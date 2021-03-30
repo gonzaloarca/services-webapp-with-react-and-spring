@@ -29,7 +29,9 @@ public class HelloWorldController {
     @RequestMapping("/user/{userId}")
     public ModelAndView getUser(@PathVariable("userId") final long id) {
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("greeting", userService.findById(id).orElseThrow(UserNotFoundException::new));
+        User aux = userService.findById(id).orElseThrow(UserNotFoundException::new);
+        mav.addObject("greeting", aux.getName());
+        mav.addObject("password", aux.getPassword());
         return mav;
     }
 

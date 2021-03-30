@@ -9,23 +9,15 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    private final static RowMapper<User> USER_ROW_MAPPER = (resultSet, i) -> {
-        String username = resultSet.getString("username");
-        long userId = resultSet.getLong("userId");
-        String password = resultSet.getString("password");
-
-        User user = new User();
-        user.setId(userId);
-        user.setName(username);
-        user.setPassword(password);
-
-        return user;
-    };
+    private final static RowMapper<User> USER_ROW_MAPPER =
+            (rs, rowNum) -> new User(rs.getLong("userId"), rs.getString("username"), rs.getString("password"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -35,11 +27,11 @@ public class UserDaoImpl implements UserDao {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users (" +
-                "userid SERIAL PRIMARY KEY, " +
-                "username VARCHAR(100) NOT NULL," +
-                "password VARCHAR(100) NOT NULL" +
-                ")");
+//        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users (" +
+//                "userid SERIAL PRIMARY KEY, " +
+//                "username VARCHAR(100) NOT NULL," +
+//                "password VARCHAR(100) NOT NULL" +
+//                ")");
     }
 
     @Override
@@ -61,5 +53,11 @@ public class UserDaoImpl implements UserDao {
         user.setPassword(password);
 
         return user;
+    }
+
+    @Override
+    public Optional<User> findByName(String name) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", new Object[]{name},
+                USER_ROW_MAPPER).stream().findFirst();
     }
 }

@@ -5,6 +5,20 @@ public class User {
     private String name;
     private String password;
 
+    public User() {
+    }
+
+    public User(String name, long id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public User(long id, String name, String password) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+    }
+
     public void setId(long id) {
         this.id = id;
     }

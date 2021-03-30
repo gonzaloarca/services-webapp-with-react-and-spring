@@ -9,5 +9,7 @@ public interface UserDao {
 
     Optional<User> get(long id);
 
-    User register(String username, String password);
+    User register(String name, String password);
+
+    Optional<User> findByName(String name);
 }
