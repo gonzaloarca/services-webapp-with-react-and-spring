@@ -1,4 +1,4 @@
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserOriginal;
 import ar.edu.itba.paw.persistence.UserDaoImpl;
 import config.TestConfig;
 import org.junit.Assert;
@@ -38,7 +38,7 @@ public class UserDaoImplTest {
 
     @Test
     public void testCreate() {
-        final User user = userDao.register(USERNAME, PASSWORD);
+        final UserOriginal user = userDao.register(USERNAME, PASSWORD);
         Assert.assertNotNull(user);
         Assert.assertEquals(USERNAME, user.getName());
         Assert.assertEquals(PASSWORD, user.getPassword());

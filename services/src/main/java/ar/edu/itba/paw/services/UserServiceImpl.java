@@ -1,27 +1,26 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.UserDaoOriginal;
+import ar.edu.itba.paw.interfaces.UserServiceOriginal;
+import ar.edu.itba.paw.models.UserOriginal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserServiceOriginal {
 
     @Autowired
-    private UserDao userDao;
+    private UserDaoOriginal userDao;
 
     @Override
-    public Optional<User> findById(long id) {
+    public Optional<UserOriginal> findById(long id) {
         return userDao.get(id);
     }
 
     @Override
-    public User register(String username, String password) {
+    public UserOriginal register(String username, String password) {
         return userDao.register(username, password);
     }
 }

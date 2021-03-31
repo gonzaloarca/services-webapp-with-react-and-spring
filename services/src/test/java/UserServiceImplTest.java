@@ -1,5 +1,5 @@
-import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.UserDaoOriginal;
+import ar.edu.itba.paw.models.UserOriginal;
 import ar.edu.itba.paw.services.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,8 +9,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
-
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {
     private static final String USERNAME = "username";
@@ -19,15 +17,15 @@ public class UserServiceImplTest {
     private UserServiceImpl userService = new UserServiceImpl();
 
     @Mock
-    private UserDao mockDao;
+    private UserDaoOriginal mockDao;
 
     @Test
     public void testCreate() {
 // 1. Setup!
         Mockito.when(mockDao.register(Mockito.eq(USERNAME), Mockito.eq(PASSWORD)))
-                .thenReturn(new User(1, USERNAME, PASSWORD));
+                .thenReturn(new UserOriginal(1, USERNAME, PASSWORD));
 // 2. "ejercito" la class under test
-        User maybeUser = userService.register(USERNAME, PASSWORD);
+        UserOriginal maybeUser = userService.register(USERNAME, PASSWORD);
 // 3. Asserts!
         Assert.assertNotNull(maybeUser);
         Assert.assertEquals(USERNAME, maybeUser.getName());
@@ -38,7 +36,7 @@ public class UserServiceImplTest {
     public void testCreateEmptyPassword() {
 // 1. Setup!
 // 2. "ejercito" la class under test
-        User maybeUser
+        UserOriginal maybeUser
                 = userService.register(USERNAME, "");
         // 3. Asserts!
         Assert.assertNull(maybeUser);

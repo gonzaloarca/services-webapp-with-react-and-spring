@@ -2,14 +2,15 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.models.User;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
 
-    Optional<User> get(long id);
+    User register(String email, String username, String phone, boolean isProfessional);
 
-    User register(String name, String password);
+    Optional<User> findById(long id);
 
-    Optional<User> findByName(String name);
+    Optional<User> findByEmail(String email);
+
+    void switchRole(long id);
 }
