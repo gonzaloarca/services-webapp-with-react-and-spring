@@ -6,9 +6,19 @@ public class JobPost {
     private String title;
     private String availableHours;
     private JobType jobType;
+    private boolean isActive;
 
     public JobPost() {
     }
+
+    public JobPost(long userId, String title, String availableHours, JobType jobType) {
+        this.userId = userId;
+        this.title = title;
+        this.availableHours = availableHours;
+        this.jobType = jobType;
+        this.isActive = true;
+    }
+
 
     public long getId() {
         return id;
@@ -40,6 +50,22 @@ public class JobPost {
 
     public void setAvailableHours(String availableHours) {
         this.availableHours = availableHours;
+    }
+
+    public JobType getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(JobType jobType) {
+        this.jobType = jobType;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @Override

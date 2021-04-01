@@ -6,11 +6,29 @@ public class JobContract {
     private long id;
     private long postId;
     private long clientId;
+    private long packageId;
     private Date creationDate;           //TODO: ver tipo de variable
     private String description;
     private String image;
 
     public JobContract() {
+    }
+
+    public JobContract(long postId, long clientId, String description, String image) {
+        this.postId = postId;
+        this.clientId = clientId;
+        this.description = description;
+        this.image = image;
+    }
+
+
+
+    public long getPackageId() {
+        return packageId;
+    }
+
+    public void setPackageId(long packageId) {
+        this.packageId = packageId;
     }
 
     public long getId() {

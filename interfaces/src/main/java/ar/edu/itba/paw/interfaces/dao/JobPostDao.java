@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces;
+package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.Zone;

@@ -7,8 +7,18 @@ public class User {
     private String userImage;
     private String phone;
     private boolean isProfessional;
+    private boolean isActive;
 
     public User() {
+    }
+
+    public User(String email, String username, String userImage, String phone, boolean isProfessional) {
+        this.email = email;
+        this.username = username;
+        this.userImage = userImage;
+        this.phone = phone;
+        this.isProfessional = isProfessional;
+        this.isActive=true;
     }
 
     public long getId() {
@@ -57,6 +67,14 @@ public class User {
 
     public void setProfessional(boolean professional) {
         isProfessional = professional;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @Override

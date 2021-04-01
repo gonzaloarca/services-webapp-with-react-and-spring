@@ -7,9 +7,20 @@ public class JobPackage {
     private String description;
     private double price;
     private RateType rateType;
+    private boolean is_active;
 
     public JobPackage() {
     }
+
+    public JobPackage(long postId, String title, String description, double price, RateType rateType) {
+        this.postId = postId;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.rateType = rateType;
+        this.is_active = true;
+    }
+
 
     public long getId() {
         return id;
@@ -57,6 +68,14 @@ public class JobPackage {
 
     public void setRateType(RateType rateType) {
         this.rateType = rateType;
+    }
+
+    public boolean isIs_active() {
+        return is_active;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
     }
 
     public enum RateType {
