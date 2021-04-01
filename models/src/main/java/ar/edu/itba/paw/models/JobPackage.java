@@ -58,4 +58,10 @@ public class JobPackage {
     public void setRateType(RateType rateType) {
         this.rateType = rateType;
     }
+
+    public enum RateType {
+        HOURLY,
+        ONE_TIME,
+        TBD
+    }
 }

@@ -46,4 +46,15 @@ public class JobPost {
     public String toString() {
         return id + ": " + title;
     }
+
+    public enum JobType {
+        PLUMBING,
+        ELECTRICITY,
+        CARPENTRY,
+        CATERING,
+        PAINTING,
+        TEACHING,
+        CLEANING,
+        BABYSITTING
+    }
 }
