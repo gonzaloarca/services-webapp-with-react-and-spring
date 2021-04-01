@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS job_package (
     post_id INTEGER NOT NULL,
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
-    price DOUBLE NOT NULL,
+    price DOUBLE PRECISION NOT NULL,
     rate_type INTEGER NOT NULL,
     FOREIGN KEY(post_id) REFERENCES job_post ON DELETE CASCADE
 );
