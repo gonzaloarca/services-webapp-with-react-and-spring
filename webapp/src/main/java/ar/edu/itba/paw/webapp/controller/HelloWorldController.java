@@ -16,10 +16,14 @@ public class HelloWorldController {
     private UserServiceOriginal userService;
 
     @RequestMapping("/")
-    public ModelAndView helloWorld(@RequestParam("userId") final long id) {
+    public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("greeting", userService.findById(id).orElseThrow(UserNotFoundException::new));
-        //mav.addObject("password",userService.list().get(2).getPassword());
+        return mav;
+    }
+
+    @RequestMapping("/create-job-post")
+    public ModelAndView createJobPost() {
+        final ModelAndView mav = new ModelAndView("createJobPost");
         return mav;
     }
 

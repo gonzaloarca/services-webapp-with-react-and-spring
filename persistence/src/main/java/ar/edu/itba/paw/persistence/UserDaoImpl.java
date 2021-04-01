@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDaoOriginal {
 
     @Override
     public Optional<UserOriginal> get(long id) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[]{id},
+        return jdbcTemplate.query("SELECT * FROM users WHERE id = ?", new Object[]{id},
                 USER_ROW_MAPPER).stream().findFirst();
     }
 

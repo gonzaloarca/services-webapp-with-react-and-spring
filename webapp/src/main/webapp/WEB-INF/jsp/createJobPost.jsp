@@ -2,11 +2,11 @@
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/resources/css/index.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/createjobpost.css" rel="stylesheet"/>
     <link rel="shortcut icon" href="#">
 </head>
 <body>
 <%@ include file="customNavBar.jsp" %>
-<img class="homeBanner" src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
+<h2>CREATE JOB POST</h2>
 </body>
 </html>

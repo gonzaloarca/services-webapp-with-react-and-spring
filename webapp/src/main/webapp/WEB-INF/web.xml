@@ -39,4 +39,9 @@
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
+    
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/resources/*</url-pattern>
+    </servlet-mapping>
 </web-app>
