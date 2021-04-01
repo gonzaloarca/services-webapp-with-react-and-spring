@@ -21,6 +21,16 @@ public class User {
         this.isActive=true;
     }
 
+    public User(long id, String email, String username, String userImage, String phone, boolean isProfessional, boolean isActive) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+        this.userImage = userImage;
+        this.phone = phone;
+        this.isProfessional = isProfessional;
+        this.isActive = isActive;
+    }
+
     public long getId() {
         return id;
     }

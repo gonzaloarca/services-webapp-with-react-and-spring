@@ -19,6 +19,14 @@ public class JobPost {
         this.isActive = true;
     }
 
+    public JobPost(long id, long userId, String title, String availableHours, JobType jobType, boolean isActive) {
+        this.id = id;
+        this.userId = userId;
+        this.title = title;
+        this.availableHours = availableHours;
+        this.jobType = jobType;
+        this.isActive = isActive;
+    }
 
     public long getId() {
         return id;

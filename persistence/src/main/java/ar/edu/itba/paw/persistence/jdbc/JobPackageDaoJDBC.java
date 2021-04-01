@@ -17,11 +17,13 @@ import java.util.Optional;
 public class JobPackageDaoJDBC implements JobPackageDao {
 
     private final static RowMapper<JobPackage> JOB_PACKAGE_ROW_MAPPER = (resultSet, rowNum) -> new JobPackage(
+            resultSet.getLong("id"),
             resultSet.getLong("postId"),
             resultSet.getString("title"),
             resultSet.getString("description"),
             resultSet.getDouble("price"),
-            JobPackage.RateType.values()[resultSet.getInt("rate_type")]);
+            JobPackage.RateType.values()[resultSet.getInt("rate_type")],
+            resultSet.getBoolean("is_active"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;

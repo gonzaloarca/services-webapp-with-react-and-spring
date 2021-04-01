@@ -21,6 +21,15 @@ public class JobContract {
         this.image = image;
     }
 
+    public JobContract(long id, long postId, long clientId, long packageId, Date creationDate, String description, String image) {
+        this.id = id;
+        this.postId = postId;
+        this.clientId = clientId;
+        this.packageId = packageId;
+        this.creationDate = creationDate;
+        this.description = description;
+        this.image = image;
+    }
 
 
     public long getPackageId() {

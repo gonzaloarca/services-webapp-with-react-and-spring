@@ -18,10 +18,12 @@ import java.util.Optional;
 public class JobPostDaoJDBC implements JobPostDao {
 
     private final static RowMapper<JobPost> JOB_POST_ROW_MAPPER = (resultSet, rowNum) -> new JobPost(
-            resultSet.getLong("email"),
+            resultSet.getLong("id"),
+            resultSet.getLong("user_id"),
             resultSet.getString("title"),
             resultSet.getString("available_hours"),
-            JobPost.JobType.values()[resultSet.getInt("job_type")]);
+            JobPost.JobType.values()[resultSet.getInt("job_type")],
+            resultSet.getBoolean("is_active"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;

@@ -16,11 +16,13 @@ import java.util.Optional;
 public class UserDaoJDBC implements UserDao {
 
     private final static RowMapper<User> USER_ROW_MAPPER = (resultSet, rowNum) -> new User(
+            resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("username"),
             resultSet.getString("user_image"),
             resultSet.getString("phone"),
-            resultSet.getBoolean("is_professional"));
+            resultSet.getBoolean("is_professional"),
+            resultSet.getBoolean("is_active"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
