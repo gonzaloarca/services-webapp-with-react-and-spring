@@ -1,5 +1,5 @@
 .body {
-    background-color: lightgray;    /*TODO: poner color posta */
+    background-color: #EFEFEF;
 }
 
 .navigation-text {
@@ -39,9 +39,16 @@
     border-radius: 5px;
 }
 
+.header-back-button {
+    display: flex;
+    height: 100%;
+    position: absolute;
+    margin-left: 30px;
+}
+
 .header-back-icon {
     color: white;
-    margin: auto -58px auto 30px;   /*TODO: ver si hay alguna mejor forma que hardodeando valores*/
+    margin: auto;
     padding: 0;
 }
 
@@ -59,8 +66,8 @@
 }
 
 .contract-form {
+    padding: 50px 30px 10px 30px;
     background-color: white;
-    height: 500px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -68,4 +75,35 @@
     background-color: white;
     height: 200px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.form-text {
+    font-weight: bold;
+}
+
+.text-input {
+    background-color: #EFEFEF !important;
+}
+
+.contract-input {
+    padding: 20px 20px 20px 40px;
+}
+
+.divider-bar {
+    border-top: 1px solid rgba(0,0,0,.3);
+    margin-top: 0;
+}
+
+.label-and-input {
+    margin-left: 10px;
+}
+
+.form-row {
+    margin-bottom: 30px;
+}
+
+.submit-button {
+    display: inline-grid;
+    width: 100%;
+    justify-items: right;
 }
