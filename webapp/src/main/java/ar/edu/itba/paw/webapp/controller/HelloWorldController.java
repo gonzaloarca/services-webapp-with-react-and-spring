@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserServiceOriginal;
+import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.UserOriginal;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,16 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping("/contract/package/{packId}")
+    public ModelAndView createContract(@PathVariable("packId") final long packId) {
+        final ModelAndView mav = new ModelAndView("createContract");
+        //JobPackage jobPackage = TODO: buscar jobPackage por id
+        //JobPost jobPost = TODO: buscar con el postId en el package
+        //TODO: agregar datos a mav
+        mav.addObject("postImage", "/resources/images/worker-placeholder.jpg");
+        return mav;
+    }
+/*
     @RequestMapping("/user/{userId}")
     public ModelAndView getUser(@PathVariable("userId") final long id) {
         final ModelAndView mav = new ModelAndView("index");
@@ -41,5 +53,5 @@ public class HelloWorldController {
         final UserOriginal user = userService.register(username, password);
         return new ModelAndView("redirect:/user/" + user.getId());
     }
-
+*/
 }

@@ -8,7 +8,7 @@
 <!-- Sacado de https://getbootstrap.com/docs/4.6/components/navbar/ -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <a class="navbar-brand" href="/">
-        <img src='<c:url value="${pageContext.request.contextPath}/resources/images/hirenet-logo-v3-invert.png" />'/>
+        <img src='<c:url value="../../resources/images/hirenet-logo-v3-invert.png" />' alt="HireNet Logo"/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
