@@ -11,3 +11,7 @@ a.nav-link {
     font-size: 17px;
     font-weight: bold;
 }
+
+a.navbar-brand {
+    margin-right: 2rem !important;
+}
