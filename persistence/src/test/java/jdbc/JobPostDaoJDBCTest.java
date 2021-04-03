@@ -30,15 +30,16 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:job-post-test.sql")
 public class JobPostDaoJDBCTest {
-    private static final User user = new User(2, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "1109675432", false, true);
+    private static final User USER = new User(1, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "1109675432", false, true);
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
-    private static final JobPost JOB_POST = new JobPost(1, user, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, true);
+    private static final JobPost JOB_POST = new JobPost(1, USER, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, true);
 
     @Autowired
     private DataSource ds;
 
     @Autowired
     private JobPostDaoJDBC jobPostDaoJDBC;
+
     private JdbcTemplate jdbcTemplate;
 
     @Mock
@@ -52,11 +53,11 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testCreate() {
-        Mockito.when(mockUserDao.findById(Mockito.eq(user.getId())))
-                .thenReturn(Optional.of(user));
+        Mockito.when(mockUserDao.findById(Mockito.eq(USER.getId())))
+                .thenReturn(Optional.of(USER));
 
 
-        JobPost jobPost = jobPostDaoJDBC.create(user.getId(), JOB_POST.getTitle(), JOB_POST.getAvailableHours(),
+        JobPost jobPost = jobPostDaoJDBC.create(USER.getId(), JOB_POST.getTitle(), JOB_POST.getAvailableHours(),
                 JOB_POST.getJobType(), JOB_POST.getZones());
 
         Assert.assertNotNull(jobPost);
@@ -82,7 +83,6 @@ public class JobPostDaoJDBCTest {
     }
 
 
-
     @Test
     public void findByUserId() {
         Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId());
@@ -92,7 +92,7 @@ public class JobPostDaoJDBCTest {
     }
 
     @Test
-    public void findByJobType(){
+    public void findByJobType() {
         Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType());
 
         Assert.assertTrue(jobPosts.isPresent());
@@ -100,7 +100,7 @@ public class JobPostDaoJDBCTest {
     }
 
     @Test
-    public void findByZone(){
+    public void findByZone() {
         JOB_POST.getZones().forEach((zone -> {
             Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByZone(zone);
 
