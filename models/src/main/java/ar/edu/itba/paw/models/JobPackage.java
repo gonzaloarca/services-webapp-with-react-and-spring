@@ -7,14 +7,14 @@ public class JobPackage {
     private long postId;
     private String title;
     private String description;
-    private double price;
+    private Double price;
     private RateType rateType;
     private boolean is_active;
 
     public JobPackage() {
     }
 
-    public JobPackage(long postId, String title, String description, double price, RateType rateType) {
+    public JobPackage(long postId, String title, String description, Double price, RateType rateType) {
         this.postId = postId;
         this.title = title;
         this.description = description;
@@ -23,7 +23,7 @@ public class JobPackage {
         this.is_active = true;
     }
 
-    public JobPackage(long id, long postId, String title, String description, double price, RateType rateType, boolean is_active) {
+    public JobPackage(long id, long postId, String title, String description, Double price, RateType rateType, boolean is_active) {
         this.id = id;
         this.postId = postId;
         this.title = title;
@@ -65,11 +65,11 @@ public class JobPackage {
         this.description = description;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

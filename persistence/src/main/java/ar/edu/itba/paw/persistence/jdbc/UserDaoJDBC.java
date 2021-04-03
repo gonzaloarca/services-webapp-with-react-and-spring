@@ -19,7 +19,8 @@ public class UserDaoJDBC implements UserDao {
             resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("username"),
-            resultSet.getString("user_image"),
+//            resultSet.getString("user_image"),
+            "",
             resultSet.getString("phone"),
             resultSet.getBoolean("is_professional"),
             resultSet.getBoolean("is_active"));
@@ -65,7 +66,8 @@ public class UserDaoJDBC implements UserDao {
     }
 
     @Override
-    public void switchRole(long id) {
-        jdbcTemplate.query("UPDATE users SET is_professional = NOT is_professional WHERE id = ?",new Object[]{id},USER_ROW_MAPPER);
+    public Optional<User> switchRole(long id) {
+        jdbcTemplate.update("UPDATE users SET is_professional = NOT is_professional WHERE id = ?", id);
+        return jdbcTemplate.query("SELECT  * FROM users WHERE id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
     }
 }

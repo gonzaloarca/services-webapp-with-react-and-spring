@@ -12,5 +12,5 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
 
-    void switchRole(long id);
+    Optional<User> switchRole(long id);
 }

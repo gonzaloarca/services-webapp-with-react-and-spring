@@ -18,7 +18,7 @@ public class JobPackageDaoJDBC implements JobPackageDao {
 
     private final static RowMapper<JobPackage> JOB_PACKAGE_ROW_MAPPER = (resultSet, rowNum) -> new JobPackage(
             resultSet.getLong("id"),
-            resultSet.getLong("postId"),
+            resultSet.getLong("post_id"),
             resultSet.getString("title"),
             resultSet.getString("description"),
             resultSet.getDouble("price"),
@@ -41,7 +41,7 @@ public class JobPackageDaoJDBC implements JobPackageDao {
             put("title",title);
             put("description",description);
             put("price",price);
-            put("rate_type",rateType);
+            put("rate_type",rateType.ordinal());
             put("is_active",true);
         }});
 

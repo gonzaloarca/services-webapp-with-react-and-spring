@@ -3,10 +3,8 @@ package ar.edu.itba.paw.persistence.jdbc;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPost.Zone;
-import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -64,7 +62,7 @@ public class JobPostDaoJDBC implements JobPostDao {
 //    private final JdbcTemplate jdbcTemplate;
 //    private final SimpleJdbcInsert jdbcInsert;
 //    private final SimpleJdbcInsert jdbcInsertZone;
-//
+////
 //    @Autowired
 //    public JobPostDaoJDBC(DataSource ds) {
 //        jdbcTemplate = new JdbcTemplate(ds);

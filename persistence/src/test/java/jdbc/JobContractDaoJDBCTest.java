@@ -31,12 +31,57 @@ import java.util.*;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:job-contract-test.sql")
 public class JobContractDaoJDBCTest {
-    private static final User PROFESSIONAL = new User(1, "franquesada@gmail.com", "Francisco Quesada", "", "1147895678", true, true);
-    private static final User CLIENT = new User(2, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "1109675432", false, true);
-    private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
-    private static final JobPost JOB_POST = new JobPost(1, PROFESSIONAL, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, true);
-    private static final JobPackage JOB_PACKAGE = new JobPackage(1, 1, "Trabajo Simple", "Arreglos de tomacorrientes", 200.00, JobPackage.RateType.values()[0], true);
-    private static final JobContract JOB_CONTRACT = new JobContract(1, CLIENT, JOB_PACKAGE, PROFESSIONAL, new Date(), "Se me rompio una zapatilla", "");
+
+    private static final User PROFESSIONAL = new User(
+            1,
+            "franquesada@gmail.com",
+            "Francisco Quesada",
+            "",
+            "1147895678",
+            true,
+            true
+    );
+    private static final User CLIENT = new User(
+            2,
+            "manurodriguez@gmail.com",
+            "Manuel Rodriguez",
+            "",
+            "1109675432",
+            false,
+            true
+    );
+    private static final List<JobPost.Zone> ZONES = new ArrayList<>(
+            Arrays.asList(
+                    JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]
+            )
+    );
+    private static final JobPost JOB_POST = new JobPost(
+            1,
+            PROFESSIONAL,
+            "Electricista Matriculado",
+            "Lun a Viernes 10hs - 14hs",
+            JobPost.JobType.values()[1],
+            ZONES,
+            true
+    );
+    private static final JobPackage JOB_PACKAGE = new JobPackage(
+            1,
+            1,
+            "Trabajo Simple",
+            "Arreglos de tomacorrientes",
+            200.00, JobPackage.RateType.values()[0],
+            true
+    );
+    private static final JobContract JOB_CONTRACT = new JobContract(
+            1, CLIENT,
+            JOB_PACKAGE,
+            PROFESSIONAL,
+            new Date(),
+            "Se me rompio una zapatilla",
+            ""
+    );
+
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";
     @Autowired
     private DataSource ds;
