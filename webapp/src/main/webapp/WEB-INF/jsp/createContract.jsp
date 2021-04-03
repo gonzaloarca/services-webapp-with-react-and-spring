@@ -155,6 +155,16 @@
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
+                            <!-- Package Name -->
+                            <div class="row info-row">
+                                <div class="info-left-col">
+                                    <i class="fas fa-box-open fa-2x"></i>
+                                </div>
+                                <p class="info-right-col">
+                                    Destape de retrete
+                                </p>
+                            </div>
+                            <hr class="divider-bar-info"/>
                             <!-- Location -->
                             <div class="row info-row">
                                 <div class="info-left-col">
