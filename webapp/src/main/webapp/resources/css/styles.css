@@ -201,3 +201,12 @@ p.job-card-detail {
     font-weight: bold;
     font-size: 18px;
 }
+
+.form-control {
+    border: transparent;
+    background-color: #e8e8e8;
+}
+
+.form-control:focus {
+    background-color: #e8e8e8;
+}
