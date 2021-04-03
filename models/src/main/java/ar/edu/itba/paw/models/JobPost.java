@@ -1,30 +1,37 @@
 package ar.edu.itba.paw.models;
 
+import java.util.List;
+
 public class JobPost {
     private long id;
-    private long userId;
+    private User user;
     private String title;
     private String availableHours;
     private JobType jobType;
     private boolean isActive;
+    private List<Zone> zones;
 
     public JobPost() {
     }
 
-    public JobPost(long userId, String title, String availableHours, JobType jobType) {
-        this.userId = userId;
+    //Constructor para crear un post nuevo (esta activo)
+    public JobPost(User user, String title, String availableHours, JobType jobType, List<Zone> zones) {
+        this.user = user;
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
+        this.zones=zones;
         this.isActive = true;
     }
 
-    public JobPost(long id, long userId, String title, String availableHours, JobType jobType, boolean isActive) {
+    //Constructor para crear un post que puede no estar activo
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, boolean isActive) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
+        this.zones = zones;
         this.isActive = isActive;
     }
 
@@ -36,12 +43,12 @@ public class JobPost {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTitle() {
@@ -76,9 +83,25 @@ public class JobPost {
         isActive = active;
     }
 
+    public List<Zone> getZones() {
+        return zones;
+    }
+
+    public void setZones(List<Zone> zones) {
+        this.zones = zones;
+    }
+
     @Override
     public String toString() {
-        return id + ": " + title;
+        return "JobPost{" +
+                "id=" + id +
+                ", userId=" + user +
+                ", title='" + title + '\'' +
+                ", availableHours='" + availableHours + '\'' +
+                ", jobType=" + jobType +
+                ", isActive=" + isActive +
+                ", zones=" + zones +
+                '}';
     }
 
     public enum JobType {
@@ -90,5 +113,12 @@ public class JobPost {
         TEACHING,
         CLEANING,
         BABYSITTING
+    }
+    public enum Zone {
+        BELGRANO,
+        PALERMO,
+        RETIRO,
+        NUNIEZ,
+        COLEGIALES;
     }
 }

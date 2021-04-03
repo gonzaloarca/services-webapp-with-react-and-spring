@@ -87,6 +87,19 @@ public class JobPackage {
         this.is_active = is_active;
     }
 
+    @Override
+    public String toString() {
+        return "JobPackage{" +
+                "id=" + id +
+                ", postId=" + postId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", rateType=" + rateType +
+                ", is_active=" + is_active +
+                '}';
+    }
+
     public enum RateType {
         HOURLY,
         ONE_TIME,

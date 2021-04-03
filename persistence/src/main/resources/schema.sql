@@ -37,12 +37,10 @@ CREATE TABLE IF NOT EXISTS post_zone (
 
 CREATE TABLE IF NOT EXISTS contract (
     id SERIAL PRIMARY KEY,
-    post_id INTEGER,
     client_id INTEGER,
     package_id INTEGER,
     creation_date DATE NOT NULL,
     description TEXT NOT NULL,
-    FOREIGN KEY(post_id) REFERENCES job_post ON DELETE SET NULL,
     FOREIGN KEY(client_id) REFERENCES users ON DELETE SET NULL,
     FOREIGN KEY(package_id) REFERENCES job_package ON DELETE SET NULL
 );

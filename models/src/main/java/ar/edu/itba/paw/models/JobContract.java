@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class JobContract {
     private long id;
-    private long postId;
-    private long clientId;
-    private long packageId;
+    private User client;
+    private JobPackage jobPackage;
+    private User professional;
     private Date creationDate;           //TODO: ver tipo de variable
     private String description;
     private String image;
@@ -14,30 +14,38 @@ public class JobContract {
     public JobContract() {
     }
 
-    public JobContract(long postId, long clientId, String description, String image) {
-        this.postId = postId;
-        this.clientId = clientId;
+    public JobContract(User client, JobPackage jobPackage, String description, String image) {
+        this.client = client;
+        this.jobPackage = jobPackage;
         this.description = description;
         this.image = image;
     }
 
-    public JobContract(long id, long postId, long clientId, long packageId, Date creationDate, String description, String image) {
+    public JobContract(long id, User client, JobPackage jobPackage, Date creationDate, String description, String image) {
         this.id = id;
-        this.postId = postId;
-        this.clientId = clientId;
-        this.packageId = packageId;
+        this.client = client;
+        this.jobPackage = jobPackage;
         this.creationDate = creationDate;
         this.description = description;
         this.image = image;
     }
 
-
-    public long getPackageId() {
-        return packageId;
+    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description, String image) {
+        this.id = id;
+        this.client = client;
+        this.jobPackage = jobPackage;
+        this.professional = professional;
+        this.creationDate = creationDate;
+        this.description = description;
+        this.image = image;
     }
 
-    public void setPackageId(long packageId) {
-        this.packageId = packageId;
+    public JobPackage getJobPackage() {
+        return jobPackage;
+    }
+
+    public void setJobPackage(JobPackage jobPackage) {
+        this.jobPackage = jobPackage;
     }
 
     public long getId() {
@@ -48,20 +56,12 @@ public class JobContract {
         this.id = id;
     }
 
-    public long getPostId() {
-        return postId;
+    public User getClient() {
+        return client;
     }
 
-    public void setPostId(long postId) {
-        this.postId = postId;
-    }
-
-    public long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
+    public void setClient(User client) {
+        this.client = client;
     }
 
     public Date getCreationDate() {
@@ -86,5 +86,26 @@ public class JobContract {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public User getProfessional() {
+        return professional;
+    }
+
+    public void setProfessional(User professional) {
+        this.professional = professional;
+    }
+
+    @Override
+    public String toString() {
+        return "JobContract{" +
+                "id=" + id +
+                ", client=" + client +
+                ", jobPackage=" + jobPackage +
+                ", professional=" + professional +
+                ", creationDate=" + creationDate +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
+                '}';
     }
 }
