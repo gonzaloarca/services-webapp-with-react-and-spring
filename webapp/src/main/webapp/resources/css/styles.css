@@ -160,16 +160,44 @@ p.job-card-detail {
     -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
 }
 
-.form-control {
-    background-color: #e8e8e8;
-    border: transparent;
+.numbered-form {
+    display: inline-block;
 }
 
-.form-control:focus {
-    background-color: #e8e8e8;
-}
-
-.input-group-text {
+.blue-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
     background-color: #485696;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.yellow-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #ffc800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orange-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: darkorange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle-text {
+    position: absolute;
+    margin: 0;
     color: white;
+    font-weight: bold;
+    font-size: 18px;
 }
