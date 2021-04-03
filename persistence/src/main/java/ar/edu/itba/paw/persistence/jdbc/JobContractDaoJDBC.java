@@ -34,40 +34,38 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Autowired
     private JobPostDao jobPostDao;
 
-    private final static RowMapper<JobContract> JOB_CONTRACT_ROW_MAPPER = (resultSet, in) -> {
-        return new JobContract(
-                resultSet.getLong("id"),
-                new User(
-                        resultSet.getLong("client_id"),
-                        resultSet.getString("client_email"),
-                        resultSet.getString("client_username"),
-                        "",
-                        resultSet.getString("client_phone"),
-                        resultSet.getBoolean("client_is_professional"),
-                        resultSet.getBoolean("client_is_active")
-                ),
-                new JobPackage(
-                        resultSet.getLong("package_id"),
-                        resultSet.getLong("post_id"),
-                        resultSet.getString("title"),
-                        resultSet.getString("package_description"),
-                        resultSet.getDouble("price"),
-                        JobPackage.RateType.values()[resultSet.getInt("rate_type")],
-                        resultSet.getBoolean("package_is_active")
-                ), new User(
-                resultSet.getLong("professional_id"),
-                resultSet.getString("professional_email"),
-                resultSet.getString("professional_username"),
-                "",
-                resultSet.getString("professional_phone"),
-                resultSet.getBoolean("professional_is_professional"),
-                resultSet.getBoolean("professional_is_active")
-        ),
-                resultSet.getDate("creation_date"),
-                resultSet.getString("description"),
-                ""
-        );
-    };
+    private final static RowMapper<JobContract> JOB_CONTRACT_ROW_MAPPER = (resultSet, in) -> new JobContract(
+            resultSet.getLong("id"),
+            new User(
+                    resultSet.getLong("client_id"),
+                    resultSet.getString("client_email"),
+                    resultSet.getString("client_username"),
+                    "",
+                    resultSet.getString("client_phone"),
+                    resultSet.getBoolean("client_is_professional"),
+                    resultSet.getBoolean("client_is_active")
+            ),
+            new JobPackage(
+                    resultSet.getLong("package_id"),
+                    resultSet.getLong("post_id"),
+                    resultSet.getString("title"),
+                    resultSet.getString("package_description"),
+                    resultSet.getDouble("price"),
+                    JobPackage.RateType.values()[resultSet.getInt("rate_type")],
+                    resultSet.getBoolean("package_is_active")
+            ), new User(
+            resultSet.getLong("professional_id"),
+            resultSet.getString("professional_email"),
+            resultSet.getString("professional_username"),
+            "",
+            resultSet.getString("professional_phone"),
+            resultSet.getBoolean("professional_is_professional"),
+            resultSet.getBoolean("professional_is_active")
+    ),
+            resultSet.getDate("creation_date"),
+            resultSet.getString("description"),
+            ""
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
