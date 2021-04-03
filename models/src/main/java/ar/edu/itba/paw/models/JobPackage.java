@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class JobPackage {
     private long id;
     private long postId;
@@ -79,7 +81,7 @@ public class JobPackage {
         this.rateType = rateType;
     }
 
-    public boolean isIs_active() {
+    public boolean is_active() {
         return is_active;
     }
 
@@ -98,6 +100,19 @@ public class JobPackage {
                 ", rateType=" + rateType +
                 ", is_active=" + is_active +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JobPackage that = (JobPackage) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public enum RateType {

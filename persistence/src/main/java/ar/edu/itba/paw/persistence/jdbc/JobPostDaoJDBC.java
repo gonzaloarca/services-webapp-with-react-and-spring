@@ -44,13 +44,13 @@ public class JobPostDaoJDBC implements JobPostDao {
     public Optional<List<JobPost>> findAll() {
         return Optional.empty();
     }
-//
-//    private static List<Zone> auxiGetZones(Object[] objs){
-//        List<Zone> zones = new ArrayList<>();
-//        Arrays.stream(objs)
-//                .forEach(obj -> zones.add(Zone.values()[(int) obj]));
-//        return zones;
-//    }
+
+    private static List<Zone> auxiGetZones(Object[] objs){
+        List<Zone> zones = new ArrayList<>();
+        Arrays.stream(objs)
+                .forEach(obj -> zones.add(Zone.values()[(int) obj]));
+        return zones;
+    }
 //
 //    private final static RowMapper<JobPost> JOB_POST_ROW_MAPPER = (resultSet, rowNum) -> new JobPost(
 //            resultSet.getLong("id"),

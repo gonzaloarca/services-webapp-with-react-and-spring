@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class User {
     private long id;
     private String email;
@@ -18,7 +20,7 @@ public class User {
         this.userImage = userImage;
         this.phone = phone;
         this.isProfessional = isProfessional;
-        this.isActive=true;
+        this.isActive = true;
     }
 
     public User(long id, String email, String username, String userImage, String phone, boolean isProfessional, boolean isActive) {
@@ -89,6 +91,27 @@ public class User {
 
     @Override
     public String toString() {
-        return email;
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", userImage='" + userImage + '\'' +
+                ", phone='" + phone + '\'' +
+                ", isProfessional=" + isProfessional +
+                ", isActive=" + isActive +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
     }
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class JobContract {
     private long id;
@@ -107,5 +108,18 @@ public class JobContract {
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JobContract that = (JobContract) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
