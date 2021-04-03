@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces;
+package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.User;
 
@@ -12,5 +12,5 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
 
-    void switchRole(long id);
+    Optional<User> switchRole(long id);
 }

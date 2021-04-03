@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import java.util.*;
 
 @Repository
-public class UserDaoImpl implements UserDaoOriginal {
+public class UserDaoOriginalImpl implements UserDaoOriginal {
 
     private final static RowMapper<UserOriginal> USER_ROW_MAPPER =
             (rs, rowNum) -> new UserOriginal(rs.getLong("userId"), rs.getString("username"), rs.getString("password"));
@@ -21,7 +21,7 @@ public class UserDaoImpl implements UserDaoOriginal {
     private final SimpleJdbcInsert jdbcInsert;
 
     @Autowired
-    public UserDaoImpl(final DataSource ds) {
+    public UserDaoOriginalImpl(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("userid");
 
