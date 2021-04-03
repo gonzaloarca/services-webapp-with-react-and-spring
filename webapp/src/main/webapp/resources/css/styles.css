@@ -45,3 +45,8 @@
     font-weight: bold;
     font-size: 18px;
 }
+
+/* Mensajes de error */
+.form-error {
+    color: red;
+}

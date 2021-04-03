@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
     <title>Contact - HireNet</title>    <!-- TODO: poner titulo correcto -->
@@ -54,7 +55,9 @@
                         <p style="margin: 0">* campo obligatorio</p>
                         <hr class="divider-bar"/>
                         <!-- Form Entries -->
-                        <form class="contract-input">
+                        <form:form class="contract-input" modelAttribute="contractForm"
+                                    action="/contract/package/${packId}" method="post"
+                                   enctype="multipart/form-data">
 
                             <!-- Name -->
                             <div class="form-row">
@@ -62,11 +65,13 @@
                                     <p class="circle-text">1</p>
                                 </div>
                                 <div class="col-10 label-and-input">
-                                    <label for="nameInput" class="form-text">
+                                    <form:label path="name" class="form-text">
                                         Introduzca su nombre*
-                                    </label>
-                                    <input type="text" class="form-control text-input" id="nameInput"
-                                           placeholder="Nombre" required/>
+                                    </form:label>
+                                    <form:input type="text" path="name"
+                                                class="form-control text-input"
+                                                placeholder="Nombre"/>
+                                    <form:errors path="name" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
 
@@ -76,11 +81,12 @@
                                     <p class="circle-text">2</p>
                                 </div>
                                 <div class="col-10 label-and-input">
-                                    <label for="emailInput" class="form-text">
+                                    <form:label path="email" class="form-text">
                                         Introduzca su dirección de correo electrónico*
-                                    </label>
-                                    <input type="email" class="form-control text-input" id="emailInput"
-                                           placeholder="Dirección de correo electrónico" required/>
+                                    </form:label>
+                                    <form:input type="email" class="form-control text-input" path="email"
+                                           placeholder="Dirección de correo electrónico"/>
+                                    <form:errors path="email" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
 
@@ -90,11 +96,12 @@
                                     <p class="circle-text">3</p>
                                 </div>
                                 <div class="col-7 label-and-input">
-                                    <label for="phoneInput" class="form-text">
+                                    <form:label path="phone" class="form-text">
                                         Introduzca su número de teléfono*
-                                    </label>
-                                    <input type="text" class="form-control text-input" id="phoneInput"
-                                           placeholder="Número de teléfono" required/>
+                                    </form:label>
+                                    <form:input type="text" class="form-control text-input" path="phone"
+                                           placeholder="Número de teléfono"/>
+                                    <form:errors path="phone" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
 
@@ -104,11 +111,12 @@
                                     <p class="circle-text">4</p>
                                 </div>
                                 <div class="col-10 label-and-input">
-                                    <label for="descInput" class="form-text">
+                                    <form:label path="description" class="form-text">
                                         Introduzca una descripción del trabajo que precisa*
-                                    </label>
-                                    <textarea class="form-control text-input" id="descInput" rows="6"
-                                              placeholder="Descripción del trabajo" required></textarea>
+                                    </form:label>
+                                    <form:textarea class="form-control text-input" rows="6" path="description"
+                                              placeholder="Descripción del trabajo" />
+                                    <form:errors path="description" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
 
@@ -118,14 +126,8 @@
                                     <p class="circle-text">5</p>
                                 </div>
                                 <div class="col-10 label-and-input">
-                                    <label for="imageInput" class="form-text">
-                                        Seleccione una imagen de interés para el trabajo
-                                    </label>
-                                    <div class="custom-file">
-                                        <!-- TODO: encontrar cómo anda el sistema de archivos -->
-                                        <input type="file" class="custom-file-input" id="imageInput">
-                                        <label class="custom-file-label" for="imageInput">Seleccionar archivo</label>
-                                    </div>
+                                    <form:label path="image">Seleccione archivo para subir</form:label>
+                                    <input type="file" name="image" />
                                 </div>
                             </div>
 
@@ -134,7 +136,7 @@
                                 <button class="btn btn-primary" type="submit">SOLICITAR SERVICIO</button>
                             </div>
 
-                        </form>
+                        </form:form>
                     </div>
                 </div>
 
