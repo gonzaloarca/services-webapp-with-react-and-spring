@@ -19,4 +19,6 @@ public interface JobPostDao {
     Optional<List<JobPost>> findByZone(JobPost.Zone zone);
 
     Optional<List<JobPost>> findAll();
+
+    Optional<List<JobPost>> search(String title, JobPost.Zone zone);
 }

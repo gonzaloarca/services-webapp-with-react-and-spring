@@ -126,4 +126,17 @@ public class JobPostDaoJDBC implements JobPostDao {
                         "INNER JOIN post_zone pz on id = pz.post_id GROUP BY id,user_id,title,available_hours,JOB_TYPE,IS_ACTIVE,user_email,user_username,user_phone,user_is_professional,user_is_active",
                 JOB_POST_ROW_MAPPER));
     }
+
+    @Override
+    public Optional<List<JobPost>> search(String title,Zone zone) {
+        title=title+"%";
+        return Optional.of(jdbcTemplate.query(
+                "SELECT id,user_id,title,available_hours,job_type,array_agg(pz.zone_id) as zones,user_email,user_username,user_phone,user_is_professional,user_is_active,is_active FROM job_post " +
+                "NATURAL JOIN (SELECT id AS user_id, username AS user_username, email AS user_email, phone AS user_phone, is_professional AS user_is_professional ,is_active AS user_is_active FROM users) AS users " +
+                        "INNER JOIN post_zone pz on id = pz.post_id " +
+                        "WHERE title LIKE ?  AND zone_id = ?" +
+                        "GROUP BY id,user_id,title,available_hours,JOB_TYPE,IS_ACTIVE,user_email,user_username,user_phone,user_is_professional,user_is_active",new Object[]{title,zone.ordinal()},
+                JOB_POST_ROW_MAPPER
+        ));
+    }
 }

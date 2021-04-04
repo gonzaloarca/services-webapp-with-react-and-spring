@@ -19,4 +19,6 @@ public interface JobPostService {
 
     Optional<List<JobPost>> findAll();
 
+    Optional<List<JobPost>> search(String title, JobPost.Zone zone);
+
 }

@@ -66,4 +66,9 @@ public class NoLoginJobPostService implements JobPostService {
     public Optional<List<JobPost>> findAll() {
         return jobPostDao.findAll();
     }
+
+    @Override
+    public Optional<List<JobPost>> search(String title, JobPost.Zone zone) {
+        return jobPostDao.search(title,zone);
+    }
 }
