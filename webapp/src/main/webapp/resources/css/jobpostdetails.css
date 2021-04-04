@@ -1,0 +1,172 @@
+.card {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    border-radius: 10px !important;
+}
+
+.card-body {
+    padding: 0;
+}
+
+.side {
+    width: 3vw;
+    justify-content: center;
+}
+
+.carousel {
+    height: 200px;
+}
+
+.carousel img {
+    object-fit: cover;
+}
+
+.capitalizeFirstLetter {
+    text-transform: lowercase;
+    margin: 0;
+}
+
+.capitalizeFirstLetter::first-letter {
+    text-transform: uppercase;
+}
+
+.custom-row {
+    display: flex;
+}
+
+.center {
+    flex: 1;
+    width: 90%;
+}
+
+.card-title p {
+    margin-left: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.card-title i {
+    margin-left: 3vw;
+    margin-top: 3px;
+    font-size: 32px;
+    line-height: 1;
+    word-break: break-word;
+}
+
+.star {
+    color: gold;
+    font-size: 22px;
+}
+
+.row .rating {
+    margin-left: 3vw;
+}
+
+.rating p {
+    color: gray;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+.summary {
+    background-color: #fcb839;
+    display: inline-flex;
+    border-radius: 8px;
+    margin: 0 3vw;
+}
+
+.summary-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 6px;
+    display: inline-flex;
+    margin: 8px 15px;
+}
+
+.summary-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.summary-item p {
+    margin: auto 14px;
+    text-align: center;
+    max-width: 110px;
+    word-wrap: break-word;
+}
+
+.summary-item i {
+    color: gray;
+    font-size: 32px;
+    align-self: center;
+    margin-left: 5px;
+}
+
+.available-hours {
+    margin: 0 3vw;
+    background-color: #EAEAEA;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.available-hours p {
+    justify-content: center;
+    margin: 0;
+}
+
+.zones {
+    margin: 0 3vw;
+}
+
+.zones p {
+    background-color: #EAEAEA;
+    border-radius: 12px;
+    padding: 10px;
+    margin: 0 10px 20px;
+    text-align: center;
+    line-height: 1;
+}
+
+.package-info {
+    align-items: center;
+}
+
+.accordion i {
+    font-size: 28px;
+    margin: auto 0 auto 1vw;
+}
+
+.package-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: auto 3vw;
+}
+
+.package-desc {
+    background-color: #EAEAEA;
+}
+
+.package-text {
+    word-wrap: break-word;
+    font-size: 18px;
+    margin: 0;
+}
+
+.package-price p {
+    font-size: 14px;
+    margin: 0;
+}
+
+.chip {
+    background-color: #485696;
+    border-radius: 12px;
+    color: white;
+    padding: 6px;
+    margin: 0 10px 20px;
+    text-align: center;
+    line-height: 1;
+}

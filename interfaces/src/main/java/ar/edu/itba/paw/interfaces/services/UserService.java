@@ -1,10 +1,10 @@
-package ar.edu.itba.paw.interfaces;
+package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.User;
 
 import java.util.Optional;
 
-public interface UserDao {
+public interface UserService {
 
     User register(String email, String username, String phone, boolean isProfessional);
 
@@ -12,5 +12,6 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
 
-    void switchRole(long id);
+    Optional<User> switchRole(long id);
+
 }

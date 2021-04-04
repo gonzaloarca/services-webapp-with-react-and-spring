@@ -9,7 +9,7 @@ body {
 }
 
 .content-container {
-    width: 80%;
+    width: 80vw;
     max-width: 1184px;
     margin: 0 auto;
     padding: 30px 5%;
@@ -84,6 +84,48 @@ p.job-card-detail {
     flex-basis: 22.98%;
 }
 
+.form-step {
+    display: flex;
+}
+
+.blue-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #485696;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.yellow-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #ffc800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orange-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: darkorange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle-text {
+    position: absolute;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
 .btn-circle.btn-xl {
     width: 70px;
     height: 70px;
@@ -116,4 +158,51 @@ p.job-card-detail {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
     -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
     -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.numbered-form {
+    display: inline-block;
+}
+
+.blue-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #485696;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.yellow-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #ffc800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orange-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: darkorange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle-text {
+    position: absolute;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Mensajes de error */
+.form-error {
+    color: red;
 }
