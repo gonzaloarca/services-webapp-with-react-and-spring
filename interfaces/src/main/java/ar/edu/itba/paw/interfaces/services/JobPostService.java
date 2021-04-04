@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface JobPostService {
 
-    JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
+    JobPost create(String email, String username, String phone, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
 
     Optional<JobPost> findById(long id);
 
