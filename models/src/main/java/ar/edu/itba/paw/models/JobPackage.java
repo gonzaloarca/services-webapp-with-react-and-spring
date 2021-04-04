@@ -14,15 +14,6 @@ public class JobPackage {
     public JobPackage() {
     }
 
-    public JobPackage(long postId, String title, String description, Double price, RateType rateType) {
-        this.postId = postId;
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.rateType = rateType;
-        this.is_active = true;
-    }
-
     public JobPackage(long id, long postId, String title, String description, Double price, RateType rateType, boolean is_active) {
         this.id = id;
         this.postId = postId;

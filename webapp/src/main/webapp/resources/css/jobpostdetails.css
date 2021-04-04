@@ -63,9 +63,8 @@
 
 .summary {
     background-color: #fcb839;
-    justify-content: center;
+    display: inline-flex;
     border-radius: 8px;
-    flex-wrap: wrap;
     margin: 0 3vw;
 }
 
@@ -105,9 +104,22 @@
     border-radius: 8px;
 }
 
-.available-hours p{
+.available-hours p {
     justify-content: center;
     margin: 0;
+}
+
+.zones {
+    margin: 0 3vw;
+}
+
+.zones p {
+    background-color: #EAEAEA;
+    border-radius: 12px;
+    padding: 10px;
+    margin: 0 10px 20px;
+    text-align: center;
+    line-height: 1;
 }
 
 .package-info {
@@ -132,6 +144,7 @@
 .package-text {
     word-wrap: break-word;
     font-size: 18px;
+    margin: 0;
 }
 
 .package-price p {
