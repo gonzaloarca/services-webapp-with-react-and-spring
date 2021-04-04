@@ -23,12 +23,15 @@
 </head>
 <body class="body">
     <%@ include file="customNavBar.jsp" %>
-        <div class="container" style="width: 60%">
+        <div class="content-container-transparent">
 
             <!-- Navigation -->
             <div class="row">
                 <!-- TODO: hacer la navegación posta -->
-                <p class="navigation-text">Inicio / Fontaneria</p>
+                <p class="navigation-text">
+                    <a href="${pageContext.request.contextPath}/">Inicio</a>
+                    / <c:out value="${jobType}"/>
+                </p>
             </div>
 
             <!-- Title Header -->
@@ -56,7 +59,7 @@
                         <hr class="divider-bar"/>
                         <!-- Form Entries -->
                         <form:form class="contract-input" modelAttribute="contractForm"
-                                    action="/contract/package/${packId}" method="post"
+                                   action="/contract/package/${packId}" method="post"
                                    enctype="multipart/form-data">
 
                             <!-- Name -->
@@ -126,6 +129,9 @@
                                     <p class="circle-text">5</p>
                                 </div>
                                 <div class="col-10 label-and-input">
+                                    <form:label path="image" class="form-text">
+                                        Seleccione una imagen para subir
+                                    </form:label>
                                     <form:input type="file" path="image"/>
                                     <form:errors path="image" cssClass="form-error" element="p"/>
                                 </div>
@@ -153,7 +159,7 @@
                                     <i class="fas fa-briefcase fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    Servicio de Fontanería Basico (instalacion fdasfasdfasdfadsfasf)
+                                    <c:out value="${jobTitle}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -163,7 +169,7 @@
                                     <i class="fas fa-box-open fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    Destape de retrete
+                                    <c:out value="${packTitle}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -173,7 +179,7 @@
                                     <i class="fas fa-map-marker-alt fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    Recoleta
+                                    <c:out value="${jobZone}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -184,7 +190,7 @@
                                     <i class="fas fa-user fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    Rodrigo
+                                        <c:out value="${proName}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -194,8 +200,7 @@
                                     <i class="far fa-clock fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    Lunes - Jueves 9:00hs a 18:00hs
-                                    Viernes - Sábados 10:00hs a 15:00hs
+                                    <c:out value="${jobHours}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -206,7 +211,7 @@
                                 </div>
                                 <div class="info-right-col">
                                     <p class="price-tag">
-                                        $69/Hora
+                                        <c:out value="${packPrice}"/>
                                     </p>
                                 </div>
                             </div>

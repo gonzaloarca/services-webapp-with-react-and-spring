@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserServiceOriginal;
+import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.ContractForm;
 import ar.edu.itba.paw.webapp.validation.ImageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Controller
 public class HelloWorldController {
@@ -34,12 +39,28 @@ public class HelloWorldController {
     @RequestMapping(path = "/contract/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
                 @ModelAttribute("contractForm") final ContractForm form) {
+
         final ModelAndView mav = new ModelAndView("createContract");
-        //JobPackage jobPackage = TODO: buscar jobPackage por id
-        //JobPost jobPost = TODO: buscar con el postId en el package
-        //TODO: agregar datos a mav
+
+        // TODO: buscar usando los servicios
+        JobPackage jobPackage = new JobPackage(packId, "Arreglo de techo", "", 50.0, JobPackage.RateType.HOURLY);
+        User pro = new User("pro@gmail.com", "Gustavo", "", "45879621", true);
+        JobPost jobPost = new JobPost(pro, "Servicio de techista", "Lunes a Viernes: 9:00 a 18:00 & Sabados: 12:00 a 17:00",
+                JobPost.JobType.CARPENTRY, Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.COLEGIALES));
+
         mav.addObject("packId", packId);
         mav.addObject("postImage", "/resources/images/worker-placeholder.jpg");
+        //TODO: JobType a String
+        mav.addObject("jobType", "Techista");
+        mav.addObject("jobTitle", jobPost.getTitle());
+        mav.addObject("packTitle", jobPackage.getTitle());
+        //TODO: Zone[] a String
+        mav.addObject("jobZone", "Belgrano, Colegiales");
+        mav.addObject("proName", pro.getUsername());
+        mav.addObject("jobHours", jobPost.getAvailableHours());
+        //TODO: price +  RateType a String
+        mav.addObject("packPrice", "$" + jobPackage.getPrice() + "/Hora");
+
         return mav;
     }
 
