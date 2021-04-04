@@ -1,14 +1,36 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class JobPackage {
     private long id;
     private long postId;
     private String title;
     private String description;
-    private double price;
+    private Double price;
     private RateType rateType;
+    private boolean is_active;
 
     public JobPackage() {
+    }
+
+    public JobPackage(long postId, String title, String description, Double price, RateType rateType) {
+        this.postId = postId;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.rateType = rateType;
+        this.is_active = true;
+    }
+
+    public JobPackage(long id, long postId, String title, String description, Double price, RateType rateType, boolean is_active) {
+        this.id = id;
+        this.postId = postId;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.rateType = rateType;
+        this.is_active = is_active;
     }
 
     public long getId() {
@@ -43,11 +65,11 @@ public class JobPackage {
         this.description = description;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -57,6 +79,40 @@ public class JobPackage {
 
     public void setRateType(RateType rateType) {
         this.rateType = rateType;
+    }
+
+    public boolean is_active() {
+        return is_active;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
+    }
+
+    @Override
+    public String toString() {
+        return "JobPackage{" +
+                "id=" + id +
+                ", postId=" + postId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", rateType=" + rateType +
+                ", is_active=" + is_active +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JobPackage that = (JobPackage) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public enum RateType {

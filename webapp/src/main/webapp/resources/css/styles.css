@@ -202,6 +202,11 @@ p.job-card-detail {
     font-size: 18px;
 }
 
+/* Mensajes de error */
+.form-error {
+    color: red;
+}
+
 .form-control {
     border: transparent;
     background-color: #e8e8e8;
