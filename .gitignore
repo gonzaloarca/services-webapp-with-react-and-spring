@@ -23,6 +23,9 @@ dist/
 target/
 dist/
 
+# Gradle
+.gradle/
+
 # JetBrains IDE
 .idea/
 *.iml
