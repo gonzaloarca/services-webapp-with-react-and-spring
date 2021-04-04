@@ -95,12 +95,12 @@
                                 <div class="orange-circle">
                                     <p class="circle-text">3</p>
                                 </div>
-                                <div class="col-7 label-and-input">
+                                <div class="col-10 label-and-input">
                                     <form:label path="phone" class="form-text">
                                         Introduzca su número de teléfono*
                                     </form:label>
                                     <form:input type="text" class="form-control text-input" path="phone"
-                                           placeholder="Número de teléfono"/>
+                                           placeholder="Número de teléfono" style="width: 70%"/>
                                     <form:errors path="phone" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
@@ -126,8 +126,8 @@
                                     <p class="circle-text">5</p>
                                 </div>
                                 <div class="col-10 label-and-input">
-                                    <form:label path="image">Seleccione archivo para subir</form:label>
-                                    <input type="file" name="image" />
+                                    <form:input type="file" path="image"/>
+                                    <form:errors path="image" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
 

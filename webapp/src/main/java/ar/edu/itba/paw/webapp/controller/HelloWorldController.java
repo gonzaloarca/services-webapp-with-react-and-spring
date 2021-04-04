@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.UserServiceOriginal;
 import ar.edu.itba.paw.webapp.form.ContractForm;
+import ar.edu.itba.paw.webapp.validation.ImageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,9 @@ import javax.validation.Valid;
 public class HelloWorldController {
     @Autowired
     private UserServiceOriginal userService;
+
+    @Autowired
+    private ImageValidator imageValidator;
 
     @RequestMapping("/")
     public ModelAndView home() {
@@ -42,6 +46,10 @@ public class HelloWorldController {
     @RequestMapping(path = "/contract/package/{packId}", method = RequestMethod.POST)
     public ModelAndView submitContract(@PathVariable("packId") final long packId,
                 @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors){
+
+        //TODO encontrar si hay una mejor forma de validar la imagen:
+        imageValidator.validate(form.getImage(), errors);
+
         if(errors.hasErrors()){
             return createContract(packId, form);
         }
