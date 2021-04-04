@@ -36,6 +36,12 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping("/job/1")
+    public ModelAndView jobPostDetails() {
+        final ModelAndView mav = new ModelAndView("jobPostDetails");
+        return mav;
+    }
+
     @RequestMapping(path = "/contract/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
                 @ModelAttribute("contractForm") final ContractForm form) {
