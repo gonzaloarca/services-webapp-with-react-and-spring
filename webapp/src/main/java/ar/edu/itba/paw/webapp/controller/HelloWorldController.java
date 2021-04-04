@@ -27,6 +27,12 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping("/job/1")
+    public ModelAndView jobPostDetails() {
+        final ModelAndView mav = new ModelAndView("jobPostDetails");
+        return mav;
+    }
+
     @RequestMapping("/user/{userId}")
     public ModelAndView getUser(@PathVariable("userId") final long id) {
         final ModelAndView mav = new ModelAndView("index");
