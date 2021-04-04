@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface JobContractService {
 
-    JobContract create(long clientId, long packageId, String description);
+    JobContract create(long packageId, String description, String client_email, String client_username, String client_phone);
 
     Optional<JobContract> findById(long id);
 
