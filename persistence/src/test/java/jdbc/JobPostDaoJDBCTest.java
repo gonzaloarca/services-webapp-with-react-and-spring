@@ -118,4 +118,16 @@ public class JobPostDaoJDBCTest {
         Assert.assertEquals(JOB_POSTS_QUANTITY,
                 jobPosts.get().size());
     }
+
+    @Test
+    public void search(){
+        String title = "Electricista";
+        JobPost.Zone zone = JobPost.Zone.values()[1];
+        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.search(title,zone);
+
+        Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertFalse(jobPosts.get().isEmpty());
+        Assert.assertEquals(2,jobPosts.get().size());
+        System.out.println(jobPosts.get().toString());
+    }
 }
