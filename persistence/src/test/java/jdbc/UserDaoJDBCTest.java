@@ -50,7 +50,7 @@ public class UserDaoJDBCTest {
     public void testRegister() {
 
         User userTest = new User(
-                2,
+                3,
                 "manurodriguez@mail.com",
                 "Manuel Rodriguez",
                 "",

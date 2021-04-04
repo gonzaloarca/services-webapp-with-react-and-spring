@@ -83,6 +83,9 @@ public class JobContractDaoJDBCTest {
     );
 
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";
+
+    private static final int JOB_CONTRACTS_QUANTITY = 5;
+
     @Autowired
     private DataSource ds;
 
@@ -102,7 +105,6 @@ public class JobContractDaoJDBCTest {
 
     @Before
     public void setUp() {
-
         jdbcTemplate = new JdbcTemplate(ds);
         MockitoAnnotations.initMocks(this);
     }
@@ -145,7 +147,7 @@ public class JobContractDaoJDBCTest {
         Assert.assertEquals(JOB_PACKAGE.is_active(), jobContract.getJobPackage().is_active());
 
         Assert.assertNotNull(jobContract.getCreationDate());
-        Assert.assertEquals(JOB_CONTRACT.getId() + 1, jobContract.getId());
+        Assert.assertEquals(JOB_CONTRACT.getId() + JOB_CONTRACTS_QUANTITY, jobContract.getId());
         Assert.assertEquals(DESCRIPTION, jobContract.getDescription());
     }
 
@@ -155,7 +157,6 @@ public class JobContractDaoJDBCTest {
         Assert.assertTrue(jobContract.isPresent());
         Assert.assertEquals(JOB_CONTRACT.getId(), jobContract.get().getId());
     }
-
 
     @Test
     public void testFindByClientId() {
@@ -173,9 +174,7 @@ public class JobContractDaoJDBCTest {
 
         Assert.assertTrue(jobContracts.isPresent());
         Assert.assertFalse(jobContracts.get().isEmpty());
-        jobContracts.get().forEach(jobContract -> {
-            Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId());
-        });
+        jobContracts.get().forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
     }
 
     @Test
@@ -184,7 +183,7 @@ public class JobContractDaoJDBCTest {
 
         Assert.assertTrue(jobContracts.isPresent());
         Assert.assertFalse(jobContracts.get().isEmpty());
-        Assert.assertEquals(1, jobContracts.get().size());
+        Assert.assertEquals(2, jobContracts.get().size());
         Assert.assertEquals(JOB_PACKAGE.getId(), jobContracts.get().get(0).getJobPackage().getId());
     }
 
@@ -194,8 +193,9 @@ public class JobContractDaoJDBCTest {
 
         Assert.assertTrue(jobContracts.isPresent());
         Assert.assertFalse(jobContracts.get().isEmpty());
-        Assert.assertEquals(1, jobContracts.get().size());
-        Assert.assertEquals(JOB_POST.getId(), jobContracts.get().get(0).getJobPackage().getPostId());
+        Assert.assertEquals(3, jobContracts.get().size());  // dos son del package 1 y otro es del package 2
+        jobContracts.get().forEach(jobContract ->
+                Assert.assertEquals(JOB_POST.getId(), jobContract.getJobPackage().getPostId()));
     }
 
 }

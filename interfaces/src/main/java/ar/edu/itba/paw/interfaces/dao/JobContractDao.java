@@ -20,4 +20,5 @@ public interface JobContractDao {
     Optional<List<JobContract>> findByPostId(long id);
 
     Optional<List<JobContract>> findByPackageId(long id);
+
 }

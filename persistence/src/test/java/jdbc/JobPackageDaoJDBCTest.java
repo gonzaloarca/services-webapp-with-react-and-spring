@@ -69,7 +69,7 @@ public class JobPackageDaoJDBCTest {
             JOB_POST.getId(),
             "Trabajo Largo",
             "Arreglo De toda el sistema electrico",
-            null,
+            1000.0,
             JobPackage.RateType.values()[2],
             true
     )};
@@ -121,7 +121,7 @@ public class JobPackageDaoJDBCTest {
     public void testFindByPostId(){
         Optional<List<JobPackage>> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId());
         Assert.assertTrue(jobPackages.isPresent());
-        Assert.assertFalse(jobPackages.get().isEmpty());
+        Assert.assertEquals(jobPackages.get().size(), JOB_PACKAGES.length);
         jobPackages.get().forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.get().indexOf(jobPackage)],jobPackage));
     }
 }
