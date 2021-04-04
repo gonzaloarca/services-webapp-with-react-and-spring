@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class User {
     private long id;
     private String email;
@@ -7,8 +9,28 @@ public class User {
     private String userImage;
     private String phone;
     private boolean isProfessional;
+    private boolean isActive;
 
     public User() {
+    }
+
+    public User(String email, String username, String userImage, String phone, boolean isProfessional) {
+        this.email = email;
+        this.username = username;
+        this.userImage = userImage;
+        this.phone = phone;
+        this.isProfessional = isProfessional;
+        this.isActive = true;
+    }
+
+    public User(long id, String email, String username, String userImage, String phone, boolean isProfessional, boolean isActive) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+        this.userImage = userImage;
+        this.phone = phone;
+        this.isProfessional = isProfessional;
+        this.isActive = isActive;
     }
 
     public long getId() {
@@ -59,8 +81,37 @@ public class User {
         isProfessional = professional;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     @Override
     public String toString() {
-        return email;
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", userImage='" + userImage + '\'' +
+                ", phone='" + phone + '\'' +
+                ", isProfessional=" + isProfessional +
+                ", isActive=" + isActive +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
     }
 }
