@@ -32,7 +32,9 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Inicio</a></li>
-            <li class="breadcrumb-item active" aria-current="page">${jobPost.jobType}</li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <p class="capitalizeFirstLetter">${jobPost.jobType}</p>
+            </li>
         </ol>
     </nav>
     <div class="card mb-4 bg-white rounded">
@@ -127,7 +129,7 @@
                         </span>
                         <div class="custom-row zones">
                             <c:forEach items="${jobPost.zones}" var="zone">
-                                <p>${zone}</p>
+                                <p class="capitalizeFirstLetter">${zone}</p>
                             </c:forEach>
                         </div>
                     </div>
@@ -178,7 +180,7 @@
                                                         <p class="text-center">Precio</p>
                                                         <div class="chip">
                                                             <c:choose>
-<%--                                                                TODO: ARREGLAR PARA QUE USE EL TIPO DEL ENUM--%>
+                                                                <%--                                                                TODO: ARREGLAR PARA QUE USE EL TIPO DEL ENUM--%>
                                                                 <c:when test="${pack.rateType == 'HOURLY'}">
                                                                     <c:out value="$${pack.price}/hora"/>
                                                                 </c:when>
