@@ -6,6 +6,8 @@ import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.UserOriginal;
+import ar.edu.itba.paw.webapp.exceptions.JobCardsNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -30,7 +33,15 @@ public class HelloWorldController {
 
     @RequestMapping("/")
     public ModelAndView home() {
+        //TODO: REFACTOR??
         final ModelAndView mav = new ModelAndView("index");
+        List<JobPost> jobPosts = jobPostService.findAll().orElseThrow(JobCardsNotFoundException::new);
+        mav.addObject("jobCards", jobPosts);
+
+        List<JobPackage> jobPackages = new ArrayList<>();
+        jobPosts.forEach(jobPost -> jobPackages.add(jobPackageService.findByPostId(
+                jobPost.getId()).orElseThrow(JobPackageNotFoundException::new).get(0)));
+        mav.addObject("packages", jobPackages);
         return mav;
     }
 

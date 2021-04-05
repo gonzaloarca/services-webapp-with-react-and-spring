@@ -179,8 +179,8 @@
                                                     <div class="package-price">
                                                         <p class="text-center">Precio</p>
                                                         <div class="chip">
+                                                                <%--   TODO: ARREGLAR COMPARACION HARDCODEADA--%>
                                                             <c:choose>
-                                                                <%--                                                                TODO: ARREGLAR PARA QUE USE EL TIPO DEL ENUM--%>
                                                                 <c:when test="${pack.rateType == 'HOURLY'}">
                                                                     <c:out value="$${pack.price}/hora"/>
                                                                 </c:when>
