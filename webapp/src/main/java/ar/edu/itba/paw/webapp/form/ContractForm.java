@@ -13,7 +13,7 @@ public class ContractForm {
 
     @NotBlank
     @Size(min = 6, max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9]+")
+    @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String name;
 
     @NotBlank
