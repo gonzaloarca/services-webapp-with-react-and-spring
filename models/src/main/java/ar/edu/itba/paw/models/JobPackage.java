@@ -21,7 +21,7 @@ public class JobPackage {
         this.description = description;
         this.price = price;
         this.rateType = rateType;
-        this.isActive = isActive;
+        this.isActive = is_active;
     }
 
     public long getId() {
