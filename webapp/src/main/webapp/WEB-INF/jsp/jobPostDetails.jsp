@@ -31,7 +31,9 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Inicio</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Fontaneria</li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <p class="capitalizeFirstLetter"><c:out value="${jobPost.jobType}"/></p>
+            </li>
         </ol>
     </nav>
     <div class="card mb-4 bg-white rounded">
@@ -47,7 +49,7 @@
                          src="${pageContext.request.contextPath}/resources/images/banner1.jpg"
                          alt="Primer foto">
                     <%--                TODO: CAMBIAR EL ALT A i20n
-                        TODO: INCORPORAR FOTO DE TRABAJADOR, FOTO DEFAULT?? --%>
+                        TODO: INCORPORAR FOTOS DE SERVICIO, FOTO DEFAULT?? --%>
                 </div>
             </div>
             <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
@@ -70,10 +72,9 @@
                 <div class="card mb-4 bg-white rounded">
                     <div class="card-body">
                         <span class="card-title custom-row">
-                            <i class="fas fa-suitcase"></i>
+                            <i class="fas fa-briefcase"></i>
                             <p>
-                                <c:out value="Fontanería"/>
-    <%--                            TODO: CAMBIAR POR TITULO--%>
+                                <c:out value="${jobPost.title}"/>
                             </p>
                         </span>
 
@@ -104,18 +105,31 @@
                         <div class="summary custom-row">
                             <div class="summary-item">
                                 <img
+                                <%--                                        TODO: CAMBIAR A FOTO DE USUARIO--%>
                                         src="${pageContext.request.contextPath}/resources/images/banner1.jpg"
                                         alt="Primer foto">
-                                <p><c:out value="Sergio"/></p>
-                            </div>
-                            <div class="summary-item">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                <p><c:out value="Palermo"/></p>
+                                <p><c:out value="${jobPost.user.username}"/></p>
                             </div>
                             <div class="summary-item">
                                 <i class="fas fa-check"></i>
                                 <p>101 trabajos completados</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 bg-white rounded">
+                    <div class="card-body">
+                        <span class="card-title custom-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>
+                                Zonas de disponibilidad
+                            </p>
+                        </span>
+                        <div class="custom-row zones">
+                            <c:forEach items="${jobPost.zones}" var="zone">
+                                <p class="capitalizeFirstLetter"><c:out value="${zone}"/></p>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
@@ -130,10 +144,7 @@
                         </span>
                         <div class="available-hours">
                             <p>
-                                <c:out value="Lunes - Jueves 9:00hs a 18:00hs
-                            Viernes - Sabados 10:00hs a 15:00hs"/>
-                                <%--                            TODO: CAMBIAR POR HORARIOS REALES
-                                                                VERIFICAR FUNCIONAMIENTO DE ENTER --%>
+                                <c:out value="${jobPost.availableHours}"/>
                             </p>
                         </div>
                     </div>
@@ -150,25 +161,35 @@
                         </span>
 
                         <div class="accordion mx-5" id="accordionPackages">
-                            <%--                        TODO: CAMBIAR POR packages VERDADEROs --%>
-                            <c:forEach var="j" begin="1" end="5">
+                            <c:forEach items="${packages}" var="pack" varStatus="status">
                                 <div class="card mb-3">
-                                    <div class="card " id="heading${j}">
+                                    <div class="card " id="heading${status.index}">
 
                                         <button class="btn btn-block collapsed" type="button"
-                                                data-toggle="collapse" data-target="#collapse${j}"
+                                                data-toggle="collapse" data-target="#collapse${status.index}"
                                                 aria-expanded="false"
-                                                aria-controls="collapse${j}">
+                                                aria-controls="collapse${status.index}">
                                             <div class="custom-row package-info">
-                                                <i class="fas fa-chevron-down"></i>
+                                                <i class="fas fa-box-open"></i>
                                                 <p class="package-title">
-                                                    <c:out value="Instalacion de ${j} puertas"/>
+                                                    <c:out value="${pack.title}"/>
                                                 </p>
                                                 <div class="ml-auto custom-row">
                                                     <div class="package-price">
                                                         <p class="text-center">Precio</p>
                                                         <div class="chip">
-                                                            <c:out value="A acordar"/>
+                                                                <%--   TODO: ARREGLAR COMPARACION HARDCODEADA--%>
+                                                            <c:choose>
+                                                                <c:when test="${pack.rateType == 'HOURLY'}">
+                                                                    <c:out value="$${pack.price}/hora"/>
+                                                                </c:when>
+                                                                <c:when test="${pack.rateType == 'ONE_TIME'}">
+                                                                    <c:out value="$${pack.price}"/>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <c:out value="A acordar"/>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </div>
                                                     </div>
                                                     <div class="align-self-center ml-4 mr-4">
@@ -180,15 +201,13 @@
                                             </div>
                                         </button>
                                     </div>
-                                    <div id="collapse${j}" class="collapse package-desc" aria-labelledby="heading${j}"
+                                    <div id="collapse${status.index}" class="collapse package-desc"
+                                         aria-labelledby="heading${status.index}"
                                          data-parent="#accordionPackages">
                                         <div class="card-body">
                                             <p class="package-text">
-                                                Descripcion<br/>
-                                                Some placeholder content
-                                                Some placeholder content for this accordion panel. This panel is hidden
-                                                by
-                                                default.
+                                                Descripción<br/>
+                                                <c:out value="${pack.description}"/>
                                             </p>
                                         </div>
                                     </div>

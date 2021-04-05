@@ -206,3 +206,14 @@ p.job-card-detail {
 .form-error {
     color: red;
 }
+
+/*Para que palabras se muestren con solo la primer letra en mayuscula*/
+.capitalizeFirstLetter {
+    text-transform: lowercase;
+    margin: 0;
+}
+
+.capitalizeFirstLetter::first-letter {
+    text-transform: uppercase;
+}
+

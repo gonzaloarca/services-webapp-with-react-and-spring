@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
@@ -33,6 +34,7 @@ public class UserDaoJDBCTest {
             true
     );
 
+    @InjectMocks
     @Autowired
     UserDaoJDBC userDaoJDBC;
 

@@ -14,6 +14,7 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -21,6 +22,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.util.Properties;
 import java.nio.charset.StandardCharsets;
 
@@ -101,10 +106,21 @@ public class WebConfig {
 
         return mailSender;
     }
+
+    @Value("classpath:emailTemplate.html")
+    Resource emailTemplate;
+
     @Bean(name = "templateSimpleMessage")
     public SimpleMailMessage templateSimpleMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setText("<h1>%s</h1>\n");
+        String text="";
+        try{
+            Reader reader = new InputStreamReader(emailTemplate.getInputStream());
+            text = FileCopyUtils.copyToString(reader);
+        } catch (IOException e) {
+           throw new UncheckedIOException(e);
+        }
+        message.setText(text);
         return message;
     }
 

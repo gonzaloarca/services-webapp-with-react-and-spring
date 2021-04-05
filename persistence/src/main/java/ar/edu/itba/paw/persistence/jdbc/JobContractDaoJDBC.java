@@ -9,17 +9,12 @@ import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.*;
 
 @Repository
@@ -35,11 +30,11 @@ public class JobContractDaoJDBC implements JobContractDao {
     private JobPostDao jobPostDao;
 
     private final static RowMapper<JobContract> JOB_CONTRACT_ROW_MAPPER = (resultSet, in) -> new JobContract(
-            resultSet.getLong("id"),
+            resultSet.getLong("contract_id"),
             new User(
                     resultSet.getLong("client_id"),
                     resultSet.getString("client_email"),
-                    resultSet.getString("client_username"),
+                    resultSet.getString("client_name"),
                     "",
                     resultSet.getString("client_phone"),
                     resultSet.getBoolean("client_is_professional"),
@@ -48,10 +43,10 @@ public class JobContractDaoJDBC implements JobContractDao {
             new JobPackage(
                     resultSet.getLong("package_id"),
                     resultSet.getLong("post_id"),
-                    resultSet.getString("title"),
+                    resultSet.getString("package_title"),
                     resultSet.getString("package_description"),
-                    resultSet.getDouble("price"),
-                    JobPackage.RateType.values()[resultSet.getInt("rate_type")],
+                    resultSet.getDouble("package_price"),
+                    JobPackage.RateType.values()[resultSet.getInt("package_rate_type")],
                     resultSet.getBoolean("package_is_active")
             ), new User(
             resultSet.getLong("professional_id"),
@@ -63,7 +58,7 @@ public class JobContractDaoJDBC implements JobContractDao {
             resultSet.getBoolean("professional_is_active")
     ),
             resultSet.getDate("creation_date"),
-            resultSet.getString("description"),
+            resultSet.getString("contract_description"),
             ""
     );
 
@@ -73,7 +68,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Autowired
     public JobContractDaoJDBC(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("contract").usingGeneratedKeyColumns("id");
+        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("contract").usingGeneratedKeyColumns("contract_id");
 
     }
 
@@ -83,7 +78,7 @@ public class JobContractDaoJDBC implements JobContractDao {
         Number key = jdbcInsert.executeAndReturnKey(new HashMap<String, Object>() {{
             put("client_id", clientId);
             put("package_id", packageId);
-            put("description", description);
+            put("contract_description", description);
             put("creation_date", new java.sql.Date(creationDate.getTime()));
         }});
 
@@ -105,18 +100,25 @@ public class JobContractDaoJDBC implements JobContractDao {
 
 
         return jdbcTemplate.query(
-                "SELECT * FROM contract" +
-                        "    NATURAL JOIN" +
-                        "    (SELECT id AS package_id, post_id, title, description AS package_description, price, rate_type,is_active AS package_is_active FROM job_package) AS packages" +
-                        "    NATURAL JOIN" +
-                        "    (SELECT id AS post_id,user_id AS professional_id FROM job_post) AS posts" +
-                        "    NATURAL JOIN (SELECT id AS client_id, username AS client_username, email AS client_email," +
-                        "                         phone AS client_phone, is_professional AS client_is_professional, is_active AS client_is_active FROM users)" +
-                        "        AS clients" +
-                        "    NATURAL JOIN (SELECT id AS professional_id, username AS professional_username, email AS professional_email," +
-                        "                         phone AS professional_phone, is_professional AS professional_is_professional, is_active AS professional_is_active FROM users)" +
-                        "        AS professionals " +
-                        "WHERE contract.id = ?"
+                "SELECT * " +
+                        "FROM contract " +
+                        "NATURAL JOIN job_package " +
+                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
+                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
+                        "user_name            AS client_name, " +
+                        "user_email           AS client_email, " +
+                        "user_phone           AS client_phone, " +
+                        "user_is_professional AS client_is_professional, " +
+                        "user_is_active       AS client_is_active " +
+                        "FROM users) AS clients " +
+                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
+                        "user_name            AS professional_username, " +
+                        "user_email           AS professional_email, " +
+                        "user_phone           AS professional_phone, " +
+                        "user_is_professional AS professional_is_professional, " +
+                        "user_is_active       AS professional_is_active " +
+                        "FROM users) AS professionals " +
+                        "WHERE contract_id = ?"
                 , new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
 
 
@@ -126,17 +128,24 @@ public class JobContractDaoJDBC implements JobContractDao {
     public Optional<List<JobContract>> findByClientId(long id) {
         return Optional.of(
                 jdbcTemplate.query(
-                        "SELECT * FROM contract" +
-                                "    NATURAL JOIN" +
-                                "    (SELECT id AS package_id, post_id, title, description AS package_description, price, rate_type,is_active AS package_is_active FROM job_package) AS packages" +
-                                "    NATURAL JOIN" +
-                                "    (SELECT id AS post_id,user_id AS professional_id FROM job_post) AS posts" +
-                                "    NATURAL JOIN (SELECT id AS client_id, username AS client_username, email AS client_email," +
-                                "                         phone AS client_phone, is_professional AS client_is_professional, is_active AS client_is_active FROM users)" +
-                                "        AS clients" +
-                                "    NATURAL JOIN (SELECT id AS professional_id, username AS professional_username, email AS professional_email," +
-                                "                         phone AS professional_phone, is_professional AS professional_is_professional, is_active AS professional_is_active FROM users)" +
-                                "        AS professionals " +
+                        "SELECT * " +
+                                "FROM contract " +
+                                "NATURAL JOIN job_package " +
+                                "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
+                                "NATURAL JOIN (SELECT user_id              AS client_id, " +
+                                "user_name            AS client_name, " +
+                                "user_email           AS client_email, " +
+                                "user_phone           AS client_phone, " +
+                                "user_is_professional AS client_is_professional, " +
+                                "user_is_active       AS client_is_active " +
+                                "FROM users) AS clients " +
+                                "NATURAL JOIN (SELECT user_id              AS professional_id, " +
+                                "user_name            AS professional_username, " +
+                                "user_email           AS professional_email, " +
+                                "user_phone           AS professional_phone, " +
+                                "user_is_professional AS professional_is_professional, " +
+                                "user_is_active       AS professional_is_active " +
+                                "FROM users) AS professionals " +
                                 "WHERE client_id = ?"
                         , new Object[]{id},
                         JOB_CONTRACT_ROW_MAPPER));
@@ -146,17 +155,24 @@ public class JobContractDaoJDBC implements JobContractDao {
     public Optional<List<JobContract>> findByProId(long id) {
         //TODO
         return Optional.of(jdbcTemplate.query(
-                "SELECT * FROM contract" +
-                        "    NATURAL JOIN" +
-                        "    (SELECT id AS package_id, post_id, title, description AS package_description, price, rate_type,is_active AS package_is_active FROM job_package) AS packages" +
-                        "    NATURAL JOIN" +
-                        "    (SELECT id AS post_id,user_id AS professional_id FROM job_post) AS posts" +
-                        "    NATURAL JOIN (SELECT id AS client_id, username AS client_username, email AS client_email," +
-                        "                         phone AS client_phone, is_professional AS client_is_professional, is_active AS client_is_active FROM users)" +
-                        "        AS clients" +
-                        "    NATURAL JOIN (SELECT id AS professional_id, username AS professional_username, email AS professional_email," +
-                        "                         phone AS professional_phone, is_professional AS professional_is_professional, is_active AS professional_is_active FROM users)" +
-                        "        AS professionals " +
+                "SELECT * " +
+                        "FROM contract " +
+                        "NATURAL JOIN job_package " +
+                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
+                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
+                        "user_name            AS client_name, " +
+                        "user_email           AS client_email, " +
+                        "user_phone           AS client_phone, " +
+                        "user_is_professional AS client_is_professional, " +
+                        "user_is_active       AS client_is_active " +
+                        "FROM users) AS clients " +
+                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
+                        "user_name            AS professional_username, " +
+                        "user_email           AS professional_email, " +
+                        "user_phone           AS professional_phone, " +
+                        "user_is_professional AS professional_is_professional, " +
+                        "user_is_active       AS professional_is_active " +
+                        "FROM users) AS professionals " +
                         "WHERE professional_id = ?",
                 new Object[]{id}, JOB_CONTRACT_ROW_MAPPER));
     }
@@ -165,17 +181,24 @@ public class JobContractDaoJDBC implements JobContractDao {
     public Optional<List<JobContract>> findByPostId(long id) {
 
         return Optional.of(jdbcTemplate.query(
-                "SELECT * FROM contract" +
-                        "    NATURAL JOIN" +
-                        "    (SELECT id AS package_id, post_id, title, description AS package_description, price, rate_type,is_active AS package_is_active FROM job_package) AS packages" +
-                        "    NATURAL JOIN" +
-                        "    (SELECT id AS post_id,user_id AS professional_id FROM job_post) AS posts" +
-                        "    NATURAL JOIN (SELECT id AS client_id, username AS client_username, email AS client_email," +
-                        "                         phone AS client_phone, is_professional AS client_is_professional, is_active AS client_is_active FROM users)" +
-                        "        AS clients" +
-                        "    NATURAL JOIN (SELECT id AS professional_id, username AS professional_username, email AS professional_email," +
-                        "                         phone AS professional_phone, is_professional AS professional_is_professional, is_active AS professional_is_active FROM users)" +
-                        "        AS professionals " +
+                "SELECT * " +
+                        "FROM contract " +
+                        "NATURAL JOIN job_package " +
+                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
+                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
+                        "user_name            AS client_name, " +
+                        "user_email           AS client_email, " +
+                        "user_phone           AS client_phone, " +
+                        "user_is_professional AS client_is_professional, " +
+                        "user_is_active       AS client_is_active " +
+                        "FROM users) AS clients " +
+                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
+                        "user_name            AS professional_username, " +
+                        "user_email           AS professional_email, " +
+                        "user_phone           AS professional_phone, " +
+                        "user_is_professional AS professional_is_professional, " +
+                        "user_is_active       AS professional_is_active " +
+                        "FROM users) AS professionals " +
                         "WHERE post_id = ?"
                 , new Object[]{id},
                 JOB_CONTRACT_ROW_MAPPER));
@@ -185,17 +208,24 @@ public class JobContractDaoJDBC implements JobContractDao {
     public Optional<List<JobContract>> findByPackageId(long id) {
 
         return Optional.of(jdbcTemplate.query(
-                "SELECT * FROM contract" +
-                        "    NATURAL JOIN" +
-                        "    (SELECT id AS package_id, post_id, title, description AS package_description, price, rate_type,is_active AS package_is_active FROM job_package) AS packages" +
-                        "    NATURAL JOIN" +
-                        "    (SELECT id AS post_id,user_id AS professional_id FROM job_post) AS posts" +
-                        "    NATURAL JOIN (SELECT id AS client_id, username AS client_username, email AS client_email," +
-                        "                         phone AS client_phone, is_professional AS client_is_professional, is_active AS client_is_active FROM users)" +
-                        "        AS clients" +
-                        "    NATURAL JOIN (SELECT id AS professional_id, username AS professional_username, email AS professional_email," +
-                        "                         phone AS professional_phone, is_professional AS professional_is_professional, is_active AS professional_is_active FROM users)" +
-                        "        AS professionals " +
+                "SELECT * " +
+                        "FROM contract " +
+                        "NATURAL JOIN job_package " +
+                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
+                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
+                        "user_name            AS client_name, " +
+                        "user_email           AS client_email, " +
+                        "user_phone           AS client_phone, " +
+                        "user_is_professional AS client_is_professional, " +
+                        "user_is_active       AS client_is_active " +
+                        "FROM users) AS clients " +
+                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
+                        "user_name            AS professional_username, " +
+                        "user_email           AS professional_email, " +
+                        "user_phone           AS professional_phone, " +
+                        "user_is_professional AS professional_is_professional, " +
+                        "user_is_active       AS professional_is_active " +
+                        "FROM users) AS professionals " +
                         "WHERE package_id = ?"
                 , new Object[]{id},
                 JOB_CONTRACT_ROW_MAPPER));
