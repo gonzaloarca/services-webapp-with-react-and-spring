@@ -132,7 +132,7 @@ public class JobPost {
         BELGRANO,
         PALERMO,
         RETIRO,
-        NUNIEZ,
+        NUÑEZ,
         COLEGIALES;
     }
 }

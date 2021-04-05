@@ -22,17 +22,9 @@
     object-fit: cover;
 }
 
-.capitalizeFirstLetter {
-    text-transform: lowercase;
-    margin: 0;
-}
-
-.capitalizeFirstLetter::first-letter {
-    text-transform: uppercase;
-}
-
 .custom-row {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .center {
@@ -60,7 +52,7 @@
     font-size: 22px;
 }
 
-.row .rating {
+.custom-row .rating {
     margin-left: 3vw;
 }
 
