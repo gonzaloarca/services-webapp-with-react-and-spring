@@ -17,13 +17,13 @@ import java.util.Optional;
 public class JobPackageDaoJDBC implements JobPackageDao {
 
     private final static RowMapper<JobPackage> JOB_PACKAGE_ROW_MAPPER = (resultSet, rowNum) -> new JobPackage(
-            resultSet.getLong("id"),
+            resultSet.getLong("package_id"),
             resultSet.getLong("post_id"),
-            resultSet.getString("title"),
-            resultSet.getString("description"),
-            resultSet.getDouble("price"),
-            JobPackage.RateType.values()[resultSet.getInt("rate_type")],
-            resultSet.getBoolean("is_active"));
+            resultSet.getString("package_title"),
+            resultSet.getString("package_description"),
+            resultSet.getDouble("package_price"),
+            JobPackage.RateType.values()[resultSet.getInt("package_rate_type")],
+            resultSet.getBoolean("package_is_active"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -31,18 +31,18 @@ public class JobPackageDaoJDBC implements JobPackageDao {
     @Autowired
     public JobPackageDaoJDBC(DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("job_package").usingGeneratedKeyColumns("id");
+        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("job_package").usingGeneratedKeyColumns("package_id");
     }
 
     @Override
     public JobPackage create(long postId, String title, String description, double price, JobPackage.RateType rateType) {
         Number key = jdbcInsert.executeAndReturnKey(new HashMap<String,Object>(){{
             put("post_id",postId);
-            put("title",title);
-            put("description",description);
-            put("price",price);
-            put("rate_type",rateType.ordinal());
-            put("is_active",true);
+            put("package_title",title);
+            put("package_description",description);
+            put("package_price",price);
+            put("package_rate_type",rateType.ordinal());
+            put("package_is_active",true);
         }});
 
         JobPackage jobPackage = new JobPackage();
@@ -57,7 +57,7 @@ public class JobPackageDaoJDBC implements JobPackageDao {
 
     @Override
     public Optional<JobPackage> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM job_package WHERE id = ?",new Object[]{id},JOB_PACKAGE_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM job_package WHERE package_id = ?",new Object[]{id},JOB_PACKAGE_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
