@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="ar.edu.itba.paw.models.JobPackage.RateType" %>
 <html>
 <head>
     <title><c:out value="Fontanería"/></title>
@@ -33,7 +32,7 @@
         <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Inicio</a></li>
             <li class="breadcrumb-item active" aria-current="page">
-                <p class="capitalizeFirstLetter">${jobPost.jobType}</p>
+                <p class="capitalizeFirstLetter"><c:out value="${jobPost.jobType}"/></p>
             </li>
         </ol>
     </nav>
@@ -129,7 +128,7 @@
                         </span>
                         <div class="custom-row zones">
                             <c:forEach items="${jobPost.zones}" var="zone">
-                                <p class="capitalizeFirstLetter">${zone}</p>
+                                <p class="capitalizeFirstLetter"><c:out value="${zone}"/></p>
                             </c:forEach>
                         </div>
                     </div>
@@ -162,14 +161,14 @@
                         </span>
 
                         <div class="accordion mx-5" id="accordionPackages">
-                            <c:forEach items="${packages}" var="pack">
+                            <c:forEach items="${packages}" var="pack" varStatus="status">
                                 <div class="card mb-3">
-                                    <div class="card " id="heading${pack.id}">
+                                    <div class="card " id="heading${status.index}">
 
                                         <button class="btn btn-block collapsed" type="button"
-                                                data-toggle="collapse" data-target="#collapse${pack.id}"
+                                                data-toggle="collapse" data-target="#collapse${status.index}"
                                                 aria-expanded="false"
-                                                aria-controls="collapse${pack.id}">
+                                                aria-controls="collapse${status.index}">
                                             <div class="custom-row package-info">
                                                 <i class="fas fa-box-open"></i>
                                                 <p class="package-title">
@@ -202,8 +201,8 @@
                                             </div>
                                         </button>
                                     </div>
-                                    <div id="collapse${pack.id}" class="collapse package-desc"
-                                         aria-labelledby="heading${pack.id}"
+                                    <div id="collapse${status.index}" class="collapse package-desc"
+                                         aria-labelledby="heading${status.index}"
                                          data-parent="#accordionPackages">
                                         <div class="card-body">
                                             <p class="package-text">

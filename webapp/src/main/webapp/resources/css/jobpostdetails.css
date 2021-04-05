@@ -24,6 +24,7 @@
 
 .custom-row {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .center {
@@ -51,7 +52,7 @@
     font-size: 22px;
 }
 
-.row .rating {
+.custom-row .rating {
     margin-left: 3vw;
 }
 

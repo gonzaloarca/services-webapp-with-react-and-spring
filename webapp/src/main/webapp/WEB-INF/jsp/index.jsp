@@ -1,6 +1,6 @@
+<%@ page isErrorPage="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="ar.edu.itba.paw.models.JobPackage.RateType" %>
 <html>
 <head>
     <title>Inicio</title>
@@ -60,53 +60,63 @@
     <h3>Servicios destacados</h3>
     <hr class="hr1"/>
     <div class="job-display-container">
-        <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
-            <div class="card job-card" style="width: 18rem;">
-                    <%-- TODO: Poner alt correcto e imagen de usuario--%>
-                <img class="card-img-top job-card-img"
-                     src='<c:url value="${pageContext.request.contextPath}/resources/images/service-default.jpg" />'
-                     alt="">
-                <div class="card-body">
-                    <h5 class="card-title job-card-title">${jobCard.title}</h5>
-                    <h6 class="card-text job-card-type capitalizeFirstLetter">${jobCard.jobType}</h6>
-                    <div class="job-card-price-container">
-                        <p class="job-card-price">
-                                <%--   TODO: ARREGLAR COMPARACION HARDCODEADA--%>
-                            <c:choose>
-                                <c:when test="${packages[status.index].rateType == 'HOURLY'}">
-                                    <c:out value="$${packages[status.index].price}/hora"/>
-                                </c:when>
-                                <c:when test="${packages[status.index].rateType == 'ONE_TIME'}">
-                                    <c:out value="$${packages[status.index].price}"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:out value="A acordar"/>
-                                </c:otherwise>
-                            </c:choose>
-                        </p>
+        <c:if test="${jobCards.size() > 0}">
+            <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
+                <div class="card job-card" style="width: 18rem;">
+                        <%-- TODO: Poner alt correcto e imagen de usuario--%>
+                    <img class="card-img-top job-card-img"
+                         src='<c:url value="${pageContext.request.contextPath}/resources/images/service-default.jpg" />'
+                         alt="">
+                    <div class="card-body">
+                        <h5 class="card-title job-card-title"><c:out value="${jobCard.key.title}"/></h5>
+                        <h6 class="card-text job-card-type capitalizeFirstLetter"><c:out
+                                value="${jobCard.key.jobType}"/></h6>
+                        <div class="job-card-price-container">
+                            <p class="job-card-price">
+                                    <%--   TODO: ARREGLAR COMPARACION HARDCODEADA--%>
+                                <c:choose>
+                                    <c:when test="${jobCard.value.rateType == 'HOURLY'}">
+                                        <c:out value="$${jobCard.value.price}/hora"/>
+                                    </c:when>
+                                    <c:when test="${jobCard.value.rateType == 'ONE_TIME'}">
+                                        <c:out value="$${jobCard.value.price}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:out value="A acordar"/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item job-card-detail">
+                            <i class="fas fa-map-marker-alt job-card-detail" style="font-size: 25px; color: gray"></i>
+                            <c:set var="zonesSize" value="${jobCard.key.zones.size()}"/>
+                            <p class="job-card-detail capitalizeFirstLetter">${jobCard.key.zones[0]}
+                                <c:if test="${zonesSize > 1}">
+                                    y ${zonesSize -1} + más
+                                </c:if>
+                            </p>
+                        </li>
+                        <li class="list-group-item job-card-detail">
+                            <i class="fas fa-check job-card-detail" style="font-size: 25px; color: gray"></i>
+                            <p class="job-card-detail">101 completados</p>
+                        </li>
+
+                    </ul>
+                    <div class="card-body" style="display: flex; justify-content: center; align-items: center">
+                        <a href="/job/${jobCard.key.id}" class="btn btn-outline-primary text-uppercase">Ver detalles</a>
                     </div>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item job-card-detail">
-                        <i class="fas fa-map-marker-alt job-card-detail" style="font-size: 25px; color: gray"></i>
-                        <c:set var="zonesSize" value="${jobCard.zones.size()}"/>
-                        <p class="job-card-detail capitalizeFirstLetter">${jobCard.zones[0]}
-                            <c:if test="${zonesSize > 1}">
-                                y ${zonesSize -1} + más
-                            </c:if>
-                        </p>
-                    </li>
-                    <li class="list-group-item job-card-detail">
-                        <i class="fas fa-check job-card-detail" style="font-size: 25px; color: gray"></i>
-                        <p class="job-card-detail">101 completados</p>
-                    </li>
-
-                </ul>
-                <div class="card-body" style="display: flex; justify-content: center; align-items: center">
-                    <a href="/job/${jobCard.id}" class="btn btn-outline-primary text-uppercase">Ver detalles</a>
-                </div>
+            </c:forEach>
+        </c:if>
+        <c:if test="${jobCards.size() == 0}">
+            <div style="text-align: center; width: 100%;">
+                <i class="fas fa-cogs" style="font-size: 20vw;"></i>
+                <p style="font-size: 32px">No hay servicios disponibles en este momento</p>
+                <p style="font-size: 22px">Disculpas por las molestias</p>
             </div>
-        </c:forEach>
+        </c:if>
     </div>
 </div>
 </body>
