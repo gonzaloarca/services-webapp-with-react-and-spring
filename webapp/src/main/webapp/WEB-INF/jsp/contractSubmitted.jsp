@@ -7,6 +7,7 @@
         <spring:message code="contract.success.page.title"/>
     </title>
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/contractSubmitted.css" rel="stylesheet"/>
 
     <!-- Bootstrap 4.5.2 CSS minified -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -30,6 +31,9 @@
             <h1 class="title">
                 <spring:message code="contract.success.message"/>
             </h1>
+            <p class="text">
+                <spring:message code="contract.success.text"/>
+            </p>
             <a class="btn btn-primary" href="${pageContext.request.contextPath}/" role="button" type="submit">
                 <spring:message code="button.return"/>
             </a>
@@ -37,32 +41,3 @@
     </div>
 </body>
 </html>
-
-<style>
-.page {
-    display: flex;
-    height: 80%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.message {
-    margin: auto;
-    padding: 50px;
-    background-color: white;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-    text-align: center;
-}
-
-.title {
-    font-weight: bold;
-    margin-bottom: 3vh;
-    margin-top: 3vh;
-}
-
-.image {
-    width: 20vh;
-    height: 20vh;
-}
-</style>
