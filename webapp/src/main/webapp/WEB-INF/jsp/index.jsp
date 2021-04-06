@@ -33,7 +33,27 @@
 <%@ include file="customNavBar.jsp" %>
 <div class="home-banner-container">
     <form class="home-search-form">
-        <input type="search" placeholder="Buscar un servicio..." class="home-search-bar home-search-bar-row">
+        <div class="search-instructions">
+            <div class="search-instruction-step">
+                <div class="blue-circle">
+                    <p class="circle-text">1</p>
+                </div>
+                <p class="search-instructions-text">Elija su ubicación</p>
+            </div>
+            <div class="search-instruction-step">
+                <div class="blue-circle">
+                    <p class="circle-text">2</p>
+                </div>
+                <p class="search-instructions-text">Introduzca el servicio que necesita</p>
+            </div>
+            <div class="search-instruction-step">
+                <div class="blue-circle">
+                    <p class="circle-text">3</p>
+                </div>
+                <p class="search-instructions-text">¡Buscar!</p>
+            </div>
+        </div>
+
         <div class="dropdown home-search-location">
             <button class="btn btn-light btn-block rounded-pill dropdown-toggle home-search-bar-row"
                     type="button"
@@ -47,6 +67,8 @@
                 <a class="dropdown-item" href="#">Something else here</a>
             </div>
         </div>
+        <input type="search" placeholder="Buscar un servicio..." class="home-search-bar home-search-bar-row">
+
         <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
             <i class="fas fa-search"></i>
         </button>
@@ -99,10 +121,11 @@
             </c:forEach>
         </c:if>
         <c:if test="${jobCards.size() == 0}">
-            <div style="text-align: center; width: 100%;">
-                <i class="fas fa-cogs" style="font-size: 20vw;"></i>
-                <p style="font-size: 32px">No hay servicios disponibles en este momento</p>
-                <p style="font-size: 22px">Disculpas por las molestias</p>
+            <div style="text-align: center; width: 100%; margin: 50px 0">
+                <i class="fas fa-cogs mb-4" style="font-size: 10vw;"></i>
+                <p style="font-size: 1.5rem; font-weight: bold; margin: 0">No hay servicios disponibles en este
+                    momento</p>
+                <p style="font-size: 1.3rem">Disculpas por las molestias</p>
             </div>
         </c:if>
     </div>

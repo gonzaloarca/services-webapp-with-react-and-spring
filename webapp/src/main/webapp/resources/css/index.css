@@ -19,11 +19,11 @@
     align-items: center;
     margin: 0;
     padding: 0;
-    height: 11vh;
-    width: 50vw;
-    background-color: rgba(255, 255, 255, 0.2);
+    height: 14vh;
+    width: 60vw;
+    background-color: rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(38px);
-    border-radius: 50px;
+    border-radius: 70px;
 }
 
 .home-search-bar-row {
@@ -34,7 +34,7 @@
     border: transparent;
     border-radius: 40px;
     width: 40%;
-    padding: 1.5% 2%;
+    padding: 1% 2%;
     font-size: 120%;
     flex-basis: 50%;
     /*margin: 0 2% 0 5%;*/
@@ -52,5 +52,22 @@
 }
 
 .btn-block {
-    padding: 5% 0;
+    padding: 4% 0;
+}
+
+.search-instructions {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.search-instruction-step {
+    display: flex;
+    align-items: center;
+}
+
+.search-instructions-text {
+    margin: 0 8px;
+    font-size: 1.05rem;
+    font-weight: bold;
 }
