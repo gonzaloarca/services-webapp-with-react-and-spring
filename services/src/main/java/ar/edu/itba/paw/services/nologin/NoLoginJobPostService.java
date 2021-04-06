@@ -43,7 +43,6 @@ public class NoLoginJobPostService implements JobPostService {
             //TODO: LANZAR EXCEPCION APROPIADA
             throw new RuntimeException();
         return jobPostDao.create(user.getId(), title, availableHours, jobType, zones);
-
     }
 
     @Override
@@ -72,18 +71,19 @@ public class NoLoginJobPostService implements JobPostService {
     }
 
     @Override
-    public Map<JobPost, JobPackage> findAllWithCheapierPackage() {
-        Map<JobPost, JobPackage> answer = new HashMap<>();
+    public Map<JobPost, String> findAllWithCheapierPackage() {
+        Map<JobPost, String> answer = new HashMap<>();
         Optional<List<JobPost>> jobPosts = findAll();
-
         if (!jobPosts.isPresent())
             return answer;
 
         jobPosts.get().forEach(jobPost -> {
             Optional<List<JobPackage>> aux = jobPackageService.findByPostId(jobPost.getId());
             //TODO: SI NO ESTA PRESENTE ARROJAR EXCEPCION?
-            aux.ifPresent(jobPackages -> answer.put(jobPost,
-                    jobPackages.stream().min(Comparator.comparingDouble(JobPackage::getPrice)).get()));
+            aux.ifPresent(jobPackages -> {
+                JobPackage jobPackage = jobPackages.stream().min(Comparator.comparingDouble(JobPackage::getPrice)).get();
+                answer.put(jobPost, jobPackageService.getPriceFormat(jobPackage.getPrice(), jobPackage.getRateType()));
+            });
         });
 
         return answer;

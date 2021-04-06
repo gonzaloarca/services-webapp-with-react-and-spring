@@ -1,4 +1,3 @@
-<%@ page isErrorPage="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -69,22 +68,11 @@
                          alt="">
                     <div class="card-body">
                         <h5 class="card-title job-card-title"><c:out value="${jobCard.key.title}"/></h5>
-                        <h6 class="card-text job-card-type capitalizeFirstLetter"><c:out
+                        <h6 class="card-text job-card-type capitalize-first-letter"><c:out
                                 value="${jobCard.key.jobType}"/></h6>
                         <div class="job-card-price-container">
                             <p class="job-card-price">
-                                    <%--   TODO: ARREGLAR COMPARACION HARDCODEADA--%>
-                                <c:choose>
-                                    <c:when test="${jobCard.value.rateType == 'HOURLY'}">
-                                        <c:out value="$${jobCard.value.price}/hora"/>
-                                    </c:when>
-                                    <c:when test="${jobCard.value.rateType == 'ONE_TIME'}">
-                                        <c:out value="$${jobCard.value.price}"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:out value="A acordar"/>
-                                    </c:otherwise>
-                                </c:choose>
+                                <c:out value="${jobCard.value}"/>
                             </p>
                         </div>
                     </div>
@@ -92,9 +80,9 @@
                         <li class="list-group-item job-card-detail">
                             <i class="fas fa-map-marker-alt job-card-detail" style="font-size: 25px; color: gray"></i>
                             <c:set var="zonesSize" value="${jobCard.key.zones.size()}"/>
-                            <p class="job-card-detail capitalizeFirstLetter">${jobCard.key.zones[0]}
+                            <p class="job-card-detail capitalize-first-letter">${jobCard.key.zones[0]}
                                 <c:if test="${zonesSize > 1}">
-                                    y ${zonesSize -1} + más
+                                    y ${zonesSize -1} más
                                 </c:if>
                             </p>
                         </li>

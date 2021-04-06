@@ -32,7 +32,7 @@
         <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Inicio</a></li>
             <li class="breadcrumb-item active" aria-current="page">
-                <p class="capitalizeFirstLetter"><c:out value="${jobPost.jobType}"/></p>
+                <p class="capitalize-first-letter"><c:out value="${jobPost.jobType}"/></p>
             </li>
         </ol>
     </nav>
@@ -128,7 +128,7 @@
                         </span>
                         <div class="custom-row zones">
                             <c:forEach items="${jobPost.zones}" var="zone">
-                                <p class="capitalizeFirstLetter"><c:out value="${zone}"/></p>
+                                <p class="capitalize-first-letter"><c:out value="${zone}"/></p>
                             </c:forEach>
                         </div>
                     </div>
@@ -172,24 +172,13 @@
                                             <div class="custom-row package-info">
                                                 <i class="fas fa-box-open"></i>
                                                 <p class="package-title">
-                                                    <c:out value="${pack.title}"/>
+                                                    <c:out value="${pack.key.title}"/>
                                                 </p>
                                                 <div class="ml-auto custom-row">
                                                     <div class="package-price">
                                                         <p class="text-center">Precio</p>
                                                         <div class="chip">
-                                                                <%--   TODO: ARREGLAR COMPARACION HARDCODEADA--%>
-                                                            <c:choose>
-                                                                <c:when test="${pack.rateType == 'HOURLY'}">
-                                                                    <c:out value="$${pack.price}/hora"/>
-                                                                </c:when>
-                                                                <c:when test="${pack.rateType == 'ONE_TIME'}">
-                                                                    <c:out value="$${pack.price}"/>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <c:out value="A acordar"/>
-                                                                </c:otherwise>
-                                                            </c:choose>
+                                                            <c:out value="${pack.value}"/>
                                                         </div>
                                                     </div>
                                                     <div class="align-self-center ml-4 mr-4">
@@ -208,7 +197,7 @@
                                         <div class="card-body">
                                             <p class="package-text">
                                                 Descripción<br/>
-                                                <c:out value="${pack.description}"/>
+                                                <c:out value="${pack.key.description}"/>
                                             </p>
                                         </div>
                                     </div>

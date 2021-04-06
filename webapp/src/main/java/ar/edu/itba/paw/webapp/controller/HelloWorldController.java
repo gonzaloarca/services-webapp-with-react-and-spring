@@ -25,7 +25,7 @@ public class HelloWorldController {
     @RequestMapping("/")
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("index");
-        Map<JobPost, JobPackage> jobCards = jobPostService.findAllWithCheapierPackage();
+        Map<JobPost, String> jobCards = jobPostService.findAllWithCheapierPackage();
         mav.addObject("jobCards", jobCards);
         return mav;
     }
@@ -40,7 +40,7 @@ public class HelloWorldController {
     public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
         mav.addObject("jobPost", jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new));
-        mav.addObject("packages", jobPackageService.findByPostId(id).orElseThrow(JobPackageNotFoundException::new));
+        mav.addObject("packages", jobPackageService.findByPostIdWithPrice(id));
         return mav;
     }
 
