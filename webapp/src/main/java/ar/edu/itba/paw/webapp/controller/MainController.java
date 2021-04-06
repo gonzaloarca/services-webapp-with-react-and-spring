@@ -2,9 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.webapp.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,8 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
 
+//TODO: ver de separar en Controllers más especificos
 @Controller
-public class HelloWorldController {
+public class MainController {
 
     @Autowired
     private JobPackageService jobPackageService;
@@ -43,20 +42,5 @@ public class HelloWorldController {
         mav.addObject("packages", jobPackageService.findByPostIdWithPrice(id));
         return mav;
     }
-
-//    @RequestMapping("/user/{userId}")
-//    public ModelAndView getUser(@PathVariable("userId") final long id) {
-//        final ModelAndView mav = new ModelAndView("index");
-//        UserOriginal aux = userService.findById(id).orElseThrow(UserNotFoundException::new);
-//        mav.addObject("greeting", aux.getName());
-//        mav.addObject("password", aux.getPassword());
-//        return mav;
-//    }
-//
-//    @RequestMapping(path = {"/create"})//, method = RequestMethod.POST)
-//    public ModelAndView registerUser(@RequestParam("username") String username, @RequestParam("password") String password) {
-//        final UserOriginal user = userService.register(username, password);
-//        return new ModelAndView("redirect:/user/" + user.getId());
-//    }
 
 }

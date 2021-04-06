@@ -12,7 +12,7 @@ public class ContractForm {
     // TODO: verificar size de las variables
 
     @NotBlank
-    @Size(min = 6, max = 100)
+    @Size(max = 100)
     @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String name;
 
@@ -21,12 +21,12 @@ public class ContractForm {
     private String email;
 
     @NotBlank
-    @Size(min = 6, max = 100)
+    @Size(max = 100)
     @Pattern(regexp = "[0-9- ]+")
     private String phone;
 
     @NotBlank
-    @Size(min = 6, max = 200)
+    @Size(max = 1000)
     private String description;
 
     private MultipartFile image;
