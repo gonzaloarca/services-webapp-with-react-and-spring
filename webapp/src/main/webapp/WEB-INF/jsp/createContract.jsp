@@ -1,9 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-    <title>Contact - HireNet</title>    <!-- TODO: poner titulo correcto -->
+    <!-- TODO: poner titulo correcto -->
+    <title>
+        <spring:message code="contract.create.page.title"/>
+    </title>
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/createcontract.css" rel="stylesheet"/>
     <link rel="shortcut icon" href="#">
@@ -27,12 +31,16 @@
 
             <!-- Navigation -->
             <div class="row">
-                <!-- TODO: hacer la navegación posta -->
-                <p class="navigation-text">
-                    <a href="${pageContext.request.contextPath}/">Inicio</a>
-                    / <c:out value="${jobPost.jobType}"/>
-                    <!-- TODO: JobType a String -->
-                </p>
+                <nav aria-label="breadcrumb" style="width: 100%">
+                    <ol class="breadcrumb bg-white">
+                        <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">
+                            <spring:message code="navigation.index"/>
+                        </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <p class="capitalize-first-letter"><c:out value="${jobPost.jobType}"/></p>
+                        </li>
+                    </ol>
+                </nav>
             </div>
 
             <!-- Title Header -->
@@ -43,10 +51,11 @@
                                 <i class="fas fa-arrow-left fa-2x"></i>
                             </a>
                         </div-->
-                        <h2 class="header-title">Solicitar Servicio</h2>
+                        <h2 class="header-title">
+                            <spring:message code="contract.create.page.title"/>
+                        </h2>
                     </div>
-                    <!--TODO: alt posta -->
-                    <img src="${postImage}" alt="" class="header-img"/>
+                    <img src="${postImage}" alt="<spring:message code='contract.create.header.image'/>" class="header-img"/>
             </div>
 
             <div class="row bottom-row">
@@ -55,8 +64,12 @@
                 <div class="first-col">
                     <div class="contract-form">
                         <!-- Title -->
-                        <h3 style="font-weight: bold">Datos de Contacto</h3>
-                        <p style="margin: 0">* campo obligatorio</p>
+                        <h3 style="font-weight: bold">
+                            <spring:message code="contract.create.form.title"/>
+                        </h3>
+                        <p style="margin: 0">
+                            <spring:message code="contract.create.form.required"/>
+                        </p>
                         <hr class="divider-bar"/>
                         <!-- Form Entries -->
                         <form:form class="contract-input" modelAttribute="contractForm"
@@ -70,11 +83,12 @@
                                 </div>
                                 <div class="col-10 label-and-input">
                                     <form:label path="name" class="form-text">
-                                        Introduzca su nombre*
+                                        <spring:message code="contract.create.form.name"/>
                                     </form:label>
+                                    <spring:message code="contract.create.form.name.placeholder" var="namePlaceholder"/>
                                     <form:input type="text" path="name"
                                                 class="form-control text-input"
-                                                placeholder="Nombre"/>
+                                                placeholder='${namePlaceholder}'/>
                                     <form:errors path="name" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
@@ -86,10 +100,11 @@
                                 </div>
                                 <div class="col-10 label-and-input">
                                     <form:label path="email" class="form-text">
-                                        Introduzca su dirección de correo electrónico*
+                                        <spring:message code="contract.create.form.email"/>
                                     </form:label>
+                                    <spring:message code="contract.create.form.email.placeholder" var="emailPlaceholder"/>
                                     <form:input type="email" class="form-control text-input" path="email"
-                                           placeholder="Dirección de correo electrónico"/>
+                                           placeholder="${emailPlaceholder}"/>
                                     <form:errors path="email" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
@@ -101,10 +116,11 @@
                                 </div>
                                 <div class="col-10 label-and-input">
                                     <form:label path="phone" class="form-text">
-                                        Introduzca su número de teléfono*
+                                        <spring:message code="contract.create.form.phone"/>
                                     </form:label>
+                                    <spring:message code="contract.create.form.phone.placeholder" var="phonePlaceholder"/>
                                     <form:input type="text" class="form-control text-input" path="phone"
-                                           placeholder="Número de teléfono" style="width: 70%"/>
+                                           placeholder="${phonePlaceholder}" style="width: 70%"/>
                                     <form:errors path="phone" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
@@ -116,31 +132,35 @@
                                 </div>
                                 <div class="col-10 label-and-input">
                                     <form:label path="description" class="form-text">
-                                        Introduzca una descripción del trabajo que precisa*
+                                        <spring:message code="contract.create.form.description"/>
                                     </form:label>
+                                    <spring:message code="contract.create.form.description.placeholder" var="descPlaceholder"/>
                                     <form:textarea class="form-control text-input" rows="6" path="description"
-                                              placeholder="Descripción del trabajo" />
+                                              placeholder="${descPlaceholder}" />
                                     <form:errors path="description" cssClass="form-error" element="p"/>
                                 </div>
                             </div>
 
                             <!-- Image -->
-                            <div class="form-row">
+                            <!-- TODO: implementar imagen en el proximo Sprint -->
+                            <!--div class="form-row">
                                 <div class="yellow-circle">
                                     <p class="circle-text">5</p>
                                 </div>
                                 <div class="col-10 label-and-input">
                                     <form:label path="image" class="form-text">
-                                        Seleccione una imagen para subir
+                                        <spring:message code="contract.create.form.image"/>
                                     </form:label>
                                     <form:input type="file" path="image"/>
                                     <form:errors path="image" cssClass="form-error" element="p"/>
                                 </div>
-                            </div>
+                            </div-->
 
                             <!-- Submit Button -->
                             <div class="submit-button">
-                                <button class="btn btn-primary" type="submit">SOLICITAR SERVICIO</button>
+                                <button class="btn btn-primary" type="submit">
+                                    <spring:message code="contract.create.form.submit"/>
+                                </button>
                             </div>
 
                         </form:form>
@@ -150,9 +170,10 @@
                 <!-- Job Detail -->
                 <div class="second-col">
                     <div class="job-info">
-                        <h5 class="info-title">Detalles del Servicio</h5>
-                        <!-- TODO: alt posta -->
-                        <img src="${postImage}" alt="" class="info-img"/>
+                        <h5 class="info-title">
+                            <spring:message code="contract.create.detail.title"/>
+                        </h5>
+                        <img src="${postImage}" alt="<spring:message code="contract.create.detail.image"/>" class="info-img"/>
                         <div class="container">
                             <!-- Job Title -->
                             <div class="row info-row">
@@ -179,10 +200,11 @@
                                 <div class="info-left-col">
                                     <i class="fas fa-map-marker-alt fa-2x"></i>
                                 </div>
-                                <p class="info-right-col">
-                                    <!-- TODO Zones[] a String -->
-                                    <c:out value="${jobPost.zones}"/>
-                                </p>
+                                <div class="info-right-col">
+                                    <c:forEach items="${jobPost.zones}" var="zone">
+                                        <p class="capitalize-first-letter"><c:out value="${zone}"/></p>
+                                    </c:forEach>
+                                </div>
                             </div>
                             <hr class="divider-bar-info"/>
                             <!-- Professional -->
@@ -213,8 +235,8 @@
                                 </div>
                                 <div class="info-right-col">
                                     <p class="price-tag">
-                                        <!-- TODO: price + rate a String -->
-                                        <c:out value="$${jobPack.price}/${jobPack.rateType}"/>
+                                        <spring:message code="${jobPack.rateType.toString()}"
+                                                        arguments="${jobPack.price}"/>
                                     </p>
                                 </div>
                             </div>

@@ -1,8 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Cotacto enviado</title>
+    <title>
+        <spring:message code="contract.success.page.title"/>
+    </title>
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
 
     <!-- Bootstrap 4.5.2 CSS minified -->
@@ -19,14 +22,16 @@
 </head>
 <body>
     <%@ include file="customNavBar.jsp" %>
-    <!-- TODO: definir cómo va a ser esta página -->
     <div class="content-container-transparent page">
         <div class="message">
-            <img src='<c:url value="${pageContext.request.contextPath}/resources/images/thumbs.svg" />' alt="thumbs up"
+            <img src='<c:url value="${pageContext.request.contextPath}/resources/images/thumbs.svg" />'
+                 alt="<spring:message code="contract.success.image"/>"
             class="image"/>
-            <h1 class="title">¡Solicitud Enviada!</h1>
+            <h1 class="title">
+                <spring:message code="contract.success.message"/>
+            </h1>
             <a class="btn btn-primary" href="${pageContext.request.contextPath}/" role="button" type="submit">
-                REGRESAR A INICIO
+                <spring:message code="button.return"/>
             </a>
         </div>
     </div>
