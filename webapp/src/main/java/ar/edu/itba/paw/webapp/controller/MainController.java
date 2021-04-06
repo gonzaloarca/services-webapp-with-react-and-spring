@@ -24,6 +24,9 @@ public class MainController {
     @Autowired
     private JobPostService jobPostService;
 
+    @Autowired
+    private JobContractService jobContractService;
+
 
     @RequestMapping("/")
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {

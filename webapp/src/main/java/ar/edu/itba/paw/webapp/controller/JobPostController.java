@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.webapp.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
 import ar.edu.itba.paw.webapp.form.PackageForm;
@@ -39,7 +40,7 @@ public class JobPostController {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
         JobPost jobPost = jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new);
         mav.addObject("jobPost", jobPost);
-        mav.addObject("packages", jobPackageService.findByPostIdWithPrice(id));
+        mav.addObject("packages", jobPackageService.findById(id).orElseThrow(JobPackageNotFoundException::new));
         mav.addObject("contractsCompleted",
                 jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
         return mav;
