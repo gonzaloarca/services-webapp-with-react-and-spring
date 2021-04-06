@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
     <title>Inicio</title>
@@ -32,7 +34,7 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="home-banner-container">
-    <form class="home-search-form">
+    <form:form action="/search" method="get" modelAttribute="searchForm" class="home-search-form">
         <div class="search-instructions">
             <div class="search-instruction-step">
                 <div class="blue-circle">
@@ -54,25 +56,24 @@
             </div>
         </div>
 
-        <div class="dropdown home-search-location">
-            <button class="btn btn-light btn-block rounded-pill dropdown-toggle home-search-bar-row"
-                    type="button"
-                    id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Ubicacion
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-            </div>
+        <div class="home-search-location">
+            <form:select path="zone" class="custom-select w-100">
+                <form:option value="" label="Ubicación"/>
+                <form:options items="${zones}" itemValue="value" itemLabel="message"/>
+            </form:select>
+            <form:errors path="zone" cssClass="search-form-error" element="p"/>
         </div>
-        <input type="search" placeholder="Buscar un servicio..." class="home-search-bar home-search-bar-row">
+
+        <div class="home-search-bar-container home-search-bar-row">
+            <form:input path="query" type="search" class="home-search-bar w-100 h-100"
+                        placeholder="Buscar un servicio..."/>
+            <form:errors path="zone" cssClass="search-form-error" element="p"/>
+        </div>
 
         <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
             <i class="fas fa-search"></i>
         </button>
-    </form>
+    </form:form>
     <%--TODO: Poner alt correcto--%>
     <img class="home-banner-img" alt=""
          src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
@@ -122,7 +123,7 @@
         </c:if>
         <c:if test="${jobCards.size() == 0}">
             <div style="text-align: center; width: 100%; margin: 50px 0">
-                <i class="fas fa-cogs mb-4" style="font-size: 10vw;"></i>
+                <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
                 <p style="font-size: 1.5rem; font-weight: bold; margin: 0">No hay servicios disponibles en este
                     momento</p>
                 <p style="font-size: 1.3rem">Disculpas por las molestias</p>

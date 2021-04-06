@@ -21,7 +21,7 @@ public class JobPost {
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
-        this.zones=zones;
+        this.zones = zones;
         this.isActive = true;
     }
 
@@ -128,11 +128,36 @@ public class JobPost {
         CLEANING,
         BABYSITTING
     }
+
     public enum Zone {
-        BELGRANO,
-        PALERMO,
-        RETIRO,
-        NUÑEZ,
-        COLEGIALES;
+        BELGRANO("JobPost.Zone.BELGRANO"),
+        PALERMO("JobPost.Zone.PALERMO"),
+        RETIRO("JobPost.Zone.RETIRO"),
+        NUÑEZ("JobPost.Zone.NUÑEZ"),
+        COLEGIALES("JobPost.Zone.COLEGIALES");
+
+        private String message;
+        private int value;
+
+        Zone(final String message) {
+            this.message = message;
+            this.value = ordinal();
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
 }

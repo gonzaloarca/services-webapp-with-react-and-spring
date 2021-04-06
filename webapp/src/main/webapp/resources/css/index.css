@@ -20,7 +20,8 @@
     margin: 0;
     padding: 0;
     height: 14vh;
-    width: 60vw;
+    width: 80vw;
+    max-width: 1184px;
     background-color: rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(38px);
     border-radius: 70px;
@@ -30,12 +31,16 @@
     margin: 0 1%;
 }
 
+.home-search-bar-container {
+    width: 45%;
+    height: 35%;
+}
+
 .home-search-bar {
     border: transparent;
     border-radius: 40px;
-    width: 40%;
-    padding: 1% 2%;
-    font-size: 120%;
+    padding: 1% 4%;
+    font-size: 1.2rem;
     flex-basis: 50%;
     /*margin: 0 2% 0 5%;*/
 }
@@ -47,8 +52,7 @@
 }
 
 .home-search-location {
-    width: 30%;
-    overflow: visible;
+    width: 35%;
 }
 
 .btn-block {
@@ -70,4 +74,11 @@
     margin: 0 8px;
     font-size: 1.05rem;
     font-weight: bold;
+}
+
+.custom-select {
+    height: 35%;
+    padding: 0 4%;
+    border-radius: 30px;
+    font-size: 1.2rem;
 }
