@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobPost;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Map;
 
 //TODO: ver de separar en Controllers más especificos
@@ -21,10 +23,13 @@ public class MainController {
     @Autowired
     private JobPostService jobPostService;
 
+    @Autowired
+    private JobContractService jobContractService;
+
     @RequestMapping("/")
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("index");
-        Map<JobPost, String> jobCards = jobPostService.findAllWithCheapierPackage();
+        Map<JobPost, List<String>> jobCards = jobPostService.findAllJobCardsWithData();
         mav.addObject("jobCards", jobCards);
         return mav;
     }
@@ -38,8 +43,11 @@ public class MainController {
     @RequestMapping("/job/{postId}")
     public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
-        mav.addObject("jobPost", jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new));
+        JobPost jobPost = jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new);
+        mav.addObject("jobPost", jobPost);
         mav.addObject("packages", jobPackageService.findByPostIdWithPrice(id));
+        mav.addObject("contractsCompleted",
+                jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
         return mav;
     }
 

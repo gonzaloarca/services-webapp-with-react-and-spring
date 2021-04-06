@@ -84,7 +84,9 @@ public class JobContractDaoJDBCTest {
 
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";
 
-    private static final int JOB_CONTRACTS_QUANTITY = 5;
+    private static final int JOB_CONTRACTS_PRO_QUANTITY = 3;
+
+    private static final int JOB_CONTRACTS_TOTAL_QUANTITY = JOB_CONTRACTS_PRO_QUANTITY+2;
 
     @Autowired
     private DataSource ds;
@@ -147,7 +149,7 @@ public class JobContractDaoJDBCTest {
         Assert.assertEquals(JOB_PACKAGE.is_active(), jobContract.getJobPackage().is_active());
 
         Assert.assertNotNull(jobContract.getCreationDate());
-        Assert.assertEquals(JOB_CONTRACT.getId() + JOB_CONTRACTS_QUANTITY, jobContract.getId());
+        Assert.assertEquals(JOB_CONTRACT.getId() + JOB_CONTRACTS_TOTAL_QUANTITY, jobContract.getId());
         Assert.assertEquals(DESCRIPTION, jobContract.getDescription());
     }
 
@@ -198,5 +200,18 @@ public class JobContractDaoJDBCTest {
                 Assert.assertEquals(JOB_POST.getId(), jobContract.getJobPackage().getPostId()));
     }
 
+    @Test
+    public void testFindContractsQuantityByProId() {
+        int ans = jobContractDaoJDBC.findContractsQuantityByProId(PROFESSIONAL.getId());
+
+        Assert.assertEquals(JOB_CONTRACTS_PRO_QUANTITY, ans);
+    }
+
+    @Test
+    public void testFindContractsQuantityByNotExistingProId() {
+        int ans = jobContractDaoJDBC.findContractsQuantityByProId(PROFESSIONAL.getId()+100);
+
+        Assert.assertEquals(0, ans);
+    }
 }
 

@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
     <title><c:out value="Fontanería"/></title>
@@ -41,13 +41,18 @@
             <ol class="carousel-indicators">
                 <li data-target="#carousel" data-slide-to="0" class="active"></li>
                 <li data-target="#carousel" data-slide-to="1"></li>
-                <li data-target="#carousel" data-slide-to="2"></li>
             </ol>
             <div class="carousel-inner">
+<%--                TODO: CAMBIAR POR FOTOS REALES DEL SERVICIO--%>
                 <div class="carousel-item active">
                     <img class="d-block w-100 h-100"
-                         src="${pageContext.request.contextPath}/resources/images/banner1.jpg"
+                         src="${pageContext.request.contextPath}/resources/images/worker-placeholder.jpg"
                          alt="Primer foto">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100 h-100"
+                         src="${pageContext.request.contextPath}/resources/images/banner1.jpg"
+                         alt="Segunda foto">
                     <%--                TODO: CAMBIAR EL ALT A i20n
                         TODO: INCORPORAR FOTOS DE SERVICIO, FOTO DEFAULT?? --%>
                 </div>
@@ -112,7 +117,7 @@
                             </div>
                             <div class="summary-item">
                                 <i class="fas fa-check"></i>
-                                <p>101 trabajos completados</p>
+                                <p>${contractsCompleted} trabajos completados</p>
                             </div>
                         </div>
                     </div>

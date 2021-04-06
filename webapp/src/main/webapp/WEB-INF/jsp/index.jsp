@@ -94,7 +94,7 @@
                                 value="${jobCard.key.jobType}"/></h6>
                         <div class="job-card-price-container">
                             <p class="job-card-price">
-                                <c:out value="${jobCard.value}"/>
+                                <c:out value="${jobCard.value[0]}"/>
                             </p>
                         </div>
                     </div>
@@ -110,12 +110,12 @@
                         </li>
                         <li class="list-group-item job-card-detail">
                             <i class="fas fa-check job-card-detail" style="font-size: 25px; color: gray"></i>
-                            <p class="job-card-detail">101 completados</p>
+                            <p class="job-card-detail">${jobCard.value[1]} completados</p>
                         </li>
 
                     </ul>
                     <div class="card-body" style="display: flex; justify-content: center; align-items: center">
-                        <a href="/job/${jobCard.key.id}" class="btn btn-outline-primary text-uppercase">Ver detalles</a>
+                        <a href="${pageContext.request.contextPath}/job/${jobCard.key.id}" class="btn btn-outline-primary text-uppercase">Ver detalles</a>
                     </div>
                 </div>
             </c:forEach>

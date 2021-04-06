@@ -230,4 +230,15 @@ public class JobContractDaoJDBC implements JobContractDao {
                 , new Object[]{id},
                 JOB_CONTRACT_ROW_MAPPER));
     }
+
+    @Override
+    public int findContractsQuantityByProId(long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) " +
+                        "FROM contract " +
+                        "NATURAL JOIN job_package " +
+                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
+                        "WHERE professional_id = ?", new Object[]{id}, Integer.class);
+
+    }
 }
