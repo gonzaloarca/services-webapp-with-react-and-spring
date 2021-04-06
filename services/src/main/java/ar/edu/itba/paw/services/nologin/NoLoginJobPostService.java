@@ -75,13 +75,12 @@ public class NoLoginJobPostService implements JobPostService {
     }
 
     @Override
-    public JobPackage findCheapestPackage(long postId) {
+    public Optional<JobPackage> findCheapestPackage(long postId) {
         List<JobPackage> jobPackages = jobPackageService.findByPostId(postId).orElseThrow(
                 RuntimeException::new //TODO: DEBERIA SER UNA EXCEPCION PROPIA
         );
 
-        return jobPackages.stream().min(Comparator.comparingDouble(JobPackage::getPrice)).
-                orElseThrow(RuntimeException::new);
+        return jobPackages.stream().min(Comparator.comparingDouble(JobPackage::getPrice));
     }
 
     @Override

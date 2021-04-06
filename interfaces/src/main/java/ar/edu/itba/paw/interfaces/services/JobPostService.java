@@ -21,7 +21,7 @@ public interface JobPostService {
 
     Optional<List<JobPost>> findAll();
 
-    JobPackage findCheapestPackage(long postId);
+    Optional<JobPackage> findCheapestPackage(long postId);
 
     Optional<List<JobPost>> search(String title, JobPost.Zone zone);
 
