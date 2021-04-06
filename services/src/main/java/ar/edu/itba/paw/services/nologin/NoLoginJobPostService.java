@@ -81,6 +81,30 @@ public class NoLoginJobPostService implements JobPostService {
         if (!jobPosts.isPresent())
             return answer;
 
+        mapPostWithData(answer, jobPosts);
+
+        return answer;
+    }
+
+
+
+    @Override
+    public Optional<List<JobPost>> search(String title, JobPost.Zone zone) {
+        return jobPostDao.search(title, zone);
+    }
+
+    @Override
+    public  Map<JobPost, List<String>> searchWithData(String title, int zoneId){
+        JobPost.Zone zone = JobPost.Zone.values()[zoneId];
+        Map<JobPost, List<String>> answer = new HashMap<>();
+        Optional<List<JobPost>> jobPosts = jobPostDao.search(title,zone);
+        if (!jobPosts.isPresent())
+            return answer;
+        mapPostWithData(answer,jobPosts);
+        return answer;
+    }
+
+    private void mapPostWithData(Map<JobPost, List<String>> answer, Optional<List<JobPost>> jobPosts) {
         jobPosts.get().forEach(jobPost -> {
             Optional<List<JobPackage>> aux = jobPackageService.findByPostId(jobPost.getId());
             //TODO: SI NO ESTA PRESENTE ARROJAR EXCEPCION?
@@ -92,14 +116,7 @@ public class NoLoginJobPostService implements JobPostService {
                 strings.add(String.valueOf(
                         jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())));
                 answer.put(jobPost, strings);
-            }); 
+            });
         });
-
-        return answer;
-    }
-
-    @Override
-    public Optional<List<JobPost>> search(String title, JobPost.Zone zone) {
-        return jobPostDao.search(title, zone);
     }
 }

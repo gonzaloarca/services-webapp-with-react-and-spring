@@ -27,4 +27,6 @@ public interface JobPostService {
 
     Optional<List<JobPost>> search(String title, JobPost.Zone zone);
 
+    Map<JobPost, List<String>> searchWithData(String title, int zone);
+
 }

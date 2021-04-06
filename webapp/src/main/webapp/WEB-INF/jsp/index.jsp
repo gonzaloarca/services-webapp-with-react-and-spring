@@ -34,7 +34,7 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="home-banner-container">
-    <form:form action="/search" method="get" modelAttribute="searchForm" class="home-search-form">
+    <form:form action="/" method="post" modelAttribute="searchForm" class="home-search-form">
         <div class="search-instructions">
             <div class="search-instruction-step">
                 <div class="blue-circle">
@@ -67,7 +67,7 @@
         <div class="home-search-bar-container home-search-bar-row">
             <form:input path="query" type="search" class="home-search-bar w-100 h-100"
                         placeholder="Buscar un servicio..."/>
-            <form:errors path="zone" cssClass="search-form-error" element="p"/>
+            <form:errors path="query" cssClass="search-form-error" element="p"/>
         </div>
 
         <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
