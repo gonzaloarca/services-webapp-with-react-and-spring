@@ -46,6 +46,7 @@ public class MailingServiceSpring implements MailingService {
     }
     @Override
     public void sendTemplatedHTMLMessage(String to, String subject, Object... templateArgs){
+        System.out.println(template.getText());
         String text = String.format(template.getText(), templateArgs);
         sendHtmlMessage(to,subject,text);
     }

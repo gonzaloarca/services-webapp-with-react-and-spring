@@ -193,7 +193,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="align-self-center ml-4 mr-4">
-                                                        <a class="btn btn-primary" href="#" role="button" type="submit">
+                                                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/contract/package/${pack.key.id}"
+                                                           role="button" type="submit">
                                                             SOLICITAR
                                                         </a>
                                                     </div>

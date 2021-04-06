@@ -30,7 +30,8 @@
                 <!-- TODO: hacer la navegación posta -->
                 <p class="navigation-text">
                     <a href="${pageContext.request.contextPath}/">Inicio</a>
-                    / <c:out value="${jobType}"/>
+                    / <c:out value="${jobPost.jobType}"/>
+                    <!-- TODO: JobType a String -->
                 </p>
             </div>
 
@@ -153,13 +154,13 @@
                         <!-- TODO: alt posta -->
                         <img src="${postImage}" alt="" class="info-img"/>
                         <div class="container">
-                            <!-- Job Type -->
+                            <!-- Job Title -->
                             <div class="row info-row">
                                 <div class="info-left-col">
                                     <i class="fas fa-briefcase fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    <c:out value="${jobTitle}"/>
+                                    <c:out value="${jobPost.title}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -169,7 +170,7 @@
                                     <i class="fas fa-box-open fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    <c:out value="${packTitle}"/>
+                                    <c:out value="${jobPack.title}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -179,7 +180,8 @@
                                     <i class="fas fa-map-marker-alt fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    <c:out value="${jobZone}"/>
+                                    <!-- TODO Zones[] a String -->
+                                    <c:out value="${jobPost.zones}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -190,7 +192,7 @@
                                     <i class="fas fa-user fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                        <c:out value="${proName}"/>
+                                        <c:out value="${jobPost.user.username}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -200,7 +202,7 @@
                                     <i class="far fa-clock fa-2x"></i>
                                 </div>
                                 <p class="info-right-col">
-                                    <c:out value="${jobHours}"/>
+                                    <c:out value="${jobPost.availableHours}"/>
                                 </p>
                             </div>
                             <hr class="divider-bar-info"/>
@@ -211,7 +213,8 @@
                                 </div>
                                 <div class="info-right-col">
                                     <p class="price-tag">
-                                        <c:out value="${packPrice}"/>
+                                        <!-- TODO: price + rate a String -->
+                                        <c:out value="$${jobPack.price}/${jobPack.rateType}"/>
                                     </p>
                                 </div>
                             </div>
