@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services.nologin;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
+import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -23,6 +24,9 @@ public class NoLoginJobPostService implements JobPostService {
 
     @Autowired
     private JobPackageService jobPackageService;
+
+    @Autowired
+    private JobContractService jobContractService;
 
     @Override
     public JobPost create(String email, String username, String phone, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
@@ -71,8 +75,8 @@ public class NoLoginJobPostService implements JobPostService {
     }
 
     @Override
-    public Map<JobPost, String> findAllWithCheapierPackage() {
-        Map<JobPost, String> answer = new HashMap<>();
+    public Map<JobPost, List<String>> findAllJobCardsWithData() {
+        Map<JobPost, List<String>> answer = new HashMap<>();
         Optional<List<JobPost>> jobPosts = findAll();
         if (!jobPosts.isPresent())
             return answer;
@@ -82,8 +86,13 @@ public class NoLoginJobPostService implements JobPostService {
             //TODO: SI NO ESTA PRESENTE ARROJAR EXCEPCION?
             aux.ifPresent(jobPackages -> {
                 JobPackage jobPackage = jobPackages.stream().min(Comparator.comparingDouble(JobPackage::getPrice)).get();
-                answer.put(jobPost, jobPackageService.getPriceFormat(jobPackage.getPrice(), jobPackage.getRateType()));
-            });
+                //Estoy seguro de que existe almenos un package en cada post
+                List<String> strings = new ArrayList<>();
+                strings.add(jobPackageService.getPriceFormat(jobPackage.getPrice(), jobPackage.getRateType()));
+                strings.add(String.valueOf(
+                        jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())));
+                answer.put(jobPost, strings);
+            }); 
         });
 
         return answer;

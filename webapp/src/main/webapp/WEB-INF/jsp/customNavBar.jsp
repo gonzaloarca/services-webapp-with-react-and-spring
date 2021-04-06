@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/resources/css/customnavbar.css" rel="stylesheet"/>
@@ -8,7 +8,8 @@
 <!-- Sacado de https://getbootstrap.com/docs/4.6/components/navbar/ -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <a class="navbar-brand" href="${pageContext.request.contextPath}/">
-        <img src='<c:url value="${pageContext.request.contextPath}/resources/images/hirenet-logo-v3-invert.png" />'/>
+        <img src='<c:url value="${pageContext.request.contextPath}/resources/images/hirenet-logo-v3-invert.png" />'
+        alt="HireNet"/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

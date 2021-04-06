@@ -62,4 +62,9 @@ public class NoLoginJobContractService implements JobContractService {
         return jobContract.findByPackageId(id);
     }
 
+    @Override
+    public int findContractsQuantityByProId(long id) {
+        return jobContract.findContractsQuantityByProId(id);
+    }
+
 }

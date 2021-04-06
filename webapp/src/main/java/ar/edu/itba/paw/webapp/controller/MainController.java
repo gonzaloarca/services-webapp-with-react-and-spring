@@ -1,20 +1,23 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.webapp.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
+import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Map;
 
+//TODO: ver de separar en Controllers más especificos
 @Controller
-public class HelloWorldController {
+public class MainController {
 
     @Autowired
     private JobPackageService jobPackageService;
@@ -22,11 +25,15 @@ public class HelloWorldController {
     @Autowired
     private JobPostService jobPostService;
 
+    @Autowired
+    private JobContractService jobContractService;
+
     @RequestMapping("/")
-    public ModelAndView home() {
+    public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
         final ModelAndView mav = new ModelAndView("index");
-        Map<JobPost, String> jobCards = jobPostService.findAllWithCheapierPackage();
+        Map<JobPost, List<String>> jobCards = jobPostService.findAllJobCardsWithData();
         mav.addObject("jobCards", jobCards);
+        mav.addObject("zones", JobPost.Zone.values());
         return mav;
     }
 
@@ -39,24 +46,22 @@ public class HelloWorldController {
     @RequestMapping("/job/{postId}")
     public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
-        mav.addObject("jobPost", jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new));
+        JobPost jobPost = jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new);
+        mav.addObject("jobPost", jobPost);
         mav.addObject("packages", jobPackageService.findByPostIdWithPrice(id));
+        mav.addObject("contractsCompleted",
+                jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
         return mav;
     }
 
-//    @RequestMapping("/user/{userId}")
-//    public ModelAndView getUser(@PathVariable("userId") final long id) {
-//        final ModelAndView mav = new ModelAndView("index");
-//        UserOriginal aux = userService.findById(id).orElseThrow(UserNotFoundException::new);
-//        mav.addObject("greeting", aux.getName());
-//        mav.addObject("password", aux.getPassword());
-//        return mav;
-//    }
-//
-//    @RequestMapping(path = {"/create"})//, method = RequestMethod.POST)
-//    public ModelAndView registerUser(@RequestParam("username") String username, @RequestParam("password") String password) {
-//        final UserOriginal user = userService.register(username, password);
-//        return new ModelAndView("redirect:/user/" + user.getId());
-//    }
+    @RequestMapping(path = "/search", method = RequestMethod.GET)
+    public ModelAndView searchJobPosts(@RequestParam() final int zone, @RequestParam() final String query,
+                                       @ModelAttribute("searchForm") SearchForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return new ModelAndView("redirect:/");
+        }
+
+        return null;
+    }
 
 }

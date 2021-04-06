@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
     <title>Inicio</title>
@@ -34,25 +36,46 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="home-banner-container">
-    <form class="home-search-form">
-        <input type="search" placeholder="Buscar un servicio..." class="home-search-bar home-search-bar-row">
-        <div class="dropdown home-search-location">
-            <button class="btn btn-light btn-block rounded-pill dropdown-toggle home-search-bar-row"
-                    type="button"
-                    id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Ubicacion
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
+    <form:form action="/search" method="get" modelAttribute="searchForm" class="home-search-form">
+        <div class="search-instructions">
+            <div class="search-instruction-step">
+                <div class="blue-circle">
+                    <p class="circle-text">1</p>
+                </div>
+                <p class="search-instructions-text">Elija su ubicación</p>
+            </div>
+            <div class="search-instruction-step">
+                <div class="blue-circle">
+                    <p class="circle-text">2</p>
+                </div>
+                <p class="search-instructions-text">Introduzca el servicio que necesita</p>
+            </div>
+            <div class="search-instruction-step">
+                <div class="blue-circle">
+                    <p class="circle-text">3</p>
+                </div>
+                <p class="search-instructions-text">¡Buscar!</p>
             </div>
         </div>
+
+        <div class="home-search-location">
+            <form:select path="zone" class="custom-select w-100">
+                <form:option value="" label="Ubicación"/>
+                <form:options items="${zones}" itemValue="value" itemLabel="message"/>
+            </form:select>
+            <form:errors path="zone" cssClass="search-form-error" element="p"/>
+        </div>
+
+        <div class="home-search-bar-container home-search-bar-row">
+            <form:input path="query" type="search" class="home-search-bar w-100 h-100"
+                        placeholder="Buscar un servicio..."/>
+            <form:errors path="zone" cssClass="search-form-error" element="p"/>
+        </div>
+
         <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
             <i class="fas fa-search"></i>
         </button>
-    </form>
+    </form:form>
     <%--TODO: Poner alt correcto--%>
     <img class="home-banner-img" alt=""
          src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
@@ -74,7 +97,7 @@
                                 value="${jobCard.key.jobType}"/></h6>
                         <div class="job-card-price-container">
                             <p class="job-card-price">
-                                <c:out value="${jobCard.value}"/>
+                                <c:out value="${jobCard.value[0]}"/>
                             </p>
                         </div>
                     </div>
@@ -90,21 +113,22 @@
                         </li>
                         <li class="list-group-item job-card-detail">
                             <i class="fas fa-check job-card-detail" style="font-size: 25px; color: gray"></i>
-                            <p class="job-card-detail">101 completados</p>
+                            <p class="job-card-detail">${jobCard.value[1]} completados</p>
                         </li>
 
                     </ul>
                     <div class="card-body" style="display: flex; justify-content: center; align-items: center">
-                        <a href="/job/${jobCard.key.id}" class="btn btn-outline-primary text-uppercase">Ver detalles</a>
+                        <a href="${pageContext.request.contextPath}/job/${jobCard.key.id}" class="btn btn-outline-primary text-uppercase">Ver detalles</a>
                     </div>
                 </div>
             </c:forEach>
         </c:if>
         <c:if test="${jobCards.size() == 0}">
-            <div style="text-align: center; width: 100%;">
-                <i class="fas fa-cogs" style="font-size: 20vw;"></i>
-                <p style="font-size: 32px">No hay servicios disponibles en este momento</p>
-                <p style="font-size: 22px">Disculpas por las molestias</p>
+            <div style="text-align: center; width: 100%; margin: 50px 0">
+                <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
+                <p style="font-size: 1.5rem; font-weight: bold; margin: 0">No hay servicios disponibles en este
+                    momento</p>
+                <p style="font-size: 1.3rem">Disculpas por las molestias</p>
             </div>
         </c:if>
     </div>

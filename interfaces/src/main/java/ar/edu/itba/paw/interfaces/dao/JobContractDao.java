@@ -21,4 +21,5 @@ public interface JobContractDao {
 
     Optional<List<JobContract>> findByPackageId(long id);
 
+    int findContractsQuantityByProId(long id);
 }
