@@ -21,7 +21,14 @@
     <%@ include file="customNavBar.jsp" %>
     <!-- TODO: definir cómo va a ser esta página -->
     <div class="content-container-transparent page">
-        <h1 class="message">¡Información Confirmada!</h1>
+        <div class="message">
+            <img src='<c:url value="${pageContext.request.contextPath}/resources/images/thumbs.svg" />' alt="thumbs up"
+            class="image"/>
+            <h1 class="title">¡Solicitud Enviada!</h1>
+            <a class="btn btn-primary" href="${pageContext.request.contextPath}/" role="button" type="submit">
+                REGRESAR A INICIO
+            </a>
+        </div>
     </div>
 </body>
 </html>
@@ -30,6 +37,9 @@
 .page {
     display: flex;
     height: 80%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .message {
@@ -38,5 +48,16 @@
     background-color: white;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
     text-align: center;
+}
+
+.title {
+    font-weight: bold;
+    margin-bottom: 3vh;
+    margin-top: 3vh;
+}
+
+.image {
+    width: 20vh;
+    height: 20vh;
 }
 </style>

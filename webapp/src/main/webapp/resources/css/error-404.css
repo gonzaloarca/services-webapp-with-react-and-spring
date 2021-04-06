@@ -1,6 +1,19 @@
-.error-container {
+.error-page {
+    display: flex;
     position: relative;
     text-align: -webkit-center;
+    height: 80%;
+}
+
+.error-container {
+    margin: auto;
+    background-color: white;
+    padding: 5vh;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .home-banner-img {
@@ -17,7 +30,6 @@
 }
 
 .error-image {
-    position: absolute;
     width: 100%;
     top: 30px;
     z-index: 1;
