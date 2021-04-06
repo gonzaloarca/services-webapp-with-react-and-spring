@@ -1,5 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="ar.edu.itba.paw.models.JobPost.JobType" %>
+<%@ page buffer="64kb" %>
 <html>
 <head>
     <title>Publicar un servicio</title>
@@ -29,7 +32,8 @@
 <div class="content-container-transparent">
     <h3 class="mt-5">Publicar un servicio</h3>
     <div class="content-container">
-        <form class="create-job-post-form">
+        <c:url value="/create-job-post" var="postPath"/>
+        <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post" class="create-job-post-form">
             <div class="form-header">
                 <h3>Datos del servicio</h3>
                 <p>* campo obligatorio</p>
@@ -47,14 +51,12 @@
                     <h4 class="circle-text">1</h4>
                 </div>
                 <div class="form-step-input">
-                    <label class="header-label" for="exampleFormControlSelect1">Seleccione un tipo de servicio</label>
-                    <select class="form-control w-75" id="exampleFormControlSelect1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
+                    <form:label path="jobType" class="header-label"
+                                for="serviceTypeSelect">Seleccione un tipo de servicio</form:label>
+                    <form:select path="jobType" class="form-control w-75" id="serviceTypeSelect">
+                        <form:options items="${jobTypes}"/>
+                    </form:select>
+                    <form:errors path="jobType" class="formError" element="p"/>
                 </div>
             </div>
 
@@ -63,9 +65,11 @@
                     <h4 class="circle-text">2</h4>
                 </div>
                 <div class="form-step-input">
-                    <label class="header-label">Introduzca un título para su publicación*</label>
-                    <input type="text" class="form-control"
-                           placeholder="Título">
+                    <form:label path="title" for="jobTitle"
+                                class="header-label">Introduzca un título para su publicación*</form:label>
+                    <form:input path="title" id="jobTitle" type="text" class="form-control"
+                                placeholder="Título"/>
+                    <form:errors path="title" class="formError" element="p"/>
                 </div>
             </div>
 
@@ -85,7 +89,7 @@
                        aria-controls="nav-home" aria-selected="true">Paquete #1</a>
                     <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
                        aria-controls="nav-profile" aria-selected="false">TODO</a>
-                    <%--TODO: Agregar tabs dinamicamente segun añada mas paquetes el usuario--%>
+                        <%--TODO: Agregar tabs dinamicamente segun añada mas paquetes el usuario--%>
                 </div>
             </nav>
 
@@ -93,49 +97,62 @@
                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                     <div class="package-form">
                         <div class="package-input">
-                            <label>Nombre del paquete*</label>
-                            <input type="text" class="form-control" placeholder="Nombre del paquete">
+                            <form:label path="packages[0].title" for="packageTitle">Nombre del paquete*</form:label>
+                            <form:input path="packages[0].title" id="packageTitle" type="text" class="form-control"
+                                        placeholder="Nombre del paquete"/>
+                            <form:errors path="packages[0].title" class="formError" element="p"/>
                         </div>
                         <div class="package-input">
-                            <label>Descripción del paquete*</label>
-                            <textarea class="form-control" placeholder="Descripción del paquete" rows="3"></textarea>
+                            <form:label path="packages[0].description"
+                                        for="packageDescription">Descripción del paquete*</form:label>
+                            <form:textarea path="packages[0].description" id="packageDescription" class="form-control"
+                                           placeholder="Descripción del paquete"
+                                           rows="3"/>
+                            <form:errors path="packages[0].description" class="formError" element="p"/>
                         </div>
 
                         <div class="package-input">
-                            <label style="display: block; margin-bottom: 15px">¿Cómo cobrará el paquete?*</label>
+                            <form:label path="packages[0].rateType"
+                                        style="display: block; margin-bottom: 15px">¿Cómo cobrará el paquete?*</form:label>
                             <div class="center">
                                 <div class="form-check form-check-inline">
-                                    <input id="hourlyRadio" class="form-check-input" type="radio"
-                                           name="inlineRadioOptions"
-                                           value="option1">
-                                    <label for="hourlyRadio" class="form-check-label">Por hora</label>
+                                    <form:radiobutton path="packages[0].rateType" id="hourlyRadio"
+                                                      class="form-check-input" name="inlineRadioOptions"
+                                                      value="0"/>
+                                    <form:label path="packages[0].rateType" for="hourlyRadio"
+                                                class="form-check-label">Por hora</form:label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input id="oneTimeRadio" class="form-check-input" type="radio"
-                                           name="inlineRadioOptions"
-                                           value="option2">
-                                    <label for="oneTimeRadio" class="form-check-label">Por trabajo puntual</label>
+                                    <form:radiobutton path="packages[0].rateType" id="oneTimeRadio"
+                                                      class="form-check-input" name="inlineRadioOptions"
+                                                      value="1"/>
+                                    <form:label path="packages[0].rateType" for="oneTimeRadio"
+                                                class="form-check-label">Por trabajo puntual</form:label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input id="tbdRadio" class="form-check-input" type="radio" name="inlineRadioOptions"
-                                           value="option3">
-                                    <label for="tbdRadio" class="form-check-label">A acordar con el cliente</label>
+                                    <form:radiobutton path="packages[0].rateType" id="tbdRadio" class="form-check-input"
+                                                      name="inlineRadioOptions"
+                                                      value="2"/>
+                                    <form:label path="packages[0].rateType" for="tbdRadio"
+                                                class="form-check-label">A acordar con el cliente</form:label>
                                 </div>
                             </div>
+                            <form:errors path="packages[0].rateType" class="formError" element="p"/>
                         </div>
-                        <%-- TODO: Deshabilitar si es "A acordar"--%>
+                            <%-- TODO: Deshabilitar si es "A acordar"--%>
                         <div class="package-input">
-                            <label>Precio*</label>
+                            <form:label path="packages[0].price" for="packagePrice">Precio*</form:label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">ARS</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Precio">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">.00</span>
-                                </div>
+                                <form:input path="packages[0].price" id="packagePrice" type="number"
+                                            class="form-control"
+                                            placeholder="Precio"/>
                             </div>
+                            <form:errors path="packages[0]" class="formError" element="p"/>
                         </div>
+                            <%-- TODO: Implementar funcionalidad --%>
                         <button type="button" class="btn btn-block btn-light btn-lg text-uppercase"
                                 style="margin-top: 20px">
                             <span class="badge badge-primary">+</span>
@@ -148,18 +165,39 @@
 
             <hr class="hr1" style="margin: 30px 0">
 
-            <%--TODO: Implementar file browser con JS/Java--%>
+            <%--            TODO: PROXIMO SPRINT--%>
+            <%--            &lt;%&ndash;TODO: Implementar file browser con JS/Java&ndash;%&gt;--%>
+            <%--            <div class="form-step">--%>
+            <%--                <div class="blue-circle">--%>
+            <%--                    <h4 class="circle-text">4</h4>--%>
+            <%--                </div>--%>
+            <%--                <div class="form-step-input">--%>
+            <%--                    <form:label path="servicePics"--%>
+            <%--                                class="header-label">Seleccione al menos 1 imagen para su servicio*</form:label>--%>
+            <%--                    <div class="custom-file">--%>
+            <%--                        <form:input path="servicePics" type="file" class="custom-file-input" id="jobImageInput"--%>
+            <%--                                    multiple="multiple"/>--%>
+            <%--                        <form:label path="servicePics" class="custom-file-label"--%>
+            <%--                                    for="jobImageInput">Seleccionar archivo(s)</form:label>--%>
+            <%--                        <small class="form-text text-muted">Restricciones de archivo</small>--%>
+            <%--                        <form:errors path="servicePics" class="formError" element="p"/>--%>
+            <%--                    </div>--%>
+            <%--                </div>--%>
+            <%--            </div>--%>
+
             <div class="form-step">
                 <div class="blue-circle">
                     <h4 class="circle-text">4</h4>
                 </div>
                 <div class="form-step-input">
-                    <label class="header-label">Seleccione al menos 1 imagen para su servicio*</label>
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="jobImageInput" multiple="multiple">
-                        <label class="custom-file-label" for="jobImageInput">Seleccionar archivo(s)</label>
-                        <small class="form-text text-muted">Restricciones de archivo</small>
-                    </div>
+                    <form:label path="availableHours" for="availableHoursInput"
+                                class="header-label">Ingrese sus horarios de disponibilidad para el
+                        servicio*</form:label>
+                    <form:textarea path="availableHours" id="availableHoursInput" class="form-control"
+                                   placeholder="Horarios de disponibilidad"
+                                   rows="5"/>
+                    <form:errors path="availableHours" class="formError" element="p"/>
+
                 </div>
             </div>
 
@@ -167,31 +205,23 @@
                 <div class="yellow-circle">
                     <h4 class="circle-text">5</h4>
                 </div>
+                    <%--TODO: Traer ubicaciones dinámicamente y hacer funcionar búsqueda--%>
                 <div class="form-step-input">
-                    <label class="header-label">Ingrese sus horarios de disponibilidad para el servicio*</label>
-                    <textarea class="form-control" placeholder="Horarios de disponibilidad" rows="5"></textarea>
-                </div>
-            </div>
-
-            <div class="form-step">
-                <div class="orange-circle">
-                    <h4 class="circle-text">6</h4>
-                </div>
-                <%--TODO: Traer ubicaciones dinámicamente y hacer funcionar búsqueda--%>
-                <div class="form-step-input">
-                    <label class="header-label">Seleccione las zonas de disponibilidad para su servicio*</label>
+                    <form:label path="zones"
+                                class="header-label">Seleccione las zonas de disponibilidad para su servicio*</form:label>
                     <div class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input type="text" class="form-control" placeholder="Filtrar por nombre">
+                        <input type="text" class="form-control" placeholder="Filtrar por nombre"/>
                     </div>
+                    <form:errors path="zones" class="formError" element="p"/>
                     <div class="list-group location-list">
                         <label class="list-group-item">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="location-name">CABA, CABA, Argentina</span>
+                            <form:checkbox path="zones" class="form-check-input" value="0"/>
+                            <span class=" location-name">0</span>
                         </label>
                         <label class="list-group-item">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="location-name">Zona Norte, Buenos Aires, Argentina</span>
+                            <form:checkbox path="zones" class="form-check-input" value="1"/>
+                            <span class="location-name">1</span>
                         </label>
                         <label class="list-group-item">
                             <input class="form-check-input" type="checkbox" value="">
@@ -234,9 +264,10 @@
                     <h4 class="circle-text">1</h4>
                 </div>
                 <div class="form-step-input">
-                    <label class="header-label">Introduzca su nombre*</label>
-                    <input type="text" class="form-control w-75"
-                           placeholder="Nombre">
+                    <form:label path="professionalName" class="header-label">Introduzca su nombre*</form:label>
+                    <form:input path="professionalName" type="text" class="form-control w-75"
+                                placeholder="Nombre"/>
+                    <form:errors path="professionalName" class="formError" element="p"/>
                 </div>
             </div>
 
@@ -245,9 +276,11 @@
                     <h4 class="circle-text">2</h4>
                 </div>
                 <div class="form-step-input">
-                    <label class="header-label">Introduzca su dirección de correo electrónico*</label>
-                    <input type="email" class="form-control"
-                           placeholder="Correo electrónico">
+                    <form:label path="email"
+                                class="header-label">Introduzca su dirección de correo electrónico*</form:label>
+                    <form:input path="email" type="email" class="form-control"
+                                placeholder="Correo electrónico"/>
+                    <form:errors path="email" class="formError" element="p"/>
                 </div>
             </div>
 
@@ -256,29 +289,34 @@
                     <h4 class="circle-text">3</h4>
                 </div>
                 <div class="form-step-input">
-                    <label class="header-label">Introduzca su número de teléfono*</label>
-                    <input type="tel" class="form-control w-50"
-                           placeholder="Teléfono">
+                    <form:label path="phone" class="header-label">Introduzca su número de teléfono*</form:label>
+                    <form:input path="phone" type="tel" class="form-control w-50"
+                                placeholder="Teléfono"/>
+                    <form:errors path="phone" class="formError" element="p"/>
                 </div>
             </div>
 
-            <div class="form-step">
-                <div class="blue-circle">
-                    <h4 class="circle-text">4</h4>
-                </div>
-                <div class="form-step-input mb-5">
-                    <label class="header-label">Seleccione una imagen de perfil</label>
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="profilePic" multiple="multiple">
-                        <label class="custom-file-label  w-100" for="profilePic">Seleccionar archivo</label>
-                        <small class="form-text text-muted">Restricciones de archivo</small>
-                    </div>
-                </div>
-            </div>
+            <%--            TODO: PROXIMO SPRINT--%>
+            <%--            <div class="form-step">--%>
+            <%--                <div class="blue-circle">--%>
+            <%--                    <h4 class="circle-text">4</h4>--%>
+            <%--                </div>--%>
+            <%--                <div class="form-step-input mb-5">--%>
+            <%--                    <label class="header-label">Seleccione una imagen de perfil</label>--%>
+            <%--                    <div class="custom-file">--%>
+            <%--                        <form:input path="profilePic" type="file" class="custom-file-input" id="profilePic"--%>
+            <%--                                    multiple="multiple"/>--%>
+            <%--                        <form:label path="profilePic" class="custom-file-label  w-100"--%>
+            <%--                                    for="profilePic">Seleccionar archivo</form:label>--%>
+            <%--                        <small class="form-text text-muted">Restricciones de archivo</small>--%>
+            <%--                        <form:errors path="profilePic" class="formError" element="p"/>--%>
+            <%--                    </div>--%>
+            <%--                </div>--%>
+            <%--            </div>--%>
             <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase w-50 mx-auto ">Publicar
                 servicio
             </button>
-        </form>
+        </form:form>
     </div>
 </div>
 

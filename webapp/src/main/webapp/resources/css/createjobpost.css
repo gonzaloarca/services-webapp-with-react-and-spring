@@ -129,4 +129,9 @@
     margin-left: 25px;
 }
 
+.input-group-text {
+    background-color: #485696 !important;
+    color: white;
+}
+
 
