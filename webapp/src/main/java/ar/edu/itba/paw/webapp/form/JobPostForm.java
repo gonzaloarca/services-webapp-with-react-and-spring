@@ -9,12 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class JobPostForm {
 
     @NotNull
-    private int jobType;
+    @Pattern(regexp = "^\\d+$")
+    private String jobType;
 
     @NotBlank
     private String title;
@@ -50,7 +52,7 @@ public class JobPostForm {
 //    private MultipartFile profilePic;
 
 
-    public int getJobType() {
+    public String getJobType() {
         return jobType;
     }
 
@@ -90,7 +92,7 @@ public class JobPostForm {
         return zones;
     }
 
-    public void setJobType(int jobType) {
+    public void setJobType(String jobType) {
         this.jobType = jobType;
     }
 

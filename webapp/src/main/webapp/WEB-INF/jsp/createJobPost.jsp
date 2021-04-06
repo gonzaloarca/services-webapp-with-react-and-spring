@@ -56,9 +56,10 @@
                     <form:label path="jobType" class="header-label"
                                 for="serviceTypeSelect">Seleccione un tipo de servicio</form:label>
                     <form:select path="jobType" class="form-control w-75" id="serviceTypeSelect">
-                        <form:options items="${jobTypes}"/>
+                        <form:option value="" label="Tipo de servicio"/>
+                        <form:options items="${jobTypes}" itemValue="value" itemLabel="message"/>
                     </form:select>
-                    <form:errors path="jobType" class="formError" element="p"/>
+                    <form:errors path="jobType" class="form-error" element="p"/>
                 </div>
             </div>
 
@@ -71,7 +72,7 @@
                                 class="header-label">Introduzca un título para su publicación*</form:label>
                     <form:input path="title" id="jobTitle" type="text" class="form-control"
                                 placeholder="Título"/>
-                    <form:errors path="title" class="formError" element="p"/>
+                    <form:errors path="title" class="form-error" element="p"/>
                 </div>
             </div>
 
@@ -102,7 +103,7 @@
                             <form:label path="packages[0].title" for="packageTitle">Nombre del paquete*</form:label>
                             <form:input path="packages[0].title" id="packageTitle" type="text" class="form-control"
                                         placeholder="Nombre del paquete"/>
-                            <form:errors path="packages[0].title" class="formError" element="p"/>
+                            <form:errors path="packages[0].title" class="form-error" element="p"/>
                         </div>
                         <div class="package-input">
                             <form:label path="packages[0].description"
@@ -110,7 +111,7 @@
                             <form:textarea path="packages[0].description" id="packageDescription" class="form-control"
                                            placeholder="Descripción del paquete"
                                            rows="3"/>
-                            <form:errors path="packages[0].description" class="formError" element="p"/>
+                            <form:errors path="packages[0].description" class="form-error" element="p"/>
                         </div>
 
                         <div class="package-input">
@@ -139,7 +140,7 @@
                                                 class="form-check-label">A acordar con el cliente</form:label>
                                 </div>
                             </div>
-                            <form:errors path="packages[0].rateType" class="formError" element="p"/>
+                            <form:errors path="packages[0].rateType" class="form-error" element="p"/>
                         </div>
                             <%-- TODO: Deshabilitar si es "A acordar"--%>
                         <div class="package-input">
@@ -152,7 +153,7 @@
                                             class="form-control"
                                             placeholder="Precio"/>
                             </div>
-                            <form:errors path="packages[0]" class="formError" element="p"/>
+                            <form:errors path="packages[0]" class="form-error" element="p"/>
                         </div>
                             <%-- TODO: Implementar funcionalidad --%>
                         <button type="button" class="btn btn-block btn-light btn-lg text-uppercase"
@@ -182,7 +183,7 @@
             <%--                        <form:label path="servicePics" class="custom-file-label"--%>
             <%--                                    for="jobImageInput">Seleccionar archivo(s)</form:label>--%>
             <%--                        <small class="form-text text-muted">Restricciones de archivo</small>--%>
-            <%--                        <form:errors path="servicePics" class="formError" element="p"/>--%>
+            <%--                        <form:errors path="servicePics" class="form-error" element="p"/>--%>
             <%--                    </div>--%>
             <%--                </div>--%>
             <%--            </div>--%>
@@ -198,7 +199,7 @@
                     <form:textarea path="availableHours" id="availableHoursInput" class="form-control"
                                    placeholder="Horarios de disponibilidad"
                                    rows="5"/>
-                    <form:errors path="availableHours" class="formError" element="p"/>
+                    <form:errors path="availableHours" class="form-error" element="p"/>
 
                 </div>
             </div>
@@ -215,36 +216,16 @@
                         <span class="fa fa-search form-control-feedback"></span>
                         <input type="text" class="form-control" placeholder="Filtrar por nombre"/>
                     </div>
-                    <form:errors path="zones" class="formError" element="p"/>
+                    <form:errors path="zones" class="form-error" element="p"/>
                     <div class="list-group location-list">
-                        <label class="list-group-item">
-                            <form:checkbox path="zones" class="form-check-input" value="0"/>
-                            <span class=" location-name">0</span>
-                        </label>
-                        <label class="list-group-item">
-                            <form:checkbox path="zones" class="form-check-input" value="1"/>
-                            <span class="location-name">1</span>
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="location-name">Zona Sur, Buenos Aires, Argentina</span>
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="location-name">Zona Oeste, Buenos Aires, Argentina</span>
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="location-name">La Plata, Buenos Aires, Argentina</span>
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="location-name">Cipolletti, Río Negro, Argentina</span>
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="location-name">Neuquén, Neuquén, Argentina</span>
-                        </label>
+                        <c:forEach items="${zoneValues}" var="zone">
+                            <label class="list-group-item">
+                                <form:checkbox path="zones" class="form-check-input" value="${zone.value}"/>
+                                <span class="location-name">
+                                    <c:out value="${zone.message}"/>
+                                </span>
+                            </label>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
@@ -269,7 +250,7 @@
                     <form:label path="professionalName" class="header-label">Introduzca su nombre*</form:label>
                     <form:input path="professionalName" type="text" class="form-control w-75"
                                 placeholder="Nombre"/>
-                    <form:errors path="professionalName" class="formError" element="p"/>
+                    <form:errors path="professionalName" class="form-error" element="p"/>
                 </div>
             </div>
 
@@ -282,7 +263,7 @@
                                 class="header-label">Introduzca su dirección de correo electrónico*</form:label>
                     <form:input path="email" type="email" class="form-control"
                                 placeholder="Correo electrónico"/>
-                    <form:errors path="email" class="formError" element="p"/>
+                    <form:errors path="email" class="form-error" element="p"/>
                 </div>
             </div>
 
@@ -294,7 +275,7 @@
                     <form:label path="phone" class="header-label">Introduzca su número de teléfono*</form:label>
                     <form:input path="phone" type="tel" class="form-control w-50"
                                 placeholder="Teléfono"/>
-                    <form:errors path="phone" class="formError" element="p"/>
+                    <form:errors path="phone" class="form-error" element="p"/>
                 </div>
             </div>
 
@@ -311,7 +292,7 @@
             <%--                        <form:label path="profilePic" class="custom-file-label  w-100"--%>
             <%--                                    for="profilePic">Seleccionar archivo</form:label>--%>
             <%--                        <small class="form-text text-muted">Restricciones de archivo</small>--%>
-            <%--                        <form:errors path="profilePic" class="formError" element="p"/>--%>
+            <%--                        <form:errors path="profilePic" class="form-error" element="p"/>--%>
             <%--                    </div>--%>
             <%--                </div>--%>
             <%--            </div>--%>

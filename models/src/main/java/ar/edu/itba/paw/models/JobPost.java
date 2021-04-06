@@ -119,14 +119,48 @@ public class JobPost {
     }
 
     public enum JobType {
-        PLUMBING,
-        ELECTRICITY,
-        CARPENTRY,
-        CATERING,
-        PAINTING,
-        TEACHING,
-        CLEANING,
-        BABYSITTING
+        PLUMBING("/plumbing.jpeg", "JobPost.JobType.PLUMBING"),
+        ELECTRICITY("/electrician.jpeg", "JobPost.JobType.ELECTRICITY"),
+        CARPENTRY("carpentry.jpeg", "JobPost.JobType.CARPENTRY"),
+        CATERING("catering.png", "JobPost.JobType.CATERING"),
+        PAINTING("painter.jpeg", "JobPost.JobType.PAINTING"),
+        TEACHING("teaching.jpeg", "JobPost.JobType.TEACHING"),
+        CLEANING("cleaning.png", "JobPost.JobType.CLEANING"),
+        BABYSITTING("babysitting.jpeg", "JobPost.JobType.BABYSITTING");
+
+        private String imagePath;
+        private String message;
+        private int value;
+
+        JobType(String imagePath, String message) {
+            this.imagePath = imagePath;
+            this.message = message;
+            this.value = ordinal();
+        }
+
+        public String getImagePath() {
+            return imagePath;
+        }
+
+        public void setImagePath(String imagePath) {
+            this.imagePath = imagePath;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
     }
 
     public enum Zone {
