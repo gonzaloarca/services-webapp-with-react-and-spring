@@ -27,7 +27,9 @@
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/index.css" rel="stylesheet"/>
-    <link rel="shortcut icon" href="#">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
 <%@ include file="customNavBar.jsp" %>

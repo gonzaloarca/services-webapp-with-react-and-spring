@@ -10,10 +10,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-    <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/resources/css/createjobpost.css" rel="stylesheet"/>
-    <link rel="shortcut icon" href="#">
-
     <!-- jQuery 3.6.0 minified dependency for Bootstrap JS libraries -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -25,6 +21,12 @@
 
     <!-- FontAwesome 5 -->
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
+
+    <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/createjobpost.css" rel="stylesheet"/>
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 
 </head>
 <body>

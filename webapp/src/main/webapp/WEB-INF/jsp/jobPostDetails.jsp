@@ -4,9 +4,7 @@
 <head>
     <title><c:out value="Fontanería"/></title>
     <%--    TODO: CAMBIAR CON CATEGORIA DEL SERVICIO--%>
-    <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/resources/css/jobpostdetails.css" rel="stylesheet"/>
-    <link rel="shortcut icon" href="#">
+
     <!-- Bootstrap 4.5.2 CSS minified -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -24,6 +22,12 @@
 
     <!--  Bootstrap icons   -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
+    <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/createjobpost.css" rel="stylesheet"/>
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
 <%@ include file="customNavBar.jsp" %>
