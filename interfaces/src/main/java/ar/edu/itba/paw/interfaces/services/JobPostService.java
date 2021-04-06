@@ -21,7 +21,7 @@ public interface JobPostService {
 
     Optional<List<JobPost>> findAll();
 
-    Map<JobPost, JobPackage> findAllWithCheapierPackage();
+    Map<JobPost, String> findAllWithCheapierPackage();
 
     Optional<List<JobPost>> search(String title, JobPost.Zone zone);
 
