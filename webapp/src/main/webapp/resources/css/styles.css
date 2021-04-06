@@ -217,3 +217,12 @@ p.job-card-detail {
     text-transform: uppercase;
 }
 
+
+.form-control {
+    border: transparent;
+    background-color: #e8e8e8;
+}
+
+.form-control:focus {
+    background-color: #e8e8e8;
+}

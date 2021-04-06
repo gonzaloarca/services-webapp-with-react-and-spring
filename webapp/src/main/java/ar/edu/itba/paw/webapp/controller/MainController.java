@@ -22,13 +22,8 @@ import java.util.*;
 public class MainController {
 
     @Autowired
-    private JobPackageService jobPackageService;
-
-    @Autowired
     private JobPostService jobPostService;
 
-    @Autowired
-    private JobContractService jobContractService;
 
     @RequestMapping("/")
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
@@ -44,24 +39,6 @@ public class MainController {
 
         mav.addObject("jobCards", jobCards);
         mav.addObject("zones", JobPost.Zone.values());
-        return mav;
-    }
-
-    @RequestMapping("/create-job-post")
-    public ModelAndView createJobPost() {
-        final ModelAndView mav = new ModelAndView("createJobPost");
-        return mav;
-    }
-
-    @RequestMapping("/job/{postId}")
-    public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
-        final ModelAndView mav = new ModelAndView("jobPostDetails");
-        JobPost jobPost = jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new);
-        mav.addObject("jobPost", jobPost);
-        mav.addObject("packages", jobPackageService.findByPostId(id).
-                orElseThrow(JobPackageNotFoundException::new));
-        mav.addObject("contractsCompleted",
-                jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
         return mav;
     }
 

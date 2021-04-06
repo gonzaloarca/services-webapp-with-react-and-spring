@@ -8,9 +8,6 @@
     <title>
         <spring:message code="contract.create.page.title"/>
     </title>
-    <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/resources/css/createcontract.css" rel="stylesheet"/>
-    <link rel="shortcut icon" href="#">
 
     <!-- Bootstrap 4.5.2 CSS minified -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -23,6 +20,12 @@
             integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
             crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
+
+    <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/createcontract.css" rel="stylesheet"/>
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 
 </head>
 <body class="body">
