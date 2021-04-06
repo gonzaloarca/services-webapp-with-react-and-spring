@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title><c:out value="Fontanería"/></title>
@@ -43,7 +44,7 @@
                 <li data-target="#carousel" data-slide-to="1"></li>
             </ol>
             <div class="carousel-inner">
-<%--                TODO: CAMBIAR POR FOTOS REALES DEL SERVICIO--%>
+                <%--                TODO: CAMBIAR POR FOTOS REALES DEL SERVICIO--%>
                 <div class="carousel-item active">
                     <img class="d-block w-100 h-100"
                          src="${pageContext.request.contextPath}/resources/images/worker-placeholder.jpg"
@@ -177,17 +178,20 @@
                                             <div class="custom-row package-info">
                                                 <i class="fas fa-box-open"></i>
                                                 <p class="package-title">
-                                                    <c:out value="${pack.key.title}"/>
+                                                    <c:out value="${pack.title}"/>
                                                 </p>
                                                 <div class="ml-auto custom-row">
                                                     <div class="package-price">
                                                         <p class="text-center">Precio</p>
                                                         <div class="chip">
-                                                            <c:out value="${pack.value}"/>
+                                                            <spring:message code="${pack.rateType.toString()}"
+                                                                            arguments="${pack.price}"/>
                                                         </div>
                                                     </div>
                                                     <div class="align-self-center ml-4 mr-4">
-                                                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/contract/package/${pack.key.id}"
+                                                        <a class="btn btn-primary"
+                                                           href="${pageContext.request.contextPath}
+                                                           /contract/package/${pack.id}"
                                                            role="button" type="submit">
                                                             SOLICITAR
                                                         </a>
@@ -202,7 +206,7 @@
                                         <div class="card-body">
                                             <p class="package-text">
                                                 Descripción<br/>
-                                                <c:out value="${pack.key.description}"/>
+                                                <c:out value="${pack.description}"/>
                                             </p>
                                         </div>
                                     </div>

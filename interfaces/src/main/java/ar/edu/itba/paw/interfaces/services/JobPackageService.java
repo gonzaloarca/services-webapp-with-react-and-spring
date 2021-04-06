@@ -13,8 +13,4 @@ public interface JobPackageService {
     Optional<JobPackage> findById(long id);
 
     Optional<List<JobPackage>> findByPostId(long id);
-
-    Map<JobPackage, String> findByPostIdWithPrice(long id);
-
-    String getPriceFormat(Double price, JobPackage.RateType rateType);
 }

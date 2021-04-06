@@ -109,6 +109,11 @@ public class JobPackage {
     public enum RateType {
         HOURLY,
         ONE_TIME,
-        TBD
+        TBD;
+
+        @Override
+        public String toString() {
+            return "rate.type." + super.toString().toLowerCase();
+        }
     }
 }

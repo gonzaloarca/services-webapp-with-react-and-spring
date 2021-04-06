@@ -21,9 +21,7 @@ public interface JobPostService {
 
     Optional<List<JobPost>> findAll();
 
-    Map<JobPost, List<String>> findAllJobCardsWithData();
-    //En List<String> el elemento 0 indica el precio del package mas barato del post
-    // y el 1 la cantidad de trabajos completados por el profesional
+    JobPackage findCheapestPackage(long postId);
 
     Optional<List<JobPost>> search(String title, JobPost.Zone zone);
 

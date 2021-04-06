@@ -75,27 +75,13 @@ public class NoLoginJobPostService implements JobPostService {
     }
 
     @Override
-    public Map<JobPost, List<String>> findAllJobCardsWithData() {
-        Map<JobPost, List<String>> answer = new HashMap<>();
-        Optional<List<JobPost>> jobPosts = findAll();
-        if (!jobPosts.isPresent())
-            return answer;
+    public JobPackage findCheapestPackage(long postId) {
+        List<JobPackage> jobPackages = jobPackageService.findByPostId(postId).orElseThrow(
+                RuntimeException::new //TODO: DEBERIA SER UNA EXCEPCION PROPIA
+        );
 
-        jobPosts.get().forEach(jobPost -> {
-            Optional<List<JobPackage>> aux = jobPackageService.findByPostId(jobPost.getId());
-            //TODO: SI NO ESTA PRESENTE ARROJAR EXCEPCION?
-            aux.ifPresent(jobPackages -> {
-                JobPackage jobPackage = jobPackages.stream().min(Comparator.comparingDouble(JobPackage::getPrice)).get();
-                //Estoy seguro de que existe almenos un package en cada post
-                List<String> strings = new ArrayList<>();
-                strings.add(jobPackageService.getPriceFormat(jobPackage.getPrice(), jobPackage.getRateType()));
-                strings.add(String.valueOf(
-                        jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())));
-                answer.put(jobPost, strings);
-            }); 
-        });
-
-        return answer;
+        return jobPackages.stream().min(Comparator.comparingDouble(JobPackage::getPrice)).
+                orElseThrow(RuntimeException::new);
     }
 
     @Override
