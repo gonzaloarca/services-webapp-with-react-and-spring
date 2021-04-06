@@ -207,6 +207,17 @@ p.job-card-detail {
     color: red;
 }
 
+/*Para que palabras se muestren con solo la primer letra en mayuscula*/
+.capitalize-first-letter {
+    text-transform: lowercase;
+    margin: 0;
+}
+
+.capitalize-first-letter::first-letter {
+    text-transform: uppercase;
+}
+
+
 .form-control {
     border: transparent;
     background-color: #e8e8e8;

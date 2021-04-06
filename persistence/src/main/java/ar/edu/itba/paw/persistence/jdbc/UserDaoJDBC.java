@@ -16,14 +16,14 @@ import java.util.Optional;
 public class UserDaoJDBC implements UserDao {
 
     private final static RowMapper<User> USER_ROW_MAPPER = (resultSet, rowNum) -> new User(
-            resultSet.getLong("id"),
-            resultSet.getString("email"),
-            resultSet.getString("username"),
+            resultSet.getLong("user_id"),
+            resultSet.getString("user_email"),
+            resultSet.getString("user_name"),
 //            resultSet.getString("user_image"),
             "",
-            resultSet.getString("phone"),
-            resultSet.getBoolean("is_professional"),
-            resultSet.getBoolean("is_active"));
+            resultSet.getString("user_phone"),
+            resultSet.getBoolean("user_is_professional"),
+            resultSet.getBoolean("user_is_active"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -31,18 +31,18 @@ public class UserDaoJDBC implements UserDao {
     @Autowired
     public UserDaoJDBC(DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("id");
+        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("user_id");
     }
 
     @Override
     public User register(String email, String username, String phone, boolean isProfessional) {
         Number key =  jdbcInsert.executeAndReturnKey(new HashMap<String,Object>(){{
-            put("email",email);
-            put("username",username);
+            put("user_email",email);
+            put("user_name",username);
             put("user_image","");
-            put("phone",phone);
-            put("is_professional",isProfessional);
-            put("is_active",true);
+            put("user_phone",phone);
+            put("user_is_professional",isProfessional);
+            put("user_is_active",true);
         }});
         User user = new User();
         user.setId(key.longValue());
@@ -57,17 +57,18 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<User> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+        System.out.println("EN USER DAO");
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?",new Object[]{email},USER_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_email = ?",new Object[]{email},USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<User> switchRole(long id) {
-        jdbcTemplate.update("UPDATE users SET is_professional = NOT is_professional WHERE id = ?", id);
-        return jdbcTemplate.query("SELECT  * FROM users WHERE id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+        jdbcTemplate.update("UPDATE users SET user_is_professional = NOT user_is_professional WHERE user_id = ?", id);
+        return jdbcTemplate.query("SELECT  * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
     }
 }

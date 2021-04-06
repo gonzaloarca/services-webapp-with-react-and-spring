@@ -9,18 +9,9 @@ public class JobPackage {
     private String description;
     private Double price;
     private RateType rateType;
-    private boolean is_active;
+    private boolean isActive;
 
     public JobPackage() {
-    }
-
-    public JobPackage(long postId, String title, String description, Double price, RateType rateType) {
-        this.postId = postId;
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.rateType = rateType;
-        this.is_active = true;
     }
 
     public JobPackage(long id, long postId, String title, String description, Double price, RateType rateType, boolean is_active) {
@@ -30,7 +21,7 @@ public class JobPackage {
         this.description = description;
         this.price = price;
         this.rateType = rateType;
-        this.is_active = is_active;
+        this.isActive = is_active;
     }
 
     public long getId() {
@@ -82,11 +73,11 @@ public class JobPackage {
     }
 
     public boolean is_active() {
-        return is_active;
+        return isActive;
     }
 
-    public void setIs_active(boolean is_active) {
-        this.is_active = is_active;
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 
     @Override
@@ -98,7 +89,7 @@ public class JobPackage {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", rateType=" + rateType +
-                ", is_active=" + is_active +
+                ", is_active=" + isActive +
                 '}';
     }
 

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.JobPackage;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface JobPackageService {
@@ -13,4 +14,7 @@ public interface JobPackageService {
 
     Optional<List<JobPackage>> findByPostId(long id);
 
+    Map<JobPackage, String> findByPostIdWithPrice(long id);
+
+    String getPriceFormat(Double price, JobPackage.RateType rateType);
 }
