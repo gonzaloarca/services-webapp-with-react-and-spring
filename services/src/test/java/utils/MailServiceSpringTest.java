@@ -1,6 +1,7 @@
 package utils;
 
 import ar.edu.itba.paw.interfaces.services.MailingService;
+import ar.edu.itba.paw.services.utils.MailingServiceSpring;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,13 +14,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 public class MailServiceSpringTest {
 
     @InjectMocks
-    private MailingService mailingService;
+    private final MailingServiceSpring mailingService = new MailingServiceSpring();
 
     @Mock
     private JavaMailSender mailSender;
 
     @Test
     public void testSendSimpleMail() {
-
+        //TODO: implementar testing del MailingService
     }
 }
