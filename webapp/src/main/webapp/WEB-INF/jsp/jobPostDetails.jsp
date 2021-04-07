@@ -39,7 +39,9 @@
         <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Inicio</a></li>
             <li class="breadcrumb-item active" aria-current="page">
-                <p class="capitalize-first-letter"><c:out value="${jobPost.jobType}"/></p>
+                <p class="capitalize-first-letter">
+                    <spring:message code="${jobPost.jobType.stringCode}"/>
+                </p>
             </li>
         </ol>
     </nav>
@@ -140,7 +142,9 @@
                         </span>
                         <div class="custom-row zones">
                             <c:forEach items="${jobPost.zones}" var="zone">
-                                <p class="capitalize-first-letter"><c:out value="${zone}"/></p>
+                                <p class="capitalize-first-letter">
+                                    <spring:message code="${zone.stringCode}"/>
+                                </p>
                             </c:forEach>
                         </div>
                     </div>
@@ -190,7 +194,7 @@
                                                     <div class="package-price">
                                                         <p class="text-center">Precio</p>
                                                         <div class="chip">
-                                                            <spring:message code="${pack.rateType.toString()}"
+                                                            <spring:message code="${pack.rateType.stringCode}"
                                                                             arguments="${pack.price}"/>
                                                         </div>
                                                     </div>

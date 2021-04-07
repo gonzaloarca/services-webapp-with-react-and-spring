@@ -62,7 +62,11 @@
         <div class="home-search-location">
             <form:select path="zone" class="custom-select w-100">
                 <form:option value="" label="Ubicación"/>
-                <form:options items="${zones}" itemValue="value" itemLabel="message"/>
+                <c:forEach items="${zones}" var="zone">
+                    <form:option value="${zone.value}">
+                        <spring:message code="${zone.stringCode}"/>
+                    </form:option>
+                </c:forEach>
             </form:select>
             <form:errors path="zone" cssClass="search-form-error" element="p"/>
         </div>
@@ -98,7 +102,7 @@
                                 value="${jobCard.jobPost.jobType}"/></h6>
                         <div class="job-card-price-container">
                             <p class="job-card-price">
-                                <spring:message code="${jobCard.rateType.toString()}"
+                                <spring:message code="${jobCard.rateType.stringCode}"
                                                 arguments="${jobCard.price}"/>
                             </p>
                         </div>

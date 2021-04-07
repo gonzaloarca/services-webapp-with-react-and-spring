@@ -129,12 +129,12 @@ public class JobPost {
         BABYSITTING("babysitting.jpeg", "JobPost.JobType.BABYSITTING");
 
         private String imagePath;
-        private String message;
+        private String stringCode;
         private int value;
 
-        JobType(String imagePath, String message) {
+        JobType(String imagePath, String stringCode) {
             this.imagePath = imagePath;
-            this.message = message;
+            this.stringCode = stringCode;
             this.value = ordinal();
         }
 
@@ -146,12 +146,12 @@ public class JobPost {
             this.imagePath = imagePath;
         }
 
-        public String getMessage() {
-            return message;
+        public String getStringCode() {
+            return stringCode;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public void setStringCode(String stringCode) {
+            this.stringCode = stringCode;
         }
 
         public int getValue() {
@@ -167,14 +167,14 @@ public class JobPost {
         BELGRANO("JobPost.Zone.BELGRANO"),
         PALERMO("JobPost.Zone.PALERMO"),
         RETIRO("JobPost.Zone.RETIRO"),
-        NUÑEZ("JobPost.Zone.NUÑEZ"),
+        NUNIEZ("JobPost.Zone.NUNIEZ"),
         COLEGIALES("JobPost.Zone.COLEGIALES");
 
-        private String message;
+        private String stringCode;
         private int value;
 
-        Zone(final String message) {
-            this.message = message;
+        Zone(final String stringCode) {
+            this.stringCode = stringCode;
             this.value = ordinal();
         }
 
@@ -186,12 +186,12 @@ public class JobPost {
             this.value = value;
         }
 
-        public String getMessage() {
-            return message;
+        public String getStringCode() {
+            return stringCode;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public void setStringCode(String stringCode) {
+            this.stringCode = stringCode;
         }
     }
 }

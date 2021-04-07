@@ -57,7 +57,11 @@
                                 for="serviceTypeSelect">Seleccione un tipo de servicio</form:label>
                     <form:select path="jobType" class="form-control w-75" id="serviceTypeSelect">
                         <form:option value="" label="Tipo de servicio"/>
-                        <form:options items="${jobTypes}" itemValue="value" itemLabel="message"/>
+                        <c:forEach items="${jobTypes}" var="type">
+                            <form:option value="${type.value}">
+                                <spring:message code="${type.stringCode}"/>
+                            </form:option>
+                        </c:forEach>
                     </form:select>
                     <form:errors path="jobType" class="form-error" element="p"/>
                 </div>
@@ -222,7 +226,7 @@
                             <label class="list-group-item">
                                 <form:checkbox path="zones" class="form-check-input" value="${zone.value}"/>
                                 <span class="location-name">
-                                    <c:out value="${zone.message}"/>
+                                    <spring:message code="${zone.stringCode}"/>
                                 </span>
                             </label>
                         </c:forEach>

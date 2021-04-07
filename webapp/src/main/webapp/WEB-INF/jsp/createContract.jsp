@@ -40,7 +40,9 @@
                             <spring:message code="navigation.index"/>
                         </a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            <p class="capitalize-first-letter"><c:out value="${jobPost.jobType}"/></p>
+                            <p class="capitalize-first-letter">
+                                <spring:message code="${jobPost.jobType.stringCode}"/>
+                            </p>
                         </li>
                     </ol>
                 </nav>
@@ -205,7 +207,9 @@
                                 </div>
                                 <div class="info-right-col">
                                     <c:forEach items="${jobPost.zones}" var="zone">
-                                        <p class="capitalize-first-letter"><c:out value="${zone}"/></p>
+                                        <p class="capitalize-first-letter">
+                                            <spring:message code="${zone.stringCode}"/>
+                                        </p>
                                     </c:forEach>
                                 </div>
                             </div>
@@ -238,7 +242,7 @@
                                 </div>
                                 <div class="info-right-col">
                                     <p class="price-tag">
-                                        <spring:message code="${jobPack.rateType.toString()}"
+                                        <spring:message code="${jobPack.rateType.stringCode}"
                                                         arguments="${jobPack.price}"/>
                                     </p>
                                 </div>
