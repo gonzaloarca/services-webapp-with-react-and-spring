@@ -80,8 +80,9 @@
                         </p>
                         <hr class="divider-bar"/>
                         <!-- Form Entries -->
+                        <c:url value="/contract/package/${packId}" var="postUrl"/>
                         <form:form class="contract-input" modelAttribute="contractForm"
-                                   action="/contract/package/${packId}" method="post"
+                                   action="${postUrl}" method="post"
                                    enctype="multipart/form-data">
 
                             <!-- Name -->
