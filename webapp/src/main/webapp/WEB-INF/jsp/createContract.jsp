@@ -40,7 +40,9 @@
                             <spring:message code="navigation.index"/>
                         </a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            <p class="capitalize-first-letter"><c:out value="${jobPost.jobType}"/></p>
+                            <p class="capitalize-first-letter">
+                                <spring:message code="${jobPost.jobType.stringCode}"/>
+                            </p>
                         </li>
                     </ol>
                 </nav>
@@ -58,7 +60,10 @@
                             <spring:message code="contract.create.page.title"/>
                         </h2>
                     </div>
-                    <img src="${postImage}" alt="<spring:message code='contract.create.header.image'/>" class="header-img"/>
+                    <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
+                    <img class="header-img"
+                        src='<c:url value="${pageContext.request.contextPath}/resources/images/${jobPost.jobType.imagePath}" />'
+                        alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
             </div>
 
             <div class="row bottom-row">
@@ -146,18 +151,18 @@
 
                             <!-- Image -->
                             <!-- TODO: implementar imagen en el proximo Sprint -->
-                            <!--div class="form-row">
-                                <div class="yellow-circle">
-                                    <p class="circle-text">5</p>
-                                </div>
-                                <div class="col-10 label-and-input">
-                                    <form:label path="image" class="form-text">
-                                        <spring:message code="contract.create.form.image"/>
-                                    </form:label>
-                                    <form:input type="file" path="image"/>
-                                    <form:errors path="image" cssClass="form-error" element="p"/>
-                                </div>
-                            </div-->
+<%--                            <div class="form-row">--%>
+<%--                                <div class="yellow-circle">--%>
+<%--                                    <p class="circle-text">5</p>--%>
+<%--                                </div>--%>
+<%--                                <div class="col-10 label-and-input">--%>
+<%--                                    <form:label path="image" class="form-text">--%>
+<%--                                        <spring:message code="contract.create.form.image"/>--%>
+<%--                                    </form:label>--%>
+<%--                                    <form:input type="file" path="image"/>--%>
+<%--                                    <form:errors path="image" cssClass="form-error" element="p"/>--%>
+<%--                                </div>--%>
+<%--                            </div>--%>
 
                             <!-- Submit Button -->
                             <div class="submit-button">
@@ -176,7 +181,9 @@
                         <h5 class="info-title">
                             <spring:message code="contract.create.detail.title"/>
                         </h5>
-                        <img src="${postImage}" alt="<spring:message code="contract.create.detail.image"/>" class="info-img"/>
+                        <img class="info-img"
+                             src='<c:url value="${pageContext.request.contextPath}/resources/images/${jobPost.jobType.imagePath}" />'
+                             alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                         <div class="container">
                             <!-- Job Title -->
                             <div class="row info-row">
@@ -205,7 +212,9 @@
                                 </div>
                                 <div class="info-right-col">
                                     <c:forEach items="${jobPost.zones}" var="zone">
-                                        <p class="capitalize-first-letter"><c:out value="${zone}"/></p>
+                                        <p class="capitalize-first-letter">
+                                            <spring:message code="${zone.stringCode}"/>
+                                        </p>
                                     </c:forEach>
                                 </div>
                             </div>
@@ -238,7 +247,7 @@
                                 </div>
                                 <div class="info-right-col">
                                     <p class="price-tag">
-                                        <spring:message code="${jobPack.rateType.toString()}"
+                                        <spring:message code="${jobPack.rateType.stringCode}"
                                                         arguments="${jobPack.price}"/>
                                     </p>
                                 </div>

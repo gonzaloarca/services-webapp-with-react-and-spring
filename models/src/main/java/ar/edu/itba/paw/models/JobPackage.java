@@ -107,13 +107,33 @@ public class JobPackage {
     }
 
     public enum RateType {
-        HOURLY,
-        ONE_TIME,
-        TBD;
+        HOURLY("JobPackage.RateType.HOURLY"),
+        ONE_TIME("JobPackage.RateType.ONE_TIME"),
+        TBD("JobPackage.RateType.TBD");
 
-        @Override
-        public String toString() {
-            return "rate.type." + super.toString().toLowerCase();
+        private String stringCode;
+        private int value;
+
+        RateType(final String stringCode) {
+            this.stringCode = stringCode;
+            this.value = ordinal();
         }
+
+        public String getStringCode() {
+            return stringCode;
+        }
+
+        public void setStringCode(String stringCode) {
+            this.stringCode = stringCode;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
     }
 }

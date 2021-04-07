@@ -29,7 +29,8 @@ public class ContractForm {
     @Size(max = 1000)
     private String description;
 
-    private MultipartFile image;
+    //TODO: proximo sprint para imagen
+   // private MultipartFile image;
 
     public String getName() {
         return name;
@@ -62,7 +63,7 @@ public class ContractForm {
     public void setDescription(String description) {
         this.description = description;
     }
-
+/*
     public MultipartFile getImage() {
         return image;
     }
@@ -70,5 +71,5 @@ public class ContractForm {
     public void setImage(MultipartFile image) {
         this.image = image;
     }
-
+*/
 }
