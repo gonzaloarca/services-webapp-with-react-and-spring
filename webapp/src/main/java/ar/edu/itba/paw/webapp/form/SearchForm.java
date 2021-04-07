@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 public class SearchForm {
 
-    @Pattern(regexp = "^[0-9][0-9]*$")
+    //  @Pattern(regexp = "^[0-9][0-9]*$")
     @NotBlank
     private String zone;
 
