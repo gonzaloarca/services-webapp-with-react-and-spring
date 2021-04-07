@@ -43,4 +43,9 @@ p.job-card-detail {
 
 .job-card {
     margin: 15px 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.job-card:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }

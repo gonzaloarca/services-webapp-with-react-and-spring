@@ -28,7 +28,7 @@
 
 .card-title p {
     margin-left: 20px;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     margin-bottom: 0;
 }
@@ -109,7 +109,8 @@
 }
 
 .zones p {
-    background-color: #EAEAEA;
+    background-color: #7e7e7e;
+    color: white;
     border-radius: 12px;
     padding: 10px;
     margin: 0 10px 20px;
@@ -118,6 +119,7 @@
 }
 
 .package-info {
+    display: flex;
     align-items: center;
 }
 
@@ -127,9 +129,11 @@
 }
 
 .package-title {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
-    margin: auto 3vw;
+    width: 50%;
+    margin-left: 20px;
+    margin-bottom: 0;
 }
 
 .package-desc {

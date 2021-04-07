@@ -72,7 +72,7 @@
             </a-->
         </div>
 
-        <div class="card-body custom-row">
+        <div class="card-body custom-row mt-2">
 
             <div class="side">
             </div>
@@ -114,9 +114,9 @@
 
                         <div class="summary custom-row">
                             <div class="summary-item">
-                            <%--TODO: CAMBIAR A FOTO DE USUARIO--%>
-<%--                                <img    src="${pageContext.request.contextPath}/resources/images/banner1.jpg"--%>
-<%--                                        alt="Primer foto">--%>
+                                <%--TODO: CAMBIAR A FOTO DE USUARIO--%>
+                                <%--                                <img    src="${pageContext.request.contextPath}/resources/images/banner1.jpg"--%>
+                                <%--                                        alt="Primer foto">--%>
                                 <i class="fas fa-user fa-2x"></i>
                                 <p><c:out value="${jobPost.user.username}"/></p>
                             </div>
@@ -140,7 +140,7 @@
                         </span>
                         <div class="custom-row zones">
                             <c:forEach items="${jobPost.zones}" var="zone">
-                                <p class="capitalize-first-letter">
+                                <p class="capitalize-first-letter" style="margin: 0 5px">
                                     <spring:message code="${zone.stringCode}"/>
                                 </p>
                             </c:forEach>
@@ -183,7 +183,7 @@
                                                 data-toggle="collapse" data-target="#collapse${status.index}"
                                                 aria-expanded="false"
                                                 aria-controls="collapse${status.index}">
-                                            <div class="custom-row package-info">
+                                            <div class="package-info">
                                                 <i class="fas fa-box-open"></i>
                                                 <p class="package-title">
                                                     <c:out value="${pack.title}"/>
