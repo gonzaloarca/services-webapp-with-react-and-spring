@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PriceNotEmpty {
+    //TODO: Paramterizar mensajes respecto de messages.properties correctamente
 
     String message() default "El precio no puede estar vacío";
 

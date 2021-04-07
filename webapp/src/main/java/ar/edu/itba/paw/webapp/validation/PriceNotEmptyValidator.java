@@ -16,12 +16,22 @@ public class PriceNotEmptyValidator implements ConstraintValidator<PriceNotEmpty
     @Override
     public boolean isValid(Object value,
                            ConstraintValidatorContext context) {
-
+        //TODO: Paramterizar mensajes respecto de messages.properties correctamente
         JobPackage.RateType rateType = JobPackage.RateType
                 .values()[(int) new BeanWrapperImpl(value).getPropertyValue("rateType")];
         String price = (String) new BeanWrapperImpl(value).getPropertyValue("price");
 
-        return (rateType == JobPackage.RateType.TBD || price != null
-                && Pattern.matches("^(?=.+)(?:[1-9]\\d*|0)?(?:\\.\\d+)?$", price));
+        if (rateType != JobPackage.RateType.TBD) {
+            if (price == null || price.isEmpty()) {
+                return false;
+            } else if (!Pattern.matches("^(?=.+)(?:[1-9]\\d*|0)?(?:\\.\\d+)?$", price)) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("El precio debe ser un número decimal válido")
+                        .addConstraintViolation();
+                return false;
+            }
+        }
+
+        return true;
     }
 }

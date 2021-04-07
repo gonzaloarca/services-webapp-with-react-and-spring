@@ -424,7 +424,7 @@
         $("#packagePrice1").prop('readonly', false);
     });
 
-    $("#hourlyRadio1" + i).on('click', function () {
+    $("#hourlyRadio1").on('click', function () {
         $("#packagePrice1").prop('readonly', false);
     });
     //TODO: Proximo sprint paquetes dinmaicos
