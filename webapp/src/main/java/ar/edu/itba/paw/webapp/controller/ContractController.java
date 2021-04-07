@@ -55,7 +55,7 @@ public class ContractController {
                                        @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors){
 
         //TODO encontrar si hay una mejor forma de validar la imagen:
-        imageValidator.validate(form.getImage(), errors);
+        //imageValidator.validate(form.getImage(), errors);
 
         if(errors.hasErrors()){
             return createContract(packId, form);
