@@ -211,10 +211,10 @@
                                 <div class="info-left-col">
                                     <i class="fas fa-map-marker-alt fa-2x"></i>
                                 </div>
-                                <div class="info-right-col">
-                                    <c:forEach items="${jobPost.zones}" var="zone">
+                                <div class="info-right-col" style="display: flex">
+                                    <c:forEach items="${jobPost.zones}" var="zone" varStatus="status">
                                         <p class="capitalize-first-letter">
-                                            <spring:message code="${zone.stringCode}"/>
+                                            <spring:message code="${zone.stringCode}"/><c:if test="${status.index != jobPost.zones.size()-1}">,&nbsp</c:if>
                                         </p>
                                     </c:forEach>
                                 </div>
