@@ -18,7 +18,7 @@ body {
 }
 
 .content-container-transparent {
-    width: 80%;
+    width: 80vw;
     max-width: 1184px;
     margin: 0 auto;
     padding: 30px 0;

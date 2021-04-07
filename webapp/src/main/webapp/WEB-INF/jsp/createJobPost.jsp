@@ -34,9 +34,13 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="content-container-transparent">
-    <h3 class="mt-5">
-        <spring:message code="jobPost.create.title"/>
-    </h3>
+    <div class="site-header">
+        <h3 style="position: absolute; margin: 0; color: white">
+            <spring:message code="jobPost.create.title"/>
+        </h3>
+        <img class="header-image" src="${pageContext.request.contextPath}/resources/images/bannerart1.jpg"
+             alt="<spring:message code="jobPost.create.title"/>">
+    </div>
     <div class="content-container">
         <c:url value="/create-job-post" var="postPath"/>
         <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post" class="create-job-post-form">
