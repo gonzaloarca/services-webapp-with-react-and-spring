@@ -24,6 +24,7 @@ public class NoLoginJobPackageService implements JobPackageService {
         if (!jobPostService.findById(postId).isPresent())
             throw new RuntimeException("Post no encontrado");
 
+
         return jobPackageDao.create(postId, title, description, price, rateType);
     }
 

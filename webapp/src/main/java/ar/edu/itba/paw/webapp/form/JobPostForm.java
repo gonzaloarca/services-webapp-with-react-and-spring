@@ -4,6 +4,7 @@ package ar.edu.itba.paw.webapp.form;
 //import ar.edu.itba.paw.webapp.validation.ValidImageArray;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class JobPostForm {
@@ -44,8 +46,7 @@ public class JobPostForm {
     @NotBlank
     private String email;
 
-    @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
-    @NotBlank
+    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
     private String phone;
 
     //TODO: Proximo sprint

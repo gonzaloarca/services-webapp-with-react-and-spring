@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -28,18 +29,18 @@ public class MainController {
     @Autowired
     private JobContractService jobContractService;
 
+    @Autowired
+    private ServletContext servletContext;
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
         final ModelAndView mav = new ModelAndView("index");
         List<JobCard> jobCards = new ArrayList<>();
-        jobPostService.findAll().ifPresent(jobPosts -> jobPosts.forEach(jobPost -> {
-            JobPackage min = jobPostService.findCheapestPackage(jobPost.getId()).orElseThrow(JobPackageNotFoundException::new);
-            jobCards.add(new JobCard(
-                    jobPost, min.getRateType(), min.getPrice(),
-                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())
-            ));
-        }));
+        Optional<List<JobPost>> homePosts = jobPostService.findAll();
+        if(homePosts.isPresent()){
+            jobCards = createCards(homePosts.get());
+        }
 
         mav.addObject("jobCards", jobCards);
         mav.addObject("zones", JobPost.Zone.values());
@@ -52,7 +53,7 @@ public class MainController {
         if (errrors.hasErrors())
             return home(form);
 
-        return new ModelAndView("redirect:/search?query=" + form.getQuery() + "&zone=" + form.getZone());
+        return new ModelAndView("redirect:"+ servletContext.getContextPath()+"/search?query=" + form.getQuery() + "&zone=" + form.getZone());
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
@@ -67,15 +68,10 @@ public class MainController {
             mav.addObject("pickedZone", null);
             return mav;
         }
-        jobPostService.search(form.getQuery(), JobPost.Zone.values()[Integer.parseInt(zone)])
-                .ifPresent(jobPosts -> jobPosts.forEach(jobPost -> {
-                    JobPackage min = jobPostService.findCheapestPackage(jobPost.getId()).orElseThrow(JobPostNotFoundException::new);
-                    jobCards.add(new JobCard(
-                            jobPost, min.getRateType(), min.getPrice(),
-                            jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())
-                    ));
-                }));
-
+        Optional<List<JobPost>> searchPost = jobPostService.search(form.getQuery(), JobPost.Zone.values()[Integer.parseInt(zone)]);
+        if(searchPost.isPresent()){
+            jobCards = createCards(searchPost.get());
+        }
         mav.addObject("jobCards", jobCards);
         mav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
         mav.addObject("query", form.getQuery());
@@ -90,6 +86,19 @@ public class MainController {
         if (errors.hasErrors())
             return search("", form.getQuery(), form.getCategory(), form);
 
-        return new ModelAndView("redirect:/search?query=" + form.getQuery() + "&zone=" + form.getZone());
+        return new ModelAndView("redirect:"+servletContext.getContextPath()+"/search?query=" + form.getQuery() + "&zone=" + form.getZone());
+    }
+
+    private List<JobCard> createCards(List<JobPost> jobPosts){
+        List<JobCard> jobCards = new ArrayList<>();
+
+        jobPosts.forEach(jobPost -> {
+            JobPackage min = jobPostService.findCheapestPackage(jobPost.getId()).orElseThrow(JobPostNotFoundException::new);
+            jobCards.add(new JobCard(
+                    jobPost, min.getRateType(), min.getPrice(),
+                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())
+            ));
+        });
+        return jobCards;
     }
 }

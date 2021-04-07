@@ -62,7 +62,7 @@
                     </div>
                     <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
                     <img class="header-img"
-                        src='<c:url value="${pageContext.request.contextPath}/resources/images/${jobPost.jobType.imagePath}" />'
+                        src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
                         alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
             </div>
 
@@ -182,7 +182,7 @@
                             <spring:message code="contract.create.detail.title"/>
                         </h5>
                         <img class="info-img"
-                             src='<c:url value="${pageContext.request.contextPath}/resources/images/${jobPost.jobType.imagePath}" />'
+                             src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
                              alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                         <div class="container">
                             <!-- Job Title -->

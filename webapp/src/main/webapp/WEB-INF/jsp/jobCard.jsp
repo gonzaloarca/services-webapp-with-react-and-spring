@@ -10,7 +10,7 @@
     <%-- TODO: Poner alt correcto e imagen de usuario--%>
     <spring:message code="${requestScope.data.jobPost.jobType.stringCode}" var="jobTypeName"/>
     <img class="card-img-top job-card-img"
-         src='<c:url value="${pageContext.request.contextPath}/resources/images/${requestScope.data.jobPost.jobType.imagePath}" />'
+         src='<c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" />'
          alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
     <div class="card-body">
         <h5 class="card-title job-card-title"><c:out value="${requestScope.data.jobPost.title}"/></h5>

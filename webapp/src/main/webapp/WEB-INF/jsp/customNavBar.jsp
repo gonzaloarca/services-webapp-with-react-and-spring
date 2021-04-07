@@ -9,8 +9,7 @@
 <!-- Sacado de https://getbootstrap.com/docs/4.6/components/navbar/ -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <a class="navbar-brand" href="${pageContext.request.contextPath}/">
-        <img src='<c:url value="${pageContext.request.contextPath}/resources/images/hirenet-logo-v3-invert.png" />'
-        alt="<spring:message code="navigation.logo"/>"/>
+        <img src="${pageContext.request.contextPath}/resources/images/hirenet-logo-v3-invert.png" alt="<spring:message code="navigation.logo"/>"/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,12 +17,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item ${requestScope['javax.servlet.forward.request_uri'] == "/" ? 'active': ''}">
+            <li class="nav-item ${param.path == "/" ? 'active': ''}">
                 <a class="nav-link" href="${pageContext.request.contextPath}/">
                     <spring:message code="navigation.index"/>
                 </a>
             </li>
-            <li class="nav-item ${requestScope['javax.servlet.forward.request_uri'] == "/create-job-post" ? 'active': ''}">
+            <li class="nav-item ${param.path == "/create-job-post" ? 'active': ''}">
                 <a class="nav-link" href="${pageContext.request.contextPath}/create-job-post">
                     <spring:message code="navigation.publish"/>
                 </a>

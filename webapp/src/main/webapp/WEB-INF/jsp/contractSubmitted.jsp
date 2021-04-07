@@ -29,7 +29,7 @@
 <%@ include file="customNavBar.jsp" %>
 <div class="content-container-transparent page">
     <div class="message">
-        <img src='<c:url value="${pageContext.request.contextPath}/resources/images/thumbs.svg" />'
+        <img src='<c:url value="/resources/images/thumbs.svg" />'
              alt="<spring:message code="contract.success.image"/>"
              class="image"/>
         <h1 class="title">

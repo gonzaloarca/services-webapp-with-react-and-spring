@@ -58,7 +58,7 @@
                 <div class="carousel-item active">
                     <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
                     <img class="d-block w-100 h-100"
-                         src='<c:url value="${pageContext.request.contextPath}/resources/images/${jobPost.jobType.imagePath}" />'
+                         src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
                          alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                 </div>
             </div>
@@ -200,8 +200,7 @@
                                                     </div>
                                                     <div class="align-self-center ml-4 mr-4 requestServiceBtn">
                                                         <a class="btn btn-primary"
-                                                           href="${pageContext.request.contextPath}
-                                                           /contract/package/${pack.id}"
+                                                           href="${pageContext.request.contextPath}/contract/package/${pack.id}"
                                                            role="button" type="submit">
                                                             <spring:message code="jobPost.jobs.submit"/>
                                                         </a>

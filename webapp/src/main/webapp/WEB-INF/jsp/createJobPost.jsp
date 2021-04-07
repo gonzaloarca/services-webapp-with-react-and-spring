@@ -32,7 +32,10 @@
 
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
+<%--<%@ include file="customNavBar.jsp" %>--%>
+<jsp:include page="customNavBar.jsp">
+    <jsp:param name="path" value="/create-job-post"/>
+</jsp:include>
 <div class="content-container-transparent">
     <div class="site-header">
         <h3 style="position: absolute; margin: 0; color: white">
@@ -187,7 +190,7 @@
                                 </span>
                             </div>
                             <spring:message code="jobPost.create.package.price" var="pricePlaceholder"/>
-                            <form:input path="packages[0].price" id="packagePrice1" type="number"
+                            <form:input path="packages[0].price" id="packagePrice1" type="number" step="any"
                                         class="form-control"
                                         placeholder="${pricePlaceholder}"/>
                         </div>

@@ -63,11 +63,11 @@ public class JobPostController {
                 form.getTitle(), form.getAvailableHours(),
                 JobPost.JobType.values()[Integer.parseInt(form.getJobType())],
                 Arrays.stream(form.getZones()).mapToObj(z -> JobPost.Zone.values()[z]).collect(Collectors.toList()));
-
+        double price;
         for (PackageForm packageForm : form.getPackages()) {
+            price = packageForm.getPrice().isEmpty() ? -1.0 : Double.parseDouble(packageForm.getPrice());
             jobPackageService.create(jobPost.getId(), packageForm.getTitle(), packageForm.getDescription(),
-                    Double.parseDouble(packageForm.getPrice()),
-                    JobPackage.RateType.values()[packageForm.getRateType()]);
+                        price, JobPackage.RateType.values()[packageForm.getRateType()]);
         }
 
         return new ModelAndView("redirect:/job/" + jobPost.getId());

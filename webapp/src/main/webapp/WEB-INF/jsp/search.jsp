@@ -94,7 +94,7 @@
     </form:form>
     <%--TODO: Poner alt correcto--%>
     <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
-         src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
+         src='<c:url value="/resources/images/banner1.jpg" />'/>
 </div>
 <div class="content-container" style="display: flex">
     <%--    <div class="custom-card filter-card">--%>

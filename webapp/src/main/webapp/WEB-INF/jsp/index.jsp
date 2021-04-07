@@ -38,7 +38,10 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
+<%--<%@ include file="customNavBar.jsp" %>--%>
+<jsp:include page="customNavBar.jsp">
+    <jsp:param name="path" value="/"/>
+</jsp:include>
 <div class="home-banner-container">
     <form:form action="/" method="post" modelAttribute="searchForm" class="home-search-form">
         <div class="search-instructions">
@@ -94,7 +97,7 @@
     </form:form>
 
     <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
-         src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
+         src='<c:url value="/resources/images/banner1.jpg" />'/>
 </div>
 <div class="content-container">
     <h3>
