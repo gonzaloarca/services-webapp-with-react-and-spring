@@ -5,7 +5,9 @@
 
 <html>
 <head>
-    <title>Inicio</title>
+    <title>
+        <spring:message code="navigation.index"/>
+    </title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -44,33 +46,45 @@
                 <div class="blue-circle">
                     <p class="circle-text">1</p>
                 </div>
-                <p class="search-instructions-text">Elija su ubicación</p>
+                <p class="search-instructions-text">
+                    <spring:message code="index.search.location"/>
+                </p>
             </div>
             <div class="search-instruction-step">
                 <div class="blue-circle">
                     <p class="circle-text">2</p>
                 </div>
-                <p class="search-instructions-text">Introduzca el servicio que necesita</p>
+                <p class="search-instructions-text">
+                    <spring:message code="index.search.jobType"/>
+                </p>
             </div>
             <div class="search-instruction-step">
                 <div class="blue-circle">
                     <p class="circle-text">3</p>
                 </div>
-                <p class="search-instructions-text">¡Buscar!</p>
+                <p class="search-instructions-text">
+                    <spring:message code="index.search.submit"/>
+                </p>
             </div>
         </div>
 
         <div class="home-search-location">
             <form:select path="zone" class="custom-select w-100">
-                <form:option value="" label="Ubicación"/>
-                <form:options items="${zones}" itemValue="value" itemLabel="message"/>
+                <spring:message code="index.search.location.placeholder" var="locationPlaceholder"/>
+                <form:option value="" label="${locationPlaceholder}"/>
+                <c:forEach items="${zones}" var="zone">
+                    <form:option value="${zone.value}">
+                        <spring:message code="${zone.stringCode}"/>
+                    </form:option>
+                </c:forEach>
             </form:select>
             <form:errors path="zone" cssClass="search-form-error" element="p"/>
         </div>
 
         <div class="home-search-bar-container home-search-bar-row">
+            <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
             <form:input path="query" type="search" class="home-search-bar w-100 h-100"
-                        placeholder="Buscar un servicio..."/>
+                        placeholder="${typePlaceholder}"/>
             <form:errors path="zone" cssClass="search-form-error" element="p"/>
         </div>
 
@@ -78,12 +92,14 @@
             <i class="fas fa-search"></i>
         </button>
     </form:form>
-    <%--TODO: Poner alt correcto--%>
-    <img class="home-banner-img" alt=""
+
+    <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
          src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
 </div>
 <div class="content-container">
-    <h3>Servicios destacados</h3>
+    <h3>
+        <spring:message code="index.jobs.title"/>
+    </h3>
     <hr class="hr1"/>
     <div class="job-display-container">
         <c:if test="${jobCards.size() > 0}">
@@ -95,9 +111,12 @@
         <c:if test="${jobCards.size() == 0}">
             <div style="text-align: center; width: 100%; margin: 50px 0">
                 <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
-                <p style="font-size: 1.5rem; font-weight: bold; margin: 0">No hay servicios disponibles en este
-                    momento</p>
-                <p style="font-size: 1.3rem">Disculpas por las molestias</p>
+                <p style="font-size: 1.5rem; font-weight: bold; margin: 0">
+                    <spring:message code="index.jobs.noResults"/>
+                </p>
+                <p style="font-size: 1.3rem">
+                    <spring:message code="index.jobs.sorry"/>
+                </p>
             </div>
         </c:if>
     </div>

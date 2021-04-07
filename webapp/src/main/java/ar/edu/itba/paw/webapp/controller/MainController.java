@@ -47,7 +47,7 @@ public class MainController {
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ModelAndView searchJobPosts(@RequestParam() final int zone, @RequestParam() final String query,
-                                       @RequestParam() final int category,
+                                       @RequestParam(value = "category",required = false) final String category,
                                        @ModelAttribute("searchForm") SearchForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
             return new ModelAndView("redirect:/");
@@ -57,7 +57,7 @@ public class MainController {
 
         final ModelAndView mav = new ModelAndView("search");
         List<JobCard> jobCards = new ArrayList<>();
-        jobPostService.findAll().ifPresent(jobPosts -> jobPosts.forEach(jobPost -> {
+        jobPostService.search(query, JobPost.Zone.values()[zone]).ifPresent(jobPosts -> jobPosts.forEach(jobPost -> {
             JobPackage min = jobPostService.findCheapestPackage(jobPost.getId()).orElseThrow(JobPostNotFoundException::new);
             jobCards.add(new JobCard(
                     jobPost, min.getRateType(), min.getPrice(),
@@ -70,7 +70,8 @@ public class MainController {
         mav.addObject("categories", JobPost.JobType.values());
         mav.addObject("pickedZone", JobPost.Zone.values()[zone]);
         mav.addObject("query", query);
-        mav.addObject("pickedCategory", JobPost.JobType.values()[category]);
+        if(category != null)
+            mav.addObject("pickedCategory", JobPost.JobType.values()[Integer.parseInt(category)]);
         return mav;
     }
 

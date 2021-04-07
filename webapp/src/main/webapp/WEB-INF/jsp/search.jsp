@@ -1,9 +1,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-    <title>Busqueda</title>
+    <title>
+        <spring:message code="search.title"/>
+    </title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -43,33 +46,45 @@
                 <div class="blue-circle">
                     <p class="circle-text">1</p>
                 </div>
-                <p class="search-instructions-text">Elija su ubicación</p>
+                <p class="search-instructions-text">
+                    <spring:message code="index.search.location"/>
+                </p>
             </div>
             <div class="search-instruction-step">
                 <div class="blue-circle">
                     <p class="circle-text">2</p>
                 </div>
-                <p class="search-instructions-text">Introduzca el servicio que necesita</p>
+                <p class="search-instructions-text">
+                    <spring:message code="index.search.jobType"/>
+                </p>
             </div>
             <div class="search-instruction-step">
                 <div class="blue-circle">
                     <p class="circle-text">3</p>
                 </div>
-                <p class="search-instructions-text">¡Buscar!</p>
+                <p class="search-instructions-text">
+                    <spring:message code="index.search.submit"/>
+                </p>
             </div>
         </div>
 
         <div class="home-search-location">
             <form:select path="zone" class="custom-select w-100">
-                <form:option value="" label="Ubicación"/>
-                <form:options items="${zones}" itemValue="value" itemLabel="message"/>
+                <spring:message code="index.search.location.placeholder" var="locationPlaceholder"/>
+                <form:option value="" label="${locationPlaceholder}"/>
+                <c:forEach items="${zones}" var="zone">
+                    <form:option value="${zone.value}">
+                        <spring:message code="${zone.stringCode}"/>
+                    </form:option>
+                </c:forEach>
             </form:select>
             <form:errors path="zone" cssClass="search-form-error" element="p"/>
         </div>
 
         <div class="home-search-bar-container home-search-bar-row">
+            <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
             <form:input path="query" type="search" class="home-search-bar w-100 h-100"
-                        placeholder="Buscar un servicio..."/>
+                        placeholder="${typePlaceholder}"/>
             <form:errors path="zone" cssClass="search-form-error" element="p"/>
         </div>
 
@@ -78,25 +93,34 @@
         </button>
     </form:form>
     <%--TODO: Poner alt correcto--%>
-    <img class="home-banner-img" alt=""
+    <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
          src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
 </div>
 <div class="content-container" style="display: flex">
-    <div class="custom-card filter-card">
-        <h4>Filtros</h4>
-        <hr class="hr1"/>
-        <h5>Categorias</h5>
-        <c:forEach items="${categories}" var="categorie">
-            <p class="mb-1 capitalize-first-letter"><a class="category"
-                  href="${pageContext.request.contextPath}
-                  /search?zone=${pickedZone}&query=${query}&category=${pickedCategory}">${categorie}</a>
-            </p>
-        </c:forEach>
-    </div>
-    <div>
+<%--    <div class="custom-card filter-card">--%>
+<%--        <h4>--%>
+<%--            <spring:message code="search.filters"/>--%>
+<%--        </h4>--%>
+<%--        <hr class="hr1"/>--%>
+<%--        <h5>--%>
+<%--            <spring:message code="search.categories"/>--%>
+<%--        </h5>--%>
+<%--        <c:forEach items="${categories}" var="categorie">--%>
+<%--            <p class="mb-1 capitalize-first-letter"><a class="category"--%>
+<%--                  href="${pageContext.request.contextPath}--%>
+<%--                  /search?zone=${pickedZone}&query=${query}&category=${pickedCategory}">${categorie}</a>--%>
+<%--            </p>--%>
+<%--        </c:forEach>--%>
+<%--    </div>--%>
+<%--TODO:CAMBIAR ESTE STYLE CUANDO METAMOS FILTRO--%>
+    <div style="width: 100%">
         <div class="search-title">
-            <h3>Resultados para "${query}" en </h3>
-            <h3 class="capitalize-first-letter">${pickedZone}</h3>
+            <h3>
+                <spring:message code="search.results" arguments="${query}"/>
+            </h3>
+            <h3 class="capitalize-first-letter">
+                <spring:message code="${pickedZone.stringCode}"/>
+            </h3>
         </div>
         <hr class="hr1"/>
         <div class="job-display-container">
@@ -109,9 +133,12 @@
             <c:if test="${jobCards.size() == 0}">
                 <div style="text-align: center; width: 100%; margin: 50px 0">
                     <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
-                    <p style="font-size: 1.5rem; font-weight: bold; margin: 0">No hay servicios disponibles en este
-                        momento</p>
-                    <p style="font-size: 1.3rem">Disculpas por las molestias</p>
+                    <p style="font-size: 1.5rem; font-weight: bold; margin: 0">
+                        <spring:message code="index.jobs.noResults"/>
+                    </p>
+                    <p style="font-size: 1.3rem">
+                        <spring:message code="index.jobs.sorry"/>
+                    </p>
                 </div>
             </c:if>
         </div>

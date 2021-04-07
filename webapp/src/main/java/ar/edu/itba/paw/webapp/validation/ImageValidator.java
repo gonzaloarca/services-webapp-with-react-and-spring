@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.List;
 
+//TODO: cambiar esto por un mejor metodo
 @Component
 public class ImageValidator implements Validator {
 
