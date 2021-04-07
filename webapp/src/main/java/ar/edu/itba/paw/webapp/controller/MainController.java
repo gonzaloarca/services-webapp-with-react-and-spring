@@ -47,12 +47,31 @@ public class MainController {
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ModelAndView searchJobPosts(@RequestParam() final int zone, @RequestParam() final String query,
+                                       @RequestParam() final int category,
                                        @ModelAttribute("searchForm") SearchForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
             return new ModelAndView("redirect:/");
         }
 
-        return null;
+        //TODO:DINAMIZAR
+
+        final ModelAndView mav = new ModelAndView("search");
+        List<JobCard> jobCards = new ArrayList<>();
+        jobPostService.findAll().ifPresent(jobPosts -> jobPosts.forEach(jobPost -> {
+            JobPackage min = jobPostService.findCheapestPackage(jobPost.getId());
+            jobCards.add(new JobCard(
+                    jobPost, min.getRateType(), min.getPrice(),
+                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())
+            ));
+        }));
+
+        mav.addObject("jobCards", jobCards);
+        mav.addObject("zones", JobPost.Zone.values());
+        mav.addObject("categories", JobPost.JobType.values());
+        mav.addObject("pickedZone", JobPost.Zone.values()[zone]);
+        mav.addObject("query", query);
+        mav.addObject("pickedCategory", JobPost.JobType.values()[category]);
+        return mav;
     }
 
 }

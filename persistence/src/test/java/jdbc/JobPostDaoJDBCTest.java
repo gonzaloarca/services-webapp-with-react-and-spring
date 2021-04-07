@@ -93,6 +93,7 @@ public class JobPostDaoJDBCTest {
         Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId());
 
         Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertEquals(jobPosts.get().size(), 2);
         jobPosts.get().forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
     }
 
@@ -101,6 +102,7 @@ public class JobPostDaoJDBCTest {
         Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType());
 
         Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertEquals(jobPosts.get().size(), 1);
         jobPosts.get().forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
     }
 

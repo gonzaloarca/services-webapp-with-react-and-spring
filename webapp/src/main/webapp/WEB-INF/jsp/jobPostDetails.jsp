@@ -43,7 +43,7 @@
             </li>
         </ol>
     </nav>
-    <div class="card mb-4 bg-white rounded">
+    <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#carousel" data-slide-to="0" class="active"></li>
@@ -81,7 +81,7 @@
 
             <div class="center">
 
-                <div class="card mb-4 bg-white rounded">
+                <div class="card custom-card mb-4 bg-white rounded">
                     <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="fas fa-briefcase"></i>
@@ -130,7 +130,7 @@
                     </div>
                 </div>
 
-                <div class="card mb-4 bg-white rounded">
+                <div class="card custom-card mb-4 bg-white rounded">
                     <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="fas fa-map-marker-alt"></i>
@@ -146,7 +146,7 @@
                     </div>
                 </div>
 
-                <div class="card mb-4 bg-white rounded">
+                <div class="card custom-card mb-4 bg-white rounded">
                     <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="far fa-clock"></i>
@@ -163,7 +163,7 @@
                 </div>
 
 
-                <div class="card mb-4 bg-white rounded">
+                <div class="card custom-card mb-4 bg-white rounded">
                     <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="bi bi-box-seam"></i>
@@ -174,8 +174,8 @@
 
                         <div class="accordion mx-5" id="accordionPackages">
                             <c:forEach items="${packages}" var="pack" varStatus="status">
-                                <div class="card mb-3">
-                                    <div class="card " id="heading${status.index}">
+                                <div class="card custom-card mb-3">
+                                    <div class="card custom-card " id="heading${status.index}">
 
                                         <button class="btn btn-block collapsed" type="button"
                                                 data-toggle="collapse" data-target="#collapse${status.index}"
@@ -194,7 +194,7 @@
                                                                             arguments="${pack.price}"/>
                                                         </div>
                                                     </div>
-                                                    <div class="align-self-center ml-4 mr-4">
+                                                    <div class="align-self-center ml-4 mr-4 requestServiceBtn">
                                                         <a class="btn btn-primary"
                                                            href="${pageContext.request.contextPath}
                                                            /contract/package/${pack.id}"
@@ -227,5 +227,10 @@
         </div>
     </div>
 </div>
+<script>
+    $('.requestServiceBtn').on('click', function (e) {
+        e.stopPropagation();
+    });
+</script>
 </body>
 </html>

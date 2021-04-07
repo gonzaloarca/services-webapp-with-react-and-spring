@@ -1,11 +1,9 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <html>
 <head>
-    <title>Inicio</title>
+    <title>Busqueda</title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -30,15 +28,16 @@
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/index.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/search.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
-    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
-    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
-    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
+    <link rel="shortcut icon" href="#">
 </head>
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="home-banner-container">
-    <form:form action="/search" method="get" modelAttribute="searchForm" class="home-search-form">
+    <form:form action="/search" method="get"
+               modelAttribute="searchForm"
+               class="home-search-form">
         <div class="search-instructions">
             <div class="search-instruction-step">
                 <div class="blue-circle">
@@ -82,24 +81,40 @@
     <img class="home-banner-img" alt=""
          src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
 </div>
-<div class="content-container">
-    <h3>Servicios destacados</h3>
-    <hr class="hr1"/>
-    <div class="job-display-container">
-        <c:if test="${jobCards.size() > 0}">
-            <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
-                <c:set var="data" value="${jobCard}" scope="request"/>
-                <c:import url="jobCard.jsp"/>
-            </c:forEach>
-        </c:if>
-        <c:if test="${jobCards.size() == 0}">
-            <div style="text-align: center; width: 100%; margin: 50px 0">
-                <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
-                <p style="font-size: 1.5rem; font-weight: bold; margin: 0">No hay servicios disponibles en este
-                    momento</p>
-                <p style="font-size: 1.3rem">Disculpas por las molestias</p>
-            </div>
-        </c:if>
+<div class="content-container" style="display: flex">
+    <div class="custom-card filter-card">
+        <h4>Filtros</h4>
+        <hr class="hr1"/>
+        <h5>Categorias</h5>
+        <c:forEach items="${categories}" var="categorie">
+            <p class="mb-1 capitalize-first-letter"><a class="category"
+                  href="${pageContext.request.contextPath}
+                  /search?zone=${pickedZone}&query=${query}&category=${pickedCategory}">${categorie}</a>
+            </p>
+        </c:forEach>
+    </div>
+    <div>
+        <div class="search-title">
+            <h3>Resultados para "${query}" en </h3>
+            <h3 class="capitalize-first-letter">${pickedZone}</h3>
+        </div>
+        <hr class="hr1"/>
+        <div class="job-display-container">
+            <c:if test="${jobCards.size() > 0}">
+                <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
+                    <c:set var="data" value="${jobCard}" scope="request"/>
+                    <c:import url="jobCard.jsp"/>
+                </c:forEach>
+            </c:if>
+            <c:if test="${jobCards.size() == 0}">
+                <div style="text-align: center; width: 100%; margin: 50px 0">
+                    <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
+                    <p style="font-size: 1.5rem; font-weight: bold; margin: 0">No hay servicios disponibles en este
+                        momento</p>
+                    <p style="font-size: 1.3rem">Disculpas por las molestias</p>
+                </div>
+            </c:if>
+        </div>
     </div>
 </div>
 </body>
