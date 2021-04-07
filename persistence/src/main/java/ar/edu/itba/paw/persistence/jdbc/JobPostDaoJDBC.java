@@ -130,7 +130,7 @@ public class JobPostDaoJDBC implements JobPostDao {
 
     @Override
     public Optional<List<JobPost>> search(String title,Zone zone) {
-        title=title+"%";
+        title="%" + title + "%";
         return Optional.of(jdbcTemplate.query(
                 "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
                         "NATURAL JOIN users " +
