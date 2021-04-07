@@ -1,0 +1,46 @@
+
+.job-card-img {
+    height: 150px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.job-card-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.job-card-type {
+    color: gray;
+}
+
+.job-card-price-container {
+    margin: 20px 10% 0 10%;
+    padding: 10px 0;
+    border-radius: 15px;
+    background-color: #485696;
+}
+
+.job-card-price {
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    font-weight: normal;
+
+}
+
+.job-card-detail {
+    display: inline;
+    vertical-align: middle;
+    word-break: break-word;
+    height: auto;
+}
+
+p.job-card-detail {
+    position: absolute;
+    left: 55px;
+}
+
+.job-card {
+    margin: 15px 10px;
+}

@@ -82,3 +82,13 @@
     border-radius: 30px;
     font-size: 1.2rem;
 }
+
+.job-display-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.job-card {
+    flex-basis: 22.98%;
+}
