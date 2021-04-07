@@ -31,7 +31,7 @@ import java.nio.charset.StandardCharsets;
 
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
-        "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.i18n"})
+        "ar.edu.itba.paw.webapp.validation"})
 @Configuration
 public class WebConfig {
 
