@@ -43,7 +43,7 @@
     <jsp:param name="path" value="/"/>
 </jsp:include>
 <div class="home-banner-container">
-    <form:form action="/" method="post" modelAttribute="searchForm" class="home-search-form">
+    <form:form action="${pageContext.request.contextPath}/" method="post" modelAttribute="searchForm" class="home-search-form">
         <div class="search-instructions">
             <div class="search-instruction-step">
                 <div class="blue-circle">

@@ -53,7 +53,7 @@ public class MainController {
         if (errrors.hasErrors())
             return home(form);
 
-        return new ModelAndView("redirect:"+ servletContext.getContextPath()+"/search?query=" + form.getQuery() + "&zone=" + form.getZone());
+        return new ModelAndView("redirect: search?query=" + form.getQuery() + "&zone=" + form.getZone());
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
@@ -86,7 +86,7 @@ public class MainController {
         if (errors.hasErrors())
             return search("", form.getQuery(), form.getCategory(), form);
 
-        return new ModelAndView("redirect:"+servletContext.getContextPath()+"/search?query=" + form.getQuery() + "&zone=" + form.getZone());
+        return new ModelAndView("redirect: search?query=" + form.getQuery() + "&zone=" + form.getZone());
     }
 
     private List<JobCard> createCards(List<JobPost> jobPosts){

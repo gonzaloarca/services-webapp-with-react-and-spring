@@ -38,7 +38,7 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="home-banner-container">
-    <form:form action="/search" method="post"
+    <form:form action="${pageContext.request.contextPath}/search" method="post"
                modelAttribute="searchForm"
                class="home-search-form">
         <div class="search-instructions">
