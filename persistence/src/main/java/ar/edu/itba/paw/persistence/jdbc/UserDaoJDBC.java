@@ -71,4 +71,15 @@ public class UserDaoJDBC implements UserDao {
         jdbcTemplate.update("UPDATE users SET user_is_professional = NOT user_is_professional WHERE user_id = ?", id);
         return jdbcTemplate.query("SELECT  * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
     }
+
+    @Override
+    public Optional<User> updateUserByEmail(String email,String phone, String name){
+        jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ? WHERE user_email = ?", phone,name,email);
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_email = ?",new Object[]{email},USER_ROW_MAPPER).stream().findFirst();
+    }
+    @Override
+    public Optional<User> updateUserByid(long id,String phone, String name){
+        jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ? WHERE user_id = ?", phone,name,id);
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+    }
 }

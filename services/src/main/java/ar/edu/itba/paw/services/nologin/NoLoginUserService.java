@@ -39,4 +39,14 @@ public class NoLoginUserService implements UserService {
     public Optional<User> switchRole(long id) {
         return userDao.switchRole(id);
     }
+
+    @Override
+    public Optional<User> updateUserByEmail(String email, String phone, String name) {
+        return userDao.updateUserByEmail(email, phone, name);
+    }
+
+    @Override
+    public Optional<User> updateUserByid(long id, String phone, String name){
+        return userDao.updateUserByid(id,phone,name);
+    }
 }

@@ -14,4 +14,8 @@ public interface UserService {
 
     Optional<User> switchRole(long id);
 
+    Optional<User> updateUserByEmail(String email,String phone, String name);
+
+    Optional<User> updateUserByid(long id,String phone, String name);
+
 }

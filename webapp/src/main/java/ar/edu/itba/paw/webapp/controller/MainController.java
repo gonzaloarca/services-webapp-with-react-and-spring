@@ -58,7 +58,7 @@ public class MainController {
         final ModelAndView mav = new ModelAndView("search");
         List<JobCard> jobCards = new ArrayList<>();
         jobPostService.findAll().ifPresent(jobPosts -> jobPosts.forEach(jobPost -> {
-            JobPackage min = jobPostService.findCheapestPackage(jobPost.getId());
+            JobPackage min = jobPostService.findCheapestPackage(jobPost.getId()).orElseThrow(JobPostNotFoundException::new);
             jobCards.add(new JobCard(
                     jobPost, min.getRateType(), min.getPrice(),
                     jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())
