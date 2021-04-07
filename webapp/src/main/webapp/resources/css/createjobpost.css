@@ -49,7 +49,7 @@
     font-size: 18px;
 }
 
-.package-tabs {
+.package-container {
     padding: 0 10%;
 }
 
@@ -132,6 +132,20 @@
 .input-group-text {
     background-color: #485696 !important;
     color: white;
+}
+
+.form-control[readonly] {
+    background-color: #c3c3c3;
+}
+
+.package-header {
+    width: 100%;
+    height: 2rem;
+    background-color: #485696;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 0 1rem;
 }
 
 

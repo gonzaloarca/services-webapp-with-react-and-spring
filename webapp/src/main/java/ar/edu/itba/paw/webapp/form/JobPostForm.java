@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 //import ar.edu.itba.paw.webapp.validation.ValidImage;
 //import ar.edu.itba.paw.webapp.validation.ValidImageArray;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -43,6 +44,7 @@ public class JobPostForm {
     @NotBlank
     private String email;
 
+    @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
     @NotBlank
     private String phone;
 

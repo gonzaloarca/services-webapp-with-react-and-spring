@@ -106,85 +106,151 @@
                 </div>
             </div>
 
-            <nav class="package-tabs">
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
-                       aria-controls="nav-home" aria-selected="true">Paquete #1</a>
-                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
-                       aria-controls="nav-profile" aria-selected="false">TODO</a>
-                        <%--TODO: Agregar tabs dinamicamente segun añada mas paquetes el usuario--%>
+            <div class="package-container" id="navTabsContent">
+                <div class="package-header">
+                    <i class="fas fa-cube mr-3"></i>Paquete
                 </div>
-            </nav>
-
-            <div class="tab-content package-tabs" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                    <div class="package-form">
-                        <div class="package-input">
-                            <form:label path="packages[0].title" for="packageTitle">Nombre del paquete*</form:label>
-                            <form:input path="packages[0].title" id="packageTitle" type="text" class="form-control"
-                                        placeholder="Nombre del paquete"/>
-                            <form:errors path="packages[0].title" class="form-error" element="p"/>
-                        </div>
-                        <div class="package-input">
-                            <form:label path="packages[0].description"
-                                        for="packageDescription">Descripción del paquete*</form:label>
-                            <form:textarea path="packages[0].description" id="packageDescription" class="form-control"
-                                           placeholder="Descripción del paquete"
-                                           rows="3"/>
-                            <form:errors path="packages[0].description" class="form-error" element="p"/>
-                        </div>
-
-                        <div class="package-input">
-                            <form:label path="packages[0].rateType"
-                                        style="display: block; margin-bottom: 15px">¿Cómo cobrará el paquete?*</form:label>
-                            <div class="center">
-                                <div class="form-check form-check-inline">
-                                    <form:radiobutton path="packages[0].rateType" id="hourlyRadio"
-                                                      class="form-check-input" name="inlineRadioOptions"
-                                                      value="0"/>
-                                    <form:label path="packages[0].rateType" for="hourlyRadio"
-                                                class="form-check-label">Por hora</form:label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <form:radiobutton path="packages[0].rateType" id="oneTimeRadio"
-                                                      class="form-check-input" name="inlineRadioOptions"
-                                                      value="1"/>
-                                    <form:label path="packages[0].rateType" for="oneTimeRadio"
-                                                class="form-check-label">Por trabajo puntual</form:label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <form:radiobutton path="packages[0].rateType" id="tbdRadio" class="form-check-input"
-                                                      name="inlineRadioOptions"
-                                                      value="2"/>
-                                    <form:label path="packages[0].rateType" for="tbdRadio"
-                                                class="form-check-label">A acordar con el cliente</form:label>
-                                </div>
-                            </div>
-                            <form:errors path="packages[0].rateType" class="form-error" element="p"/>
-                        </div>
-                            <%-- TODO: Deshabilitar si es "A acordar"--%>
-                        <div class="package-input">
-                            <form:label path="packages[0].price" for="packagePrice">Precio*</form:label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">ARS</span>
-                                </div>
-                                <form:input path="packages[0].price" id="packagePrice" type="number"
-                                            class="form-control"
-                                            placeholder="Precio"/>
-                            </div>
-                            <form:errors path="packages[0]" class="form-error" element="p"/>
-                        </div>
-                            <%-- TODO: Implementar funcionalidad --%>
-                        <button type="button" class="btn btn-block btn-light btn-lg text-uppercase"
-                                style="margin-top: 20px">
-                            <span class="badge badge-primary">+</span>
-                            <span style="font-size: 16px; font-weight: bold">Añadir otro paquete</span>
-                        </button>
+                <div id="navPackage1" class="package-form">
+                    <div class="package-input">
+                        <form:label path="packages[0].title" for="packageTitle1">Nombre del paquete*</form:label>
+                        <form:input path="packages[0].title" id="packageTitle1" type="text" class="form-control"
+                                    placeholder="Nombre del paquete"/>
+                        <form:errors path="packages[0].title" class="form-error" element="p"/>
                     </div>
+                    <div class="package-input">
+                        <form:label path="packages[0].description"
+                                    for="packageDescription1">Descripción del paquete*</form:label>
+                        <form:textarea path="packages[0].description" id="packageDescription1" class="form-control"
+                                       placeholder="Descripción del paquete"
+                                       rows="3"/>
+                        <form:errors path="packages[0].description" class="form-error" element="p"/>
+                    </div>
+
+                    <div class="package-input">
+                        <form:label path="packages[0].rateType"
+                                    style="display: block; margin-bottom: 15px">¿Cómo cobrará el paquete?*</form:label>
+                        <div class="center">
+                            <div class="form-check form-check-inline">
+                                <form:radiobutton path="packages[0].rateType" id="hourlyRadio1"
+                                                  class="form-check-input" name="inlineRadioOptions"
+                                                  value="0"/>
+                                <form:label path="packages[0].rateType" for="hourlyRadio1"
+                                            class="form-check-label">Por hora</form:label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <form:radiobutton path="packages[0].rateType" id="oneTimeRadio1"
+                                                  class="form-check-input" name="inlineRadioOptions"
+                                                  value="1"/>
+                                <form:label path="packages[0].rateType" for="oneTimeRadio1"
+                                            class="form-check-label">Por trabajo puntual</form:label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <form:radiobutton path="packages[0].rateType" id="tbdRadio1"
+                                                  class="form-check-input"
+                                                  name="inlineRadioOptions"
+                                                  value="2"/>
+                                <form:label path="packages[0].rateType" for="tbdRadio1"
+                                            class="form-check-label">A acordar con el cliente</form:label>
+                            </div>
+                        </div>
+                        <form:errors path="packages[0].rateType" class="form-error" element="p"/>
+                    </div>
+                        <%-- TODO: Deshabilitar si es "A acordar"--%>
+                    <div class="package-input">
+                        <form:label path="packages[0].price" for="packagePrice1">Precio*</form:label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">ARS</span>
+                            </div>
+                            <form:input path="packages[0].price" id="packagePrice1" type="number"
+                                        class="form-control"
+                                        placeholder="Precio"/>
+                        </div>
+                        <form:errors path="packages[0]" class="form-error" element="p"/>
+                    </div>
+
                 </div>
-                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+                    <%--                TODO: Proximo sprint: multiples paquetes--%>
+                    <%--                <c:forEach begin="2" end="5" var="i">--%>
+                    <%--                    <div id="packageCont${i}" style="display: none">--%>
+                    <%--                        <div class="package-header">--%>
+                    <%--                            <i class="fas fa-cube"></i>--%>
+                    <%--                            <span class="ml-5">Paquete</span>--%>
+                    <%--                        </div>--%>
+                    <%--                        <div id="navPackage${i}" class="package-form">--%>
+                    <%--                            <div class="package-input">--%>
+                    <%--                                <form:label path="packages[${i-1}].title"--%>
+                    <%--                                            for="packageTitle${i}">Nombre del paquete*</form:label>--%>
+                    <%--                                <form:input path="packages[${i-1}].title" id="packageTitle${i}" type="text"--%>
+                    <%--                                            class="form-control"--%>
+                    <%--                                            placeholder="Nombre del paquete"/>--%>
+                    <%--                                <form:errors path="packages[${i-1}].title" class="form-error" element="p"/>--%>
+                    <%--                            </div>--%>
+                    <%--                            <div class="package-input">--%>
+                    <%--                                <form:label path="packages[${i-1}].description"--%>
+                    <%--                                            for="packageDescription${i}">Descripción del paquete*</form:label>--%>
+                    <%--                                <form:textarea path="packages[${i-1}].description" id="packageDescription${i}"--%>
+                    <%--                                               class="form-control"--%>
+                    <%--                                               placeholder="Descripción del paquete"--%>
+                    <%--                                               rows="3"/>--%>
+                    <%--                                <form:errors path="packages[${i-1}].description" class="form-error" element="p"/>--%>
+                    <%--                            </div>--%>
+
+                    <%--                            <div class="package-input">--%>
+                    <%--                                <form:label path="packages[${i-1}].rateType"--%>
+                    <%--                                            style="display: block; margin-bottom: 15px">¿Cómo cobrará el paquete?*</form:label>--%>
+                    <%--                                <div class="center">--%>
+                    <%--                                    <div class="form-check form-check-inline">--%>
+                    <%--                                        <form:radiobutton path="packages[${i-1}].rateType" id="hourlyRadio${i}"--%>
+                    <%--                                                          class="form-check-input" name="inlineRadioOptions"--%>
+                    <%--                                                          value="0"/>--%>
+                    <%--                                        <form:label path="packages[${i-1}].rateType" for="hourlyRadio${i}"--%>
+                    <%--                                                    class="form-check-label">Por hora</form:label>--%>
+                    <%--                                    </div>--%>
+                    <%--                                    <div class="form-check form-check-inline">--%>
+                    <%--                                        <form:radiobutton path="packages[${i-1}].rateType" id="oneTimeRadio${i}"--%>
+                    <%--                                                          class="form-check-input" name="inlineRadioOptions"--%>
+                    <%--                                                          value="1"/>--%>
+                    <%--                                        <form:label path="packages[${i-1}].rateType" for="oneTimeRadio${i}"--%>
+                    <%--                                                    class="form-check-label">Por trabajo puntual</form:label>--%>
+                    <%--                                    </div>--%>
+                    <%--                                    <div class="form-check form-check-inline">--%>
+                    <%--                                        <form:radiobutton path="packages[${i-1}].rateType" id="tbdRadio${i}"--%>
+                    <%--                                                          class="form-check-input"--%>
+                    <%--                                                          name="inlineRadioOptions"--%>
+                    <%--                                                          value="2"/>--%>
+                    <%--                                        <form:label path="packages[${i-1}].rateType" for="tbdRadio${i}"--%>
+                    <%--                                                    class="form-check-label">A acordar con el cliente</form:label>--%>
+                    <%--                                    </div>--%>
+                    <%--                                </div>--%>
+                    <%--                                <form:errors path="packages[${i-1}].rateType" class="form-error" element="p"/>--%>
+                    <%--                            </div>--%>
+                    <%--                            <div class="package-input">--%>
+                    <%--                                <form:label path="packages[${i-1}].price" for="packagePrice${i}">Precio*</form:label>--%>
+                    <%--                                <div class="input-group mb-3">--%>
+                    <%--                                    <div class="input-group-prepend">--%>
+                    <%--                                        <span class="input-group-text">ARS</span>--%>
+                    <%--                                    </div>--%>
+                    <%--                                    <form:input path="packages[${i-1}].price" id="packagePrice${i}" type="number"--%>
+                    <%--                                                class="form-control"--%>
+                    <%--                                                placeholder="Precio"/>--%>
+                    <%--                                </div>--%>
+                    <%--                                <form:errors path="packages[${i-1}]" class="form-error" element="p"/>--%>
+                    <%--                            </div>--%>
+                    <%--
+                                                    <%--                            <button id="deletePackage${i}" type="button" class="btn btn-block btn-danger btn-lg">--%>
+                    <%--                                <i class="fas fa-trash-alt"></i> ELIMINAR PAQUETE--%>
+                    <%--                            </button>--%>
+                    <%--                        </div>--%>
+                    <%--                    </div>--%>
+                    <%--                </c:forEach>--%>
             </div>
+
+            <%--            <button id="addPackage" type="button" class="btn btn-block btn-light btn-lg text-uppercase"--%>
+            <%--                    style="margin-top: 20px">--%>
+            <%--                <span class="badge badge-primary">+</span>--%>
+            <%--                <span style="font-size: 16px; font-weight: bold">Añadir otro paquete</span>--%>
+            <%--            </button>--%>
 
             <hr class="hr1" style="margin: 30px 0">
 
@@ -230,16 +296,17 @@
                 <div class="yellow-circle">
                     <h4 class="circle-text">5</h4>
                 </div>
-                    <%--TODO: Traer ubicaciones dinámicamente y hacer funcionar búsqueda--%>
                 <div class="form-step-input">
                     <form:label path="zones"
                                 class="header-label">
                         <spring:message code="jobPost.create.zones"/>
                     </form:label>
-                    <div class="form-group has-search">
-                        <span class="fa fa-search form-control-feedback"></span>
-                        <input type="text" class="form-control" placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
-                    </div>
+                        <%--                    TODO: Filtrado de ubicaciones para proximo sprint--%>
+                        <%--                    <div class="form-group has-search">--%>
+                        <%--                        <span class="fa fa-search form-control-feedback"></span>--%>
+                        <%--                        <input type="text" class="form-control"--%>
+                        <%--                               placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>--%>
+                        <%--                    </div>--%>
                     <form:errors path="zones" class="form-error" element="p"/>
                     <div class="list-group location-list">
                         <c:forEach items="${zoneValues}" var="zone">
@@ -253,6 +320,7 @@
                     </div>
                 </div>
             </div>
+
 
             <div class="form-header mt-5">
                 <h3>
@@ -295,7 +363,7 @@
                         <spring:message code="jobPost.create.contact.email"/>
                     </form:label>
                     <spring:message code="jobPost.create.contact.email.placeholder" var="emailPlaceholder"/>
-                    <form:input path="email" type="email" class="form-control"
+                    <form:input path="email" type="text" class="form-control"
                                 placeholder="${emailPlaceholder}"/>
                     <form:errors path="email" class="form-error" element="p"/>
                 </div>
@@ -339,6 +407,62 @@
         </form:form>
     </div>
 </div>
+
+
+<script>
+    const tbdRadio = $("#tbdRadio1");
+
+    tbdRadio.on('click', function () {
+        $("#packagePrice1").prop('readonly', true);
+    })
+
+    if (tbdRadio.is(':checked'))
+        $("#packagePrice1").prop('readonly', true);
+
+
+    $("#oneTimeRadio1").on('click', function () {
+        $("#packagePrice1").prop('readonly', false);
+    });
+
+    $("#hourlyRadio1" + i).on('click', function () {
+        $("#packagePrice1").prop('readonly', false);
+    });
+    //TODO: Proximo sprint paquetes dinmaicos
+    // let packageCount = 1;
+    //
+    // for (let i = 1; i <= 5; i++) {
+    //     $("#tbdRadio" + i).on('click', function () {
+    //         $("#packagePrice" + i).prop('readonly', true);
+    //     });
+    //
+    //     $("#oneTimeRadio" + i).on('click', function () {
+    //         $("#packagePrice" + i).prop('readonly', false);
+    //     });
+    //
+    //     $("#hourlyRadio" + i).on('click', function () {
+    //         $("#packagePrice" + i).prop('readonly', false);
+    //     });
+    //
+    //     // if (i >= 2) {
+    //     //     $("#deletePackage" + packageCount).on('click', function () {
+    //     //         $("#packageCont" + packageCount).css("display", "none");
+    //     //         //vaciar los inputs
+    //     //         packageCount--;
+    //     //     })
+    //     // }
+    // }
+    //
+    // $("#addPackage").on('click', function () {
+    //     if (packageCount < 5) {
+    //         packageCount++;
+    //         $("#packageCont" + packageCount).css("display", "block");
+    //     }
+    //     if (packageCount === 5)
+    //         $("#packageCont" + packageCount).prop('disabled', true);
+    // });
+
+
+</script>
 
 </body>
 </html>
