@@ -108,41 +108,55 @@
 
             <div class="package-container" id="navTabsContent">
                 <div class="package-header">
-                    <i class="fas fa-cube mr-3"></i>Paquete
+                    <i class="fas fa-cube mr-3"></i>
+                    <spring:message code="jobPost.create.package.header"/>
                 </div>
                 <div id="navPackage1" class="package-form">
                     <div class="package-input">
-                        <form:label path="packages[0].title" for="packageTitle1">Nombre del paquete*</form:label>
+                        <form:label path="packages[0].title" for="packageTitle1">
+                            <spring:message code="jobPost.create.package.title"/>
+                        </form:label>
+                        <spring:message code="jobPost.create.package.title" var="pTitlePlaceholder"/>
                         <form:input path="packages[0].title" id="packageTitle1" type="text" class="form-control"
-                                    placeholder="Nombre del paquete"/>
+                                    placeholder="${pTitlePlaceholder}"/>
                         <form:errors path="packages[0].title" class="form-error" element="p"/>
                     </div>
                     <div class="package-input">
                         <form:label path="packages[0].description"
-                                    for="packageDescription1">Descripción del paquete*</form:label>
+                                    for="packageDescription1">
+                            <spring:message code="jobPost.create.package.description"/>
+                        </form:label>
+                        <spring:message code="jobPost.create.package.descriptionPlaceholder"
+                                        var="descriptionPlaceholder"/>
                         <form:textarea path="packages[0].description" id="packageDescription1" class="form-control"
-                                       placeholder="Descripción del paquete"
+                                       placeholder="${descriptionPlaceholder}"
                                        rows="3"/>
                         <form:errors path="packages[0].description" class="form-error" element="p"/>
                     </div>
 
                     <div class="package-input">
                         <form:label path="packages[0].rateType"
-                                    style="display: block; margin-bottom: 15px">¿Cómo cobrará el paquete?*</form:label>
+                                    style="display: block; margin-bottom: 15px">
+                            <spring:message code="jobPost.create.package.rateType"/>
+                        </form:label>
                         <div class="center">
                             <div class="form-check form-check-inline">
                                 <form:radiobutton path="packages[0].rateType" id="hourlyRadio1"
                                                   class="form-check-input" name="inlineRadioOptions"
                                                   value="0"/>
                                 <form:label path="packages[0].rateType" for="hourlyRadio1"
-                                            class="form-check-label">Por hora</form:label>
+                                            class="form-check-label">
+                                    <spring:message code="jobPost.create.package.hourly"/>
+                                </form:label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <form:radiobutton path="packages[0].rateType" id="oneTimeRadio1"
                                                   class="form-check-input" name="inlineRadioOptions"
                                                   value="1"/>
                                 <form:label path="packages[0].rateType" for="oneTimeRadio1"
-                                            class="form-check-label">Por trabajo puntual</form:label>
+                                            class="form-check-label">
+                                    <spring:message code="jobPost.create.package.oneTime"/>
+                                </form:label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <form:radiobutton path="packages[0].rateType" id="tbdRadio1"
@@ -150,21 +164,28 @@
                                                   name="inlineRadioOptions"
                                                   value="2"/>
                                 <form:label path="packages[0].rateType" for="tbdRadio1"
-                                            class="form-check-label">A acordar con el cliente</form:label>
+                                            class="form-check-label">
+                                    <spring:message code="jobPost.create.package.tbd"/>
+                                </form:label>
                             </div>
                         </div>
                         <form:errors path="packages[0].rateType" class="form-error" element="p"/>
                     </div>
                         <%-- TODO: Deshabilitar si es "A acordar"--%>
                     <div class="package-input">
-                        <form:label path="packages[0].price" for="packagePrice1">Precio*</form:label>
+                        <form:label path="packages[0].price" for="packagePrice1">
+                            <spring:message code="jobPost.create.package.price"/>
+                        </form:label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">ARS</span>
+                                <span class="input-group-text">
+                                    <spring:message code="jobPost.create.package.argentinePeso"/>
+                                </span>
                             </div>
+                            <spring:message code="jobPost.create.package.price" var="pricePlaceholder"/>
                             <form:input path="packages[0].price" id="packagePrice1" type="number"
                                         class="form-control"
-                                        placeholder="Precio"/>
+                                        placeholder="${pricePlaceholder}"/>
                         </div>
                         <form:errors path="packages[0]" class="form-error" element="p"/>
                     </div>
@@ -413,12 +434,12 @@
     const tbdRadio = $("#tbdRadio1");
 
     tbdRadio.on('click', function () {
-        $("#packagePrice1").prop('readonly', true);
+        $("#packagePrice1").prop('readonly', true).val('');
     })
 
-    if (tbdRadio.is(':checked'))
+    if (tbdRadio.is(':checked')) {
         $("#packagePrice1").prop('readonly', true);
-
+    }
 
     $("#oneTimeRadio1").on('click', function () {
         $("#packagePrice1").prop('readonly', false);
