@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap');
+
+* {
+    font-family: "Lato", sans-serif;
+}
+
+body {
+    background-color: #efefef !important;
+}
+
+.content-container {
+    width: 80vw;
+    max-width: 1184px;
+    margin: 0 auto;
+    padding: 30px 5%;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.content-container-transparent {
+    width: 80vw;
+    max-width: 1184px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+.hr1 {
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+    font-weight: bold;
+}
+
+.form-step {
+    display: flex;
+}
+
+.blue-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #485696;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.yellow-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #ffc800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orange-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: darkorange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle-text {
+    position: absolute;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+.btn-circle.btn-l {
+    width: 50px;
+    height: 50px;
+    padding: 10px 12px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+.breadcrumb {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.numbered-form {
+    display: inline-block;
+}
+
+.blue-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #485696;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.yellow-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: #ffc800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orange-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    background-color: darkorange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle-text {
+    position: absolute;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Mensajes de error */
+.form-error {
+    color: red;
+}
+
+/*Para que palabras se muestren con solo la primer letra en mayuscula*/
+.capitalize-first-letter {
+    text-transform: lowercase;
+    margin: 0;
+}
+
+.capitalize-first-letter::first-letter {
+    text-transform: uppercase;
+}
+
+/*Para sombras de las cards*/
+.custom-card {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    border-radius: 10px !important;
+}
+
+.form-control {
+    border: transparent;
+    background-color: #e8e8e8;
+}
+
+.form-control:focus {
+    background-color: #e8e8e8;
+}
+
+/* Para el div que se muestra cuando hubo un error en la busqueda o no se encontraron resultados */
+.result-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.result-div .fas {
+    font-size: 10rem;
+}
+
+.result-sub-text {
+    font-size: 1.3rem;
+}
+
+.result-div {
+    text-align: center;
+    width: 100%;
+    margin: 50px 0;
+}
+
+.card {
+    border: transparent !important;
+}

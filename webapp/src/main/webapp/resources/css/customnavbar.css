@@ -1,0 +1,17 @@
+.navbar {
+    background-color: #485696;
+}
+
+img {
+    height: 6vh;
+    width: auto;
+}
+
+a.nav-link {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+a.navbar-brand {
+    margin-right: 2rem !important;
+}

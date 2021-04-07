@@ -1,0 +1,104 @@
+.home-banner-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.home-banner-container {
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-search-form {
+    position: absolute;
+    margin: 0;
+    padding: 20px;
+    width: 80vw;
+    max-width: 1184px;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(38px);
+    border-radius: 70px;
+}
+
+.home-search-bar-row {
+    margin: 0 1%;
+}
+
+.home-search-bar-container {
+    width: 45%;
+}
+
+.home-search-bar {
+    border: transparent;
+    border-radius: 40px;
+    padding: 1% 4%;
+    font-size: 1.2rem;
+    flex-basis: 50%;
+    /*margin: 0 2% 0 5%;*/
+}
+
+.home-search-bar:focus {
+    outline: none;
+    border: transparent;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.home-search-location {
+    width: 35%;
+}
+
+.btn-block {
+    padding: 4% 0;
+}
+
+.search-instructions {
+    margin-bottom: 20px;
+    flex-basis: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.search-instruction-step {
+    display: flex;
+    align-items: center;
+}
+
+.search-instructions-text {
+    margin: 0 8px;
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+
+.custom-select {
+    height: 100%;
+    padding: 0 4%;
+    border-radius: 30px;
+    font-size: 1.2rem;
+}
+
+.job-display-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.job-card {
+    flex-basis: 22.98%;
+}
+
+.search-form-error {
+    position: absolute;
+    background-color: #ef6a6a;
+    color: white;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    margin-top: 5px;
+    padding: 10px;
+}
+
+.search-inputs {
+    display: flex;
+
+    justify-content: center;
+}

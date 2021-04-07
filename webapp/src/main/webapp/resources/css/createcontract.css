@@ -1,0 +1,166 @@
+.body {
+    background-color: #EFEFEF;
+}
+
+.contract-container {
+    width: 50%;
+}
+
+.navigation-text {
+    margin: 20px 0 0 0 !important;
+}
+
+.top-row {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.bottom-row {
+    display: flex;
+}
+
+.header-title {
+    margin: auto;
+    color: white;
+    font-weight: bold;
+}
+
+.header-container {
+    position: absolute;
+    backdrop-filter: blur(8px);
+    background-color: rgba(128,128,128,0.7);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    border-radius: 5px;
+}
+
+.header-img {
+    width: 100%;
+    height: 11vh;
+    object-fit: cover;
+    border-radius: 5px;
+}
+/*
+.header-back-button {
+    display: flex;
+    height: 100%;
+    position: absolute;
+    margin-left: 30px;
+}
+
+.header-back-icon {
+    color: white;
+    margin: auto;
+    padding: 0;
+}
+*/
+.header-back-icon:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.first-col {
+    width: 63%;
+    padding-right: 10px;
+}
+
+.second-col {
+    width: 37%;
+    padding-left: 10px;
+}
+
+.contract-form {
+    padding: 50px 30px 10px 30px;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.form-text {
+    font-weight: bold;
+}
+
+.text-input {
+    background-color: #EFEFEF !important;
+}
+
+.contract-input {
+    padding: 20px 20px 20px 40px;
+}
+
+.divider-bar {
+    border-top: 1px solid #a7a7a7;
+    margin: 0;
+}
+
+.divider-bar-info {
+    border-top: 1px solid #a7a7a7;
+    margin: 0 20px 0 20px;
+}
+
+.label-and-input {
+    margin-left: 10px;
+}
+
+.form-row {
+    margin-bottom: 30px;
+}
+
+.submit-button {
+    display: inline-grid;
+    width: 100%;
+    justify-items: right;
+}
+
+.job-info {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.info-img {
+    width: 100%;
+    height: 18vh;
+    object-fit: cover;
+}
+
+.info-title {
+    font-weight: bold;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.info-left-col {
+    width: 20%;
+    display: inline-grid;
+    align-items: center;
+    justify-items: center;
+}
+
+.info-right-col {
+    width: 75%;
+    display: inline-grid;
+    align-items: center;
+    justify-items: left;
+    margin-bottom: 0;
+    margin-left: 10px;
+}
+
+.price-tag {
+    background-color: #485696;
+    color: white;
+    margin: 5px 0 5px 0;
+    font-size: larger;
+    font-weight: bold;
+    padding: 5px 10px 5px 10px;
+    border-radius: 15px;
+}
+
+.info-row {
+    padding: 0 20px 0 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
