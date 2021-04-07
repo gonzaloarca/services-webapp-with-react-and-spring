@@ -40,7 +40,7 @@ public class JobPostController {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
         JobPost jobPost = jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new);
         mav.addObject("jobPost", jobPost);
-        mav.addObject("packages", jobPackageService.findById(id).orElseThrow(JobPackageNotFoundException::new));
+        mav.addObject("packages", jobPackageService.findByPostId(id).orElseThrow(JobPackageNotFoundException::new));
         mav.addObject("contractsCompleted",
                 jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
         return mav;
