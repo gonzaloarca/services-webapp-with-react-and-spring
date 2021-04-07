@@ -181,3 +181,24 @@ h3 {
 .form-control:focus {
     background-color: #e8e8e8;
 }
+
+/* Para el div que se muestra cuando hubo un error en la busqueda o no se encontraron resultados */
+.result-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.result-div .fas {
+    font-size: 10rem;
+}
+
+.result-sub-text {
+    font-size: 1.3rem;
+}
+
+.result-div {
+    text-align: center;
+    width: 100%;
+    margin: 50px 0;
+}

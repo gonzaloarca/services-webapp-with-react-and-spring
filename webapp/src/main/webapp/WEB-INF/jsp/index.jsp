@@ -40,7 +40,7 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="home-banner-container">
-    <form:form action="/search" method="get" modelAttribute="searchForm" class="home-search-form">
+    <form:form action="/" method="post" modelAttribute="searchForm" class="home-search-form">
         <div class="search-instructions">
             <div class="search-instruction-step">
                 <div class="blue-circle">
@@ -85,7 +85,7 @@
             <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
             <form:input path="query" type="search" class="home-search-bar w-100 h-100"
                         placeholder="${typePlaceholder}"/>
-            <form:errors path="zone" cssClass="search-form-error" element="p"/>
+            <form:errors path="query" cssClass="search-form-error" element="p"/>
         </div>
 
         <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
@@ -109,12 +109,12 @@
             </c:forEach>
         </c:if>
         <c:if test="${jobCards.size() == 0}">
-            <div style="text-align: center; width: 100%; margin: 50px 0">
+            <div class="result-div">
                 <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
-                <p style="font-size: 1.5rem; font-weight: bold; margin: 0">
+                <p class="result-text">
                     <spring:message code="index.jobs.noResults"/>
                 </p>
-                <p style="font-size: 1.3rem">
+                <p class="result-sub-text">
                     <spring:message code="index.jobs.sorry"/>
                 </p>
             </div>

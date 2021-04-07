@@ -38,7 +38,7 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="home-banner-container">
-    <form:form action="/search" method="get"
+    <form:form action="/search" method="post"
                modelAttribute="searchForm"
                class="home-search-form">
         <div class="search-instructions">
@@ -85,7 +85,7 @@
             <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
             <form:input path="query" type="search" class="home-search-bar w-100 h-100"
                         placeholder="${typePlaceholder}"/>
-            <form:errors path="zone" cssClass="search-form-error" element="p"/>
+            <form:errors path="query" cssClass="search-form-error" element="p"/>
         </div>
 
         <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
@@ -97,51 +97,75 @@
          src='<c:url value="${pageContext.request.contextPath}/resources/images/banner1.jpg" />'/>
 </div>
 <div class="content-container" style="display: flex">
-<%--    <div class="custom-card filter-card">--%>
-<%--        <h4>--%>
-<%--            <spring:message code="search.filters"/>--%>
-<%--        </h4>--%>
-<%--        <hr class="hr1"/>--%>
-<%--        <h5>--%>
-<%--            <spring:message code="search.categories"/>--%>
-<%--        </h5>--%>
-<%--        <c:forEach items="${categories}" var="categorie">--%>
-<%--            <p class="mb-1 capitalize-first-letter"><a class="category"--%>
-<%--                  href="${pageContext.request.contextPath}--%>
-<%--                  /search?zone=${pickedZone}&query=${query}&category=${pickedCategory}">${categorie}</a>--%>
-<%--            </p>--%>
-<%--        </c:forEach>--%>
-<%--    </div>--%>
-<%--TODO:CAMBIAR ESTE STYLE CUANDO METAMOS FILTRO--%>
+    <%--    <div class="custom-card filter-card">--%>
+    <%--        <h4>--%>
+    <%--            <spring:message code="search.filters"/>--%>
+    <%--        </h4>--%>
+    <%--        <hr class="hr1"/>--%>
+    <%--        <h5>--%>
+    <%--            <spring:message code="search.categories"/>--%>
+    <%--        </h5>--%>
+    <%--        <c:forEach items="${categories}" var="categorie">--%>
+    <%--            <p class="mb-1 capitalize-first-letter"><a class="category"--%>
+    <%--                  href="${pageContext.request.contextPath}--%>
+    <%--                  /search?zone=${pickedZone}&query=${query}&category=${pickedCategory}">${categorie}</a>--%>
+    <%--            </p>--%>
+    <%--        </c:forEach>--%>
+    <%--    </div>--%>
+    <%--TODO:CAMBIAR ESTE STYLE CUANDO METAMOS FILTROS--%>
     <div style="width: 100%">
-        <div class="search-title">
-            <h3>
-                <spring:message code="search.results" arguments="${query}"/>
-            </h3>
-            <h3 class="capitalize-first-letter">
-                <spring:message code="${pickedZone.stringCode}"/>
-            </h3>
-        </div>
-        <hr class="hr1"/>
-        <div class="job-display-container">
-            <c:if test="${jobCards.size() > 0}">
-                <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
-                    <c:set var="data" value="${jobCard}" scope="request"/>
-                    <c:import url="jobCard.jsp"/>
-                </c:forEach>
-            </c:if>
-            <c:if test="${jobCards.size() == 0}">
-                <div style="text-align: center; width: 100%; margin: 50px 0">
-                    <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
-                    <p style="font-size: 1.5rem; font-weight: bold; margin: 0">
-                        <spring:message code="index.jobs.noResults"/>
-                    </p>
-                    <p style="font-size: 1.3rem">
-                        <spring:message code="index.jobs.sorry"/>
-                    </p>
-                </div>
-            </c:if>
-        </div>
+        <c:if test="${pickedZone != null}">
+            <div class="search-title">
+                <h3>
+                    <c:if test="${query.length() == 0}">
+                        <spring:message code="search.noquery.results"/>
+                    </c:if>
+                    <c:if test="${!(query.length() == 0)}">
+                        <spring:message code="search.results" arguments="${query}"/>
+                    </c:if>
+                        <%--                &nbsp--%>
+                    <spring:message code="${pickedZone.stringCode}"/>
+                    <c:if test="${pickedZone == null}">
+                        <spring:message code="search.badQuery"/>
+                    </c:if>
+                </h3>
+            </div>
+            <hr class="hr1"/>
+            <div class="job-display-container">
+                <c:if test="${jobCards.size() > 0}">
+                    <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
+                        <c:set var="data" value="${jobCard}" scope="request"/>
+                        <c:import url="jobCard.jsp"/>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${jobCards.size() == 0}">
+                    <div class="result-div">
+                        <i class="fas fa-cogs mb-4"></i>
+                        <p class="result-text">
+                            <spring:message code="search.jobs.noResults"/>
+                        </p>
+                        <p class="result-sub-text">
+                            <spring:message code="index.jobs.sorry"/>
+                        </p>
+                    </div>
+                </c:if>
+            </div>
+        </c:if>
+
+        <c:if test="${pickedZone == null}">
+            <div class="search-title " style="width: 100%; justify-content: center">
+                <h3>
+                    <spring:message code="search.badQuery"/>
+                </h3>
+            </div>
+            <hr class="hr1"/>
+            <div class="result-div">
+                <i class="fas fa-search mb-4"></i>
+                <p class="result-text">
+                    <spring:message code="search.jobs.badSearch"/>
+                </p>
+            </div>
+        </c:if>
     </div>
 </div>
 </body>

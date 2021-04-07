@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.*;
 
 //TODO: ver de separar en Controllers más especificos
@@ -28,7 +29,7 @@ public class MainController {
     private JobContractService jobContractService;
 
 
-    @RequestMapping("/")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
         final ModelAndView mav = new ModelAndView("index");
         List<JobCard> jobCards = new ArrayList<>();
@@ -45,34 +46,50 @@ public class MainController {
         return mav;
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public ModelAndView homeSubmitSearch(@Valid @ModelAttribute("searchForm") final SearchForm form,
+                                         final BindingResult errrors) {
+        if (errrors.hasErrors())
+            return home(form);
+
+        return new ModelAndView("redirect:/search?query=" + form.getQuery() + "&zone=" + form.getZone());
+    }
+
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public ModelAndView searchJobPosts(@RequestParam() final int zone, @RequestParam() final String query,
-                                       @RequestParam(value = "category",required = false) final String category,
-                                       @ModelAttribute("searchForm") SearchForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return new ModelAndView("redirect:/");
-        }
-
-        //TODO:DINAMIZAR
-
+    public ModelAndView search(@RequestParam() final String zone, @RequestParam() final String query,
+                               @RequestParam(value = "category", required = false) final String category,
+                               @ModelAttribute("searchForm") SearchForm form) {
         final ModelAndView mav = new ModelAndView("search");
-        List<JobCard> jobCards = new ArrayList<>();
-        jobPostService.search(query, JobPost.Zone.values()[zone]).ifPresent(jobPosts -> jobPosts.forEach(jobPost -> {
-            JobPackage min = jobPostService.findCheapestPackage(jobPost.getId()).orElseThrow(JobPostNotFoundException::new);
-            jobCards.add(new JobCard(
-                    jobPost, min.getRateType(), min.getPrice(),
-                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())
-            ));
-        }));
-
-        mav.addObject("jobCards", jobCards);
         mav.addObject("zones", JobPost.Zone.values());
         mav.addObject("categories", JobPost.JobType.values());
-        mav.addObject("pickedZone", JobPost.Zone.values()[zone]);
-        mav.addObject("query", query);
-        if(category != null)
-            mav.addObject("pickedCategory", JobPost.JobType.values()[Integer.parseInt(category)]);
+        List<JobCard> jobCards = new ArrayList<>();
+        if(zone.equals("")) {
+            mav.addObject("pickedZone", null);
+            return mav;
+        }
+        jobPostService.search(form.getQuery(), JobPost.Zone.values()[Integer.parseInt(zone)])
+                .ifPresent(jobPosts -> jobPosts.forEach(jobPost -> {
+                    JobPackage min = jobPostService.findCheapestPackage(jobPost.getId()).orElseThrow(JobPostNotFoundException::new);
+                    jobCards.add(new JobCard(
+                            jobPost, min.getRateType(), min.getPrice(),
+                            jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())
+                    ));
+                }));
+
+        mav.addObject("jobCards", jobCards);
+        mav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
+        mav.addObject("query", form.getQuery());
+        if (form.getCategory() != null)
+            mav.addObject("pickedCategory", JobPost.JobType.values()[Integer.parseInt(form.getCategory())]);
         return mav;
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public ModelAndView searchSubmitSearch(@Valid @ModelAttribute("searchForm") SearchForm form,
+                                           final BindingResult errors) {
+        if (errors.hasErrors())
+            return search("", form.getQuery(), form.getCategory(), form);
+
+        return new ModelAndView("redirect:/search?query=" + form.getQuery() + "&zone=" + form.getZone());
+    }
 }
