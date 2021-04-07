@@ -21,8 +21,7 @@ public class ContractForm {
     private String email;
 
     @NotBlank
-    @Size(max = 100)
-    @Pattern(regexp = "[0-9- ]+")
+    @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
     private String phone;
 
     @NotBlank
@@ -30,7 +29,7 @@ public class ContractForm {
     private String description;
 
     //TODO: proximo sprint para imagen
-   // private MultipartFile image;
+    // private MultipartFile image;
 
     public String getName() {
         return name;
