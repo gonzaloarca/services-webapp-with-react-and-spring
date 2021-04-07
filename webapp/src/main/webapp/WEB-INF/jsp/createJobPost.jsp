@@ -3,9 +3,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="ar.edu.itba.paw.models.JobPost.JobType" %>
 <%@ page buffer="64kb" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-    <title>Publicar un servicio</title>
+    <title>
+        <spring:message code="jobPost.create.title"/>
+    </title>
     <!-- Bootstrap 4.5.2 CSS minified -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -32,13 +35,19 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 <div class="content-container-transparent">
-    <h3 class="mt-5">Publicar un servicio</h3>
+    <h3 class="mt-5">
+        <spring:message code="jobPost.create.title"/>
+    </h3>
     <div class="content-container">
         <c:url value="/create-job-post" var="postPath"/>
         <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post" class="create-job-post-form">
             <div class="form-header">
-                <h3>Datos del servicio</h3>
-                <p>* campo obligatorio</p>
+                <h3>
+                    <spring:message code="jobPost.create.service"/>
+                </h3>
+                <p>
+                    <spring:message code="jobPost.create.required"/>
+                </p>
                 <hr class="hr1 form-hr">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      xmlns:xlink="http://www.w3.org/1999/xlink" width="680"
@@ -54,9 +63,12 @@
                 </div>
                 <div class="form-step-input">
                     <form:label path="jobType" class="header-label"
-                                for="serviceTypeSelect">Seleccione un tipo de servicio</form:label>
+                                for="serviceTypeSelect">
+                        <spring:message code="jobPost.create.service.select"/>
+                    </form:label>
+                    <spring:message code="jobPost.create.service.type" var="serviceType"/>
                     <form:select path="jobType" class="form-control w-75" id="serviceTypeSelect">
-                        <form:option value="" label="Tipo de servicio"/>
+                        <form:option value="" label="${serviceType}"/>
                         <c:forEach items="${jobTypes}" var="type">
                             <form:option value="${type.value}">
                                 <spring:message code="${type.stringCode}"/>
@@ -73,9 +85,12 @@
                 </div>
                 <div class="form-step-input">
                     <form:label path="title" for="jobTitle"
-                                class="header-label">Introduzca un título para su publicación*</form:label>
+                                class="header-label">
+                        <spring:message code="jobPost.create.publication.title"/>
+                    </form:label>
+                    <spring:message code="jobPost.create.publication.placeholder" var="titlePlaceholder"/>
                     <form:input path="title" id="jobTitle" type="text" class="form-control"
-                                placeholder="Título"/>
+                                placeholder="${titlePlaceholder}"/>
                     <form:errors path="title" class="form-error" element="p"/>
                 </div>
             </div>
@@ -85,7 +100,9 @@
                     <h4 class="circle-text">3</h4>
                 </div>
                 <div class="form-step-input" style="width: 100%">
-                    <label class="header-label">Agregue al menos 1 paquete para su publicación*</label>
+                    <label class="header-label">
+                        <spring:message code="jobPost.create.package.required"/>
+                    </label>
                     <hr class="hr1" style="margin-top: 0">
                 </div>
             </div>
@@ -198,10 +215,12 @@
                 </div>
                 <div class="form-step-input">
                     <form:label path="availableHours" for="availableHoursInput"
-                                class="header-label">Ingrese sus horarios de disponibilidad para el
-                        servicio*</form:label>
+                                class="header-label">
+                        <spring:message code="jobPost.create.availableHours"/>
+                    </form:label>
+                    <spring:message code="jobPost.create.availableHours.placeholder" var="hoursPlaceholder"/>
                     <form:textarea path="availableHours" id="availableHoursInput" class="form-control"
-                                   placeholder="Horarios de disponibilidad"
+                                   placeholder="${hoursPlaceholder}"
                                    rows="5"/>
                     <form:errors path="availableHours" class="form-error" element="p"/>
 
@@ -215,10 +234,12 @@
                     <%--TODO: Traer ubicaciones dinámicamente y hacer funcionar búsqueda--%>
                 <div class="form-step-input">
                     <form:label path="zones"
-                                class="header-label">Seleccione las zonas de disponibilidad para su servicio*</form:label>
+                                class="header-label">
+                        <spring:message code="jobPost.create.zones"/>
+                    </form:label>
                     <div class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input type="text" class="form-control" placeholder="Filtrar por nombre"/>
+                        <input type="text" class="form-control" placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                     </div>
                     <form:errors path="zones" class="form-error" element="p"/>
                     <div class="list-group location-list">
@@ -235,8 +256,12 @@
             </div>
 
             <div class="form-header mt-5">
-                <h3>Datos de contacto</h3>
-                <p>* campo obligatorio</p>
+                <h3>
+                    <spring:message code="jobPost.create.contact"/>
+                </h3>
+                <p>
+                    <spring:message code="jobPost.create.required"/>
+                </p>
                 <hr class="hr1 form-hr">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="683"
                      height="638" viewBox="0 0 683 638">
@@ -251,9 +276,12 @@
                     <h4 class="circle-text">1</h4>
                 </div>
                 <div class="form-step-input">
-                    <form:label path="professionalName" class="header-label">Introduzca su nombre*</form:label>
+                    <form:label path="professionalName" class="header-label">
+                        <spring:message code="jobPost.create.contact.name"/>
+                    </form:label>
+                    <spring:message code="jobPost.create.contact.name.placeholder" var="namePlaceholder"/>
                     <form:input path="professionalName" type="text" class="form-control w-75"
-                                placeholder="Nombre"/>
+                                placeholder="${namePlaceholder}"/>
                     <form:errors path="professionalName" class="form-error" element="p"/>
                 </div>
             </div>
@@ -264,9 +292,12 @@
                 </div>
                 <div class="form-step-input">
                     <form:label path="email"
-                                class="header-label">Introduzca su dirección de correo electrónico*</form:label>
+                                class="header-label">
+                        <spring:message code="jobPost.create.contact.email"/>
+                    </form:label>
+                    <spring:message code="jobPost.create.contact.email.placeholder" var="emailPlaceholder"/>
                     <form:input path="email" type="email" class="form-control"
-                                placeholder="Correo electrónico"/>
+                                placeholder="${emailPlaceholder}"/>
                     <form:errors path="email" class="form-error" element="p"/>
                 </div>
             </div>
@@ -276,9 +307,12 @@
                     <h4 class="circle-text">3</h4>
                 </div>
                 <div class="form-step-input">
-                    <form:label path="phone" class="header-label">Introduzca su número de teléfono*</form:label>
+                    <form:label path="phone" class="header-label">
+                        <spring:message code="jobPost.create.contact.phone"/>
+                    </form:label>
+                    <spring:message code="jobPost.create.contact.phone.placeholder" var="phonePlaceholder"/>
                     <form:input path="phone" type="tel" class="form-control w-50"
-                                placeholder="Teléfono"/>
+                                placeholder="${phonePlaceholder}"/>
                     <form:errors path="phone" class="form-error" element="p"/>
                 </div>
             </div>
@@ -300,8 +334,8 @@
             <%--                    </div>--%>
             <%--                </div>--%>
             <%--            </div>--%>
-            <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase w-50 mx-auto ">Publicar
-                servicio
+            <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase w-50 mx-auto ">
+                <spring:message code="jobPost.create.submit"/>
             </button>
         </form:form>
     </div>

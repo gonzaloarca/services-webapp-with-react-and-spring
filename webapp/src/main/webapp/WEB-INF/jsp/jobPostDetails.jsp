@@ -3,8 +3,9 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <title><c:out value="Fontanería"/></title>
-    <%--    TODO: CAMBIAR CON CATEGORIA DEL SERVICIO--%>
+    <title>
+        <spring:message code="${jobPost.jobType.stringCode}"/>
+    </title>
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobpostdetails.css" rel="stylesheet"/>
@@ -37,7 +38,9 @@
 <div class="content-container-transparent">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-white">
-            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">
+                <spring:message code="navigation.index"/>
+            </a></li>
             <li class="breadcrumb-item active" aria-current="page">
                 <p class="capitalize-first-letter">
                     <spring:message code="${jobPost.jobType.stringCode}"/>
@@ -47,33 +50,26 @@
     </nav>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
+            <!--ol class="carousel-indicators">
                 <li data-target="#carousel" data-slide-to="0" class="active"></li>
                 <li data-target="#carousel" data-slide-to="1"></li>
-            </ol>
+            </ol-->
             <div class="carousel-inner">
-                <%--                TODO: CAMBIAR POR FOTOS REALES DEL SERVICIO--%>
                 <div class="carousel-item active">
+                    <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
                     <img class="d-block w-100 h-100"
-                         src="${pageContext.request.contextPath}/resources/images/worker-placeholder.jpg"
-                         alt="Primer foto">
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100 h-100"
-                         src="${pageContext.request.contextPath}/resources/images/banner1.jpg"
-                         alt="Segunda foto">
-                    <%--                TODO: CAMBIAR EL ALT A i20n
-                        TODO: INCORPORAR FOTOS DE SERVICIO, FOTO DEFAULT?? --%>
+                         src='<c:url value="${pageContext.request.contextPath}/resources/images/${jobPost.jobType.imagePath}" />'
+                         alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                 </div>
             </div>
-            <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+            <!--a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
             </a>
             <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
-            </a>
+            </a-->
         </div>
 
         <div class="card-body custom-row">
@@ -118,15 +114,17 @@
 
                         <div class="summary custom-row">
                             <div class="summary-item">
-                                <img
-                                <%--                                        TODO: CAMBIAR A FOTO DE USUARIO--%>
-                                        src="${pageContext.request.contextPath}/resources/images/banner1.jpg"
-                                        alt="Primer foto">
+                            <%--TODO: CAMBIAR A FOTO DE USUARIO--%>
+<%--                                <img    src="${pageContext.request.contextPath}/resources/images/banner1.jpg"--%>
+<%--                                        alt="Primer foto">--%>
+                                <i class="fas fa-user fa-2x"></i>
                                 <p><c:out value="${jobPost.user.username}"/></p>
                             </div>
                             <div class="summary-item">
                                 <i class="fas fa-check"></i>
-                                <p>${contractsCompleted} trabajos completados</p>
+                                <p>
+                                    <spring:message code="jobPost.jobs.completed" arguments="${contractsCompleted}"/>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -137,7 +135,7 @@
                         <span class="card-title custom-row">
                             <i class="fas fa-map-marker-alt"></i>
                             <p>
-                                Zonas de disponibilidad
+                                <spring:message code="jobPost.jobs.zones"/>
                             </p>
                         </span>
                         <div class="custom-row zones">
@@ -155,7 +153,7 @@
                         <span class="card-title custom-row">
                             <i class="far fa-clock"></i>
                             <p>
-                                Horarios
+                                <spring:message code="jobPost.jobs.hours"/>
                             </p>
                         </span>
                         <div class="available-hours">
@@ -172,7 +170,7 @@
                         <span class="card-title custom-row">
                             <i class="bi bi-box-seam"></i>
                             <p>
-                                Paquetes disponibles
+                                <spring:message code="jobPost.jobs.packages"/>
                             </p>
                         </span>
 
@@ -192,7 +190,9 @@
                                                 </p>
                                                 <div class="ml-auto custom-row">
                                                     <div class="package-price">
-                                                        <p class="text-center">Precio</p>
+                                                        <p class="text-center">
+                                                            <spring:message code="jobPost.jobs.price"/>
+                                                        </p>
                                                         <div class="chip">
                                                             <spring:message code="${pack.rateType.stringCode}"
                                                                             arguments="${pack.price}"/>
@@ -203,7 +203,7 @@
                                                            href="${pageContext.request.contextPath}
                                                            /contract/package/${pack.id}"
                                                            role="button" type="submit">
-                                                            SOLICITAR
+                                                            <spring:message code="jobPost.jobs.submit"/>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -215,7 +215,7 @@
                                          data-parent="#accordionPackages">
                                         <div class="card-body">
                                             <p class="package-text">
-                                                Descripción<br/>
+                                                <spring:message code="jobPost.package.description"/><br/>
                                                 <c:out value="${pack.description}"/>
                                             </p>
                                         </div>

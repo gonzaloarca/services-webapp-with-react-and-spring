@@ -60,7 +60,10 @@
                             <spring:message code="contract.create.page.title"/>
                         </h2>
                     </div>
-                    <img src="${postImage}" alt="<spring:message code='contract.create.header.image'/>" class="header-img"/>
+                    <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
+                    <img class="header-img"
+                        src='<c:url value="${pageContext.request.contextPath}/resources/images/${jobPost.jobType.imagePath}" />'
+                        alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
             </div>
 
             <div class="row bottom-row">
@@ -178,7 +181,9 @@
                         <h5 class="info-title">
                             <spring:message code="contract.create.detail.title"/>
                         </h5>
-                        <img src="${postImage}" alt="<spring:message code="contract.create.detail.image"/>" class="info-img"/>
+                        <img class="info-img"
+                             src='<c:url value="${pageContext.request.contextPath}/resources/images/${jobPost.jobType.imagePath}" />'
+                             alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                         <div class="container">
                             <!-- Job Title -->
                             <div class="row info-row">

@@ -119,8 +119,8 @@ public class JobPost {
     }
 
     public enum JobType {
-        PLUMBING("/plumbing.jpeg", "JobPost.JobType.PLUMBING"),
-        ELECTRICITY("/electrician.jpeg", "JobPost.JobType.ELECTRICITY"),
+        PLUMBING("plumbing.jpeg", "JobPost.JobType.PLUMBING"),
+        ELECTRICITY("electrician.jpeg", "JobPost.JobType.ELECTRICITY"),
         CARPENTRY("carpentry.jpeg", "JobPost.JobType.CARPENTRY"),
         CATERING("catering.png", "JobPost.JobType.CATERING"),
         PAINTING("painter.jpeg", "JobPost.JobType.PAINTING"),
