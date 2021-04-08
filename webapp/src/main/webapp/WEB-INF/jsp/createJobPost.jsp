@@ -191,7 +191,7 @@
                             </div>
                             <spring:message code="jobPost.create.package.price" var="pricePlaceholder"/>
                             <form:input path="packages[0].price" id="packagePrice1" type="number" step="any"
-                                        class="form-control"
+                                        class="form-control" min="0"
                                         placeholder="${pricePlaceholder}"/>
                         </div>
                         <form:errors path="packages[0]" class="form-error" element="p"/>

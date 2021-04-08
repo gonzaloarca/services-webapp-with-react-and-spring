@@ -60,7 +60,7 @@ public class MainController {
             if (errors.hasErrors())
                 return search("", form.getQuery(), form.getCategory(), form);
 
-            return new ModelAndView("redirect: search?query=" + URLEncoder.encode(form.getQuery(), "UTF-8") + "&zone=" + form.getZone());
+            return new ModelAndView("redirect:search?query=" + URLEncoder.encode(form.getQuery(), "UTF-8") + "&zone=" + form.getZone());
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -105,7 +105,7 @@ public class MainController {
             if (errors.hasErrors())
                 return search("", form.getQuery(), form.getCategory(), form);
 
-            return new ModelAndView("redirect: search?query=" + URLEncoder.encode(form.getQuery(), "UTF-8") + "&zone=" + form.getZone());
+            return new ModelAndView("redirect:search?query=" + URLEncoder.encode(form.getQuery(), "UTF-8") + "&zone=" + form.getZone());
         } catch (Exception e) {
             throw new RuntimeException();
         }
