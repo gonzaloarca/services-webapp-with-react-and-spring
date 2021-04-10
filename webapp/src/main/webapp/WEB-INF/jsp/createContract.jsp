@@ -6,7 +6,8 @@
 <head>
     <!-- TODO: poner titulo correcto -->
     <title>
-        <spring:message code="contract.create.page.title"/>
+        <spring:message code="contract.create.page.title" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <!-- Bootstrap 4.5.2 CSS minified -->

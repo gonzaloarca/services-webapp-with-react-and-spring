@@ -6,7 +6,7 @@
 <html>
 <head>
     <title>
-        <spring:message code="jobPost.create.title"/>
+        <spring:message code="title.createJobPost"/>
     </title>
     <!-- Bootstrap 4.5.2 CSS minified -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"

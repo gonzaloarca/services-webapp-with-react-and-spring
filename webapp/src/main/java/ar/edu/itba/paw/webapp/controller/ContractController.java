@@ -52,12 +52,12 @@ public class ContractController {
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.POST)
     public ModelAndView submitContract(@PathVariable("packId") final long packId,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
-                                       @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors){
+                                       @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors) {
 
         //TODO encontrar si hay una mejor forma de validar la imagen:
         //imageValidator.validate(form.getImage(), errors);
 
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             return createContract(packId, form);
         }
 
@@ -67,14 +67,18 @@ public class ContractController {
         String proName = jobPost.getUser().getUsername();
         String proEmail = jobPost.getUser().getEmail();
         String subject = form.getName() + " quiere contratar tu servicio";
-        mailingService.sendTemplatedHTMLMessage(proEmail, subject, proName, form.getName(), form.getEmail(),
+        JobPackage jobPackage = jobPackageService.findById(packId).orElseThrow(RuntimeException::new);
+        //TODO: CAMBIAR EXCEPCION
+        mailingService.sendTemplatedHTMLMessage(proEmail, subject, proName,
+                jobPackage.getTitle(), String.valueOf(jobPackage.getPrice()),
+                jobPost.getTitle(), form.getName(), form.getEmail(),
                 form.getPhone(), form.getDescription());
 
         return new ModelAndView("redirect:/contract/package/" + packId + "/success");
     }
 
     @RequestMapping("/package/{packId}/success")
-    public ModelAndView contractSuccess(@PathVariable String packId){
+    public ModelAndView contractSuccess(@PathVariable String packId) {
         return new ModelAndView("contractSubmitted");
     }
 

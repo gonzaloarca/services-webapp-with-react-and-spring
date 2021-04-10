@@ -1,11 +1,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
     <title>
-        <spring:message code="search.title"/>
+        <spring:message code="search.title" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
@@ -39,9 +40,7 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 
-<c:set var="path" value="/search" scope="request"/>
-<%@include file="searchBar.jsp"%>
-
+<%@ include file="searchBar.jsp"%>
 
 <div class="content-container" style="display: flex">
 <%--    TODO: IMPLEMENTAR FILTRO POR CATEGORIA EN LA QUERY      --%>
@@ -71,7 +70,6 @@
                     <c:if test="${!(query.length() == 0)}">
                         <spring:message code="search.results" arguments="${query}"/>
                     </c:if>
-                        <%--                &nbsp--%>
                     <spring:message code="${pickedZone.stringCode}"/>
                     <c:if test="${pickedZone == null}">
                         <spring:message code="search.badQuery"/>
@@ -88,7 +86,7 @@
                 </c:if>
                 <c:if test="${jobCards.size() == 0}">
                     <div class="result-div">
-                        <i class="fas fa-cogs mb-4"></i>
+                        <i class="fas fa-search mb-4"></i>
                         <p class="result-text">
                             <spring:message code="search.jobs.noResults"/>
                         </p>

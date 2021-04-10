@@ -4,7 +4,8 @@
 <html>
 <head>
     <title>
-        <spring:message code="error.404"/>
+        <spring:message code="error.404" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
