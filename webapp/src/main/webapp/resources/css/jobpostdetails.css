@@ -16,11 +16,6 @@
     object-fit: cover;
 }
 
-.custom-row {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .center {
     flex: 1;
     width: 90%;

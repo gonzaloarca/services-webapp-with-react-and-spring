@@ -40,9 +40,9 @@ public class NoLoginJobPostService implements JobPostService {
                 //TODO: Es necesario un optional?
                 Optional<User> newRole = userService.switchRole(maybeUser.get().getId());
                 user = newRole.orElse(maybeUser.get());
-            }else{
-                maybeUser = userService.updateUserByEmail(email,phone,username);
-                if(maybeUser.isPresent())
+            } else {
+                maybeUser = userService.updateUserByEmail(email, phone, username);
+                if (maybeUser.isPresent())
                     user = maybeUser.get();
             }
         } else {
@@ -89,7 +89,9 @@ public class NoLoginJobPostService implements JobPostService {
     }
 
     @Override
-    public Optional<List<JobPost>> search(String title, JobPost.Zone zone) {
-        return jobPostDao.search(title, zone);
+    public Optional<List<JobPost>> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
+        if (jobType == null)
+            return jobPostDao.search(title, zone);
+        else return jobPostDao.searchWithCategory(title, zone, jobType);
     }
 }

@@ -31,7 +31,6 @@
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
-<%--    <link href="${pageContext.request.contextPath}/resources/css/index.css" rel="stylesheet"/>--%>
     <link href="${pageContext.request.contextPath}/resources/css/search.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/searchBar.css" rel="stylesheet"/>
@@ -40,27 +39,34 @@
 <body>
 <%@ include file="customNavBar.jsp" %>
 
-<%@ include file="searchBar.jsp"%>
+<%@ include file="searchBar.jsp" %>
 
-<div class="content-container" style="display: flex">
-<%--    TODO: IMPLEMENTAR FILTRO POR CATEGORIA EN LA QUERY      --%>
-    <%--    <div class="custom-card filter-card">--%>
-    <%--        <h4>--%>
-    <%--            <spring:message code="search.filters"/>--%>
-    <%--        </h4>--%>
-    <%--        <hr class="hr1"/>--%>
-    <%--        <h5>--%>
-    <%--            <spring:message code="search.categories"/>--%>
-    <%--        </h5>--%>
-    <%--        <c:forEach items="${categories}" var="categorie">--%>
-    <%--            <p class="mb-1 capitalize-first-letter"><a class="category"--%>
-    <%--                  href="${pageContext.request.contextPath}--%>
-    <%--                  /search?zone=${pickedZone}&query=${query}&category=${pickedCategory}">${categorie}</a>--%>
-    <%--            </p>--%>
-    <%--        </c:forEach>--%>
-    <%--    </div>--%>
-    <%--TODO:CAMBIAR ESTE STYLE CUANDO METAMOS FILTROS--%>
-    <div style="width: 100%">
+<div class="content-container d-flex">
+    <div class="custom-card filter-card">
+        <h3>
+            <spring:message code="search.filters"/>
+        </h3>
+        <hr class="hr1"/>
+        <h4>
+            <spring:message code="search.categories"/>
+        </h4>
+        <c:forEach items="${categories}" var="categorie" varStatus="status">
+            <span class="mb-1 custom-row align-items-center">
+                <c:if test="${pickedCategory.ordinal() == status.index}">
+                    <a href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}">
+                        <i class="fa fa-times unselect-category"></i>
+                    </a>
+                </c:if>
+                <p class="capitalize-first-letter">
+                    <a class="category ${pickedCategory.ordinal() == status.index? 'pickedCategory':''}"
+                       href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=${status.index}">
+                        <spring:message code="${categorie.stringCode}"/>
+                    </a>
+                </p>
+            </span>
+        </c:forEach>
+    </div>
+    <div class="custom-row">
         <c:if test="${pickedZone != null}">
             <div class="search-title">
                 <h3>

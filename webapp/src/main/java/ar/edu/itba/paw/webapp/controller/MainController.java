@@ -52,19 +52,21 @@ public class MainController {
         List<JobCard> jobCards = new ArrayList<>();
         if (errors.hasErrors())
             return home(form);
-        Optional<List<JobPost>> searchPost = jobPostService.search(form.getQuery(),
-                JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
-        if (searchPost.isPresent()) {
-            jobCards = createCards(searchPost.get());
-        }
-        mav.addObject("jobCards", jobCards);
-
         mav.addObject("query", form.getQuery());
         mav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
-        if (form.getCategory() != null)
+        Optional<List<JobPost>> searchPost;
+        if (form.getCategory() != null) {
             mav.addObject("pickedCategory", JobPost.JobType.values()[Integer.parseInt(form.getCategory())]);
-        return mav;
+            searchPost = jobPostService.search(form.getQuery(), JobPost.Zone.values()[Integer.parseInt(form.getZone())],
+                    JobPost.JobType.values()[Integer.parseInt(form.getCategory())]);
+        } else
+            searchPost = jobPostService.search(form.getQuery(), JobPost.Zone.values()[Integer.parseInt(form.getZone())],
+                    null);
 
+        if (searchPost.isPresent())
+            jobCards = createCards(searchPost.get());
+        mav.addObject("jobCards", jobCards);
+        return mav;
     }
 
     private List<JobCard> createCards(List<JobPost> jobPosts) {

@@ -206,3 +206,8 @@ h3 {
 .card {
     border: transparent !important;
 }
+
+.custom-row {
+    display: flex;
+    flex-wrap: wrap;
+}

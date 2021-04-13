@@ -2,11 +2,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
-<head>
-</head>
 <body>
-
-<div class="card job-card" style="width: 18rem;">
+<div class="card job-card">
     <%-- TODO: Poner alt correcto e imagen de usuario--%>
     <spring:message code="${requestScope.data.jobPost.jobType.stringCode}" var="jobTypeName"/>
     <img class="card-img-top job-card-img"
@@ -26,7 +23,7 @@
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item job-card-detail">
-            <i class="fas fa-map-marker-alt job-card-detail" style="font-size: 25px; color: gray"></i>
+            <i class="fas fa-map-marker-alt job-card-detail"></i>
             <p class="job-card-detail capitalize-first-letter">
                 <spring:message code="${requestScope.data.jobPost.zones[0].stringCode}"/>
                 <c:if test="${requestScope.data.jobPost.zones.size() > 1}">
@@ -35,14 +32,14 @@
             </p>
         </li>
         <li class="list-group-item job-card-detail">
-            <i class="fas fa-check job-card-detail" style="font-size: 25px; color: gray"></i>
+            <i class="fas fa-check job-card-detail"></i>
             <p class="job-card-detail">
                 <spring:message code="jobCard.jobs.completed" arguments="${requestScope.data.contractsCompleted}"/>
             </p>
         </li>
 
     </ul>
-    <div class="card-body" style="display: flex; justify-content: center; align-items: center">
+    <div class="card-body job-card-button">
         <a href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}"
            class="btn btn-outline-primary text-uppercase stretched-link">
             <spring:message code="jobCard.jobs.details"/>
