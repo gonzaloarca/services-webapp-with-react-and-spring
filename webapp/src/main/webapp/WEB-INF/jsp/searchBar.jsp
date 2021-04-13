@@ -3,7 +3,7 @@
     <form:form action="${pageContext.request.contextPath}/search" method="get"
                modelAttribute="searchForm"
                class="home-search-form"
-               acceptCharset="utf-8" >
+               acceptCharset="utf-8">
         <div class="search-instructions">
             <div class="search-instruction-step">
                 <div class="blue-circle">
@@ -48,7 +48,7 @@
             <div class="home-search-bar-container home-search-bar-row">
                 <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
                 <form:input path="query" type="search" class="home-search-bar w-100 h-100"
-                            placeholder="${typePlaceholder}" />
+                            placeholder="${typePlaceholder}" maxlength="100"/>
                 <form:errors path="query" cssClass="search-form-error" element="p"/>
             </div>
 

@@ -52,13 +52,13 @@
         </h4>
         <c:forEach items="${categories}" var="categorie" varStatus="status">
             <span class="mb-1 custom-row align-items-center">
-                <c:if test="${pickedCategory.ordinal() == status.index}">
-                    <a href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}">
+                <c:if test="${pickedCategory == status.index}">
+                    <a href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=-1">
                         <i class="fa fa-times unselect-category"></i>
                     </a>
                 </c:if>
                 <p class="capitalize-first-letter">
-                    <a class="category ${pickedCategory.ordinal() == status.index? 'pickedCategory':''}"
+                    <a class="category ${pickedCategory == status.index? 'pickedCategory':''}"
                        href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=${status.index}">
                         <spring:message code="${categorie.stringCode}"/>
                     </a>

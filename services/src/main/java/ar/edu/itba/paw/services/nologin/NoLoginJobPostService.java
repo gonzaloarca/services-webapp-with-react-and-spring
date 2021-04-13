@@ -1,11 +1,8 @@
 package ar.edu.itba.paw.services.nologin;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +18,6 @@ public class NoLoginJobPostService implements JobPostService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private JobPackageService jobPackageService;
-
-    @Autowired
-    private JobContractService jobContractService;
 
     @Override
     public JobPost create(String email, String username, String phone, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
@@ -77,15 +68,6 @@ public class NoLoginJobPostService implements JobPostService {
     @Override
     public Optional<List<JobPost>> findAll() {
         return jobPostDao.findAll();
-    }
-
-    @Override
-    public Optional<JobPackage> findCheapestPackage(long postId) {
-        List<JobPackage> jobPackages = jobPackageService.findByPostId(postId).orElseThrow(
-                RuntimeException::new //TODO: DEBERIA SER UNA EXCEPCION PROPIA
-        );
-
-        return jobPackages.stream().min(Comparator.comparingDouble(JobPackage::getPrice));
     }
 
     @Override
