@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
-public class ExceptionHandler {
+public class ExceptionController {
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @org.springframework.web.bind.annotation.ExceptionHandler(
