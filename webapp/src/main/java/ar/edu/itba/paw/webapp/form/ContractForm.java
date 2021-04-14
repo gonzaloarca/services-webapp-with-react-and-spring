@@ -18,6 +18,7 @@ public class ContractForm {
     private String name;
 
     @NotBlank
+    @Size(max = 100)
     @Email
     private String email;
 
@@ -25,7 +26,7 @@ public class ContractForm {
     private String phone;
 
     @NotBlank
-    @Size(max = 1000)
+    @Size(max = 100)
     private String description;
 
     //TODO: proximo sprint para imagen

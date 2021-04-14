@@ -51,7 +51,6 @@
                             placeholder="${typePlaceholder}" maxlength="100"/>
                 <form:errors path="query" cssClass="search-form-error" element="p"/>
             </div>
-
             <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
                 <i class="fas fa-search"></i>
             </button>

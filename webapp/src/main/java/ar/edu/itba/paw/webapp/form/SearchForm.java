@@ -8,9 +8,10 @@ public class SearchForm {
 
     //  @Pattern(regexp = "^[0-9][0-9]*$")
     @NotBlank
+    @Size(max = 100)
     private String zone;
 
-    @Size(max = 200)
+    @Size(max = 100)
     private String query;
 
     private int category = -1;
