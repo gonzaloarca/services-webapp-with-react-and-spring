@@ -65,6 +65,9 @@ public class WebConfig {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
+    @Value("classpath:migration_image_schema.sql")
+    private Resource imageSchemaSql;
+
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
@@ -75,6 +78,7 @@ public class WebConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
+        dbp.addScript(imageSchemaSql);
         return dbp;
     }
 
@@ -113,21 +117,32 @@ public class WebConfig {
         return mailSender;
     }
 
-    @Value("classpath:emailTemplate.html")
-    Resource emailTemplate;
+    @Value("classpath:contractEmail.html")
+    Resource contractTemplate;
+    @Value("classpath:contractEmailWithImage.html")
+    Resource contractImageTemplate;
 
-    @Bean(name = "templateSimpleMessage")
-    public SimpleMailMessage templateSimpleMessage() {
+    private SimpleMailMessage makeMessage(Resource template) {
         SimpleMailMessage message = new SimpleMailMessage();
         String text="";
         try{
-            Reader reader = new InputStreamReader(emailTemplate.getInputStream());
+            Reader reader = new InputStreamReader(template.getInputStream());
             text = FileCopyUtils.copyToString(reader);
         } catch (IOException e) {
-           throw new UncheckedIOException(e);
+            throw new UncheckedIOException(e);
         }
         message.setText(text);
         return message;
+    }
+
+    @Bean(name = "contractEmail")
+    public SimpleMailMessage contractEmail() {
+        return makeMessage(contractTemplate);
+    }
+
+    @Bean(name = "contractEmailWithImage")
+    public SimpleMailMessage contractEmailWithImage() {
+        return makeMessage(contractImageTemplate);
     }
 
 }

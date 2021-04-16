@@ -10,35 +10,29 @@ public class JobContract {
     private User professional;
     private Date creationDate;           //TODO: ver tipo de variable
     private String description;
-    private String image;
+    private byte[] imageData;
 
     public JobContract() {
     }
 
-    public JobContract(User client, JobPackage jobPackage, String description, String image) {
-        this.client = client;
-        this.jobPackage = jobPackage;
-        this.description = description;
-        this.image = image;
-    }
-
-    public JobContract(long id, User client, JobPackage jobPackage, Date creationDate, String description, String image) {
-        this.id = id;
-        this.client = client;
-        this.jobPackage = jobPackage;
-        this.creationDate = creationDate;
-        this.description = description;
-        this.image = image;
-    }
-
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description, String image) {
+    //TODO: ver si este constructor está de mas, se usa en los tests
+    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
         this.professional = professional;
         this.creationDate = creationDate;
         this.description = description;
-        this.image = image;
+    }
+
+    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description, byte[] imageData) {
+        this.id = id;
+        this.client = client;
+        this.jobPackage = jobPackage;
+        this.professional = professional;
+        this.creationDate = creationDate;
+        this.description = description;
+        this.imageData = imageData;
     }
 
     public JobPackage getJobPackage() {
@@ -81,20 +75,20 @@ public class JobContract {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public User getProfessional() {
         return professional;
     }
 
     public void setProfessional(User professional) {
         this.professional = professional;
+    }
+
+    public byte[] getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
     }
 
     @Override
@@ -106,7 +100,6 @@ public class JobContract {
                 ", professional=" + professional +
                 ", creationDate=" + creationDate +
                 ", description='" + description + '\'' +
-                ", image='" + image + '\'' +
                 '}';
     }
 
