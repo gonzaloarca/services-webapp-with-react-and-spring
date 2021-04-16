@@ -17,16 +17,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NoLoginJobContractServiceTest {
     private static final User CLIENT = new User(
-            3, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "0303456", false, true
+            3, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "0303456", true
     );
     private static final User PROFESSIONAL = new User(
-            8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", false, true
+            8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", true
     );
     private static final JobPackage JOB_PACKAGE = new JobPackage(
             7, 2, "Arreglo avanzado de plomeria", "Todo tipo de canerias", 200.00, JobPackage.RateType.ONE_TIME, true
@@ -74,8 +75,8 @@ public class NoLoginJobContractServiceTest {
 
     @Test
     public void testCreateExistingClient() {
-        Mockito.when(noLoginUserService.register(Mockito.eq(CLIENT.getEmail()), Mockito.eq(CLIENT.getUsername()),
-                Mockito.eq(CLIENT.getPhone()), Mockito.eq(CLIENT.isProfessional()))).thenReturn(CLIENT);
+        Mockito.when(noLoginUserService.register(Mockito.eq(CLIENT.getEmail()),"", Mockito.eq(CLIENT.getUsername()),
+                Mockito.eq(CLIENT.getPhone()), Arrays.asList(0))).thenReturn(CLIENT);
 
         Mockito.when(noLoginJobPackageService.findById(Mockito.eq(JOB_PACKAGE.getId())))
                 .thenReturn(Optional.of(JOB_PACKAGE));

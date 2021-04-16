@@ -30,7 +30,6 @@ public class UserDaoJDBCTest {
             "Francisco Quesada",
             "",
             "11-3456-3232",
-            true,
             true
     );
 
@@ -57,17 +56,15 @@ public class UserDaoJDBCTest {
                 "Manuel Rodriguez",
                 "",
                 "11-4536-5656",
-                false,
                 true
         );
 
-        User user = userDaoJDBC.register(userTest.getEmail(),userTest.getUsername(),userTest.getPhone(),userTest.isProfessional());
+        User user = userDaoJDBC.register(userTest.getEmail(),"",userTest.getUsername(),userTest.getPhone());
 
         Assert.assertNotNull(user);
         Assert.assertEquals(userTest,user);
         Assert.assertEquals(userTest.getUsername(),user.getUsername());
         Assert.assertEquals(userTest.getPhone(),user.getPhone());
-        Assert.assertEquals(userTest.isProfessional(),user.isProfessional());
     }
 
     @Test
@@ -87,9 +84,8 @@ public class UserDaoJDBCTest {
 
     @Test
     public void testSwitchRole() {
-        Optional<User> user = userDaoJDBC.switchRole(USER.getId());
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER,user.get());
-        Assert.assertEquals(!USER.isProfessional(),user.get().isProfessional());
+//        Optional<User> user = userDaoJDBC.switchRole(USER.getId());
+//        Assert.assertTrue(user.isPresent());
+//        Assert.assertEquals(USER,user.get());
     }
 }

@@ -33,24 +33,27 @@ public class NoLoginJobPostService implements JobPostService {
 
         //Chequeamos si el user esta registrado
         Optional<User> maybeUser = userService.findByEmail(email);
-        User user = null;
-        //Si existe vemos si es profesional, si no lo es lo hacemos
-        if (maybeUser.isPresent()) {
-            if (!maybeUser.get().isProfessional()) {
-                //TODO: Es necesario un optional?
-                Optional<User> newRole = userService.switchRole(maybeUser.get().getId());
-                user = newRole.orElse(maybeUser.get());
-            }else{
-                maybeUser = userService.updateUserByEmail(email,phone,username);
-                if(maybeUser.isPresent())
-                    user = maybeUser.get();
-            }
-        } else {
-            user = userService.register(email, username, phone, true);
-        }
-        if (user == null)
-            //TODO: LANZAR EXCEPCION APROPIADA
-            throw new RuntimeException();
+        User user = new User();
+        user.setId(-1);
+//        Si existe vemos si es profesional, si no lo es lo hacemos
+//        if (maybeUser.isPresent()) {
+//            if (!maybeUser.get().isProfessional()) {
+//                //TODO: Es necesario un optional?
+//                Optional<User> newRole = userService.switchRole(maybeUser.get().getId());
+//                user = newRole.orElse(maybeUser.get());
+//            }else{
+//                maybeUser = userService.updateUserByEmail(email,phone,username);
+//                if(maybeUser.isPresent())
+//                    user = maybeUser.get();
+//            }
+//        } else {
+//            user=new User();
+//            user.setId(-1);
+//            user = userService.register(email,"", username, phone, true);
+//        }
+//        if (user == null)
+//            //TODO: LANZAR EXCEPCION APROPIADA
+//            throw new RuntimeException();
         return jobPostDao.create(user.getId(), title, availableHours, jobType, zones);
     }
 

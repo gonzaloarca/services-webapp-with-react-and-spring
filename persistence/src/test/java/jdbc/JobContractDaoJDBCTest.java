@@ -38,7 +38,6 @@ public class JobContractDaoJDBCTest {
             "Francisco Quesada",
             "",
             "1147895678",
-            true,
             true
     );
     private static final User CLIENT = new User(
@@ -47,7 +46,6 @@ public class JobContractDaoJDBCTest {
             "Manuel Rodriguez",
             "",
             "1109675432",
-            false,
             true
     );
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(

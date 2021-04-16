@@ -27,8 +27,9 @@ public class NoLoginJobContractService implements JobContractService {
     @Override
     public JobContract create(long packageId, String description, String client_email, String client_username, String client_phone) {
         Optional<User> maybeUser = userService.findByEmail(client_email);
-        User client;
-        client = maybeUser.orElseGet(() -> userService.register(client_email, client_username, client_phone, false));
+        User client = new User();
+        client.setId(-1);
+//        client = maybeUser.orElseGet(() -> userService.register(client_email,"", client_username, client_phone, 1));
 
         if(!jobPackageService.findById(packageId).isPresent())
             // TODO: CAMBIAR A EXCEPCION PROPIA

@@ -1,20 +1,23 @@
 package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserAuth;
 
 import java.util.Optional;
 
 public interface UserDao {
 
-    User register(String email, String username, String phone, boolean isProfessional);
+    User register(String email,String password, String username, String phone);
 
     Optional<User> findById(long id);
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> switchRole(long id);
-
     Optional<User> updateUserByEmail(String email,String phone, String name);
 
     Optional<User> updateUserByid(long id,String phone, String name);
+
+    Optional<UserAuth> getAuthInfo(String email);
+
+    void assignRole(long id, int role);
 }

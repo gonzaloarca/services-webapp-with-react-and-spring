@@ -2,12 +2,15 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
+import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utils.JobCard;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,9 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 //TODO: ver de separar en Controllers más especificos
 @Controller
@@ -31,6 +32,12 @@ public class MainController {
 
     @Autowired
     private JobContractService jobContractService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
@@ -102,4 +109,22 @@ public class MainController {
         });
         return jobCards;
     }
+
+    @RequestMapping(value = "/register",method = RequestMethod.GET)
+    public ModelAndView register(@ModelAttribute("registerForm")RegisterForm registerForm){
+        return new ModelAndView("register");
+    }
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
+    public ModelAndView registerForm(@Valid @ModelAttribute("registerForm")RegisterForm registerForm,BindingResult errors){
+        if(errors.hasErrors())
+            return register(registerForm);
+        userService.register(registerForm.getEmail(),passwordEncoder.encode(registerForm.getPassword()),registerForm.getUsername(),registerForm.getPhone(), Arrays.asList(1));
+        return new ModelAndView("redirect:");
+    }
+
+    @RequestMapping(value = "/login")
+    public ModelAndView login(){
+        return new ModelAndView("login");
+    }
+
 }

@@ -8,28 +8,26 @@ public class User {
     private String username;
     private String userImage;
     private String phone;
-    private boolean isProfessional;
     private boolean isActive;
+    private boolean isVerified;
 
     public User() {
     }
 
-    public User(String email, String username, String userImage, String phone, boolean isProfessional) {
+    public User(String email, String username, String userImage, String phone) {
         this.email = email;
         this.username = username;
         this.userImage = userImage;
         this.phone = phone;
-        this.isProfessional = isProfessional;
         this.isActive = true;
     }
 
-    public User(long id, String email, String username, String userImage, String phone, boolean isProfessional, boolean isActive) {
+    public User(long id, String email, String username, String userImage, String phone, boolean isActive) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.userImage = userImage;
         this.phone = phone;
-        this.isProfessional = isProfessional;
         this.isActive = isActive;
     }
 
@@ -73,14 +71,6 @@ public class User {
         this.phone = phone;
     }
 
-    public boolean isProfessional() {
-        return isProfessional;
-    }
-
-    public void setProfessional(boolean professional) {
-        isProfessional = professional;
-    }
-
     public boolean isActive() {
         return isActive;
     }
@@ -97,7 +87,6 @@ public class User {
                 ", username='" + username + '\'' +
                 ", userImage='" + userImage + '\'' +
                 ", phone='" + phone + '\'' +
-                ", isProfessional=" + isProfessional +
                 ", isActive=" + isActive +
                 '}';
     }

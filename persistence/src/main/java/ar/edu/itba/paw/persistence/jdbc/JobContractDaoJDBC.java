@@ -37,7 +37,6 @@ public class JobContractDaoJDBC implements JobContractDao {
                     resultSet.getString("client_name"),
                     "",
                     resultSet.getString("client_phone"),
-                    resultSet.getBoolean("client_is_professional"),
                     resultSet.getBoolean("client_is_active")
             ),
             new JobPackage(
@@ -54,7 +53,6 @@ public class JobContractDaoJDBC implements JobContractDao {
             resultSet.getString("professional_username"),
             "",
             resultSet.getString("professional_phone"),
-            resultSet.getBoolean("professional_is_professional"),
             resultSet.getBoolean("professional_is_active")
     ),
             resultSet.getDate("creation_date"),
@@ -108,14 +106,12 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "user_name            AS client_name, " +
                         "user_email           AS client_email, " +
                         "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
                         "user_is_active       AS client_is_active " +
                         "FROM users) AS clients " +
                         "NATURAL JOIN (SELECT user_id              AS professional_id, " +
                         "user_name            AS professional_username, " +
                         "user_email           AS professional_email, " +
                         "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
                         "user_is_active       AS professional_is_active " +
                         "FROM users) AS professionals " +
                         "WHERE contract_id = ?"
@@ -136,14 +132,12 @@ public class JobContractDaoJDBC implements JobContractDao {
                                 "user_name            AS client_name, " +
                                 "user_email           AS client_email, " +
                                 "user_phone           AS client_phone, " +
-                                "user_is_professional AS client_is_professional, " +
                                 "user_is_active       AS client_is_active " +
                                 "FROM users) AS clients " +
                                 "NATURAL JOIN (SELECT user_id              AS professional_id, " +
                                 "user_name            AS professional_username, " +
                                 "user_email           AS professional_email, " +
                                 "user_phone           AS professional_phone, " +
-                                "user_is_professional AS professional_is_professional, " +
                                 "user_is_active       AS professional_is_active " +
                                 "FROM users) AS professionals " +
                                 "WHERE client_id = ?"
@@ -163,14 +157,12 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "user_name            AS client_name, " +
                         "user_email           AS client_email, " +
                         "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
                         "user_is_active       AS client_is_active " +
                         "FROM users) AS clients " +
                         "NATURAL JOIN (SELECT user_id              AS professional_id, " +
                         "user_name            AS professional_username, " +
                         "user_email           AS professional_email, " +
                         "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
                         "user_is_active       AS professional_is_active " +
                         "FROM users) AS professionals " +
                         "WHERE professional_id = ?",
@@ -189,14 +181,12 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "user_name            AS client_name, " +
                         "user_email           AS client_email, " +
                         "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
                         "user_is_active       AS client_is_active " +
                         "FROM users) AS clients " +
                         "NATURAL JOIN (SELECT user_id              AS professional_id, " +
                         "user_name            AS professional_username, " +
                         "user_email           AS professional_email, " +
                         "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
                         "user_is_active       AS professional_is_active " +
                         "FROM users) AS professionals " +
                         "WHERE post_id = ?"
@@ -216,14 +206,12 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "user_name            AS client_name, " +
                         "user_email           AS client_email, " +
                         "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
                         "user_is_active       AS client_is_active " +
                         "FROM users) AS clients " +
                         "NATURAL JOIN (SELECT user_id              AS professional_id, " +
                         "user_name            AS professional_username, " +
                         "user_email           AS professional_email, " +
                         "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
                         "user_is_active       AS professional_is_active " +
                         "FROM users) AS professionals " +
                         "WHERE package_id = ?"
