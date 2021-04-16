@@ -1,5 +1,6 @@
 .search-title {
     display: inline-flex;
+    word-break: break-word;
 }
 
 .filter-card {

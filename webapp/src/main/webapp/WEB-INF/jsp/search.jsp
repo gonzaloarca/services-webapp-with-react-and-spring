@@ -34,11 +34,12 @@
     <link href="${pageContext.request.contextPath}/resources/css/search.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/searchBar.css" rel="stylesheet"/>
-    <link rel="shortcut icon" href="#">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
-
+<jsp:include page="customNavBar.jsp"/>
 <%@ include file="searchBar.jsp" %>
 
 <div class="content-container d-flex">
@@ -52,13 +53,13 @@
         </h4>
         <c:forEach items="${categories}" var="categorie" varStatus="status">
             <span class="mb-1 custom-row align-items-center">
-                <c:if test="${pickedCategory.ordinal() == status.index}">
-                    <a href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}">
+                <c:if test="${pickedCategory == status.index}">
+                    <a href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=-1">
                         <i class="fa fa-times unselect-category"></i>
                     </a>
                 </c:if>
                 <p class="capitalize-first-letter">
-                    <a class="category ${pickedCategory.ordinal() == status.index? 'pickedCategory':''}"
+                    <a class="category ${pickedCategory == status.index? 'pickedCategory':''}"
                        href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=${status.index}">
                         <spring:message code="${categorie.stringCode}"/>
                     </a>
@@ -120,5 +121,6 @@
         </c:if>
     </div>
 </div>
+<jsp:include page="footer.jsp"/>
 </body>
 </html>

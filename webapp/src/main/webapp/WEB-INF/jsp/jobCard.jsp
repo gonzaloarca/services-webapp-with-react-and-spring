@@ -14,11 +14,13 @@
         <h6 class="card-text job-card-type capitalize-first-letter">
             <c:out value="${jobTypeName}"/>
         </h6>
-        <div class="job-card-price-container">
-            <p class="job-card-price">
-                <spring:message code="${requestScope.data.rateType.stringCode}"
-                                arguments="${requestScope.data.price}"/>
-            </p>
+        <div>
+            <div class="price-container mt-4 mx-4">
+                <p class="price">
+                    <spring:message code="${requestScope.data.rateType.stringCode}"
+                                    arguments="${requestScope.data.price}"/>
+                </p>
+            </div>
         </div>
     </div>
     <ul class="list-group list-group-flush">
@@ -27,7 +29,8 @@
             <p class="job-card-detail capitalize-first-letter">
                 <spring:message code="${requestScope.data.jobPost.zones[0].stringCode}"/>
                 <c:if test="${requestScope.data.jobPost.zones.size() > 1}">
-                    <spring:message code="jobCard.jobs.extraZones" arguments="${requestScope.data.jobPost.zones.size() -1}"/>
+                    <spring:message code="jobCard.jobs.extraZones"
+                                    arguments="${requestScope.data.jobPost.zones.size() -1}"/>
                 </c:if>
             </p>
         </li>

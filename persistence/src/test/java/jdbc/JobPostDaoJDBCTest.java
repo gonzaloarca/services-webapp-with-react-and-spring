@@ -101,7 +101,7 @@ public class JobPostDaoJDBCTest {
         Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType());
 
         Assert.assertTrue(jobPosts.isPresent());
-        Assert.assertEquals(jobPosts.get().size(), 1);
+        Assert.assertEquals(2, jobPosts.get().size());
         jobPosts.get().forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
     }
 

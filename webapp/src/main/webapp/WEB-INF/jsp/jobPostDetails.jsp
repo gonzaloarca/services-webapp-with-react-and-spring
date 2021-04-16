@@ -35,7 +35,7 @@
 
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
+<jsp:include page="customNavBar.jsp"/>
 <div class="content-container-transparent">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-white">
@@ -231,6 +231,7 @@
         </div>
     </div>
 </div>
+<jsp:include page="footer.jsp"/>
 <script>
     $('.requestServiceBtn').on('click', function (e) {
         e.stopPropagation();
