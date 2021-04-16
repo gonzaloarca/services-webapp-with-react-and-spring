@@ -22,6 +22,7 @@ public class JobPostForm {
     private String jobType;
 
     @NotBlank
+    @Size(max = 100)
     private String title;
 
     @NotEmpty
@@ -34,16 +35,19 @@ public class JobPostForm {
 //    private MultipartFile[] servicePics;
 
     @NotBlank
+    @Size(max = 100)
     private String availableHours;
 
     @NotEmpty
     private int[] zones;
 
     @NotBlank
+    @Size(max = 100)
     private String professionalName;
 
     @Email
     @NotBlank
+    @Size(max = 100)
     private String email;
 
     @Pattern(regexp = "^\\+?[0-9- ]{7,50}")

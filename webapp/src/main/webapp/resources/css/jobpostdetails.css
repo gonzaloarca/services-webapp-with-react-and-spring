@@ -16,11 +16,6 @@
     object-fit: cover;
 }
 
-.custom-row {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .center {
     flex: 1;
     width: 90%;
@@ -30,6 +25,7 @@
     margin-left: 20px;
     font-size: 24px;
     font-weight: bold;
+    word-break: break-word;
     margin-bottom: 0;
 }
 
@@ -39,21 +35,6 @@
     font-size: 32px;
     line-height: 1;
     word-break: break-word;
-}
-
-.star {
-    color: gold;
-    font-size: 22px;
-}
-
-.custom-row .rating {
-    margin-left: 3vw;
-}
-
-.rating p {
-    color: gray;
-    margin-left: 10px;
-    font-size: 16px;
 }
 
 .summary {
@@ -149,14 +130,4 @@
 .package-price p {
     font-size: 14px;
     margin: 0;
-}
-
-.chip {
-    background-color: #485696;
-    border-radius: 12px;
-    color: white;
-    padding: 6px;
-    margin: 0 10px 20px;
-    text-align: center;
-    line-height: 1;
 }

@@ -2,20 +2,19 @@ package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class SearchForm {
 
     //  @Pattern(regexp = "^[0-9][0-9]*$")
     @NotBlank
+    @Size(max = 100)
     private String zone;
 
-    @Size(max = 200)
+    @Size(max = 100)
     private String query;
 
-    @Pattern(regexp = "^[0-9][0-9]*$")
-    private String category;
+    private int category = -1;
 
     public String getZone() {
         return zone;
@@ -33,11 +32,11 @@ public class SearchForm {
         this.query = query;
     }
 
-    public String getCategory() {
+    public int getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(int category) {
         this.category = category;
     }
 }

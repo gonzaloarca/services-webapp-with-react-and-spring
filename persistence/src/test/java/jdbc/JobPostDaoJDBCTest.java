@@ -49,7 +49,6 @@ public class JobPostDaoJDBCTest {
     private UserDaoJDBC mockUserDao;
 
 
-
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -126,14 +125,27 @@ public class JobPostDaoJDBCTest {
     }
 
     @Test
-    public void search(){
+    public void search() {
         String title = "Electricista";
-        JobPost.Zone zone = JobPost.Zone.values()[1];
-        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.search(title,zone);
+        JobPost.Zone zone = JobPost.Zone.PALERMO;
+        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.search(title, zone);
 
         Assert.assertTrue(jobPosts.isPresent());
         Assert.assertFalse(jobPosts.get().isEmpty());
-        Assert.assertEquals(2,jobPosts.get().size());
-        System.out.println(jobPosts.get().toString());
+        Assert.assertEquals(2, jobPosts.get().size());
+        System.out.println(jobPosts.get());
+    }
+
+    @Test
+    public void searchWithCategory() {
+        String title = "";
+        JobPost.Zone zone = JobPost.Zone.PALERMO;
+        JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
+        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType);
+
+        Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertFalse(jobPosts.get().isEmpty());
+        Assert.assertEquals(2, jobPosts.get().size());
+        System.out.println(jobPosts.get());
     }
 }

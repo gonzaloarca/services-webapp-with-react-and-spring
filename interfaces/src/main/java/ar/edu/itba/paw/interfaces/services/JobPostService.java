@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface JobPostService {
@@ -21,8 +19,6 @@ public interface JobPostService {
 
     Optional<List<JobPost>> findAll();
 
-    Optional<JobPackage> findCheapestPackage(long postId);
-
-    Optional<List<JobPost>> search(String title, JobPost.Zone zone);
+    Optional<List<JobPost>> search(String title, JobPost.Zone zone, JobPost.JobType jobType);
 
 }
