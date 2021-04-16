@@ -1,11 +1,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
     <title>
-        <spring:message code="search.title"/>
+        <spring:message code="search.title" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
@@ -30,38 +31,43 @@
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
-<%--    <link href="${pageContext.request.contextPath}/resources/css/index.css" rel="stylesheet"/>--%>
     <link href="${pageContext.request.contextPath}/resources/css/search.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/searchBar.css" rel="stylesheet"/>
-    <link rel="shortcut icon" href="#">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
+<jsp:include page="customNavBar.jsp"/>
+<%@ include file="searchBar.jsp" %>
 
-<c:set var="path" value="/search" scope="request"/>
-<%@include file="searchBar.jsp"%>
-
-
-<div class="content-container" style="display: flex">
-<%--    TODO: IMPLEMENTAR FILTRO POR CATEGORIA EN LA QUERY      --%>
-    <%--    <div class="custom-card filter-card">--%>
-    <%--        <h4>--%>
-    <%--            <spring:message code="search.filters"/>--%>
-    <%--        </h4>--%>
-    <%--        <hr class="hr1"/>--%>
-    <%--        <h5>--%>
-    <%--            <spring:message code="search.categories"/>--%>
-    <%--        </h5>--%>
-    <%--        <c:forEach items="${categories}" var="categorie">--%>
-    <%--            <p class="mb-1 capitalize-first-letter"><a class="category"--%>
-    <%--                  href="${pageContext.request.contextPath}--%>
-    <%--                  /search?zone=${pickedZone}&query=${query}&category=${pickedCategory}">${categorie}</a>--%>
-    <%--            </p>--%>
-    <%--        </c:forEach>--%>
-    <%--    </div>--%>
-    <%--TODO:CAMBIAR ESTE STYLE CUANDO METAMOS FILTROS--%>
-    <div style="width: 100%">
+<div class="content-container d-flex">
+    <div class="custom-card filter-card">
+        <h3>
+            <spring:message code="search.filters"/>
+        </h3>
+        <hr class="hr1"/>
+        <h4>
+            <spring:message code="search.categories"/>
+        </h4>
+        <c:forEach items="${categories}" var="categorie" varStatus="status">
+            <span class="mb-1 custom-row align-items-center">
+                <c:if test="${pickedCategory == status.index}">
+                    <a href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=-1">
+                        <i class="fa fa-times unselect-category"></i>
+                    </a>
+                </c:if>
+                <p class="capitalize-first-letter">
+                    <a class="category ${pickedCategory == status.index? 'pickedCategory':''}"
+                       href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=${status.index}">
+                        <spring:message code="${categorie.stringCode}"/>
+                    </a>
+                </p>
+            </span>
+        </c:forEach>
+    </div>
+    <div class="custom-row">
         <c:if test="${pickedZone != null}">
             <div class="search-title">
                 <h3>
@@ -71,7 +77,6 @@
                     <c:if test="${!(query.length() == 0)}">
                         <spring:message code="search.results" arguments="${query}"/>
                     </c:if>
-                        <%--                &nbsp--%>
                     <spring:message code="${pickedZone.stringCode}"/>
                     <c:if test="${pickedZone == null}">
                         <spring:message code="search.badQuery"/>
@@ -88,7 +93,7 @@
                 </c:if>
                 <c:if test="${jobCards.size() == 0}">
                     <div class="result-div">
-                        <i class="fas fa-cogs mb-4"></i>
+                        <i class="fas fa-search mb-4"></i>
                         <p class="result-text">
                             <spring:message code="search.jobs.noResults"/>
                         </p>
@@ -116,5 +121,6 @@
         </c:if>
     </div>
 </div>
+<jsp:include page="footer.jsp"/>
 </body>
 </html>

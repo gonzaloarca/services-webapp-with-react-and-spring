@@ -1,12 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
-
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
     <title>
-        <spring:message code="navigation.index"/>
+        <spring:message code="navigation.index" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
@@ -43,7 +43,6 @@
     <jsp:param name="path" value="/"/>
 </jsp:include>
 
-<c:set var="path" value="/" scope="request"/>
 <%@include file="searchBar.jsp"%>
 
 <div class="content-container">
@@ -71,5 +70,6 @@
         </c:if>
     </div>
 </div>
+<jsp:include page="footer.jsp"/>
 </body>
 </html>

@@ -1,12 +1,9 @@
-<html>
-<head>
-</head>
-<body>
 <div class="home-banner-container">
     <%--@elvariable id="searchForm" type=""--%>
-    <form:form action="${pageContext.request.contextPath}${requestScope.path}" method="post"
+    <form:form action="${pageContext.request.contextPath}/search" method="get"
                modelAttribute="searchForm"
-               class="home-search-form">
+               class="home-search-form"
+               acceptCharset="utf-8">
         <div class="search-instructions">
             <div class="search-instruction-step">
                 <div class="blue-circle">
@@ -51,10 +48,9 @@
             <div class="home-search-bar-container home-search-bar-row">
                 <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
                 <form:input path="query" type="search" class="home-search-bar w-100 h-100"
-                            placeholder="${typePlaceholder}"/>
+                            placeholder="${typePlaceholder}" maxlength="100"/>
                 <form:errors path="query" cssClass="search-form-error" element="p"/>
             </div>
-
             <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
                 <i class="fas fa-search"></i>
             </button>
@@ -64,5 +60,3 @@
     <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
          src='<c:url value="/resources/images/banner1.jpg" />'/>
 </div>
-</body>
-</html>

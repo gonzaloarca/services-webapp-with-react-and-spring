@@ -1,7 +1,4 @@
-package ar.edu.itba.paw.webapp.utils;
-
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
+package ar.edu.itba.paw.models;
 
 public class JobCard {
     private JobPost jobPost;
@@ -16,19 +13,38 @@ public class JobCard {
         this.contractsCompleted = contractsCompleted;
     }
 
+    public JobCard() {
+    }
+
     public JobPost getJobPost() {
         return jobPost;
+    }
+
+    public void setJobPost(JobPost jobPost) {
+        this.jobPost = jobPost;
     }
 
     public JobPackage.RateType getRateType() {
         return rateType;
     }
 
-    public String getPrice() {
-        return String.valueOf(price);
+    public void setRateType(JobPackage.RateType rateType) {
+        this.rateType = rateType;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public int getContractsCompleted() {
         return contractsCompleted;
+    }
+
+    public void setContractsCompleted(int contractsCompleted) {
+        this.contractsCompleted = contractsCompleted;
     }
 }
