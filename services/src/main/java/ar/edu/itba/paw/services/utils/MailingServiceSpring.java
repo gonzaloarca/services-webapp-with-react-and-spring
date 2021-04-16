@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services.utils;
 
+import ar.edu.itba.paw.interfaces.services.ImageDataService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPackage;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import java.util.HashMap;
 
 @Service
@@ -25,11 +25,14 @@ public class MailingServiceSpring implements MailingService {
 
     @Autowired
     @Qualifier("contractEmail")
-    public SimpleMailMessage contractEmail;
+    private SimpleMailMessage contractEmail;
 
     @Autowired
     @Qualifier("contractEmailWithImage")
-    public SimpleMailMessage contractEmailWithImage;
+    private SimpleMailMessage contractEmailWithImage;
+
+    @Autowired
+    private ImageDataService imageDataService;
 
     private final HashMap<String, String> IMAGE_TYPE_TO_NAME = new HashMap<String, String>() {{
         put("image/png", "image.png");
@@ -70,7 +73,7 @@ public class MailingServiceSpring implements MailingService {
 
         if(jobContract.getImageData() != null) {
             message = contractEmailWithImage;
-            attachment = new ByteArrayDataSource(jobContract.getImageData(), jobContract.getImageType());
+            attachment = imageDataService.getImageDataSource(jobContract.getImageData());
         } else {
             message = contractEmail;
         }

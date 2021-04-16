@@ -11,7 +11,6 @@ public class JobContract {
     private Date creationDate;           //TODO: ver tipo de variable
     private String description;
     private byte[] imageData;
-    private String imageType;
 
     public JobContract() {
     }
@@ -26,7 +25,7 @@ public class JobContract {
         this.description = description;
     }
 
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description, byte[] imageData, String imageType) {
+    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description, byte[] imageData) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
@@ -34,7 +33,6 @@ public class JobContract {
         this.creationDate = creationDate;
         this.description = description;
         this.imageData = imageData;
-        this.imageType = imageType;
     }
 
     public JobPackage getJobPackage() {
@@ -91,14 +89,6 @@ public class JobContract {
 
     public void setImageData(byte[] imageData) {
         this.imageData = imageData;
-    }
-
-    public String getImageType() {
-        return imageType;
-    }
-
-    public void setImageType(String imageType) {
-        this.imageType = imageType;
     }
 
     @Override

@@ -59,8 +59,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     ),
             resultSet.getDate("creation_date"),
             resultSet.getString("contract_description"),
-            resultSet.getBytes("image_data"),
-            resultSet.getString("image_type")
+            resultSet.getBytes("image_data")
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -75,11 +74,11 @@ public class JobContractDaoJDBC implements JobContractDao {
 
     @Override
     public JobContract create(long clientId, long packageId, String description) {
-        return create(clientId, packageId, description, null, null);
+        return create(clientId, packageId, description, null);
     }
 
     @Override
-    public JobContract create(long clientId, long packageId, String description, byte[] imageData, String imageType) {
+    public JobContract create(long clientId, long packageId, String description, byte[] imageData) {
         Date creationDate = new Date();
         Number key = jdbcInsert.executeAndReturnKey(new HashMap<String, Object>() {{
             put("client_id", clientId);
@@ -87,7 +86,6 @@ public class JobContractDaoJDBC implements JobContractDao {
             put("contract_description", description);
             put("creation_date", new java.sql.Date(creationDate.getTime()));
             put("image_data", imageData);
-            put("image_type", imageType);
         }});
 
         //TODO: Cambiar excepciones por excepciones propias
@@ -100,7 +98,7 @@ public class JobContractDaoJDBC implements JobContractDao {
         //TODO: Revisar caso de nullPointerException
         User professional = userDao.findById(jobPost.getUser().getId()).orElseThrow(NoSuchElementException::new);
 
-        return new JobContract(key.longValue(), client, jobPackage, professional, creationDate, description, imageData, imageType);
+        return new JobContract(key.longValue(), client, jobPackage, professional, creationDate, description, imageData);
     }
 
     @Override

@@ -59,11 +59,12 @@ public class ContractController {
         JobContract jobContract;
 
         if(form.getImage().getSize() == 0)
-            jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(), form.getPhone());
+            jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(),
+                    form.getPhone());
         else {
             try {
-                jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(), form.getPhone(),
-                        form.getImage().getBytes(), form.getImage().getContentType());
+                jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(),
+                        form.getPhone(), form.getImage().getBytes());
             } catch (IOException e){
                 //fixme
                 throw new RuntimeException(e.getMessage());
