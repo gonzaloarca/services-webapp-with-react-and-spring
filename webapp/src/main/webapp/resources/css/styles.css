@@ -10,6 +10,7 @@ body {
 
 .content-container {
     width: 80vw;
+    min-height: 80vh;
     max-width: 1184px;
     margin: 0 auto;
     padding: 30px 5%;
@@ -19,6 +20,7 @@ body {
 
 .content-container-transparent {
     width: 80vw;
+    min-height: 80vh;
     max-width: 1184px;
     margin: 0 auto;
     padding: 30px 0;
@@ -210,4 +212,45 @@ h3 {
 .custom-row {
     display: flex;
     flex-wrap: wrap;
+}
+
+/* Para ratings */
+.star {
+    color: gold;
+    font-size: 22px;
+}
+
+.custom-row .rating {
+    margin-left: 3vw;
+}
+
+.rating p {
+    color: gray;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+/* chip */
+.chip {
+    background-color: #485696;
+    border-radius: 12px;
+    color: white;
+    padding: 6px;
+    margin: 0 10px 20px;
+    text-align: center;
+    line-height: 1;
+}
+
+/*Para precio, se utiliza en JobCard y en ServiceCard*/
+.price-container {
+    padding: 1vh 1vw;
+    border-radius: 15px;
+    background-color: #485696;
+}
+
+.price {
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    font-weight: normal;
 }

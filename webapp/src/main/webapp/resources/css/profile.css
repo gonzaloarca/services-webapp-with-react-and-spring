@@ -1,0 +1,105 @@
+.profile-img {
+    border-radius: 15px;
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.profile-title {
+    font-weight: bold;
+}
+
+.profile-subtitle {
+    color: gray;
+    margin: 0;
+}
+
+.profile-completed-works {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    background: #485696;
+}
+
+.profile-completed-works-outline {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #fcb839;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-list-selector {
+    display: flex;
+    color: #485696;
+    align-items: center;
+}
+
+
+/*SERVICE CARD*/
+
+.service-img {
+    border-radius: 15px;
+    height: 180px;
+    width: 180px;
+    object-fit: cover;
+}
+
+.service-title {
+    color: #485696;
+    line-height: 1.1em;
+    height: 2.2em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.service-subtitle {
+    color: gray;
+    margin: 0;
+}
+
+.service-contracted-times {
+    color: gray;
+    margin-top: 10px;
+}
+
+/*REVIEW CARD*/
+.reviews-rate {
+    font-size: 80px;
+    margin: 0;
+}
+
+.reviews-rate-stars i {
+    font-size: 30px;
+}
+
+.reviews-summary-gray-text {
+    color: gray;
+    font-size: 18px;
+    margin-bottom: 0;
+    min-width: 2em;
+}
+
+.progress {
+    margin: 0 10px;
+    width: 9vw;
+    height: 8px;
+}
+
+.review-title {
+    font-weight: bold;
+}
+
+.review-link {
+    color: #485696;
+}

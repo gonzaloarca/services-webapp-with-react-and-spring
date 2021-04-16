@@ -30,7 +30,7 @@
 
 </head>
 <body class="body">
-<%@ include file="customNavBar.jsp" %>
+<jsp:include page="customNavBar.jsp"/>
 <div class="content-container-transparent">
 
     <!-- Navigation -->
@@ -262,5 +262,6 @@
 
     </div>
 </div>
+<jsp:include page="footer.jsp"/>
 </body>
 </html>

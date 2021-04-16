@@ -39,8 +39,7 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
-
+<jsp:include page="customNavBar.jsp"/>
 <%@ include file="searchBar.jsp" %>
 
 <div class="content-container d-flex">
@@ -122,5 +121,6 @@
         </c:if>
     </div>
 </div>
+<jsp:include page="footer.jsp"/>
 </body>
 </html>

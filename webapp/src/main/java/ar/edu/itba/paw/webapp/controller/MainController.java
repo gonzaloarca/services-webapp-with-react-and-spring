@@ -22,6 +22,20 @@ public class MainController {
     @Autowired
     private JobCardService jobCardService;
 
+    @RequestMapping(value = "/profile/services")
+    public ModelAndView profileWithServices(){
+        final ModelAndView mav = new ModelAndView("profile");
+        mav.addObject("withServices", true);
+        return mav;
+    }
+
+    @RequestMapping(value = "/profile/reviews")
+    public ModelAndView profileWithReviews(){
+        final ModelAndView mav = new ModelAndView("profile");
+        mav.addObject("withServices", false);
+        return mav;
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
         final ModelAndView mav = new ModelAndView("index");

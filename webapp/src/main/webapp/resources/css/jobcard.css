@@ -19,21 +19,6 @@
     color: gray;
 }
 
-.job-card-price-container {
-    margin: 20px 10% 0 10%;
-    padding: 10px 0;
-    border-radius: 15px;
-    background-color: #485696;
-}
-
-.job-card-price {
-    margin: 0 auto;
-    text-align: center;
-    color: white;
-    font-weight: normal;
-
-}
-
 .job-card-detail {
     display: inline;
     vertical-align: middle;

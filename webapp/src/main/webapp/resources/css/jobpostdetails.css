@@ -37,21 +37,6 @@
     word-break: break-word;
 }
 
-.star {
-    color: gold;
-    font-size: 22px;
-}
-
-.custom-row .rating {
-    margin-left: 3vw;
-}
-
-.rating p {
-    color: gray;
-    margin-left: 10px;
-    font-size: 16px;
-}
-
 .summary {
     background-color: #fcb839;
     display: inline-flex;
@@ -145,14 +130,4 @@
 .package-price p {
     font-size: 14px;
     margin: 0;
-}
-
-.chip {
-    background-color: #485696;
-    border-radius: 12px;
-    color: white;
-    padding: 6px;
-    margin: 0 10px 20px;
-    text-align: center;
-    line-height: 1;
 }
