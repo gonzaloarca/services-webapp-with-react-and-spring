@@ -54,9 +54,9 @@
                     <img class="card-image-top profile-img"
                          src='<c:url value="/resources/images/worker-placeholder.jpg" />'
                          alt="<spring:message code="profile.image"/>">
-                    <h3 class="card-title mt-2 profile-title"><c:out value="Rodrigo"/></h3>
-                    <%--                    TODO: ARG DINAMICO--%>
+                    <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
                     <h5 class="profile-subtitle"><spring:message code="profile.professional"/></h5>
+<%--                    FIXME: QUE PASA SI NO ES PROFESIONAL???--%>
                 </div>
             </div>
             <div class="card custom-card mt-3">
@@ -81,8 +81,7 @@
                 <div class="card-body">
                     <div class="row align-items-center justify-content-center">
                         <div class="profile-completed-works-outline">
-                            <div class="profile-completed-works">120</div>
-                            <%--                            TODO: ARG DINAMICO--%>
+                            <div class="profile-completed-works">${totalContractsCompleted}</div>
                         </div>
                         <h4 class="mb-0 ml-3"><spring:message code="profile.completed.works"/></h4>
                     </div>
@@ -96,35 +95,36 @@
                     <div class="card-title row ml-3">
                         <a type="button" class="btn profile-list-selector ${(withServices)? 'disabled' : ''}"
                            aria-disabled="${(withServices)? 'true' : 'false'}"
-                           href="${pageContext.request.contextPath}/profile/services">
+                           href="${pageContext.request.contextPath}/profile/${user.id}/services">
                             <div><h4 class="mb-0"><spring:message code="profile.selector.services"/></h4></div>
                             <div class="chip mb-0"><h5 class="mb-0">6</h5></div>
                         </a>
                         &nbsp;
                         <a type="button" class="btn profile-list-selector ${(!withServices)? 'disabled' : ''}"
                            aria-disabled="${(!withServices)? 'true' : 'false'}"
-                           href="${pageContext.request.contextPath}/profile/reviews">
+                           href="${pageContext.request.contextPath}/profile/${user.id}/reviews">
                             <div><h4 class="mb-0"><spring:message code="profile.selector.reviews"/></h4></div>
                             <div class="chip mb-0"><h5 class="mb-0">43</h5></div>
                         </a>
                     </div>
 
                     <c:if test="${withServices}">
-                        <c:forEach var="i" begin="1" end="5">
+                        <c:forEach var="jobCard" items="${jobCards}">
                             <%--                            TODO: DINAMIZAR--%>
                             <div class="row no-gutters">
                                 <div class="col-md-3">
                                     <img class="card-image-top service-img"
                                          src='<c:url value="/resources/images/cleaning.png" />'
                                          alt="<spring:message code="profile.service.image"/>">
+<%--                                    TODO: LEVANTAR IMAGEN DE BASE DE DATOS--%>
                                 </div>
                                 <div class="col-md-9 px-3">
                                     <h4 class="service-title">
-                                        <c:out value="Aasdasd asdawedqw 12dsda as fdqwds adzx asdqw zxcxed ssda as fdqwds adzx asdqw zxcxed sasda as fdqwds adzx asdqw zxcxed sadawd ssdawd dsD "/>
+                                        <c:out value="${jobCard.jobPost.title}"/>
                                     </h4>
                                     <div class="justify-content-between custom-row">
                                         <h6 class="service-subtitle"><spring:message code="jobCard.jobs.imageAlt"
-                                                                                     arguments="Fontaneria"/></h6>
+                                                                                     arguments="${jobCard.jobPost.jobType.stringCode}"/></h6>
                                             <%--        TODO: ARG DINAMICO--%>
 
                                             <%--                        TODO: CAMBIAR POR RATING VERDADERO--%>
@@ -141,9 +141,8 @@
                                     <div class="d-flex">
                                         <div class="price-container">
                                             <p class="price">
-                                                    <%--        TODO:                            <spring:message code="${requestScope.data.rateType.stringCode}"--%>
-                                                    <%--                                                    arguments="${requestScope.data.price}"/>--%>
-                                                $80/hora
+                                                <spring:message code="${jobCard.rateType.stringCode}"
+                                                                arguments="${jobCard.price}"/>
                                             </p>
                                         </div>
                                     </div>
@@ -151,8 +150,7 @@
                                     <div class="custom-row service-contracted-times">
                                         <i class="fas fa-check"></i>
                                         <h6 class="ml-2">
-                                            <spring:message code="profile.service.contract.quantity" arguments="30"/>
-                                                <%--                                    TODO: ARG DINAMICO--%>
+                                            <spring:message code="profile.service.contract.quantity" arguments="${jobCard.contractsCompleted}"/>
                                         </h6>
                                     </div>
 
