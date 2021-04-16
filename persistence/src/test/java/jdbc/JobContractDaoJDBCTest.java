@@ -78,8 +78,7 @@ public class JobContractDaoJDBCTest {
             JOB_PACKAGE,
             PROFESSIONAL,
             new Date(),
-            "Se me rompio una zapatilla",
-            ""
+            "Se me rompio una zapatilla"
     );
 
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";

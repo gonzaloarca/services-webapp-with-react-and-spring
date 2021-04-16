@@ -58,7 +58,7 @@ public class NoLoginJobContractServiceTest {
                 .thenReturn(Optional.of(JOB_PACKAGE));
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION, ""));
+                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
 
         JobContract maybeContract = noLoginJobContractService.create(JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
                 CLIENT.getUsername(), CLIENT.getPhone());
@@ -66,7 +66,6 @@ public class NoLoginJobContractServiceTest {
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
         Assert.assertEquals(CONTRACT_DESCRIPTION, maybeContract.getDescription());
-        Assert.assertEquals("", maybeContract.getImage());
         Assert.assertEquals(JOB_PACKAGE, maybeContract.getJobPackage());
         Assert.assertEquals(CLIENT, maybeContract.getClient());
         Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
@@ -81,7 +80,7 @@ public class NoLoginJobContractServiceTest {
                 .thenReturn(Optional.of(JOB_PACKAGE));
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION, ""));
+                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
 
         JobContract maybeContract = noLoginJobContractService.create(JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
                 CLIENT.getUsername(), CLIENT.getPhone());
@@ -89,7 +88,6 @@ public class NoLoginJobContractServiceTest {
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
         Assert.assertEquals(CONTRACT_DESCRIPTION, maybeContract.getDescription());
-        Assert.assertEquals("", maybeContract.getImage());
         Assert.assertEquals(JOB_PACKAGE, maybeContract.getJobPackage());
         Assert.assertEquals(CLIENT, maybeContract.getClient());
         Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());

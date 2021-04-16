@@ -9,6 +9,9 @@ public interface JobContractService {
 
     JobContract create(long packageId, String description, String client_email, String client_username, String client_phone);
 
+    JobContract create(long packageId, String description, String client_email, String client_username,
+                       String client_phone, byte[] imageData, String imageType);
+
     Optional<JobContract> findById(long id);
 
     Optional<List<JobContract>> findByClientId(long id);

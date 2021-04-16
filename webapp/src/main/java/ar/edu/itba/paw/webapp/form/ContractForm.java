@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +28,9 @@ public class ContractForm {
     @Size(max = 1000)
     private String description;
 
-    //TODO: proximo sprint para imagen
-    // private MultipartFile image;
+    @ValidImage
+    //@NotEmptyFile
+    private MultipartFile image;
 
     public String getName() {
         return name;
@@ -62,7 +63,7 @@ public class ContractForm {
     public void setDescription(String description) {
         this.description = description;
     }
-/*
+
     public MultipartFile getImage() {
         return image;
     }
@@ -70,5 +71,4 @@ public class ContractForm {
     public void setImage(MultipartFile image) {
         this.image = image;
     }
-*/
 }

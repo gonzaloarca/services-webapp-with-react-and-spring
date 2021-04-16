@@ -11,6 +11,8 @@ public interface JobContractDao {
 
     JobContract create(long clientId, long packageId, String description);
 
+    JobContract create(long clientId, long packageId, String description, byte[] imageData, String imageType);
+
     Optional<JobContract> findById(long id);
 
     Optional<List<JobContract>> findByClientId(long id);
