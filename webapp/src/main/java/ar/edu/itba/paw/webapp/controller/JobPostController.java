@@ -59,8 +59,7 @@ public class JobPostController {
             return createJobPost(form);
         }
 
-        JobPost jobPost = jobPostService.create(form.getEmail(), form.getProfessionalName(), form.getPhone(),
-                form.getTitle(), form.getAvailableHours(),
+        JobPost jobPost = jobPostService.create(form.getTitle(), form.getAvailableHours(),
                 JobPost.JobType.values()[Integer.parseInt(form.getJobType())],
                 Arrays.stream(form.getZones()).mapToObj(z -> JobPost.Zone.values()[z]).collect(Collectors.toList()));
         double price;

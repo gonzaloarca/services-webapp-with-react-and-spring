@@ -29,10 +29,11 @@ public class NoLoginJobPostService implements JobPostService {
     private JobContractService jobContractService;
 
     @Override
-    public JobPost create(String email, String username, String phone, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
+    public JobPost create(String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
+
 
         //Chequeamos si el user esta registrado
-        Optional<User> maybeUser = userService.findByEmail(email);
+//        Optional<User> maybeUser = userService.findByEmail(email);
         User user = new User();
         user.setId(-1);
 //        Si existe vemos si es profesional, si no lo es lo hacemos
