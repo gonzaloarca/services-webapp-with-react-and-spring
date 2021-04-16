@@ -57,7 +57,7 @@ public class NoLoginJobContractServiceTest {
         Mockito.when(noLoginJobPackageService.findById(Mockito.eq(JOB_PACKAGE.getId())))
                 .thenReturn(Optional.of(JOB_PACKAGE));
 
-        Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription())))
+        Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(null)))
                 .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
 
         JobContract maybeContract = noLoginJobContractService.create(JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
@@ -79,7 +79,7 @@ public class NoLoginJobContractServiceTest {
         Mockito.when(noLoginJobPackageService.findById(Mockito.eq(JOB_PACKAGE.getId())))
                 .thenReturn(Optional.of(JOB_PACKAGE));
 
-        Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription())))
+        Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(null)))
                 .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
 
         JobContract maybeContract = noLoginJobContractService.create(JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CLIENT.getEmail(),

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services.utils;
 
 import ar.edu.itba.paw.interfaces.services.ImageDataService;
-import com.sun.istack.internal.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.activation.DataSource;
@@ -18,7 +17,10 @@ import java.util.Base64;
 public class ImageDataServiceImpl implements ImageDataService {
 
 	@Override
-	public String getImageType(@NotNull byte[] imageData) {
+	public String getImageType(byte[] imageData) {
+		if(imageData == null)
+			throw new RuntimeException("Parameter can't be null");
+
 		InputStream is = new BufferedInputStream(new ByteArrayInputStream(imageData));
 		String mimeType;
 		try {
@@ -32,13 +34,19 @@ public class ImageDataServiceImpl implements ImageDataService {
 	}
 
 	@Override
-	public String getEncodedString(@NotNull byte[] imageData) {
+	public String getEncodedString(byte[] imageData) {
+		if(imageData == null)
+			throw new RuntimeException("Parameter can't be null");
+
 		byte[] encodedArray = Base64.getEncoder().encode(imageData);
 		return new String(encodedArray, StandardCharsets.UTF_8);
 	}
 
 	@Override
-	public DataSource getImageDataSource(@NotNull byte[] imageData) {
+	public DataSource getImageDataSource(byte[] imageData) {
+		if(imageData == null)
+			throw new RuntimeException("Parameter can't be null");
+
 		String imageType = getImageType(imageData);
 		return new ByteArrayDataSource(imageData, imageType);
 	}
