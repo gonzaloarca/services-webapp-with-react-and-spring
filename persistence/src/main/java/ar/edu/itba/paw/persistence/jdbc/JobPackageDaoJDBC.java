@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.models.Review;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -63,5 +64,16 @@ public class JobPackageDaoJDBC implements JobPackageDao {
     @Override
     public Optional<List<JobPackage>> findByPostId(long id) {
         return Optional.of(jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ?",new Object[]{id},JOB_PACKAGE_ROW_MAPPER));
+    }
+
+    @Override
+    public Optional<List<Review>> findReviews(long id) {
+        return Optional.of(jdbcTemplate.query(
+                "SELECT rate, review_title, review_description " +
+                        "FROM job_package NATURAL JOIN contract NATURAL JOIN review " +
+                        "WHERE package_id = ?", new Object[]{id}, (resultSet, i) ->
+                        new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
+                                resultSet.getString("review_description"))
+        ));
     }
 }

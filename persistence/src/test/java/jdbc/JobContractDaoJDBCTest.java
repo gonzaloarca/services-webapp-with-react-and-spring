@@ -1,6 +1,5 @@
 package jdbc;
 
-import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jdbc.JobContractDaoJDBC;
 import ar.edu.itba.paw.persistence.jdbc.JobPackageDaoJDBC;
@@ -15,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
@@ -80,12 +78,17 @@ public class JobContractDaoJDBCTest {
             new Date(),
             "Se me rompio una zapatilla"
     );
+    private static final Review REVIEW = new Review(
+            4,
+            "Muy bueno",
+            "Resolvio todo en cuestion de minutos"
+    );
 
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";
 
     private static final int JOB_CONTRACTS_PRO_QUANTITY = 3;
 
-    private static final int JOB_CONTRACTS_TOTAL_QUANTITY = JOB_CONTRACTS_PRO_QUANTITY+2;
+    private static final int JOB_CONTRACTS_TOTAL_QUANTITY = JOB_CONTRACTS_PRO_QUANTITY + 2;
 
     @Autowired
     private DataSource ds;
@@ -208,9 +211,20 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindContractsQuantityByNotExistingProId() {
-        int ans = jobContractDaoJDBC.findContractsQuantityByProId(PROFESSIONAL.getId()+100);
+        int ans = jobContractDaoJDBC.findContractsQuantityByProId(PROFESSIONAL.getId() + 100);
 
         Assert.assertEquals(0, ans);
     }
-}
 
+    @Test
+    public void testFindReview() {
+        Optional<List<Review>> maybeReview = jobContractDaoJDBC.findReview(JOB_CONTRACT.getId());
+
+        Assert.assertTrue(maybeReview.isPresent());
+        Assert.assertFalse(maybeReview.get().isEmpty());
+        Assert.assertEquals(1, maybeReview.get().size());
+        Assert.assertEquals(REVIEW.getRate(), maybeReview.get().get(0).getRate());
+        Assert.assertEquals(REVIEW.getTitle(), maybeReview.get().get(0).getTitle());
+        Assert.assertEquals(REVIEW.getDescription(), maybeReview.get().get(0).getDescription());
+    }
+}

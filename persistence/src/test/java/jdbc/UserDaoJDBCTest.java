@@ -1,5 +1,6 @@
 package jdbc;
 
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jdbc.UserDaoJDBC;
 import config.TestConfig;
@@ -16,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 @Rollback
@@ -32,6 +34,14 @@ public class UserDaoJDBCTest {
             "11-3456-3232",
             true,
             true
+    );
+    private static final Review REVIEW_1 = new Review(
+            4,
+            "Muy bueno",
+            "Resolvio todo en cuestion de minutos"
+    );
+    private static final Review REVIEW_2 = new Review(
+            2, "Medio pelo", "Resolvio todo de forma ideal"
     );
 
     @InjectMocks
@@ -61,20 +71,20 @@ public class UserDaoJDBCTest {
                 true
         );
 
-        User user = userDaoJDBC.register(userTest.getEmail(),userTest.getUsername(),userTest.getPhone(),userTest.isProfessional());
+        User user = userDaoJDBC.register(userTest.getEmail(), userTest.getUsername(), userTest.getPhone(), userTest.isProfessional());
 
         Assert.assertNotNull(user);
-        Assert.assertEquals(userTest,user);
-        Assert.assertEquals(userTest.getUsername(),user.getUsername());
-        Assert.assertEquals(userTest.getPhone(),user.getPhone());
-        Assert.assertEquals(userTest.isProfessional(),user.isProfessional());
+        Assert.assertEquals(userTest, user);
+        Assert.assertEquals(userTest.getUsername(), user.getUsername());
+        Assert.assertEquals(userTest.getPhone(), user.getPhone());
+        Assert.assertEquals(userTest.isProfessional(), user.isProfessional());
     }
 
     @Test
     public void testFindById() {
         Optional<User> user = userDaoJDBC.findById(USER.getId());
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER,user.get());
+        Assert.assertEquals(USER, user.get());
     }
 
     @Test
@@ -82,14 +92,24 @@ public class UserDaoJDBCTest {
         Optional<User> user = userDaoJDBC.findByEmail(USER.getEmail());
 
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER,user.get());
+        Assert.assertEquals(USER, user.get());
     }
 
+//    @Test
+//    public void testSwitchRole() {
+//        Optional<User> user = userDaoJDBC.switchRole(USER.getId());
+//        Assert.assertTrue(user.isPresent());
+//        Assert.assertEquals(USER,user.get());
+//        Assert.assertEquals(!USER.isProfessional(),user.get().isProfessional());
+//    }
+
     @Test
-    public void testSwitchRole() {
-        Optional<User> user = userDaoJDBC.switchRole(USER.getId());
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER,user.get());
-        Assert.assertEquals(!USER.isProfessional(),user.get().isProfessional());
+    public void testFindUserReviews() {
+        Optional<List<Review>> maybeUserReviews = userDaoJDBC.findUserReviews(USER.getId());
+
+        Assert.assertTrue(maybeUserReviews.isPresent());
+        Assert.assertEquals(maybeUserReviews.get().size(), 2);
+        Assert.assertEquals(maybeUserReviews.get().get(0), REVIEW_1);
+        Assert.assertEquals(maybeUserReviews.get().get(1), REVIEW_2);
     }
 }

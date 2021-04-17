@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -66,11 +68,11 @@ public class UserDaoJDBC implements UserDao {
         return jdbcTemplate.query("SELECT * FROM users WHERE user_email = ?",new Object[]{email},USER_ROW_MAPPER).stream().findFirst();
     }
 
-    @Override
-    public Optional<User> switchRole(long id) {
-        jdbcTemplate.update("UPDATE users SET user_is_professional = NOT user_is_professional WHERE user_id = ?", id);
-        return jdbcTemplate.query("SELECT  * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
-    }
+//    @Override
+//    public Optional<User> switchRole(long id) {
+//        jdbcTemplate.update("UPDATE users SET user_is_professional = NOT user_is_professional WHERE user_id = ?", id);
+//        return jdbcTemplate.query("SELECT  * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+//    }
 
     @Override
     public Optional<User> updateUserByEmail(String email,String phone, String name){
@@ -81,5 +83,15 @@ public class UserDaoJDBC implements UserDao {
     public Optional<User> updateUserByid(long id,String phone, String name){
         jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ? WHERE user_id = ?", phone,name,id);
         return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public Optional<List<Review>> findUserReviews(long id) {
+        return Optional.of(jdbcTemplate.query(
+                "SELECT rate, review_title, review_description " +
+                        "FROM job_post NATURAL JOIN job_package NATURAL JOIN contract NATURAL JOIN review " +
+                        "WHERE user_id = ?", new Object[]{id}, (resultSet, i) ->
+                        new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
+                                resultSet.getString("review_description"))));
     }
 }

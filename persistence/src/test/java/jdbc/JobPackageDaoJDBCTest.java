@@ -2,6 +2,7 @@ package jdbc;
 
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jdbc.JobPackageDaoJDBC;
 import config.TestConfig;
@@ -57,7 +58,7 @@ public class JobPackageDaoJDBCTest {
             true
     );
 
-    private static final JobPackage[] JOB_PACKAGES ={ new JobPackage(
+    private static final JobPackage[] JOB_PACKAGES = {new JobPackage(
             1,
             JOB_POST.getId(),
             "Trabajo simple",
@@ -65,7 +66,7 @@ public class JobPackageDaoJDBCTest {
             200.0,
             JobPackage.RateType.values()[0],
             true
-    ),new JobPackage(
+    ), new JobPackage(
             2,
             JOB_POST.getId(),
             "Trabajo Largo",
@@ -74,6 +75,14 @@ public class JobPackageDaoJDBCTest {
             JobPackage.RateType.values()[2],
             true
     )};
+    private static final Review REVIEW_1 = new Review(
+            4,
+            "Muy bueno",
+            "Resolvio todo en cuestion de minutos"
+    );
+    private static final Review REVIEW_2 = new Review(
+            2, "Medio pelo", "Resolvio todo de forma ideal"
+    );
 
     @InjectMocks
     @Autowired
@@ -91,7 +100,7 @@ public class JobPackageDaoJDBCTest {
     }
 
     @Test
-    public void testCreate(){
+    public void testCreate() {
         String title = "Arreglo complejo";
         String description = "Arreglo de instalaciones electricas de 1 fase";
         double price = 500.0;
@@ -104,26 +113,36 @@ public class JobPackageDaoJDBCTest {
                 rateType);
 
         Assert.assertNotNull(jobPackage);
-        Assert.assertEquals(JOB_POST.getId(),jobPackage.getPostId());
-        Assert.assertEquals(title,jobPackage.getTitle());
-        Assert.assertEquals(description,jobPackage.getDescription());
-        Assert.assertEquals(price,jobPackage.getPrice(),0.001);
-        Assert.assertEquals(rateType,jobPackage.getRateType());
+        Assert.assertEquals(JOB_POST.getId(), jobPackage.getPostId());
+        Assert.assertEquals(title, jobPackage.getTitle());
+        Assert.assertEquals(description, jobPackage.getDescription());
+        Assert.assertEquals(price, jobPackage.getPrice(), 0.001);
+        Assert.assertEquals(rateType, jobPackage.getRateType());
     }
 
     @Test
-    public void testFindById(){
+    public void testFindById() {
         Optional<JobPackage> jobPackage = jobPackageDaojdbc.findById(JOB_PACKAGES[0].getId());
 
         Assert.assertTrue(jobPackage.isPresent());
-        Assert.assertEquals(jobPackage.get(),JOB_PACKAGES[0]);
+        Assert.assertEquals(jobPackage.get(), JOB_PACKAGES[0]);
     }
 
     @Test
-    public void testFindByPostId(){
+    public void testFindByPostId() {
         Optional<List<JobPackage>> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId());
         Assert.assertTrue(jobPackages.isPresent());
         Assert.assertEquals(jobPackages.get().size(), JOB_PACKAGES.length);
-        jobPackages.get().forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.get().indexOf(jobPackage)],jobPackage));
+        jobPackages.get().forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.get().indexOf(jobPackage)], jobPackage));
+    }
+
+    @Test
+    public void testFindReviews() {
+        Optional<List<Review>> maybeReviews = jobPackageDaojdbc.findReviews(JOB_PACKAGES[0].getId());
+
+        Assert.assertTrue(maybeReviews.isPresent());
+        Assert.assertEquals(maybeReviews.get().size(), 2);
+        Assert.assertEquals(maybeReviews.get().get(0), REVIEW_1);
+        Assert.assertEquals(maybeReviews.get().get(1), REVIEW_2);
     }
 }

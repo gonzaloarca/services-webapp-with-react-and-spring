@@ -3,6 +3,7 @@ TRUNCATE TABLE users RESTART IDENTITY AND COMMIT NO CHECK;
 TRUNCATE TABLE job_package RESTART IDENTITY AND COMMIT NO CHECK;
 TRUNCATE TABLE post_zone RESTART IDENTITY AND COMMIT NO CHECK;
 TRUNCATE TABLE contract RESTART IDENTITY AND COMMIT NO CHECK;
+TRUNCATE TABLE review RESTART IDENTITY AND COMMIT NO CHECK;
 INSERT INTO users(user_id, user_name, user_email, user_phone, user_is_professional, user_is_active) VALUES (DEFAULT, 'Francisco Quesada', 'franquesada@gmail.com', '1147895678', true, true);
 INSERT INTO users(user_id, user_name, user_email, user_phone, user_is_professional, user_is_active) VALUES (DEFAULT, 'Manuel Rodriguez', 'manurodriguez@gmail.com', '1109675432', false, true);
 INSERT INTO users(user_id, user_name, user_email, user_phone, user_is_professional, user_is_active) VALUES (DEFAULT, 'Gonzalo Arca', 'gonzaarca@gmail.com', '0549940406521', false, true);
@@ -20,4 +21,6 @@ INSERT INTO job_package(package_id, post_id, package_title, package_description,
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 3, 3, NOW(), 'Se me rompieron las tuberias del banio');
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 3, NOW(), 'Se me rompio una tuberia en la cocina');
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 3, 2, NOW(), 'Instalacion de tomacorrientes');
+INSERT INTO review(contract_id, rate, review_title, review_description) VALUES (1, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos');
+INSERT INTO review(contract_id, rate, review_title, review_description) VALUES (2, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
 COMMIT;
