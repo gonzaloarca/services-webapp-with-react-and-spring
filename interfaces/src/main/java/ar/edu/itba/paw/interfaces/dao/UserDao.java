@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.dao;
 
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 
@@ -23,4 +24,6 @@ public interface UserDao {
     void assignRole(long id, int role);
 
     List<UserAuth.Role> getRoles(long id);
+
+    Optional<List<Review>> findUserReviews(long id);
 }

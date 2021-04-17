@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -24,4 +25,7 @@ public interface JobContractDao {
     List<JobContract> findByPackageId(long id);
 
     int findContractsQuantityByProId(long id);
+
+    Optional<List<Review>> findReview(long id);
+
 }

@@ -4,10 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -101,8 +98,6 @@ public class JobContractDaoJDBC implements JobContractDao {
 
     @Override
     public Optional<JobContract> findById(long id) {
-
-
         return jdbcTemplate.query(
                 "SELECT * " +
                         "FROM contract " +
@@ -233,6 +228,15 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "NATURAL JOIN job_package " +
                         "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
                         "WHERE professional_id = ?", new Object[]{id}, Integer.class);
+    }
 
+    @Override
+    public Optional<List<Review>> findReview(long id) {
+        return Optional.of(jdbcTemplate.query(
+                "SELECT * FROM review WHERE contract_id = ?", new Object[]{id},
+                (resultSet, i) ->
+                        new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
+                                resultSet.getString("review_description"))
+        ));
     }
 }

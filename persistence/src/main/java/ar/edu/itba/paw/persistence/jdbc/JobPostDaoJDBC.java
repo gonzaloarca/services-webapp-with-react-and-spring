@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPost.Zone;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -152,5 +153,15 @@ public class JobPostDaoJDBC implements JobPostDao {
                 new Object[]{zone.ordinal(), title, jobType.ordinal()},
                 JOB_POST_ROW_MAPPER
         ));
+    }
+
+    @Override
+    public Optional<List<Review>> findAllReviews(long id) {
+        return Optional.of(jdbcTemplate.query(
+                "SELECT rate, review_title, review_description " +
+                        "FROM job_post NATURAL JOIN job_package NATURAL JOIN contract NATURAL JOIN review " +
+                        "WHERE post_id = ?", new Object[]{id}, (resultSet, i) ->
+                        new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
+                                resultSet.getString("review_description"))));
     }
 }

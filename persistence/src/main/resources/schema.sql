@@ -49,3 +49,13 @@ CREATE TABLE IF NOT EXISTS contract
     FOREIGN KEY (client_id) REFERENCES users ON DELETE SET NULL,
     FOREIGN KEY (package_id) REFERENCES job_package ON DELETE SET NULL
 );
+
+CREATE TABLE IF NOT EXISTS review
+(
+    contract_id      INTEGER,
+    rate             INTEGER NOT NULL,
+    review_title       TEXT    NOT NULL,
+    review_description TEXT    NOT NULL,
+    FOREIGN KEY (contract_id) REFERENCES contract ON DELETE SET NULL,
+    PRIMARY KEY (contract_id)
+);

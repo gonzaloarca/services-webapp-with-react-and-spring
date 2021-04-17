@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,5 +104,15 @@ public class UserDaoJDBC implements UserDao {
         return jdbcTemplate.query("SELECT array_agg(role_id) as roles FROM user_role WHERE user_id = ? GROUP BY user_id",new Object[]{id},(resultSet, i) -> {
             return mapArrToList((Object[]) resultSet.getArray("roles").getArray());
         }).stream().findFirst().orElse(new ArrayList<>());
+    }
+
+    @Override
+    public Optional<List<Review>> findUserReviews(long id) {
+        return Optional.of(jdbcTemplate.query(
+                "SELECT rate, review_title, review_description " +
+                        "FROM job_post NATURAL JOIN job_package NATURAL JOIN contract NATURAL JOIN review " +
+                        "WHERE user_id = ?", new Object[]{id}, (resultSet, i) ->
+                        new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
+                                resultSet.getString("review_description"))));
     }
 }

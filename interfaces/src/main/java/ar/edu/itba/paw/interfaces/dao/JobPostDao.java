@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface JobPostDao {
     Optional<List<JobPost>> search(String title, JobPost.Zone zone);
 
     Optional<List<JobPost>> searchWithCategory(String title, JobPost.Zone zone, JobPost.JobType jobType);
+
+    Optional<List<Review>> findAllReviews(long id);
 }
