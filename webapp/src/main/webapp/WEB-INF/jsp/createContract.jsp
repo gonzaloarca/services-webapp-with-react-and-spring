@@ -61,9 +61,18 @@
                 <spring:message code="contract.create.page.title"/>
             </h2>
         </div>
+        <c:choose>
+            <c:when test="${jobPost.images.isEmpty()}">
+                <c:url value="/resources/images/${jobPost.jobType.imagePath}" var="imageSrc"/>
+            </c:when>
+            <c:otherwise>
+                <c:set value="data:${jobPost.images[0].imageType};base64,${jobPost.images[0].encodedData}"
+                       var="imageSrc"/>
+            </c:otherwise>
+        </c:choose>
         <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
         <img class="header-img"
-             src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
+             src='${imageSrc}'
              alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
     </div>
 
@@ -184,7 +193,7 @@
                     <spring:message code="contract.create.detail.title"/>
                 </h5>
                 <img class="info-img"
-                     src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
+                     src='${imageSrc}'
                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                 <div class="container">
                     <!-- Job Title -->

@@ -51,26 +51,43 @@
     </nav>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
-            <!--ol class="carousel-indicators">
-                <li data-target="#carousel" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel" data-slide-to="1"></li>
-            </ol-->
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                    <img class="d-block w-100 h-100"
-                         src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
-                         alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
-                </div>
-            </div>
-            <!--a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a-->
+            <c:choose>
+                <c:when test="${jobPost.images.size() == 0}">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
+                            <img class="d-block w-100 h-100"
+                                 src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
+                                 alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <ol class="carousel-indicators">
+                        <c:forEach items="${jobPost.images}" varStatus="status">
+                            <li data-target="#carousel" data-slide-to="${status.index}" class="${status.index == 0 ? 'active' : ''}"></li>
+                        </c:forEach>
+                    </ol>
+                    <div class="carousel-inner">
+                        <c:forEach items="${jobPost.images}" varStatus="status" var="image">
+                            <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
+                                <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
+                                <img class="d-block w-100 h-100"
+                                     src='data:${image.imageType};base64,${image.encodedData}'
+                                     alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
+                            </div>
+                        </c:forEach>
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </c:otherwise>
+            </c:choose>
         </div>
 
         <div class="card-body custom-row mt-2">
