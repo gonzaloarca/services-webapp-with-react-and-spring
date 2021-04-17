@@ -11,16 +11,16 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 public class ExceptionController {
 
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    @org.springframework.web.bind.annotation.ExceptionHandler(
-            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class})
-    public ModelAndView notFoundError() {
-        return new ModelAndView("error/404");
-    }
-
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler() {
-        return new ModelAndView("error/default");
-    }
+//    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+//    @org.springframework.web.bind.annotation.ExceptionHandler(
+//            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class})
+//    public ModelAndView notFoundError() {
+//        return new ModelAndView("error/404");
+//    }
+//
+//    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
+//    public ModelAndView defaultErrorHandler() {
+//        return new ModelAndView("error/default");
+//    }
 
 }

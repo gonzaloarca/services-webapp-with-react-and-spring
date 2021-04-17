@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -91,12 +93,12 @@ public class MainController {
         if (errors.hasErrors())
             return register(registerForm);
         userService.register(registerForm.getEmail(), passwordEncoder.encode(registerForm.getPassword()),
-                registerForm.getUsername(), registerForm.getPhone(), Arrays.asList(0, 1));
+                registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1));
         return new ModelAndView("redirect:");
     }
 
     @RequestMapping(value = "/login")
-    public ModelAndView login() {
+    public ModelAndView login(@ModelAttribute("loginForm") LoginForm loginForm) {
         return new ModelAndView("login");
     }
 

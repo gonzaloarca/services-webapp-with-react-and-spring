@@ -1,4 +1,4 @@
-.navbar {
+.navbar-color {
     background-color: #485696;
 }
 
@@ -14,4 +14,10 @@ a.nav-link {
 
 a.navbar-brand {
     margin-right: 2rem !important;
+}
+
+.navbar-login-button, .navbar-login-button:active, .navbar-login-button:link, .navbar-login-button:hover{
+    color: white;
+    margin-right: 30px;
+    box-shadow: none;
 }
