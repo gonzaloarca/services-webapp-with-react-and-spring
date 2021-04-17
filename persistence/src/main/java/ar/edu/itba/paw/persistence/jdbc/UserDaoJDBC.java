@@ -59,14 +59,8 @@ public class UserDaoJDBC implements UserDao {
             put("user_phone",phone);
             put("user_is_active",true);
         }});
-        User user = new User();
-        user.setId(key.longValue());
-        user.setEmail(email);
-        user.setUsername(username);
-        user.setUserImage("");
-        user.setPhone(phone);
-        user.setActive(true);
-        return user;
+
+        return new User(key.longValue(),email,username,"",phone,true);
     }
 
     @Override
@@ -102,5 +96,12 @@ public class UserDaoJDBC implements UserDao {
             put("user_id",id);
             put("role_id",role);
         }});
+    }
+
+    @Override
+    public List<UserAuth.Role> getRoles(long id) {
+        return jdbcTemplate.query("SELECT array_agg(role_id) as roles FROM user_role WHERE user_id = ? GROUP BY user_id",new Object[]{id},(resultSet, i) -> {
+            return mapArrToList((Object[]) resultSet.getArray("roles").getArray());
+        }).stream().findFirst().orElse(new ArrayList<>());
     }
 }

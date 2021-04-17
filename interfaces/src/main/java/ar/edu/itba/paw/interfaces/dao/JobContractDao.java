@@ -15,13 +15,13 @@ public interface JobContractDao {
 
     Optional<JobContract> findById(long id);
 
-    Optional<List<JobContract>> findByClientId(long id);
+    List<JobContract> findByClientId(long id);
 
-    Optional<List<JobContract>> findByProId(long id);
+    List<JobContract> findByProId(long id);
 
-    Optional<List<JobContract>> findByPostId(long id);
+    List<JobContract> findByPostId(long id);
 
-    Optional<List<JobContract>> findByPackageId(long id);
+    List<JobContract> findByPackageId(long id);
 
     int findContractsQuantityByProId(long id);
 }

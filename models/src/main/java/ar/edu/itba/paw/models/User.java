@@ -3,80 +3,60 @@ package ar.edu.itba.paw.models;
 import java.util.Objects;
 
 public class User {
-    private long id;
-    private String email;
-    private String username;
-    private String userImage;
-    private String phone;
-    private boolean isActive;
-    private boolean isVerified;
+    private final long id;
+    private final String email;
+    private final String username;
+    private final String userImage;
+    private final String phone;
+    private final boolean isActive;
+    private final boolean isVerified;
 
-    public User() {
-    }
-
-    public User(String email, String username, String userImage, String phone) {
+    public User(long id,String email, String username, String userImage, String phone,boolean isVerified) {
+        this.id = id;
         this.email = email;
         this.username = username;
         this.userImage = userImage;
         this.phone = phone;
         this.isActive = true;
+        this.isVerified=isVerified;
     }
 
-    public User(long id, String email, String username, String userImage, String phone, boolean isActive) {
+    public User(long id, String email, String username, String userImage, String phone,boolean isVerified, boolean isActive) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.userImage = userImage;
         this.phone = phone;
         this.isActive = isActive;
+        this.isVerified = isVerified;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getUserImage() {
         return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public boolean isVerified() {
+        return isVerified;
     }
 
     @Override
@@ -103,4 +83,6 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, email);
     }
+
+
 }

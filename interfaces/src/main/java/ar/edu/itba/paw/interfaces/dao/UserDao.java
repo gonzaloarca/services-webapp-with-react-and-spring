@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.dao;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
@@ -20,4 +21,6 @@ public interface UserDao {
     Optional<UserAuth> getAuthInfo(String email);
 
     void assignRole(long id, int role);
+
+    List<UserAuth.Role> getRoles(long id);
 }

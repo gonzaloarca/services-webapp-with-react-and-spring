@@ -8,3 +8,5 @@ CREATE TABLE IF NOT EXISTS user_role(
 );
 
 ALTER TABLE users DROP COLUMN IF EXISTS user_is_professional;
+
+ALTER TABLE IF EXISTS job_package ALTER COLUMN package_price DROP NOT NULL ;

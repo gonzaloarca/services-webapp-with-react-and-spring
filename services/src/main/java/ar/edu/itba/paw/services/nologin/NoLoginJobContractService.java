@@ -10,13 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class NoLoginJobContractService implements JobContractService {
 
     @Autowired
-    private JobContractDao jobContract;
+    private JobContractDao jobContractDao;
 
     @Autowired
     private JobPackageService jobPackageService;
@@ -25,53 +26,51 @@ public class NoLoginJobContractService implements JobContractService {
     private UserService userService;
 
     @Override
-    public JobContract create(long packageId, String description, String client_email, String client_username, String client_phone) {
-        return create(packageId, description, client_email, client_username, client_phone, null);
+    public JobContract create(String clientEmail, long packageId, String description) {
+        return create(clientEmail,packageId, description, null);
     }
 
     @Override
-    public JobContract create(long packageId, String description, String client_email, String client_username,
-                              String client_phone, byte[] imageData) {
-        Optional<User> maybeUser = userService.findByEmail(client_email);
-        User client = new User();
-        client.setId(-1);
+    public JobContract create(String clientEmail,long packageId, String description, byte[] imageData) {
+        User user = userService.findByEmail(clientEmail).orElseThrow(NoSuchElementException::new);
+
 //        client = maybeUser.orElseGet(() -> userService.register(client_email,"", client_username, client_phone, 1));
 
         if(!jobPackageService.findById(packageId).isPresent())
             // TODO: CAMBIAR A EXCEPCION PROPIA
             throw new RuntimeException("Package no encontrado");
 
-        return jobContract.create(client.getId(), packageId, description, imageData);
+        return jobContractDao.create(user.getId(), packageId, description, imageData);
     }
 
     @Override
     public Optional<JobContract> findById(long id) {
-        return jobContract.findById(id);
+        return jobContractDao.findById(id);
     }
 
     @Override
-    public Optional<List<JobContract>> findByClientId(long id) {
-        return jobContract.findByClientId(id);
+    public List<JobContract> findByClientId(long id) {
+        return jobContractDao.findByClientId(id);
     }
 
     @Override
-    public Optional<List<JobContract>> findByProId(long id) {
-        return jobContract.findByProId(id);
+    public List<JobContract> findByProId(long id) {
+        return jobContractDao.findByProId(id);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPostId(long id) {
-        return jobContract.findByPostId(id);
+    public List<JobContract> findByPostId(long id) {
+        return jobContractDao.findByPostId(id);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPackageId(long id) {
-        return jobContract.findByPackageId(id);
+    public List<JobContract> findByPackageId(long id) {
+        return jobContractDao.findByPackageId(id);
     }
 
     @Override
     public int findContractsQuantityByProId(long id) {
-        return jobContract.findContractsQuantityByProId(id);
+        return jobContractDao.findContractsQuantityByProId(id);
     }
 
 }

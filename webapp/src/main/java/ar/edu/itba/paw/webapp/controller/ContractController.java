@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 
 @RequestMapping("/contract")
 @Controller
@@ -51,20 +52,20 @@ public class ContractController {
     public ModelAndView submitContract(@PathVariable("packId") final long packId,
                                        @ModelAttribute("jobPack") final JobPackage jobPack,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
-                                       @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors) {
+                                       @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors,
+                                       Principal principal) {
         if (errors.hasErrors()) {
             return createContract(packId, form);
         }
 
+        String email = principal.getName();
         JobContract jobContract;
 
         if(form.getImage().getSize() == 0)
-            jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(),
-                    form.getPhone());
+            jobContract = jobContractService.create(email,packId, form.getDescription());
         else {
             try {
-                jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(),
-                        form.getPhone(), form.getImage().getBytes());
+                jobContract = jobContractService.create(email,packId, form.getDescription(), form.getImage().getBytes());
             } catch (IOException e){
                 //fixme
                 throw new RuntimeException(e.getMessage());

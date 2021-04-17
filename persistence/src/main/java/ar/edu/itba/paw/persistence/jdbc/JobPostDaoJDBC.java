@@ -145,10 +145,10 @@ public class JobPostDaoJDBC implements JobPostDao {
         title = "%" + title + "%";
         return Optional.of(jdbcTemplate.query(
                 "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones," +
-                        "user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
+                        "user_email,user_name,user_phone,user_is_active,post_is_active FROM job_post " +
                         "NATURAL JOIN users " +
                         "NATURAL JOIN post_zone WHERE zone_id = ? AND UPPER(post_title) LIKE UPPER(?) AND post_job_type = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
+                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_active",
                 new Object[]{zone.ordinal(), title, jobType.ordinal()},
                 JOB_POST_ROW_MAPPER
         ));

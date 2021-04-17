@@ -57,5 +57,13 @@ public class NoLoginUserService implements UserService {
         return userDao.getAuthInfo(email);
     }
 
+    @Override
+    public void assignRole(long id, int role) {
+        User user = userDao.findById(id).orElseThrow(RuntimeException::new);
+        List<UserAuth.Role> roles = userDao.getRoles(id);
+        if(!roles.contains(UserAuth.Role.values()[role]))
+            userDao.assignRole(id,role);
+    }
+
 
 }

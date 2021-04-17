@@ -127,8 +127,8 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
     @Override
-    public Optional<List<JobContract>> findByClientId(long id) {
-        return Optional.of(
+    public List<JobContract> findByClientId(long id) {
+        return
                 jdbcTemplate.query(
                         "SELECT * " +
                                 "FROM contract " +
@@ -148,13 +148,13 @@ public class JobContractDaoJDBC implements JobContractDao {
                                 "FROM users) AS professionals " +
                                 "WHERE client_id = ?"
                         , new Object[]{id},
-                        JOB_CONTRACT_ROW_MAPPER));
+                        JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByProId(long id) {
+    public List<JobContract> findByProId(long id) {
         //TODO
-        return Optional.of(jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "SELECT * " +
                         "FROM contract " +
                         "NATURAL JOIN job_package " +
@@ -172,13 +172,13 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "user_is_active       AS professional_is_active " +
                         "FROM users) AS professionals " +
                         "WHERE professional_id = ?",
-                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER));
+                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPostId(long id) {
+    public List<JobContract> findByPostId(long id) {
 
-        return Optional.of(jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "SELECT * " +
                         "FROM contract " +
                         "NATURAL JOIN job_package " +
@@ -197,13 +197,13 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "FROM users) AS professionals " +
                         "WHERE post_id = ?"
                 , new Object[]{id},
-                JOB_CONTRACT_ROW_MAPPER));
+                JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPackageId(long id) {
+    public List<JobContract> findByPackageId(long id) {
 
-        return Optional.of(jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "SELECT * " +
                         "FROM contract " +
                         "NATURAL JOIN job_package " +
@@ -222,7 +222,7 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "FROM users) AS professionals " +
                         "WHERE package_id = ?"
                 , new Object[]{id},
-                JOB_CONTRACT_ROW_MAPPER));
+                JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override

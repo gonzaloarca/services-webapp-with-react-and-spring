@@ -17,7 +17,7 @@ public class PackageForm {
     private String description;
 
     @NotNull
-    private int rateType;
+    private Integer rateType;
 
     // Si fuera double y dejamos el campo vacío, tira una excepcion en el lugar del mensaje de error en la pagina
     @Size(max = 100)
@@ -31,7 +31,7 @@ public class PackageForm {
         return description;
     }
 
-    public int getRateType() {
+    public Integer getRateType() {
         return rateType;
     }
 
@@ -47,7 +47,7 @@ public class PackageForm {
         this.description = description;
     }
 
-    public void setRateType(int rateType) {
+    public void setRateType(Integer rateType) {
         this.rateType = rateType;
     }
 

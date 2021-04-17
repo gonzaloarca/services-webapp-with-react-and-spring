@@ -1,22 +1,22 @@
 package jdbc;
 
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.jdbc.UserDaoJDBC;
-import config.TestConfig;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.sql.DataSource;
-import java.util.Optional;
+//import ar.edu.itba.paw.models.User;
+//import ar.edu.itba.paw.persistence.jdbc.UserDaoJDBC;
+//import config.TestConfig;
+//import org.junit.Assert;
+//import org.junit.Before;
+//import org.junit.Test;
+//import org.junit.runner.RunWith;
+//import org.mockito.InjectMocks;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.jdbc.core.JdbcTemplate;
+//import org.springframework.test.annotation.Rollback;
+//import org.springframework.test.context.ContextConfiguration;
+//import org.springframework.test.context.jdbc.Sql;
+//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+//
+//import javax.sql.DataSource;
+//import java.util.Optional;
 
 //@Rollback
 //@RunWith(SpringJUnit4ClassRunner.class)

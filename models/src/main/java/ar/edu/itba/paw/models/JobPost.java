@@ -4,19 +4,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class JobPost {
-    private long id;
-    private User user;
-    private String title;
-    private String availableHours;
-    private JobType jobType;
-    private boolean isActive;
-    private List<Zone> zones;
-
-    public JobPost() {
-    }
+    private final long id;
+    private final User user;
+    private final String title;
+    private final String availableHours;
+    private final JobType jobType;
+    private final boolean isActive;
+    private final List<Zone> zones;
 
     //Constructor para crear un post nuevo (esta activo)
-    public JobPost(User user, String title, String availableHours, JobType jobType, List<Zone> zones) {
+    public JobPost(long id,User user, String title, String availableHours, JobType jobType, List<Zone> zones) {
+        this.id=id;
         this.user = user;
         this.title = title;
         this.availableHours = availableHours;
@@ -40,56 +38,28 @@ public class JobPost {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getAvailableHours() {
         return availableHours;
-    }
-
-    public void setAvailableHours(String availableHours) {
-        this.availableHours = availableHours;
     }
 
     public JobType getJobType() {
         return jobType;
     }
 
-    public void setJobType(JobType jobType) {
-        this.jobType = jobType;
-    }
-
     public boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
     public List<Zone> getZones() {
         return zones;
-    }
-
-    public void setZones(List<Zone> zones) {
-        this.zones = zones;
     }
 
     @Override
@@ -170,8 +140,8 @@ public class JobPost {
         NUNIEZ("JobPost.Zone.NUNIEZ"),
         COLEGIALES("JobPost.Zone.COLEGIALES");
 
-        private String stringCode;
-        private int value;
+        private final String stringCode;
+        private final int value;
 
         Zone(final String stringCode) {
             this.stringCode = stringCode;
@@ -182,16 +152,8 @@ public class JobPost {
             return value;
         }
 
-        public void setValue(int value) {
-            this.value = value;
-        }
-
         public String getStringCode() {
             return stringCode;
-        }
-
-        public void setStringCode(String stringCode) {
-            this.stringCode = stringCode;
         }
     }
 }

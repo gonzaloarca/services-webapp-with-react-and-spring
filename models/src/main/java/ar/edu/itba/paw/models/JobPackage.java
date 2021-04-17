@@ -3,16 +3,13 @@ package ar.edu.itba.paw.models;
 import java.util.Objects;
 
 public class JobPackage {
-    private long id;
-    private long postId;
-    private String title;
-    private String description;
-    private Double price;
-    private RateType rateType;
-    private boolean isActive;
-
-    public JobPackage() {
-    }
+    private final long id;
+    private final long postId;
+    private final String title;
+    private final String description;
+    private final Double price;
+    private final RateType rateType;
+    private final boolean isActive;
 
     public JobPackage(long id, long postId, String title, String description, Double price, RateType rateType, boolean is_active) {
         this.id = id;
@@ -28,56 +25,28 @@ public class JobPackage {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public long getPostId() {
         return postId;
-    }
-
-    public void setPostId(long postId) {
-        this.postId = postId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public RateType getRateType() {
         return rateType;
     }
 
-    public void setRateType(RateType rateType) {
-        this.rateType = rateType;
-    }
-
     public boolean is_active() {
         return isActive;
-    }
-
-    public void setActive(boolean active) {
-        this.isActive = active;
     }
 
     @Override
@@ -111,8 +80,8 @@ public class JobPackage {
         ONE_TIME("JobPackage.RateType.ONE_TIME"),
         TBD("JobPackage.RateType.TBD");
 
-        private String stringCode;
-        private int value;
+        private final String stringCode;
+        private final int value;
 
         RateType(final String stringCode) {
             this.stringCode = stringCode;
@@ -123,16 +92,8 @@ public class JobPackage {
             return stringCode;
         }
 
-        public void setStringCode(String stringCode) {
-            this.stringCode = stringCode;
-        }
-
         public int getValue() {
             return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
         }
 
     }

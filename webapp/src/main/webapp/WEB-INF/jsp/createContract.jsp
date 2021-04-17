@@ -86,55 +86,6 @@
                            action="${postUrl}" method="post"
                            enctype="multipart/form-data">
 
-                    <!-- Name -->
-                    <div class="form-row">
-                        <div class="blue-circle">
-                            <p class="circle-text">1</p>
-                        </div>
-                        <div class="col-10 label-and-input">
-                            <form:label path="name" class="form-text">
-                                <spring:message code="contract.create.form.name"/>
-                            </form:label>
-                            <spring:message code="contract.create.form.name.placeholder" var="namePlaceholder"/>
-                            <form:input type="text" path="name"
-                                        class="form-control text-input"
-                                        placeholder='${namePlaceholder}' maxlength="100"/>
-                            <form:errors path="name" cssClass="form-error" element="p"/>
-                        </div>
-                    </div>
-
-                    <!-- Email -->
-                    <div class="form-row">
-                        <div class="yellow-circle">
-                            <p class="circle-text">2</p>
-                        </div>
-                        <div class="col-10 label-and-input">
-                            <form:label path="email" class="form-text">
-                                <spring:message code="contract.create.form.email"/>
-                            </form:label>
-                            <spring:message code="contract.create.form.email.placeholder" var="emailPlaceholder"/>
-                            <form:input type="email" class="form-control text-input" path="email"
-                                        placeholder="${emailPlaceholder}" maxlength="100"/>
-                            <form:errors path="email" cssClass="form-error" element="p"/>
-                        </div>
-                    </div>
-
-                    <!-- Phone Number -->
-                    <div class="form-row">
-                        <div class="orange-circle">
-                            <p class="circle-text">3</p>
-                        </div>
-                        <div class="col-10 label-and-input">
-                            <form:label path="phone" class="form-text">
-                                <spring:message code="contract.create.form.phone"/>
-                            </form:label>
-                            <spring:message code="contract.create.form.phone.placeholder" var="phonePlaceholder"/>
-                            <form:input type="text" class="form-control text-input" path="phone"
-                                        placeholder="${phonePlaceholder}" style="width: 70%" maxlength="50"/>
-                            <form:errors path="phone" cssClass="form-error" element="p"/>
-                        </div>
-                    </div>
-
                     <!-- Description -->
                     <div class="form-row">
                         <div class="blue-circle">

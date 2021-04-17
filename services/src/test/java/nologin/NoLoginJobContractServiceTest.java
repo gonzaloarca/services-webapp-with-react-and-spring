@@ -21,19 +21,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
-//@RunWith(MockitoJUnitRunner.class)
-//public class NoLoginJobContractServiceTest {
-//    private static final User CLIENT = new User(
-//            3, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "0303456", true
-//    );
-//    private static final User PROFESSIONAL = new User(
-//            8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", true
-//    );
-//    private static final JobPackage JOB_PACKAGE = new JobPackage(
-//            7, 2, "Arreglo avanzado de plomeria", "Todo tipo de canerias", 200.00, JobPackage.RateType.ONE_TIME, true
-//    );
-//    private static final Date CREATION_DATE = new Date();
-//    private static final String CONTRACT_DESCRIPTION = "Problema en tuberias en la cocina";
+@RunWith(MockitoJUnitRunner.class)
+public class NoLoginJobContractServiceTest {
+    private static final User CLIENT = new User(
+            3, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "0303456", true
+    );
+    private static final User PROFESSIONAL = new User(
+            8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", true
+    );
+    private static final JobPackage JOB_PACKAGE = new JobPackage(
+            7, 2, "Arreglo avanzado de plomeria", "Todo tipo de canerias", 200.00, JobPackage.RateType.ONE_TIME, true
+    );
+    private static final Date CREATION_DATE = new Date();
+    private static final String CONTRACT_DESCRIPTION = "Problema en tuberias en la cocina";
 //
 //    @InjectMocks
 //    private final NoLoginJobContractService noLoginJobContractService = new NoLoginJobContractService();
@@ -134,8 +134,7 @@ import java.util.Optional;
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(null)))
                 .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
 
-        JobContract maybeContract = noLoginJobContractService.create(JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
-                CLIENT.getUsername(), CLIENT.getPhone());
+        JobContract maybeContract = noLoginJobContractService.create(CLIENT.getEmail(),JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),null);
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -147,8 +146,8 @@ import java.util.Optional;
 
     @Test
     public void testCreateExistingClient() {
-        Mockito.when(noLoginUserService.register(Mockito.eq(CLIENT.getEmail()), Mockito.eq(CLIENT.getUsername()),
-                Mockito.eq(CLIENT.getPhone()), Mockito.eq(CLIENT.isProfessional()))).thenReturn(CLIENT);
+        Mockito.when(noLoginUserService.register(Mockito.eq(CLIENT.getEmail()),"", Mockito.eq(CLIENT.getUsername()),
+                Mockito.eq(CLIENT.getPhone()),Arrays.asList(0,1))).thenReturn(CLIENT);
 
         Mockito.when(noLoginJobPackageService.findById(Mockito.eq(JOB_PACKAGE.getId())))
                 .thenReturn(Optional.of(JOB_PACKAGE));
@@ -156,8 +155,7 @@ import java.util.Optional;
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(null)))
                 .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
 
-        JobContract maybeContract = noLoginJobContractService.create(JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
-                CLIENT.getUsername(), CLIENT.getPhone());
+        JobContract maybeContract = noLoginJobContractService.create(CLIENT.getEmail(),JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), null);
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -174,7 +172,6 @@ import java.util.Optional;
         Mockito.when(noLoginUserService.findByEmail(Mockito.eq(CLIENT.getEmail())))
                 .thenReturn(Optional.of(CLIENT));
 
-        noLoginJobContractService.create(JOB_PACKAGE.getId() + 1, JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
-                CLIENT.getUsername(), CLIENT.getPhone());
+        noLoginJobContractService.create(CLIENT.getEmail(),JOB_PACKAGE.getId() + 1, JOB_PACKAGE.getDescription(), null);
     }
 }

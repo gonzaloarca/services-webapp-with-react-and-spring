@@ -5,10 +5,13 @@ import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserAuth;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.SecurityContextProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class NoLoginJobPostService implements JobPostService {
@@ -20,33 +23,13 @@ public class NoLoginJobPostService implements JobPostService {
     private UserService userService;
 
     @Override
-    public JobPost create(String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
+    public JobPost create(String email,String title, String availableHours, int jobType, int[] zones) {
 
-
-        //Chequeamos si el user esta registrado
-//        Optional<User> maybeUser = userService.findByEmail(email);
-        User user = new User();
-        user.setId(-1);
-//        Si existe vemos si es profesional, si no lo es lo hacemos
-//        if (maybeUser.isPresent()) {
-//            if (!maybeUser.get().isProfessional()) {
-//                //TODO: Es necesario un optional?
-//                Optional<User> newRole = userService.switchRole(maybeUser.get().getId());
-//                user = newRole.orElse(maybeUser.get());
-//            }else{
-//                maybeUser = userService.updateUserByEmail(email,phone,username);
-//                if(maybeUser.isPresent())
-//                    user = maybeUser.get();
-//            }
-//        } else {
-//            user=new User();
-//            user.setId(-1);
-//            user = userService.register(email,"", username, phone, true);
-//        }
-//        if (user == null)
-//            //TODO: LANZAR EXCEPCION APROPIADA
-//            throw new RuntimeException();
-        return jobPostDao.create(user.getId(), title, availableHours, jobType, zones);
+        User user = userService.findByEmail(email).orElseThrow(RuntimeException::new);
+        userService.assignRole(user.getId(),UserAuth.Role.PROFESSIONAL.ordinal());
+        List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
+        JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
+        return jobPostDao.create(user.getId(), title, availableHours, parsedJobType, parsedZones);
     }
 
     @Override

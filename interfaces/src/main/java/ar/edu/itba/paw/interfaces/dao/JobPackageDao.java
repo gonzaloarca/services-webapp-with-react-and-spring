@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface JobPackageDao {
 
-    JobPackage create(long postId, String title, String description, double price, JobPackage.RateType rateType);
+    JobPackage create(long postId, String title, String description, Double price, JobPackage.RateType rateType);
 
     Optional<JobPackage> findById(long id);
 
-    Optional<List<JobPackage>> findByPostId(long id);
+    List<JobPackage> findByPostId(long id);
 }

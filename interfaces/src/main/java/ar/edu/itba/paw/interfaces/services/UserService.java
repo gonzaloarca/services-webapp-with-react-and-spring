@@ -20,4 +20,6 @@ public interface UserService {
 
     Optional<UserAuth> getAuthInfo(String email);
 
+    void assignRole(long id, int role);
+
 }

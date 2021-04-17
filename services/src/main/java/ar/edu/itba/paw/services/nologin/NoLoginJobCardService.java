@@ -47,7 +47,7 @@ public class NoLoginJobCardService implements JobCardService {
     private List<JobCard> createCards(List<JobPost> jobPosts) {
         List<JobCard> jobCards = new ArrayList<>();
         jobPosts.forEach(jobPost -> {
-            JobPackage min = jobPackageService.findByPostId(jobPost.getId()).orElseThrow(RuntimeException::new)
+            JobPackage min = jobPackageService.findByPostId(jobPost.getId())
                     .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(RuntimeException::new);
             //TODO: Mejorar excepciones
             jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
