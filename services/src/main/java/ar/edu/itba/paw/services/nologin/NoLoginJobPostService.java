@@ -33,32 +33,32 @@ public class NoLoginJobPostService implements JobPostService {
     }
 
     @Override
-    public Optional<JobPost> findById(long id) {
-        return jobPostDao.findById(id);
+    public JobPost findById(long id) {
+        return jobPostDao.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
-    public Optional<List<JobPost>> findByUserId(long id) {
+    public List<JobPost> findByUserId(long id) {
         return jobPostDao.findByUserId(id);
     }
 
     @Override
-    public Optional<List<JobPost>> findByJobType(JobPost.JobType jobType) {
+    public List<JobPost> findByJobType(JobPost.JobType jobType) {
         return jobPostDao.findByJobType(jobType);
     }
 
     @Override
-    public Optional<List<JobPost>> findByZone(JobPost.Zone zone) {
+    public List<JobPost> findByZone(JobPost.Zone zone) {
         return jobPostDao.findByZone(zone);
     }
 
     @Override
-    public Optional<List<JobPost>> findAll() {
+    public List<JobPost> findAll() {
         return jobPostDao.findAll();
     }
 
     @Override
-    public Optional<List<JobPost>> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
+    public List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
         if (jobType == null)
             return jobPostDao.search(title, zone);
         else return jobPostDao.searchWithCategory(title, zone, jobType);

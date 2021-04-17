@@ -13,5 +13,6 @@ public interface JobPackageDao {
     Optional<JobPackage> findById(long id);
 
     List<JobPackage> findByPostId(long id);
-    Optional<List<Review>> findReviews(long id);
+
+    List<Review> findReviews(long id);
 }

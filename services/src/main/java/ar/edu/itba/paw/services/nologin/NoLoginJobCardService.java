@@ -29,19 +29,19 @@ public class NoLoginJobCardService implements JobCardService {
     @Override
     public List<JobCard> findAll() {
         //TODO: Mejorar excepcion
-        return createCards(jobPostService.findAll().orElseThrow(RuntimeException::new));
+            return createCards(jobPostService.findAll());
     }
 
     @Override
     public List<JobCard> findByUserId(long id) {
         //TODO: Mejorar excepcion
-        return createCards(jobPostService.findByUserId(id).orElseThrow(RuntimeException::new));
+        return createCards(jobPostService.findByUserId(id));
     }
 
     @Override
     public List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
         //TODO: Mejorar excepcion
-        return createCards(jobPostService.search(title, zone, jobType).orElseThrow(RuntimeException::new));
+        return createCards(jobPostService.search(title, zone, jobType));
     }
 
     private List<JobCard> createCards(List<JobPost> jobPosts) {

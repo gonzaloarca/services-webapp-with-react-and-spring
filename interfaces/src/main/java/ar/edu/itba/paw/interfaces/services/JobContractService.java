@@ -11,7 +11,7 @@ public interface JobContractService {
 
     JobContract create(String client_email,long packageId, String description, byte[] imageData);
 
-    Optional<JobContract> findById(long id);
+    JobContract findById(long id);
 
     List<JobContract> findByClientId(long id);
 

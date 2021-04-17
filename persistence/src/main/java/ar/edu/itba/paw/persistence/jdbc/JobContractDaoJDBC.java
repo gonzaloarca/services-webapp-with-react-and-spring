@@ -231,12 +231,12 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
     @Override
-    public Optional<List<Review>> findReview(long id) {
-        return Optional.of(jdbcTemplate.query(
+    public List<Review> findReview(long id) {
+        return jdbcTemplate.query(
                 "SELECT * FROM review WHERE contract_id = ?", new Object[]{id},
                 (resultSet, i) ->
                         new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
                                 resultSet.getString("review_description"))
-        ));
+        );
     }
 }

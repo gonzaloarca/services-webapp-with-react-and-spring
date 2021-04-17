@@ -33,8 +33,8 @@ public class NoLoginUserService implements UserService {
     }
 
     @Override
-    public Optional<User> findById(long id) {
-        return userDao.findById(id);
+    public User findById(long id) {
+        return userDao.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -43,13 +43,13 @@ public class NoLoginUserService implements UserService {
     }
 
     @Override
-    public Optional<User> updateUserByEmail(String email, String phone, String name) {
-        return userDao.updateUserByEmail(email, phone, name);
+    public User updateUserByEmail(String email, String phone, String name) {
+        return userDao.updateUserByEmail(email, phone, name).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
-    public Optional<User> updateUserByid(long id, String phone, String name){
-        return userDao.updateUserByid(id,phone,name);
+    public User updateUserByid(long id, String phone, String name){
+        return userDao.updateUserByid(id,phone,name).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

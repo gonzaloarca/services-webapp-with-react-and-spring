@@ -25,5 +25,5 @@ public interface UserDao {
 
     List<UserAuth.Role> getRoles(long id);
 
-    Optional<List<Review>> findUserReviews(long id);
+    List<Review> findUserReviews(long id);
 }

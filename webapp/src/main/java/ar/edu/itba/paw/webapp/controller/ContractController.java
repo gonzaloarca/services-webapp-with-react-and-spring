@@ -85,11 +85,11 @@ public class ContractController {
 
     @ModelAttribute("jobPack")
     public JobPackage getJobPackage(@PathVariable("packId") final long packId) {
-        return jobPackageService.findById(packId).orElseThrow(JobPackageNotFoundException::new);
+        return jobPackageService.findById(packId);
     }
 
     @ModelAttribute("jobPost")
     public JobPost getJobPost(@ModelAttribute("jobPack") final JobPackage jobPackage) {
-        return jobPostService.findById(jobPackage.getPostId()).orElseThrow(JobPostNotFoundException::new);
+        return jobPostService.findById(jobPackage.getPostId());
     }
 }

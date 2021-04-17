@@ -1,27 +1,4 @@
 package jdbc;
-//
-//import ar.edu.itba.paw.models.JobPackage;
-//import ar.edu.itba.paw.models.JobPost;
-//import ar.edu.itba.paw.models.User;
-//import ar.edu.itba.paw.persistence.jdbc.JobPackageDaoJDBC;
-//import config.TestConfig;
-//import org.junit.Assert;
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.InjectMocks;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.jdbc.core.JdbcTemplate;
-//import org.springframework.test.annotation.Rollback;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.context.jdbc.Sql;
-//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-//
-//import javax.sql.DataSource;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.List;
-//import java.util.Optional;
 
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
@@ -78,8 +55,7 @@ public class JobPackageDaoJDBCTest {
             "Lunes a viernes 10 a 20",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            true
-    );
+            true);
 
     private static final JobPackage[] JOB_PACKAGES = {new JobPackage(
             1,
@@ -153,19 +129,17 @@ public class JobPackageDaoJDBCTest {
 
     @Test
     public void testFindByPostId() {
-        Optional<List<JobPackage>> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId());
-        Assert.assertTrue(jobPackages.isPresent());
-        Assert.assertEquals(jobPackages.get().size(), JOB_PACKAGES.length);
-        jobPackages.get().forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.get().indexOf(jobPackage)], jobPackage));
+        List<JobPackage> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId());
+        Assert.assertEquals(jobPackages.size(), JOB_PACKAGES.length);
+        jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
     }
 
     @Test
     public void testFindReviews() {
-        Optional<List<Review>> maybeReviews = jobPackageDaojdbc.findReviews(JOB_PACKAGES[0].getId());
+        List<Review> maybeReviews = jobPackageDaojdbc.findReviews(JOB_PACKAGES[0].getId());
 
-        Assert.assertTrue(maybeReviews.isPresent());
-        Assert.assertEquals(maybeReviews.get().size(), 2);
-        Assert.assertEquals(maybeReviews.get().get(0), REVIEW_1);
-        Assert.assertEquals(maybeReviews.get().get(1), REVIEW_2);
+        Assert.assertEquals(maybeReviews.size(), 2);
+        Assert.assertEquals(maybeReviews.get(0), REVIEW_1);
+        Assert.assertEquals(maybeReviews.get(1), REVIEW_2);
     }
 }

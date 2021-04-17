@@ -60,13 +60,13 @@ public class JobPackageDaoJDBC implements JobPackageDao {
     }
 
     @Override
-    public Optional<List<Review>> findReviews(long id) {
-        return Optional.of(jdbcTemplate.query(
+    public List<Review> findReviews(long id) {
+        return jdbcTemplate.query(
                 "SELECT rate, review_title, review_description " +
                         "FROM job_package NATURAL JOIN contract NATURAL JOIN review " +
                         "WHERE package_id = ?", new Object[]{id}, (resultSet, i) ->
                         new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
                                 resultSet.getString("review_description"))
-        ));
+        );
     }
 }

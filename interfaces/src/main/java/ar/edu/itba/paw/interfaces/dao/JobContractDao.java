@@ -26,6 +26,6 @@ public interface JobContractDao {
 
     int findContractsQuantityByProId(long id);
 
-    Optional<List<Review>> findReview(long id);
+    List<Review> findReview(long id);
 
 }

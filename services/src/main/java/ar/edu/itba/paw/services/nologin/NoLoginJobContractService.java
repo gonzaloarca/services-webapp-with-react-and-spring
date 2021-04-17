@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -34,18 +35,15 @@ public class NoLoginJobContractService implements JobContractService {
     public JobContract create(String clientEmail,long packageId, String description, byte[] imageData) {
         User user = userService.findByEmail(clientEmail).orElseThrow(NoSuchElementException::new);
 
+        jobPackageService.findById(packageId);
 //        client = maybeUser.orElseGet(() -> userService.register(client_email,"", client_username, client_phone, 1));
-
-        if(!jobPackageService.findById(packageId).isPresent())
-            // TODO: CAMBIAR A EXCEPCION PROPIA
-            throw new RuntimeException("Package no encontrado");
 
         return jobContractDao.create(user.getId(), packageId, description, imageData);
     }
 
     @Override
-    public Optional<JobContract> findById(long id) {
-        return jobContractDao.findById(id);
+    public JobContract findById(long id) {
+        return jobContractDao.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

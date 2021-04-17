@@ -9,16 +9,16 @@ public interface JobPostService {
 
     JobPost create(String email,String title, String availableHours, int jobType, int[] zones);
 
-    Optional<JobPost> findById(long id);
+    JobPost findById(long id);
 
-    Optional<List<JobPost>> findByUserId(long id);
+    List<JobPost> findByUserId(long id);
 
-    Optional<List<JobPost>> findByJobType(JobPost.JobType jobType);
+    List<JobPost> findByJobType(JobPost.JobType jobType);
 
-    Optional<List<JobPost>> findByZone(JobPost.Zone zone);
+    List<JobPost> findByZone(JobPost.Zone zone);
 
-    Optional<List<JobPost>> findAll();
+    List<JobPost> findAll();
 
-    Optional<List<JobPost>> search(String title, JobPost.Zone zone, JobPost.JobType jobType);
+    List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType);
 
 }

@@ -21,9 +21,8 @@ public class NoLoginJobPackageService implements JobPackageService {
     @Override
     public JobPackage create(long postId, String title, String description, String price, int rateType) {
         //TODO: CAMBIAR POR EXCEPCIONES PROPIAS
-        if (!jobPostService.findById(postId).isPresent())
-            throw new RuntimeException("Post no encontrado");
 
+        jobPostService.findById(postId);
         Double parsedPrice=null;
 
         JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
@@ -42,8 +41,8 @@ public class NoLoginJobPackageService implements JobPackageService {
     }
 
     @Override
-    public Optional<JobPackage> findById(long id) {
-        return jobPackageDao.findById(id);
+    public JobPackage findById(long id) {
+        return jobPackageDao.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

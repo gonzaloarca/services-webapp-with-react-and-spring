@@ -42,7 +42,7 @@ public class MainController {
     public ModelAndView profileWithServices(@PathVariable("id") final long id) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", true);
-        mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(id));
         mav.addObject("jobCards", jobCardService.findByUserId(id));
         mav.addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(id));
         return mav;
@@ -52,7 +52,7 @@ public class MainController {
     public ModelAndView profileWithReviews(@PathVariable("id") final long id) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", false);
-        mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(id));
         return mav;
     }
 
