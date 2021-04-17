@@ -26,6 +26,12 @@ public class NoLoginJobContractService implements JobContractService {
 
     @Override
     public JobContract create(long packageId, String description, String client_email, String client_username, String client_phone) {
+        return create(packageId, description, client_email, client_username, client_phone, null);
+    }
+
+    @Override
+    public JobContract create(long packageId, String description, String client_email, String client_username,
+                              String client_phone, byte[] imageData) {
         Optional<User> maybeUser = userService.findByEmail(client_email);
         User client = new User();
         client.setId(-1);
@@ -35,7 +41,7 @@ public class NoLoginJobContractService implements JobContractService {
             // TODO: CAMBIAR A EXCEPCION PROPIA
             throw new RuntimeException("Package no encontrado");
 
-        return jobContract.create(client.getId(), packageId, description);
+        return jobContract.create(client.getId(), packageId, description, imageData);
     }
 
     @Override

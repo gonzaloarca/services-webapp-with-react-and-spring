@@ -23,6 +23,9 @@ public class TestConfig {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
+    @Value("classpath:migration_image_schema_test.sql")
+    private Resource imageSchema;
+
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
@@ -45,6 +48,7 @@ public class TestConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
+        dbp.addScript(imageSchema);
         return dbp;
     }
 

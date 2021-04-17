@@ -149,3 +149,117 @@ import java.util.Optional;
 //        System.out.println(jobPosts.get());
 //    }
 //}
+
+    @Autowired
+    private DataSource ds;
+
+    @InjectMocks
+    @Autowired
+    private JobPostDaoJDBC jobPostDaoJDBC;
+
+    private JdbcTemplate jdbcTemplate;
+
+    @Mock
+    private UserDaoJDBC mockUserDao;
+
+
+    @Before
+    public void setUp() {
+        jdbcTemplate = new JdbcTemplate(ds);
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testCreate() {
+        Mockito.when(mockUserDao.findById(Mockito.eq(USER.getId())))
+                .thenReturn(Optional.of(USER));
+
+
+        JobPost jobPost = jobPostDaoJDBC.create(USER.getId(), JOB_POST.getTitle(), JOB_POST.getAvailableHours(),
+                JOB_POST.getJobType(), JOB_POST.getZones());
+
+        Assert.assertNotNull(jobPost);
+        List<JobPost.Zone> zonesList = jobPost.getZones();
+        Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser());
+        Assert.assertEquals(JOB_POST.getTitle(), jobPost.getTitle());
+        Assert.assertEquals(JOB_POST.getAvailableHours(), jobPost.getAvailableHours());
+        Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType());
+        Assert.assertEquals(JOB_POST.getZones().size(), zonesList.size());
+        int i = 0;
+        for (JobPost.Zone zone : JOB_POST.getZones()) {
+            Assert.assertEquals(zone, zonesList.get(i++));
+        }
+    }
+
+    @Test
+    public void testFindById() {
+        Optional<JobPost> jobPost = jobPostDaoJDBC.findById(JOB_POST.getId());
+
+        Assert.assertTrue(jobPost.isPresent());
+        System.out.println(jobPost);
+        Assert.assertEquals(JOB_POST, jobPost.get());
+    }
+
+
+    @Test
+    public void findByUserId() {
+        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId());
+
+        Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertEquals(jobPosts.get().size(), 2);
+        jobPosts.get().forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
+    }
+
+    @Test
+    public void findByJobType() {
+        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType());
+
+        Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertEquals(2, jobPosts.get().size());
+        jobPosts.get().forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
+    }
+
+    @Test
+    public void findByZone() {
+        JOB_POST.getZones().forEach((zone -> {
+            Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByZone(zone);
+
+            Assert.assertTrue(jobPosts.isPresent());
+            jobPosts.get().forEach((jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone))));
+        }));
+    }
+
+    @Test
+    public void findAll() {
+        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findAll();
+
+        Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertEquals(JOB_POSTS_QUANTITY,
+                jobPosts.get().size());
+    }
+
+    @Test
+    public void search() {
+        String title = "Electricista";
+        JobPost.Zone zone = JobPost.Zone.PALERMO;
+        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.search(title, zone);
+
+        Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertFalse(jobPosts.get().isEmpty());
+        Assert.assertEquals(2, jobPosts.get().size());
+        System.out.println(jobPosts.get());
+    }
+
+    @Test
+    public void searchWithCategory() {
+        String title = "";
+        JobPost.Zone zone = JobPost.Zone.PALERMO;
+        JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
+        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType);
+
+        Assert.assertTrue(jobPosts.isPresent());
+        Assert.assertFalse(jobPosts.get().isEmpty());
+        Assert.assertEquals(2, jobPosts.get().size());
+        System.out.println(jobPosts.get());
+    }
+}

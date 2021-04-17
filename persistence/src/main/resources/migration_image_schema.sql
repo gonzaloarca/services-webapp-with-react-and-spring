@@ -1,0 +1,2 @@
+ALTER TABLE contract
+ADD COLUMN IF NOT EXISTS image_data BYTEA;

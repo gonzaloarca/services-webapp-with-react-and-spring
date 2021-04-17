@@ -107,3 +107,74 @@ import java.util.Optional;
 //                CLIENT.getUsername(), CLIENT.getPhone());
 //    }
 //}
+
+    @InjectMocks
+    private final NoLoginJobContractService noLoginJobContractService = new NoLoginJobContractService();
+
+    @Mock
+    private NoLoginUserService noLoginUserService;
+
+    @Mock
+    private NoLoginJobPackageService noLoginJobPackageService;
+
+    @Mock
+    private JobContractDao jobContractDao;
+
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
+
+    @Test
+    public void testCreateNewClient() {
+        Mockito.when(noLoginUserService.findByEmail(Mockito.eq(CLIENT.getEmail())))
+                .thenReturn(Optional.of(CLIENT));
+
+        Mockito.when(noLoginJobPackageService.findById(Mockito.eq(JOB_PACKAGE.getId())))
+                .thenReturn(Optional.of(JOB_PACKAGE));
+
+        Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(null)))
+                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
+
+        JobContract maybeContract = noLoginJobContractService.create(JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
+                CLIENT.getUsername(), CLIENT.getPhone());
+
+        Assert.assertNotNull(maybeContract);
+        Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
+        Assert.assertEquals(CONTRACT_DESCRIPTION, maybeContract.getDescription());
+        Assert.assertEquals(JOB_PACKAGE, maybeContract.getJobPackage());
+        Assert.assertEquals(CLIENT, maybeContract.getClient());
+        Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
+    }
+
+    @Test
+    public void testCreateExistingClient() {
+        Mockito.when(noLoginUserService.register(Mockito.eq(CLIENT.getEmail()), Mockito.eq(CLIENT.getUsername()),
+                Mockito.eq(CLIENT.getPhone()), Mockito.eq(CLIENT.isProfessional()))).thenReturn(CLIENT);
+
+        Mockito.when(noLoginJobPackageService.findById(Mockito.eq(JOB_PACKAGE.getId())))
+                .thenReturn(Optional.of(JOB_PACKAGE));
+
+        Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()), Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(null)))
+                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
+
+        JobContract maybeContract = noLoginJobContractService.create(JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
+                CLIENT.getUsername(), CLIENT.getPhone());
+
+        Assert.assertNotNull(maybeContract);
+        Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
+        Assert.assertEquals(CONTRACT_DESCRIPTION, maybeContract.getDescription());
+        Assert.assertEquals(JOB_PACKAGE, maybeContract.getJobPackage());
+        Assert.assertEquals(CLIENT, maybeContract.getClient());
+        Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
+    }
+
+    @Test
+    public void testCreateWrongPackageID() {
+        exceptionRule.expect(RuntimeException.class);
+
+        Mockito.when(noLoginUserService.findByEmail(Mockito.eq(CLIENT.getEmail())))
+                .thenReturn(Optional.of(CLIENT));
+
+        noLoginJobContractService.create(JOB_PACKAGE.getId() + 1, JOB_PACKAGE.getDescription(), CLIENT.getEmail(),
+                CLIENT.getUsername(), CLIENT.getPhone());
+    }
+}

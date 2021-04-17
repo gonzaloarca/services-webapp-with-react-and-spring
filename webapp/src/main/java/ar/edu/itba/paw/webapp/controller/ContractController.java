@@ -4,12 +4,12 @@ import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
+import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.webapp.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.webapp.form.ContractForm;
-import ar.edu.itba.paw.webapp.validation.ImageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,13 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RequestMapping("/contract")
 @Controller
 public class ContractController {
-
-    @Autowired
-    private ImageValidator imageValidator;
 
     @Autowired
     private JobPackageService jobPackageService;
@@ -51,32 +49,34 @@ public class ContractController {
 
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.POST)
     public ModelAndView submitContract(@PathVariable("packId") final long packId,
+                                       @ModelAttribute("jobPack") final JobPackage jobPack,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
                                        @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors) {
-
-        //TODO encontrar si hay una mejor forma de validar la imagen:
-        //imageValidator.validate(form.getImage(), errors);
-
         if (errors.hasErrors()) {
             return createContract(packId, form);
         }
 
-        jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(), form.getPhone());
+        JobContract jobContract;
 
-        //TODO: i18n del email
-        String proName = jobPost.getUser().getUsername();
-        String proEmail = jobPost.getUser().getEmail();
-        String subject = form.getName() + " quiere contratar tu servicio";
-        JobPackage jobPackage = jobPackageService.findById(packId).orElseThrow(RuntimeException::new);
-        //TODO: CAMBIAR EXCEPCION
-        mailingService.sendTemplatedHTMLMessage(proEmail, subject, proName,
-                jobPackage.getTitle(), String.valueOf(jobPackage.getPrice()),
-                jobPost.getTitle(), form.getName(), form.getEmail(),
-                form.getPhone(), form.getDescription());
+        if(form.getImage().getSize() == 0)
+            jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(),
+                    form.getPhone());
+        else {
+            try {
+                jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(),
+                        form.getPhone(), form.getImage().getBytes());
+            } catch (IOException e){
+                //fixme
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+
+        mailingService.sendContractEmail(jobContract, jobPack, jobPost);
 
         return new ModelAndView("redirect:/contract/package/" + packId + "/success");
     }
 
+    //TODO: encontrar si se puede realizar sin packId
     @RequestMapping("/package/{packId}/success")
     public ModelAndView contractSuccess(@PathVariable String packId) {
         return new ModelAndView("contractSubmitted");
