@@ -1,20 +1,46 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class RegisterForm {
 
     @NotBlank
+    @Size(max = 100)
+    private String name;
+
+    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
+    private String phone;
+
+    @NotBlank
+    @Size(max = 100)
+    @Email
     private String email;
 
-    @NotBlank
+    @Size(min = 8, max = 100)
     private String password;
 
-    @NotBlank
-    private String username;
+    @Size(min = 8, max = 100)
+    private String repeatPassword;
 
-    @NotBlank
-    private String phone;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getEmail() {
         return email;
@@ -32,19 +58,11 @@ public class RegisterForm {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getRepeatPassword() {
+        return repeatPassword;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
     }
 }

@@ -1,0 +1,10 @@
+.register-card {
+    max-width: 600px;
+    height: 700px;
+    margin: 5vh auto auto;
+}
+
+.register-title {
+    color: white;
+    font-weight: bold;
+}
