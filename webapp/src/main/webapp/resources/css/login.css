@@ -51,3 +51,6 @@
 .password-eye a{
     color: #7e7e7e !important;
 }
+.login-error{
+    margin: 20px auto auto;
+}

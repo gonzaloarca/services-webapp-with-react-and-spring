@@ -45,13 +45,11 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
         String keyString = StreamUtils.copyToString( key.getInputStream(), Charset.availableCharsets().get("utf-8") );
 
-        http.sessionManagement()
-                .invalidSessionUrl("/login")
-            .and().authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/create-job-post").hasAnyRole("PROFESSIONAL")
                 .antMatchers("/contract/**").hasRole("CLIENT")
                 .antMatchers("/login","/register").anonymous()
-                .antMatchers("/**", "/profile/**").hasAnyRole("PROFESSIONAL","CLIENT", "ANONYMOUS")
+                .antMatchers("/**", "/profile/**").permitAll()
             .and().formLogin()
                 .usernameParameter("email")
                 .passwordParameter("password")
@@ -60,6 +58,9 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
             .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
+            .and()
+                .sessionManagement()
+                .invalidSessionUrl("/login")
             .and().rememberMe()
                 .rememberMeParameter("rememberme")
                 .userDetailsService(hireNetUserDetails)

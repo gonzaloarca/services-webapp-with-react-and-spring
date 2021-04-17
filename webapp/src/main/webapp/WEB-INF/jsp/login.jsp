@@ -51,37 +51,38 @@
         </h3>
         <div class="card p-5">
 
-            <form:form modelAttribute="loginForm"
-                       action="${pageContext.request.contextPath}/login" method="post"
+            <form action="${pageContext.request.contextPath}/login" method="post"
                        enctype="application/x-www-form-urlencoded">
 
-                <form:label path="email" class="form-text custom-label">
+                <label for="email" class="form-text custom-label">
                     <spring:message code="login.email"/>
-                </form:label>
+                </label>
                 <spring:message code="login.email.placeholder" var="emailPlaceholder"/>
-                <form:input type="email" class="form-control custom-input" name="email"
-                            placeholder="${emailPlaceholder}" maxlength="100" path="email"/>
-                <form:errors path="email" cssClass="form-error" element="p"/>
+                <input type="email" class="form-control custom-input" id="email" name="email"
+                            placeholder="${emailPlaceholder}" maxlength="100"/>
 
-                <form:label path="password" class="form-text custom-label">
+                <label for="password" class="form-text custom-label">
                     <spring:message code="login.password"/>
-                </form:label>
+                </label>
                 <spring:message code="login.password.placeholder" var="passwordPlaceholder"/>
                 <div class="input-group" id="show_hide_password">
-                    <form:input type="password" class="form-control custom-input custom-password" name="password"
-                                placeholder="${passwordPlaceholder}" maxlength="100" path="password"/>
+                    <input type="password" class="form-control custom-input custom-password" name="password"
+                                placeholder="${passwordPlaceholder}" maxlength="100" id="password"/>
                     <div class="input-group-addon password-eye">
                         <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
                     </div>
                 </div>
-                <form:errors path="password" cssClass="form-error" element="p"/>
-
+                <div class="login-error">
+                    <c:if test="${param.error != null}">
+                        <p class="form-error"><spring:message code="login.badcredentials"/></p>
+                    </c:if>
+                </div>
                 <div class="submit-button-container">
                     <button class="btn btn-primary hirenet-blue-btn" type="submit">
                         <spring:message code="login.submit"/>
                     </button>
                 </div>
-            </form:form>
+            </form>
 
             <a href="${pageContext.request.contextPath}/register">
                 <h5 class="bottom-link">
@@ -97,14 +98,16 @@
     $(document).ready(function () {
         $("#show_hide_password a").on('click', function (event) {
             event.preventDefault();
-            if ($('#show_hide_password input').attr("type") == "text") {
-                $('#show_hide_password input').attr('type', 'password');
-                $('#show_hide_password i').addClass("fa-eye");
-                $('#show_hide_password i').removeClass("fa-eye-slash");
-            } else if ($('#show_hide_password input').attr("type") == "password") {
-                $('#show_hide_password input').attr('type', 'text');
-                $('#show_hide_password i').removeClass("fa-eye");
-                $('#show_hide_password i').addClass("fa-eye-slash");
+            let input = $('#show_hide_password input');
+            let icon = $('#show_hide_password i')
+            if (input.attr("type") === "text") {
+                input.attr('type', 'password');
+                icon.addClass("fa-eye");
+                icon.removeClass("fa-eye-slash");
+            } else if (input.attr("type") ==="password") {
+                input.attr('type', 'text');
+                icon.removeClass("fa-eye");
+                icon.addClass("fa-eye-slash");
             }
         });
     });
