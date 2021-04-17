@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ public class JobPost {
     private JobType jobType;
     private boolean isActive;
     private List<Zone> zones;
+    private List<JobPostImage> images;
 
     public JobPost() {
     }
@@ -23,6 +25,7 @@ public class JobPost {
         this.jobType = jobType;
         this.zones = zones;
         this.isActive = true;
+        this.images = new ArrayList<>();
     }
 
     //Constructor para crear un post que puede no estar activo
@@ -34,6 +37,18 @@ public class JobPost {
         this.jobType = jobType;
         this.zones = zones;
         this.isActive = isActive;
+        this.images = new ArrayList<>();
+    }
+
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, List<JobPostImage> images) {
+        this.id = id;
+        this.user = user;
+        this.title = title;
+        this.availableHours = availableHours;
+        this.jobType = jobType;
+        this.zones = zones;
+        this.isActive = true;
+        this.images = images;
     }
 
     public long getId() {
@@ -90,6 +105,10 @@ public class JobPost {
 
     public void setZones(List<Zone> zones) {
         this.zones = zones;
+    }
+
+    public List<JobPostImage> getImages() {
+        return images;
     }
 
     @Override

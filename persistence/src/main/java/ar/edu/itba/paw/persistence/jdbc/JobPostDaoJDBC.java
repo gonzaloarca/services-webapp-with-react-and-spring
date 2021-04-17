@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
+import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPost.Zone;
+import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +21,9 @@ public class JobPostDaoJDBC implements JobPostDao {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private JobPostImageDao jobPostImageDao;
 
     private static List<Zone> auxiGetZones(Object[] objs) {
         List<Zone> zones = new ArrayList<>();
@@ -42,7 +47,8 @@ public class JobPostDaoJDBC implements JobPostDao {
             resultSet.getString("post_available_hours"),
             JobPost.JobType.values()[resultSet.getInt("post_job_type")],
             JobPostDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
-            resultSet.getBoolean("post_is_active"));
+            resultSet.getBoolean("post_is_active")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -56,7 +62,8 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
-    public JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones) {
+    public JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones,
+                          List<byte[]> byteImages) {
         Number key = jdbcInsert.executeAndReturnKey(new HashMap<String, Object>() {{
             put("user_id", userId);
             put("post_title", title);
@@ -75,7 +82,15 @@ public class JobPostDaoJDBC implements JobPostDao {
             }});
         }
 
-        return new JobPost(key.longValue(), user, title, availableHours, jobType, zones, true);
+        //TODO: Esto no deberia ir en el service?
+        List<JobPostImage> images = jobPostImageDao.addImages(key.longValue(), byteImages);
+
+        return new JobPost(key.longValue(), user, title, availableHours, jobType, zones, images);
+    }
+
+    @Override
+    public JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones) {
+        return create(userId, title, availableHours, jobType, zones, new ArrayList<>());
     }
 
     @Override

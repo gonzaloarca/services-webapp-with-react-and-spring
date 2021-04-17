@@ -38,7 +38,7 @@ public class JobPostController {
     @RequestMapping("/job/{postId}")
     public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
-        JobPost jobPost = jobPostService.findById(id).orElseThrow(JobPostNotFoundException::new);
+        JobPost jobPost = jobPostService.findById(id);
         mav.addObject("jobPost", jobPost);
         mav.addObject("packages", jobPackageService.findByPostId(id).orElseThrow(JobPackageNotFoundException::new));
         mav.addObject("contractsCompleted",

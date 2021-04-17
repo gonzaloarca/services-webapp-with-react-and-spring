@@ -89,6 +89,6 @@ public class ContractController {
 
     @ModelAttribute("jobPost")
     public JobPost getJobPost(@ModelAttribute("jobPack") final JobPackage jobPackage) {
-        return jobPostService.findById(jobPackage.getPostId()).orElseThrow(JobPostNotFoundException::new);
+        return jobPostService.findById(jobPackage.getPostId());
     }
 }

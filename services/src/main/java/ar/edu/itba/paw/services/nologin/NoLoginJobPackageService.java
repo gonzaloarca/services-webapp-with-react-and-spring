@@ -20,11 +20,7 @@ public class NoLoginJobPackageService implements JobPackageService {
 
     @Override
     public JobPackage create(long postId, String title, String description, double price, JobPackage.RateType rateType) {
-        //TODO: CAMBIAR POR EXCEPCIONES PROPIAS
-        if (!jobPostService.findById(postId).isPresent())
-            throw new RuntimeException("Post no encontrado");
-
-
+        jobPostService.findById(postId);        //Para verificar que existe el Post
         return jobPackageDao.create(postId, title, description, price, rateType);
     }
 

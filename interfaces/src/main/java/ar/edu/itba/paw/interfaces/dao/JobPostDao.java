@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +8,9 @@ import java.util.Optional;
 public interface JobPostDao {
 
     JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
+
+    JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones,
+            List<byte[]> byteImages);
 
     Optional<JobPost> findById(long id);
 

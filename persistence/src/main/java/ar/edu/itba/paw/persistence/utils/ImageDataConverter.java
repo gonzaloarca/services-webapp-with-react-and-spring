@@ -1,10 +1,5 @@
-package ar.edu.itba.paw.services.utils;
+package ar.edu.itba.paw.persistence.utils;
 
-import ar.edu.itba.paw.interfaces.services.ImageDataService;
-import org.springframework.stereotype.Service;
-
-import javax.activation.DataSource;
-import javax.mail.util.ByteArrayDataSource;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -13,12 +8,10 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-//TODO ver si este service está de más
-@Service
-public class ImageDataServiceImpl implements ImageDataService {
+//Clase con métodos estáticos para manejar la conversión de imagenes
+public class ImageDataConverter {
 
-	@Override
-	public String getImageType(byte[] imageData) {
+	public static String getImageType(byte[] imageData) {
 		if(imageData == null)
 			throw new RuntimeException("Parameter can't be null");
 
@@ -34,21 +27,11 @@ public class ImageDataServiceImpl implements ImageDataService {
 		return mimeType;
 	}
 
-	@Override
-	public String getEncodedString(byte[] imageData) {
+	public static String getEncodedString(byte[] imageData) {
 		if(imageData == null)
 			throw new RuntimeException("Parameter can't be null");
 
 		byte[] encodedArray = Base64.getEncoder().encode(imageData);
 		return new String(encodedArray, StandardCharsets.UTF_8);
-	}
-
-	@Override
-	public DataSource getImageDataSource(byte[] imageData) {
-		if(imageData == null)
-			throw new RuntimeException("Parameter can't be null");
-
-		String imageType = getImageType(imageData);
-		return new ByteArrayDataSource(imageData, imageType);
 	}
 }
