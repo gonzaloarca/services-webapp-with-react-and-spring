@@ -82,42 +82,42 @@ public class JobPostDaoJDBC implements JobPostDao {
     @Override
     public Optional<JobPost> findById(long id) {
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts WHERE post_id = ?",
+                "SELECT * FROM full_post WHERE post_id = ?",
                 new Object[]{id}, JOB_POST_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<JobPost> findByUserId(long id) {
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts WHERE user_id = ?",
+                "SELECT * FROM full_post WHERE user_id = ?",
                 new Object[]{id}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
     public List<JobPost> findByJobType(JobPost.JobType jobType) {
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts WHERE post_job_type = ?",
+                "SELECT * FROM full_post WHERE post_job_type = ?",
                 new Object[]{jobType.ordinal()}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
     public List<JobPost> findByZone(JobPost.Zone zone) {
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts WHERE ? = ANY(zones)",
+                "SELECT * FROM full_post WHERE ? = ANY(zones)",
                 new Object[]{zone.ordinal()}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
     public List<JobPost> findAll() {
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts",
+                "SELECT * FROM full_post",
                 JOB_POST_ROW_MAPPER);
     }
     @Override
     public List<JobPost> search(String title, Zone zone) {
         title = "%" + title + "%";
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones)",
+                "SELECT * FROM full_post WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones)",
                 new Object[]{title,zone.ordinal()},
                 JOB_POST_ROW_MAPPER
         );
@@ -127,24 +127,10 @@ public class JobPostDaoJDBC implements JobPostDao {
     public List<JobPost> searchWithCategory(String title, Zone zone, JobPost.JobType jobType) {
         title = "%" + title + "%";
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones) AND post_job_type = ?",
+                "SELECT * FROM full_post WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones) AND post_job_type = ?",
                 new Object[]{title,zone.ordinal(), jobType.ordinal()},
                 JOB_POST_ROW_MAPPER
         );
     }
 
-    @Override
-    public List<Review> findAllReviews(long id) {
-        return jdbcTemplate.query(
-                "SELECT rate, review_title, review_description " +
-                        "FROM job_post NATURAL JOIN job_package NATURAL JOIN contract NATURAL JOIN review " +
-                        "WHERE post_id = ?", new Object[]{id}, (resultSet, i) ->
-                        new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
-                                resultSet.getString("review_description")));
-    }
-
-    @Override
-    public int findJobPostReviewSize(long id) {
-        return jdbcTemplate.queryForObject("SELECT reviews FROM full_posts WHERE post_id = ?",new Object[]{id},Integer.class);
-    }
 }

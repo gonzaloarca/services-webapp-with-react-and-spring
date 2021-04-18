@@ -40,12 +40,6 @@
 </head>
 <body>
 <jsp:include page="customNavBar.jsp"/>
-
-<c:set var="ratings" value="${[3, 5, 10, 5, 20]}" scope="session"/>
-<c:set var="rate" value="${3.79}" scope="session"/>
-<%--(3*1 + 5*2 + 10*3 + 5*4 + 20*5)/(3+5+10+5+20)--%>
-<%--TODO: DINAMIZAR ARRAY RECIBIDO CON RATINGS DE 1 ESTRELLAS, 2 ESTRELLAS, 3 ESTRELLAS...--%>
-
 <div class="content-container-transparent">
     <div class="row">
         <div class="d-block col-4">
@@ -61,7 +55,6 @@
             <div class="card custom-card mt-3">
                 <div class="card-body">
                     <h5 class="profile-subtitle"><spring:message code="profile.reviews.average"/></h5>
-
                     <span class="custom-row rating align-items-center">
                         <h1 class="mr-3">
                             ${avgRate}
@@ -107,7 +100,8 @@
                     </div>
 
                     <c:if test="${withServices}">
-                        <c:forEach var="jobCard" items="${jobCards}">
+                        <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
+                            <a href="${pageContext.request.contextPath}/job/${jobCard.jobPost.id}">
                             <div class="row no-gutters">
                                 <div class="col-md-3">
                                     <img class="card-image-top service-img"
@@ -119,8 +113,8 @@
                                         <c:out value="${jobCard.jobPost.title}"/>
                                     </h4>
                                     <div class="justify-content-between custom-row">
-                                        <h6 class="service-subtitle"><spring:message code="jobCard.jobs.imageAlt"
-                                                                                     arguments="${jobCard.jobPost.jobType.stringCode}"/></h6>
+                                        <h6 class="service-subtitle"><spring:message
+                                                code="${jobCard.jobPost.jobType.stringCode}"/></h6>
 
                                         <jsp:include page="rateStars.jsp">
                                             <jsp:param name="rate" value="${jobCard.jobPost.rating}"/>
@@ -143,14 +137,18 @@
                                     <div class="custom-row service-contracted-times">
                                         <i class="fas fa-check"></i>
                                         <h6 class="ml-2">
-                                            <spring:message code="profile.service.contract.quantity" arguments="${jobCard.contractsCompleted}"/>
+                                            <spring:message code="profile.service.contract.quantity"
+                                                            arguments="${jobCard.contractsCompleted}"/>
                                         </h6>
                                     </div>
 
                                 </div>
                             </div>
-                            <hr class="hr1"/>
-                            <%--                    </c:if>--%>
+                            </a>
+
+                            <c:if test="${status.index != jobCards.size()-1}">
+                                <hr class="hr1"/>
+                            </c:if>
                         </c:forEach>
                     </c:if>
 
@@ -170,44 +168,46 @@
                                 </h5>
                             </div>
                             <div class="col align-self-center">
-                                <c:set var="totalReviews"
-                                       value="${reviews.size()}"/>
-                                <c:forEach begin="1" end="5" var="i">
-                                    <div class="row mb-1 align-items-center justify-content-center">
-                                        <p class="reviews-summary-gray-text"><spring:message code="profile.review.stars"
-                                                                                             arguments="${6-i}"/></p>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-warning" role="progressbar"
-<%--                                                 TODO:DINAMIZAR--%>
-                                                 style="width: ${Integer.valueOf(ratings[5-i]*100/totalReviews) };"
-                                                 aria-valuenow="${Integer.valueOf(ratings[5-i]*100/totalReviews)}"
-                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                <c:if test="${reviews.size() >0}">
+                                    <c:forEach begin="1" end="5" var="i">
+                                        <div class="row mb-1 align-items-center justify-content-center">
+                                            <p class="reviews-summary-gray-text"><spring:message
+                                                    code="profile.review.stars"
+                                                    arguments="${6-i}"/></p>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" role="progressbar"
+                                                    <%--                                                 TODO:DINAMIZAR--%>
+                                                     style="width: ${Integer.valueOf(reviewsByPoints[5-i]*100/reviews.size()) };"
+                                                     aria-valuenow="${Integer.valueOf(reviewsByPoints.get(5-i)*100/reviews.size())}"
+                                                     aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <p class="reviews-summary-gray-text">${reviewsByPoints.get(5-i)}</p>
                                         </div>
-                                        <p class="reviews-summary-gray-text">${ratings[5-i]}</p>
-                                    </div>
-                                </c:forEach>
+                                    </c:forEach>
+                                </c:if>
                             </div>
                         </div>
                         <hr class="hr1"/>
 
-                        <c:forEach var="review" items="${reviews}">
+                        <c:forEach var="review" items="${reviews}" varStatus="status">
                             <jsp:include page="rateStars.jsp">
                                 <jsp:param name="rate" value="${review.rate}"/>
                             </jsp:include>
                             <h4 class="mt-2 review-title">${review.title}</h4>
                             <h5>${review.description}</h5>
 
-                            <a href="${pageContext.request.contextPath}/job/1">
+                            <h6>${review.client.username}</h6>
+                            <a href="${pageContext.request.contextPath}/job/${review.jobPost.id}">
                                 <h5 class="review-link mt-2">
                                     <i class="bi bi-box-arrow-up-right"></i>
-                                    &nbsp;
                                     <spring:message code="profile.review.link"
-                                                    arguments="Servicio de fontaneria ultra pro"/>
-                                        <%--                            TODO: DINAMIZAR--%>
+                                                    arguments="${review.jobPost.title}"/>
                                 </h5>
                             </a>
-                            <%--                   TODO <c:if test="${i != items.size-1}">--%>
-                            <hr class="hr1"/>
+
+                            <c:if test="${status.index != reviews.size()-1}">
+                                <hr class="hr1"/>
+                            </c:if>
                         </c:forEach>
                     </c:if>
                 </div>

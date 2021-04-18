@@ -107,28 +107,17 @@
                         </span>
 
 
-                        <%--TODO: IMPLEMENTAR CALIFICACIONES--%>
-                        <%--                        <span class="custom-row rating ml-5">--%>
-                        <%--                            <c:set var="rate" value="${3.7}" scope="session"/>--%>
-                        <%--    &lt;%&ndash;                        TODO: CAMBIAR POR RATING VERDADERO&ndash;%&gt;--%>
-                        <%--                            <c:forEach var="i" begin="1" end="5">--%>
-                        <%--                                &lt;%&ndash;                            > 0.8 se rendondea para arriba, < 0.2 para abajo, el resto queda en 0.5&ndash;%&gt;--%>
-                        <%--                                <c:choose>--%>
-                        <%--                                    <c:when test="${i <= rate + 0.2}">--%>
-                        <%--                                        <i class="bi bi-star-fill star"></i>--%>
-                        <%--                                    </c:when>--%>
-                        <%--                                    <c:when test="${i-rate <= 0.8 && i-rate >= 0.2}">--%>
-                        <%--                                        <i class="bi bi-star-half star"></i>--%>
-                        <%--                                    </c:when>--%>
-                        <%--                                    <c:otherwise>--%>
-                        <%--                                        <i class="bi bi-star star"></i>--%>
-                        <%--                                    </c:otherwise>--%>
-                        <%--                                </c:choose>--%>
-                        <%--                            </c:forEach>--%>
-                        <%--                            <p>--%>
-                        <%--                                (43 calificaciones)--%>
-                        <%--                            </p>--%>
-                        <%--                        </span>--%>
+                        <span class="custom-row rating align-items-center">
+                            <h1 class="mr-3">
+                                ${avgRate}
+                            </h1>
+                            <jsp:include page="rateStars.jsp">
+                                <jsp:param name="rate" value="${avgRate}"/>
+                            </jsp:include>
+                            <h5 class="ml-3 mb-0">
+                                (${reviewsSize})
+                            </h5>
+                        </span>
 
                         <div class="summary custom-row">
                             <div class="summary-item">

@@ -75,14 +75,6 @@ public class JobPackageDaoJDBCTest {
             JobPackage.RateType.values()[2],
             true
     )};
-    private static final Review REVIEW_1 = new Review(
-            4,
-            "Muy bueno",
-            "Resolvio todo en cuestion de minutos"
-    );
-    private static final Review REVIEW_2 = new Review(
-            2, "Medio pelo", "Resolvio todo de forma ideal"
-    );
 
     @InjectMocks
     @Autowired
@@ -135,12 +127,4 @@ public class JobPackageDaoJDBCTest {
         jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
     }
 
-    @Test
-    public void testFindReviews() {
-        List<Review> maybeReviews = jobPackageDaojdbc.findReviews(JOB_PACKAGES[0].getId());
-
-        Assert.assertEquals(maybeReviews.size(), 2);
-        Assert.assertEquals(maybeReviews.get(0), REVIEW_1);
-        Assert.assertEquals(maybeReviews.get(1), REVIEW_2);
-    }
 }

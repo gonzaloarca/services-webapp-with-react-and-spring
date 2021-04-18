@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.interfaces.services.JobCardService;
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.Review;
@@ -34,30 +31,33 @@ public class ProfileController {
     @Autowired
     JobPostService jobPostService;
 
+    @Autowired
+    ReviewService reviewService;
+
     @ModelAttribute("user")
-    private User getUser(@PathVariable("id") final long id){
-        return userService.getUserByRoleAndId(1,id);
+    private User getUser(@PathVariable("id") final long id) {
+        return userService.getUserByRoleAndId(1, id);
     }
 
     @ModelAttribute("avgRate")
-    private Double getAvgRate(@PathVariable("id") final long id){
-        return userService.getProfessionalAvgRate(id);
+    private Double getAvgRate(@PathVariable("id") final long id) {
+        return reviewService.getProfessionalAvgRate(id);
     }
 
-     @ModelAttribute("reviews")
-     private List<Review> getReviews(@PathVariable("id") final long id){
-         return userService.findByUserReviews(id);
-     }
-     @ModelAttribute("services")
-     private List<JobPost> getServices(@PathVariable("id") final long id){
-      return jobPostService.findByUserId(id);
-     }
+    @ModelAttribute("reviews")
+    private List<Review> getProfessionalReviews(@PathVariable("id") final long id) {
+        return reviewService.findProfessionalReviews(id);
+    }
 
-     @ModelAttribute("totalContractsCompleted")
-     private int getTotalContractsCompleted(@PathVariable("id") final long id){
+    @ModelAttribute("services")
+    private List<JobPost> getServices(@PathVariable("id") final long id) {
+        return jobPostService.findByUserId(id);
+    }
+
+    @ModelAttribute("totalContractsCompleted")
+    private int getTotalContractsCompleted(@PathVariable("id") final long id) {
         return jobContractService.findContractsQuantityByProId(id);
-     }
-
+    }
 
     @RequestMapping(value = "/services")
     public ModelAndView profileWithServices(@PathVariable("id") final long id) {
@@ -72,6 +72,7 @@ public class ProfileController {
     public ModelAndView profileWithReviews(@PathVariable("id") final long id) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", false);
+        mav.addObject("reviewsByPoints", reviewService.getProfessionalReviewsByPoints(id));
         return mav;
     }
 }

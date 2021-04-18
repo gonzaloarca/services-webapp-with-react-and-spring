@@ -9,6 +9,7 @@
 .register-title {
     color: white;
     font-weight: bold;
+    margin-bottom: 0;
 }
 
 .register-button-container {
@@ -36,8 +37,8 @@
 }
 
 #img-preview {
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     object-fit: cover;
     border-radius: 200px;
     margin: 20px 0;
@@ -45,4 +46,11 @@
 
 .file-input-container {
     background-color: #e8e8e8;
+}
+
+.register-title-container {
+    background-color: #343e6d;
+    padding: 10px 10px 0 10px;
+    width: max-content;
+    border-radius: 20px 20px 0 0;
 }

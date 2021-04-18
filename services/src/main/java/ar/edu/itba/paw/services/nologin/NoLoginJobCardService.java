@@ -26,10 +26,13 @@ public class NoLoginJobCardService implements JobCardService {
     @Autowired
     private JobPostImageService jobPostImageService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     @Override
     public List<JobCard> findAll() {
         //TODO: Mejorar excepcion
-            return createCards(jobPostService.findAll());
+        return createCards(jobPostService.findAll());
     }
 
     @Override
@@ -58,7 +61,7 @@ public class NoLoginJobCardService implements JobCardService {
             jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
                     jobPostImageService.findByPostId(jobPost.getId()),
                     jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()),
-                    jobPostService.getJobPostReviewsSize(jobPost.getId())));
+                     reviewService.getJobPostReviewsSize(jobPost.getId())));
         });
         return jobCards;
     }

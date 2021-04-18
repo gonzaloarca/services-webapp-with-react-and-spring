@@ -14,8 +14,8 @@ public class JobPost {
     private final double rating;
 
     //Constructor para crear un post nuevo (esta activo)
-    public JobPost(long id,User user, String title, String availableHours, JobType jobType, List<Zone> zones,double rating) {
-        this.id=id;
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating) {
+        this.id = id;
         this.user = user;
         this.title = title;
         this.availableHours = availableHours;

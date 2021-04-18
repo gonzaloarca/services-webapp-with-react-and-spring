@@ -25,8 +25,4 @@ public interface UserService {
 
     void assignRole(long id, int role);
 
-    List<Review> findByUserReviews(long id);
-
-    Double getProfessionalAvgRate(long id);
-
 }

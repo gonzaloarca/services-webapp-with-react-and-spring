@@ -45,11 +45,13 @@
         <jsp:param name="withoutColor" value="true"/>
     </jsp:include>
     <div class="login-card">
-        <h3 class="login-title">
-            <%--            TODO: Agregar alt--%>
-            <img class="login-icon" src="${pageContext.request.contextPath}/resources/images/log-in.svg" alt="">
-            <spring:message code="login.into.hirenet"/>
-        </h3>
+        <div class="login-title-container">
+            <h3 class="login-title">
+                <%--            TODO: Agregar alt--%>
+                <img class="login-icon" src="${pageContext.request.contextPath}/resources/images/log-in.svg" alt="">
+                <spring:message code="login.into.hirenet"/>
+            </h3>
+        </div>
         <div class="card p-5">
 
             <form action="${pageContext.request.contextPath}/login" method="post"

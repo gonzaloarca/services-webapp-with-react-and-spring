@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostImageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
+import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
@@ -36,6 +37,9 @@ public class JobPostController {
     @Autowired
     private JobPostImageService jobPostImageService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     @RequestMapping("/job/{postId}")
     public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
@@ -45,9 +49,10 @@ public class JobPostController {
         mav.addObject("jobPost", jobPost);
         mav.addObject("packages", jobPackageService.findByPostId(id));
         mav.addObject("contractsCompleted",
-                jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
+                jobContractService.findContractsQuantityByPostId(jobPost.getUser().getId()));
+        mav.addObject("avgRate", reviewService.getProfessionalAvgRate(jobPost.getUser().getId()));
+        mav.addObject("reviewsSize", reviewService.findProfessionalReviews(jobPost.getUser().getId()).size());
         mav.addObject("imageList", imageList);
-
         return mav;
     }
 
@@ -69,11 +74,11 @@ public class JobPostController {
         }
 
         String currentUserEmail = principal.getName();
-        JobPost jobPost = jobPostService.create(currentUserEmail,form.getTitle(), form.getAvailableHours(),form.getJobType(),form.getZones());
+        JobPost jobPost = jobPostService.create(currentUserEmail, form.getTitle(), form.getAvailableHours(), form.getJobType(), form.getZones());
         PackageForm packageForm = form.getJobPackage();
 
 
-        jobPackageService.create(jobPost.getId(),packageForm.getTitle(),packageForm.getDescription(),packageForm.getPrice(), packageForm.getRateType());
+        jobPackageService.create(jobPost.getId(), packageForm.getTitle(), packageForm.getDescription(), packageForm.getPrice(), packageForm.getRateType());
 
         return new ModelAndView("redirect:/job/" + jobPost.getId());
     }

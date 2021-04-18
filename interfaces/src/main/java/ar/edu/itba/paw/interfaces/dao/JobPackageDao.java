@@ -14,5 +14,4 @@ public interface JobPackageDao {
 
     List<JobPackage> findByPostId(long id);
 
-    List<Review> findReviews(long id);
 }

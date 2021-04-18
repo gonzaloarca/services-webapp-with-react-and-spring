@@ -25,7 +25,4 @@ public interface JobPostDao {
 
     List<JobPost> searchWithCategory(String title, JobPost.Zone zone, JobPost.JobType jobType);
 
-    List<Review> findAllReviews(long id);
-
-    int findJobPostReviewSize(long id);
 }

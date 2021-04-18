@@ -6,38 +6,38 @@ public class Review {
     private int rate;
     private String title;
     private String description;
+    private User client;
+    private JobPost jobPost;
 
     public Review() {
     }
 
-    public Review(int rate, String title, String description) {
+    public Review(int rate, String title, String description, User client, JobPost jobPost) {
         this.rate = rate;
         this.title = title;
         this.description = description;
+        this.client = client;
+        this.jobPost = jobPost;
     }
 
     public int getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
-        this.rate = rate;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public User getClient() {
+        return client;
+    }
+
+    public JobPost getJobPost() {
+        return jobPost;
     }
 
     @Override
@@ -45,11 +45,11 @@ public class Review {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review = (Review) o;
-        return rate == review.rate && Objects.equals(title, review.title) && Objects.equals(description, review.description);
+        return rate == review.rate && Objects.equals(title, review.title) && Objects.equals(description, review.description) && Objects.equals(client, review.client) && Objects.equals(jobPost, review.jobPost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rate, title, description);
+        return Objects.hash(rate, title, description, client, jobPost);
     }
 }

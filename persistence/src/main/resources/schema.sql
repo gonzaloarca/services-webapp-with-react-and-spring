@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS contract
 CREATE TABLE IF NOT EXISTS review
 (
     contract_id      INTEGER,
-    rate             INTEGER NOT NULL,
+    review_rate      INTEGER NOT NULL,
     review_title       TEXT    NOT NULL,
     review_description TEXT    NOT NULL,
     FOREIGN KEY (contract_id) REFERENCES contract ON DELETE SET NULL,

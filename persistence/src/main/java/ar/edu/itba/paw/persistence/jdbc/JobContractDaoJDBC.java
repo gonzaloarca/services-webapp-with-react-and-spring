@@ -57,10 +57,6 @@ public class JobContractDaoJDBC implements JobContractDao {
             resultSet.getBytes("image_data")
     );
 
-    private final RowMapper<Review> REVIEW_ROW_MAPPER = (resultSet, i) ->
-            new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
-                    resultSet.getString("review_description"));
-
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -103,7 +99,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Override
     public Optional<JobContract> findById(long id) {
         return jdbcTemplate.query(
-                "SELECT * FROM full_contracts WHERE contract_id = ?"
+                "SELECT * FROM full_contract WHERE contract_id = ?"
                 , new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
 
 
@@ -113,7 +109,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByClientId(long id) {
         return
                 jdbcTemplate.query(
-                        "SELECT * FROM full_contracts WHERE client_id = ?"
+                        "SELECT * FROM full_contract WHERE client_id = ?"
                         , new Object[]{id},
                         JOB_CONTRACT_ROW_MAPPER);
     }
@@ -122,7 +118,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByProId(long id) {
         //TODO
         return jdbcTemplate.query(
-                "SELECT * FROM full_contracts WHERE professional_id = ?",
+                "SELECT * FROM full_contract WHERE professional_id = ?",
                 new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
     }
 
@@ -130,7 +126,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByPostId(long id) {
 
         return jdbcTemplate.query(
-                "SELECT * FROM full_contracts WHERE post_id = ?"
+                "SELECT * FROM full_contract WHERE post_id = ?"
                 , new Object[]{id},
                 JOB_CONTRACT_ROW_MAPPER);
     }
@@ -139,7 +135,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByPackageId(long id) {
 
         return jdbcTemplate.query(
-                "SELECT * FROM full_contracts WHERE package_id = ?"
+                "SELECT * FROM full_contract WHERE package_id = ?"
                 , new Object[]{id},
                 JOB_CONTRACT_ROW_MAPPER);
     }
@@ -155,9 +151,12 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
     @Override
-    public Optional<Review> findReview(long id) {
-        return jdbcTemplate.query(
-                "SELECT * FROM review WHERE contract_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER).stream().findFirst();
+    public int findContractsQuantityByPostId(long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) " +
+                        "FROM contract " +
+                        "NATURAL JOIN job_package " +
+                        "WHERE post_id = ?", new Object[]{id}, Integer.class);
     }
 
 }

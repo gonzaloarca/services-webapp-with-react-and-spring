@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface JobContractService {
 
-    JobContract create(String client_email,long packageId, String description);
+    JobContract create(String client_email, long packageId, String description);
 
-    JobContract create(String client_email,long packageId, String description, byte[] imageData);
+    JobContract create(String client_email, long packageId, String description, byte[] imageData);
 
     JobContract findById(long id);
 
@@ -24,4 +24,5 @@ public interface JobContractService {
 
     int findContractsQuantityByProId(long id);
 
+    int findContractsQuantityByPostId(long id);
 }

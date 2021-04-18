@@ -50,11 +50,13 @@
     <jsp:param name="withoutColor" value="true"/>
 </jsp:include>
 <div class="register-card">
-    <h3 class="register-title">
-        <%--        TODO: Agregar alt--%>
-        <img class="login-icon mb-2" src="${pageContext.request.contextPath}/resources/images/adduser.svg" alt="">
-        <spring:message code="register.into.hirenet"/>
-    </h3>
+    <div class="register-title-container">
+        <h3 class="register-title">
+            <%--        TODO: Agregar alt--%>
+            <img class="login-icon mb-2" src="${pageContext.request.contextPath}/resources/images/adduser.svg" alt="">
+            <spring:message code="register.into.hirenet"/>
+        </h3>
+    </div>
 
 
     <form:form modelAttribute="registerForm"
@@ -68,7 +70,7 @@
                             <form:label path="name" class="form-text custom-label">
                                 <spring:message code="register.name"/>
                             </form:label>
-                            <spring:message code="register.name.placeholder" var="namePlaceholder"/>
+                            <spring:message code="register.name" var="namePlaceholder"/>
                             <form:input type="text" class="form-control custom-input" name="name"
                                         placeholder="${namePlaceholder}" maxlength="100" path="name"/>
                             <form:errors path="name" cssClass="form-error" element="p"/>
@@ -77,7 +79,7 @@
                             <form:label path="phone" class="form-text custom-label">
                                 <spring:message code="register.phone"/>
                             </form:label>
-                            <spring:message code="register.phone.placeholder" var="phonePlaceholder"/>
+                            <spring:message code="register.phone" var="phonePlaceholder"/>
                             <form:input type="text" class="form-control custom-input" name="phone"
                                         placeholder="${phonePlaceholder}" maxlength="100" path="phone"/>
                             <form:errors path="phone" cssClass="form-error" element="p"/>
@@ -88,7 +90,7 @@
                         <form:label path="email" class="form-text custom-label">
                             <spring:message code="register.email"/>
                         </form:label>
-                        <spring:message code="register.email.placeholder" var="emailPlaceholder"/>
+                        <spring:message code="register.email" var="emailPlaceholder"/>
                         <form:input type="email" class="form-control custom-input" name="email"
                                     placeholder="${emailPlaceholder}" maxlength="100" path="email"/>
                         <form:errors path="email" cssClass="form-error" element="p"/>
@@ -142,7 +144,9 @@
                     </div>
                 </fieldset>
                 <fieldset id="register-step-2">
-                    <h5 class="form-step-title">Seleccione una imagen de perfil (opcional)</h5>
+                    <h5 class="form-step-title">
+                        <spring:message code="register.selectimage"/>
+                    </h5>
 
                     <div class="img-preview-container">
                             <%--                        TODO: Alt correcto--%>
@@ -154,13 +158,14 @@
                         <form:input type="file" path="avatar" onchange="readURL(this);"/>
                     </div>
 
-                    <p class="img-upload-disclaimer">La imagen debe ser de formato PNG o JPG y puede pesar hasta 5
-                        MB</p>
+                    <p class="img-upload-disclaimer">
+                        <spring:message code="register.filedisclaimer"/>
+                    </p>
 
                     <form:errors path="avatar" cssClass="form-error" element="p"/>
                     <div class="register-button-container">
                         <button class="btn btn-outline-secondary back-btn" type="button">
-                            Volver
+                            Volver atrás
                         </button>
 
                         <button class="btn btn-primary hirenet-blue-btn submit-btn" type="submit">
@@ -286,6 +291,11 @@
     $(".submit").click(function () {
         return false;
     })
+
+    // Disable submit on enter keypress while input is focused
+    $('form input').on('keypress', function (e) {
+        return e.which !== 13;
+    });
 
     // Script para ver vista previa de imagen subida
 

@@ -20,7 +20,7 @@ public class JobCard {
     }
 
     public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, List<JobPostImage> jobPostImages,int contractsCompleted) {
-        this(jobPost,rateType,price,jobPostImages,contractsCompleted,0);
+        this(jobPost,rateType,price,jobPostImages,contractsCompleted,-1);
     }
 
     public JobPost getJobPost() {

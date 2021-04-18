@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.validation.PasswordsMatch;
 import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -8,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@PasswordsMatch
 public class RegisterForm {
 
     @NotBlank
@@ -28,7 +30,7 @@ public class RegisterForm {
     @ValidImage
     private MultipartFile avatar;
 
-    @Size(min = 8, max = 100)
+    @NotBlank
     private String repeatPassword;
 
     public String getName() {
