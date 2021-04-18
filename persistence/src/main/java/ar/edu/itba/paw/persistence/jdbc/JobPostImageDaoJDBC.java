@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JobPostImageDaoJDBC implements JobPostImageDao {
@@ -30,15 +31,16 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 	@Autowired
 	public JobPostImageDaoJDBC(DataSource ds) {
 		jdbcTemplate = new JdbcTemplate(ds);
-		jdbcInsertImage = new SimpleJdbcInsert(ds).withTableName("post_image");
+		jdbcInsertImage = new SimpleJdbcInsert(ds).withTableName("post_image").usingGeneratedKeyColumns("image_id");
 	}
 
 	@Override
 	public JobPostImage addImage(long postId, byte[] byteImage) {
-		Number imageId = jdbcInsertImage.executeAndReturnKey(new HashMap<String, Object>() {{
-			put("post_id", postId);
-			put("image_data", byteImage);
-		}});
+		Map<String, Object> map = new HashMap<>();
+		map.put("post_id", postId);
+		map.put("image_data", byteImage);
+
+		Number imageId = jdbcInsertImage.executeAndReturnKey(map);
 
 		return new JobPostImage(imageId.longValue(), postId,
 				ImageDataConverter.getEncodedString(byteImage), ImageDataConverter.getImageType(byteImage));
