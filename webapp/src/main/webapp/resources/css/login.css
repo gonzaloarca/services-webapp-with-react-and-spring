@@ -7,6 +7,7 @@
 .login-title {
     color: white;
     font-weight: bold;
+    margin-bottom: 0;
 }
 
 /*background para login y register*/
@@ -70,4 +71,12 @@ body {
 
 .input-container {
     margin-bottom: 10px;
+}
+
+
+.login-title-container {
+    background-color: #343e6d;
+    padding: 10px;
+    width: max-content;
+    border-radius: 20px 20px 0 0;
 }
