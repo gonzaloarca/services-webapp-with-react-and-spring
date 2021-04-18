@@ -2,9 +2,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
+import ar.edu.itba.paw.interfaces.services.JobPostImageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
@@ -35,14 +37,21 @@ public class JobPostController {
     @Autowired
     private JobPostService jobPostService;
 
+    @Autowired
+    private JobPostImageService jobPostImageService;
+
     @RequestMapping("/job/{postId}")
     public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
         JobPost jobPost = jobPostService.findById(id);
+        List<JobPostImage> imageList = jobPostImageService.findByPostId(jobPost.getId());
+
         mav.addObject("jobPost", jobPost);
         mav.addObject("packages", jobPackageService.findByPostId(id).orElseThrow(JobPackageNotFoundException::new));
         mav.addObject("contractsCompleted",
                 jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
+        mav.addObject("imageList", imageList);
+
         return mav;
     }
 

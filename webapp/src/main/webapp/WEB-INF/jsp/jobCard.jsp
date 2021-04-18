@@ -8,11 +8,11 @@
     <spring:message code="${requestScope.data.jobPost.jobType.stringCode}" var="jobTypeName"/>
 
     <c:choose>
-        <c:when test="${requestScope.data.jobPost.images.isEmpty()}">
+        <c:when test="${requestScope.data.jobPostImages.isEmpty()}">
             <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
         </c:when>
         <c:otherwise>
-            <c:set value="data:${requestScope.data.jobPost.images[0].imageType};base64,${requestScope.data.jobPost.images[0].encodedData}"
+            <c:set value="data:${requestScope.data.jobPostImages[0].imageType};base64,${requestScope.data.jobPostImages[0].encodedData}"
                    var="imageSrc"/>
         </c:otherwise>
     </c:choose>

@@ -13,7 +13,6 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class JobPostImageDaoJDBC implements JobPostImageDao {
@@ -55,13 +54,13 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 	}
 
 	@Override
-	public Optional<List<JobPostImage>> findByPostId(long postId) {
-		return Optional.of(jdbcTemplate.query(
+	public List<JobPostImage> findByPostId(long postId) {
+		return jdbcTemplate.query(
 			"SELECT image_id, post_id, image_data " +
 					"FROM post_image " +
 					"WHERE post_id = ?;",
 				new Object[]{postId},
 				JOB_POST_IMAGE_ROW_MAPPER
-		));
+		);
 	}
 }

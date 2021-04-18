@@ -9,9 +9,6 @@ public interface JobPostDao {
 
     JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
 
-    JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones,
-            List<byte[]> byteImages);
-
     Optional<JobPost> findById(long id);
 
     Optional<List<JobPost>> findByUserId(long id);

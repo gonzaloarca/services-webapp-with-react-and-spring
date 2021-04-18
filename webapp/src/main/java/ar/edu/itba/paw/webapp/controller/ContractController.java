@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPackageService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.interfaces.services.MailingService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.webapp.form.ContractForm;
@@ -18,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RequestMapping("/contract")
 @Controller
@@ -35,14 +34,18 @@ public class ContractController {
     @Autowired
     private MailingService mailingService;
 
+    @Autowired
+    private JobPostImageService jobPostImageService;
+
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
+                                       @ModelAttribute("jobPost") final JobPost jobPost,
                                        @ModelAttribute("contractForm") final ContractForm form) {
 
         final ModelAndView mav = new ModelAndView("createContract");
+        List<JobPostImage> imageList = jobPostImageService.findByPostId(jobPost.getId());
 
-        //TODO: reemplazar por la imagen default o la correspondiente al post
-        mav.addObject("postImage", "/resources/images/worker-placeholder.jpg");
+        mav.addObject("imageList", imageList);
 
         return mav;
     }
@@ -53,7 +56,7 @@ public class ContractController {
                                        @ModelAttribute("jobPost") final JobPost jobPost,
                                        @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return createContract(packId, form);
+            return createContract(packId, jobPost, form);
         }
 
         JobContract jobContract;

@@ -15,7 +15,7 @@ public class ImageDataConverter {
 		if(imageData == null)
 			throw new RuntimeException("Parameter can't be null");
 
-		InputStream is = new BufferedInputStream(new ByteArrayInputStream(imageData));
+		InputStream is = new ByteArrayInputStream(imageData);
 		String mimeType;
 		try {
 			mimeType = URLConnection.guessContentTypeFromStream(is);

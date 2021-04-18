@@ -62,11 +62,11 @@
             </h2>
         </div>
         <c:choose>
-            <c:when test="${jobPost.images.isEmpty()}">
+            <c:when test="${imageList.size() == 0}">
                 <c:url value="/resources/images/${jobPost.jobType.imagePath}" var="imageSrc"/>
             </c:when>
             <c:otherwise>
-                <c:set value="data:${jobPost.images[0].imageType};base64,${jobPost.images[0].encodedData}"
+                <c:set value="data:${imageList[0].imageType};base64,${imageList[0].encodedData}"
                        var="imageSrc"/>
             </c:otherwise>
         </c:choose>

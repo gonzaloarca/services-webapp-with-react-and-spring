@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services.nologin;
 
-import ar.edu.itba.paw.interfaces.services.JobCardService;
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPackageService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
@@ -26,6 +23,9 @@ public class NoLoginJobCardService implements JobCardService {
     @Autowired
     private JobPackageService jobPackageService;
 
+    @Autowired
+    private JobPostImageService jobPostImageService;
+
     @Override
     public List<JobCard> findAll() {
         return createCards(jobPostService.findAll());
@@ -43,7 +43,8 @@ public class NoLoginJobCardService implements JobCardService {
                     .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(RuntimeException::new);
             //TODO: Mejorar excepciones
             jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
-                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())));
+                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()),
+                    jobPostImageService.findByPostId(jobPost.getId())));
         });
         return jobCards;
     }

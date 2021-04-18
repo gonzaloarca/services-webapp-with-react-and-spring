@@ -52,7 +52,7 @@
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <c:choose>
-                <c:when test="${jobPost.images.size() == 0}">
+                <c:when test="${imageList.size() == 0}">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
@@ -64,12 +64,12 @@
                 </c:when>
                 <c:otherwise>
                     <ol class="carousel-indicators">
-                        <c:forEach items="${jobPost.images}" varStatus="status">
+                        <c:forEach items="${imageList}" varStatus="status">
                             <li data-target="#carousel" data-slide-to="${status.index}" class="${status.index == 0 ? 'active' : ''}"></li>
                         </c:forEach>
                     </ol>
                     <div class="carousel-inner">
-                        <c:forEach items="${jobPost.images}" varStatus="status" var="image">
+                        <c:forEach items="${imageList}" varStatus="status" var="image">
                             <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
                                 <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
                                 <img class="d-block w-100 h-100"
