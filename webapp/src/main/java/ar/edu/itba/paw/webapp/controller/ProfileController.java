@@ -46,7 +46,7 @@ public class ProfileController {
 
      @ModelAttribute("reviews")
      private List<Review> getReviews(@PathVariable("id") final long id){
-         return userService.getProfessionalReviews(id);
+         return userService.findByUserReviews(id);
      }
      @ModelAttribute("services")
      private List<JobPost> getServices(@PathVariable("id") final long id){
@@ -72,8 +72,6 @@ public class ProfileController {
     public ModelAndView profileWithReviews(@PathVariable("id") final long id) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", false);
-        mav.addObject("user", userService.findById(id));
-
         return mav;
     }
 }

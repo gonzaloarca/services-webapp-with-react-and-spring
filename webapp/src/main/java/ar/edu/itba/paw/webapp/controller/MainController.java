@@ -72,7 +72,7 @@ public class MainController {
             return register(registerForm);
         userService.register(registerForm.getEmail(), passwordEncoder.encode(registerForm.getPassword()),
                 registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1));
-        return new ModelAndView("redirect:");
+        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(value = "/login")

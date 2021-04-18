@@ -12,6 +12,7 @@ ALTER TABLE users DROP COLUMN IF EXISTS user_is_professional;
 ALTER TABLE IF EXISTS job_package ALTER COLUMN package_price DROP NOT NULL ;
 
 
+DROP VIEW IF EXISTS full_posts;
 CREATE OR REPLACE VIEW full_posts AS
 SELECT post_id,post_title,post_available_hours,post_job_type,post_is_active,user_id,user_email,user_name,user_phone,user_is_active,avg(rate) as rating,array_agg(zone_id) as zones
 FROM job_post
@@ -20,4 +21,4 @@ FROM job_post
          NATURAL JOIN contract
          NATURAL JOIN review
          NATURAL JOIN post_zone
-GROUP BY post_id, post_title, post_available_hours, post_job_type, post_is_active, user_id, user_email, user_name, user_phone, user_is_active
+GROUP BY post_id, post_title, post_available_hours, post_job_type, post_is_active, user_id, user_email, user_name, user_phone, user_is_active;

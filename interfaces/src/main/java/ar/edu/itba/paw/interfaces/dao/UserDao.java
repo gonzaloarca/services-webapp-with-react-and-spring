@@ -17,21 +17,19 @@ public interface UserDao {
 
     Optional<User> updateUserByEmail(String email,String phone, String name);
 
-    Optional<User> updateUserByid(long id,String phone, String name);
+    Optional<User> updateUserById(long id, String phone, String name);
 
-    Optional<UserAuth> getAuthInfo(String email);
+    Optional<UserAuth> findAuthInfo(String email);
 
     void assignRole(long id, int role);
 
-    List<UserAuth.Role> getRoles(long id);
+    List<UserAuth.Role> findRoles(long id);
 
     List<Review> findUserReviews(long id);
 
-    Optional<User> getUserByRoleAndId(UserAuth.Role role,long id);
+    Optional<User> findUserByRoleAndId(UserAuth.Role role, long id);
 
-    List<Review> getProfessionalReviews(long id);
-
-    Double getProfessionalAvgRate(long id);
+    Double findProfessionalAvgRate(long id);
 
 
 }

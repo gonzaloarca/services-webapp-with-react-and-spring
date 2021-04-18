@@ -51,34 +51,34 @@ public class NoLoginUserService implements UserService {
 
     @Override
     public User updateUserByid(long id, String phone, String name){
-        return userDao.updateUserByid(id,phone,name).orElseThrow(NoSuchElementException::new);
+        return userDao.updateUserById(id,phone,name).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
     public User getUserByRoleAndId(int role, long id) {
-        return userDao.getUserByRoleAndId(UserAuth.Role.values()[role],id).orElseThrow(UserNotFoundException::new);
+        return userDao.findUserByRoleAndId(UserAuth.Role.values()[role],id).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
     public Optional<UserAuth> getAuthInfo(String email) {
-        return userDao.getAuthInfo(email);
+        return userDao.findAuthInfo(email);
     }
 
     @Override
     public void assignRole(long id, int role) {
         User user = userDao.findById(id).orElseThrow(RuntimeException::new);
-        List<UserAuth.Role> roles = userDao.getRoles(id);
+        List<UserAuth.Role> roles = userDao.findRoles(id);
         if(!roles.contains(UserAuth.Role.values()[role]))
             userDao.assignRole(id,role);
     }
 
     @Override
-    public List<Review> getProfessionalReviews(long id) {
-        return userDao.getProfessionalReviews(id);
+    public List<Review> findByUserReviews(long id) {
+        return userDao.findUserReviews(id);
     }
 
     @Override
     public Double getProfessionalAvgRate(long id) {
-        return userDao.getProfessionalAvgRate(id);
+        return userDao.findProfessionalAvgRate(id);
     }
 }
