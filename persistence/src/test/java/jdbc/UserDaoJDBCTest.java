@@ -35,14 +35,6 @@ public class UserDaoJDBCTest {
             true,
             true
     );
-    private static final Review REVIEW_1 = new Review(
-            4,
-            "Muy bueno",
-            "Resolvio todo en cuestion de minutos"
-    );
-    private static final Review REVIEW_2 = new Review(
-            2, "Medio pelo", "Resolvio todo de forma ideal"
-    );
 
     @Autowired
     UserDaoJDBC userDaoJDBC;
@@ -94,12 +86,4 @@ public class UserDaoJDBCTest {
         Assert.assertEquals(USER, user.get());
     }
 
-    @Test
-    public void testFindUserReviews() {
-        List<Review> maybeUserReviews = userDaoJDBC.findUserReviews(USER.getId());
-
-        Assert.assertEquals(maybeUserReviews.size(), 2);
-        Assert.assertEquals(maybeUserReviews.get(0), REVIEW_1);
-        Assert.assertEquals(maybeUserReviews.get(1), REVIEW_2);
-    }
 }

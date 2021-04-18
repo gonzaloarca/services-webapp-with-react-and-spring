@@ -29,11 +29,11 @@ public class NoLoginJobContractService implements JobContractService {
 
     @Override
     public JobContract create(String clientEmail, long packageId, String description) {
-        return create(clientEmail,packageId, description, null);
+        return create(clientEmail, packageId, description, null);
     }
 
     @Override
-    public JobContract create(String clientEmail,long packageId, String description, byte[] imageData) {
+    public JobContract create(String clientEmail, long packageId, String description, byte[] imageData) {
         User user = userService.findByEmail(clientEmail).orElseThrow(NoSuchElementException::new);
 
         jobPackageService.findById(packageId);
@@ -72,7 +72,9 @@ public class NoLoginJobContractService implements JobContractService {
         return jobContractDao.findContractsQuantityByProId(id);
     }
 
-
-
+    @Override
+    public int findContractsQuantityByPostId(long id) {
+        return jobContractDao.findContractsQuantityByPostId(id);
+    }
 
 }

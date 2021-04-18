@@ -19,7 +19,7 @@ public class JobCard {
         this.rateType = rateType;
         this.price = price;
         this.contractsCompleted = contractsCompleted;
-        this.reviewsCount = 0;
+        this.reviewsCount = -1;
     }
 
     public JobPost getJobPost() {

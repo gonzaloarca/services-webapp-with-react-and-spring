@@ -81,11 +81,6 @@ public class JobContractDaoJDBCTest {
             new Date(),
             "Se me rompio una zapatilla"
     );
-    private static final Review REVIEW = new Review(
-            4,
-            "Muy bueno",
-            "Resolvio todo en cuestion de minutos"
-    );
 
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";
 
@@ -215,12 +210,4 @@ public class JobContractDaoJDBCTest {
         Assert.assertEquals(0, ans);
     }
 
-    @Test
-    public void testFindReview() {
-        Optional<Review> maybeReview = jobContractDaoJDBC.findReview(JOB_CONTRACT.getId());
-
-        Assert.assertEquals(REVIEW.getRate(), maybeReview.get().getRate());
-        Assert.assertEquals(REVIEW.getTitle(), maybeReview.get().getTitle());
-        Assert.assertEquals(REVIEW.getDescription(), maybeReview.get().getDescription());
-    }
 }

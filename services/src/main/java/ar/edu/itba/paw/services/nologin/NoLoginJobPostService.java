@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services.nologin;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
+import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
@@ -18,6 +19,9 @@ public class NoLoginJobPostService implements JobPostService {
 
     @Autowired
     private JobPostDao jobPostDao;
+
+    @Autowired
+    private ReviewDao reviewDao;
 
     @Autowired
     private UserService userService;
@@ -64,8 +68,4 @@ public class NoLoginJobPostService implements JobPostService {
         else return jobPostDao.searchWithCategory(title, zone, jobType);
     }
 
-    @Override
-    public int getJobPostReviewsSize(long id) {
-        return jobPostDao.findJobPostReviewSize(id);
-    }
 }

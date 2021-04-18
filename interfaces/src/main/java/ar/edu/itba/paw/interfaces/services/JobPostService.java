@@ -21,6 +21,4 @@ public interface JobPostService {
 
     List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType);
 
-    int getJobPostReviewsSize(long id);
-
 }

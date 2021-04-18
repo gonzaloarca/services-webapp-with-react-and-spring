@@ -59,14 +59,4 @@ public class JobPackageDaoJDBC implements JobPackageDao {
         return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ?",new Object[]{id},JOB_PACKAGE_ROW_MAPPER);
     }
 
-    @Override
-    public List<Review> findReviews(long id) {
-        return jdbcTemplate.query(
-                "SELECT rate, review_title, review_description " +
-                        "FROM job_package NATURAL JOIN contract NATURAL JOIN review " +
-                        "WHERE package_id = ?", new Object[]{id}, (resultSet, i) ->
-                        new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
-                                resultSet.getString("review_description"))
-        );
-    }
 }

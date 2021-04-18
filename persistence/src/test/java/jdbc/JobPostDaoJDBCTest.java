@@ -36,14 +36,6 @@ public class JobPostDaoJDBCTest {
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
     private static final JobPost JOB_POST = new JobPost(1, USER, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0,true);
     private static final int JOB_POSTS_QUANTITY = 3;
-    private static final Review REVIEW_1 = new Review(
-            4,
-            "Muy bueno",
-            "Resolvio todo en cuestion de minutos"
-    );
-    private static final Review REVIEW_2 = new Review(
-            2, "Medio pelo", "Resolvio todo de forma ideal"
-    );
 
     @Autowired
     private DataSource ds;
@@ -149,14 +141,5 @@ public class JobPostDaoJDBCTest {
         Assert.assertFalse(jobPosts.isEmpty());
         Assert.assertEquals(2, jobPosts.size());
         System.out.println(jobPosts);
-    }
-
-    @Test
-    public void testFindAllReviews() {
-        List<Review> maybeUserReviews = jobPostDaoJDBC.findAllReviews(JOB_POST.getId());
-
-        Assert.assertEquals(maybeUserReviews.size(), 2);
-        Assert.assertEquals(maybeUserReviews.get(0), REVIEW_1);
-        Assert.assertEquals(maybeUserReviews.get(1), REVIEW_2);
     }
 }
