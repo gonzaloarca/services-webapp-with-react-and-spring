@@ -16,8 +16,15 @@ a.navbar-brand {
     margin-right: 2rem !important;
 }
 
-.navbar-login-button, .navbar-login-button:active, .navbar-login-button:link, .navbar-login-button:hover{
+.navbar-login-button, .navbar-login-button:active, .navbar-login-button:link, .navbar-login-button:hover {
     color: white;
     margin-right: 30px;
     box-shadow: none;
+}
+
+.transparent-navbar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 2;
 }
