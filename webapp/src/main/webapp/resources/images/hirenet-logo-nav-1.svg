@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="95.729" height="61.777" viewBox="0 0 95.729 61.777">
+  <g id="hirenet-logo-v1" transform="translate(-0.25 -0.203)">
+    <circle id="Ellipse_1" data-name="Ellipse 1" cx="30.889" cy="30.889" r="30.889" transform="translate(0.25 0.203)" fill="#fcb81e"/>
+    <circle id="Ellipse_2" data-name="Ellipse 2" cx="20.483" cy="20.483" r="20.483" transform="translate(55.012 12.335)" fill="#fff"/>
+    <text id="hire" transform="translate(9.139 40.092)" font-size="25" font-family="MADETOMMY-Medium, MADE TOMMY" font-weight="500"><tspan x="0" y="0">hire</tspan></text>
+    <text id="net" transform="translate(59.495 38.592)" fill="#485696" font-size="21" font-family="MADETOMMY-Medium, MADE TOMMY" font-weight="500"><tspan x="0" y="0">net</tspan></text>
+  </g>
+</svg>
