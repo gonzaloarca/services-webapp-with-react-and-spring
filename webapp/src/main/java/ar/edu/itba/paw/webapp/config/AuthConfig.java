@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StreamUtils;
@@ -58,15 +59,17 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
             .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID")
             .and()
                 .sessionManagement()
-                .invalidSessionUrl("/login")
+                .sessionAuthenticationErrorUrl("/login")
+//                .invalidSessionUrl("/login")
             .and().rememberMe()
-                .rememberMeParameter("rememberme")
-                .userDetailsService(hireNetUserDetails)
-                .key(keyString)
+                .rememberMeParameter("rememberMeCheck")
+                .key("keyString")
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-            .and().exceptionHandling()
+                .userDetailsService(hireNetUserDetails)
+                .and().exceptionHandling()
                 .accessDeniedPage("/403")
             .and().csrf().disable();
     }

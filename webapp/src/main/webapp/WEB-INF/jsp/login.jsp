@@ -82,7 +82,7 @@
                 </div>
                 <div class="submit-button-container">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="rememberMeCheck">
+                        <input class="form-check-input" type="checkbox" name="rememberMeCheck" id="rememberMeCheck">
                         <label class="form-check-label" for="rememberMeCheck">
                             <spring:message code="login.rememberme"/>
                         </label>

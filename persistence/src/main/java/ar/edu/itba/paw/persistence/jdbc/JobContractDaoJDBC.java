@@ -103,23 +103,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Override
     public Optional<JobContract> findById(long id) {
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE contract_id = ?"
+                "SELECT * FROM full_contracts WHERE contract_id = ?"
                 , new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
 
 
@@ -129,23 +113,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByClientId(long id) {
         return
                 jdbcTemplate.query(
-                        "SELECT * " +
-                                "FROM contract " +
-                                "NATURAL JOIN job_package " +
-                                "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                                "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                                "user_name            AS client_name, " +
-                                "user_email           AS client_email, " +
-                                "user_phone           AS client_phone, " +
-                                "user_is_active       AS client_is_active " +
-                                "FROM users) AS clients " +
-                                "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                                "user_name            AS professional_username, " +
-                                "user_email           AS professional_email, " +
-                                "user_phone           AS professional_phone, " +
-                                "user_is_active       AS professional_is_active " +
-                                "FROM users) AS professionals " +
-                                "WHERE client_id = ?"
+                        "SELECT * FROM full_contracts WHERE client_id = ?"
                         , new Object[]{id},
                         JOB_CONTRACT_ROW_MAPPER);
     }
@@ -154,23 +122,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByProId(long id) {
         //TODO
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE professional_id = ?",
+                "SELECT * FROM full_contracts WHERE professional_id = ?",
                 new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
     }
 
@@ -178,23 +130,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByPostId(long id) {
 
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE post_id = ?"
+                "SELECT * FROM full_contracts WHERE post_id = ?"
                 , new Object[]{id},
                 JOB_CONTRACT_ROW_MAPPER);
     }
@@ -203,23 +139,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByPackageId(long id) {
 
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE package_id = ?"
+                "SELECT * FROM full_contracts WHERE package_id = ?"
                 , new Object[]{id},
                 JOB_CONTRACT_ROW_MAPPER);
     }
@@ -235,9 +155,9 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
     @Override
-    public List<Review> findReview(long id) {
+    public Optional<Review> findReview(long id) {
         return jdbcTemplate.query(
-                "SELECT * FROM review WHERE contract_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER);
+                "SELECT * FROM review WHERE contract_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER).stream().findFirst();
     }
 
 }

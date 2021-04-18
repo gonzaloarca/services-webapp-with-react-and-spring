@@ -117,8 +117,8 @@ public class JobPostDaoJDBC implements JobPostDao {
     public List<JobPost> search(String title, Zone zone) {
         title = "%" + title + "%";
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts WHERE upper(post_title) LIKE ? AND ? = ANY(zones)",
-                new Object[]{zone.ordinal(),title},
+                "SELECT * FROM full_posts WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones)",
+                new Object[]{title,zone.ordinal()},
                 JOB_POST_ROW_MAPPER
         );
     }
@@ -127,7 +127,7 @@ public class JobPostDaoJDBC implements JobPostDao {
     public List<JobPost> searchWithCategory(String title, Zone zone, JobPost.JobType jobType) {
         title = "%" + title + "%";
         return jdbcTemplate.query(
-                "SELECT * FROM full_posts WHERE upper(post_title) LIKE ? AND ? = ANY(zones) AND post_job_type = ?",
+                "SELECT * FROM full_posts WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones) AND post_job_type = ?",
                 new Object[]{title,zone.ordinal(), jobType.ordinal()},
                 JOB_POST_ROW_MAPPER
         );
@@ -145,6 +145,6 @@ public class JobPostDaoJDBC implements JobPostDao {
 
     @Override
     public int findJobPostReviewSize(long id) {
-        return jdbcTemplate.query("SELECT count(contract_id) as size FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE post_id = ?",new Object[]{id},(resultSet,i) -> resultSet.getInt("size")).stream().findFirst().orElse(0);
+        return jdbcTemplate.queryForObject("SELECT reviews FROM full_posts WHERE post_id = ?",new Object[]{id},Integer.class);
     }
 }

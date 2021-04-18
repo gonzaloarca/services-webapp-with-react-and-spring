@@ -128,6 +128,6 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Double findProfessionalAvgRate(long id){
-        return jdbcTemplate.query("SELECT avg(rate) as average from review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post NATURAL JOIN users WHERE user_id = ? GROUP BY user_id",new Object[]{id},(resultSet,i) -> resultSet.getDouble("average")).stream().findFirst().orElse(0.0);
+        return jdbcTemplate.query("SELECT coalesce(avg(rate),0) as rating from review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post NATURAL JOIN users WHERE user_id = ? GROUP BY user_id",new Object[]{id},(resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
     }
 }

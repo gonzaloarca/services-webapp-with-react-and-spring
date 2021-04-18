@@ -217,12 +217,10 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindReview() {
-        List<Review> maybeReview = jobContractDaoJDBC.findReview(JOB_CONTRACT.getId());
+        Optional<Review> maybeReview = jobContractDaoJDBC.findReview(JOB_CONTRACT.getId());
 
-        Assert.assertFalse(maybeReview.isEmpty());
-        Assert.assertEquals(1, maybeReview.size());
-        Assert.assertEquals(REVIEW.getRate(), maybeReview.get(0).getRate());
-        Assert.assertEquals(REVIEW.getTitle(), maybeReview.get(0).getTitle());
-        Assert.assertEquals(REVIEW.getDescription(), maybeReview.get(0).getDescription());
+        Assert.assertEquals(REVIEW.getRate(), maybeReview.get().getRate());
+        Assert.assertEquals(REVIEW.getTitle(), maybeReview.get().getTitle());
+        Assert.assertEquals(REVIEW.getDescription(), maybeReview.get().getDescription());
     }
 }
