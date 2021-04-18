@@ -68,6 +68,9 @@ public class WebConfig {
     @Value("classpath:migration_image_schema.sql")
     private Resource imageSchemaSql;
 
+    @Value("classpath:migration_login.sql")
+    private Resource loginMigration;
+
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
@@ -78,6 +81,7 @@ public class WebConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
+        dbp.addScript(loginMigration);
         dbp.addScript(imageSchemaSql);
         return dbp;
     }

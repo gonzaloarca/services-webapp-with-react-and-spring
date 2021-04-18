@@ -55,8 +55,8 @@ public class JobPackageDaoJDBCTest {
             "Lunes a viernes 10 a 20",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            true
-    );
+            0.0,
+            true);
 
     private static final JobPackage[] JOB_PACKAGES = {new JobPackage(
             1,
@@ -130,19 +130,17 @@ public class JobPackageDaoJDBCTest {
 
     @Test
     public void testFindByPostId() {
-        Optional<List<JobPackage>> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId());
-        Assert.assertTrue(jobPackages.isPresent());
-        Assert.assertEquals(jobPackages.get().size(), JOB_PACKAGES.length);
-        jobPackages.get().forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.get().indexOf(jobPackage)], jobPackage));
+        List<JobPackage> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId());
+        Assert.assertEquals(jobPackages.size(), JOB_PACKAGES.length);
+        jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
     }
 
     @Test
     public void testFindReviews() {
-        Optional<List<Review>> maybeReviews = jobPackageDaojdbc.findReviews(JOB_PACKAGES[0].getId());
+        List<Review> maybeReviews = jobPackageDaojdbc.findReviews(JOB_PACKAGES[0].getId());
 
-        Assert.assertTrue(maybeReviews.isPresent());
-        Assert.assertEquals(maybeReviews.get().size(), 2);
-        Assert.assertEquals(maybeReviews.get().get(0), REVIEW_1);
-        Assert.assertEquals(maybeReviews.get().get(1), REVIEW_2);
+        Assert.assertEquals(maybeReviews.size(), 2);
+        Assert.assertEquals(maybeReviews.get(0), REVIEW_1);
+        Assert.assertEquals(maybeReviews.get(1), REVIEW_2);
     }
 }

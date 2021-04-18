@@ -1,6 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>
@@ -54,8 +54,7 @@
                     <img class="card-image-top profile-img"
                          src='<c:url value="/resources/images/worker-placeholder.jpg" />'
                          alt="<spring:message code="profile.image"/>">
-                    <h3 class="card-title mt-2 profile-title"><c:out value="Rodrigo"/></h3>
-                    <%--                    TODO: ARG DINAMICO--%>
+                    <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
                     <h5 class="profile-subtitle"><spring:message code="profile.professional"/></h5>
                 </div>
             </div>
@@ -65,14 +64,13 @@
 
                     <span class="custom-row rating align-items-center">
                         <h1 class="mr-3">
-                            ${rate}
+                            ${avgRate}
                         </h1>
                         <jsp:include page="rateStars.jsp">
-                            <jsp:param name="rate" value="${4}"/>
+                            <jsp:param name="rate" value="${avgRate}"/>
                         </jsp:include>
-                                <%--                                TODO: DINAMIZAR--%>
                         <h5 class="ml-3 mb-0">
-                            (43)
+                            (${reviews.size()})
                         </h5>
                     </span>
                 </div>
@@ -81,8 +79,7 @@
                 <div class="card-body">
                     <div class="row align-items-center justify-content-center">
                         <div class="profile-completed-works-outline">
-                            <div class="profile-completed-works">120</div>
-                            <%--                            TODO: ARG DINAMICO--%>
+                            <div class="profile-completed-works">${totalContractsCompleted}</div>
                         </div>
                         <h4 class="mb-0 ml-3"><spring:message code="profile.completed.works"/></h4>
                     </div>
@@ -96,22 +93,21 @@
                     <div class="card-title row ml-3">
                         <a type="button" class="btn profile-list-selector ${(withServices)? 'disabled' : ''}"
                            aria-disabled="${(withServices)? 'true' : 'false'}"
-                           href="${pageContext.request.contextPath}/profile/services">
+                           href="${pageContext.request.contextPath}/profile/${user.id}/services">
                             <div><h4 class="mb-0"><spring:message code="profile.selector.services"/></h4></div>
-                            <div class="chip mb-0"><h5 class="mb-0">6</h5></div>
+                            <div class="chip mb-0"><h5 class="mb-0">${services.size()}</h5></div>
                         </a>
                         &nbsp;
                         <a type="button" class="btn profile-list-selector ${(!withServices)? 'disabled' : ''}"
                            aria-disabled="${(!withServices)? 'true' : 'false'}"
-                           href="${pageContext.request.contextPath}/profile/reviews">
+                           href="${pageContext.request.contextPath}/profile/${user.id}/reviews">
                             <div><h4 class="mb-0"><spring:message code="profile.selector.reviews"/></h4></div>
-                            <div class="chip mb-0"><h5 class="mb-0">43</h5></div>
+                            <div class="chip mb-0"><h5 class="mb-0">${reviews.size()}</h5></div>
                         </a>
                     </div>
 
                     <c:if test="${withServices}">
-                        <c:forEach var="i" begin="1" end="5">
-                            <%--                            TODO: DINAMIZAR--%>
+                        <c:forEach var="jobCard" items="${jobCards}">
                             <div class="row no-gutters">
                                 <div class="col-md-3">
                                     <img class="card-image-top service-img"
@@ -120,20 +116,17 @@
                                 </div>
                                 <div class="col-md-9 px-3">
                                     <h4 class="service-title">
-                                        <c:out value="Aasdasd asdawedqw 12dsda as fdqwds adzx asdqw zxcxed ssda as fdqwds adzx asdqw zxcxed sasda as fdqwds adzx asdqw zxcxed sadawd ssdawd dsD "/>
+                                        <c:out value="${jobCard.jobPost.title}"/>
                                     </h4>
                                     <div class="justify-content-between custom-row">
                                         <h6 class="service-subtitle"><spring:message code="jobCard.jobs.imageAlt"
-                                                                                     arguments="Fontaneria"/></h6>
-                                            <%--        TODO: ARG DINAMICO--%>
+                                                                                     arguments="${jobCard.jobPost.jobType.stringCode}"/></h6>
 
-                                            <%--                        TODO: CAMBIAR POR RATING VERDADERO--%>
                                         <jsp:include page="rateStars.jsp">
-                                            <jsp:param name="rate" value="${3.7}"/>
+                                            <jsp:param name="rate" value="${jobCard.jobPost.rating}"/>
                                         </jsp:include>
                                         <h6 class="ml-3 mb-0">
-                                            (43)
-                                                <%--                                    TODO: ARG DINAMICO--%>
+                                            (${jobCard.reviewsCount})
                                         </h6>
                                     </div>
 
@@ -141,9 +134,8 @@
                                     <div class="d-flex">
                                         <div class="price-container">
                                             <p class="price">
-                                                    <%--        TODO:                            <spring:message code="${requestScope.data.rateType.stringCode}"--%>
-                                                    <%--                                                    arguments="${requestScope.data.price}"/>--%>
-                                                $80/hora
+                                                <spring:message code="${jobCard.rateType.stringCode}"
+                                                                arguments="${jobCard.price}"/>
                                             </p>
                                         </div>
                                     </div>
@@ -151,14 +143,12 @@
                                     <div class="custom-row service-contracted-times">
                                         <i class="fas fa-check"></i>
                                         <h6 class="ml-2">
-                                            <spring:message code="profile.service.contract.quantity" arguments="30"/>
-                                                <%--                                    TODO: ARG DINAMICO--%>
+                                            <spring:message code="profile.service.contract.quantity" arguments="${jobCard.contractsCompleted}"/>
                                         </h6>
                                     </div>
 
                                 </div>
                             </div>
-                            <%--                   TODO <c:if test="${i != items.size-1}">--%>
                             <hr class="hr1"/>
                             <%--                    </c:if>--%>
                         </c:forEach>
@@ -168,52 +158,44 @@
                         <div class="row">
                             <div class="col d-flex flex-column align-items-end">
                                 <p class="reviews-rate">
-                                        ${rate}
+                                        ${avgRate}
                                 </p>
                                 <span class="reviews-rate-stars">
-                <%--                        TODO: CAMBIAR POR RATING VERDADERO--%>
                                     <jsp:include page="rateStars.jsp">
-                                        <jsp:param name="rate" value="${4}"/>
+                                        <jsp:param name="rate" value="${avgRate}"/>
                                     </jsp:include>
                                 </span>
                                 <h5 class="reviews-summary-gray-text mt-3"><spring:message code="profile.review.average"
-                                                                                           arguments="43"/>
-                                        <%--                                    TODO: DINAMIZAR--%>
+                                                                                           arguments="${reviews.size()}"/>
                                 </h5>
                             </div>
                             <div class="col align-self-center">
                                 <c:set var="totalReviews"
-                                       value="${ratings[0]+ratings[1]+ratings[2]+ratings[3]+ratings[4]}"/>
-                                    <%--                                    TODO: DINAMIZAR--%>
+                                       value="${reviews.size()}"/>
                                 <c:forEach begin="1" end="5" var="i">
                                     <div class="row mb-1 align-items-center justify-content-center">
                                         <p class="reviews-summary-gray-text"><spring:message code="profile.review.stars"
                                                                                              arguments="${6-i}"/></p>
                                         <div class="progress">
                                             <div class="progress-bar bg-warning" role="progressbar"
-                                                 style="width: ${Integer.valueOf(ratings[6-1-i]*100/totalReviews)}%;"
-                                                 aria-valuenow="${Integer.valueOf(ratings[6-1-i]*100/totalReviews)}"
+<%--                                                 TODO:DINAMIZAR--%>
+                                                 style="width: ${Integer.valueOf(ratings[5-i]*100/totalReviews) };"
+                                                 aria-valuenow="${Integer.valueOf(ratings[5-i]*100/totalReviews)}"
                                                  aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
-                                        <p class="reviews-summary-gray-text">${ratings[6-1-i]}</p>
+                                        <p class="reviews-summary-gray-text">${ratings[5-i]}</p>
                                     </div>
                                 </c:forEach>
                             </div>
                         </div>
                         <hr class="hr1"/>
 
-                        <c:forEach begin="1" end="5">
-                            <%--                            TODO: DINAMIZAR--%>
+                        <c:forEach var="review" items="${reviews}">
                             <jsp:include page="rateStars.jsp">
-                                <jsp:param name="rate" value="${4}"/>
+                                <jsp:param name="rate" value="${review.rate}"/>
                             </jsp:include>
-                            <%--                            TODO: DINAMIZAR--%>
-                            <h4 class="mt-2 review-title">Excelente servicio</h4>
-                            <h5>sasdw qsadqwd asdf sg arg asdfsd as fas df wef wadfasf e a asd asdded wddddddddddddadas
-                                dasd
-                                awod kqpdaskl;d'm awdl a'slm ak;sk';alwkd 'aslk d'a;wkl 'a;slk dalasld; as';d
-                                akwl;kas';ldkldkasodkjapiwdj askdjjka shd kasgdaskbd awgdh shaouiwhd ashd ipahwdo uas
-                                a</h5>
+                            <h4 class="mt-2 review-title">${review.title}</h4>
+                            <h5>${review.description}</h5>
 
                             <a href="${pageContext.request.contextPath}/job/1">
                                 <h5 class="review-link mt-2">
@@ -226,7 +208,6 @@
                             </a>
                             <%--                   TODO <c:if test="${i != items.size-1}">--%>
                             <hr class="hr1"/>
-                            <%--                    </c:if>--%>
                         </c:forEach>
                     </c:if>
                 </div>

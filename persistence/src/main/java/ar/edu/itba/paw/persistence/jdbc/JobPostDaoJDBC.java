@@ -36,15 +36,14 @@ public class JobPostDaoJDBC implements JobPostDao {
                     resultSet.getString("user_name"),
                     "",
                     resultSet.getString("user_phone"),
-                    resultSet.getBoolean("user_is_professional"),
                     resultSet.getBoolean("user_is_active")
             ),
             resultSet.getString("post_title"),
             resultSet.getString("post_available_hours"),
             JobPost.JobType.values()[resultSet.getInt("post_job_type")],
-            auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
-            resultSet.getBoolean("post_is_active")
-    );
+            JobPostDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
+            resultSet.getDouble("rating"),
+            resultSet.getBoolean("post_is_active"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -77,94 +76,75 @@ public class JobPostDaoJDBC implements JobPostDao {
             }});
         }
 
-        return new JobPost(key.longValue(), user, title, availableHours, jobType, zones, true);
+        return new JobPost(key.longValue(), user, title, availableHours, jobType, zones, 0.0,true);
     }
 
     @Override
     public Optional<JobPost> findById(long id) {
         return jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE post_id = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
+                "SELECT * FROM full_posts WHERE post_id = ?",
                 new Object[]{id}, JOB_POST_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public Optional<List<JobPost>> findByUserId(long id) {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE user_id = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{id}, JOB_POST_ROW_MAPPER));
+    public List<JobPost> findByUserId(long id) {
+        return jdbcTemplate.query(
+                "SELECT * FROM full_posts WHERE user_id = ?",
+                new Object[]{id}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobPost>> findByJobType(JobPost.JobType jobType) {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE post_job_type = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{jobType.ordinal()}, JOB_POST_ROW_MAPPER));
+    public List<JobPost> findByJobType(JobPost.JobType jobType) {
+        return jdbcTemplate.query(
+                "SELECT * FROM full_posts WHERE post_job_type = ?",
+                new Object[]{jobType.ordinal()}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobPost>> findByZone(JobPost.Zone zone) {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE zone_id = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{zone.ordinal()}, JOB_POST_ROW_MAPPER));
+    public List<JobPost> findByZone(JobPost.Zone zone) {
+        return jdbcTemplate.query(
+                "SELECT * FROM full_posts WHERE ? = ANY(zones)",
+                new Object[]{zone.ordinal()}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobPost>> findAll() {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                JOB_POST_ROW_MAPPER));
+    public List<JobPost> findAll() {
+        return jdbcTemplate.query(
+                "SELECT * FROM full_posts",
+                JOB_POST_ROW_MAPPER);
     }
-
     @Override
-    public Optional<List<JobPost>> search(String title, Zone zone) {
+    public List<JobPost> search(String title, Zone zone) {
         title = "%" + title + "%";
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones," +
-                        "user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE zone_id = ? AND UPPER(post_title) LIKE UPPER(?)" +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{zone.ordinal(), title},
+        return jdbcTemplate.query(
+                "SELECT * FROM full_posts WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones)",
+                new Object[]{title,zone.ordinal()},
                 JOB_POST_ROW_MAPPER
-        ));
+        );
     }
 
     @Override
-    public Optional<List<JobPost>> searchWithCategory(String title, Zone zone, JobPost.JobType jobType) {
+    public List<JobPost> searchWithCategory(String title, Zone zone, JobPost.JobType jobType) {
         title = "%" + title + "%";
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones," +
-                        "user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE zone_id = ? AND UPPER(post_title) LIKE UPPER(?) AND post_job_type = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{zone.ordinal(), title, jobType.ordinal()},
+        return jdbcTemplate.query(
+                "SELECT * FROM full_posts WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones) AND post_job_type = ?",
+                new Object[]{title,zone.ordinal(), jobType.ordinal()},
                 JOB_POST_ROW_MAPPER
-        ));
+        );
     }
 
     @Override
-    public Optional<List<Review>> findAllReviews(long id) {
-        return Optional.of(jdbcTemplate.query(
+    public List<Review> findAllReviews(long id) {
+        return jdbcTemplate.query(
                 "SELECT rate, review_title, review_description " +
                         "FROM job_post NATURAL JOIN job_package NATURAL JOIN contract NATURAL JOIN review " +
                         "WHERE post_id = ?", new Object[]{id}, (resultSet, i) ->
                         new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
-                                resultSet.getString("review_description"))));
+                                resultSet.getString("review_description")));
+    }
+
+    @Override
+    public int findJobPostReviewSize(long id) {
+        return jdbcTemplate.queryForObject("SELECT reviews FROM full_posts WHERE post_id = ?",new Object[]{id},Integer.class);
     }
 }

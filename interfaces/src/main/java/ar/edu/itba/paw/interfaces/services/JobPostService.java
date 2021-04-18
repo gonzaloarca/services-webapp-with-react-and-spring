@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface JobPostService {
 
-    JobPost create(String email, String username, String phone, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
+    JobPost create(String email,String title, String availableHours, int jobType, int[] zones);
 
     JobPost findById(long id);
 
@@ -19,5 +19,7 @@ public interface JobPostService {
     List<JobPost> findAll();
 
     List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType);
+
+    int getJobPostReviewsSize(long id);
 
 }

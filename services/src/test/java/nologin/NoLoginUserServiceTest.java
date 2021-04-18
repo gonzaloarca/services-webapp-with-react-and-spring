@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Arrays;
+
 @RunWith(MockitoJUnitRunner.class)
 public class NoLoginUserServiceTest {
 
@@ -22,7 +24,6 @@ public class NoLoginUserServiceTest {
             "Francisco Quesada",
             "",
             "11-4578-9087",
-            true,
             true
     );
     private static final User NEW_USER = new User(
@@ -31,7 +32,6 @@ public class NoLoginUserServiceTest {
             "Manuel Rodriguez",
             "",
             "11-5678-4353",
-            false,
             true
     );
 
@@ -46,9 +46,9 @@ public class NoLoginUserServiceTest {
 
     @Test
     public void testRegisterNewUser() {
-        Mockito.when(userDaoJDBC.register(NEW_USER.getEmail(),NEW_USER.getUsername(),NEW_USER.getPhone(),NEW_USER.isProfessional()))
+        Mockito.when(userDaoJDBC.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone()))
                 .thenReturn(NEW_USER);
-        User createdUser = userService.register(NEW_USER.getEmail(),NEW_USER.getUsername(),NEW_USER.getPhone(),NEW_USER.isProfessional());
+        User createdUser = userService.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone(), Arrays.asList(0));
         Assert.assertNotNull(createdUser);
         Assert.assertEquals(NEW_USER,createdUser);
     }
@@ -59,15 +59,14 @@ public class NoLoginUserServiceTest {
         Mockito.when(
                 userDaoJDBC.register(
                         Mockito.eq(EXISTING_USER.getEmail()),
+                        "",
                         Mockito.eq(EXISTING_USER.getUsername()),
-                        Mockito.eq(EXISTING_USER.getPhone()),
-                        Mockito.eq(EXISTING_USER.isProfessional()
-                        )
+                        Mockito.eq(EXISTING_USER.getPhone())
                 )
         ).thenThrow(
                 new RuntimeException()
         );
-        userDaoJDBC.register(EXISTING_USER.getEmail(),EXISTING_USER.getUsername(),EXISTING_USER.getPhone(),EXISTING_USER.isProfessional());
+        userDaoJDBC.register(EXISTING_USER.getEmail(),"",EXISTING_USER.getUsername(),EXISTING_USER.getPhone());
     }
 
 

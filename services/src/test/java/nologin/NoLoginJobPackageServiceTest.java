@@ -24,10 +24,10 @@ public class NoLoginJobPackageServiceTest {
     private static final JobPackage JOB_PACKAGE = new JobPackage(
             7, 2, "Arreglos menores", "Canerias rotas", 200.00, JobPackage.RateType.ONE_TIME, true);
     private static final User PROFESSIONAL = new User(
-            8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", false, true);
+            8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", true);
     private static final JobPost JOB_POST = new JobPost(
             JOB_PACKAGE.getPostId(), PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
-            Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO), true);
+            Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO), 0.0,true);
 
     @InjectMocks
     NoLoginJobPackageService noLoginJobPackageService = new NoLoginJobPackageService();
@@ -50,7 +50,7 @@ public class NoLoginJobPackageServiceTest {
                 JOB_PACKAGE.getPrice(), JOB_PACKAGE.getRateType())).thenReturn(JOB_PACKAGE);
 
         JobPackage maybePackage = noLoginJobPackageService.create(JOB_PACKAGE.getPostId(), JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
-                JOB_PACKAGE.getPrice(), JOB_PACKAGE.getRateType());
+                JOB_PACKAGE.getPrice().toString(), JOB_PACKAGE.getRateType().getValue());
 
         Assert.assertNotNull(maybePackage);
         Assert.assertEquals(JOB_PACKAGE, maybePackage);
@@ -60,8 +60,10 @@ public class NoLoginJobPackageServiceTest {
     public void createNoExistingPostId() {
         exceptionRule.expect(RuntimeException.class);
 
+        Mockito.when(noLoginJobPostService.findById(Mockito.eq(JOB_PACKAGE.getId()+1))).thenThrow(RuntimeException.class);
+
         noLoginJobPackageService.create(JOB_PACKAGE.getId() + 1, JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
-                JOB_PACKAGE.getPrice(), JOB_PACKAGE.getRateType());
+                JOB_PACKAGE.getPrice().toString(), JOB_PACKAGE.getRateType().getValue());
     }
 
 }

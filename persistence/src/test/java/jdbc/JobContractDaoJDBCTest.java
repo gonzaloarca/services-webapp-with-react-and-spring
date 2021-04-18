@@ -1,5 +1,4 @@
 package jdbc;
-
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jdbc.JobContractDaoJDBC;
 import ar.edu.itba.paw.persistence.jdbc.JobPackageDaoJDBC;
@@ -31,7 +30,7 @@ import java.util.*;
 @Sql("classpath:job-contract-test.sql")
 public class JobContractDaoJDBCTest {
 
-    private static final User PROFESSIONAL = new User(
+    private static final User USER1 = new User(
             1,
             "franquesada@gmail.com",
             "Francisco Quesada",
@@ -40,15 +39,18 @@ public class JobContractDaoJDBCTest {
             true,
             true
     );
-    private static final User CLIENT = new User(
+    private static final List<UserAuth.Role> USER1_ROLES = Arrays.asList(UserAuth.Role.CLIENT, UserAuth.Role.PROFESSIONAL);
+    private static final User USER2 = new User(
             2,
             "manurodriguez@gmail.com",
             "Manuel Rodriguez",
             "",
             "1109675432",
-            false,
+            true,
             true
     );
+    private static final List<UserAuth.Role> USER2_ROLES = Arrays.asList(UserAuth.Role.CLIENT);
+
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(
             Arrays.asList(
                     JobPost.Zone.values()[1],
@@ -57,11 +59,12 @@ public class JobContractDaoJDBCTest {
     );
     private static final JobPost JOB_POST = new JobPost(
             1,
-            PROFESSIONAL,
+            USER1,
             "Electricista Matriculado",
             "Lun a Viernes 10hs - 14hs",
             JobPost.JobType.values()[1],
             ZONES,
+            0.0,
             true
     );
     private static final JobPackage JOB_PACKAGE = new JobPackage(
@@ -73,9 +76,9 @@ public class JobContractDaoJDBCTest {
             true
     );
     private static final JobContract JOB_CONTRACT = new JobContract(
-            1, CLIENT,
+            1, USER2,
             JOB_PACKAGE,
-            PROFESSIONAL,
+            USER1,
             new Date(),
             "Se me rompio una zapatilla"
     );
@@ -121,29 +124,29 @@ public class JobContractDaoJDBCTest {
 
         Mockito.when(mockPostDao.findById(Mockito.eq(JOB_POST.getId())))
                 .thenReturn(Optional.of(JOB_POST));
-        Mockito.when(mockUserDao.findById(Mockito.eq(CLIENT.getId())))
-                .thenReturn(Optional.of(CLIENT));
-        Mockito.when(mockUserDao.findById(Mockito.eq(PROFESSIONAL.getId())))
-                .thenReturn(Optional.of(PROFESSIONAL));
+        Mockito.when(mockUserDao.findById(Mockito.eq(USER2.getId())))
+                .thenReturn(Optional.of(USER2));
+        Mockito.when(mockUserDao.findById(Mockito.eq(USER1.getId())))
+                .thenReturn(Optional.of(USER1));
         Mockito.when(mockJobPackageDao.findById(JOB_PACKAGE.getId()))
                 .thenReturn(Optional.of(JOB_PACKAGE));
 
-        JobContract jobContract = jobContractDaoJDBC.create(CLIENT.getId(), JOB_PACKAGE.getId(), DESCRIPTION, IMAGE_DATA);
+        JobContract jobContract = jobContractDaoJDBC.create(USER1.getId(), JOB_PACKAGE.getId(), DESCRIPTION, IMAGE_DATA);
 
         Assert.assertNotNull(jobContract);
 
-        Assert.assertEquals(CLIENT, jobContract.getClient());
-        Assert.assertEquals(CLIENT.getUsername(), jobContract.getClient().getUsername());
-        Assert.assertEquals(CLIENT.getPhone(), jobContract.getClient().getPhone());
-        Assert.assertEquals(CLIENT.getUserImage(), jobContract.getClient().getUserImage());
-        Assert.assertEquals(CLIENT.isActive(), jobContract.getClient().isActive());
+        Assert.assertEquals(USER2, jobContract.getClient());
+        Assert.assertEquals(USER2.getUsername(), jobContract.getClient().getUsername());
+        Assert.assertEquals(USER2.getPhone(), jobContract.getClient().getPhone());
+        Assert.assertEquals(USER2.getUserImage(), jobContract.getClient().getUserImage());
+        Assert.assertEquals(USER2.isActive(), jobContract.getClient().isActive());
 
-        Assert.assertEquals(PROFESSIONAL, jobContract.getProfessional());
-        Assert.assertEquals(PROFESSIONAL.getEmail(), jobContract.getProfessional().getEmail());
-        Assert.assertEquals(PROFESSIONAL.getUsername(), jobContract.getProfessional().getUsername());
-        Assert.assertEquals(PROFESSIONAL.getPhone(), jobContract.getProfessional().getPhone());
-        Assert.assertEquals(PROFESSIONAL.getUserImage(), jobContract.getProfessional().getUserImage());
-        Assert.assertEquals(PROFESSIONAL.isActive(), jobContract.getProfessional().isActive());
+        Assert.assertEquals(USER1, jobContract.getProfessional());
+        Assert.assertEquals(USER1.getEmail(), jobContract.getProfessional().getEmail());
+        Assert.assertEquals(USER1.getUsername(), jobContract.getProfessional().getUsername());
+        Assert.assertEquals(USER1.getPhone(), jobContract.getProfessional().getPhone());
+        Assert.assertEquals(USER1.getUserImage(), jobContract.getProfessional().getUserImage());
+        Assert.assertEquals(USER1.isActive(), jobContract.getProfessional().isActive());
 
         Assert.assertEquals(JOB_PACKAGE, jobContract.getJobPackage());
         Assert.assertEquals(JOB_PACKAGE.getPostId(), jobContract.getJobPackage().getPostId());
@@ -169,67 +172,60 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByClientId() {
-        Optional<List<JobContract>> jobContracts = jobContractDaoJDBC.findByClientId(CLIENT.getId());
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByClientId(USER2.getId());
 
-        Assert.assertTrue(jobContracts.isPresent());
-        Assert.assertFalse(jobContracts.get().isEmpty());
-        System.out.println(jobContracts.get());
-        jobContracts.get().forEach(jobContract -> Assert.assertEquals(CLIENT.getId(), jobContract.getClient().getId()));
+        Assert.assertFalse(jobContracts.isEmpty());
+        System.out.println(jobContracts);
+        jobContracts.forEach(jobContract -> Assert.assertEquals(USER2.getId(), jobContract.getClient().getId()));
     }
 
     @Test
     public void testFindByProId() {
-        Optional<List<JobContract>> jobContracts = jobContractDaoJDBC.findByProId(PROFESSIONAL.getId());
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByProId(USER1.getId());
 
-        Assert.assertTrue(jobContracts.isPresent());
-        Assert.assertFalse(jobContracts.get().isEmpty());
-        jobContracts.get().forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
+        Assert.assertFalse(jobContracts.isEmpty());
+        jobContracts.forEach(jobContract -> Assert.assertEquals(USER1.getId(), jobContract.getProfessional().getId()));
     }
 
     @Test
     public void testFindByPackageId() {
-        Optional<List<JobContract>> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId());
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId());
 
-        Assert.assertTrue(jobContracts.isPresent());
-        Assert.assertFalse(jobContracts.get().isEmpty());
-        Assert.assertEquals(2, jobContracts.get().size());
-        Assert.assertEquals(JOB_PACKAGE.getId(), jobContracts.get().get(0).getJobPackage().getId());
+        Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(2, jobContracts.size());
+        Assert.assertEquals(JOB_PACKAGE.getId(), jobContracts.get(0).getJobPackage().getId());
     }
 
     @Test
     public void testFindByPostId() {
-        Optional<List<JobContract>> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId());
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId());
 
-        Assert.assertTrue(jobContracts.isPresent());
-        Assert.assertFalse(jobContracts.get().isEmpty());
-        Assert.assertEquals(3, jobContracts.get().size());  // dos son del package 1 y otro es del package 2
-        jobContracts.get().forEach(jobContract ->
+        Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(3, jobContracts.size());  // dos son del package 1 y otro es del package 2
+        jobContracts.forEach(jobContract ->
                 Assert.assertEquals(JOB_POST.getId(), jobContract.getJobPackage().getPostId()));
     }
 
     @Test
     public void testFindContractsQuantityByProId() {
-        int ans = jobContractDaoJDBC.findContractsQuantityByProId(PROFESSIONAL.getId());
+        int ans = jobContractDaoJDBC.findContractsQuantityByProId(USER1.getId());
 
         Assert.assertEquals(JOB_CONTRACTS_PRO_QUANTITY, ans);
     }
 
     @Test
     public void testFindContractsQuantityByNotExistingProId() {
-        int ans = jobContractDaoJDBC.findContractsQuantityByProId(PROFESSIONAL.getId() + 100);
+        int ans = jobContractDaoJDBC.findContractsQuantityByProId(USER1.getId() + 100);
 
         Assert.assertEquals(0, ans);
     }
 
     @Test
     public void testFindReview() {
-        Optional<List<Review>> maybeReview = jobContractDaoJDBC.findReview(JOB_CONTRACT.getId());
-
+        Optional<Review> maybeReview = jobContractDaoJDBC.findReview(JOB_CONTRACT.getId());
         Assert.assertTrue(maybeReview.isPresent());
-        Assert.assertFalse(maybeReview.get().isEmpty());
-        Assert.assertEquals(1, maybeReview.get().size());
-        Assert.assertEquals(REVIEW.getRate(), maybeReview.get().get(0).getRate());
-        Assert.assertEquals(REVIEW.getTitle(), maybeReview.get().get(0).getTitle());
-        Assert.assertEquals(REVIEW.getDescription(), maybeReview.get().get(0).getDescription());
+        Assert.assertEquals(REVIEW.getRate(), maybeReview.get().getRate());
+        Assert.assertEquals(REVIEW.getTitle(), maybeReview.get().getTitle());
+        Assert.assertEquals(REVIEW.getDescription(), maybeReview.get().getDescription());
     }
 }

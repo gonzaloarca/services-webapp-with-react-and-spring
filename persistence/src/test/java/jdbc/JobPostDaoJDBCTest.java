@@ -34,7 +34,7 @@ import java.util.Optional;
 public class JobPostDaoJDBCTest {
     private static final User USER = new User(1, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "1109675432", false, true);
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
-    private static final JobPost JOB_POST = new JobPost(1, USER, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, true);
+    private static final JobPost JOB_POST = new JobPost(1, USER, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0,true);
     private static final int JOB_POSTS_QUANTITY = 3;
     private static final Review REVIEW_1 = new Review(
             4,
@@ -98,51 +98,45 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindByUserId() {
-        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId());
+        List<JobPost> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId());
 
-        Assert.assertTrue(jobPosts.isPresent());
-        Assert.assertEquals(jobPosts.get().size(), 2);
-        jobPosts.get().forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
+        Assert.assertEquals(jobPosts.size(), 2);
+        jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
     }
 
     @Test
     public void testFindByJobType() {
-        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType());
+        List<JobPost> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType());
 
-        Assert.assertTrue(jobPosts.isPresent());
-        Assert.assertEquals(2, jobPosts.get().size());
-        jobPosts.get().forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
+        Assert.assertEquals(2, jobPosts.size());
+        jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
     }
 
     @Test
     public void testFindByZone() {
         JOB_POST.getZones().forEach((zone -> {
-            Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findByZone(zone);
+            List<JobPost> jobPosts = jobPostDaoJDBC.findByZone(zone);
 
-            Assert.assertTrue(jobPosts.isPresent());
-            jobPosts.get().forEach((jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone))));
+            jobPosts.forEach((jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone))));
         }));
     }
 
     @Test
     public void testFindAll() {
-        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.findAll();
+        List<JobPost> jobPosts = jobPostDaoJDBC.findAll();
 
-        Assert.assertTrue(jobPosts.isPresent());
         Assert.assertEquals(JOB_POSTS_QUANTITY,
-                jobPosts.get().size());
+                jobPosts.size());
     }
 
     @Test
     public void testSearch() {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.PALERMO;
-        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.search(title, zone);
+        List<JobPost> jobPosts = jobPostDaoJDBC.search(title, zone);
 
-        Assert.assertTrue(jobPosts.isPresent());
-        Assert.assertFalse(jobPosts.get().isEmpty());
-        Assert.assertEquals(2, jobPosts.get().size());
-        System.out.println(jobPosts.get());
+        Assert.assertFalse(jobPosts.isEmpty());
+        Assert.assertEquals(2, jobPosts.size());
     }
 
     @Test
@@ -150,21 +144,19 @@ public class JobPostDaoJDBCTest {
         String title = "";
         JobPost.Zone zone = JobPost.Zone.PALERMO;
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-        Optional<List<JobPost>> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType);
+        List<JobPost> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType);
 
-        Assert.assertTrue(jobPosts.isPresent());
-        Assert.assertFalse(jobPosts.get().isEmpty());
-        Assert.assertEquals(2, jobPosts.get().size());
-        System.out.println(jobPosts.get());
+        Assert.assertFalse(jobPosts.isEmpty());
+        Assert.assertEquals(2, jobPosts.size());
+        System.out.println(jobPosts);
     }
 
     @Test
     public void testFindAllReviews() {
-        Optional<List<Review>> maybeUserReviews = jobPostDaoJDBC.findAllReviews(JOB_POST.getId());
+        List<Review> maybeUserReviews = jobPostDaoJDBC.findAllReviews(JOB_POST.getId());
 
-        Assert.assertTrue(maybeUserReviews.isPresent());
-        Assert.assertEquals(maybeUserReviews.get().size(), 2);
-        Assert.assertEquals(maybeUserReviews.get().get(0), REVIEW_1);
-        Assert.assertEquals(maybeUserReviews.get().get(1), REVIEW_2);
+        Assert.assertEquals(maybeUserReviews.size(), 2);
+        Assert.assertEquals(maybeUserReviews.get(0), REVIEW_1);
+        Assert.assertEquals(maybeUserReviews.get(1), REVIEW_2);
     }
 }

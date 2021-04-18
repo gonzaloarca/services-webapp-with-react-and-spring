@@ -34,7 +34,6 @@ public class JobContractDaoJDBC implements JobContractDao {
                     resultSet.getString("client_name"),
                     "",
                     resultSet.getString("client_phone"),
-                    resultSet.getBoolean("client_is_professional"),
                     resultSet.getBoolean("client_is_active")
             ),
             new JobPackage(
@@ -51,13 +50,16 @@ public class JobContractDaoJDBC implements JobContractDao {
             resultSet.getString("professional_username"),
             "",
             resultSet.getString("professional_phone"),
-            resultSet.getBoolean("professional_is_professional"),
             resultSet.getBoolean("professional_is_active")
     ),
             resultSet.getDate("creation_date"),
             resultSet.getString("contract_description"),
             resultSet.getBytes("image_data")
     );
+
+    private final RowMapper<Review> REVIEW_ROW_MAPPER = (resultSet, i) ->
+            new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
+                    resultSet.getString("review_description"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -101,135 +103,45 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Override
     public Optional<JobContract> findById(long id) {
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE contract_id = ?"
+                "SELECT * FROM full_contracts WHERE contract_id = ?"
                 , new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
 
 
     }
 
     @Override
-    public Optional<List<JobContract>> findByClientId(long id) {
-        return Optional.of(
+    public List<JobContract> findByClientId(long id) {
+        return
                 jdbcTemplate.query(
-                        "SELECT * " +
-                                "FROM contract " +
-                                "NATURAL JOIN job_package " +
-                                "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                                "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                                "user_name            AS client_name, " +
-                                "user_email           AS client_email, " +
-                                "user_phone           AS client_phone, " +
-                                "user_is_professional AS client_is_professional, " +
-                                "user_is_active       AS client_is_active " +
-                                "FROM users) AS clients " +
-                                "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                                "user_name            AS professional_username, " +
-                                "user_email           AS professional_email, " +
-                                "user_phone           AS professional_phone, " +
-                                "user_is_professional AS professional_is_professional, " +
-                                "user_is_active       AS professional_is_active " +
-                                "FROM users) AS professionals " +
-                                "WHERE client_id = ?"
+                        "SELECT * FROM full_contracts WHERE client_id = ?"
                         , new Object[]{id},
-                        JOB_CONTRACT_ROW_MAPPER));
+                        JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByProId(long id) {
+    public List<JobContract> findByProId(long id) {
         //TODO
-        return Optional.of(jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE professional_id = ?",
-                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER));
+        return jdbcTemplate.query(
+                "SELECT * FROM full_contracts WHERE professional_id = ?",
+                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPostId(long id) {
+    public List<JobContract> findByPostId(long id) {
 
-        return Optional.of(jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE post_id = ?"
+        return jdbcTemplate.query(
+                "SELECT * FROM full_contracts WHERE post_id = ?"
                 , new Object[]{id},
-                JOB_CONTRACT_ROW_MAPPER));
+                JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPackageId(long id) {
+    public List<JobContract> findByPackageId(long id) {
 
-        return Optional.of(jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE package_id = ?"
+        return jdbcTemplate.query(
+                "SELECT * FROM full_contracts WHERE package_id = ?"
                 , new Object[]{id},
-                JOB_CONTRACT_ROW_MAPPER));
+                JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
@@ -243,12 +155,9 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
     @Override
-    public Optional<List<Review>> findReview(long id) {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT * FROM review WHERE contract_id = ?", new Object[]{id},
-                (resultSet, i) ->
-                        new Review(resultSet.getInt("rate"), resultSet.getString("review_title"),
-                                resultSet.getString("review_description"))
-        ));
+    public Optional<Review> findReview(long id) {
+        return jdbcTemplate.query(
+                "SELECT * FROM review WHERE contract_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER).stream().findFirst();
     }
+
 }

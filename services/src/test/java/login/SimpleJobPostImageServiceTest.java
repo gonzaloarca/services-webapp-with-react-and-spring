@@ -29,7 +29,7 @@ public class SimpleJobPostImageServiceTest {
 			8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", false, true);
 	private static final JobPost JOB_POST = new JobPost(
 			POST_ID, PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
-			Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO), true);
+			Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO),0 ,true);
 	private static final byte[] imageData1 = {1,2,3,4,5,6};
 	private static final byte[] imageData2 = {7,4,1,2,5,8};
 	private static final JobPostImage image1 = new JobPostImage(1, POST_ID, "123456", "image/jpg");

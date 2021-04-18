@@ -10,24 +10,20 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 public class JobPostForm {
 
     @NotNull
-    @Pattern(regexp = "^\\d+$")
-    private String jobType;
+    private Integer jobType;
 
     @NotBlank
     @Size(max = 100)
     private String title;
 
-    @NotEmpty
     @Valid
-    private List<PackageForm> packages;
+    private PackageForm jobPackage;
 
     //TODO: Proximo sprint
 //    @NotEmpty
@@ -41,17 +37,6 @@ public class JobPostForm {
     @NotEmpty
     private int[] zones;
 
-    @NotBlank
-    @Size(max = 100)
-    private String professionalName;
-
-    @Email
-    @NotBlank
-    @Size(max = 100)
-    private String email;
-
-    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
-    private String phone;
 
     //TODO: Proximo sprint
 //    @NotNull
@@ -59,7 +44,7 @@ public class JobPostForm {
 //    private MultipartFile profilePic;
 
 
-    public String getJobType() {
+    public Integer getJobType() {
         return jobType;
     }
 
@@ -67,8 +52,8 @@ public class JobPostForm {
         return title;
     }
 
-    public List<PackageForm> getPackages() {
-        return packages;
+    public PackageForm getJobPackage() {
+        return jobPackage;
     }
 
 //    public MultipartFile[] getServicePics() {
@@ -79,17 +64,8 @@ public class JobPostForm {
         return availableHours;
     }
 
-    public String getProfessionalName() {
-        return professionalName;
-    }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public String getPhone() {
-        return phone;
-    }
 
 //    public MultipartFile getProfilePic() {
 //        return profilePic;
@@ -99,7 +75,7 @@ public class JobPostForm {
         return zones;
     }
 
-    public void setJobType(String jobType) {
+    public void setJobType(Integer jobType) {
         this.jobType = jobType;
     }
 
@@ -107,8 +83,8 @@ public class JobPostForm {
         this.title = title;
     }
 
-    public void setPackages(List<PackageForm> packages) {
-        this.packages = packages;
+    public void setJobPackage(PackageForm jobPackage) {
+        this.jobPackage = jobPackage;
     }
 
 //    public void setServicePics(MultipartFile[] servicePics) {
@@ -117,18 +93,6 @@ public class JobPostForm {
 
     public void setAvailableHours(String availableHours) {
         this.availableHours = availableHours;
-    }
-
-    public void setProfessionalName(String professionalName) {
-        this.professionalName = professionalName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
 //    public void setProfilePic(MultipartFile profilePic) {

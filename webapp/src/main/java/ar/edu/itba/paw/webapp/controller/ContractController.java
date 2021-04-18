@@ -5,8 +5,6 @@ import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
-import ar.edu.itba.paw.webapp.exceptions.JobPackageNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.webapp.form.ContractForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.security.Principal;
 
 @RequestMapping("/contract")
 @Controller
@@ -54,20 +53,20 @@ public class ContractController {
     public ModelAndView submitContract(@PathVariable("packId") final long packId,
                                        @ModelAttribute("jobPack") final JobPackage jobPack,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
-                                       @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors) {
+                                       @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors,
+                                       Principal principal) {
         if (errors.hasErrors()) {
             return createContract(packId, jobPost, form);
         }
 
+        String email = principal.getName();
         JobContract jobContract;
 
         if(form.getImage().getSize() == 0)
-            jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(),
-                    form.getPhone());
+            jobContract = jobContractService.create(email,packId, form.getDescription());
         else {
             try {
-                jobContract = jobContractService.create(packId, form.getDescription(), form.getEmail(), form.getName(),
-                        form.getPhone(), form.getImage().getBytes());
+                jobContract = jobContractService.create(email,packId, form.getDescription(), form.getImage().getBytes());
             } catch (IOException e){
                 //fixme
                 throw new RuntimeException(e.getMessage());
@@ -87,7 +86,7 @@ public class ContractController {
 
     @ModelAttribute("jobPack")
     public JobPackage getJobPackage(@PathVariable("packId") final long packId) {
-        return jobPackageService.findById(packId).orElseThrow(JobPackageNotFoundException::new);
+        return jobPackageService.findById(packId);
     }
 
     @ModelAttribute("jobPost")

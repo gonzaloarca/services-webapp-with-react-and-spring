@@ -44,7 +44,6 @@ public class UserDaoJDBCTest {
             2, "Medio pelo", "Resolvio todo de forma ideal"
     );
 
-    @InjectMocks
     @Autowired
     UserDaoJDBC userDaoJDBC;
 
@@ -67,17 +66,17 @@ public class UserDaoJDBCTest {
                 "Manuel Rodriguez",
                 "",
                 "11-4536-5656",
-                false,
+                true,
                 true
         );
+        String userTestPassword = "password";
 
-        User user = userDaoJDBC.register(userTest.getEmail(), userTest.getUsername(), userTest.getPhone(), userTest.isProfessional());
+        User user = userDaoJDBC.register(userTest.getEmail(),userTestPassword, userTest.getUsername(), userTest.getPhone());
 
         Assert.assertNotNull(user);
         Assert.assertEquals(userTest, user);
         Assert.assertEquals(userTest.getUsername(), user.getUsername());
         Assert.assertEquals(userTest.getPhone(), user.getPhone());
-        Assert.assertEquals(userTest.isProfessional(), user.isProfessional());
     }
 
     @Test
@@ -95,21 +94,12 @@ public class UserDaoJDBCTest {
         Assert.assertEquals(USER, user.get());
     }
 
-//    @Test
-//    public void testSwitchRole() {
-//        Optional<User> user = userDaoJDBC.switchRole(USER.getId());
-//        Assert.assertTrue(user.isPresent());
-//        Assert.assertEquals(USER,user.get());
-//        Assert.assertEquals(!USER.isProfessional(),user.get().isProfessional());
-//    }
-
     @Test
     public void testFindUserReviews() {
-        Optional<List<Review>> maybeUserReviews = userDaoJDBC.findUserReviews(USER.getId());
+        List<Review> maybeUserReviews = userDaoJDBC.findUserReviews(USER.getId());
 
-        Assert.assertTrue(maybeUserReviews.isPresent());
-        Assert.assertEquals(maybeUserReviews.get().size(), 2);
-        Assert.assertEquals(maybeUserReviews.get().get(0), REVIEW_1);
-        Assert.assertEquals(maybeUserReviews.get().get(1), REVIEW_2);
+        Assert.assertEquals(maybeUserReviews.size(), 2);
+        Assert.assertEquals(maybeUserReviews.get(0), REVIEW_1);
+        Assert.assertEquals(maybeUserReviews.get(1), REVIEW_2);
     }
 }

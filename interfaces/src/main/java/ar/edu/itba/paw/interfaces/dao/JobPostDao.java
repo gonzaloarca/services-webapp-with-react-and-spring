@@ -13,17 +13,19 @@ public interface JobPostDao {
 
     Optional<JobPost> findById(long id);
 
-    Optional<List<JobPost>> findByUserId(long id);
+    List<JobPost> findByUserId(long id);
 
-    Optional<List<JobPost>> findByJobType(JobPost.JobType jobType);
+    List<JobPost> findByJobType(JobPost.JobType jobType);
 
-    Optional<List<JobPost>> findByZone(JobPost.Zone zone);
+    List<JobPost> findByZone(JobPost.Zone zone);
 
-    Optional<List<JobPost>> findAll();
+    List<JobPost> findAll();
 
-    Optional<List<JobPost>> search(String title, JobPost.Zone zone);
+    List<JobPost> search(String title, JobPost.Zone zone);
 
-    Optional<List<JobPost>> searchWithCategory(String title, JobPost.Zone zone, JobPost.JobType jobType);
+    List<JobPost> searchWithCategory(String title, JobPost.Zone zone, JobPost.JobType jobType);
 
-    Optional<List<Review>> findAllReviews(long id);
+    List<Review> findAllReviews(long id);
+
+    int findJobPostReviewSize(long id);
 }

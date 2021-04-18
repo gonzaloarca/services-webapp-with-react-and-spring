@@ -28,25 +28,40 @@ public class NoLoginJobCardService implements JobCardService {
 
     @Override
     public List<JobCard> findAll() {
-        return createCards(jobPostService.findAll());
+        //TODO: Mejorar excepcion
+            return createCards(jobPostService.findAll());
+    }
+
+    @Override
+    public List<JobCard> findByUserId(long id) {
+        //TODO: Mejorar excepcion
+        return createCards(jobPostService.findByUserId(id));
     }
 
     @Override
     public List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
+        //TODO: Mejorar excepcion
         return createCards(jobPostService.search(title, zone, jobType));
+    }
+
+    @Override
+    public List<JobCard> findByUserIdWithReview(long id) {
+        return createCards(jobPostService.findByUserId(id));
     }
 
     private List<JobCard> createCards(List<JobPost> jobPosts) {
         List<JobCard> jobCards = new ArrayList<>();
         jobPosts.forEach(jobPost -> {
-            JobPackage min = jobPackageService.findByPostId(jobPost.getId()).orElseThrow(RuntimeException::new)
+            JobPackage min = jobPackageService.findByPostId(jobPost.getId())
                     .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(RuntimeException::new);
             //TODO: Mejorar excepciones
             jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
+                    jobPostImageService.findByPostId(jobPost.getId()),
                     jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()),
-                    jobPostImageService.findByPostId(jobPost.getId())));
+                    jobPostService.getJobPostReviewsSize(jobPost.getId())));
         });
         return jobCards;
     }
+
 
 }

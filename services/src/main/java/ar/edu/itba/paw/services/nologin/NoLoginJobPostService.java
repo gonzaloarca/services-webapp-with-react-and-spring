@@ -5,10 +5,13 @@ import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserAuth;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.SecurityContextProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class NoLoginJobPostService implements JobPostService {
@@ -20,69 +23,50 @@ public class NoLoginJobPostService implements JobPostService {
     private UserService userService;
 
     @Override
-    public JobPost create(String email, String username, String phone, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
+    public JobPost create(String email,String title, String availableHours, int jobType, int[] zones) {
 
-        //Chequeamos si el user esta registrado
-        Optional<User> maybeUser = userService.findByEmail(email);
-        User user = null;
-        //Si existe vemos si es profesional, si no lo es lo hacemos
-        if (maybeUser.isPresent()) {
-            if (!maybeUser.get().isProfessional()) {
-                //TODO: Es necesario un optional?
-//                Optional<User> newRole = userService.switchRole(maybeUser.get().getId());
-//                user = newRole.orElse(maybeUser.get());
-            } else {
-                maybeUser = userService.updateUserByEmail(email, phone, username);
-                if (maybeUser.isPresent())
-                    user = maybeUser.get();
-            }
-        } else {
-            user = userService.register(email, username, phone, true);
-        }
-        if (user == null)
-            //TODO: LANZAR EXCEPCION APROPIADA
-            throw new RuntimeException();
-
-        return jobPostDao.create(user.getId(), title, availableHours, jobType, zones);
+        User user = userService.findByEmail(email).orElseThrow(RuntimeException::new);
+        userService.assignRole(user.getId(),UserAuth.Role.PROFESSIONAL.ordinal());
+        List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
+        JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
+        return jobPostDao.create(user.getId(), title, availableHours, parsedJobType, parsedZones);
     }
 
     @Override
     public JobPost findById(long id) {
-        //TODO excepcion propia
-        return jobPostDao.findById(id).orElseThrow(RuntimeException::new);
+        return jobPostDao.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
     public List<JobPost> findByUserId(long id) {
-        //TODO excepcion propia
-        return jobPostDao.findByUserId(id).orElseThrow(RuntimeException::new);
+        return jobPostDao.findByUserId(id);
     }
 
     @Override
     public List<JobPost> findByJobType(JobPost.JobType jobType) {
-        //TODO excepcion propia
-        return jobPostDao.findByJobType(jobType).orElseThrow(RuntimeException::new);
+        return jobPostDao.findByJobType(jobType);
     }
 
     @Override
     public List<JobPost> findByZone(JobPost.Zone zone) {
-        //TODO excepcion propia
-        return jobPostDao.findByZone(zone).orElseThrow(RuntimeException::new);
+        return jobPostDao.findByZone(zone);
     }
 
     @Override
     public List<JobPost> findAll() {
-        //TODO excepcion propia
-        return jobPostDao.findAll().orElseThrow(RuntimeException::new);
+        return jobPostDao.findAll();
     }
 
     @Override
     public List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
-        //TODO excepcion propia
         if (jobType == null)
-            return jobPostDao.search(title, zone).orElseThrow(RuntimeException::new);
+            return jobPostDao.search(title, zone);
 
-        return jobPostDao.searchWithCategory(title, zone, jobType).orElseThrow(RuntimeException::new);
+        return jobPostDao.searchWithCategory(title, zone, jobType);
     }
 
+    @Override
+    public int getJobPostReviewsSize(long id) {
+        return jobPostDao.findJobPostReviewSize(id);
+    }
 }
