@@ -14,14 +14,14 @@ ALTER TABLE IF EXISTS job_package ALTER COLUMN package_price DROP NOT NULL ;
 
 DROP VIEW IF EXISTS full_posts;
 CREATE OR REPLACE VIEW full_posts AS
-SELECT post_id,post_title,post_available_hours,post_job_type,post_is_active,user_id,user_email,user_name,user_phone,user_is_active,coalesce(avg(rate),0) AS rating,array_agg(DISTINCT zone_id) as zones, count(distinct contract.contract_id) as contracts, count(DISTINCT review.contract_id) as reviews
+SELECT job_post.post_id,post_title,post_available_hours,post_job_type,post_is_active,user_id,user_email,user_name,user_phone,user_is_active,coalesce(avg(rate),0) AS rating,array_agg(DISTINCT zone_id) as zones, count(distinct contract.contract_id) as contracts, count(DISTINCT review.contract_id) as reviews
 FROM job_post
          NATURAL JOIN users
-         NATURAL JOIN job_package
          NATURAL JOIN post_zone
+         LEFT JOIN job_package ON job_post.post_id = job_package.post_id
          LEFT JOIN contract ON contract.package_id=job_package.package_id
          LEFT JOIN review ON review.contract_id = contract.contract_id
-GROUP BY post_id, post_title, post_available_hours, post_job_type, post_is_active, user_id, user_email, user_name, user_phone, user_is_active;
+GROUP BY job_post.post_id, post_title, post_available_hours, post_job_type, post_is_active, user_id, user_email, user_name, user_phone, user_is_active;
 
 DROP VIEW IF EXISTS full_contracts;
 CREATE OR REPLACE VIEW full_contracts AS
