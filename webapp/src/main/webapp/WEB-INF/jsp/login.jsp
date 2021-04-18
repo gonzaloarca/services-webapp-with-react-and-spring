@@ -46,20 +46,23 @@
     </jsp:include>
     <div class="login-card">
         <h3 class="login-title">
-            <i class="bi bi-box-arrow-in-right"></i>
+            <%--            TODO: Agregar alt--%>
+            <img class="login-icon" src="${pageContext.request.contextPath}/resources/images/log-in.svg" alt="">
             <spring:message code="login.into.hirenet"/>
         </h3>
         <div class="card p-5">
 
             <form action="${pageContext.request.contextPath}/login" method="post"
-                       enctype="application/x-www-form-urlencoded">
+                  enctype="application/x-www-form-urlencoded">
 
-                <label for="email" class="form-text custom-label">
-                    <spring:message code="login.email"/>
-                </label>
-                <spring:message code="login.email.placeholder" var="emailPlaceholder"/>
-                <input type="email" class="form-control custom-input" id="email" name="email"
-                            placeholder="${emailPlaceholder}" maxlength="100"/>
+                <div class="input-container">
+                    <label for="email" class="form-text custom-label">
+                        <spring:message code="login.email"/>
+                    </label>
+                    <spring:message code="login.email.placeholder" var="emailPlaceholder"/>
+                    <input type="email" class="form-control custom-input" id="email" name="email"
+                           placeholder="${emailPlaceholder}" maxlength="100"/>
+                </div>
 
                 <label for="password" class="form-text custom-label">
                     <spring:message code="login.password"/>
@@ -67,7 +70,7 @@
                 <spring:message code="login.password.placeholder" var="passwordPlaceholder"/>
                 <div class="input-group" id="show_hide_password">
                     <input type="password" class="form-control custom-input custom-password" name="password"
-                                placeholder="${passwordPlaceholder}" maxlength="100" id="password"/>
+                           placeholder="${passwordPlaceholder}" maxlength="100" id="password"/>
                     <div class="input-group-addon password-eye">
                         <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
                     </div>
@@ -78,18 +81,22 @@
                     </c:if>
                 </div>
                 <div class="submit-button-container">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="rememberMeCheck">
+                        <label class="form-check-label" for="rememberMeCheck">
+                            <spring:message code="login.rememberme"/>
+                        </label>
+                    </div>
                     <button class="btn btn-primary hirenet-blue-btn" type="submit">
                         <spring:message code="login.submit"/>
                     </button>
                 </div>
             </form>
-
-            <a href="${pageContext.request.contextPath}/register">
-                <h5 class="bottom-link">
-                    <spring:message code="login.hasaccount.question"/>
-                    <br/>
-                    <spring:message code="login.getaccount"/>
-                </h5>
+            <p class="bottom-link-label">
+                <spring:message code="login.hasaccount.question"/>
+            </p>
+            <a class="bottom-link" href="${pageContext.request.contextPath}/register">
+                <spring:message code="login.getaccount"/>
             </a>
         </div>
     </div>
@@ -104,7 +111,7 @@
                 input.attr('type', 'password');
                 icon.addClass("fa-eye");
                 icon.removeClass("fa-eye-slash");
-            } else if (input.attr("type") ==="password") {
+            } else if (input.attr("type") === "password") {
                 input.attr('type', 'text');
                 icon.removeClass("fa-eye");
                 icon.addClass("fa-eye-slash");

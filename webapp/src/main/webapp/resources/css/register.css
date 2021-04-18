@@ -1,10 +1,48 @@
 .register-card {
-    max-width: 600px;
-    height: 700px;
-    margin: 5vh auto auto;
+    display: flex;
+    margin: 10vh auto;
+    width: 800px;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .register-title {
     color: white;
     font-weight: bold;
+}
+
+.register-button-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.form-error {
+    margin-bottom: 0;
+}
+
+#register-form fieldset:not(:first-of-type) {
+    display: none;
+}
+
+#register-step-1 {
+    width: 100%;
+}
+
+.img-preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#img-preview {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 200px;
+    margin: 20px 0;
+}
+
+.file-input-container {
+    background-color: #e8e8e8;
 }
