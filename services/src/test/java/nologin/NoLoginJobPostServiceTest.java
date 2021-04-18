@@ -103,8 +103,8 @@ public class NoLoginJobPostServiceTest {
     public void testCreatePostExistingUserNoProf(){
         Mockito.when(userService.findByEmail(EXISTING_USER.getEmail()))
                 .thenReturn(Optional.of(EXISTING_USER));
-        Mockito.when(userService.switchRole(EXISTING_USER.getId()))
-                .thenReturn(Optional.of(EXISTING_USER_TO_PROF));
+//        Mockito.when(userService.switchRole(EXISTING_USER.getId()))
+//                .thenReturn(Optional.of(EXISTING_USER_TO_PROF));
         Mockito.when(jobPostDao.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType(),ZONES))
                 .thenReturn(JOB_POST_EXISTING_USER);
 

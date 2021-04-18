@@ -29,8 +29,8 @@ public class NoLoginJobPostService implements JobPostService {
         if (maybeUser.isPresent()) {
             if (!maybeUser.get().isProfessional()) {
                 //TODO: Es necesario un optional?
-                Optional<User> newRole = userService.switchRole(maybeUser.get().getId());
-                user = newRole.orElse(maybeUser.get());
+//                Optional<User> newRole = userService.switchRole(maybeUser.get().getId());
+//                user = newRole.orElse(maybeUser.get());
             } else {
                 maybeUser = userService.updateUserByEmail(email, phone, username);
                 if (maybeUser.isPresent())

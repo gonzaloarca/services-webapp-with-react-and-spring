@@ -12,7 +12,7 @@ public interface UserService {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> switchRole(long id);
+//    Optional<User> switchRole(long id);
 
     Optional<User> updateUserByEmail(String email,String phone, String name);
 

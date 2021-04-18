@@ -35,10 +35,13 @@ public class NoLoginUserService implements UserService {
         return userDao.findByEmail(email);
     }
 
+    /*
     @Override
     public Optional<User> switchRole(long id) {
         return userDao.switchRole(id);
     }
+
+     */
 
     @Override
     public Optional<User> updateUserByEmail(String email, String phone, String name) {
