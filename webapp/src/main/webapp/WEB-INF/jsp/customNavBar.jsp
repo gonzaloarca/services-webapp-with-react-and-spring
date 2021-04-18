@@ -8,7 +8,7 @@
 </head>
 <body>
 <!-- Sacado de https://getbootstrap.com/docs/4.6/components/navbar/ -->
-<nav class="navbar navbar-expand-lg navbar-dark ${param.withoutColor? '':'navbar-color'}">
+<nav class="navbar navbar-expand-lg navbar-dark ${param.withoutColor? 'transparent-navbar':'navbar-color'}">
     <a class="navbar-brand" href="${pageContext.request.contextPath}/">
         <img src="${pageContext.request.contextPath}/resources/images/hirenet-logo-v3-invert.png"
              alt="<spring:message code="navigation.logo"/>"/>
@@ -32,7 +32,8 @@
         </ul>
         <%--        TODO: SOLO MOSTRAR EN CASO DE NO ESTAR LOGUEADO--%>
         <sec:authorize access="isAnonymous()">
-            <a type="button" class="btn btn-link navbar-login-button" href="${pageContext.request.contextPath}/login"><spring:message
+            <a type="button" class="btn btn-link navbar-login-button"
+               href="${pageContext.request.contextPath}/login"><spring:message
                     code="navigation.login"/></a>
             <a type="button" class="btn btn-light" href="${pageContext.request.contextPath}/register"><spring:message
                     code="navigation.register"/></a>
