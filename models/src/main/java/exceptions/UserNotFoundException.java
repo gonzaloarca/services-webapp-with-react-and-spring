@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.exceptions;
+package exceptions;
 
 public class UserNotFoundException extends RuntimeException {
 

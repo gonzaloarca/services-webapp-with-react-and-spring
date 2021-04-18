@@ -11,26 +11,29 @@ public class JobPost {
     private final JobType jobType;
     private final boolean isActive;
     private final List<Zone> zones;
+    private final double rating;
 
     //Constructor para crear un post nuevo (esta activo)
-    public JobPost(long id,User user, String title, String availableHours, JobType jobType, List<Zone> zones) {
+    public JobPost(long id,User user, String title, String availableHours, JobType jobType, List<Zone> zones,double rating) {
         this.id=id;
         this.user = user;
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
         this.zones = zones;
+        this.rating = rating;
         this.isActive = true;
     }
 
     //Constructor para crear un post que puede no estar activo
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, boolean isActive) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, boolean isActive) {
         this.id = id;
         this.user = user;
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
         this.zones = zones;
+        this.rating = rating;
         this.isActive = isActive;
     }
 
@@ -60,6 +63,10 @@ public class JobPost {
 
     public List<Zone> getZones() {
         return zones;
+    }
+
+    public double getRating() {
+        return rating;
     }
 
     @Override

@@ -26,4 +26,12 @@ public interface UserDao {
     List<UserAuth.Role> getRoles(long id);
 
     List<Review> findUserReviews(long id);
+
+    Optional<User> getUserByRoleAndId(UserAuth.Role role,long id);
+
+    List<Review> getProfessionalReviews(long id);
+
+    Double getProfessionalAvgRate(long id);
+
+
 }

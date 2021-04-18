@@ -55,6 +55,7 @@ public class JobPackageDaoJDBCTest {
             "Lunes a viernes 10 a 20",
             JobPost.JobType.ELECTRICITY,
             ZONES,
+            0.0,
             true);
 
     private static final JobPackage[] JOB_PACKAGES = {new JobPackage(

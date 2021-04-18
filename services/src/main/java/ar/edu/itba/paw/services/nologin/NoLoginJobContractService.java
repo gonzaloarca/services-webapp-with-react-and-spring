@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobContract;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,5 +71,8 @@ public class NoLoginJobContractService implements JobContractService {
     public int findContractsQuantityByProId(long id) {
         return jobContractDao.findContractsQuantityByProId(id);
     }
+
+
+
 
 }

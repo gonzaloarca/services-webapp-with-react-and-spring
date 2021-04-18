@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 
@@ -18,8 +19,14 @@ public interface UserService {
 
     User updateUserByid(long id,String phone, String name);
 
+    User getUserByRoleAndId(int role, long id);
+
     Optional<UserAuth> getAuthInfo(String email);
 
     void assignRole(long id, int role);
+
+    List<Review> getProfessionalReviews(long id);
+
+    Double getProfessionalAvgRate(long id);
 
 }

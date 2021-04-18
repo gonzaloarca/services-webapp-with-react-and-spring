@@ -2,8 +2,10 @@ package ar.edu.itba.paw.services.nologin;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,11 @@ public class NoLoginUserService implements UserService {
     }
 
     @Override
+    public User getUserByRoleAndId(int role, long id) {
+        return userDao.getUserByRoleAndId(UserAuth.Role.values()[role],id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
     public Optional<UserAuth> getAuthInfo(String email) {
         return userDao.getAuthInfo(email);
     }
@@ -65,5 +72,13 @@ public class NoLoginUserService implements UserService {
             userDao.assignRole(id,role);
     }
 
+    @Override
+    public List<Review> getProfessionalReviews(long id) {
+        return userDao.getProfessionalReviews(id);
+    }
 
+    @Override
+    public Double getProfessionalAvgRate(long id) {
+        return userDao.getProfessionalAvgRate(id);
+    }
 }

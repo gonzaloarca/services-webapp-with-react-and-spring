@@ -4,11 +4,7 @@ import ar.edu.itba.paw.interfaces.services.JobCardService;
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -18,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -40,23 +35,6 @@ public class MainController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @RequestMapping(value = "/profile/{id}/services")
-    public ModelAndView profileWithServices(@PathVariable("id") final long id) {
-        final ModelAndView mav = new ModelAndView("profile");
-        mav.addObject("withServices", true);
-        mav.addObject("user", userService.findById(id));
-        mav.addObject("jobCards", jobCardService.findByUserId(id));
-        mav.addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(id));
-        return mav;
-    }
-
-    @RequestMapping(value = "/profile/{id}/reviews")
-    public ModelAndView profileWithReviews(@PathVariable("id") final long id) {
-        final ModelAndView mav = new ModelAndView("profile");
-        mav.addObject("withServices", false);
-        mav.addObject("user", userService.findById(id));
-        return mav;
-    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {

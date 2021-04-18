@@ -27,7 +27,7 @@ public class NoLoginJobPackageServiceTest {
             8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", true);
     private static final JobPost JOB_POST = new JobPost(
             JOB_PACKAGE.getPostId(), PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
-            Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO), true);
+            Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO), 0.0,true);
 
     @InjectMocks
     NoLoginJobPackageService noLoginJobPackageService = new NoLoginJobPackageService();

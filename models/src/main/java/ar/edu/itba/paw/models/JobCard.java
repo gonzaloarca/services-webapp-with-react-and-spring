@@ -5,12 +5,21 @@ public class JobCard {
     private final JobPackage.RateType rateType;
     private final Double price;
     private final int contractsCompleted;
+    private final int reviewsCount;
 
+    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, int contractsCompleted,int reviewsCount) {
+        this.jobPost = jobPost;
+        this.rateType = rateType;
+        this.price = price;
+        this.contractsCompleted = contractsCompleted;
+        this.reviewsCount = reviewsCount;
+    }
     public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, int contractsCompleted) {
         this.jobPost = jobPost;
         this.rateType = rateType;
         this.price = price;
         this.contractsCompleted = contractsCompleted;
+        this.reviewsCount = 0;
     }
 
     public JobPost getJobPost() {
@@ -27,6 +36,10 @@ public class JobCard {
 
     public int getContractsCompleted() {
         return contractsCompleted;
+    }
+
+    public int getReviewsCount() {
+        return reviewsCount;
     }
 
 }

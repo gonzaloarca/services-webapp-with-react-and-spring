@@ -61,7 +61,7 @@ public class NoLoginJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            true
+            0.0,true
     );
     private static final JobPost JOB_POST_EXISTING_USER = new JobPost(
             1,
@@ -70,7 +70,7 @@ public class NoLoginJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            true
+            0.0,true
     );
 
     @InjectMocks

@@ -44,6 +44,11 @@ public class NoLoginJobCardService implements JobCardService {
         return createCards(jobPostService.search(title, zone, jobType));
     }
 
+    @Override
+    public List<JobCard> findByUserIdWithReview(long id) {
+        return createCards(jobPostService.findByUserId(id));
+    }
+
     private List<JobCard> createCards(List<JobPost> jobPosts) {
         List<JobCard> jobCards = new ArrayList<>();
         jobPosts.forEach(jobPost -> {
@@ -51,9 +56,10 @@ public class NoLoginJobCardService implements JobCardService {
                     .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(RuntimeException::new);
             //TODO: Mejorar excepciones
             jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
-                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())));
+                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()),jobPostService.getJobPostReviewsSize(jobPost.getId())));
         });
         return jobCards;
     }
+
 
 }

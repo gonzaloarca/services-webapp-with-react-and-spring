@@ -63,4 +63,9 @@ public class NoLoginJobPostService implements JobPostService {
             return jobPostDao.search(title, zone);
         else return jobPostDao.searchWithCategory(title, zone, jobType);
     }
+
+    @Override
+    public int getJobPostReviewsSize(long id) {
+        return jobPostDao.findJobPostReviewSize(id);
+    }
 }

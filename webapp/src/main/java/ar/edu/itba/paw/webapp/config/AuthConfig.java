@@ -49,7 +49,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/create-job-post").hasAnyRole("PROFESSIONAL")
                 .antMatchers("/contract/**").hasRole("CLIENT")
                 .antMatchers("/login","/register").anonymous()
-                .antMatchers("/**", "/profile/**").permitAll()
+                .antMatchers("/**").permitAll()
             .and().formLogin()
                 .usernameParameter("email")
                 .passwordParameter("password")

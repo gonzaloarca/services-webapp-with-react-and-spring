@@ -6,7 +6,7 @@
 <head>
     <link href="${pageContext.request.contextPath}/resources/css/customnavbar.css" rel="stylesheet"/>
 </head>
-<body>  
+<body>
 <!-- Sacado de https://getbootstrap.com/docs/4.6/components/navbar/ -->
 <nav class="navbar navbar-expand-lg navbar-dark ${param.withoutColor? '':'navbar-color'}">
     <a class="navbar-brand" href="${pageContext.request.contextPath}/">
