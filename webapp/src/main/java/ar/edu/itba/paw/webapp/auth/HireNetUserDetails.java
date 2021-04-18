@@ -21,6 +21,7 @@ public class HireNetUserDetails implements UserDetailsService {
     @Autowired
     UserService userService;
 
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //FIXME: Excepcion
