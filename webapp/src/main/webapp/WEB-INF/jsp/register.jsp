@@ -30,6 +30,11 @@
     <%-- FontAwesome Icons--%>
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
 
+    <%-- Animation plugin for jQuery--%>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"
+            integrity="sha512-0QbL0ph8Tc8g5bLhfVzSqxe9GERORsKhIn1IrpxDAgUsbBGz/V7iSav2zzW325XGd1OMLdL4UiqRJj702IeqnQ=="
+            crossorigin="anonymous"></script>
+
     <!--  Bootstrap icons   -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 
@@ -41,127 +46,261 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<div class="background">
-    <jsp:include page="customNavBar.jsp">
-        <jsp:param name="withoutColor" value="true"/>
-    </jsp:include>
-    <div class="register-card">
-        <h3 class="register-title">
-            <i class="bi bi-person-plus"></i>
-            <spring:message code="register.into.hirenet"/>
-        </h3>
+<jsp:include page="customNavBar.jsp">
+    <jsp:param name="withoutColor" value="true"/>
+</jsp:include>
+<div class="register-card">
+    <h3 class="register-title">
+        <%--        TODO: Agregar alt--%>
+        <img class="login-icon mb-2" src="${pageContext.request.contextPath}/resources/images/adduser.svg" alt="">
+        <spring:message code="register.into.hirenet"/>
+    </h3>
+
+
+    <form:form modelAttribute="registerForm"
+               action="${pageContext.request.contextPath}/register" method="post"
+               enctype="multipart/form-data" id="register-form">
         <div class="card p-5">
-
-            <form:form modelAttribute="registerForm"
-                       action="${pageContext.request.contextPath}/register" method="post"
-                       enctype="application/x-www-form-urlencoded">
-
-                <div class="row">
-                    <div class="col-8">
-                        <form:label path="name" class="form-text custom-label">
-                            <spring:message code="register.name"/>
-                        </form:label>
-                        <spring:message code="register.name.placeholder" var="namePlaceholder"/>
-                        <form:input type="text" class="form-control custom-input" name="name"
-                                    placeholder="${namePlaceholder}" maxlength="100" path="name"/>
-                        <form:errors path="name" cssClass="form-error" element="p"/>
-                    </div>
-                    <div class="col-4">
-                        <form:label path="phone" class="form-text custom-label">
-                            <spring:message code="register.phone"/>
-                        </form:label>
-                        <spring:message code="register.phone.placeholder" var="phonePlaceholder"/>
-                        <form:input type="text" class="form-control custom-input" name="phone"
-                                    placeholder="${phonePlaceholder}" maxlength="100" path="phone"/>
-                        <form:errors path="phone" cssClass="form-error" element="p"/>
-                    </div>
-                </div>
-
-                <form:label path="email" class="form-text custom-label">
-                    <spring:message code="register.email"/>
-                </form:label>
-                <spring:message code="register.email.placeholder" var="emailPlaceholder"/>
-                <form:input type="email" class="form-control custom-input" name="email"
-                            placeholder="${emailPlaceholder}" maxlength="100" path="email"/>
-                <form:errors path="email" cssClass="form-error" element="p"/>
-
-                <div class="row">
-                    <div class="col">
-                        <form:label path="password" class="form-text custom-label">
-                            <spring:message code="register.password"/>
-                        </form:label>
-                        <spring:message code="register.password.placeholder" var="passwordPlaceholder"/>
-                        <div class="input-group" id="show_hide_password">
-                            <form:input type="password" class="form-control custom-input custom-password"
-                                        name="password"
-                                        placeholder="${passwordPlaceholder}" maxlength="100" path="password"/>
-                            <div class="input-group-addon password-eye">
-                                <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                            </div>
+            <div style="width: 600px; margin: 0 auto; position: relative">
+                <fieldset id="register-step-1">
+                    <div class="row input-container">
+                        <div class="col-7">
+                            <form:label path="name" class="form-text custom-label">
+                                <spring:message code="register.name"/>
+                            </form:label>
+                            <spring:message code="register.name.placeholder" var="namePlaceholder"/>
+                            <form:input type="text" class="form-control custom-input" name="name"
+                                        placeholder="${namePlaceholder}" maxlength="100" path="name"/>
+                            <form:errors path="name" cssClass="form-error" element="p"/>
                         </div>
-                        <form:errors path="password" cssClass="form-error" element="p"/>
-                    </div>
-                    <div class="col">
-                        <form:label path="password" class="form-text custom-label">
-                            <spring:message code="register.password.repeat"/>
-                        </form:label>
-                        <div class="input-group" id="show_hide_password_repeat">
-                            <form:input type="password" class="form-control custom-input custom-password"
-                                        name="repeatPassword"
-                                        placeholder="${passwordPlaceholder}" maxlength="100" path="repeatPassword"/>
-                            <div class="input-group-addon password-eye">
-                                <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                            </div>
+                        <div class="col-5">
+                            <form:label path="phone" class="form-text custom-label">
+                                <spring:message code="register.phone"/>
+                            </form:label>
+                            <spring:message code="register.phone.placeholder" var="phonePlaceholder"/>
+                            <form:input type="text" class="form-control custom-input" name="phone"
+                                        placeholder="${phonePlaceholder}" maxlength="100" path="phone"/>
+                            <form:errors path="phone" cssClass="form-error" element="p"/>
                         </div>
-                        <form:errors path="repeatPassword" cssClass="form-error" element="p"/>
                     </div>
-                </div>
-                <div class="submit-button-container">
-                    <button class="btn btn-primary hirenet-blue-btn" type="submit">
-                        <spring:message code="register.submit"/>
-                    </button>
-                </div>
-            </form:form>
 
-            <a href="${pageContext.request.contextPath}/login">
-                <h5 class="bottom-link">
-                    <spring:message code="register.alreadyhasaccount"/>
-                    <br/>
-                    <spring:message code="register.login"/>
-                </h5>
-            </a>
+                    <div class="input-container">
+                        <form:label path="email" class="form-text custom-label">
+                            <spring:message code="register.email"/>
+                        </form:label>
+                        <spring:message code="register.email.placeholder" var="emailPlaceholder"/>
+                        <form:input type="email" class="form-control custom-input" name="email"
+                                    placeholder="${emailPlaceholder}" maxlength="100" path="email"/>
+                        <form:errors path="email" cssClass="form-error" element="p"/>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <form:label path="password" class="form-text custom-label">
+                                <spring:message code="register.password"/>
+                            </form:label>
+                            <spring:message code="register.password" var="passwordPlaceholder"/>
+                            <div class="input-group" id="show_hide_password">
+                                <form:input type="password" class="form-control custom-input custom-password"
+                                            name="password"
+                                            placeholder="${passwordPlaceholder}" maxlength="100" path="password"/>
+                                <div class="input-group-addon password-eye">
+                                    <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <form:errors path="password" cssClass="form-error" element="p"/>
+                        </div>
+                        <div class="col">
+                            <form:label path="password" class="form-text custom-label">
+                                <spring:message code="register.password.repeat"/>
+                            </form:label>
+                            <div class="input-group" id="show_hide_password_repeat">
+                                <form:input type="password" class="form-control custom-input custom-password"
+                                            name="repeatPassword"
+                                            placeholder="${passwordPlaceholder}" maxlength="100" path="repeatPassword"/>
+                                <div class="input-group-addon password-eye">
+                                    <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <form:errors path="repeatPassword" cssClass="form-error" element="p"/>
+                        </div>
+                    </div>
+
+                    <div class="register-button-container">
+                        <button class="btn btn-primary hirenet-blue-btn continue-btn" type="button">
+                            <spring:message code="register.continue"/>
+                        </button>
+                    </div>
+
+                    <p class="bottom-link-label">
+                        <spring:message code="register.alreadyhasaccount"/>
+                    </p>
+                    <div style="width: 100%; display: flex; justify-content: center"><a class="bottom-link"
+                                                                                        href="${pageContext.request.contextPath}/login">
+                        <spring:message code="register.login"/>
+                    </a>
+                    </div>
+                </fieldset>
+                <fieldset id="register-step-2">
+                    <h5 class="form-step-title">Seleccione una imagen de perfil (opcional)</h5>
+
+                    <div class="img-preview-container">
+                            <%--                        TODO: Alt correcto--%>
+                        <img id="img-preview"
+                             src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="">
+                        <p class="font-weight-bold">Vista previa</p>
+                    </div>
+                    <div class="file-input-container">
+                        <form:input type="file" path="avatar" onchange="readURL(this);"/>
+                    </div>
+
+                    <p class="img-upload-disclaimer">La imagen debe ser de formato PNG o JPG y puede pesar hasta 5
+                        MB</p>
+
+                    <form:errors path="avatar" cssClass="form-error" element="p"/>
+                    <div class="register-button-container">
+                        <button class="btn btn-outline-secondary back-btn" type="button">
+                            Volver
+                        </button>
+
+                        <button class="btn btn-primary hirenet-blue-btn submit-btn" type="submit">
+                            <spring:message code="register.submit"/>
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+
         </div>
-    </div>
+    </form:form>
+
 </div>
+
 <script>
+    // Script for hiding/showing password on input
     $(document).ready(function () {
         $("#show_hide_password a").on('click', function (event) {
             event.preventDefault();
-            if ($('#show_hide_password input').attr("type") == "text") {
-                $('#show_hide_password input').attr('type', 'password');
-                $('#show_hide_password i').addClass("fa-eye");
-                $('#show_hide_password i').removeClass("fa-eye-slash");
-            } else if ($('#show_hide_password input').attr("type") == "password") {
-                $('#show_hide_password input').attr('type', 'text');
-                $('#show_hide_password i').removeClass("fa-eye");
-                $('#show_hide_password i').addClass("fa-eye-slash");
+            let passwordInput = $('#show_hide_password input');
+            let passwordI = $('#show_hide_password i');
+            if (passwordInput.attr("type") === "text") {
+                passwordInput.attr('type', 'password');
+                passwordI.addClass("fa-eye").removeClass("fa-eye-slash");
+            } else if (passwordInput.attr("type") === "password") {
+                passwordInput.attr('type', 'text');
+                passwordI.removeClass("fa-eye");
+                passwordI.addClass("fa-eye-slash");
             }
         });
     });
     $(document).ready(function () {
         $("#show_hide_password_repeat a").on('click', function (event) {
             event.preventDefault();
-            if ($('#show_hide_password_repeat input').attr("type") == "text") {
-                $('#show_hide_password_repeat input').attr('type', 'password');
-                $('#show_hide_password_repeat i').addClass("fa-eye");
-                $('#show_hide_password_repeat i').removeClass("fa-eye-slash");
-            } else if ($('#show_hide_password_repeat input').attr("type") == "password") {
-                $('#show_hide_password_repeat input').attr('type', 'text');
-                $('#show_hide_password_repeat i').removeClass("fa-eye");
-                $('#show_hide_password_repeat i').addClass("fa-eye-slash");
+            let repeatInput = $('#show_hide_password_repeat input');
+            let repeatI = $('#show_hide_password_repeat i');
+            if (repeatInput.attr("type") === "text") {
+                repeatInput.attr('type', 'password');
+                repeatI.addClass("fa-eye");
+                repeatI.removeClass("fa-eye-slash");
+            } else if (repeatInput.attr("type") === "password") {
+                repeatInput.attr('type', 'text');
+                repeatI.removeClass("fa-eye");
+                repeatI.addClass("fa-eye-slash");
             }
         });
     });
+
+    //Script for form step wizard
+    let registerStep1, registerStep2;
+    let left, opacity, scale; //fieldset properties which we will animate
+    let animating = false; //flag to prevent quick multi-click glitches
+
+    $('.continue-btn').click(function () {
+        if (animating) return false;
+        animating = true;
+
+        registerStep1 = $('#register-step-1');
+        registerStep2 = $('#register-step-2');
+
+        //show the next fieldset
+        registerStep2.show();
+        //hide the current fieldset with style
+        registerStep1.animate({opacity: 0}, {
+            step: function (now, mx) {
+                //as the opacity of current_fs reduces to 0 - stored in "now"
+                //1. scale current_fs down to 80%
+                scale = 1 - (1 - now) * 0.2;
+                //2. bring next_fs from the right(50%)
+                left = (now * 50) + "%";
+                //3. increase opacity of next_fs to 1 as it moves in
+                opacity = 1 - now;
+                registerStep1.css({
+                    'transform': 'scale(' + scale + ')',
+                    'position': 'absolute'
+
+                });
+                registerStep2.css({'left': left, 'opacity': opacity});
+            },
+            duration: 800,
+            complete: function () {
+                registerStep1.hide();
+                animating = false;
+            },
+            //this comes from the custom easing plugin
+            easing: 'easeInOutBack'
+        });
+    });
+
+    $(".back-btn").click(function () {
+        if (animating) return false;
+        animating = true;
+
+        registerStep1 = $('#register-step-1');
+        registerStep2 = $('#register-step-2');
+
+        //show the previous fieldset
+        registerStep1.show();
+        //hide the current fieldset with style
+        registerStep2.animate({opacity: 0}, {
+            step: function (now, mx) {
+                //as the opacity of current_fs reduces to 0 - stored in "now"
+                //1. scale previous_fs from 80% to 100%
+                scale = 0.8 + (1 - now) * 0.2;
+                //2. take current_fs to the right(50%) - from 0%
+                left = ((1 - now) * 50) + "%";
+                //3. increase opacity of previous_fs to 1 as it moves in
+                opacity = 1 - now;
+                registerStep2.css({'left': left});
+                registerStep1.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
+            },
+            duration: 800,
+            complete: function () {
+                registerStep1.css({'position': 'relative'})
+                registerStep2.hide();
+                animating = false;
+            },
+            //this comes from the custom easing plugin
+            easing: 'easeInOutBack'
+        });
+    });
+
+    $(".submit").click(function () {
+        return false;
+    })
+
+    // Script para ver vista previa de imagen subida
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#img-preview')
+                    .attr('src', e.target.result)
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 </body>
 </html>

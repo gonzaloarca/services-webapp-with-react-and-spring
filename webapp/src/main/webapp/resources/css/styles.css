@@ -257,16 +257,25 @@ h3 {
 
 /*Blue button*/
 .hirenet-blue-btn {
-    margin-top: 2vh;
     font-weight: bold;
     background-color: #485696;
     border: transparent;
 }
+
 .hirenet-blue-btn:active, .hirenet-blue-btn:focus {
     background-color: #485696 !important;
     border-color: transparent !important;
     box-shadow: 0 0 0 0.2rem rgba(52, 62, 109, 0.35) !important;
 }
+
 .hirenet-blue-btn:hover {
     background-color: #343e6d;
+}
+
+.form-step-title {
+    font-weight: bold;
+}
+
+.img-upload-disclaimer {
+    color: #7e7e7e;
 }
