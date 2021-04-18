@@ -42,38 +42,47 @@ public class NoLoginJobPostService implements JobPostService {
         if (user == null)
             //TODO: LANZAR EXCEPCION APROPIADA
             throw new RuntimeException();
+
         return jobPostDao.create(user.getId(), title, availableHours, jobType, zones);
     }
 
     @Override
-    public Optional<JobPost> findById(long id) {
-        return jobPostDao.findById(id);
+    public JobPost findById(long id) {
+        //TODO excepcion propia
+        return jobPostDao.findById(id).orElseThrow(RuntimeException::new);
     }
 
     @Override
-    public Optional<List<JobPost>> findByUserId(long id) {
-        return jobPostDao.findByUserId(id);
+    public List<JobPost> findByUserId(long id) {
+        //TODO excepcion propia
+        return jobPostDao.findByUserId(id).orElseThrow(RuntimeException::new);
     }
 
     @Override
-    public Optional<List<JobPost>> findByJobType(JobPost.JobType jobType) {
-        return jobPostDao.findByJobType(jobType);
+    public List<JobPost> findByJobType(JobPost.JobType jobType) {
+        //TODO excepcion propia
+        return jobPostDao.findByJobType(jobType).orElseThrow(RuntimeException::new);
     }
 
     @Override
-    public Optional<List<JobPost>> findByZone(JobPost.Zone zone) {
-        return jobPostDao.findByZone(zone);
+    public List<JobPost> findByZone(JobPost.Zone zone) {
+        //TODO excepcion propia
+        return jobPostDao.findByZone(zone).orElseThrow(RuntimeException::new);
     }
 
     @Override
-    public Optional<List<JobPost>> findAll() {
-        return jobPostDao.findAll();
+    public List<JobPost> findAll() {
+        //TODO excepcion propia
+        return jobPostDao.findAll().orElseThrow(RuntimeException::new);
     }
 
     @Override
-    public Optional<List<JobPost>> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
+    public List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
+        //TODO excepcion propia
         if (jobType == null)
-            return jobPostDao.search(title, zone);
-        else return jobPostDao.searchWithCategory(title, zone, jobType);
+            return jobPostDao.search(title, zone).orElseThrow(RuntimeException::new);
+
+        return jobPostDao.searchWithCategory(title, zone, jobType).orElseThrow(RuntimeException::new);
     }
+
 }

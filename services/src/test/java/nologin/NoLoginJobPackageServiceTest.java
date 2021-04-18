@@ -44,7 +44,7 @@ public class NoLoginJobPackageServiceTest {
     @Test
     public void createSuccess() {
         Mockito.when(noLoginJobPostService.findById(Mockito.eq(JOB_PACKAGE.getPostId())))
-                .thenReturn(Optional.of(JOB_POST));
+                .thenReturn(JOB_POST);
 
         Mockito.when(jobPackageDao.create(JOB_PACKAGE.getPostId(), JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
                 JOB_PACKAGE.getPrice(), JOB_PACKAGE.getRateType())).thenReturn(JOB_PACKAGE);

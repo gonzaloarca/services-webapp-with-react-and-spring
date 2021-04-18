@@ -42,8 +42,9 @@ public class JobPostDaoJDBC implements JobPostDao {
             resultSet.getString("post_title"),
             resultSet.getString("post_available_hours"),
             JobPost.JobType.values()[resultSet.getInt("post_job_type")],
-            JobPostDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
-            resultSet.getBoolean("post_is_active"));
+            auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
+            resultSet.getBoolean("post_is_active")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;

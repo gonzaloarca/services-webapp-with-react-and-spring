@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services.utils;
 
-import ar.edu.itba.paw.interfaces.services.ImageDataService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPackage;
@@ -15,6 +14,12 @@ import org.springframework.stereotype.Service;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.HashMap;
 
 @Service
@@ -30,9 +35,6 @@ public class MailingServiceSpring implements MailingService {
     @Autowired
     @Qualifier("contractEmailWithImage")
     private SimpleMailMessage contractEmailWithImage;
-
-    @Autowired
-    private ImageDataService imageDataService;
 
     private final HashMap<String, String> IMAGE_TYPE_TO_NAME = new HashMap<String, String>() {{
         put("image/png", "image.png");
@@ -70,10 +72,11 @@ public class MailingServiceSpring implements MailingService {
                 text;
         SimpleMailMessage message;
         DataSource attachment = null;
+        byte[] imageData = jobContract.getImageData();
 
-        if(jobContract.getImageData() != null) {
+        if(imageData != null) {
             message = contractEmailWithImage;
-            attachment = imageDataService.getImageDataSource(jobContract.getImageData());
+            attachment = new ByteArrayDataSource(imageData, getImageType(imageData));
         } else {
             message = contractEmail;
         }
@@ -84,6 +87,23 @@ public class MailingServiceSpring implements MailingService {
                 jobContract.getDescription());
 
         sendHtmlMessageWithAttachment(jobPost.getUser().getEmail(), subject, text, attachment);
+    }
+
+    //TODO: decidir si seguir utilizando este metodo o agregar el imageType al Model
+    private String getImageType(byte[] imageData) {
+        if(imageData == null)
+            throw new RuntimeException("Parameter can't be null");
+
+        InputStream is = new BufferedInputStream(new ByteArrayInputStream(imageData));
+        String mimeType;
+        try {
+            mimeType = URLConnection.guessContentTypeFromStream(is);
+        } catch (IOException e) {
+            //TODO: decidir si es mejor otro tipo de excepción
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return mimeType;
     }
 
     /*

@@ -22,6 +22,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Rollback
@@ -86,6 +87,8 @@ public class JobContractDaoJDBCTest {
 
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";
 
+    private static final byte[] IMAGE_DATA = "image_data_for_testing".getBytes(StandardCharsets.UTF_8);
+
     private static final int JOB_CONTRACTS_PRO_QUANTITY = 3;
 
     private static final int JOB_CONTRACTS_TOTAL_QUANTITY = JOB_CONTRACTS_PRO_QUANTITY + 2;
@@ -125,7 +128,7 @@ public class JobContractDaoJDBCTest {
         Mockito.when(mockJobPackageDao.findById(JOB_PACKAGE.getId()))
                 .thenReturn(Optional.of(JOB_PACKAGE));
 
-        JobContract jobContract = jobContractDaoJDBC.create(CLIENT.getId(), JOB_PACKAGE.getId(), DESCRIPTION);
+        JobContract jobContract = jobContractDaoJDBC.create(CLIENT.getId(), JOB_PACKAGE.getId(), DESCRIPTION, IMAGE_DATA);
 
         Assert.assertNotNull(jobContract);
 
@@ -153,6 +156,7 @@ public class JobContractDaoJDBCTest {
         Assert.assertNotNull(jobContract.getCreationDate());
         Assert.assertEquals(JOB_CONTRACT.getId() + JOB_CONTRACTS_TOTAL_QUANTITY, jobContract.getId());
         Assert.assertEquals(DESCRIPTION, jobContract.getDescription());
+        Assert.assertEquals(IMAGE_DATA, jobContract.getImageData());
     }
 
     @Test
@@ -160,6 +164,7 @@ public class JobContractDaoJDBCTest {
         Optional<JobContract> jobContract = jobContractDaoJDBC.findById(JOB_CONTRACT.getId());
         Assert.assertTrue(jobContract.isPresent());
         Assert.assertEquals(JOB_CONTRACT.getId(), jobContract.get().getId());
+        Assert.assertEquals(JOB_CONTRACT.getImageData(), jobContract.get().getImageData());
     }
 
     @Test

@@ -6,8 +6,18 @@
 <div class="card job-card">
     <%-- TODO: Poner alt correcto e imagen de usuario--%>
     <spring:message code="${requestScope.data.jobPost.jobType.stringCode}" var="jobTypeName"/>
-    <img class="card-img-top job-card-img"
-         src='<c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" />'
+
+    <c:choose>
+        <c:when test="${requestScope.data.jobPostImages.isEmpty()}">
+            <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
+        </c:when>
+        <c:otherwise>
+            <c:set value="data:${requestScope.data.jobPostImages[0].imageType};base64,${requestScope.data.jobPostImages[0].encodedData}"
+                   var="imageSrc"/>
+        </c:otherwise>
+    </c:choose>
+
+    <img class="card-img-top job-card-img" src="${imageSrc}"
          alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
     <div class="card-body">
         <h5 class="card-title job-card-title"><c:out value="${requestScope.data.jobPost.title}"/></h5>
