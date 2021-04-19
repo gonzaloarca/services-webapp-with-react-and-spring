@@ -64,7 +64,7 @@
     position: absolute;
     background-color: #ef6a6a;
     color: white;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
     margin-top: 5px;
     padding: 10px;
 }
@@ -121,6 +121,7 @@
     border-radius: 45px;
     padding: 5px;
     margin: 20px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .landing-instruction-inner {
@@ -135,6 +136,7 @@
     height: 150px;
     width: 150px;
     text-align: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .landing-instruction-inner h3 {
