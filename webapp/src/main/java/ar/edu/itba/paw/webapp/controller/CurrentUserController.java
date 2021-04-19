@@ -5,6 +5,7 @@ import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.webapp.utils.JobContractCard;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -53,6 +54,7 @@ public class CurrentUserController {
     @RequestMapping(value = "/qualify-contract/{contractId}")
     public ModelAndView qualifyContract(@PathVariable("contractId") final long id,
                                         @ModelAttribute("reviewForm") ReviewForm reviewForm) {
+        String a =jobContractService.findById(id).getClient().getEmail();
         //TODO: VERIFICAR QUE SEA EL CLIENTE DESDE SPRING SECURITY
         if (!reviewService.findContractReview(id).isPresent()) {
             final ModelAndView mav = new ModelAndView("qualifyContract");

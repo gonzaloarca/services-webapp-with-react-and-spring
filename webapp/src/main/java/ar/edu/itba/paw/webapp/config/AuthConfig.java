@@ -1,12 +1,18 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.HireNetUserDetails;
+import ar.edu.itba.paw.webapp.auth.OwnershipVoter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -15,9 +21,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.util.StreamUtils;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
@@ -31,6 +40,9 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private HireNetUserDetails hireNetUserDetails;
 
+    @Autowired
+    private AccessDecisionVoter ownershipVoter;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(hireNetUserDetails).passwordEncoder(passwordEncoder());
@@ -38,7 +50,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**","/images/**");
+        web.ignoring().antMatchers("/resources/**","/css/**","/images/**");
     }
 
     @Override
@@ -47,6 +59,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
         String keyString = StreamUtils.copyToString( key.getInputStream(), Charset.availableCharsets().get("utf-8") );
 
         http.authorizeRequests()
+                .accessDecisionManager(accessDecisionManager())
                 .antMatchers("/create-job-post").hasAnyRole("PROFESSIONAL")
                 .antMatchers("/contract/**","/my-contracts", "/qualify-contract/**").hasRole("CLIENT")
                 .antMatchers("/login","/register").anonymous()
@@ -78,5 +91,16 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AccessDecisionManager accessDecisionManager(){
+        List<AccessDecisionVoter<?>> decisionVoters = Arrays.asList(
+                new WebExpressionVoter(),
+                new RoleVoter(),
+                new AuthenticatedVoter(),
+                ownershipVoter);
+        return new UnanimousBased(decisionVoters);
+    }
+
 }
 

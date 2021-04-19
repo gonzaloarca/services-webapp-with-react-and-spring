@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class HireNetUserDetails implements UserDetailsService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
 
     @Override

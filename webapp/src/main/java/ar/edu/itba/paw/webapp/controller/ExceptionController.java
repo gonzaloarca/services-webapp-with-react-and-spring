@@ -20,9 +20,9 @@ public class ExceptionController {
         return new ModelAndView("error/404");
     }
 
-//    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
-//    public ModelAndView defaultErrorHandler() {
-//        return new ModelAndView("error/default");
-//    }
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
+    public ModelAndView defaultErrorHandler() {
+        return new ModelAndView("error/default");
+    }
 
 }

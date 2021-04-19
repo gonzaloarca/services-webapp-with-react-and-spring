@@ -91,10 +91,6 @@
         </div>
     </div>
         <div class="card-body custom-row mt-2">
-
-            <div class="side">
-            </div>
-
             <div class="center">
 
                 <div class="card custom-card mb-4 bg-white rounded">
@@ -241,8 +237,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="side"></div>
         </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
