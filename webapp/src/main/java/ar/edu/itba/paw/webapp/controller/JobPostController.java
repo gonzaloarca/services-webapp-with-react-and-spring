@@ -53,6 +53,7 @@ public class JobPostController {
         mav.addObject("avgRate", reviewService.getProfessionalAvgRate(jobPost.getUser().getId()));
         mav.addObject("reviewsSize", reviewService.findProfessionalReviews(jobPost.getUser().getId()).size());
         mav.addObject("imageList", imageList);
+        mav.addObject("totalContractsCompleted",jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
         return mav;
     }
 

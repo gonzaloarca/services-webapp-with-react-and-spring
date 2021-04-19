@@ -139,45 +139,46 @@
                                 </p>
                             </div>
                             <div class="summary-item contracts-item">
-                                <i class="fas fa-check"></i>
-                                <p>
-                                    <spring:message code="jobPost.jobs.completed" arguments="${contractsCompleted}"/>
-                                </p>
+                                <p class="mb-0 ml-3"><spring:message code="profile.completed.works"/></p>
+                                <div class="profile-completed-works-outline">
+                                    <div class="profile-completed-works">${totalContractsCompleted}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="card custom-card mb-4 bg-white rounded">
-                    <div class="card-body">
-                        <span class="card-title custom-row">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <p>
-                                <spring:message code="jobPost.jobs.zones"/>
-                            </p>
-                        </span>
-                        <div class="custom-row zones">
-                            <c:forEach items="${jobPost.zones}" var="zone">
-                                <p class="capitalize-first-letter" style="margin: 0 5px">
-                                    <spring:message code="${zone.stringCode}"/>
+                <div class="two-column">
+                    <div class="card custom-card mb-4 bg-white rounded two-column-item">
+                        <div class="card-body">
+                            <span class="card-title custom-row">
+                                <i class="far fa-clock"></i>
+                                <p>
+                                    <spring:message code="jobPost.jobs.hours"/>
                                 </p>
-                            </c:forEach>
+                            </span>
+                            <div class="available-hours">
+                                <p>
+                                    <c:out value="${jobPost.availableHours}"/>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="card custom-card mb-4 bg-white rounded">
-                    <div class="card-body">
-                        <span class="card-title custom-row">
-                            <i class="far fa-clock"></i>
-                            <p>
-                                <spring:message code="jobPost.jobs.hours"/>
-                            </p>
-                        </span>
-                        <div class="available-hours">
-                            <p>
-                                <c:out value="${jobPost.availableHours}"/>
-                            </p>
+                    <div class="card custom-card mb-4 bg-white rounded two-column-item">
+                        <div class="card-body">
+                            <span class="card-title custom-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <p>
+                                    <spring:message code="jobPost.jobs.zones"/>
+                                </p>
+                            </span>
+                            <div class="custom-row zones">
+                                <c:forEach items="${jobPost.zones}" var="zone">
+                                    <p class="capitalize-first-letter" style="margin: 0 5px">
+                                        <spring:message code="${zone.stringCode}"/>
+                                    </p>
+                                </c:forEach>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -197,18 +198,18 @@
                                 <div class="card custom-card mb-3">
                                     <div class="card custom-card " id="heading${status.index}">
 
-                                        <button class="btn btn-block collapsed" type="button"
+                                        <button class="btn-block hirenet-blue-btn collapsed" type="button"
                                                 data-toggle="collapse" data-target="#collapse${status.index}"
                                                 aria-expanded="false"
                                                 aria-controls="collapse${status.index}">
                                             <div class="package-info">
-                                                <i class="fas fa-box-open"></i>
+                                                <i class="fa fa-chevron-down text-white"></i>
                                                 <p class="package-title">
                                                     <c:out value="${pack.title}"/>
                                                 </p>
-                                                <div class="ml-auto custom-row">
-                                                    <div class="package-price">
-                                                        <p class="text-center">
+                                                <div class="ml-auto custom-row end-items">
+                                                    <div class="package-price end-items-item">
+                                                        <p class="text-center mt-2">
                                                             <spring:message code="jobPost.jobs.price"/>
                                                         </p>
                                                         <div class="chip">
@@ -216,8 +217,8 @@
                                                                             arguments="${pack.price}"/>
                                                         </div>
                                                     </div>
-                                                    <div class="align-self-center ml-4 mr-4 requestServiceBtn">
-                                                        <a class="btn btn-primary"
+                                                    <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
+                                                        <a class="btn"
                                                            href="${pageContext.request.contextPath}/contract/package/${pack.id}"
                                                            role="button" type="submit">
                                                             <spring:message code="jobPost.jobs.submit"/>

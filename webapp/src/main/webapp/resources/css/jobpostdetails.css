@@ -21,6 +21,16 @@
     width: 90%;
 }
 
+.chip {
+    background-color: white;
+    border-radius: 12px;
+    color: #485696;
+    padding: 6px;
+    margin: 0 10px 20px;
+    text-align: center;
+    line-height: 1;
+}
+
 .card-title p {
     margin-left: 20px;
     font-size: 24px;
@@ -137,9 +147,46 @@
 
 .contracts-item{
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal!important;
 }
 .contracts-item p{
     font-size: 21px;
+}
+
+.contracts-item .profile-completed-works {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    background: #485696;
+}
+
+.contracts-item .profile-completed-works-outline {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fcb839;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.two-column{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.two-column-item{
+    width: 49%;
 }
 
 .available-hours {
@@ -172,6 +219,9 @@
     display: flex;
     align-items: center;
 }
+.package-info p{
+    color: white;
+}
 
 .accordion i {
     font-size: 28px;
@@ -179,7 +229,7 @@
 }
 
 .package-title {
-    font-size: 20px;
+    font-size: 28px;
     font-weight: bold;
     width: 50%;
     margin-left: 20px;
@@ -198,5 +248,37 @@
 
 .package-price p {
     font-size: 14px;
+    font-weight: normal;
     margin: 0;
+}
+
+.end-items{
+    flex-direction: row;
+    justify-content: flex-end;
+
+}
+.end-items-item{
+    display: flex;
+    flex-direction: column;
+}
+
+/*Alternative button*/
+
+.requestServiceBtn a{
+    font-weight: bold;
+    background-color: #8690FA;
+    border: transparent;
+    color: white;
+}
+
+.requestServiceBtn a:active, .requestServiceBtn a:focus {
+    background-color: #8690FA !important;
+    border-color: transparent !important;
+    box-shadow: 0 0 0 0.2rem rgba(52, 62, 109, 0.35) !important;
+    color: white;
+}
+
+.requestServiceBtn a:hover {
+    background-color: #6877e0;
+    color: white;
 }
