@@ -52,7 +52,7 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 	@Override
 	public List<JobPostImage> findByPostId(long postId) {
 		return jdbcTemplate.query(
-			"SELECT image_id, post_id, image_data " +
+			"SELECT image_id, post_id, image_data, image_type " +
 					"FROM post_image " +
 					"WHERE post_id = ?;",
 				new Object[]{postId},

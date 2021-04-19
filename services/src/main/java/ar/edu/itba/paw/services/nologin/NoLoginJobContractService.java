@@ -27,7 +27,7 @@ public class NoLoginJobContractService implements JobContractService {
 
     @Override
     public JobContract create(String clientEmail, long packageId, String description) {
-        return create(clientEmail, packageId, description, new ByteImage(null, null));
+        return create(clientEmail, packageId, description, null);
     }
 
     @Override
@@ -36,6 +36,9 @@ public class NoLoginJobContractService implements JobContractService {
 
         jobPackageService.findById(packageId);
 //        client = maybeUser.orElseGet(() -> userService.register(client_email,"", client_username, client_phone, 1));
+
+        if(image == null)
+            return jobContractDao.create(user.getId(), packageId, description);
 
         return jobContractDao.create(user.getId(), packageId, description, image);
     }

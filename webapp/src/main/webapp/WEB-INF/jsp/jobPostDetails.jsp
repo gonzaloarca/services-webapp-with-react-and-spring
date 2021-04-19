@@ -69,11 +69,11 @@
                         </c:forEach>
                     </ol>
                     <div class="carousel-inner">
-                        <c:forEach items="${imageList}" varStatus="status" var="image">
+                        <c:forEach items="${imageList}" varStatus="status" var="postImage">
                             <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
                                 <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
                                 <img class="d-block w-100 h-100"
-                                     src='data:${image.imageType};base64,${image.encodedData}'
+                                     src='data:${postImage.image.type};base64,${postImage.image.string}'
                                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                             </div>
                         </c:forEach>

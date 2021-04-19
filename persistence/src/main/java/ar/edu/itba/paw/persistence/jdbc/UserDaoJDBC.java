@@ -53,7 +53,6 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public User register(String email, String password, String username, String phone, ByteImage image) {
-        EncodedImage encodedImage = null;
         Map<String, Object> objectMap = new HashMap<>();
 
         objectMap.put("user_email", email);
@@ -61,17 +60,14 @@ public class UserDaoJDBC implements UserDao {
         objectMap.put("user_name", username);
         objectMap.put("user_phone", phone);
         objectMap.put("user_is_active", true);
-        if (image != null) {
-            objectMap.put("user_image", image.getData());
-            objectMap.put("image_type", image.getType());
-            encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
-        }
+        objectMap.put("user_image", image.getData());
+        objectMap.put("image_type", image.getType());
 
         Number key =  jdbcInsert.executeAndReturnKey(objectMap);
 
         return new User(key.longValue(), email, username,
                 phone, true, true,  //TODO implementar isVerified
-                encodedImage);
+                new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType()));
     }
 
     @Override

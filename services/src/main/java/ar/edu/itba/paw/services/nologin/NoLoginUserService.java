@@ -24,7 +24,13 @@ public class NoLoginUserService implements UserService {
         if (maybeUser.isPresent()) {
             //TODO: arrojar error de el usuario ya existe
         }
-        User registeredUser = userDao.register(email, password, username, phone, image);
+
+        User registeredUser;
+        if(image == null)
+            registeredUser = userDao.register(email, password, username, phone);
+        else
+            registeredUser = userDao.register(email, password, username, phone, image);
+
         if (registeredUser == null) {
             //TODO: LANAZAR EXCEPCION APROPIADA
             throw new NoSuchElementException();

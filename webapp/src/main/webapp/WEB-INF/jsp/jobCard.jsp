@@ -12,7 +12,7 @@
             <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
         </c:when>
         <c:otherwise>
-            <c:set value="data:${requestScope.data.jobPostImages[0].imageType};base64,${requestScope.data.jobPostImages[0].encodedData}"
+            <c:set value="data:${requestScope.data.jobPostImages[0].image.type};base64,${requestScope.data.jobPostImages[0].image.string}"
                    var="imageSrc"/>
         </c:otherwise>
     </c:choose>
