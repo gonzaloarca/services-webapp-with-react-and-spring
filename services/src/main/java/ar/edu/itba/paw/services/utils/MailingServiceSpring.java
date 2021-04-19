@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.activation.DataSource;
@@ -68,6 +69,7 @@ public class MailingServiceSpring implements MailingService {
         emailSender.send(mimeMessage);
     }
 
+    @Async
     @Override
     public void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost) {
         //TODO: i18n del email
