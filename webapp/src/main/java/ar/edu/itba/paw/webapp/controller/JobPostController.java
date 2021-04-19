@@ -59,7 +59,7 @@ public class JobPostController {
     @RequestMapping(path = "/create-job-post", method = RequestMethod.GET)
     public ModelAndView createJobPost(@ModelAttribute("createJobPostForm") final JobPostForm form) {
 
-        return new ModelAndView("createJobPost")
+        return new ModelAndView("createJobPostSteps")
                 .addObject("jobTypes", JobPost.JobType.values())
                 .addObject("zoneValues", JobPost.Zone.values());
 

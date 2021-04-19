@@ -1,0 +1,38 @@
+.step-container-wrapper {
+    position: relative;
+    width: max-content;
+    margin: 80px auto;
+}
+
+.step-container {
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    padding: 20px 50px;
+    width: max-content;
+}
+
+.step-container h4 {
+    font-weight: bold;
+
+}
+
+.step-subtitle {
+    color: #a7a7a7;
+    display: inline-block;
+}
+
+.input-label {
+    font-weight: bold;
+}
+
+.input-container {
+    padding: 20px;
+    width: 500px;
+}
+
+.button-controls {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
