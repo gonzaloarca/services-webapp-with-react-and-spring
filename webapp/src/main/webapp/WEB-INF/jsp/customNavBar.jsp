@@ -4,6 +4,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
+
     <link href="${pageContext.request.contextPath}/resources/css/customnavbar.css" rel="stylesheet"/>
 </head>
 <body>
@@ -22,6 +23,11 @@
             <li class="nav-item ${param.path == "/" ? 'active': ''}">
                 <a class="nav-link" href="${pageContext.request.contextPath}/">
                     <spring:message code="navigation.index"/>
+                </a>
+            </li>
+            <li class="nav-item ${param.path == "/categories" ? 'active': ''}">
+                <a class="nav-link" href="${pageContext.request.contextPath}/categories">
+                    <spring:message code="navigation.categories"/>
                 </a>
             </li>
             <li class="nav-item ${param.path == "/create-job-post" ? 'active': ''}">
