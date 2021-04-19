@@ -2,10 +2,12 @@ package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.models.EncodedImage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPost.Zone;
 import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,9 +36,11 @@ public class JobPostDaoJDBC implements JobPostDao {
                     resultSet.getLong("user_id"),
                     resultSet.getString("user_email"),
                     resultSet.getString("user_name"),
-                    "",
                     resultSet.getString("user_phone"),
-                    resultSet.getBoolean("user_is_active")
+                    resultSet.getBoolean("user_is_active"),
+                    true, //TODO: implementar esto
+                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
+                            resultSet.getString("user_image_type"))
             ),
             resultSet.getString("post_title"),
             resultSet.getString("post_available_hours"),

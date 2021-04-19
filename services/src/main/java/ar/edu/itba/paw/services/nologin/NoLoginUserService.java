@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services.nologin;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Review;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import exceptions.UserNotFoundException;
@@ -18,18 +18,24 @@ public class NoLoginUserService implements UserService {
     private UserDao userDao;
 
     @Override
-    public User register(String email, String password, String username, String phone, List<Integer> roles) {
+    public User register(String email, String password, String username, String phone, List<Integer> roles,
+                         ByteImage image) {
         Optional<User> maybeUser = userDao.findByEmail(email);
         if (maybeUser.isPresent()) {
             //TODO: arrojar error de el usuario ya existe
         }
-        User registeredUser = userDao.register(email, password, username, phone);
+        User registeredUser = userDao.register(email, password, username, phone, image);
         if (registeredUser == null) {
             //TODO: LANAZAR EXCEPCION APROPIADA
             throw new NoSuchElementException();
         }
         roles.forEach(role -> userDao.assignRole(registeredUser.getId(), role));
         return registeredUser;
+    }
+
+    @Override
+    public User register(String email, String password, String username, String phone, List<Integer> role) {
+        return register(email, password, username, phone, role, null);
     }
 
     @Override

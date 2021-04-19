@@ -41,7 +41,6 @@ public class JobPackageDaoJDBCTest {
             1,
             "franquesada@mail.com",
             "Francisco Quesada",
-            "",
             "11-3456-3232",
             true,
             true

@@ -6,29 +6,29 @@ public class User {
     private final long id;
     private final String email;
     private final String username;
-    private final String userImage;
     private final String phone;
     private final boolean isActive;
     private final boolean isVerified;
+    private final EncodedImage image;
 
-    public User(long id,String email, String username, String userImage, String phone,boolean isVerified) {
+    public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified, EncodedImage image) {
         this.id = id;
         this.email = email;
         this.username = username;
-        this.userImage = userImage;
-        this.phone = phone;
-        this.isActive = true;
-        this.isVerified=isVerified;
-    }
-
-    public User(long id, String email, String username, String userImage, String phone,boolean isVerified, boolean isActive) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.userImage = userImage;
         this.phone = phone;
         this.isActive = isActive;
         this.isVerified = isVerified;
+        this.image = image;
+    }
+
+    public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+        this.phone = phone;
+        this.isActive = isActive;
+        this.isVerified = isVerified;
+        this.image = null;
     }
 
     public long getId() {
@@ -43,9 +43,6 @@ public class User {
         return username;
     }
 
-    public String getUserImage() {
-        return userImage;
-    }
 
     public String getPhone() {
         return phone;
@@ -59,13 +56,16 @@ public class User {
         return isVerified;
     }
 
+    public EncodedImage getImage() {
+        return image;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
-                ", userImage='" + userImage + '\'' +
                 ", phone='" + phone + '\'' +
                 ", isActive=" + isActive +
                 '}';

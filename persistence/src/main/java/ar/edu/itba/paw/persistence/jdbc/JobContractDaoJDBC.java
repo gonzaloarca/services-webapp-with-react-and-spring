@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -32,9 +33,11 @@ public class JobContractDaoJDBC implements JobContractDao {
                     resultSet.getLong("client_id"),
                     resultSet.getString("client_email"),
                     resultSet.getString("client_name"),
-                    "",
                     resultSet.getString("client_phone"),
-                    resultSet.getBoolean("client_is_active")
+                    resultSet.getBoolean("client_is_active"),
+                    true,   //TODO implementar
+                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
+                            resultSet.getString("client_image_type"))
             ),
             new JobPackage(
                     resultSet.getLong("package_id"),
@@ -45,16 +48,18 @@ public class JobContractDaoJDBC implements JobContractDao {
                     JobPackage.RateType.values()[resultSet.getInt("package_rate_type")],
                     resultSet.getBoolean("package_is_active")
             ), new User(
-            resultSet.getLong("professional_id"),
-            resultSet.getString("professional_email"),
-            resultSet.getString("professional_username"),
-            "",
-            resultSet.getString("professional_phone"),
-            resultSet.getBoolean("professional_is_active")
-    ),
+                    resultSet.getLong("professional_id"),
+                    resultSet.getString("professional_email"),
+                    resultSet.getString("professional_username"),
+                    resultSet.getString("professional_phone"),
+                    resultSet.getBoolean("professional_is_active"),
+                    true,       //TODO implementar
+                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
+                            resultSet.getString("professional_image_type"))
+            ),
             resultSet.getDate("creation_date"),
             resultSet.getString("contract_description"),
-            resultSet.getBytes("image_data")
+            new ByteImage(resultSet.getBytes("image_data"), resultSet.getString("image_type"))
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -69,19 +74,22 @@ public class JobContractDaoJDBC implements JobContractDao {
 
     @Override
     public JobContract create(long clientId, long packageId, String description) {
-        return create(clientId, packageId, description, null);
+        return create(clientId, packageId, description, new ByteImage(null ,null));
     }
 
     @Override
-    public JobContract create(long clientId, long packageId, String description, byte[] imageData) {
+    public JobContract create(long clientId, long packageId, String description, ByteImage image) {
         Date creationDate = new Date();
-        Number key = jdbcInsert.executeAndReturnKey(new HashMap<String, Object>() {{
-            put("client_id", clientId);
-            put("package_id", packageId);
-            put("contract_description", description);
-            put("creation_date", new java.sql.Date(creationDate.getTime()));
-            put("image_data", imageData);
-        }});
+        Map<String,Object> objectMap = new HashMap<>();
+
+        objectMap.put("client_id", clientId);
+        objectMap.put("package_id", packageId);
+        objectMap.put("contract_description", description);
+        objectMap.put("creation_date", new java.sql.Date(creationDate.getTime()));
+        objectMap.put("image_data", image.getData());
+        objectMap.put("image_type", image.getType());
+
+        Number key = jdbcInsert.executeAndReturnKey(objectMap);
 
         //TODO: Cambiar excepciones por excepciones propias
         User client = userDao.findById(clientId).orElseThrow(NoSuchElementException::new);
@@ -93,7 +101,7 @@ public class JobContractDaoJDBC implements JobContractDao {
         //TODO: Revisar caso de nullPointerException
         User professional = userDao.findById(jobPost.getUser().getId()).orElseThrow(NoSuchElementException::new);
 
-        return new JobContract(key.longValue(), client, jobPackage, professional, creationDate, description, imageData);
+        return new JobContract(key.longValue(), client, jobPackage, professional, creationDate, description, image);
     }
 
     @Override
@@ -101,8 +109,6 @@ public class JobContractDaoJDBC implements JobContractDao {
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract WHERE contract_id = ?"
                 , new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
-
-
     }
 
     @Override

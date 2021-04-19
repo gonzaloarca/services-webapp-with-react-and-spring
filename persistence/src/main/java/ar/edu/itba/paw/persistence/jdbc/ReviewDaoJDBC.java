@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.Review;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,19 +35,23 @@ public class ReviewDaoJDBC implements ReviewDao {
                             resultSet.getLong("client_id"),
                             resultSet.getString("client_email"),
                             resultSet.getString("client_name"),
-                            "",
                             resultSet.getString("client_phone"),
-                            resultSet.getBoolean("client_is_active")
+                            resultSet.getBoolean("client_is_active"),
+                            true,   //TODO implementar
+                            new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
+                                    resultSet.getString("client_image_type"))
                     ),
                     new JobPost(
                             resultSet.getLong("post_id"),
                             new User(
                                     resultSet.getLong("professional_id"),
                                     resultSet.getString("professional_email"),
-                                    resultSet.getString("professional_name"),
-                                    "",
+                                    resultSet.getString("professional_username"),
                                     resultSet.getString("professional_phone"),
-                                    resultSet.getBoolean("professional_is_active")
+                                    resultSet.getBoolean("professional_is_active"),
+                                    true,       //TODO implementar
+                                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
+                                            resultSet.getString("professional_image_type"))
                             ),
                             resultSet.getString("post_title"),
                             resultSet.getString("post_available_hours"),
@@ -85,12 +87,6 @@ public class ReviewDaoJDBC implements ReviewDao {
                 "SELECT * " +
                         "FROM full_contract NATURAL JOIN review " +
                         "WHERE package_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER);
-    }
-
-    @Override
-    public Optional<Review> findReviewByContractId(long id) {
-        return jdbcTemplate.query(
-                "SELECT * FROM review WHERE contract_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER).stream().findFirst();
     }
 
     @Override

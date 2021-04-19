@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
-import ar.edu.itba.paw.models.Review;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,10 +26,12 @@ public class UserDaoJDBC implements UserDao {
             resultSet.getLong("user_id"),
             resultSet.getString("user_email"),
             resultSet.getString("user_name"),
-//            resultSet.getString("user_image"),
-            "",
             resultSet.getString("user_phone"),
-            resultSet.getBoolean("user_is_active"));
+            resultSet.getBoolean("user_is_active"),
+            true, //TODO: implementar esto
+            new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
+                    resultSet.getString("image_type"))
+    );
 
     private final static RowMapper<UserAuth> USER_AUTH_ROW_MAPPER = ((resultSet, i) -> new UserAuth(
             resultSet.getString("user_email"),
@@ -51,17 +52,31 @@ public class UserDaoJDBC implements UserDao {
     }
 
     @Override
-    public User register(String email, String password, String username, String phone) {
-        Number key =  jdbcInsert.executeAndReturnKey(new HashMap<String,Object>(){{
-            put("user_email",email);
-            put("user_password",password);
-            put("user_name",username);
-            put("user_image","");
-            put("user_phone",phone);
-            put("user_is_active",true);
-        }});
+    public User register(String email, String password, String username, String phone, ByteImage image) {
+        EncodedImage encodedImage = null;
+        Map<String, Object> objectMap = new HashMap<>();
 
-        return new User(key.longValue(),email,username,"",phone,true);
+        objectMap.put("user_email", email);
+        objectMap.put("user_password", password);
+        objectMap.put("user_name", username);
+        objectMap.put("user_phone", phone);
+        objectMap.put("user_is_active", true);
+        if (image != null) {
+            objectMap.put("user_image", image.getData());
+            objectMap.put("image_type", image.getType());
+            encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
+        }
+
+        Number key =  jdbcInsert.executeAndReturnKey(objectMap);
+
+        return new User(key.longValue(), email, username,
+                phone, true, true,  //TODO implementar isVerified
+                encodedImage);
+    }
+
+    @Override
+    public User register(String email, String password, String username, String phone) {
+        return register(email, password, username, phone, new ByteImage(null, null));
     }
 
     @Override
@@ -108,7 +123,7 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
-        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone  FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image  FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
                 .stream().findFirst();
     }
 

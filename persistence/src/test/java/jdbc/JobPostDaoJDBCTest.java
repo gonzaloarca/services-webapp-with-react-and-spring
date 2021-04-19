@@ -32,7 +32,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:job-post-test.sql")
 public class JobPostDaoJDBCTest {
-    private static final User USER = new User(1, "manurodriguez@gmail.com", "Manuel Rodriguez", "", "1109675432", false, true);
+    private static final User USER = new User(1, "manurodriguez@gmail.com", "Manuel Rodriguez", "1109675432", false, true);
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
     private static final JobPost JOB_POST = new JobPost(1, USER, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0,true);
     private static final int JOB_POSTS_QUANTITY = 3;

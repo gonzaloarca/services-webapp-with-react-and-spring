@@ -26,7 +26,6 @@ public class ReviewDaoJDBCTest {
             1,
             "franquesada@gmail.com",
             "Francisco Quesada",
-            "",
             "1147895678",
             true,
             true
@@ -36,7 +35,6 @@ public class ReviewDaoJDBCTest {
             2,
             "manurodriguez@gmail.com",
             "Manuel Rodriguez",
-            "",
             "1109675432",
             true,
             true
@@ -103,12 +101,4 @@ public class ReviewDaoJDBCTest {
         Assert.assertEquals(maybeReviews.get(1), REVIEW_2);
     }
 
-    @Test
-    public void findReviewByContractId() {
-        Optional<Review> maybeReview = reviewDaoJDBC.findReviewByContractId(JOB_CONTRACT.getId());
-
-        Assert.assertEquals(REVIEW_1.getRate(), maybeReview.get().getRate());
-        Assert.assertEquals(REVIEW_1.getTitle(), maybeReview.get().getTitle());
-        Assert.assertEquals(REVIEW_1.getDescription(), maybeReview.get().getDescription());
-    }
 }

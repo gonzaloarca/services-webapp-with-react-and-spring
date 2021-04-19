@@ -30,7 +30,6 @@ public class UserDaoJDBCTest {
             1,
             "franquesada@mail.com",
             "Francisco Quesada",
-            "",
             "11-3456-3232",
             true,
             true
@@ -56,7 +55,6 @@ public class UserDaoJDBCTest {
                 3,
                 "manurodriguez@mail.com",
                 "Manuel Rodriguez",
-                "",
                 "11-4536-5656",
                 true,
                 true

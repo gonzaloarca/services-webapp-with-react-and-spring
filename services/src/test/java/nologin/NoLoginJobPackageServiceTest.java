@@ -24,7 +24,7 @@ public class NoLoginJobPackageServiceTest {
     private static final JobPackage JOB_PACKAGE = new JobPackage(
             7, 2, "Arreglos menores", "Canerias rotas", 200.00, JobPackage.RateType.ONE_TIME, true);
     private static final User PROFESSIONAL = new User(
-            8, "franquesada@gmail.com", "Francisco Quesada", "", "0800111333", true);
+            8, "franquesada@gmail.com", "Francisco Quesada",  "0800111333", true, true);
     private static final JobPost JOB_POST = new JobPost(
             JOB_PACKAGE.getPostId(), PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
             Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO), 0.0,true);

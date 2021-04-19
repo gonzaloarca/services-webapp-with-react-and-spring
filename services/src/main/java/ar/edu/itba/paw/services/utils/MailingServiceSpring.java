@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services.utils;
 
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
@@ -15,15 +17,13 @@ import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
 import java.util.HashMap;
 
 @Service
 public class MailingServiceSpring implements MailingService {
+
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     private JavaMailSender emailSender;
@@ -36,10 +36,14 @@ public class MailingServiceSpring implements MailingService {
     @Qualifier("contractEmailWithImage")
     private SimpleMailMessage contractEmailWithImage;
 
-    private final HashMap<String, String> IMAGE_TYPE_TO_NAME = new HashMap<String, String>() {{
-        put("image/png", "image.png");
-        put("image/jpeg", "image.jpg");
-    }};
+    private final HashMap<String, String> IMAGE_TYPE_TO_NAME;
+
+    public MailingServiceSpring() {
+        IMAGE_TYPE_TO_NAME = new HashMap<>();
+        IMAGE_TYPE_TO_NAME.put("image/png", "image.png");
+        IMAGE_TYPE_TO_NAME.put("image/jpeg", "image.jpg");
+        IMAGE_TYPE_TO_NAME.put("image/jpg", "image.jpg");
+    }
 
     @Override
     public void sendHtmlMessage(String to, String subject, String html) {
@@ -72,11 +76,11 @@ public class MailingServiceSpring implements MailingService {
                 text;
         SimpleMailMessage message;
         DataSource attachment = null;
-        byte[] imageData = jobContract.getImageData();
+        ByteImage image = jobContract.getImage();
 
-        if(imageData != null) {
+        if(imageService.isValidImage(image)) {
             message = contractEmailWithImage;
-            attachment = new ByteArrayDataSource(imageData, getImageType(imageData));
+            attachment = new ByteArrayDataSource(image.getData(), image.getType());
         } else {
             message = contractEmail;
         }
@@ -87,23 +91,6 @@ public class MailingServiceSpring implements MailingService {
                 jobContract.getDescription());
 
         sendHtmlMessageWithAttachment(jobPost.getUser().getEmail(), subject, text, attachment);
-    }
-
-    //TODO: decidir si seguir utilizando este metodo o agregar el imageType al Model
-    private String getImageType(byte[] imageData) {
-        if(imageData == null)
-            throw new RuntimeException("Parameter can't be null");
-
-        InputStream is = new BufferedInputStream(new ByteArrayInputStream(imageData));
-        String mimeType;
-        try {
-            mimeType = URLConnection.guessContentTypeFromStream(is);
-        } catch (IOException e) {
-            //TODO: decidir si es mejor otro tipo de excepción
-            throw new RuntimeException(e.getMessage());
-        }
-
-        return mimeType;
     }
 
     /*

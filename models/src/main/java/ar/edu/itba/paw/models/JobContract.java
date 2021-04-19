@@ -10,7 +10,7 @@ public class JobContract {
     private final User professional;
     private final Date creationDate;           //TODO: ver tipo de variable
     private final String description;
-    private final byte[] imageData;
+    private final ByteImage image;
 
     //TODO: ver si este constructor está de mas, se usa en los tests
     public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description) {
@@ -20,17 +20,18 @@ public class JobContract {
         this.professional = professional;
         this.creationDate = creationDate;
         this.description = description;
-        this.imageData=null;
+        image = null;
     }
 
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description, byte[] imageData) {
+    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description,
+                       ByteImage image) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
         this.professional = professional;
         this.creationDate = creationDate;
         this.description = description;
-        this.imageData = imageData;
+        this.image = image;
     }
 
     public JobPackage getJobPackage() {
@@ -57,8 +58,8 @@ public class JobContract {
         return professional;
     }
 
-    public byte[] getImageData() {
-        return imageData;
+    public ByteImage getImage() {
+        return image;
     }
 
     @Override

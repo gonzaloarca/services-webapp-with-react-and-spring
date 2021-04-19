@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
+import ar.edu.itba.paw.models.ByteImage;
+import ar.edu.itba.paw.models.EncodedImage;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,8 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 	private final static RowMapper<JobPostImage> JOB_POST_IMAGE_ROW_MAPPER = ((resultSet, i) -> new JobPostImage(
 			resultSet.getLong("image_id"),
 			resultSet.getLong("post_id"),
-			ImageDataConverter.getEncodedString(resultSet.getBytes("image_data")),
-			ImageDataConverter.getImageType(resultSet.getBytes("image_data"))
+			new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("image_data")),
+					resultSet.getString("image_type"))
 	));
 
 	@Autowired
@@ -35,24 +37,16 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 	}
 
 	@Override
-	public JobPostImage addImage(long postId, byte[] byteImage) {
+	public JobPostImage addImage(long postId, ByteImage image) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("post_id", postId);
-		map.put("image_data", byteImage);
+		map.put("image_data", image.getData());
+		map.put("image_type", image.getType());
 
 		Number imageId = jdbcInsertImage.executeAndReturnKey(map);
 
 		return new JobPostImage(imageId.longValue(), postId,
-				ImageDataConverter.getEncodedString(byteImage), ImageDataConverter.getImageType(byteImage));
-	}
-
-	@Override
-	public List<JobPostImage> addImages(long postId, List<byte[]> byteImages) {
-		List<JobPostImage> images = new ArrayList<>();
-
-		byteImages.forEach(image -> images.add(addImage(postId, image)));
-
-		return images;
+				new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType()));
 	}
 
 	@Override

@@ -13,8 +13,6 @@ public interface ReviewDao {
 
     List<Review> findReviews(long id);
 
-    Optional<Review> findReviewByContractId(long id);
-
     Double findProfessionalAvgRate(long id);
 
     List<Review> findProfessionalReviews(long id);
