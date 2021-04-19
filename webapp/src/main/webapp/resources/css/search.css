@@ -1,3 +1,7 @@
+.search-results {
+    flex: 1;
+}
+
 .search-title {
     display: inline-flex;
     word-break: break-word;

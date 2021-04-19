@@ -55,10 +55,19 @@
                     <c:import url="components/serviceCard.jsp"/>
                 </div>
                 <div class="contract-buttons-card">
-                    <h4 class="contract-contact-text">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i>
-                        CONTACTO
-                    </h4>
+                    <spring:message code="mycontracts.contact.name"
+                                    arguments="${contractCard.jobCard.jobPost.user.username}" var="name"/>
+                    <spring:message code="mycontracts.contact.email"
+                                    arguments="${contractCard.jobCard.jobPost.user.email}" var="email"/>
+                    <spring:message code="mycontracts.contact.phone"
+                                    arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
+                    <a class="contract-contact-text"
+                       onclick='openContactModal("${name}", "${email}", "${phone}")'>
+                        <h4 class="mb-3">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            <spring:message code="mycontracts.contact"/>
+                        </h4>
+                    </a>
                     <c:choose>
                         <c:when test="${contractCard.review != null}">
                             <jsp:include page="components/rateStars.jsp">
@@ -66,10 +75,13 @@
                             </jsp:include>
                         </c:when>
                         <c:otherwise>
-                            <h4 class="contract-review-text">
-                                <i class="bi bi-star"></i>
-                                CALIFICAR
-                            </h4>
+                            <a class="contract-review-text"
+                               href="${pageContext.request.contextPath}/qualify-contract/${contractCard.jobContract.id}">
+                                <h4 class="mb-0">
+                                    <i class="bi bi-star"></i>
+                                    <spring:message code="mycontracts.qualifycontract"/>
+                                </h4>
+                            </a>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -80,6 +92,36 @@
         </c:forEach>
     </div>
 </div>
+
 <jsp:include page="components/footer.jsp"/>
+
+<%--Modal de contacto--%>
+<div class="modal fade" tabindex="-1" id="modal" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <spring:message code="mycontracts.contact.title"/></h3>
+            </div>
+            <div class="modal-body">
+                <h5 id="modalProfessionalName"></h5>
+                <h5 id="modalProfessionalEmail"></h5>
+                <h5 id="modalProfessionalPhone"></h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openContactModal(name, email, phone) {
+        $('#modalProfessionalName').text(name);
+        $('#modalProfessionalEmail').text(email);
+        $('#modalProfessionalPhone').text(phone);
+        $('#modal').modal('show');
+    }
+</script>
 </body>
 </html>

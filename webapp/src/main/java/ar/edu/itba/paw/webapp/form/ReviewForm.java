@@ -10,8 +10,7 @@ public class ReviewForm {
     @Size(max = 100)
     private String description;
 
-    @NotEmpty
-    private int rate;
+    private int rate = 1;
 
     @Size(max = 100)
     private String title;

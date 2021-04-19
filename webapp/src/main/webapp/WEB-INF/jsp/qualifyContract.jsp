@@ -46,7 +46,8 @@
     <div class="qualify-service">
         <h2>
             <i class="bi bi-star-fill"></i>
-            Califique su experiencia con Rodrigo Perez
+            <spring:message code="qualifycontract.review.qualifyprofessional"
+                            arguments="${jobCard.jobPost.user.username}"/>
         </h2>
 
         <c:set var="data" value="${jobCard}" scope="request"/>
@@ -58,38 +59,41 @@
     </div>
     <div class="qualify-form">
         <form:form modelAttribute="reviewForm"
-                   action="${pageContext.request.contextPath}/qualify-contract/${contractId}}" method="post"
+                   action="${pageContext.request.contextPath}/qualify-contract/${contractId}" method="post"
                    enctype="multipart/form-data">
-            <h3 class="m-0">Cuantas estrellas le daria?</h3>
+            <h3 class="m-0">
+                <spring:message code="qualifycontract.review.pickrate"/></h3>
             <div class="qualify-rate">
-                <input type="radio" id="star5" name="rate" value="5"/>
-                <label for="star5" title="text">5 stars</label>
-                <input type="radio" id="star4" name="rate" value="4"/>
-                <label for="star4" title="text">4 stars</label>
-                <input type="radio" id="star3" name="rate" value="3"/>
-                <label for="star3" title="text">3 stars</label>
-                <input type="radio" id="star2" name="rate" value="2"/>
-                <label for="star2" title="text">2 stars</label>
-                <input type="radio" id="star1" name="rate" value="1"/>
-                <label for="star1" title="text">1 star</label>
+                <form:radiobutton path="rate" id="star5" name="rate" value="5"/>
+                <form:label path="rate" for="star5" title="text">5 stars</form:label>
+                <form:radiobutton path="rate" id="star4" name="rate" value="4"/>
+                <form:label path="rate" for="star4" title="text">4 stars</form:label>
+                <form:radiobutton path="rate" id="star3" name="rate" value="3"/>
+                <form:label path="rate" for="star3" title="text">3 stars</form:label>
+                <form:radiobutton path="rate" id="star2" name="rate" value="2"/>
+                <form:label path="rate" for="star2" title="text">2 stars</form:label>
+                <form:radiobutton path="rate" id="star1" name="rate" value="1" checked="checked"/>
+                <form:label path="rate" for="star1" title="text">1 star</form:label>
             </div>
             <form:label path="description" class="custom-label">
-                Cuente un poco sobre la experiencia
+                <spring:message code="qualifycontract.review.description"/>
             </form:label>
+            <spring:message code="qualifycontract.review.description.placeholder" var="descriptionPlaceholder"/>
             <form:textarea class="form-control text-input" rows="6" path="description" maxlength="100"
-                           placeholder="Escriba sobre la calidad del trabajo, el trato con el profesional, la atencion, etc."/>
+                           placeholder="${descriptionPlaceholder}"/>
             <form:errors path="description" cssClass="form-error" element="p"/>
 
             <form:label path="title" class="custom-label">
-                Resuma su opinion en una frase (opcional)
+                <spring:message code="qualifycontract.review.title"/>
             </form:label>
+            <spring:message code="qualifycontract.review.title.placeholder" var="titlePlaceholder"/>
             <form:input type="text" class="form-control custom-input" name="title"
-                        placeholder="Titulo de opinion" maxlength="100" path="title"/>
+                        placeholder="${titlePlaceholder}" maxlength="100" path="title"/>
             <form:errors path="title" cssClass="form-error" element="p"/>
 
             <div class="submit-button-container p-5">
                 <button class="btn btn-primary hirenet-yellow-btn" type="submit">
-                    Confirmar
+                    <spring:message code="qualifycontract.review.submit"/>
                 </button>
             </div>
         </form:form>

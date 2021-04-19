@@ -77,7 +77,7 @@ public class ReviewDaoJDBC implements ReviewDao {
 
     @Override
     public Review create(long contractId, int rate, String title, String description) {
-        Number key = jdbcInsert.executeAndReturnKey(new HashMap<String, Object>() {{
+        jdbcInsert.execute(new HashMap<String, Object>() {{
             put("contract_id", contractId);
             put("review_rate", rate);
             put("review_title", title);

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Review;
+import exceptions.ReviewNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,11 @@ public class NoLoginReviewService implements ReviewService {
 
     @Autowired
     private ReviewDao reviewDao;
+
+    @Override
+    public Review create(long contractId, int rate, String title, String description) {
+        return reviewDao.create(contractId, rate, title, description);
+    }
 
     @Override
     public List<Review> findProfessionalReviews(long id) {
@@ -45,8 +51,7 @@ public class NoLoginReviewService implements ReviewService {
     }
 
     @Override
-    public Review findContractReview(long id) {
-        Optional<Review> review = reviewDao.findReviewByContractId(id);
-        return review.orElse(null);
+    public Optional<Review> findContractReview(long id) {
+        return reviewDao.findReviewByContractId(id);
     }
 }

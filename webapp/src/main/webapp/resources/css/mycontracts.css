@@ -9,11 +9,14 @@
     display: table;
 }
 
-.contract-contact-text {
+.contract-contact-text, .contract-contact-text:hover {
     color: #485696;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-.contract-review-text {
+.contract-review-text, .contract-review-text:link, .contract-review-text:hover {
+    text-decoration: none;
     color: gold;
 }
 

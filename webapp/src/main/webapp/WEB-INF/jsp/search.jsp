@@ -67,7 +67,7 @@
             </span>
         </c:forEach>
     </div>
-    <div class="custom-row">
+    <div class="search-results">
         <c:if test="${pickedZone != null}">
             <div class="search-title">
                 <h3>

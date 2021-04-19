@@ -111,20 +111,19 @@
                         </div>
                     </div>
 
-                            <!-- Image -->
-                            <!-- TODO: implementar imagen en el proximo Sprint -->
-                            <div class="form-row">
-                                <div class="yellow-circle">
-                                    <p class="circle-text">2</p>
-                                </div>
-                                <div class="col-10 label-and-input">
-                                    <form:label path="image" class="form-text">
-                                        <spring:message code="contract.create.form.image"/>
-                                    </form:label>
-                                    <form:input type="file" path="image"/>
-                                    <form:errors path="image" cssClass="form-error" element="p"/>
-                                </div>
-                            </div>
+                    <!-- Image -->
+                    <div class="form-row">
+                        <div class="yellow-circle">
+                            <p class="circle-text">2</p>
+                        </div>
+                        <div class="col-10 label-and-input">
+                            <form:label path="image" class="form-text">
+                                <spring:message code="contract.create.form.image"/>
+                            </form:label>
+                            <form:input type="file" path="image"/>
+                            <form:errors path="image" cssClass="form-error" element="p"/>
+                        </div>
+                    </div>
 
                     <!-- Submit Button -->
                     <div class="submit-button">

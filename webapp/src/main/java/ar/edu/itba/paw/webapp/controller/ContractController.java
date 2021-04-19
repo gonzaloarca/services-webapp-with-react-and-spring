@@ -6,6 +6,9 @@ import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.form.ContractForm;
+import ar.edu.itba.paw.webapp.form.ReviewForm;
+import ar.edu.itba.paw.webapp.utils.JobContractCard;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -14,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.security.Principal;
 
@@ -38,6 +42,15 @@ public class ContractController {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
+    private JobCardService jobCardService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
@@ -65,13 +78,13 @@ public class ContractController {
         String email = principal.getName();
         JobContract jobContract;
 
-        if(form.getImage().getSize() == 0)
-            jobContract = jobContractService.create(email,packId, form.getDescription());
+        if (form.getImage().getSize() == 0)
+            jobContract = jobContractService.create(email, packId, form.getDescription());
         else {
             try {
-                jobContract = jobContractService.create(email,packId, form.getDescription(),
+                jobContract = jobContractService.create(email, packId, form.getDescription(),
                         imageService.create(form.getImage().getBytes(), form.getImage().getContentType()));
-            } catch (IOException e){
+            } catch (IOException e) {
                 //fixme
                 throw new RuntimeException(e.getMessage());
             }
@@ -97,4 +110,5 @@ public class ContractController {
     public JobPost getJobPost(@ModelAttribute("jobPack") final JobPackage jobPackage) {
         return jobPostService.findById(jobPackage.getPostId());
     }
+
 }
