@@ -45,8 +45,16 @@
         <div class="d-block col-4">
             <div class="card custom-card">
                 <div class="card-body">
+                    <c:choose>
+                        <c:when test="${user.image.string != null}">
+                            <c:set var="profilePic" value="data:${user.image.type};base64,${user.image.string}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
+                        </c:otherwise>
+                    </c:choose>
                     <img class="card-image-top profile-img"
-                         src='<c:url value="/resources/images/worker-placeholder.jpg" />'
+                         src='${profilePic}'
                          alt="<spring:message code="profile.image"/>">
                     <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
                     <h5 class="profile-subtitle"><spring:message code="profile.professional"/></h5>
@@ -104,8 +112,17 @@
                             <a href="${pageContext.request.contextPath}/job/${jobCard.jobPost.id}">
                             <div class="row no-gutters">
                                 <div class="col-md-3">
+                                    <c:choose>
+                                        <c:when test="${jobCard.postImage == null}">
+                                            <c:url value="/resources/images/${jobCard.jobPost.jobType.imagePath}" var="imageSrc"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set value="data:${jobCard.postImage.image.type};base64,${jobCard.postImage.image.string}"
+                                                   var="imageSrc"/>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <img class="card-image-top service-img"
-                                         src='<c:url value="/resources/images/cleaning.png" />'
+                                         src='${imageSrc}'
                                          alt="<spring:message code="profile.service.image"/>">
                                 </div>
                                 <div class="col-md-9 px-3">

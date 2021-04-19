@@ -121,10 +121,16 @@
 
                         <div class="summary custom-row">
                             <div class="summary-item">
-                                <%--TODO: CAMBIAR A FOTO DE USUARIO--%>
-                                <%--                                <img    src="${pageContext.request.contextPath}/resources/images/banner1.jpg"--%>
-                                <%--                                        alt="Primer foto">--%>
-                                <i class="fas fa-user fa-2x"></i>
+                                    <c:choose>
+                                        <c:when test="${jobPost.user.image.string != null}">
+                                            <img src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}"
+                                                 alt="">
+                                            <!--TODO alt-->
+                                        </c:when>
+                                        <c:otherwise>
+                                            <i class="fas fa-user fa-2x"></i>
+                                        </c:otherwise>
+                                    </c:choose>
                                 <p><c:out value="${jobPost.user.username}"/></p>
                             </div>
                             <div class="summary-item">

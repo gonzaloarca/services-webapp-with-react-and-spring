@@ -10,4 +10,6 @@ public interface JobPostImageDao {
 
 	List<JobPostImage> findByPostId(long postId);
 
+	List<JobPostImage> getPostImage(long postId);
+
 }

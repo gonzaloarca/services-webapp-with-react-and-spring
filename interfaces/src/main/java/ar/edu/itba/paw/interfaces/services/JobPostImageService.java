@@ -12,4 +12,6 @@ public interface JobPostImageService {
 //	List<JobPostImage> addImages(long postId, List<byte[]> byteImages);
 
 	List<JobPostImage> findByPostId(long postId);
+
+	JobPostImage getPostImage(long postId);
 }

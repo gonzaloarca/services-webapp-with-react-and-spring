@@ -1,26 +1,24 @@
 package ar.edu.itba.paw.models;
 
-import java.util.List;
-
 public class JobCard {
     private final JobPost jobPost;
     private final JobPackage.RateType rateType;
     private final Double price;
     private final int contractsCompleted;
     private final int reviewsCount;
-    private final List<JobPostImage> jobPostImages;
+    private final JobPostImage postImage;
 
-    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, List<JobPostImage> jobPostImages,int contractsCompleted, int reviewsCount) {
+    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, JobPostImage postImage ,int contractsCompleted, int reviewsCount) {
         this.jobPost = jobPost;
         this.rateType = rateType;
         this.price = price;
         this.contractsCompleted = contractsCompleted;
         this.reviewsCount = reviewsCount;
-        this.jobPostImages = jobPostImages;
+        this.postImage = postImage;
     }
 
-    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, List<JobPostImage> jobPostImages,int contractsCompleted) {
-        this(jobPost,rateType,price,jobPostImages,contractsCompleted,-1);
+    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, JobPostImage postImage, int contractsCompleted) {
+        this(jobPost,rateType,price,postImage,contractsCompleted,-1);
     }
 
     public JobPost getJobPost() {
@@ -43,7 +41,7 @@ public class JobCard {
         return reviewsCount;
     }
 
-    public List<JobPostImage> getJobPostImages() {
-        return jobPostImages;
+    public JobPostImage getPostImage() {
+        return postImage;
     }
 }

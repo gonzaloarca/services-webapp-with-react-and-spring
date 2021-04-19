@@ -12,10 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class JobPostImageDaoJDBC implements JobPostImageDao {
@@ -54,7 +51,21 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 		return jdbcTemplate.query(
 			"SELECT image_id, post_id, image_data, image_type " +
 					"FROM post_image " +
-					"WHERE post_id = ?;",
+					"WHERE post_id = ? " +
+					"GROUP BY image_id;",
+				new Object[]{postId},
+				JOB_POST_IMAGE_ROW_MAPPER
+		);
+	}
+
+	@Override
+	public List<JobPostImage> getPostImage(long postId) {
+		return jdbcTemplate.query(
+				"SELECT image_id, post_id, image_data, image_type " +
+						"FROM post_image " +
+						"WHERE post_id = ? " +
+						"GROUP BY image_id " +
+						"LIMIT 1;",
 				new Object[]{postId},
 				JOB_POST_IMAGE_ROW_MAPPER
 		);

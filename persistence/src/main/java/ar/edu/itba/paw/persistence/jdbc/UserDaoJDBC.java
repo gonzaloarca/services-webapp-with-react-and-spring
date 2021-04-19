@@ -119,7 +119,7 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
-        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image  FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image,image_type  FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
                 .stream().findFirst();
     }
 

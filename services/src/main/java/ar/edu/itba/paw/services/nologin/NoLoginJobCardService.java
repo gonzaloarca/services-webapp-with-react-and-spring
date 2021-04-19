@@ -59,7 +59,7 @@ public class NoLoginJobCardService implements JobCardService {
                     .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(RuntimeException::new);
             //TODO: Mejorar excepciones
             jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
-                    jobPostImageService.findByPostId(jobPost.getId()),
+                    jobPostImageService.getPostImage(jobPost.getId()),
                     jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()),
                      reviewService.getJobPostReviewsSize(jobPost.getId())));
         });
