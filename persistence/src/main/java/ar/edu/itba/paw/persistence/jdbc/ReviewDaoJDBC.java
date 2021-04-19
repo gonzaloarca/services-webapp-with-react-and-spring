@@ -72,14 +72,13 @@ public class ReviewDaoJDBC implements ReviewDao {
 
     @Override
     public Review create(long contractId, int rate, String title, String description) {
-        Number key = jdbcInsert.executeAndReturnKey(new HashMap<String,Object>(){{
+        Number key = jdbcInsert.executeAndReturnKey(new HashMap<String, Object>() {{
             put("contract_id", contractId);
             put("review_rate", rate);
-            put("review_title",title);
-            put("review_description",description);
+            put("review_title", title);
+            put("review_description", description);
         }});
 
-        //TODO: Cambiar excepciones por excepciones propias
         JobContract jobContract = jobContractDao.findById(contractId).orElseThrow(JobContractNotFoundException::new);
         JobPost jobPost = jobPostDao.findById(jobContract.getJobPackage().getPostId()).orElseThrow(JobPostNotFoundException::new);
 
@@ -89,36 +88,34 @@ public class ReviewDaoJDBC implements ReviewDao {
     @Override
     public List<Review> findAllReviews(long id) {
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM full_contract NATURAL JOIN review " +
+                "SELECT * FROM full_contract NATURAL JOIN review " +
                         "WHERE post_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER);
     }
 
     @Override
     public int findJobPostReviewsSize(long id) {
-        return jdbcTemplate.queryForObject("SELECT reviews FROM full_post WHERE post_id = ?", new Object[]{id},
-                Integer.class);
+        return jdbcTemplate.queryForObject("SELECT reviews FROM full_post WHERE post_id = ?",
+                new Object[]{id}, Integer.class);
     }
 
     @Override
     public List<Review> findReviews(long id) {
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM full_contract NATURAL JOIN review " +
-                        "WHERE package_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER);
+                "SELECT * FROM full_contract NATURAL JOIN review WHERE package_id = ?",
+                new Object[]{id}, REVIEW_ROW_MAPPER);
     }
 
     @Override
     public Optional<Review> findReviewByContractId(long id) {
         return jdbcTemplate.query(
-                "SELECT * FROM review WHERE contract_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER).stream().findFirst();
+                "SELECT * FROM full_contract NATURAL JOIN review WHERE contract_id = ?",
+                new Object[]{id}, REVIEW_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<Review> findProfessionalReviews(long id) {
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM full_contract NATURAL JOIN review " +
+                "SELECT * FROM full_contract NATURAL JOIN review " +
                         "WHERE professional_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER);
     }
 
@@ -126,7 +123,7 @@ public class ReviewDaoJDBC implements ReviewDao {
     public Double findProfessionalAvgRate(long id) {
         return jdbcTemplate.query("SELECT coalesce(avg(review_rate),0) as rating " +
                         "FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "NATURAL JOIN users WHERE user_id = ? GROUP BY user_id"
-                , new Object[]{id}, (resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
+                        "NATURAL JOIN users WHERE user_id = ? GROUP BY user_id",
+                new Object[]{id}, (resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
     }
 }

@@ -8,9 +8,12 @@ public interface ReviewService {
 
     List<Review> findProfessionalReviews(long id);
 
-    Double getProfessionalAvgRate(long id);
+    Double findProfessionalAvgRate(long id);
 
-    List<Integer> getProfessionalReviewsByPoints(long id);
+    List<Integer> findProfessionalReviewsByPoints(long id);
 
-    int getJobPostReviewsSize(long id);
+    int findJobPostReviewsSize(long id);
+
+    Review findContractReview(long id);
+
 }

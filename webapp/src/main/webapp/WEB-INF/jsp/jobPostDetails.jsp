@@ -35,7 +35,7 @@
 
 </head>
 <body>
-<jsp:include page="customNavBar.jsp"/>
+<jsp:include page="components/customNavBar.jsp"/>
 <div class="content-container-transparent">
 <%--    <nav aria-label="breadcrumb">--%>
 <%--        <ol class="breadcrumb bg-white">--%>
@@ -248,7 +248,7 @@
             <div class="side"></div>
         </div>
 </div>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="components/footer.jsp"/>
 <script>
     $('.requestServiceBtn').on('click', function (e) {
         e.stopPropagation();

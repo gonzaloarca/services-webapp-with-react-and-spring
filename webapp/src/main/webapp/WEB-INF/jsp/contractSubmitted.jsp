@@ -27,7 +27,7 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="customNavBar.jsp"/>
+<jsp:include page="components/customNavBar.jsp"/>
 <div class="content-container-transparent page">
     <div class="message">
         <img src='<c:url value="/resources/images/thumbs.svg" />'
@@ -44,6 +44,6 @@
         </a>
     </div>
 </div>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="components/footer.jsp"/>
 </body>
 </html>

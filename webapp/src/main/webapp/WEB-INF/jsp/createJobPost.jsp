@@ -33,18 +33,13 @@
 
 </head>
 <body>
-<%--<%@ include file="customNavBar.jsp" %>--%>
-<jsp:include page="customNavBar.jsp">
+<jsp:include page="components/customNavBar.jsp">
     <jsp:param name="path" value="/create-job-post"/>
 </jsp:include>
 <div class="content-container-transparent">
-    <div class="site-header">
-        <h3 style="position: absolute; margin: 0; color: white">
-            <spring:message code="jobPost.create.title"/>
-        </h3>
-        <img class="header-image" src="${pageContext.request.contextPath}/resources/images/bannerart1.jpg"
-             alt="<spring:message code="jobPost.create.title"/>">
-    </div>
+    <jsp:include page="components/siteHeader.jsp">
+        <jsp:param name="code" value="jobPost.create.title"/>
+    </jsp:include>
     <div class="content-container">
         <c:url value="/create-job-post" var="postPath"/>
         <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post" class="create-job-post-form">
@@ -373,7 +368,7 @@
         </form:form>
     </div>
 </div>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="components/footer.jsp"/>
 
 
 <script>

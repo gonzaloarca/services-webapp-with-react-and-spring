@@ -14,4 +14,6 @@ public interface JobCardService {
     List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType);
 
     List<JobCard> findByUserIdWithReview(long id);
+
+    JobCard findByPostId(long id);
 }

@@ -4,7 +4,6 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-
     <link href="${pageContext.request.contextPath}/resources/css/customnavbar.css" rel="stylesheet"/>
 </head>
 <body>
@@ -19,15 +18,10 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav w-100">
             <li class="nav-item ${param.path == "/" ? 'active': ''}">
                 <a class="nav-link" href="${pageContext.request.contextPath}/">
                     <spring:message code="navigation.index"/>
-                </a>
-            </li>
-            <li class="nav-item ${param.path == "/categories" ? 'active': ''}">
-                <a class="nav-link" href="${pageContext.request.contextPath}/categories">
-                    <spring:message code="navigation.categories"/>
                 </a>
             </li>
             <li class="nav-item ${param.path == "/create-job-post" ? 'active': ''}">
@@ -35,18 +29,30 @@
                     <spring:message code="navigation.publish"/>
                 </a>
             </li>
+            <li class="nav-item mr-auto ${param.path == "/categories" ? 'active': ''}">
+                <a class="nav-link" href="${pageContext.request.contextPath}/categories">
+                    <spring:message code="navigation.categories"/>
+                </a>
+            </li>
+            <%--        TODO: SOLO MOSTRAR EN CASO DE NO ESTAR LOGUEADO--%>
+            <sec:authorize access="isAnonymous()">
+                <a type="button" class="btn btn-link navbar-login-button"
+                   href="${pageContext.request.contextPath}/login"><spring:message
+                        code="navigation.login"/></a>
+                <a type="button" class="btn btn-light"
+                   href="${pageContext.request.contextPath}/register"><spring:message
+                        code="navigation.register"/></a>
+            </sec:authorize>
+            <sec:authorize access="isAuthenticated()">
+                <li class="nav-item ${param.path == "/my-contracts" ? 'active': ''}">
+                    <a class="nav-link"
+                       href="${pageContext.request.contextPath}/my-contracts">
+                        <spring:message code="navigation.mycontracts"/>
+                    </a>
+                </li>
+                <span>HOLA ${currentUser.username}</span>
+            </sec:authorize>
         </ul>
-        <%--        TODO: SOLO MOSTRAR EN CASO DE NO ESTAR LOGUEADO--%>
-        <sec:authorize access="isAnonymous()">
-            <a type="button" class="btn btn-link navbar-login-button"
-               href="${pageContext.request.contextPath}/login"><spring:message
-                    code="navigation.login"/></a>
-            <a type="button" class="btn btn-light" href="${pageContext.request.contextPath}/register"><spring:message
-                    code="navigation.register"/></a>
-        </sec:authorize>
-        <sec:authorize access="isAuthenticated()">
-            <span>HOLA ${currentUser.username}</span>
-        </sec:authorize>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
         <%--            <input class="form-control mr-sm-2" type="search" placeholder="<spring:message code="navigation.search"/>" aria-label="Search">--%>
         <%--            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">--%>

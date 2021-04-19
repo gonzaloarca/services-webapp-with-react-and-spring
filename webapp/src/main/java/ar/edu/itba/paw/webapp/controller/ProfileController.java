@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
@@ -41,7 +40,7 @@ public class ProfileController {
 
     @ModelAttribute("avgRate")
     private Double getAvgRate(@PathVariable("id") final long id) {
-        return reviewService.getProfessionalAvgRate(id);
+        return reviewService.findProfessionalAvgRate(id);
     }
 
     @ModelAttribute("reviews")
@@ -72,7 +71,7 @@ public class ProfileController {
     public ModelAndView profileWithReviews(@PathVariable("id") final long id) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", false);
-        mav.addObject("reviewsByPoints", reviewService.getProfessionalReviewsByPoints(id));
+        mav.addObject("reviewsByPoints", reviewService.findProfessionalReviewsByPoints(id));
         return mav;
     }
 }

@@ -39,8 +39,8 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="customNavBar.jsp"/>
-<%@ include file="searchBar.jsp" %>
+<jsp:include page="components/customNavBar.jsp"/>
+<%@ include file="components/searchBar.jsp" %>
 
 <div class="content-container d-flex">
     <div class="custom-card filter-card">
@@ -88,7 +88,7 @@
                 <c:if test="${jobCards.size() > 0}">
                     <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
                         <c:set var="data" value="${jobCard}" scope="request"/>
-                        <c:import url="jobCard.jsp"/>
+                        <c:import url="components/jobCard.jsp"/>
                     </c:forEach>
                 </c:if>
                 <c:if test="${jobCards.size() == 0}">
@@ -121,6 +121,6 @@
         </c:if>
     </div>
 </div>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="components/footer.jsp"/>
 </body>
 </html>

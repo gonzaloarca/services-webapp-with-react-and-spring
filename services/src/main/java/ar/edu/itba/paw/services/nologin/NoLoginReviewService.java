@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NoLoginReviewService implements ReviewService {
@@ -22,12 +23,12 @@ public class NoLoginReviewService implements ReviewService {
     }
 
     @Override
-    public Double getProfessionalAvgRate(long id) {
+    public Double findProfessionalAvgRate(long id) {
         return reviewDao.findProfessionalAvgRate(id);
     }
 
     @Override
-    public List<Integer> getProfessionalReviewsByPoints(long id) {
+    public List<Integer> findProfessionalReviewsByPoints(long id) {
         List<Integer> answer = new ArrayList<>();
         while (answer.size() < 5)
             answer.add(0);
@@ -39,7 +40,13 @@ public class NoLoginReviewService implements ReviewService {
     }
 
     @Override
-    public int getJobPostReviewsSize(long id) {
+    public int findJobPostReviewsSize(long id) {
         return reviewDao.findJobPostReviewsSize(id);
+    }
+
+    @Override
+    public Review findContractReview(long id) {
+        Optional<Review> review = reviewDao.findReviewByContractId(id);
+        return review.orElse(null);
     }
 }

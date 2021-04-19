@@ -36,7 +36,7 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<%@ include file="../customNavBar.jsp" %>
+<%@ include file="../components/customNavBar.jsp" %>
 <div class="error-page">
     <div class="error-container">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

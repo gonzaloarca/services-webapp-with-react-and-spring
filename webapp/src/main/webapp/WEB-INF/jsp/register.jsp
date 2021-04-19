@@ -46,7 +46,7 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="customNavBar.jsp">
+<jsp:include page="components/customNavBar.jsp">
     <jsp:param name="withoutColor" value="true"/>
 </jsp:include>
 <div class="register-card">

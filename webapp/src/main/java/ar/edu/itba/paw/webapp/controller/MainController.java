@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.JobCardService;
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
+import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utils.JobContractCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -33,11 +33,41 @@ public class MainController {
 
     @Autowired
     private JobContractService jobContractService;
+
     @Autowired
     private UserService userService;
 
     @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @RequestMapping(value = "/my-contracts")
+    public ModelAndView myContracts() {
+        final ModelAndView mav = new ModelAndView("myContracts");
+        List<JobContractCard> jobContractCards = new ArrayList<>();
+//        TODO: OBTENER ID DEL USUARIO ACTUAL
+        jobContractService.findByClientId(1).forEach((jobContract ->
+                jobContractCards.add(
+                        new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
+                                reviewService.findContractReview(jobContract.getId())))));
+
+        mav.addObject("contractCards", jobContractCards);
+        return mav;
+    }
+
+    @RequestMapping(value = "/qualify-contract/{contractId}")
+    public ModelAndView qualifyContract(@PathVariable("contractId") final long id,
+                                        @ModelAttribute("reviewForm") ReviewForm reviewForm) {
+        //TODO: VERIFICAR QUE SEA EL CLIENTE Y QUE LA REVIEW NO ESTE COMPLETADA
+        final ModelAndView mav = new ModelAndView("qualifyContract");
+        mav.addObject("jobCard", jobCardService.findByPostId(
+                jobContractService.findById(id)
+                        .getJobPackage().getPostId()));
+        mav.addObject("contractId", id);
+        return mav;
+    }
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)

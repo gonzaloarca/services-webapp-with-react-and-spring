@@ -39,11 +39,11 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="customNavBar.jsp">
+<jsp:include page="components/customNavBar.jsp">
     <jsp:param name="path" value="/"/>
     <jsp:param name="withoutColor" value="true"/>
 </jsp:include>
-<%@include file="searchBar.jsp" %>
+<%@include file="components/searchBar.jsp" %>
 
 
 <div>
@@ -88,9 +88,9 @@
             <h3>Algunos de nuestros servicios destacados</h3>
             <div class="job-display-container">
                 <c:if test="${jobCards.size() > 0}">
-                    <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
+                    <c:forEach items="${jobCards}" var="jobCard">
                         <c:set var="data" value="${jobCard}" scope="request"/>
-                        <c:import url="jobCard.jsp"/>
+                        <c:import url="components/jobCard.jsp"/>
                     </c:forEach>
                 </c:if>
                 <c:if test="${jobCards.size() == 0}">
@@ -127,7 +127,7 @@
         </h3>
         <a class="btn hirenet-blue-btn mt-3" style="color: #fcb839">Publicar</a>
         <div class="mt-5">
-            <jsp:include page="footer.jsp"/>
+            <jsp:include page="components/footer.jsp"/>
         </div>
     </div>
 

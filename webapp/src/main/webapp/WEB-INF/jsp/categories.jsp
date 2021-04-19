@@ -38,7 +38,7 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="customNavBar.jsp">
+<jsp:include page="components/customNavBar.jsp">
     <jsp:param name="path" value="categories"/>
 </jsp:include>
 <div class="content-container mt-5">

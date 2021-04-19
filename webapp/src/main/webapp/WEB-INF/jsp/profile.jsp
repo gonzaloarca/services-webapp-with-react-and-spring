@@ -39,7 +39,7 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="customNavBar.jsp"/>
+<jsp:include page="components/customNavBar.jsp"/>
 <div class="content-container-transparent">
     <div class="row">
         <div class="d-block col-4">
@@ -62,7 +62,7 @@
                         <h1 class="mr-3">
                             ${avgRate}
                         </h1>
-                        <jsp:include page="rateStars.jsp">
+                        <jsp:include page="components/rateStars.jsp">
                             <jsp:param name="rate" value="${avgRate}"/>
                         </jsp:include>
                         <h5 class="ml-3 mb-0">
@@ -104,54 +104,8 @@
 
                     <c:if test="${withServices}">
                         <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
-                            <a class="service-link" href="${pageContext.request.contextPath}/job/${jobCard.jobPost.id}">
-                                <div class="row no-gutters">
-                                    <div class="col-md-3">
-                                            <%--                                        TODO: LEVANTAR IMAGEN DE SERVICE--%>
-                                        <img class="card-image-top service-img"
-                                             src='<c:url value="/resources/images/cleaning.png" />'
-                                             alt="<spring:message code="profile.service.image"/>">
-                                    </div>
-                                    <div class="col-md-9 px-3">
-                                        <h4 class="service-title">
-                                            <c:out value="${jobCard.jobPost.title}"/>
-                                        </h4>
-                                        <div class="justify-content-between custom-row">
-                                            <h6 class="service-subtitle"><spring:message
-                                                    code="${jobCard.jobPost.jobType.stringCode}"/></h6>
-
-                                            <div class="custom-row">
-                                                <jsp:include page="rateStars.jsp">
-                                                    <jsp:param name="rate" value="${jobCard.jobPost.rating}"/>
-                                                </jsp:include>
-                                                <h6 class="ml-3 service-subtitle">
-                                                    (${jobCard.reviewsCount})
-                                                </h6>
-                                            </div>
-                                        </div>
-
-                                        <div class="d-flex mt-2">
-                                            <div class="price-container">
-                                                <p class="price">
-                                                    <spring:message code="${jobCard.rateType.stringCode}"
-                                                                    arguments="${jobCard.price}"/>
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="d-flex">
-                                            <div class="custom-row service-contracted-times gray-chip">
-                                                <i class="fas fa-check mr-2"></i>
-                                                <h6 class="m-0">
-                                                    <spring:message code="profile.service.contract.quantity"
-                                                                    arguments="${jobCard.contractsCompleted}"/>
-                                                </h6>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </a>
+                            <c:set var="data" value="${jobCard}" scope="request"/>
+                            <c:import url="components/serviceCard.jsp"/>
 
                             <c:if test="${status.index != jobCards.size()-1}">
                                 <hr class="hr1"/>
@@ -166,7 +120,7 @@
                                         ${avgRate}
                                 </p>
                                 <span class="reviews-rate-stars">
-                                    <jsp:include page="rateStars.jsp">
+                                    <jsp:include page="components/rateStars.jsp">
                                         <jsp:param name="rate" value="${avgRate}"/>
                                     </jsp:include>
                                 </span>
@@ -206,10 +160,11 @@
                                     </div>
                                     <div class="col align-self-center p-0">
                                         <h4>${review.client.username}</h4>
-                                        <h5>15/3/21</h5>
+<%--                                        TODO: IMPLEMENTAR FECHA EN REVIEWS--%>
+<%--                                        <h5>15/3/21</h5>--%>
                                     </div>
                                 </div>
-                                <jsp:include page="rateStars.jsp">
+                                <jsp:include page="components/rateStars.jsp">
                                     <jsp:param name="rate" value="${review.rate}"/>
                                 </jsp:include>
                             </div>
@@ -235,6 +190,6 @@
         </div>
     </div>
 </div>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="components/footer.jsp"/>
 </body>
 </html>

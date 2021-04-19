@@ -264,7 +264,7 @@ h3 {
     font-weight: normal;
 }
 
-/*Blue button*/
+/*YELLOW BUTTON*/
 .hirenet-blue-btn {
     font-weight: bold;
     background-color: #485696;
@@ -281,10 +281,100 @@ h3 {
     background-color: #343e6d;
 }
 
+/*YELLOW BUTTON*/
+.hirenet-yellow-btn {
+    font-weight: bold;
+    background-color: #fcb839;
+    border: transparent;
+}
+
+.hirenet-yellow-btn:active, .hirenet-yellow-btn:focus {
+    background-color: #fcb839 !important;
+    border-color: transparent !important;
+    box-shadow: 0 0 0 0.2rem rgba(52, 62, 109, 0.35) !important;
+}
+
+.hirenet-yellow-btn:hover {
+    background-color: #c48d26;
+}
+
+/*PARA QUE EL BOTON QUEDE CENTRADO*/
+.submit-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
 .form-step-title {
     font-weight: bold;
 }
 
 .img-upload-disclaimer {
     color: #7e7e7e;
+}
+
+/*Site Header*/
+.site-header {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.site-header h3 {
+    position: absolute;
+    margin: 0;
+    color: white;
+}
+
+.header-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+/*SERVICE CARD*/
+.service-link, .service-link:link{
+    text-decoration: none;
+}
+
+.service-img {
+    border-radius: 15px;
+    height: 180px;
+    width: 180px;
+    object-fit: cover;
+}
+
+.service-title {
+    color: #485696;
+    line-height: 1.1em;
+    height: 2.2em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.service-subtitle {
+    color: gray;
+    margin: 0;
+}
+
+.service-contracted-times {
+    color: gray;
+    margin-top: 10px;
+    align-items: center;
+}
+
+/*INPUTS DE FORMS*/
+.custom-input {
+    font-size: 16px;
+}
+
+.custom-label {
+    font-weight: bold;
 }

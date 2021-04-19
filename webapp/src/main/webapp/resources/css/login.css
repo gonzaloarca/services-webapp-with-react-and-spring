@@ -30,20 +30,6 @@ body {
     margin-bottom: 0;
 }
 
-.submit-button-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.custom-input {
-    font-size: 16px;
-}
-
-.custom-label {
-    font-weight: bold;
-}
-
 .custom-password {
     padding-right: 30px;
 }
