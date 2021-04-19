@@ -4,8 +4,8 @@ import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPost.Zone;
-import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -66,8 +66,7 @@ public class JobPostDaoJDBC implements JobPostDao {
             put("post_is_active", true);
         }});
 
-        //TODO: Cambiar excepciones por excepciones propias
-        User user = userDao.findById(userId).orElseThrow(NoSuchElementException::new);
+        User user = userDao.findById(userId).orElseThrow(UserNotFoundException::new);
 
         for (Zone zone : zones) {
             jdbcInsertZone.execute(new HashMap<String, Integer>() {{

@@ -1,7 +1,7 @@
 .profile-img {
-    border-radius: 15px;
-    height: 250px;
-    width: 100%;
+    border-radius: 50%;
+    width: 320px;
+    height: 320px;
     object-fit: cover;
 }
 
@@ -44,6 +44,9 @@
 
 
 /*SERVICE CARD*/
+.service-link, .service-link:link{
+    text-decoration: none;
+}
 
 .service-img {
     border-radius: 15px;
@@ -71,6 +74,7 @@
 .service-contracted-times {
     color: gray;
     margin-top: 10px;
+    align-items: center;
 }
 
 /*REVIEW CARD*/
@@ -102,4 +106,11 @@
 
 .review-link {
     color: #485696;
+}
+
+.review-img {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
 }

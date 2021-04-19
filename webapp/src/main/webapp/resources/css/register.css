@@ -1,6 +1,6 @@
 .register-card {
     display: flex;
-    margin: 10vh auto;
+    margin: 120px auto;
     width: 800px;
     flex-direction: column;
     justify-content: center;

@@ -1,7 +1,7 @@
 .login-card {
     width: 500px;
     height: 600px;
-    margin: 15vh auto auto;
+    margin: 150px auto auto;
 }
 
 .login-title {
@@ -14,7 +14,6 @@
 body {
     background-image: url("/resources/images/background.jpg");
     background-size: cover;
-    background-color: #485696;
 }
 
 /*login y register*/

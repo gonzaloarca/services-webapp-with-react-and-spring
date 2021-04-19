@@ -5,6 +5,9 @@ import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
+import exceptions.JobPackageNotFoundException;
+import exceptions.JobPostNotFoundException;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -83,15 +86,12 @@ public class JobContractDaoJDBC implements JobContractDao {
             put("image_data", imageData);
         }});
 
-        //TODO: Cambiar excepciones por excepciones propias
-        User client = userDao.findById(clientId).orElseThrow(NoSuchElementException::new);
+        JobPackage jobPackage = jobPackageDao.findById(packageId).orElseThrow(JobPackageNotFoundException::new);
 
-        JobPackage jobPackage = jobPackageDao.findById(packageId).orElseThrow(NoSuchElementException::new);
+        JobPost jobPost = jobPostDao.findById(jobPackage.getPostId()).orElseThrow(JobPostNotFoundException::new);
 
-        JobPost jobPost = jobPostDao.findById(jobPackage.getPostId()).orElseThrow(NoSuchElementException::new);
-
-        //TODO: Revisar caso de nullPointerException
-        User professional = userDao.findById(jobPost.getUser().getId()).orElseThrow(NoSuchElementException::new);
+        User client = userDao.findById(clientId).orElseThrow(UserNotFoundException::new);
+        User professional = userDao.findById(jobPost.getUser().getId()).orElseThrow(UserNotFoundException::new);
 
         return new JobContract(key.longValue(), client, jobPackage, professional, creationDate, description, imageData);
     }
@@ -99,24 +99,19 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Override
     public Optional<JobContract> findById(long id) {
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE contract_id = ?"
-                , new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
-
-
+                "SELECT * FROM full_contract WHERE contract_id = ?",
+                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<JobContract> findByClientId(long id) {
-        return
-                jdbcTemplate.query(
-                        "SELECT * FROM full_contract WHERE client_id = ?"
-                        , new Object[]{id},
-                        JOB_CONTRACT_ROW_MAPPER);
+        return jdbcTemplate.query(
+                "SELECT * FROM full_contract WHERE client_id = ?",
+                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
     public List<JobContract> findByProId(long id) {
-        //TODO
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract WHERE professional_id = ?",
                 new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
@@ -126,18 +121,16 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByPostId(long id) {
 
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE post_id = ?"
-                , new Object[]{id},
-                JOB_CONTRACT_ROW_MAPPER);
+                "SELECT * FROM full_contract WHERE post_id = ?",
+                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
     public List<JobContract> findByPackageId(long id) {
 
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE package_id = ?"
-                , new Object[]{id},
-                JOB_CONTRACT_ROW_MAPPER);
+                "SELECT * FROM full_contract WHERE package_id = ?",
+                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override

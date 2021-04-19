@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
+import ar.edu.itba.paw.interfaces.dao.JobContractDao;
+import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.Review;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.models.*;
+import exceptions.JobContractNotFoundException;
+import exceptions.JobPostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,16 +14,19 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ReviewDaoJDBC implements ReviewDao {
 
     private final JdbcTemplate jdbcTemplate;
-//    private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    @Autowired
+    private JobContractDao jobContractDao;
+
+    @Autowired
+    private JobPostDao jobPostDao;
 
     private static List<JobPost.Zone> auxiGetZones(Object[] objs) {
         List<JobPost.Zone> zones = new ArrayList<>();
@@ -62,7 +67,23 @@ public class ReviewDaoJDBC implements ReviewDao {
     @Autowired
     public ReviewDaoJDBC(DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-//        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("review"); TODO: implementar crear review
+        jdbcInsert = new SimpleJdbcInsert(ds).withTableName("review");
+    }
+
+    @Override
+    public Review create(long contractId, int rate, String title, String description) {
+        Number key = jdbcInsert.executeAndReturnKey(new HashMap<String,Object>(){{
+            put("contract_id", contractId);
+            put("review_rate", rate);
+            put("review_title",title);
+            put("review_description",description);
+        }});
+
+        //TODO: Cambiar excepciones por excepciones propias
+        JobContract jobContract = jobContractDao.findById(contractId).orElseThrow(JobContractNotFoundException::new);
+        JobPost jobPost = jobPostDao.findById(jobContract.getJobPackage().getPostId()).orElseThrow(JobPostNotFoundException::new);
+
+        return new Review(rate, title, description, jobContract.getClient(), jobPost);
     }
 
     @Override

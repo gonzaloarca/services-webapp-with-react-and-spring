@@ -241,6 +241,15 @@ h3 {
     line-height: 1;
 }
 
+.gray-chip {
+    background-color: #efefef;
+    border-radius: 18px;
+    color: white;
+    padding: 6px 12px;
+    text-align: center;
+    line-height: 1;
+}
+
 /*Para precio, se utiliza en JobCard y en ServiceCard*/
 .price-container {
     padding: 1vh 1vw;
