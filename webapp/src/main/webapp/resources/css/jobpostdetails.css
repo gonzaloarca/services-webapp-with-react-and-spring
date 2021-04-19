@@ -38,18 +38,18 @@
 }
 
 .summary {
-    background-color: #fcb839;
     display: inline-flex;
     border-radius: 8px;
-    margin: 0 3vw;
+    width: 100%;
 }
 
 .summary-item {
     background-color: white;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 6px;
     display: inline-flex;
     margin: 8px 15px;
+    border: 5px solid #fab739;
 }
 
 .summary-item img {
@@ -57,13 +57,14 @@
     height: 50px;
     object-fit: cover;
     border-radius: 50%;
+    padding: 2px;
 }
 
 .summary-item p {
     margin: auto 14px;
-    text-align: center;
-    max-width: 110px;
+    text-align: left;
     word-wrap: break-word;
+    font-weight: bold;
 }
 
 .summary-item i {
@@ -71,6 +72,74 @@
     font-size: 32px;
     align-self: center;
     margin-left: 5px;
+}
+
+.summary a:hover{
+    text-decoration: none;
+}
+
+/* profile item */
+.profile-item,.profile-item:link{
+    color: black;
+    flex: 1;
+}
+.profile-item:hover{
+    color: black;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    flex: 1;
+}
+.profile-item p{
+    width: 100%;
+    font-size: 22px;
+}
+/* rate item */
+.rate-item{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.rate-item p{
+    max-width: 100%;
+    font-size: 21px;
+}
+.rate-item .custom-row {
+    justify-content: center;
+}
+.rate-item h2{
+    margin-bottom: 0;
+}
+.rate-item p{
+    text-align: center;
+}
+.rate-item .custom-row .review-count{
+    color: grey;
+    font-size: 15px;
+    margin-bottom: 3vh;
+}
+
+.rate-item .custom-row .rating{
+    margin-left:0;
+    margin-bottom: 3vh;
+
+}
+.rate-item .custom-row .rating .star{
+    color: gold;
+    font-size: 15px;
+}
+
+.rate-item .opinion{
+    color: #485696;
+    font-size: 16px;
+    opacity: 57%;
+}
+
+/* contracts item*/
+
+.contracts-item{
+    flex: 1;
+}
+.contracts-item p{
+    font-size: 21px;
 }
 
 .available-hours {

@@ -37,7 +37,7 @@ public class ReviewDaoJDBC implements ReviewDao {
                             resultSet.getLong("client_id"),
                             resultSet.getString("client_email"),
                             resultSet.getString("client_name"),
-                            "",
+                            null,
                             resultSet.getString("client_phone"),
                             resultSet.getBoolean("client_is_active")
                     ),
@@ -47,7 +47,7 @@ public class ReviewDaoJDBC implements ReviewDao {
                                     resultSet.getLong("professional_id"),
                                     resultSet.getString("professional_email"),
                                     resultSet.getString("professional_name"),
-                                    "",
+                                    null,
                                     resultSet.getString("professional_phone"),
                                     resultSet.getBoolean("professional_is_active")
                             ),

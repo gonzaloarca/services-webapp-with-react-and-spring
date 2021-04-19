@@ -34,7 +34,7 @@ public class JobPostDaoJDBC implements JobPostDao {
                     resultSet.getLong("user_id"),
                     resultSet.getString("user_email"),
                     resultSet.getString("user_name"),
-                    "",
+                    null,
                     resultSet.getString("user_phone"),
                     resultSet.getBoolean("user_is_active")
             ),

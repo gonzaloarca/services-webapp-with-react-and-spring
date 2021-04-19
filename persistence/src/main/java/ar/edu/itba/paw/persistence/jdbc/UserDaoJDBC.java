@@ -28,7 +28,7 @@ public class UserDaoJDBC implements UserDao {
             resultSet.getString("user_email"),
             resultSet.getString("user_name"),
 //            resultSet.getString("user_image"),
-            "",
+            null,
             resultSet.getString("user_phone"),
             resultSet.getBoolean("user_is_active"));
 
@@ -61,7 +61,7 @@ public class UserDaoJDBC implements UserDao {
             put("user_is_active",true);
         }});
 
-        return new User(key.longValue(),email,username,"",phone,true);
+        return new User(key.longValue(),email,username,null,phone,true);
     }
 
     @Override

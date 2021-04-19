@@ -37,18 +37,18 @@
 <body>
 <jsp:include page="customNavBar.jsp"/>
 <div class="content-container-transparent">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white">
-            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">
-                <spring:message code="navigation.index"/>
-            </a></li>
-            <li class="breadcrumb-item active" aria-current="page">
-                <p class="capitalize-first-letter">
-                    <spring:message code="${jobPost.jobType.stringCode}"/>
-                </p>
-            </li>
-        </ol>
-    </nav>
+<%--    <nav aria-label="breadcrumb">--%>
+<%--        <ol class="breadcrumb bg-white">--%>
+<%--            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
+<%--                <spring:message code="navigation.index"/>--%>
+<%--            </a></li>--%>
+<%--            <li class="breadcrumb-item active" aria-current="page">--%>
+<%--                <p class="capitalize-first-letter">--%>
+<%--                    <spring:message code="${jobPost.jobType.stringCode}"/>--%>
+<%--                </p>--%>
+<%--            </li>--%>
+<%--        </ol>--%>
+<%--    </nav>--%>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <c:choose>
@@ -89,7 +89,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-
+    </div>
         <div class="card-body custom-row mt-2">
 
             <div class="side">
@@ -107,27 +107,38 @@
                         </span>
 
 
-                        <span class="custom-row rating align-items-center">
-                            <h1 class="mr-3">
-                                ${avgRate}
-                            </h1>
-                            <jsp:include page="rateStars.jsp">
-                                <jsp:param name="rate" value="${avgRate}"/>
-                            </jsp:include>
-                            <h5 class="ml-3 mb-0">
-                                (${reviewsSize})
-                            </h5>
-                        </span>
+
 
                         <div class="summary custom-row">
-                            <div class="summary-item">
-                                <%--TODO: CAMBIAR A FOTO DE USUARIO--%>
-                                <%--                                <img    src="${pageContext.request.contextPath}/resources/images/banner1.jpg"--%>
-                                <%--                                        alt="Primer foto">--%>
-                                <i class="fas fa-user fa-2x"></i>
+                            <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services" class="summary-item profile-item align-items-center">
+                                <c:choose>
+                                    <c:when test="${jobPost.user.userImage == null}">
+                                        <img src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="todo" alt="avatar">
+                                    </c:otherwise>
+                                </c:choose>
                                 <p><c:out value="${jobPost.user.username}"/></p>
+                            </a>
+                            <div class="summary-item rate-item">
+                                <p>Calificacion promedio</p>
+                                <span class="custom-row align-items-center">
+                                    <h2>
+                                        ${avgRate}
+                                    </h2>
+                                    <jsp:include page="rateStars.jsp">
+                                        <jsp:param name="rate" value="${avgRate}"/>
+                                    </jsp:include>
+                                    <h5 class="ml-1 review-count">
+                                        (${reviewsSize})
+                                    </h5>
+                                </span>
+                                <p class="align-items-center mt-0 opinion">
+                                    Ver opiniones
+                                </p>
                             </div>
-                            <div class="summary-item">
+                            <div class="summary-item contracts-item">
                                 <i class="fas fa-check"></i>
                                 <p>
                                     <spring:message code="jobPost.jobs.completed" arguments="${contractsCompleted}"/>
@@ -235,7 +246,6 @@
 
             <div class="side"></div>
         </div>
-    </div>
 </div>
 <jsp:include page="footer.jsp"/>
 <script>
