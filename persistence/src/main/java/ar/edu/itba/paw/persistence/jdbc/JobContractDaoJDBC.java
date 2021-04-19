@@ -53,7 +53,7 @@ public class JobContractDaoJDBC implements JobContractDao {
             ), new User(
                     resultSet.getLong("professional_id"),
                     resultSet.getString("professional_email"),
-                    resultSet.getString("professional_username"),
+                    resultSet.getString("professional_name"),
                     resultSet.getString("professional_phone"),
                     resultSet.getBoolean("professional_is_active"),
                     true,       //TODO implementar

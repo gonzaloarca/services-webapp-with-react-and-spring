@@ -46,17 +46,17 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="profile-image-container">
-                    <c:choose>
-                        <c:when test="${user.image.string != null}">
-                            <c:set var="profilePic" value="data:${user.image.type};base64,${user.image.string}"/>
-                        </c:when>
-                        <c:otherwise>
-                            <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
-                        </c:otherwise>
-                    </c:choose>
-                    <img class="card-image-top profile-img"
-                         src='${profilePic}'
-                         alt="<spring:message code="profile.image"/>">
+                        <c:choose>
+                            <c:when test="${user.image.string != null}">
+                                <c:set var="profilePic" value="data:${user.image.type};base64,${user.image.string}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
+                            </c:otherwise>
+                        </c:choose>
+                        <img class="card-image-top profile-img"
+                             src='${profilePic}'
+                             alt="<spring:message code="profile.image"/>">
                     </div>
                     <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
                     <h5 class="profile-subtitle"><spring:message code="profile.professional"/></h5>
@@ -159,25 +159,32 @@
                             <div class="custom-row justify-content-between">
                                 <div class="row">
                                     <div class="col">
-                                            <%--                                        TODO: LEVANTAR IMAGEN DE SERVICE--%>
-                                        <img class="review-img"
-                                             src='<c:url value="/resources/images/worker-placeholder.jpg" />'
+                                        <c:choose>
+                                            <c:when test="${review.client.image.string != null}">
+                                                <c:set var="profilePic"
+                                                       value="data:${review.client.image.type};base64,${review.client.image.string}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <img class="review-img" src='${profilePic}'
                                              alt="<spring:message code="profile.image"/>">
                                     </div>
                                     <div class="col align-self-center p-0">
                                         <h4>${review.client.username}</h4>
-<%--                                        TODO: IMPLEMENTAR FECHA EN REVIEWS--%>
-<%--                                        <h5>15/3/21</h5>--%>
+                                            <%--                                        TODO: IMPLEMENTAR FECHA EN REVIEWS--%>
+                                            <%--                                        <h5>15/3/21</h5>--%>
                                     </div>
                                 </div>
                                 <jsp:include page="components/rateStars.jsp">
                                     <jsp:param name="rate" value="${review.rate}"/>
                                 </jsp:include>
                             </div>
-                            <h4 class="mt-2 review-title">${review.title}</h4>
-                            <h5>${review.description}</h5>
+                            <h4 class="mt-2 review-title"><c:out value="${review.title}"/></h4>
+                            <h5><c:out value="${review.description}"/></h5>
 
-                            <h6>${review.client.username}</h6>
+                            <h6><c:out value="${review.client.username}"/></h6>
                             <a href="${pageContext.request.contextPath}/job/${review.jobPost.id}">
                                 <h5 class="review-link mt-2">
                                     <i class="bi bi-box-arrow-up-right"></i>
