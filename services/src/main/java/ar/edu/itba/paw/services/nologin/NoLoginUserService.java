@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,6 +17,9 @@ public class NoLoginUserService implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User register(String email, String password, String username, String phone, List<Integer> roles,
@@ -81,4 +85,15 @@ public class NoLoginUserService implements UserService {
             userDao.assignRole(id, role);
     }
 
+    @Override
+    public boolean validCredentials(String email, String password) {
+        UserAuth auth = userDao.findAuthInfo(email).orElseThrow(UserNotFoundException::new);
+        return passwordEncoder.matches(password,auth.getPassword());
+    }
+
+    @Override
+    public void changeUserPassword(String email, String password) {
+        User user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
+    }
 }

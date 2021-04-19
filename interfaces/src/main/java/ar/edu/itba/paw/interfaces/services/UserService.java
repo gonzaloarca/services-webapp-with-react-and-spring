@@ -27,4 +27,7 @@ public interface UserService {
 
     void assignRole(long id, int role);
 
+    boolean validCredentials(String email, String password);
+
+    void changeUserPassword(String email, String password);
 }

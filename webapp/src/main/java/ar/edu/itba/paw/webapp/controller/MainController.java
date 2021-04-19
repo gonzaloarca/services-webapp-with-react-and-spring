@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utils.JobContractCard;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -133,5 +134,11 @@ public class MainController {
     @RequestMapping("/categories")
     public ModelAndView categories() {
         return new ModelAndView("categories");
+    }
+
+    @RequestMapping("/password_changed")
+    public ModelAndView passwordChanged() {
+        SecurityContextHolder.clearContext();
+        return new ModelAndView("passwordChanged");
     }
 }

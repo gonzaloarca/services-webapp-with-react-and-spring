@@ -123,4 +123,8 @@ public class UserDaoJDBC implements UserDao {
                 .stream().findFirst();
     }
 
+    @Override
+    public void changeUserPassword(long id, String password) {
+        jdbcTemplate.update("UPDATE users SET user_password = ? WHERE user_id = ?;", password, id);
+    }
 }

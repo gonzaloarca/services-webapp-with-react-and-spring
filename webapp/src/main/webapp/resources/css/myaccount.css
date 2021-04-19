@@ -1,0 +1,142 @@
+.account-sections {
+	width: 25%;
+	margin-right: 10px;
+	min-height: 0;
+	padding: 0;
+}
+
+.account-settings {
+	width: 75%;
+	margin-left: 10px;
+	min-height: 0;
+	padding: 0;
+}
+
+.main-body {
+	display: flex;
+	align-items: flex-start;
+}
+
+.options-title {
+	margin: 30px 20px 10px 20px;
+	font-weight: bold;
+}
+
+.divider-bar {
+	border-top: 2px solid rgba(0,0,0,0.05);
+	margin: 0;
+}
+
+.nav-option {
+	display: flex;
+	min-height: 50px;
+	padding: 0;
+}
+
+.account-option {
+	margin: auto 0 auto 0;
+	color: black;
+	font-weight: normal;
+}
+
+.nav-option:hover {
+	background-color: #efefef;
+}
+
+.active {
+	background-color: #efefef;
+}
+
+.option-icon {
+	margin-left: 15px;
+	margin-right: 10px;
+	width: 27px;
+	height: 27px;
+	border-radius: 27px;
+	display: flex inline;
+	justify-content: center;
+	align-items: center;
+}
+
+.user-icon {
+	color: darkorange;
+	background-color: white;
+	border: 4px solid darkorange;
+}
+
+.security-icon {
+	color: white;
+	background-color: #485696;
+}
+
+.logout-icon {
+	color: white;
+	background-color: red;
+}
+
+.orange-line {
+	display: inline-block;
+	border-left: 3px solid darkorange;
+}
+
+.blue-line {
+	display: inline-block;
+	border-left: 3px solid #485696;
+}
+
+.empty-line {
+	display: inline-block;
+	border-left: 3px solid transparent;
+}
+
+.options-subtitle {
+	margin: 20px 20px 10px 20px;
+	font-weight: bold;
+}
+
+.custom-password {
+	padding-right: 30px;
+}
+
+.custom-password {
+	padding-right: 30px;
+}
+
+.password-eye {
+	z-index: 4;
+	align-self: center;
+	position: absolute;
+	right: 10px;
+}
+
+.password-eye a {
+	color: #7e7e7e !important;
+}
+
+.form-section {
+	padding: 10px 30px 20px 30px;
+}
+
+.btn-primary {
+	background-color: #485696;
+	border-color: #485696;
+	border-radius: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.data-row {
+	margin-bottom: 20px;
+}
+
+.bottom-row {
+	display: flex;
+	justify-content: space-between;
+	align-content: center;
+}
+
+.success-text {
+	margin: auto auto auto 0;
+	color: green;
+	font-weight: bold;
+}
