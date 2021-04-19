@@ -45,9 +45,12 @@
         <div class="d-block col-4">
             <div class="card custom-card">
                 <div class="card-body">
-                    <img class="card-image-top profile-img"
-                         src='<c:url value="/resources/images/worker-placeholder.jpg" />'
-                         alt="<spring:message code="profile.image"/>">
+                    <div class="text-align-center">
+                        <%--                        TODO: LEVANTAR IMAGEN DE PROFESIONAL--%>
+                        <img class="card-image-top profile-img"
+                             src='<c:url value="/resources/images/worker-placeholder.jpg" />'
+                             alt="<spring:message code="profile.image"/>">
+                    </div>
                     <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
                     <h5 class="profile-subtitle"><spring:message code="profile.professional"/></h5>
                 </div>
@@ -101,49 +104,53 @@
 
                     <c:if test="${withServices}">
                         <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
-                            <a href="${pageContext.request.contextPath}/job/${jobCard.jobPost.id}">
-                            <div class="row no-gutters">
-                                <div class="col-md-3">
-                                    <img class="card-image-top service-img"
-                                         src='<c:url value="/resources/images/cleaning.png" />'
-                                         alt="<spring:message code="profile.service.image"/>">
-                                </div>
-                                <div class="col-md-9 px-3">
-                                    <h4 class="service-title">
-                                        <c:out value="${jobCard.jobPost.title}"/>
-                                    </h4>
-                                    <div class="justify-content-between custom-row">
-                                        <h6 class="service-subtitle"><spring:message
-                                                code="${jobCard.jobPost.jobType.stringCode}"/></h6>
-
-                                        <jsp:include page="rateStars.jsp">
-                                            <jsp:param name="rate" value="${jobCard.jobPost.rating}"/>
-                                        </jsp:include>
-                                        <h6 class="ml-3 mb-0">
-                                            (${jobCard.reviewsCount})
-                                        </h6>
+                            <a class="service-link" href="${pageContext.request.contextPath}/job/${jobCard.jobPost.id}">
+                                <div class="row no-gutters">
+                                    <div class="col-md-3">
+                                            <%--                                        TODO: LEVANTAR IMAGEN DE SERVICE--%>
+                                        <img class="card-image-top service-img"
+                                             src='<c:url value="/resources/images/cleaning.png" />'
+                                             alt="<spring:message code="profile.service.image"/>">
                                     </div>
+                                    <div class="col-md-9 px-3">
+                                        <h4 class="service-title">
+                                            <c:out value="${jobCard.jobPost.title}"/>
+                                        </h4>
+                                        <div class="justify-content-between custom-row">
+                                            <h6 class="service-subtitle"><spring:message
+                                                    code="${jobCard.jobPost.jobType.stringCode}"/></h6>
 
-                                    <br/>
-                                    <div class="d-flex">
-                                        <div class="price-container">
-                                            <p class="price">
-                                                <spring:message code="${jobCard.rateType.stringCode}"
-                                                                arguments="${jobCard.price}"/>
-                                            </p>
+                                            <div class="custom-row">
+                                                <jsp:include page="rateStars.jsp">
+                                                    <jsp:param name="rate" value="${jobCard.jobPost.rating}"/>
+                                                </jsp:include>
+                                                <h6 class="ml-3 service-subtitle">
+                                                    (${jobCard.reviewsCount})
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="custom-row service-contracted-times">
-                                        <i class="fas fa-check"></i>
-                                        <h6 class="ml-2">
-                                            <spring:message code="profile.service.contract.quantity"
-                                                            arguments="${jobCard.contractsCompleted}"/>
-                                        </h6>
-                                    </div>
+                                        <div class="d-flex mt-2">
+                                            <div class="price-container">
+                                                <p class="price">
+                                                    <spring:message code="${jobCard.rateType.stringCode}"
+                                                                    arguments="${jobCard.price}"/>
+                                                </p>
+                                            </div>
+                                        </div>
 
+                                        <div class="d-flex">
+                                            <div class="custom-row service-contracted-times gray-chip">
+                                                <i class="fas fa-check mr-2"></i>
+                                                <h6 class="m-0">
+                                                    <spring:message code="profile.service.contract.quantity"
+                                                                    arguments="${jobCard.contractsCompleted}"/>
+                                                </h6>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                            </div>
                             </a>
 
                             <c:if test="${status.index != jobCards.size()-1}">
@@ -176,8 +183,7 @@
                                                     arguments="${6-i}"/></p>
                                             <div class="progress">
                                                 <div class="progress-bar bg-warning" role="progressbar"
-                                                    <%--                                                 TODO:DINAMIZAR--%>
-                                                     style="width: ${Integer.valueOf(reviewsByPoints[5-i]*100/reviews.size()) };"
+                                                     style="width: ${Integer.valueOf(reviewsByPoints[5-i]*100/reviews.size())};"
                                                      aria-valuenow="${Integer.valueOf(reviewsByPoints.get(5-i)*100/reviews.size())}"
                                                      aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
@@ -190,9 +196,23 @@
                         <hr class="hr1"/>
 
                         <c:forEach var="review" items="${reviews}" varStatus="status">
-                            <jsp:include page="rateStars.jsp">
-                                <jsp:param name="rate" value="${review.rate}"/>
-                            </jsp:include>
+                            <div class="custom-row justify-content-between">
+                                <div class="row">
+                                    <div class="col">
+                                            <%--                                        TODO: LEVANTAR IMAGEN DE SERVICE--%>
+                                        <img class="review-img"
+                                             src='<c:url value="/resources/images/worker-placeholder.jpg" />'
+                                             alt="<spring:message code="profile.image"/>">
+                                    </div>
+                                    <div class="col align-self-center p-0">
+                                        <h4>${review.client.username}</h4>
+                                        <h5>15/3/21</h5>
+                                    </div>
+                                </div>
+                                <jsp:include page="rateStars.jsp">
+                                    <jsp:param name="rate" value="${review.rate}"/>
+                                </jsp:include>
+                            </div>
                             <h4 class="mt-2 review-title">${review.title}</h4>
                             <h5>${review.description}</h5>
 

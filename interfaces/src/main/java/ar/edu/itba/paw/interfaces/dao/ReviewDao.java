@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface ReviewDao {
 
+    Review create(long contractId, int rate, String title, String description);
+
     List<Review> findAllReviews(long id);
 
     int findJobPostReviewsSize(long id);
