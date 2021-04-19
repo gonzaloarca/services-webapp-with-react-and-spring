@@ -45,11 +45,18 @@
         <div class="d-block col-4">
             <div class="card custom-card">
                 <div class="card-body">
-                    <div class="text-align-center">
-                        <%--                        TODO: LEVANTAR IMAGEN DE PROFESIONAL--%>
-                        <img class="card-image-top profile-img"
-                             src='<c:url value="/resources/images/worker-placeholder.jpg" />'
-                             alt="<spring:message code="profile.image"/>">
+                    <div class="profile-image-container">
+                    <c:choose>
+                        <c:when test="${user.image.string != null}">
+                            <c:set var="profilePic" value="data:${user.image.type};base64,${user.image.string}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
+                        </c:otherwise>
+                    </c:choose>
+                    <img class="card-image-top profile-img"
+                         src='${profilePic}'
+                         alt="<spring:message code="profile.image"/>">
                     </div>
                     <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
                     <h5 class="profile-subtitle"><spring:message code="profile.professional"/></h5>
@@ -106,7 +113,6 @@
                         <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
                             <c:set var="data" value="${jobCard}" scope="request"/>
                             <c:import url="components/serviceCard.jsp"/>
-
                             <c:if test="${status.index != jobCards.size()-1}">
                                 <hr class="hr1"/>
                             </c:if>

@@ -1,11 +1,16 @@
 package ar.edu.itba.paw.webapp.validation;
 
+import ar.edu.itba.paw.interfaces.services.ImageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class ImageFileValidator implements ConstraintValidator<ValidImage, MultipartFile> {
+
+    @Autowired
+    private ImageService imageService;
 
     @Override
     public void initialize(ValidImage constraintAnnotation) {
@@ -15,7 +20,7 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
     @Override
     public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext context) {
         String contentType = multipartFile.getContentType();
-        if (multipartFile.getSize() != 0 && !isSupportedContentType(contentType)) {
+        if (multipartFile.getSize() != 0 && !imageService.isValidType(contentType)) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
                     "Only JPG and PNG are supported")
@@ -25,11 +30,4 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
         return true;
     }
 
-    // TODO: definir los tipos de imagen aceptados:
-    // http://www.java2s.com/Code/Java/Network-Protocol/MapfileextensionstoMIMEtypesBasedontheApachemimetypesfile.htm
-    private boolean isSupportedContentType(String contentType) {
-        return contentType.equals("image/png")
-                || contentType.equals("image/jpg")
-                || contentType.equals("image/jpeg");
-    }
 }

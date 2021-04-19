@@ -66,7 +66,7 @@
                 <c:url value="/resources/images/${jobPost.jobType.imagePath}" var="imageSrc"/>
             </c:when>
             <c:otherwise>
-                <c:set value="data:${imageList[0].imageType};base64,${imageList[0].encodedData}"
+                <c:set value="data:${imageList[0].image.type};base64,${imageList[0].image.string}"
                        var="imageSrc"/>
             </c:otherwise>
         </c:choose>
@@ -98,7 +98,7 @@
                     <!-- Description -->
                     <div class="form-row">
                         <div class="blue-circle">
-                            <p class="circle-text">4</p>
+                            <p class="circle-text">1</p>
                         </div>
                         <div class="col-10 label-and-input">
                             <form:label path="description" class="form-text">
@@ -115,7 +115,7 @@
                             <!-- TODO: implementar imagen en el proximo Sprint -->
                             <div class="form-row">
                                 <div class="yellow-circle">
-                                    <p class="circle-text">5</p>
+                                    <p class="circle-text">2</p>
                                 </div>
                                 <div class="col-10 label-and-input">
                                     <form:label path="image" class="form-text">

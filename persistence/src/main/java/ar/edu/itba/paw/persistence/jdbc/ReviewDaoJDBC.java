@@ -3,8 +3,9 @@ package ar.edu.itba.paw.persistence.jdbc;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
-import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
+import ar.edu.itba.paw.interfaces.dao.UserDao;
 import exceptions.JobContractNotFoundException;
 import exceptions.JobPostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,11 @@ public class ReviewDaoJDBC implements ReviewDao {
                             resultSet.getLong("client_id"),
                             resultSet.getString("client_email"),
                             resultSet.getString("client_name"),
-                            null,
                             resultSet.getString("client_phone"),
-                            resultSet.getBoolean("client_is_active")
+                            resultSet.getBoolean("client_is_active"),
+                            true,   //TODO implementar
+                            new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
+                                    resultSet.getString("client_image_type"))
                     ),
                     new JobPost(
                             resultSet.getLong("post_id"),
@@ -52,9 +55,11 @@ public class ReviewDaoJDBC implements ReviewDao {
                                     resultSet.getLong("professional_id"),
                                     resultSet.getString("professional_email"),
                                     resultSet.getString("professional_name"),
-                                    null,
                                     resultSet.getString("professional_phone"),
-                                    resultSet.getBoolean("professional_is_active")
+                                    resultSet.getBoolean("professional_is_active"),
+                                    true,       //TODO implementar
+                                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
+                                            resultSet.getString("professional_image_type"))
                             ),
                             resultSet.getString("post_title"),
                             resultSet.getString("post_available_hours"),

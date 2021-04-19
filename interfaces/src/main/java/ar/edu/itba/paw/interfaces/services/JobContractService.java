@@ -1,16 +1,15 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.Review;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface JobContractService {
 
     JobContract create(String client_email, long packageId, String description);
 
-    JobContract create(String client_email, long packageId, String description, byte[] imageData);
+    JobContract create(String client_email, long packageId, String description, ByteImage image);
 
     JobContract findById(long id);
 

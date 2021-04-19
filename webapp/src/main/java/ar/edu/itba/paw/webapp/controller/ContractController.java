@@ -36,6 +36,9 @@ public class ContractController {
     @Autowired
     private JobPostImageService jobPostImageService;
 
+    @Autowired
+    private ImageService imageService;
+
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
@@ -66,7 +69,8 @@ public class ContractController {
             jobContract = jobContractService.create(email,packId, form.getDescription());
         else {
             try {
-                jobContract = jobContractService.create(email,packId, form.getDescription(), form.getImage().getBytes());
+                jobContract = jobContractService.create(email,packId, form.getDescription(),
+                        imageService.create(form.getImage().getBytes(), form.getImage().getContentType()));
             } catch (IOException e){
                 //fixme
                 throw new RuntimeException(e.getMessage());

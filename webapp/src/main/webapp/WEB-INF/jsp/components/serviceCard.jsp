@@ -5,9 +5,17 @@
 <a class="service-link" href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
     <div class="row no-gutters">
         <div class="col-md-3">
-            <%--                                        TODO: LEVANTAR IMAGEN DE SERVICE--%>
+            <c:choose>
+                <c:when test="${requestScope.data.postImage == null}">
+                    <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
+                </c:when>
+                <c:otherwise>
+                    <c:set value="data:${requestScope.data.postImage.image.type};base64,${requestScope.data.postImage.image.string}"
+                           var="imageSrc"/>
+                </c:otherwise>
+            </c:choose>
             <img class="card-image-top service-img"
-                 src='<c:url value="/resources/images/cleaning.png" />'
+                 src='${imageSrc}'
                  alt="<spring:message code="profile.service.image"/>">
         </div>
         <div class="col-md-9 px-3">

@@ -28,6 +28,8 @@ SELECT job_post.post_id,
        user_name,
        user_phone,
        user_is_active,
+       user_image,
+       users.image_type 					as user_image_type,
        coalesce(avg(review_rate), 0)        AS rating,
        array_agg(DISTINCT zone_id)          as zones,
        count(distinct contract.contract_id) as contracts,
@@ -39,7 +41,7 @@ FROM job_post
          LEFT JOIN contract ON contract.package_id = job_package.package_id
          LEFT JOIN review ON review.contract_id = contract.contract_id
 GROUP BY job_post.post_id, post_title, post_available_hours, post_job_type, post_is_active, user_id, user_email,
-         user_name, user_phone, user_is_active;
+         user_name, user_phone, user_is_active, user_image, users.image_type;
 
 DROP VIEW IF EXISTS full_contract;
 CREATE OR REPLACE VIEW full_contract AS
@@ -61,11 +63,15 @@ FROM contract
                               user_email     AS client_email,
                               user_name      AS client_name,
                               user_phone     AS client_phone,
-                              user_is_active as client_is_active
+                              user_is_active as client_is_active,
+                              user_image	 as client_image,
+                              image_type	 as client_image_type
                        FROM users) as clients
          NATURAL JOIN (SELECT user_id        AS professional_id,
                               user_email     AS professional_email,
                               user_name      AS professional_name,
                               user_phone     AS professional_phone,
-                              user_is_active as professional_is_active
-                       FROM users) as professionals
+                              user_is_active as professional_is_active,
+         					  user_image     as professional_image,
+							  image_type	 as professional_image_type
+                       FROM users) as professionals;

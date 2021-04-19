@@ -81,8 +81,8 @@ public class WebConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
-        dbp.addScript(loginMigration);
         dbp.addScript(imageSchemaSql);
+        dbp.addScript(loginMigration);
         return dbp;
     }
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.webapp.form.LoginForm;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 @Controller
@@ -43,6 +45,8 @@ public class MainController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ImageService imageService;
     @RequestMapping(value = "/my-contracts")
     public ModelAndView myContracts() {
         final ModelAndView mav = new ModelAndView("myContracts");
@@ -104,8 +108,20 @@ public class MainController {
     public ModelAndView registerForm(@Valid @ModelAttribute("registerForm") RegisterForm registerForm, BindingResult errors) {
         if (errors.hasErrors())
             return register(registerForm);
+
+        ByteImage byteImage = null;
+
+        if(registerForm.getAvatar().getSize() != 0) {
+            try {
+                byteImage = imageService.create(registerForm.getAvatar().getBytes(), registerForm.getAvatar().getContentType());
+            } catch (IOException ignored) {
+                //Se ignora porque la imagen queda en valor null
+            }
+        }
+
         userService.register(registerForm.getEmail(), passwordEncoder.encode(registerForm.getPassword()),
-                registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1));
+                registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1), byteImage);
+
         return new ModelAndView("redirect:/");
     }
 

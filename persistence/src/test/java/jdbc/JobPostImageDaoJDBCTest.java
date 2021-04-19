@@ -1,5 +1,6 @@
 package jdbc;
 
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.persistence.jdbc.JobPostImageDaoJDBC;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
@@ -45,11 +46,13 @@ public class JobPostImageDaoJDBCTest {
 	public void addImageTest() {
 		long post_id = 1;
 		byte[] image_data = {1,2,3,4,5,6,7};
-		JobPostImage jobPostImage = jobPostImageDaoJDBC.addImage(post_id, image_data);
+		String image_type = "image/png";
+
+		JobPostImage jobPostImage = jobPostImageDaoJDBC.addImage(post_id, new ByteImage(image_data, image_type));
 
 		Assert.assertNotNull(jobPostImage);
 		Assert.assertEquals(post_id, jobPostImage.getPostId());
-		Assert.assertEquals(ImageDataConverter.getEncodedString(image_data), jobPostImage.getEncodedData());
+		Assert.assertEquals(ImageDataConverter.getEncodedString(image_data), jobPostImage.getImage().getString());
 	}
 
 	@Test
@@ -62,7 +65,10 @@ public class JobPostImageDaoJDBCTest {
 		byteImages.add(first_image);
 		byteImages.add(second_image);
 
-		List<JobPostImage> images = jobPostImageDaoJDBC.addImages(post_id, byteImages);
+		List<JobPostImage> images = new ArrayList<>();
+		for(byte[] image : byteImages) {
+			images.add(jobPostImageDaoJDBC.addImage(post_id, new ByteImage(image, "image/jpg")));
+		}
 
 		Assert.assertNotNull(images);
 		Assert.assertFalse(images.isEmpty());
@@ -70,7 +76,7 @@ public class JobPostImageDaoJDBCTest {
 		for(int i = 0; i < images.size(); i++) {
 			Assert.assertEquals(post_id, images.get(i).getPostId());
 			Assert.assertEquals(ImageDataConverter.getEncodedString(byteImages.get(i)),
-					images.get(i).getEncodedData());
+					images.get(i).getImage().getString());
 		}
 
 		images = jobPostImageDaoJDBC.findByPostId(post_id);
@@ -78,7 +84,7 @@ public class JobPostImageDaoJDBCTest {
 		for(int i = 0; i < images.size(); i++) {
 			Assert.assertEquals(post_id, images.get(i).getPostId());
 			Assert.assertEquals(ImageDataConverter.getEncodedString(byteImages.get(i)),
-					images.get(i).getEncodedData());
+					images.get(i).getImage().getString());
 		}
 	}
 

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.dao;
 
-import ar.edu.itba.paw.models.Review;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 
@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface UserDao {
 
     User register(String email,String password, String username, String phone);
+
+    User register(String email, String password, String username, String phone, ByteImage image);
 
     Optional<User> findById(long id);
 

@@ -69,11 +69,11 @@
                         </c:forEach>
                     </ol>
                     <div class="carousel-inner">
-                        <c:forEach items="${imageList}" varStatus="status" var="image">
+                        <c:forEach items="${imageList}" varStatus="status" var="postImage">
                             <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
                                 <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
                                 <img class="d-block w-100 h-100"
-                                     src='data:${image.imageType};base64,${image.encodedData}'
+                                     src='data:${postImage.image.type};base64,${postImage.image.string}'
                                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                             </div>
                         </c:forEach>
@@ -106,17 +106,14 @@
                             </p>
                         </span>
 
-
-
-
                         <div class="summary custom-row">
                             <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services" class="summary-item profile-item align-items-center">
                                 <c:choose>
-                                    <c:when test="${jobPost.user.userImage == null}">
+                                    <c:when test="${jobPost.user.image.string == null}">
                                         <img src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="todo" alt="avatar">
+                                        <img src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
                                     </c:otherwise>
                                 </c:choose>
                                 <p><c:out value="${jobPost.user.username}"/></p>
@@ -127,7 +124,7 @@
                                     <h2>
                                         ${avgRate}
                                     </h2>
-                                    <jsp:include page="rateStars.jsp">
+                                    <jsp:include page="components/rateStars.jsp">
                                         <jsp:param name="rate" value="${avgRate}"/>
                                     </jsp:include>
                                     <h5 class="ml-1 review-count">

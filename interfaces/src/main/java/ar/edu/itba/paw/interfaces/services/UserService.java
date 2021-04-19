@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Review;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 
@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface UserService {
 
     User register(String email,String password, String username, String phone, List<Integer> role);
+
+    User register(String email, String password, String username, String phone, List<Integer> role, ByteImage image);
 
     User findById(long id);
 

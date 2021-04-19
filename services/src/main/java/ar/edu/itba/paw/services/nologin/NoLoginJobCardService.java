@@ -60,7 +60,7 @@ public class NoLoginJobCardService implements JobCardService {
                 .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(JobPackageNotFoundException::new);
 
         return new JobCard(jobPost, min.getRateType(), min.getPrice(),
-                jobPostImageService.findByPostId(jobPost.getId()),
+                jobPostImageService.getPostImage(jobPost.getId()),
                 jobContractService.findContractsQuantityByPostId(jobPost.getId()),
                 reviewService.findJobPostReviewsSize(jobPost.getId()));
     }
@@ -72,8 +72,8 @@ public class NoLoginJobCardService implements JobCardService {
                     .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(JobPackageNotFoundException::new);
             //TODO: Mejorar excepciones
             jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
-                    jobPostImageService.findByPostId(jobPost.getId()),
-                    jobContractService.findContractsQuantityByPostId(jobPost.getId()),
+                    jobPostImageService.getPostImage(jobPost.getId()),
+                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()),
                      reviewService.findJobPostReviewsSize(jobPost.getId())));
         });
         return jobCards;

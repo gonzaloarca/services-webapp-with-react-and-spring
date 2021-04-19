@@ -4,16 +4,14 @@ import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class NoLoginJobContractService implements JobContractService {
@@ -33,13 +31,16 @@ public class NoLoginJobContractService implements JobContractService {
     }
 
     @Override
-    public JobContract create(String clientEmail, long packageId, String description, byte[] imageData) {
+    public JobContract create(String clientEmail, long packageId, String description, ByteImage image) {
         User user = userService.findByEmail(clientEmail).orElseThrow(NoSuchElementException::new);
 
         jobPackageService.findById(packageId);
 //        client = maybeUser.orElseGet(() -> userService.register(client_email,"", client_username, client_phone, 1));
 
-        return jobContractDao.create(user.getId(), packageId, description, imageData);
+        if(image == null)
+            return jobContractDao.create(user.getId(), packageId, description);
+
+        return jobContractDao.create(user.getId(), packageId, description, image);
     }
 
     @Override

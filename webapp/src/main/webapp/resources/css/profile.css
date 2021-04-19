@@ -79,3 +79,8 @@
     height: 80px;
     object-fit: cover;
 }
+
+.profile-image-container {
+    display: flex;
+    justify-content: center;
+}

@@ -26,24 +26,24 @@ public class NoLoginJobPostServiceTest {
             1,
             "fquesada@gmail.com",
             "Francisco Quesada",
-            "",
             "11-4578-9087",
+            true,
             true
     );
     private static final User EXISTING_USER_TO_PROF = new User(
             1,
             "fquesada@gmail.com",
             "Francisco Quesada",
-            "",
             "11-4578-9087",
+            true,
             true
     );
     private static final User NEW_PROFESSIONAL = new User(
             1,
             "mrodriguez@gmail.com",
             "Manuel Rodriguez",
-            "",
             "11-5678-4353",
+            true,
             true
     );
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(
