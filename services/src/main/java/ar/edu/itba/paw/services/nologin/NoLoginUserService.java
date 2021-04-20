@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services.nologin;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
 import ar.edu.itba.paw.models.ByteImage;
@@ -28,11 +29,15 @@ public class NoLoginUserService implements UserService {
     @Autowired
     private VerificationTokenService verificationTokenService;
 
+    @Autowired
+    private MailingService mailingService;
+
     @Override
     public User register(String email, String password, String username, String phone, List<Integer> roles,
                          ByteImage image) throws UserAlreadyExistsException, UserNotVerifiedException{
         Optional<User> maybeUser = userDao.findByEmail(email);
 
+        //TODO Logica de usuario legacy???
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
 
@@ -40,7 +45,7 @@ public class NoLoginUserService implements UserService {
                 throw new UserAlreadyExistsException();
 
             VerificationToken token = verificationTokenService.create(user);
-            //TODO reenviar mail de confirmacion
+            mailingService.sendVerificationTokenEmail(user, token);
             throw new UserNotVerifiedException();
         }
 
@@ -54,7 +59,7 @@ public class NoLoginUserService implements UserService {
         roles.forEach(role -> userDao.assignRole(registeredUser.getId(), role));
 
         VerificationToken token = verificationTokenService.create(registeredUser);
-        //TODO enviar mail con el token
+        mailingService.sendVerificationTokenEmail(registeredUser, token);
 
         return registeredUser;
     }

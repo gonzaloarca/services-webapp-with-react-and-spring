@@ -127,6 +127,8 @@ public class WebConfig {
     Resource contractTemplate;
     @Value("classpath:contractEmailWithImage.html")
     Resource contractImageTemplate;
+    @Value("classpath:tokenEmail.html")
+    Resource tokenEmailTemplate;
 
     private SimpleMailMessage makeMessage(Resource template) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -149,6 +151,11 @@ public class WebConfig {
     @Bean(name = "contractEmailWithImage")
     public SimpleMailMessage contractEmailWithImage() {
         return makeMessage(contractImageTemplate);
+    }
+
+    @Bean(name = "tokenEmail")
+    public SimpleMailMessage tokenEmail() {
+        return makeMessage(tokenEmailTemplate);
     }
 
 }
