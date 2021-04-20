@@ -288,10 +288,6 @@
         });
     });
 
-    $(".submit").click(function () {
-        return false;
-    })
-
     // Disable submit on enter keypress while input is focused
     $('form input').on('keypress', function (e) {
         return e.which !== 13;

@@ -12,11 +12,9 @@ import ar.edu.itba.paw.webapp.form.PackageForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -62,7 +60,6 @@ public class JobPostController {
         return new ModelAndView("createJobPostSteps")
                 .addObject("jobTypes", JobPost.JobType.values())
                 .addObject("zoneValues", JobPost.Zone.values());
-
     }
 
     @RequestMapping(path = "/create-job-post", method = RequestMethod.POST)
@@ -76,7 +73,6 @@ public class JobPostController {
         String currentUserEmail = principal.getName();
         JobPost jobPost = jobPostService.create(currentUserEmail, form.getTitle(), form.getAvailableHours(), form.getJobType(), form.getZones());
         PackageForm packageForm = form.getJobPackage();
-
 
         jobPackageService.create(jobPost.getId(), packageForm.getTitle(), packageForm.getDescription(), packageForm.getPrice(), packageForm.getRateType());
 

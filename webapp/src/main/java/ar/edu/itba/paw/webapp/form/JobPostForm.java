@@ -24,10 +24,7 @@ public class JobPostForm {
 
     @Valid
     private PackageForm jobPackage;
-
-    //TODO: Proximo sprint
-//    @NotEmpty
-//    @ValidImageArray
+//
 //    private MultipartFile[] servicePics;
 
     @NotBlank
@@ -36,12 +33,6 @@ public class JobPostForm {
 
     @NotEmpty
     private int[] zones;
-
-
-    //TODO: Proximo sprint
-//    @NotNull
-//    @ValidImage
-//    private MultipartFile profilePic;
 
 
     public Integer getJobType() {
@@ -63,13 +54,6 @@ public class JobPostForm {
     public String getAvailableHours() {
         return availableHours;
     }
-
-
-
-
-//    public MultipartFile getProfilePic() {
-//        return profilePic;
-//    }
 
     public int[] getZones() {
         return zones;
@@ -94,10 +78,6 @@ public class JobPostForm {
     public void setAvailableHours(String availableHours) {
         this.availableHours = availableHours;
     }
-
-//    public void setProfilePic(MultipartFile profilePic) {
-//        this.profilePic = profilePic;
-//    }
 
     public void setZones(int[] zones) {
         this.zones = zones;
