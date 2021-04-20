@@ -3,15 +3,18 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import exceptions.UserAlreadyExistsException;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
 
+    //TODO eliminar este metodo cambiando los tests
     User register(String email,String password, String username, String phone, List<Integer> role);
 
-    User register(String email, String password, String username, String phone, List<Integer> role, ByteImage image);
+    User register(String email, String password, String username, String phone, List<Integer> role, ByteImage image)
+            throws UserAlreadyExistsException;
 
     User findById(long id);
 
@@ -33,5 +36,4 @@ public interface UserService {
 
     void changeUserPassword(String email, String password);
 
-    boolean isExistingUser(String email);
 }

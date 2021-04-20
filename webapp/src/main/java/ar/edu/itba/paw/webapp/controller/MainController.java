@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utils.JobContractCard;
+import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -85,10 +86,6 @@ public class MainController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView registerForm(@Valid @ModelAttribute("registerForm") RegisterForm registerForm, BindingResult errors) {
-        //TODO esta verificacion podria ser una annotation?
-        if(userService.isExistingUser(registerForm.getEmail()))
-            errors.rejectValue("email", "register.existingemail");
-
         if (errors.hasErrors())
             return register(registerForm);
 
@@ -102,8 +99,13 @@ public class MainController {
             }
         }
 
-        userService.register(registerForm.getEmail(), passwordEncoder.encode(registerForm.getPassword()),
-                registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1), byteImage);
+        try {
+            userService.register(registerForm.getEmail(), passwordEncoder.encode(registerForm.getPassword()),
+                    registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1), byteImage);
+        } catch (UserAlreadyExistsException e) {
+            errors.rejectValue("email", "register.existingemail");
+            return register(registerForm);
+        }
 
         return new ModelAndView("redirect:/");
     }

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,10 +24,11 @@ public class NoLoginUserService implements UserService {
 
     @Override
     public User register(String email, String password, String username, String phone, List<Integer> roles,
-                         ByteImage image) {
+                         ByteImage image) throws UserAlreadyExistsException{
         Optional<User> maybeUser = userDao.findByEmail(email);
+
         if (maybeUser.isPresent()) {
-            //TODO: arrojar error de el usuario ya existe
+            throw new UserAlreadyExistsException();
         }
 
         User registeredUser;
@@ -103,8 +105,4 @@ public class NoLoginUserService implements UserService {
         userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
     }
 
-    @Override
-    public boolean isExistingUser(String email) {
-        return userDao.findByEmail(email).isPresent();
-    }
 }
