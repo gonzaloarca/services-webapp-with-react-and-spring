@@ -6,9 +6,6 @@ import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.form.ContractForm;
-import ar.edu.itba.paw.webapp.form.ReviewForm;
-import ar.edu.itba.paw.webapp.utils.JobContractCard;
-import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.security.Principal;
 
@@ -58,7 +54,7 @@ public class ContractController {
                                        @ModelAttribute("contractForm") final ContractForm form) {
 
         final ModelAndView mav = new ModelAndView("createContract");
-        List<JobPostImage> imageList = jobPostImageService.findByPostId(jobPost.getId());
+        List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
 
         mav.addObject("imageList", imageList);
 

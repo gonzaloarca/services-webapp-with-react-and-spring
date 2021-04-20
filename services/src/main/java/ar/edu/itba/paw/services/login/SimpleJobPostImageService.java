@@ -39,14 +39,13 @@ public class SimpleJobPostImageService implements JobPostImageService {
 //	}
 
 	@Override
-	public List<JobPostImage> findByPostId(long postId) {
-		return jobPostImageDao.findByPostId(postId);
+	public List<JobPostImage> findImages(long postId) {
+		return jobPostImageDao.findImages(postId);
 	}
 
 	@Override
-	public JobPostImage getPostImage(long postId) {
+	public JobPostImage findPostImage(long postId) {
 		jobPostService.findById(postId);			//TODO: ver si hay una mejor forma de checkear si existe
-		List<JobPostImage> resultList = jobPostImageDao.getPostImage(postId);
-		return resultList.stream().findFirst().orElse(null);
+		return jobPostImageDao.findPostImage(postId);
 	}
 }

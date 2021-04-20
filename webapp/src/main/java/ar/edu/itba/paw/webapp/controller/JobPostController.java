@@ -44,7 +44,7 @@ public class JobPostController {
     public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
         final ModelAndView mav = new ModelAndView("jobPostDetails");
         JobPost jobPost = jobPostService.findById(id);
-        List<JobPostImage> imageList = jobPostImageService.findByPostId(jobPost.getId());
+        List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
 
         mav.addObject("jobPost", jobPost);
         mav.addObject("packages", jobPackageService.findByPostId(id));

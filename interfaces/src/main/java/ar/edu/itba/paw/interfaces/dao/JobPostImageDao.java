@@ -8,8 +8,8 @@ public interface JobPostImageDao {
 
 	JobPostImage addImage(long postId, ByteImage image);
 
-	List<JobPostImage> findByPostId(long postId);
+	List<JobPostImage> findImages(long postId);
 
-	List<JobPostImage> getPostImage(long postId);
+	JobPostImage findPostImage(long postId);
 
 }

@@ -79,7 +79,7 @@ public class JobPostImageDaoJDBCTest {
 					images.get(i).getImage().getString());
 		}
 
-		images = jobPostImageDaoJDBC.findByPostId(post_id);
+		images = jobPostImageDaoJDBC.findImages(post_id);
 
 		for(int i = 0; i < images.size(); i++) {
 			Assert.assertEquals(post_id, images.get(i).getPostId());
