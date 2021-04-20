@@ -35,7 +35,8 @@
             <%--                </a>--%>
             <%--            </li>--%>
 
-            <c:if test="${requestScope.path != '/' && requestScope.path != '/login' && requestScope.path != '/register'}">
+            <c:if test="${requestScope.path != '/' && requestScope.path != '/login' && requestScope.path != '/register'
+            && requestScope.path != '/error'}">
                 <%--@elvariable id="searchForm" type="ar.edu.itba.paw.webapp.form.SearchForm"--%>
                 <form:form class="form-inline ml-4 my-auto flex-grow-1"
                            action="${pageContext.request.contextPath}/search"
@@ -103,7 +104,8 @@
                     </div>
                 </form:form>
             </c:if>
-            <c:if test="${requestScope.path == '/' || requestScope.path == '/login' || requestScope.path == '/register'}">
+            <c:if test="${requestScope.path == '/' || requestScope.path == '/login' || requestScope.path == '/register'
+            || requestScope.path == '/error'}">
                 <span class="ml-auto"></span>
             </c:if>
 
@@ -122,7 +124,56 @@
                         <spring:message code="navigation.mycontracts"/>
                     </a>
                 </li>
-                <span>HOLA ${currentUser.username}</span>
+                <button type="button" class="btn dropdown-toggle navbar-dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false" id="navbarDropdown">
+                    <c:choose>
+                        <c:when test="${currentUser.image.string == null}">
+                            <img class="navbar-user-img"
+                                 src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
+                                 alt="avatar">
+                        </c:when>
+                        <c:otherwise>
+                            <img class="navbar-user-img"
+                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar">
+                        </c:otherwise>
+                    </c:choose>
+                </button>
+                <div class="dropdown-menu navbar-dropdown" aria-labelledby="navbarDropdown">
+                    <div class="navbar-dropdown-details">
+                        <c:choose>
+                            <c:when test="${currentUser.image.string == null}">
+                                <img class="navbar-user-img"
+                                     src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
+                                     alt="avatar">
+                            </c:when>
+                            <c:otherwise>
+                                <img class="navbar-user-img"
+                                     src="data:${currentUser.image.type};base64,${currentUser.image.string}"
+                                     alt="avatar">
+                            </c:otherwise>
+                        </c:choose>
+                        <div>
+                            <p class="navbar-dropdown-name">
+                                <c:out value="${currentUser.username}"/>
+                            </p>
+                            <p class="navbar-dropdown-email">
+                                <c:out value="${currentUser.email}"/>
+                            </p>
+                        </div>
+                    </div>
+                    <sec:authorize access="hasRole('ROLE_PROFESSIONAL')">
+                        <a class="dropdown-item"
+                           href="${pageContext.request.contextPath}/profile/${currentUser.id}/services">
+                            <i class="fas fa-user navbar-dropdown-icon"></i><spring:message
+                                code="navigation.dropdowon.myprofile"/></a>
+                    </sec:authorize>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/account/details">
+                        <i class="fas fa-user-cog navbar-dropdown-icon"></i><spring:message
+                            code="navigation.dropdowon.myaccount"/></a>
+                    <a class="dropdown-item mt-3" href="${pageContext.request.contextPath}/logout"><spring:message
+                            code="navigation.dropdowon.logout"/></a>
+                </div>
             </sec:authorize>
         </ul>
     </div>

@@ -52,14 +52,14 @@
         </h4>
         <c:forEach items="${categories}" var="categorie" varStatus="status">
             <span class="mb-1 custom-row align-items-center">
-                <c:if test="${pickedCategory == status.index}">
-                    <a href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=-1">
+                <c:if test="${param.category == status.index}">
+                    <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
                         <i class="fa fa-times unselect-category"></i>
                     </a>
                 </c:if>
                 <p class="capitalize-first-letter">
-                    <a class="category ${pickedCategory == status.index? 'pickedCategory':''}"
-                       href="${pageContext.request.contextPath}/search?zone=${pickedZone.ordinal()}&query=${query}&category=${status.index}">
+                    <a class="category ${param.category == status.index? 'pickedCategory':''}"
+                       href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=${status.index}">
                         <spring:message code="${categorie.stringCode}"/>
                     </a>
                 </p>
@@ -67,57 +67,59 @@
         </c:forEach>
     </div>
     <div class="search-results">
-        <c:if test="${pickedZone != null}">
-            <div class="search-title">
-                <h3>
-                    <c:if test="${query.length() == 0}">
-                        <spring:message code="search.noquery.results"/>
-                    </c:if>
-                    <c:if test="${!(query.length() == 0)}">
-                        <spring:message code="search.results" arguments="${query}"/>
-                    </c:if>
-                    <spring:message code="${pickedZone.stringCode}"/>
-                    <c:if test="${pickedZone == null}">
+        <c:choose>
+            <c:when test="${param.zone != ''}">
+                <div class="search-title">
+                    <h3>
+                        <c:choose>
+                            <c:when test="${param.query == ''}">
+                                <spring:message code="search.noquery.results"/>
+                            </c:when>
+                            <c:otherwise>
+                                <spring:message code="search.results" arguments="${param.query}"/>
+                            </c:otherwise>
+                        </c:choose>
+                        <spring:message code="${pickedZone.stringCode}"/>
+                    </h3>
+                </div>
+                <hr class="hr1"/>
+                <div class="job-display-container">
+                    <c:choose>
+                        <c:when test="${jobCards.size() > 0}">
+                            <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
+                                <c:set var="data" value="${jobCard}" scope="request"/>
+                                <c:import url="components/jobCard.jsp"/>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="result-div">
+                                <i class="fas fa-search mb-4"></i>
+                                <p class="result-text">
+                                    <spring:message code="search.jobs.noResults"/>
+                                </p>
+                                <p class="result-sub-text">
+                                    <spring:message code="index.jobs.sorry"/>
+                                </p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="search-title " style="width: 100%; justify-content: center">
+                    <h3>
                         <spring:message code="search.badQuery"/>
-                    </c:if>
-                </h3>
-            </div>
-            <hr class="hr1"/>
-            <div class="job-display-container">
-                <c:if test="${jobCards.size() > 0}">
-                    <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
-                        <c:set var="data" value="${jobCard}" scope="request"/>
-                        <c:import url="components/jobCard.jsp"/>
-                    </c:forEach>
-                </c:if>
-                <c:if test="${jobCards.size() == 0}">
-                    <div class="result-div">
-                        <i class="fas fa-search mb-4"></i>
-                        <p class="result-text">
-                            <spring:message code="search.jobs.noResults"/>
-                        </p>
-                        <p class="result-sub-text">
-                            <spring:message code="index.jobs.sorry"/>
-                        </p>
-                    </div>
-                </c:if>
-            </div>
-        </c:if>
-
-        <c:if test="${pickedZone == null}">
-            <div class="search-title " style="width: 100%; justify-content: center">
-                <h3>
-                    <spring:message code="search.badQuery"/>
-                </h3>
-            </div>
-            <hr class="hr1"/>
-            <div class="result-div">
-                <i class="fas fa-search mb-4"></i>
-                <p class="result-text">
-                    <spring:message code="search.jobs.badSearch"/>
-                </p>
-            </div>
-        </c:if>
+                    </h3>
+                </div>
+                <hr class="hr1"/>
+                <div class="result-div">
+                    <i class="fas fa-search mb-4"></i>
+                    <p class="result-text">
+                        <spring:message code="search.jobs.badSearch"/>
+                    </p>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 <jsp:include page="components/footer.jsp"/>

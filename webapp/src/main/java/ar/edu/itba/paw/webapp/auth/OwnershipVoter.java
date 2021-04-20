@@ -12,6 +12,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 @Component
 public class OwnershipVoter implements AccessDecisionVoter {
@@ -60,11 +61,17 @@ public class OwnershipVoter implements AccessDecisionVoter {
                     }catch (NumberFormatException e){
                         return ACCESS_ABSTAIN;
                     }
-                    boolean isOwner = jobPostService.findById(id).getUser().getEmail().equals(authentication.getName());
-                    if(paths.length > 2 && paths[2].equals("edit") && isOwner){
-                        return ACCESS_GRANTED;
-                    }else if(!isOwner){
-                        return ACCESS_DENIED;
+                    boolean isOwner;
+                    try{
+                        isOwner = jobPostService.findById(id).getUser().getEmail().equals(authentication.getName());
+                    }catch (NoSuchElementException e){
+                        isOwner= false;
+                    }
+                    if(paths.length > 2 && paths[2].equals("edit")){
+                        if(isOwner)
+                            return ACCESS_GRANTED;
+                        else
+                            return ACCESS_DENIED;
                     }
             }
 //

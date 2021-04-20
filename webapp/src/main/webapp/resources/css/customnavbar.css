@@ -58,8 +58,7 @@ a.navbar-brand {
     text-align: center;
 }
 
-/*TODO: EXPORTAR A STYLES POR QUE LOS PROXIMOS DOS TAMBIEN SE USAN EN CREATE JOB POST*/
-.has-search{
+.has-search {
     margin: auto;
 }
 
@@ -76,4 +75,63 @@ a.navbar-brand {
     text-align: center;
     pointer-events: none;
     color: #aaa;
+}
+
+.navbar-user-img {
+    border-radius: 50%;
+    height: 50px;
+}
+
+.navbar-dropdown-toggle {
+    margin: 0 0 0 20px;
+}
+
+.navbar-dropdown-toggle.dropdown-toggle::after, .navbar-dropdown-toggle.dropdown-toggle:focus {
+    content: none;
+    box-shadow: none;
+}
+
+.navbar-dropdown {
+    width: 300px;
+    margin-left: auto;
+    margin-right: 30px;
+    right: 0;
+    padding: 10px;
+}
+
+.navbar-dropdown-details {
+    margin-bottom: 15px;
+    display: flex;
+    font-size: 18px;
+}
+
+.navbar-dropdown-details p {
+    padding-left: 15px;
+}
+
+.navbar-dropdown-name {
+    font-weight: bold;
+    margin: 0;
+}
+
+.navbar-dropdown-email {
+    color: gray;
+    margin: 0;
+}
+
+.navbar-dropdown .dropdown-item {
+    color: gray !important;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.navbar-dropdown .dropdown-item:hover {
+    color: #acacac;
+}
+
+.navbar-dropdown-icon {
+    width: 50px;
+    padding-left: 10px;
 }
