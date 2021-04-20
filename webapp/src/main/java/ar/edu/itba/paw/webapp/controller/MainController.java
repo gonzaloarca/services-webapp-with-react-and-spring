@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -52,25 +54,29 @@ public class MainController {
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("jobCards", jobCardService.findAll());
-        mav.addObject("zones", JobPost.Zone.values());
         return mav;
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public ModelAndView search(@Valid @ModelAttribute("searchForm") SearchForm form, final BindingResult errors) {
-        final ModelAndView mav = new ModelAndView("search");
-        mav.addObject("zones", JobPost.Zone.values());
-        mav.addObject("categories", JobPost.JobType.values());
-        if (errors.hasErrors())
-            return home(form);
-        mav.addObject("query", form.getQuery());
-        mav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
-        mav.addObject("pickedCategory", form.getCategory());
-        mav.addObject("jobCards", jobCardService.search(form.getQuery(),
+    public ModelAndView search(@Valid @ModelAttribute("searchForm") SearchForm form, final BindingResult errors,
+                               final ModelAndView mav) {
+        if (errors.hasErrors()) {
+            ModelAndView errorMav = new ModelAndView(mav.getViewName());
+            errorMav.addObject(form);
+            errorMav.addObject("categories", JobPost.JobType.values());
+            return errorMav;
+        }
+
+        final ModelAndView searchMav = new ModelAndView("search");
+        searchMav.addObject("categories", JobPost.JobType.values());
+        searchMav.addObject("query", form.getQuery());
+        searchMav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
+        searchMav.addObject("pickedCategory", form.getCategory());
+        searchMav.addObject("jobCards", jobCardService.search(form.getQuery(),
                 JobPost.Zone.values()[Integer.parseInt(form.getZone())],
                 (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()])
         );
-        return mav;
+        return searchMav;
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)

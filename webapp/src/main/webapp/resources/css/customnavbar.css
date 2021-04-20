@@ -16,9 +16,10 @@ a.navbar-brand {
     margin-right: 2rem !important;
 }
 
-.navbar-login-button, .navbar-login-button:active, .navbar-login-button:link, .navbar-login-button:hover {
+.navbar-link-button, .navbar-link-button:active, .navbar-link-button:link, .navbar-link-button:hover {
     color: white;
     margin-right: 30px;
+    text-decoration: none;
     box-shadow: none;
 }
 
@@ -27,4 +28,52 @@ a.navbar-brand {
     top: 0;
     width: 100%;
     z-index: 2;
+}
+
+.navbar-modal-icon {
+    height: 80px;
+}
+
+.navbar-location-list-group {
+    overflow: auto;
+    max-height: 200px;
+    width: 350px;
+    margin: 20px auto;
+}
+
+.navbar-location-list-group-item {
+    justify-content: left !important;
+    margin-bottom: 10px;
+    background-color: #eeeeee;
+    font-size: 18px;
+    padding: 5px;
+}
+
+.navbar-location-list-group-item:hover {
+    background-color: #e2e2e2;
+}
+
+.navbar-modal-container {
+    padding: 25px;
+    text-align: center;
+}
+
+/*TODO: EXPORTAR A STYLES POR QUE LOS PROXIMOS DOS TAMBIEN SE USAN EN CREATE JOB POST*/
+.has-search{
+    margin: auto;
+}
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
 }

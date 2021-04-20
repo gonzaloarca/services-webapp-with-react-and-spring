@@ -39,9 +39,8 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="components/customNavBar.jsp"/>
-<%@ include file="components/searchBar.jsp" %>
-
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
 <div class="content-container d-flex">
     <div class="custom-card filter-card">
         <h3>

@@ -38,9 +38,9 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="components/customNavBar.jsp">
-    <jsp:param name="path" value="categories"/>
-</jsp:include>
+<c:set var="zoneValues" value="${zones}" scope="request"/>
+<c:set var="path" value="/categories" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
 <div class="content-container mt-5">
     <h3>
         Categorías de servicios

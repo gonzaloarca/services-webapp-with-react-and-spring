@@ -30,7 +30,8 @@
 
 </head>
 <body class="body">
-<jsp:include page="components/customNavBar.jsp"/>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
 
     <!-- Navigation -->

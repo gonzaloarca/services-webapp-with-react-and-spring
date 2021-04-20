@@ -40,9 +40,9 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="components/customNavBar.jsp">
-    <jsp:param name="path" value="/my-contracts"/>
-</jsp:include>
+<c:set var="path" value="/my-contracts" scope="request"/>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
     <jsp:include page="components/siteHeader.jsp">
         <jsp:param name="code" value="mycontracts.title"/>
@@ -109,7 +109,8 @@
                 <h5 id="modalProfessionalPhone"></h5>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <spring:message code="mycontracts.contact.close"/></button>
             </div>
         </div>
     </div>
