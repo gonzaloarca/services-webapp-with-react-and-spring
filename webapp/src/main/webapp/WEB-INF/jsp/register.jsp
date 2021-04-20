@@ -153,7 +153,9 @@
                             <%--                        TODO: Alt correcto--%>
                         <img id="img-preview"
                              src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="">
-                        <p class="font-weight-bold">Vista previa</p>
+                        <p class="font-weight-bold">
+                            <spring:message code="register.imagepreview"/>
+                        </p>
                     </div>
                     <div class="file-input-container">
                         <form:input type="file" path="avatar" onchange="readURL(this);"/>

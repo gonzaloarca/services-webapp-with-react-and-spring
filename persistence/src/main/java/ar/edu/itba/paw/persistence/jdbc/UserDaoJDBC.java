@@ -6,10 +6,16 @@ import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.support.SqlLobValue;
+import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.sql.PreparedStatement;
 import java.util.*;
 
 @Repository
@@ -91,8 +97,16 @@ public class UserDaoJDBC implements UserDao {
         return jdbcTemplate.query("SELECT * FROM users WHERE user_email = ?",new Object[]{email},USER_ROW_MAPPER).stream().findFirst();
     }
     @Override
-    public Optional<User> updateUserById(long id, String phone, String name){
+    public Optional<User> updateUserById(long id, String name, String phone){
         jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ? WHERE user_id = ?", phone,name,id);
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public Optional<User> updateUserById(long id, String name, String phone, ByteImage image) {
+        updateUserById(id, name, phone);
+        jdbcTemplate.update("UPDATE users SET user_image = (?), image_type = ? WHERE user_id = ?;",
+                image.getData(), image.getType(), id);
         return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
     }
 
@@ -123,4 +137,8 @@ public class UserDaoJDBC implements UserDao {
                 .stream().findFirst();
     }
 
+    @Override
+    public void changeUserPassword(long id, String password) {
+        jdbcTemplate.update("UPDATE users SET user_password = ? WHERE user_id = ?;", password, id);
+    }
 }

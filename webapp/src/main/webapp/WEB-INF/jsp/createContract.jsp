@@ -4,7 +4,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-    <!-- TODO: poner titulo correcto -->
     <title>
         <spring:message code="contract.create.page.title" var="text"/>
         <spring:message code="title.name" arguments="${text}"/>
@@ -35,6 +34,7 @@
 <div class="content-container-transparent">
 
     <!-- Navigation -->
+    <!-- TODO: implementar breadcrumb correctamente -->
     <div class="row">
         <nav aria-label="breadcrumb" style="width: 100%">
             <ol class="breadcrumb bg-white">

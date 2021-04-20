@@ -19,7 +19,9 @@ public interface UserDao {
 
     Optional<User> updateUserByEmail(String email,String phone, String name);
 
-    Optional<User> updateUserById(long id, String phone, String name);
+    Optional<User> updateUserById(long id, String name, String phone);
+
+    Optional<User> updateUserById(long id, String name, String phone, ByteImage image);
 
     Optional<UserAuth> findAuthInfo(String email);
 
@@ -29,4 +31,5 @@ public interface UserDao {
 
     Optional<User> findUserByRoleAndId(UserAuth.Role role, long id);
 
+    void changeUserPassword(long id, String password);
 }
