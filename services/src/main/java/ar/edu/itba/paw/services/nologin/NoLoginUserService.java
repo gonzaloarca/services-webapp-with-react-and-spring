@@ -39,6 +39,7 @@ public class NoLoginUserService implements UserService {
             //TODO: LANAZAR EXCEPCION APROPIADA
             throw new NoSuchElementException();
         }
+        //TODO manejo de roles
         roles.forEach(role -> userDao.assignRole(registeredUser.getId(), role));
         return registeredUser;
     }
@@ -100,5 +101,10 @@ public class NoLoginUserService implements UserService {
     public void changeUserPassword(String email, String password) {
         User user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
         userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
+    }
+
+    @Override
+    public boolean isExistingUser(String email) {
+        return userDao.findByEmail(email).isPresent();
     }
 }

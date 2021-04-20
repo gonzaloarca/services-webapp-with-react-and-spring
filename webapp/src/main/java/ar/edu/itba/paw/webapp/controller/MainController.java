@@ -85,6 +85,10 @@ public class MainController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView registerForm(@Valid @ModelAttribute("registerForm") RegisterForm registerForm, BindingResult errors) {
+        //TODO esta verificacion podria ser una annotation?
+        if(userService.isExistingUser(registerForm.getEmail()))
+            errors.rejectValue("email", "register.existingemail");
+
         if (errors.hasErrors())
             return register(registerForm);
 

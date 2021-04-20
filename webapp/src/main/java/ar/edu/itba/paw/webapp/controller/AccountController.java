@@ -36,11 +36,15 @@ public class AccountController {
 									 Principal principal) {
 		String email = principal.getName();
 		User currentUser = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+		UserAuth auth = userService.getAuthInfo(email).orElseThrow(UserNotFoundException::new);
+		ModelAndView mav =  new ModelAndView("myAccountSettings");
 
 		form.setName(currentUser.getUsername());
 		form.setPhone(currentUser.getPhone());
+		mav.addObject("user", currentUser);
+		mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
 
-		return new ModelAndView("myAccountSettings").addObject("user", currentUser);
+		return	mav;
 	}
 
 	@RequestMapping(path = "/details", method = RequestMethod.POST)
@@ -48,7 +52,9 @@ public class AccountController {
 										   final BindingResult errors, Principal principal) {
 
 		User currentUser = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new);
+		UserAuth auth = userService.getAuthInfo(principal.getName()).orElseThrow(UserNotFoundException::new);
 		ModelAndView mav = new ModelAndView("myAccountSettings");
+		mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
 
 		if(errors.hasErrors())
 			return mav.addObject("user", currentUser);

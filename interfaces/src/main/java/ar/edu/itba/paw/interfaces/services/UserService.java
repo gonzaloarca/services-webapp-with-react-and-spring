@@ -32,4 +32,6 @@ public interface UserService {
     boolean validCredentials(String email, String password);
 
     void changeUserPassword(String email, String password);
+
+    boolean isExistingUser(String email);
 }

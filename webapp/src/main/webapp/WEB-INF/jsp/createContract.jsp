@@ -185,8 +185,14 @@
                     <!-- Professional -->
                     <div class="row info-row">
                         <div class="info-left-col">
-                            <!-- TODO: cambiar este icono por imagen de perfil -->
-                            <i class="fas fa-user fa-2x"></i>
+                            <c:choose>
+                                <c:when test="${jobPost.user.image.string == null}">
+                                    <img class="avatar-pic" src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
+                                </c:when>
+                                <c:otherwise>
+                                    <img class="avatar-pic" src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <p class="info-right-col">
                             <c:out value="${jobPost.user.username}"/>

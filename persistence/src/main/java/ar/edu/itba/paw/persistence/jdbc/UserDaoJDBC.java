@@ -54,7 +54,6 @@ public class UserDaoJDBC implements UserDao {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(ds).withTableName("users").usingGeneratedKeyColumns("user_id");
         roleJdbcInsert = new SimpleJdbcInsert(ds).withTableName("user_role");
-
     }
 
     @Override
@@ -104,9 +103,8 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<User> updateUserById(long id, String name, String phone, ByteImage image) {
-        updateUserById(id, name, phone);
-        jdbcTemplate.update("UPDATE users SET user_image = (?), image_type = ? WHERE user_id = ?;",
-                image.getData(), image.getType(), id);
+        jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ?, user_image = (?), image_type = ? WHERE user_id = ?;",
+                phone, name, image.getData(), image.getType(), id);
         return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
     }
 
@@ -118,10 +116,10 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public void assignRole(long id, int role) {
-        roleJdbcInsert.execute(new HashMap<String,Object>(){{
-            put("user_id",id);
-            put("role_id",role);
-        }});
+        Map<String, Object> objectMap = new HashMap<String,Object>();
+        objectMap.put("user_id",id);
+        objectMap.put("role_id",role);
+        roleJdbcInsert.execute(objectMap);
     }
 
     @Override

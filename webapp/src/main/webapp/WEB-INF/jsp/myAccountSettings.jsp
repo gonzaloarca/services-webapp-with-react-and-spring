@@ -65,7 +65,14 @@
 							<h4 style="font-weight: bold">
 								<c:out value="${user.username}"/>
 							</h4>
-							Cliente
+							<c:choose>
+								<c:when test="${isPro}">
+									<spring:message code="account.settings.info.professional"/>
+								</c:when>
+								<c:otherwise>
+									<spring:message code="account.settings.info.client"/>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</div>
 					<!-- TODO logica para convertirme en profesional -->
@@ -78,7 +85,7 @@
 				<hr class="divider-bar"/>
 				<!-- Editar Informacion -->
 				<h4 class="options-title">
-					Editar datos
+					<spring:message code="account.settings.info.subtitle"/>
 				</h4>
 				<div style="padding: 0 20px 0 20px">
 				<form:form modelAttribute="accountChangeForm"
@@ -112,9 +119,8 @@
 					</div>
 					<div class="row">
 						<div class="col-3 img-preview-container">
-								<%--                        TODO: Alt correcto--%>
-							<img id="img-preview"	class="profile-img"
-								 src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="">
+							<img id="img-preview"	class="profile-img" alt="<spring:message code="account.settings.info.previewalt"/>"
+								 src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" >
 							<div class="font-weight-bold">
 								<spring:message code="register.imagepreview"/>
 							</div>
