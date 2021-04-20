@@ -18,6 +18,8 @@ public class PriceNotEmptyValidator implements ConstraintValidator<PriceNotEmpty
                            ConstraintValidatorContext context) {
         //TODO: Paramterizar mensajes respecto de messages.properties correctamente
         Integer ordinal = (Integer) new BeanWrapperImpl(value).getPropertyValue("rateType");
+        if(ordinal == null)
+            return false;
         JobPackage.RateType rateType = JobPackage.RateType
                 .values()[ordinal];
         String price = (String) new BeanWrapperImpl(value).getPropertyValue("price");
