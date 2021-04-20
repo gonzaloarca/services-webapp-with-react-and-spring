@@ -58,15 +58,15 @@ a.navbar-brand {
     text-align: center;
 }
 
-.has-search {
+.navbar-has-search {
     margin: auto;
 }
 
-.has-search .form-control {
+.navbar-has-search .navbar-form-control {
     padding-left: 2.375rem;
 }
 
-.has-search .form-control-feedback {
+.navbar-has-search .navbar-form-control-feedback {
     position: absolute;
     z-index: 2;
     width: 2.375rem;
@@ -80,6 +80,9 @@ a.navbar-brand {
 .navbar-user-img {
     border-radius: 50%;
     height: 50px;
+    width: 50px;
+    margin: auto;
+    object-fit: cover;
 }
 
 .navbar-dropdown-toggle {
@@ -107,6 +110,7 @@ a.navbar-brand {
 
 .navbar-dropdown-details p {
     padding-left: 15px;
+    word-break: break-word;
 }
 
 .navbar-dropdown-name {

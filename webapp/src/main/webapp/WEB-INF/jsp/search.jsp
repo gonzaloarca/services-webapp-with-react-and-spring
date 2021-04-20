@@ -68,7 +68,7 @@
     </div>
     <div class="search-results">
         <c:choose>
-            <c:when test="${param.zone != ''}">
+            <c:when test="${param.zone != null}">
                 <div class="search-title">
                     <h3>
                         <c:choose>
