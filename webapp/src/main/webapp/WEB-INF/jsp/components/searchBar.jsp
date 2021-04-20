@@ -13,7 +13,7 @@
                         <form:select path="zone" class="custom-select w-100">
                             <spring:message code="index.search.location.placeholder" var="locationPlaceholder"/>
                             <form:option value="" label="${locationPlaceholder}"/>
-                            <c:forEach items="${zones}" var="zone">
+                            <c:forEach items="${zoneValues}" var="zone">
                                 <form:option value="${zone.value}">
                                     <spring:message code="${zone.stringCode}"/>
                                 </form:option>
