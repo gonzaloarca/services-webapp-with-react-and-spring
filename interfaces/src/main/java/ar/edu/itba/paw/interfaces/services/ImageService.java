@@ -9,4 +9,6 @@ public interface ImageService {
 	boolean isValidType(String type);
 
 	boolean isValidImage(ByteImage image);
+
+
 }

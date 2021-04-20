@@ -75,3 +75,14 @@ FROM contract
          					  user_image     as professional_image,
 							  image_type	 as professional_image_type
                        FROM users) as professionals;
+
+ALTER TABLE users
+	ADD COLUMN IF NOT EXISTS user_is_verified BOOLEAN NOT NULL DEFAULT false;
+
+CREATE TABLE IF NOT EXISTS verification_token
+(
+	user_id			INT				PRIMARY KEY,
+	token			VARCHAR(100)	NOT NULL,
+	creation_date	TIMESTAMP		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES users
+);

@@ -99,4 +99,5 @@ public class AccountController {
 
 		return new ModelAndView("redirect:/password_changed");
 	}
+
 }

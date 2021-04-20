@@ -2,11 +2,14 @@ package ar.edu.itba.paw.services.nologin;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.VerificationToken;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
+import exceptions.UserNotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,13 +25,23 @@ public class NoLoginUserService implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+
     @Override
     public User register(String email, String password, String username, String phone, List<Integer> roles,
-                         ByteImage image) throws UserAlreadyExistsException{
+                         ByteImage image) throws UserAlreadyExistsException, UserNotVerifiedException{
         Optional<User> maybeUser = userDao.findByEmail(email);
 
         if (maybeUser.isPresent()) {
-            throw new UserAlreadyExistsException();
+            User user = maybeUser.get();
+
+            if (user.isVerified())
+                throw new UserAlreadyExistsException();
+
+            VerificationToken token = verificationTokenService.create(user);
+            //TODO reenviar mail de confirmacion
+            throw new UserNotVerifiedException();
         }
 
         User registeredUser;
@@ -37,12 +50,12 @@ public class NoLoginUserService implements UserService {
         else
             registeredUser = userDao.register(email, password, username, phone, image);
 
-        if (registeredUser == null) {
-            //TODO: LANAZAR EXCEPCION APROPIADA
-            throw new NoSuchElementException();
-        }
         //TODO manejo de roles
         roles.forEach(role -> userDao.assignRole(registeredUser.getId(), role));
+
+        VerificationToken token = verificationTokenService.create(registeredUser);
+        //TODO enviar mail con el token
+
         return registeredUser;
     }
 
