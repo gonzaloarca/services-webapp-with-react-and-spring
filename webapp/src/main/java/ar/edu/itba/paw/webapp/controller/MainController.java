@@ -69,9 +69,7 @@ public class MainController {
 
         final ModelAndView searchMav = new ModelAndView("search");
         searchMav.addObject("categories", JobPost.JobType.values());
-        searchMav.addObject("query", form.getQuery());
         searchMav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
-        searchMav.addObject("pickedCategory", form.getCategory());
         searchMav.addObject("jobCards", jobCardService.search(form.getQuery(),
                 JobPost.Zone.values()[Integer.parseInt(form.getZone())],
                 (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()])

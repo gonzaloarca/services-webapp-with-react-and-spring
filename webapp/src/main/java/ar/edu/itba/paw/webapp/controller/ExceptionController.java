@@ -16,32 +16,28 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @ControllerAdvice
 public class ExceptionController {
 
     @Autowired
-    UserService userService;
-
-    @ModelAttribute("currentUser")
-    public User currentUser(Principal principal){
-        User currentUser = null;
-        if(principal != null){
-            currentUser = userService.findByEmail(principal.getName()).orElse(null);
-        }
-        return currentUser;
-    }
+    private UserService userService;
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @org.springframework.web.bind.annotation.ExceptionHandler(
             {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})
     public ModelAndView notFoundError() {
-        return new ModelAndView("error/404").addObject("currentUser",new User(1,"a","a","a",true,true));
+        ModelAndView mav = new ModelAndView("error/404");
+        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+        return mav;
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
     public ModelAndView defaultErrorHandler() {
-        return new ModelAndView("error/default");
+        ModelAndView mav = new ModelAndView("error/default");
+        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+        return mav;
     }
 
 }
