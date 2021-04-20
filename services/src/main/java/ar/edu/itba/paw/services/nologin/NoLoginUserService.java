@@ -64,8 +64,13 @@ public class NoLoginUserService implements UserService {
     }
 
     @Override
-    public User updateUserByid(long id, String phone, String name) {
-        return userDao.updateUserById(id, phone, name).orElseThrow(NoSuchElementException::new);
+    public User updateUserById(long id, String name, String phone) {
+        return userDao.updateUserById(id, name, phone).orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
+    public User updateUserById(long id, String name, String phone, ByteImage byteImage) {
+        return userDao.updateUserById(id, name, phone, byteImage).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

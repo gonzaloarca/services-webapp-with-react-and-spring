@@ -110,7 +110,7 @@
 							</div>
 						</div>
 
-						<div class="bottom-row">
+						<div class="spaced-div">
 							<h5 class="success-text">
 <%--								<c:if test="${success}">--%>
 <%--									<spring:message code="account.settings.security.success"/>--%>

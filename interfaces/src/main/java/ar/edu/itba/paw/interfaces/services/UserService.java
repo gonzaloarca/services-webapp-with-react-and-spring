@@ -19,7 +19,9 @@ public interface UserService {
 
     User updateUserByEmail(String email,String phone, String name);
 
-    User updateUserByid(long id,String phone, String name);
+    User updateUserById(long id, String name, String phone);
+
+    User updateUserById(long id, String name, String phone, ByteImage byteImage);
 
     User getUserByRoleAndId(int role, long id);
 

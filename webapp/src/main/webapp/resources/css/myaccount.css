@@ -123,20 +123,63 @@
 	border-radius: 10px;
 	padding-left: 20px;
 	padding-right: 20px;
+	margin: auto;
 }
 
 .data-row {
 	margin-bottom: 20px;
 }
 
-.bottom-row {
+.spaced-div {
 	display: flex;
 	justify-content: space-between;
 	align-content: center;
 }
 
 .success-text {
-	margin: auto auto auto 0;
+	margin: 20px;
 	color: green;
 	font-weight: bold;
 }
+
+.profile-img {
+	border-radius: 50%;
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+}
+
+.centered-div {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	flex-direction: column;
+	margin-left: 20px;
+}
+
+.btn-pro {
+	background-color: #FCB839;
+	border-color: #FCB839;
+	border-radius: 10px;
+	font-size: large;
+	padding: 10px 20px 10px 20px;
+}
+
+.img-preview-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.image-input {
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+}
+
+.file-input-container {
+	background-color: #e8e8e8;
+}
+
