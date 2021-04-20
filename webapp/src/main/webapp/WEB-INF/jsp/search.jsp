@@ -51,7 +51,7 @@
             <spring:message code="search.categories"/>
         </h4>
         <c:forEach items="${categories}" var="categorie" varStatus="status">
-            <span class="mb-1 custom-row align-items-center">
+            <span class="mb-1 custom-row align-items-center" onclick="updateCategorySelected(${categorie.value})">
                 <c:if test="${param.category == status.index}">
                     <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
                         <i class="fa fa-times unselect-category"></i>
@@ -68,7 +68,7 @@
     </div>
     <div class="search-results">
         <c:choose>
-            <c:when test="${param.zone != null}">
+            <c:when test="${param.zone != null && param.zone != ''}">
                 <div class="search-title">
                     <h3>
                         <c:choose>
@@ -123,5 +123,15 @@
     </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
+<script>
+    let categoryIndex;
+
+    function updateCategorySelected(category) {
+        categoryIndex = sessionStorage.getItem("pickedCategoryId");
+        if (category && categoryIndex !== category) {
+            sessionStorage.setItem("pickedCategoryId", category);
+        }else sessionStorage.removeItem("pickedCategoryId");  //Pasa a tener ninguna categoria seleccionada
+    }
+</script>
 </body>
 </html>

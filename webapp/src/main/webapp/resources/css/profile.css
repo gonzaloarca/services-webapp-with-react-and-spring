@@ -65,6 +65,14 @@
     height: 8px;
 }
 
+.review-username {
+    word-break: break-word;
+    flex: 1;
+    align-self: center;
+    padding: 0;
+    margin-left: 15px;
+}
+
 .review-title {
     font-weight: bold;
 }

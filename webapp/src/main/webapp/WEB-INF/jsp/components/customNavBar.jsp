@@ -29,11 +29,11 @@
                     <spring:message code="navigation.publish"/>
                 </a>
             </li>
-            <%--            <li class="nav-item ${requestScope.path == "/categories" ? 'active': ''}">--%>
-            <%--                <a class="nav-link" href="${pageContext.request.contextPath}/categories">--%>
-            <%--                    <spring:message code="navigation.categories"/>--%>
-            <%--                </a>--%>
-            <%--            </li>--%>
+            <li class="nav-item ${requestScope.path == "/categories" ? 'active': ''}">
+                <a class="nav-link" href="${pageContext.request.contextPath}/categories">
+                    <spring:message code="navigation.categories"/>
+                </a>
+            </li>
 
             <c:if test="${requestScope.path != '/' && requestScope.path != '/login' && requestScope.path != '/register'
             && requestScope.path != '/error'}">
@@ -51,12 +51,6 @@
                        data-target="#zonesModal">
                         <i class="fas fa-map-marker-alt fa-lg mr-2"></i>
                         <span id="zoneString"></span>
-                            <%--                        <c:if test="${pickedZone == null}">--%>
-                            <%--                            <spring:message code="navigation.picklocation"/>--%>
-                            <%--                        </c:if>--%>
-                            <%--                        <c:otherwise>--%>
-                            <%--                            <spring:message code="${pickedZone.stringCode}"/>--%>
-                            <%--                        </c:otherwise>--%>
                         <form:errors path="zone" cssClass="search-form-error" element="p"/>
                     </a>
 
@@ -103,6 +97,7 @@
                             </div>
                         </div>
                     </div>
+                    <form:hidden path="category" id="categoryForm"/>
                 </form:form>
             </c:if>
             <c:if test="${requestScope.path == '/' || requestScope.path == '/login' || requestScope.path == '/register'
@@ -197,24 +192,35 @@
             }
         }
     });
-    // Para setear la ubicacion en las cookies
+    // Seteo la ubicacion en variables auxiliares
     let zoneId;
     let zoneString;
-    $('#pickLocationButton').on('click', function () {
-        sessionStorage.setItem("pickedZoneId", zoneId);
-        sessionStorage.setItem("pickedZoneString", zoneString);
-    })
     $('.navbar-modal-zone').on('click', function (e) {
         zoneId = e.target.querySelector("input").value;
         zoneString = e.target.innerText;
     })
-    // Para levantar la ubicacion en las cookies
-    if (sessionStorage.getItem("pickedZoneString")) {
-        $('#zoneString')[0].innerText = sessionStorage.getItem("pickedZoneString");
-        $('#zone'+ (parseInt(sessionStorage.getItem('pickedZoneId'))+1)).prop("checked",true);
-    }else
-        $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
 
+    // Cuando se hace el submit guardo las cookies
+    $('#pickLocationButton').on('click', function () {
+        sessionStorage.setItem("pickedZoneId", zoneId);
+        sessionStorage.setItem("pickedZoneString", zoneString);
+    })
+
+    // Para levantar la ubicacion en las cookies, en caso de existir
+    if ($("#searchForm")[0]) {
+        var auxZoneString = sessionStorage.getItem("pickedZoneString");
+        if (auxZoneString) {
+            $('#zoneString')[0].innerText = auxZoneString;
+            $('#zone' + (parseInt(sessionStorage.getItem('pickedZoneId')) + 1)).prop("checked", true);
+        } else
+            $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
+
+        // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
+        var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
+        if (auxCategoryId ) {
+            $('#categoryForm')[0].value = auxCategoryId;
+        }
+    }
 </script>
 </body>
 </html>

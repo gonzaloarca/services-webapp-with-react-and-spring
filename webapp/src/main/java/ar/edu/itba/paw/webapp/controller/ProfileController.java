@@ -62,7 +62,7 @@ public class ProfileController {
     public ModelAndView profileWithServices(@PathVariable("id") final long id) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", true);
-        //TODO: preguntar si esta bien
+        //TODO: preguntar si es un usuario profesional
         mav.addObject("jobCards", jobCardService.findByUserIdWithReview(id));
         return mav;
     }

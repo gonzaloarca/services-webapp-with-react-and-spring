@@ -117,7 +117,9 @@ public class MainController {
 
     @RequestMapping("/categories")
     public ModelAndView categories() {
-        return new ModelAndView("categories");
+        ModelAndView mav = new ModelAndView("categories");
+        mav.addObject("categories", JobPost.JobType.values());
+        return mav;
     }
 
     @RequestMapping("/password_changed")

@@ -38,60 +38,64 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<c:set var="zoneValues" value="${zones}" scope="request"/>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <c:set var="path" value="/categories" scope="request"/>
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container mt-5">
     <h3>
-        Categorías de servicios
+        <spring:message code="categories.search.title"/>
     </h3>
     <hr>
     <div class="search-bar-container">
-        <input class="category-search-bar" placeholder="Filtrar categorías por nombre"/>
-        <button style="color: white" class="btn search-button hirenet-blue-btn">
-            <i class="fas fa-search mr-2"></i>Buscar
-        </button>
+        <spring:message code="categories.search.placeholder" var="searchPlaceholder"/>
+        <input class="category-search-bar" id="categoryFilter" placeholder="${searchPlaceholder}"/>
     </div>
     <div class="category-container">
-        <a class="category">
-            <p>
-                Categoría
-            </p>
-            <div class="category-overlay">
-            </div>
-            <%--            TODO: Poner alt correcto--%>
-            <img src="<c:url value="/resources/images/teaching.jpeg"/>" alt="">
-        </a>
-        <a class="category">
-            <p>
-                Categoría
-            </p>
-            <div class="category-overlay">
-            </div>
-            <%--            TODO: Poner alt correcto--%>
-            <img src="<c:url value="/resources/images/teaching.jpeg"/>" alt="">
-        </a>
-        <a class="category">
-            <p>
-                Categoría
-            </p>
-            <div class="category-overlay">
-            </div>
-            <%--            TODO: Poner alt correcto--%>
-            <img src="<c:url value="/resources/images/teaching.jpeg"/>" alt="">
-        </a>
-        <a class="category">
-            <p>
-                Categoría
-            </p>
-            <div class="category-overlay">
-            </div>
-            <%--            TODO: Poner alt correcto--%>
-            <img src="<c:url value="/resources/images/teaching.jpeg"/>" alt="">
-        </a>
+        <c:forEach items="${categories}" var="category">
+            <a class="category-href" onclick="redirectCategory(${category.value})" >
+                <p>
+                    <spring:message code="${category.stringCode}"/>
+                </p>
+                <div class="category-overlay">
+                </div>
+                <spring:message code="${category.stringCode}" var="jobTypeName"/>
+                <img src='<c:url value="/resources/images/${category.imagePath}" />'
+                     alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${category}"/>">
+            </a>
+        </c:forEach>
     </div>
-
-
 </div>
+<jsp:include page="components/footer.jsp"/>
+<script>
+    // Para buscar una categoria
+    $('#categoryFilter').on('keyup', function () {
+        const filter = $(this)[0].value.toUpperCase();
+        const list = $('.category-container');
+        const listElems = list[0].getElementsByTagName('a');
+
+        // Iterar por la lista y esconder los elementos que no matcheen
+        for (let i = 0; i < listElems.length; i++) {
+            let a = listElems[i].getElementsByTagName("p")[0];
+            let txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                listElems[i].style.display = "";
+            } else {
+                listElems[i].style.display = "none";
+            }
+        }
+    });
+    // Para modificar el href con la ubicacion seleccionada
+    function redirectCategory(category) {
+        var auxZoneId = sessionStorage.getItem("pickedZoneId");
+        sessionStorage.setItem("pickedCategoryId", category);
+        if (auxZoneId) {
+            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' + auxZoneId +
+                '&query=&category=' + category;
+        }else {
+            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' +
+                '&query=&category=' + category;
+        }
+    }
+</script>
 </body>
 </html>
