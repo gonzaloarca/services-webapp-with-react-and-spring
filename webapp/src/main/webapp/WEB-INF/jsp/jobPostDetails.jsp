@@ -49,6 +49,10 @@
 <%--            </li>--%>
 <%--        </ol>--%>
 <%--    </nav>--%>
+    <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">
+        <i class="fas fa-edit"></i>
+        <p>Editar publicacion</p>
+    </a>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <c:choose>
@@ -90,7 +94,7 @@
             </c:choose>
         </div>
     </div>
-        <div class="card-body custom-row mt-2">
+        <div class="card-body custom-row mt-2 p-0">
             <div class="center">
 
                 <div class="card custom-card mb-4 bg-white rounded">
@@ -106,10 +110,10 @@
                             <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services" class="summary-item profile-item align-items-center">
                                 <c:choose>
                                     <c:when test="${jobPost.user.image.string == null}">
-                                        <img src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
+                                        <img class="ml-4" src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
+                                        <img class="ml-4" src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
                                     </c:otherwise>
                                 </c:choose>
                                 <p><c:out value="${jobPost.user.username}"/></p>
@@ -191,12 +195,13 @@
                                 <div class="card custom-card mb-3">
                                     <div class="card custom-card " id="heading${status.index}">
 
-                                        <button class="btn-block hirenet-blue-btn collapsed" type="button"
+                                        <button class="drop btn-block hirenet-blue-btn collapsed" type="button"
                                                 data-toggle="collapse" data-target="#collapse${status.index}"
                                                 aria-expanded="false"
                                                 aria-controls="collapse${status.index}">
                                             <div class="package-info">
                                                 <i class="fa fa-chevron-down text-white"></i>
+                                                <i class="fa fa-chevron-up text-white"></i>
                                                 <p class="package-title">
                                                     <c:out value="${pack.title}"/>
                                                 </p>
@@ -244,6 +249,7 @@
     $('.requestServiceBtn').on('click', function (e) {
         e.stopPropagation();
     });
+
 </script>
 </body>
 </html>

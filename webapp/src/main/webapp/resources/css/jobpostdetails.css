@@ -40,7 +40,6 @@
 }
 
 .card-title i {
-    margin-left: 3vw;
     margin-top: 3px;
     font-size: 32px;
     line-height: 1;
@@ -71,7 +70,7 @@
 }
 
 .summary-item p {
-    margin: auto 14px;
+    margin: 0 14px;
     text-align: left;
     word-wrap: break-word;
     font-weight: bold;
@@ -102,6 +101,7 @@
     width: 100%;
     font-size: 22px;
 }
+
 /* rate item */
 .rate-item{
     display: flex;
@@ -190,19 +190,24 @@
 }
 
 .available-hours {
-    margin: 0 3vw;
+    margin: 4vh 3vw;
     background-color: #EAEAEA;
     padding: 12px;
     border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .available-hours p {
     justify-content: center;
     margin: 0;
+    font-size: 1.25rem;
 }
 
 .zones {
-    margin: 0 3vw;
+    margin: 5vh 3vw;
+    justify-content: center;
 }
 
 .zones p {
@@ -213,6 +218,7 @@
     margin: 0 10px 20px;
     text-align: center;
     line-height: 1;
+    font-size: 1.25rem;
 }
 
 .package-info {
@@ -221,6 +227,14 @@
 }
 .package-info p{
     color: white;
+}
+
+button[aria-expanded=true] .package-info .fa-chevron-down {
+    display: none;
+}
+
+button[aria-expanded=false] .package-info .fa-chevron-up {
+    display: none;
 }
 
 .accordion i {
@@ -282,3 +296,23 @@
     background-color: #6877e0;
     color: white;
 }
+
+.edit-button,.edit-button:link{
+    justify-content: flex-end;
+    color:#485696
+}
+
+.edit-button:hover{
+    text-decoration:none
+}
+
+.edit-button p{
+    font-size: 16px;
+}
+
+.edit-button i{
+    font-size: 26px;
+    line-height: 22px;
+    margin-right: 5px;
+}
+
