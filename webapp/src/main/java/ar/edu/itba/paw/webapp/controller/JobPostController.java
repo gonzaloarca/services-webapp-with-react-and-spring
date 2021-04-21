@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.ByteImage;
+import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.jws.WebParam;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
@@ -54,7 +56,7 @@ public class JobPostController {
         mav.addObject("avgRate", reviewService.findProfessionalAvgRate(jobPost.getUser().getId()));
         mav.addObject("reviewsSize", reviewService.findProfessionalReviews(jobPost.getUser().getId()).size());
         mav.addObject("imageList", imageList);
-        mav.addObject("totalContractsCompleted",jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
+        mav.addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
         return mav;
     }
 
@@ -68,7 +70,7 @@ public class JobPostController {
 
     @RequestMapping(path = "/create-job-post", method = RequestMethod.POST)
     public ModelAndView submitJobPost(@Valid @ModelAttribute("createJobPostForm") final JobPostForm form,
-                                      final BindingResult errors, Principal principal) {
+                                      final BindingResult errors, RedirectAttributes attr, Principal principal) {
 
         if (errors.hasErrors()) {
             return createJobPost(form);
@@ -92,7 +94,13 @@ public class JobPostController {
         }
         jobPostImageService.addImages(jobPost.getId(), byteImages);
 
-        return new ModelAndView("redirect:/job/" + jobPost.getId());
+        attr.addAttribute("postId", jobPost.getId());
+        return new ModelAndView("redirect:/create-job-post/success");
+    }
+
+    @RequestMapping("/create-job-post/success")
+    public ModelAndView createSuccess(@RequestParam("postId") final long postId) {
+        return new ModelAndView("createJobPostSuccess").addObject("postId", postId);
     }
 
 }
