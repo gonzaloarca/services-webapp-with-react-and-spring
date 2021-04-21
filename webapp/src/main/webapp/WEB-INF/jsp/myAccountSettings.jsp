@@ -88,26 +88,30 @@
                 <spring:message code="account.settings.info.subtitle"/>
             </h4>
             <div style="padding: 0 20px 0 20px">
-                <form:form modelAttribute="accountChangeForm"
+                <form:form modelAttribute="accountChangeForm" class="needs-validation" novalidate="true"
                            action="${pageContext.request.contextPath}/account/details" method="post"
-                           enctype="multipart/form-data">
+                           enctype="multipart/form-data" onsubmit="disableBtn()">
                     <div class="row p-4">
-                        <div class="col-7">
+                        <div class="col-7 needs-validation">
                             <form:label path="name" class="form-text custom-label">
                                 <spring:message code="register.name"/>
                             </form:label>
-                            <spring:message code="register.name" var="namePlaceholder"/>
-                            <form:input type="text" class="form-control custom-input" name="name"
+                            <form:input type="text" class="form-control custom-input" name="name" required="true"
                                         placeholder="${namePlaceholder}" maxlength="100" path="name"/>
+                            <div class="invalid-feedback">
+                                <spring:message code="account.settings.security.empty"/>
+                            </div>
                             <form:errors path="name" cssClass="form-error" element="p"/>
                         </div>
-                        <div class="col-5">
+                        <div class="col-5 needs-validation">
                             <form:label path="phone" class="form-text custom-label">
                                 <spring:message code="register.phone"/>
                             </form:label>
-                            <spring:message code="register.phone" var="phonePlaceholder"/>
-                            <form:input type="text" class="form-control custom-input" name="phone"
+                            <form:input type="text" class="form-control custom-input" name="phone" required="true"
                                         placeholder="${phonePlaceholder}" maxlength="100" path="phone"/>
+                            <div class="invalid-feedback">
+                                <spring:message code="account.settings.security.empty"/>
+                            </div>
                             <form:errors path="phone" cssClass="form-error" element="p"/>
                         </div>
                     </div>
@@ -145,7 +149,7 @@
                             </c:if>
                         </h5>
 
-                        <button class="btn btn-primary hirenet-blue-btn" type="submit" onclick="this.disabled=true;">
+                        <button class="btn btn-primary hirenet-blue-btn" type="submit" id="submitBtn"">
                             <spring:message code="account.settings.security.save"/>
                         </button>
 
@@ -169,6 +173,38 @@
 
             reader.readAsDataURL(input.files[0]);
         }
+    }
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+    })()
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        var forms = document.querySelectorAll('.needs-validation');
+        var is_valid = true;
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    if (!form.checkValidity()) {
+                        is_valid = false;
+                    }
+                })
+        $("#submitBtn").attr("disabled", is_valid);
     }
 </script>
 </body>

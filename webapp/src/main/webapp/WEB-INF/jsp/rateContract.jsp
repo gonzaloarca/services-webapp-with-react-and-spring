@@ -59,7 +59,7 @@
         </div>
     </div>
     <div class="qualify-form">
-        <form:form modelAttribute="reviewForm"
+        <form:form modelAttribute="reviewForm" class="needs-validation" novalidate="true" onsubmit="disableBtn()"
                    action="${pageContext.request.contextPath}/rate-contract/${contractId}" method="post"
                    enctype="multipart/form-data">
             <h3 class="m-0">
@@ -93,7 +93,7 @@
             <form:errors path="title" cssClass="form-error" element="p"/>
 
             <div class="submit-rate-button-container p-5">
-                <button class="btn btn-primary hirenet-yellow-btn" type="submit" onclick="this.disabled=true;">
+                <button class="btn btn-primary hirenet-yellow-btn" type="submit" id="submitBtn">
                     <spring:message code="ratecontract.review.submit"/>
                 </button>
             </div>
@@ -101,6 +101,20 @@
     </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
+<script>
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        var forms = document.querySelectorAll('.needs-validation');
+        var is_valid = true;
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    if (!form.checkValidity()) {
+                        is_valid = false;
+                    }
+                })
+        $("#submitBtn").attr("disabled", is_valid);
+    }
+</script>
 </body>
 </html>
 

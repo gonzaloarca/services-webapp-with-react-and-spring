@@ -60,7 +60,7 @@
     </div>
 
 
-    <form:form modelAttribute="registerForm"
+    <form:form modelAttribute="registerForm" class="needs-validation" novalidate="true" onsubmit="disableBtn()"
                action="${pageContext.request.contextPath}/register" method="post"
                enctype="multipart/form-data" id="register-form">
         <div class="card p-5">
@@ -103,12 +103,15 @@
                                 <spring:message code="register.password"/>
                             </form:label>
                             <spring:message code="register.password" var="passwordPlaceholder"/>
-                            <div class="input-group" id="show_hide_password">
+                            <div class="input-group has-validation" id="show_hide_password">
                                 <form:input type="password" class="form-control custom-input custom-password"
-                                            name="password"
+                                            name="password" required="true"
                                             placeholder="${passwordPlaceholder}" maxlength="100" path="password"/>
-                                <div class="input-group-addon password-eye">
+                                <span class="input-group-text password-eye" id="inputGroupPostpend">
                                     <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                </span>
+                                <div class="invalid-feedback">
+                                    Este campo no puede estar vacío
                                 </div>
                             </div>
                             <form:errors path="password" cssClass="form-error" element="p"/>
@@ -117,12 +120,15 @@
                             <form:label path="password" class="form-text custom-label">
                                 <spring:message code="register.password.repeat"/>
                             </form:label>
-                            <div class="input-group" id="show_hide_password_repeat">
+                            <div class="input-group has-validation" id="show_hide_password_repeat">
                                 <form:input type="password" class="form-control custom-input custom-password"
                                             name="repeatPassword"
                                             placeholder="${passwordPlaceholder}" maxlength="100" path="repeatPassword"/>
-                                <div class="input-group-addon password-eye">
+                                <span class="input-group-text password-eye" id="inputGroupPostpend">
                                     <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                </span>
+                                <div class="invalid-feedback">
+                                    Este campo no puede estar vacío
                                 </div>
                             </div>
                             <form:errors path="repeatPassword" cssClass="form-error" element="p"/>
@@ -171,7 +177,7 @@
                             Volver atrás
                         </button>
 
-                        <button class="btn btn-primary hirenet-blue-btn submit-btn" type="submit" onclick="this.disabled=true;">
+                        <button class="btn btn-primary hirenet-blue-btn submit-btn" type="submit" id="submitBtn">
                             <spring:message code="register.submit"/>
                         </button>
                     </div>
@@ -309,6 +315,40 @@
 
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    // // Example starter JavaScript for disabling form submissions if there are invalid fields
+    // (function () {
+    //     'use strict'
+    //
+    //     // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    //     var forms = document.querySelectorAll('.needs-validation');
+    //
+    //     // Loop over them and prevent submission
+    //     Array.prototype.slice.call(forms)
+    //             .forEach(function (form) {
+    //                 form.addEventListener('submit', function (event) {
+    //                     if (!form.checkValidity()) {
+    //                         event.preventDefault()
+    //                         event.stopPropagation()
+    //                     }
+    //
+    //                     form.classList.add('was-validated')
+    //                 }, false)
+    //             })
+    // })()
+
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        var forms = document.querySelectorAll('.needs-validation');
+        var is_valid = true;
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    if (!form.checkValidity()) {
+                        is_valid = false;
+                    }
+                })
+        $("#submitBtn").attr("disabled", is_valid);
     }
 </script>
 </body>

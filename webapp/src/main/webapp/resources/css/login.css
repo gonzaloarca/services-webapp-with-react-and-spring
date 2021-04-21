@@ -31,18 +31,23 @@ body {
 }
 
 .custom-password {
-    padding-right: 30px;
+    padding-right: 20px; !important;
 }
 
-.password-eye {
-    z-index: 4;
-    align-self: center;
-    position: absolute;
-    right: 10px;
+.custom-password.is-valid, .was-validated .custom-password:valid {
+    padding-right: 50px; !important;
+}
+
+.custom-password:invalid {
+    padding-right: 50px; !important;
 }
 
 .password-eye a {
-    color: #7e7e7e !important;
+    color: #5e5e5e !important;
+}
+
+.input-group-text {
+    background-color: #a7a7a7;
 }
 
 .login-error {
@@ -64,4 +69,8 @@ body {
     padding: 10px;
     width: max-content;
     border-radius: 20px 20px 0 0;
+}
+
+.was-validated .form-check-input:valid ~ .form-check-label {
+    color: black; !important;
 }

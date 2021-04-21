@@ -104,13 +104,6 @@
     padding-right: 30px;
 }
 
-.password-eye {
-    z-index: 4;
-    align-self: center;
-    position: absolute;
-    right: 10px;
-}
-
 .password-eye a {
     color: #7e7e7e !important;
 }
