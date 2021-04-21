@@ -48,7 +48,7 @@ public class NoLoginUserServiceTest {
     public void testRegisterNewUser() {
         Mockito.when(userDaoJDBC.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone()))
                 .thenReturn(NEW_USER);
-        User createdUser = userService.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone(), Arrays.asList(0));
+        User createdUser = userService.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone());
         Assert.assertNotNull(createdUser);
         Assert.assertEquals(NEW_USER,createdUser);
     }

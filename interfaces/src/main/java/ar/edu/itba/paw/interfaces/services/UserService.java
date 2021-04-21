@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface UserService {
 
     //TODO eliminar este metodo cambiando los tests
-    User register(String email,String password, String username, String phone, List<Integer> role);
+    User register(String email,String password, String username, String phone);
 
-    User register(String email, String password, String username, String phone, List<Integer> role, ByteImage image)
+    User register(String email, String password, String username, String phone, ByteImage image)
             throws UserAlreadyExistsException, UserNotVerifiedException;
 
     User findById(long id);

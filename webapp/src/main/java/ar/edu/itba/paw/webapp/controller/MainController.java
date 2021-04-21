@@ -110,7 +110,7 @@ public class MainController {
 
         try {
             userService.register(registerForm.getEmail(), registerForm.getPassword(),
-                    registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1), byteImage);
+                    registerForm.getName(), registerForm.getPhone(), byteImage);
         } catch (UserAlreadyExistsException e) {
             errors.rejectValue("email", "register.existingemail");
             return register(registerForm);

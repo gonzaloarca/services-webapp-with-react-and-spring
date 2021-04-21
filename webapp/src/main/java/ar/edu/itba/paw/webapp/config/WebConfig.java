@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -36,6 +37,12 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 @EnableAsync
 public class WebConfig {
+
+    //FIXME poner la url correcta
+    @Bean(name = "webpageUrl")
+    public String webpageUrl() {
+        return "http://localhost:8080";
+    }
 
     @Bean
     public ViewResolver viewResolver() {

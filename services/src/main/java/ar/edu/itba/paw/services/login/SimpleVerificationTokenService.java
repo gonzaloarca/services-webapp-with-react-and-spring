@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.dao.VerificationTokenDao;
 import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.models.VerificationToken;
 import exceptions.VerificationTokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class SimpleVerificationTokenService implements VerificationTokenService 
 				}
 				verificationTokenDao.deleteToken(user.getId());
 				userDao.verifyUser(user.getId());
+				userDao.assignRole(user.getId(), UserAuth.Role.CLIENT.ordinal());
 				return;
 			}
 		}

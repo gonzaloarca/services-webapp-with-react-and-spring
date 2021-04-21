@@ -68,11 +68,21 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <ol class="carousel-indicators">
-                        <c:forEach items="${imageList}" varStatus="status">
-                            <li data-target="#carousel" data-slide-to="${status.index}" class="${status.index == 0 ? 'active' : ''}"></li>
-                        </c:forEach>
-                    </ol>
+                    <c:if test="${imageList.size() > 1}">
+                        <ol class="carousel-indicators">
+                            <c:forEach items="${imageList}" varStatus="status">
+                                <li data-target="#carousel" data-slide-to="${status.index}" class="${status.index == 0 ? 'active' : ''}"></li>
+                            </c:forEach>
+                        </ol>
+                        <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </c:if>
                     <div class="carousel-inner">
                         <c:forEach items="${imageList}" varStatus="status" var="postImage">
                             <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
@@ -83,14 +93,6 @@
                             </div>
                         </c:forEach>
                     </div>
-                    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
                 </c:otherwise>
             </c:choose>
         </div>

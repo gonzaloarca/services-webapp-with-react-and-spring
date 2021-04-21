@@ -33,11 +33,10 @@ public class NoLoginUserService implements UserService {
     private MailingService mailingService;
 
     @Override
-    public User register(String email, String password, String username, String phone, List<Integer> roles,
+    public User register(String email, String password, String username, String phone,
                          ByteImage image) throws UserAlreadyExistsException, UserNotVerifiedException{
         Optional<User> maybeUser = userDao.findByEmail(email);
 
-        //TODO Logica de usuario legacy???
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
 
@@ -63,9 +62,6 @@ public class NoLoginUserService implements UserService {
         else
             registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone, image);
 
-        //TODO manejo de roles
-        roles.forEach(role -> userDao.assignRole(registeredUser.getId(), role));
-
         VerificationToken token = verificationTokenService.create(registeredUser);
         mailingService.sendVerificationTokenEmail(registeredUser, token);
 
@@ -73,8 +69,8 @@ public class NoLoginUserService implements UserService {
     }
 
     @Override
-    public User register(String email, String password, String username, String phone, List<Integer> role) {
-        return register(email, password, username, phone, role, null);
+    public User register(String email, String password, String username, String phone) {
+        return register(email, password, username, phone, null);
     }
 
     @Override

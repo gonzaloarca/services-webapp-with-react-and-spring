@@ -38,6 +38,10 @@ public class MailingServiceSpring implements MailingService {
     @Qualifier("tokenEmail")
     private SimpleMailMessage tokenEmail;
 
+    @Autowired
+    @Qualifier("webpageUrl")
+    private String webpageUrl;
+
     private final HashMap<String, String> IMAGE_TYPE_TO_NAME;
 
     public MailingServiceSpring() {
@@ -101,7 +105,7 @@ public class MailingServiceSpring implements MailingService {
     public void sendVerificationTokenEmail(User user, VerificationToken token) {
         //TODO i18n del email
         //TODO direccion de la pagina posta
-        String url = "localhost:8080/token?user_id=" + user.getId() + "&token=" + token.getToken(),
+        String url = webpageUrl + "/token?user_id=" + user.getId() + "&token=" + token.getToken(),
                 subject = "Bienvenido a Hirenet";
 
         String text = String.format(tokenEmail.getText(), user.getUsername(), user.getUsername(),
