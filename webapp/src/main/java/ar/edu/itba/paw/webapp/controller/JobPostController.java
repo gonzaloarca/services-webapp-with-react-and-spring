@@ -82,16 +82,17 @@ public class JobPostController {
 
         List<ByteImage> byteImages = new ArrayList<>();
         for(MultipartFile file : form.getServicePics()){
-            try {
-                byteImages.add(imageService.create(file.getBytes(), file.getContentType()));
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
+            if(!file.isEmpty()){
+                try {
+                    byteImages.add(imageService.create(file.getBytes(), file.getContentType()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
             }
         }
         jobPostImageService.addImages(jobPost.getId(), byteImages);
 
         return new ModelAndView("redirect:/job/" + jobPost.getId());
     }
-
 
 }
