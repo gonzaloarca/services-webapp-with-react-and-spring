@@ -106,7 +106,7 @@
         <br>
         <spring:message code="index.createJobPost.proposition"/>
     </h3>
-    <a class="btn hirenet-blue-btn"><spring:message code="index.createJobPost.button"/></a>
+    <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post"><spring:message code="index.createJobPost.button"/></a>
     <div class="mt-5">
         <jsp:include page="components/footer.jsp"/>
     </div>
