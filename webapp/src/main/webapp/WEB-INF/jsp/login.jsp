@@ -93,7 +93,7 @@
                             <spring:message code="login.rememberme"/>
                         </label>
                     </div>
-                    <button class="btn btn-primary hirenet-blue-btn" type="submit">
+                    <button class="btn btn-primary hirenet-blue-btn" type="submit" onclick="this.disabled=true;">
                         <spring:message code="login.submit"/>
                     </button>
                 </div>

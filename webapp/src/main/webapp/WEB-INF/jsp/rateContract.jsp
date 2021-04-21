@@ -93,7 +93,7 @@
             <form:errors path="title" cssClass="form-error" element="p"/>
 
             <div class="submit-rate-button-container p-5">
-                <button class="btn btn-primary hirenet-yellow-btn" type="submit">
+                <button class="btn btn-primary hirenet-yellow-btn" type="submit" onclick="this.disabled=true;">
                     <spring:message code="ratecontract.review.submit"/>
                 </button>
             </div>

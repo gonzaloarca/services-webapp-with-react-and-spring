@@ -86,12 +86,8 @@ a.navbar-brand {
     border-radius: 50%;
     height: 40px;
     width: 40px;
-
     object-fit: cover;
-}
-
-.navbar-dropdown-toggle {
-
+    margin: 10px;
 }
 
 .navbar-dropdown-toggle.dropdown-toggle::after, .navbar-dropdown-toggle.dropdown-toggle:focus {
@@ -110,7 +106,7 @@ a.navbar-brand {
 .navbar-dropdown-details {
     margin-bottom: 15px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: center;
     font-size: 18px;
 }
@@ -118,15 +114,21 @@ a.navbar-brand {
 .navbar-dropdown-details p {
     padding-left: 15px;
     word-break: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .navbar-dropdown-name {
     font-weight: bold;
+    -webkit-line-clamp: 3;
     margin: 0;
 }
 
 .navbar-dropdown-email {
     color: gray;
+    -webkit-line-clamp: 2;
     margin: 0;
 }
 
