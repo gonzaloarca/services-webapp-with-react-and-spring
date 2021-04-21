@@ -42,6 +42,7 @@ public class MainController {
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("jobCards", jobCardService.findAll());
+        mav.addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
         return mav;
     }
 
@@ -122,7 +123,7 @@ public class MainController {
         ModelAndView mav = new ModelAndView("tokenViews");
         User user = userService.findById(user_id);
 
-        if(user.isVerified())
+        if (user.isVerified())
             return new ModelAndView("error/404");
 
         try {

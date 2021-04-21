@@ -588,6 +588,7 @@
         $("body").tooltip({selector: '[data-toggle=tooltip]'});
     });
 
+
     // Script para deshabilitar el input de precio cuando esta TBD el radio
     const tbdRadio = $("#tbd-radio");
 
