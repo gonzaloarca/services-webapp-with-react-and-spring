@@ -35,10 +35,21 @@
                 </a>
             </li>
 
+            <div class="vl"></div>
+
+            <sec:authorize access="isAuthenticated()">
+                <li class="nav-item ${requestScope.path == "/my-contracts" ? 'active': ''}">
+                    <a class="nav-link"
+                       href="${pageContext.request.contextPath}/my-contracts">
+                        <spring:message code="navigation.mycontracts"/>
+                    </a>
+                </li>
+            </sec:authorize>
+
             <c:if test="${requestScope.path != '/' && requestScope.path != '/login' && requestScope.path != '/register'
             && requestScope.path != '/error'}">
                 <%--@elvariable id="searchForm" type="ar.edu.itba.paw.webapp.form.SearchForm"--%>
-                <form:form class="form-inline ml-4 my-auto flex-grow-1" id="searchForm"
+                <form:form class="form-inline ml-4 my-auto flex-grow-1 justify-content-between" id="searchForm"
                            action="${pageContext.request.contextPath}/search"
                            method="get" modelAttribute="searchForm" acceptCharset="utf-8">
                     <spring:message code="navigation.search" var="queryPlaceholder"/>
@@ -105,6 +116,8 @@
                 <span class="ml-auto"></span>
             </c:if>
 
+            <div class="vl"></div>
+
             <sec:authorize access="isAnonymous()">
                 <a type="button" class="btn btn-link navbar-link-button"
                    href="${pageContext.request.contextPath}/login"><spring:message
@@ -114,12 +127,6 @@
                         code="navigation.register"/></a>
             </sec:authorize>
             <sec:authorize access="isAuthenticated()">
-                <li class="nav-item ${requestScope.path == "/my-contracts" ? 'active': ''}">
-                    <a class="nav-link"
-                       href="${pageContext.request.contextPath}/my-contracts">
-                        <spring:message code="navigation.mycontracts"/>
-                    </a>
-                </li>
                 <button type="button" class="btn dropdown-toggle navbar-dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false" id="navbarDropdown">
@@ -167,8 +174,10 @@
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/account/details">
                         <i class="fas fa-user-cog navbar-dropdown-icon"></i><spring:message
                             code="navigation.dropdowon.myaccount"/></a>
-                    <a class="dropdown-item mt-3" href="${pageContext.request.contextPath}/logout"><spring:message
-                            code="navigation.dropdowon.logout"/></a>
+                    <a class="dropdown-item mt-3" href="${pageContext.request.contextPath}/logout">
+                        <div class="ml-3"><spring:message
+                                code="navigation.dropdowon.logout"/></div>
+                    </a>
                 </div>
             </sec:authorize>
         </ul>
@@ -217,7 +226,7 @@
 
         // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
         var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
-        if (auxCategoryId ) {
+        if (auxCategoryId) {
             $('#categoryForm')[0].value = auxCategoryId;
         }
     }
