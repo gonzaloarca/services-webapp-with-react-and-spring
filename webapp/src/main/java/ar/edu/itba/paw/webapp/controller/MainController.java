@@ -16,12 +16,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.ContentHandler;
 import java.security.InvalidParameterException;
 import java.security.Principal;
 import java.util.*;
@@ -50,12 +52,19 @@ public class MainController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private PaginationService paginationService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value="page", required = false,defaultValue = "1") final int page) {
         if(page < 1)
             throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("jobCards", jobCardService.findAll(page-1));
+        int maxPage = jobPostService.findMaxPage();
+        List<Integer> currentPages = paginationService.findCurrentPages(page,maxPage);
+        mav.addObject("maxPage",jobPostService.findMaxPage());
+        mav.addObject("currentPages",currentPages);
         return mav;
     }
 
@@ -72,10 +81,12 @@ public class MainController {
             errorMav.addObject("categories", JobPost.JobType.values());
             return errorMav;
         }
-
         final ModelAndView searchMav = new ModelAndView("search");
         searchMav.addObject("categories", JobPost.JobType.values());
         searchMav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
+        int maxPage = paginationService.findMaxPagesJobPost();
+        searchMav.addObject("maxPage",maxPage);
+        searchMav.addObject("currentPages",paginationService.findCurrentPages(page,maxPage));
         searchMav.addObject("jobCards", jobCardService.search(form.getQuery(),
                 JobPost.Zone.values()[Integer.parseInt(form.getZone())],
                 (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()],page-1)
@@ -131,4 +142,6 @@ public class MainController {
         SecurityContextHolder.clearContext();
         return new ModelAndView("passwordChanged");
     }
+
+
 }

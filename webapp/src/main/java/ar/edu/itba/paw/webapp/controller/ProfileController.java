@@ -34,6 +34,9 @@ public class ProfileController {
     @Autowired
     ReviewService reviewService;
 
+    @Autowired
+    PaginationService paginationService;
+
     @ModelAttribute("user")
     private User getUser(@PathVariable("id") final long id) {
         return userService.getUserByRoleAndId(1, id);
@@ -56,7 +59,9 @@ public class ProfileController {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", true);
         mav.addObject("reviews",reviewService.findProfessionalReviews(id));
-
+        int maxPage = paginationService.findMaxPagesJobPostByUserId(id);
+        mav.addObject("currentPages",paginationService.findCurrentPages(page,maxPage));
+        mav.addObject("maxPage",maxPage);
         //TODO: preguntar si esta bien
         mav.addObject("jobCards", jobCardService.findByUserIdWithReview(id,page-1));
         return mav;

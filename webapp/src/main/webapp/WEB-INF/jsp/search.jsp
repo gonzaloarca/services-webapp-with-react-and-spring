@@ -104,6 +104,11 @@
                         </c:otherwise>
                     </c:choose>
                 </div>
+                <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
+                <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                <c:set var="parameters" value="&zone=${param.zone}&query=${param.query}&${param.category}" scope="request"/>
+                <%@include file="components/bottomPaginationBar.jsp" %>
             </c:when>
             <c:otherwise>
                 <div class="search-title " style="width: 100%; justify-content: center">

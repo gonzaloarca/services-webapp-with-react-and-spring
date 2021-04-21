@@ -118,6 +118,10 @@
                                 <hr class="hr1"/>
                             </c:if>
                         </c:forEach>
+                        <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
+                        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                        <%@include file="components/bottomPaginationBar.jsp" %>
                     </c:if>
 
                     <c:if test="${!withServices}">

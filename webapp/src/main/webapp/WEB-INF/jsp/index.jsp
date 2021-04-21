@@ -42,6 +42,7 @@
 <c:set var="path" value="/" scope="request"/>
 <c:set var="withoutColor" value="true" scope="request"/>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<c:set var="jobCardSize" value="${jobCards.size()}"/>
 <%@include file="components/customNavBar.jsp" %>
 <%@include file="components/searchBar.jsp" %>
 
@@ -86,13 +87,14 @@
         <div class="landing-row">
             <h3>Algunos de nuestros servicios destacados</h3>
             <div class="job-display-container">
-                <c:if test="${jobCards.size() > 0}">
+                <c:choose>
+                <c:when test="${jobCardSize > 0}">
                     <c:forEach items="${jobCards}" var="jobCard">
                         <c:set var="data" value="${jobCard}" scope="request"/>
                         <c:import url="components/jobCard.jsp"/>
                     </c:forEach>
-                </c:if>
-                <c:if test="${jobCards.size() == 0}">
+                </c:when>
+                <c:otherwise>
                     <div class="result-div">
                         <img class="mb-5" style="height: 60%"
                              src="<c:url value="/resources/images/unavailable-1.svg"/> ">
@@ -103,8 +105,13 @@
                             <spring:message code="index.jobs.sorry"/>
                         </p>
                     </div>
-                </c:if>
+                </c:otherwise>
+                </c:choose>
             </div>
+            <c:set var="listSize" value="${jobCardSize}" scope="request"/>
+            <c:set var="maxPage" value="${maxPage}" scope="request"/>
+            <c:set var="currentPages" value="${currentPages}" scope="request"/>
+            <%@include file="components/bottomPaginationBar.jsp" %>
         </div>
     </div>
     <div style="
@@ -131,5 +138,8 @@
     </div>
 
 </div>
+<script>
+    $("")
+</script>
 </body>
 </html>

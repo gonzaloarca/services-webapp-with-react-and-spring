@@ -102,4 +102,14 @@ public class NoLoginJobPostService implements JobPostService {
         return jobPostDao.searchWithCategory(title, zone, jobType,page);
     }
 
+    @Override
+    public Integer findMaxPage() {
+        return jobPostDao.findMaxPage();
+    }
+
+    @Override
+    public int findMaxPageByUserId(long id) {
+        return jobPostDao.findMaxPageByUserId(id);
+    }
+
 }

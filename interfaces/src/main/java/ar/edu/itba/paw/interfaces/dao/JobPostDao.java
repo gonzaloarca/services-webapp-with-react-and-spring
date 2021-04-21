@@ -25,4 +25,7 @@ public interface JobPostDao {
 
     List<JobPost> searchWithCategory(String title, JobPost.Zone zone, JobPost.JobType jobType,int page);
 
+    Integer findMaxPage();
+
+    int findMaxPageByUserId(long id);
 }

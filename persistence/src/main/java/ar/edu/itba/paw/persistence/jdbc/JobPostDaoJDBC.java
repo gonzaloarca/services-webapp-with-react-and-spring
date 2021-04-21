@@ -156,4 +156,17 @@ public class JobPostDaoJDBC implements JobPostDao {
         );
     }
 
+    @Override
+    public Integer findMaxPage() {
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT count(post_id) FROM full_post",Integer.class);
+        return totalJobsCount / HirenetUtils.PAGE_SIZE + 1;
+    }
+
+    @Override
+    public int findMaxPageByUserId(long id) {
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT count(post_id) FROM full_post WHERE user_id = ?",new Object[]{id},Integer.class);
+        return totalJobsCount / HirenetUtils.PAGE_SIZE + 1;
+
+    }
+
 }

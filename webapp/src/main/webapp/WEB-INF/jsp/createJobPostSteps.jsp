@@ -42,9 +42,9 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="customNavBar.jsp">
-    <jsp:param name="path" value="/create-job-post"/>
-</jsp:include>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
+
 <div class="content-container-transparent mt-3">
     <h3>
         <img style="height: 30px; padding-bottom: 5px" src="<c:url value="/resources/images/add-1.svg"/>" alt="">

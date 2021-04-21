@@ -32,5 +32,7 @@ public interface JobPostService {
 
     List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page);
 
+    Integer findMaxPage();
 
+    int findMaxPageByUserId(long id);
 }
