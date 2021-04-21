@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserAuth;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -59,10 +61,11 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/services")
-    public ModelAndView profileWithServices(@PathVariable("id") final long id) {
+    public ModelAndView profileWithServices(@PathVariable("id") final long id, @ModelAttribute("user") User user) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", true);
-        //TODO: preguntar si es un usuario profesional
+        UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
+        mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
         mav.addObject("jobCards", jobCardService.findByUserIdWithReview(id));
         return mav;
     }

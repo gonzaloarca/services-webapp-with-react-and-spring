@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>
-        <c:set value="Verificación" var="text"/>
+        <spring:message code="token.view.title" var="text"/>
         <spring:message code="title.name" arguments="${text}"/>
     </title>
 
@@ -34,48 +34,48 @@
         <c:choose>
             <c:when test="${success}">
                 <img src='<c:url value="/resources/images/emailconfirmed.svg" />'
-                     alt="Email confirmado"
+                     alt="<spring:message code="token.view.email.alt"/>"
                      class="image"/>
                 <h1 class="title">
-                    ¡Email verificado correctamente!
+                    <spring:message code="token.view.email.success"/>
                 </h1>
                 <p class="text">
-                    Por favor, inicie sesión con su usuario para utlizar el sitio.
+                    <spring:message code="token.view.email.text"/>
                 </p>
             </c:when>
             <c:when test="${send}">
                 <img src='<c:url value="/resources/images/emailnotification.svg" />'
-                     alt="Envio de Email"
+                     alt="<spring:message code="token.view.email.alt2"/>"
                      class="image"/>
                 <h1 class="title">
-                    ¡Registro exitoso!
+                    <spring:message code="token.view.register.success"/>
                 </h1>
                 <p class="text">
-                    Se ha enviado un email para verificar su identidad, por favor revíselo.
+                    <spring:message code="token.view.register.text"/>
                 </p>
             </c:when>
             <c:when test="${resend}">
                 <img src='<c:url value="/resources/images/emailnotification.svg" />'
-                     alt="Envio de Email"
+                     alt="<spring:message code="token.view.email.alt2"/>"
                      class="image"/>
                 <h1 class="title">
-                    Usuario no verificado
+                    <spring:message code="token.view.user.notverified"/>
                 </h1>
                 <p class="text">
-                    Su email pertenece a un usuario ya existente.<br/>
-                    Se ha enviado un email para verificar su identidad, por favor revíselo.
+                    <spring:message code="token.view.email.registered"/><br/>
+                    <spring:message code="token.view.email.sent"/>
                 </p>
             </c:when>
             <c:when test="${expired}">
                 <img src='<c:url value="/resources/images/warning-sign.svg" />'
-                     alt="Warning Sign"
+                     alt="<spring:message code="token.view.code.warning"/>"
                      class="image"/>
                 <h1 class="title">
-                    Código expirado
+                    <spring:message code="token.view.code.expired"/>
                 </h1>
                 <p class="text">
-                    El código utilizado ya no es válido.<br/>
-                    Deberá realizar el registro de nuevo.
+                    <spring:message code="token.view.code.invalid"/><br/>
+                    <spring:message code="token.view.code.again"/>
                 </p>
             </c:when>
         </c:choose>
