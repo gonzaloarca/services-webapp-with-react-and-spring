@@ -64,8 +64,9 @@ public class ProfileController {
     public ModelAndView profileWithServices(@PathVariable("id") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page, @ModelAttribute("user") User user) {
         if (page < 1)
             throw new IllegalArgumentException();
-        //TODO: preguntar si es profesional???
         final ModelAndView mav = new ModelAndView("profile");
+        UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
+        mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
         mav.addObject("withServices", true);
         int maxPage = paginationService.findMaxPageJobPostsByUserId(id);
         mav.addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
@@ -78,8 +79,9 @@ public class ProfileController {
     public ModelAndView profileWithReviews(@PathVariable("id") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page, @ModelAttribute("user") User user) {
         if (page < 1)
             throw new IllegalArgumentException();
-        //TODO: preguntar si es profesional???
         final ModelAndView mav = new ModelAndView("profile");
+        UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
+        mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
         mav.addObject("withServices", false);
         mav.addObject("reviews", reviewService.findProfessionalReviews(id, page - 1));
         int maxPage = paginationService.findMaxPageReviewsByUserId(id);

@@ -53,8 +53,8 @@
 <div class="register-card">
     <div class="register-title-container">
         <h3 class="register-title">
-            <%--        TODO: Agregar alt--%>
-            <img class="login-icon mb-2" src="${pageContext.request.contextPath}/resources/images/adduser.svg" alt="">
+            <img class="login-icon mb-2" src="${pageContext.request.contextPath}/resources/images/adduser.svg"
+                 alt="<spring:message code="add.user"/>">
             <spring:message code="register.into.hirenet"/>
         </h3>
     </div>
@@ -156,9 +156,9 @@
                     </h5>
 
                     <div class="img-preview-container">
-                            <%--                        TODO: Alt correcto--%>
                         <img id="img-preview"
-                             src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="">
+                             src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
+                             alt="<spring:message code="user.avatar"/>">
                         <p class="font-weight-bold">
                             <spring:message code="register.imagepreview"/>
                         </p>
