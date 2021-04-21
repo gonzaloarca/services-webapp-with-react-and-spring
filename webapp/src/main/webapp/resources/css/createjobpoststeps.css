@@ -321,3 +321,13 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     justify-content: center;
     align-items: center;
 }
+
+.add-package-reminder {
+    background-color: #2F3965;
+    border-radius: 20px;
+    border: 10px solid #8690FA;
+    color: white;
+    width: max-content;
+    margin: 30px auto;
+    padding: 10px 15px;
+}
