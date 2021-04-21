@@ -17,6 +17,11 @@
     max-width: 500px;
 }
 
+.submit-rate-button-container {
+    display: flex;
+    justify-content: center;
+}
+
 /*INPUT ESTRELLAS*/
 .qualify-rate {
     float: left;

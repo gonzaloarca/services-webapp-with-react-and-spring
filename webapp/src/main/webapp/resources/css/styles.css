@@ -301,7 +301,8 @@ h3 {
 /*PARA QUE EL BOTON QUEDE CENTRADO*/
 .submit-button-container {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .form-step-title {

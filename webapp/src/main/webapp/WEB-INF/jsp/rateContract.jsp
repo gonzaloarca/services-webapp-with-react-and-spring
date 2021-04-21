@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/resources/css/qualifycontract.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/ratecontract.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
@@ -92,7 +92,7 @@
                         placeholder="${titlePlaceholder}" maxlength="100" path="title"/>
             <form:errors path="title" cssClass="form-error" element="p"/>
 
-            <div class="submit-button-container p-5">
+            <div class="submit-rate-button-container p-5">
                 <button class="btn btn-primary hirenet-yellow-btn" type="submit">
                     <spring:message code="ratecontract.review.submit"/>
                 </button>
