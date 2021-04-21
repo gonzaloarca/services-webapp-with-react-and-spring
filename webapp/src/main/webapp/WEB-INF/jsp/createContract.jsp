@@ -128,7 +128,7 @@
 
                     <!-- Submit Button -->
                     <div class="submit-button">
-                        <button class="btn btn-primary" type="submit">
+                        <button class="btn btn-primary" type="submit"  onclick="this.disabled=true;">
                             <spring:message code="contract.create.form.submit"/>
                         </button>
                     </div>

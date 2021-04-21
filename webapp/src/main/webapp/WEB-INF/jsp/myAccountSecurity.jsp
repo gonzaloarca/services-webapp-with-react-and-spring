@@ -119,7 +119,7 @@
 							</h5>
 							<!-- Submit Button -->
 							<div>
-								<button class="btn btn-primary" type="submit">
+								<button class="btn btn-primary" type="submit" onclick="this.disabled=true;">
 									<spring:message code="account.settings.security.save"/>
 								</button>
 							</div>

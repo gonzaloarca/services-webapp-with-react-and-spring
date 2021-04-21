@@ -171,7 +171,7 @@
                             Volver atrás
                         </button>
 
-                        <button class="btn btn-primary hirenet-blue-btn submit-btn" type="submit">
+                        <button class="btn btn-primary hirenet-blue-btn submit-btn" type="submit" onclick="this.disabled=true;">
                             <spring:message code="register.submit"/>
                         </button>
                     </div>

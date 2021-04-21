@@ -571,7 +571,7 @@
                         </button>
 
                         <button class="btn btn-primary hirenet-blue-btn text-uppercase"
-                                type="submit">
+                                type="submit"  onclick="this.disabled=true;">
                             Publicar
                         </button>
                     </div>
