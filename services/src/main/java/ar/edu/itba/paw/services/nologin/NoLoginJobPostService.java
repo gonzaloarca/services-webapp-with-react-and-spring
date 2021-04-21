@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services.nologin;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
@@ -43,30 +44,62 @@ public class NoLoginJobPostService implements JobPostService {
 
     @Override
     public List<JobPost> findByUserId(long id) {
-        return jobPostDao.findByUserId(id);
+        return jobPostDao.findByUserId(id, HirenetUtils.ALL_PAGES);
     }
+
+    @Override
+    public List<JobPost> findByUserId(long id, int page) {
+        return jobPostDao.findByUserId(id,page);
+    }
+
 
     @Override
     public List<JobPost> findByJobType(JobPost.JobType jobType) {
-        return jobPostDao.findByJobType(jobType);
+        return jobPostDao.findByJobType(jobType,HirenetUtils.ALL_PAGES);
     }
 
     @Override
+    public List<JobPost> findByJobType(JobPost.JobType jobType,int page) {
+        return jobPostDao.findByJobType(jobType,page);
+    }
+
+
+    @Override
     public List<JobPost> findByZone(JobPost.Zone zone) {
-        return jobPostDao.findByZone(zone);
+        return jobPostDao.findByZone(zone,HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<JobPost> findByZone(JobPost.Zone zone, int page) {
+        return jobPostDao.findByZone(zone,page);
     }
 
     @Override
     public List<JobPost> findAll() {
-        return jobPostDao.findAll();
+        return jobPostDao.findAll(HirenetUtils.ALL_PAGES);
     }
+
+    @Override
+    public List<JobPost> findAll(int page) {
+        return jobPostDao.findAll(page);
+    }
+
 
     @Override
     public List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
         if (jobType == null)
-            return jobPostDao.search(title, zone);
+            return jobPostDao.search(title, zone,HirenetUtils.ALL_PAGES);
 
-        return jobPostDao.searchWithCategory(title, zone, jobType);
+        return jobPostDao.searchWithCategory(title, zone, jobType,HirenetUtils.ALL_PAGES);
+    }
+
+
+    @Override
+    public List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page) {
+        if (jobType == null)
+            return jobPostDao.search(title, zone,page);
+
+        return jobPostDao.searchWithCategory(title, zone, jobType,page);
     }
 
 }

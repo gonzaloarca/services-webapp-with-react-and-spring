@@ -9,15 +9,15 @@ public interface ReviewDao {
 
     Review create(long contractId, int rate, String title, String description);
 
-    List<Review> findAllReviews(long id);
+    List<Review> findAllReviews(long id, int page);
 
     int findJobPostReviewsSize(long id);
 
-    List<Review> findReviews(long id);
+    List<Review> findReviews(long id, int page);
 
     Double findProfessionalAvgRate(long id);
 
-    List<Review> findProfessionalReviews(long id);
+    List<Review> findProfessionalReviews(long id, int page);
 
     Optional<Review> findReviewByContractId(long id);
 

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services.nologin;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
@@ -47,7 +48,13 @@ public class NoLoginJobPackageService implements JobPackageService {
 
     @Override
     public List<JobPackage> findByPostId(long id) {
-        return jobPackageDao.findByPostId(id);
+        return jobPackageDao.findByPostId(id, HirenetUtils.ALL_PAGES);
     }
+
+    @Override
+    public List<JobPackage> findByPostId(long id,int page) {
+        return jobPackageDao.findByPostId(id,page);
+    }
+
 
 }

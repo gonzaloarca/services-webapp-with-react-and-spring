@@ -13,4 +13,7 @@ public interface JobPackageService {
     JobPackage findById(long id);
 
     List<JobPackage> findByPostId(long id);
+
+    List<JobPackage> findByPostId(long id, int page);
+
 }

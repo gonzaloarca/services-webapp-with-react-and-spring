@@ -33,11 +33,11 @@ public class ExceptionController {
         return mav;
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler() {
-        ModelAndView mav = new ModelAndView("error/default");
-        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
-        return mav;
-    }
+//    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
+//    public ModelAndView defaultErrorHandler() {
+//        ModelAndView mav = new ModelAndView("error/default");
+//        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+//        return mav;
+//    }
 
 }

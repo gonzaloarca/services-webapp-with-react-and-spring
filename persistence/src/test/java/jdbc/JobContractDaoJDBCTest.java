@@ -168,7 +168,7 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByClientId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByClientId(USER2.getId());
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByClientId(USER2.getId(),0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         System.out.println(jobContracts);
@@ -177,7 +177,7 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByProId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByProId(USER1.getId());
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByProId(USER1.getId(),0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         jobContracts.forEach(jobContract -> Assert.assertEquals(USER1.getId(), jobContract.getProfessional().getId()));
@@ -185,7 +185,7 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByPackageId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId());
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId(),0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(2, jobContracts.size());
@@ -194,7 +194,7 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByPostId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId());
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId(),0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(3, jobContracts.size());  // dos son del package 1 y otro es del package 2

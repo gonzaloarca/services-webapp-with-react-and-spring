@@ -121,7 +121,7 @@ public class JobPackageDaoJDBCTest {
 
     @Test
     public void testFindByPostId() {
-        List<JobPackage> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId());
+        List<JobPackage> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId(),0);
         Assert.assertEquals(jobPackages.size(), JOB_PACKAGES.length);
         jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
     }

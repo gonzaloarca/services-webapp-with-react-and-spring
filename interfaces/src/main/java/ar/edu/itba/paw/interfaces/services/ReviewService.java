@@ -11,6 +11,8 @@ public interface ReviewService {
 
     List<Review> findProfessionalReviews(long id);
 
+    List<Review> findProfessionalReviews(long id,int page);
+
     Double findProfessionalAvgRate(long id);
 
     List<Integer> findProfessionalReviewsByPoints(long id);

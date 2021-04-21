@@ -12,12 +12,25 @@ public interface JobPostService {
 
     List<JobPost> findByUserId(long id);
 
+    List<JobPost> findByUserId(long id, int page);
+
     List<JobPost> findByJobType(JobPost.JobType jobType);
+
+    List<JobPost> findByJobType(JobPost.JobType jobType,int page);
+
 
     List<JobPost> findByZone(JobPost.Zone zone);
 
+    List<JobPost> findByZone(JobPost.Zone zone,int page);
+
+
     List<JobPost> findAll();
 
+    List<JobPost> findAll(int page);
+
     List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType);
+
+    List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page);
+
 
 }

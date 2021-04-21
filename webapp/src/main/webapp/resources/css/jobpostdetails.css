@@ -316,3 +316,17 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     margin-right: 5px;
 }
 
+.add-package-button{
+    margin-left: auto;
+}
+
+.add-package-button i{
+    font-size: 26px;
+    line-height: 32px;
+    margin-right: 5px;
+}
+
+.add-package-button p{
+    margin-top: 4px;
+}
+

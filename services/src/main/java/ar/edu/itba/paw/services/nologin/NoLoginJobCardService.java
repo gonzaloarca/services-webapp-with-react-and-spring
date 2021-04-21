@@ -30,10 +30,17 @@ public class NoLoginJobCardService implements JobCardService {
     @Autowired
     private ReviewService reviewService;
 
+
     @Override
     public List<JobCard> findAll() {
         //TODO: Mejorar excepcion
         return createCards(jobPostService.findAll());
+    }
+
+    @Override
+    public List<JobCard> findAll(int page) {
+        //TODO: Mejorar excepcion
+        return createCards(jobPostService.findAll(page));
     }
 
     @Override
@@ -43,14 +50,31 @@ public class NoLoginJobCardService implements JobCardService {
     }
 
     @Override
+    public List<JobCard> findByUserId(long id,int page) {
+        //TODO: Mejorar excepcion
+        return createCards(jobPostService.findByUserId(id,page));
+    }
+
+    @Override
     public List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
         //TODO: Mejorar excepcion
         return createCards(jobPostService.search(title, zone, jobType));
     }
 
     @Override
+    public List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page) {
+        //TODO: Mejorar excepcion
+        return createCards(jobPostService.search(title, zone, jobType,page));
+    }
+
+    @Override
     public List<JobCard> findByUserIdWithReview(long id) {
         return createCards(jobPostService.findByUserId(id));
+    }
+
+    @Override
+    public List<JobCard> findByUserIdWithReview(long id,int page) {
+        return createCards(jobPostService.findByUserId(id,page));
     }
 
     @Override

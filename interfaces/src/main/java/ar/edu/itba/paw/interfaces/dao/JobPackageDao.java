@@ -12,6 +12,6 @@ public interface JobPackageDao {
 
     Optional<JobPackage> findById(long id);
 
-    List<JobPackage> findByPostId(long id);
+    List<JobPackage> findByPostId(long id, int page);
 
 }

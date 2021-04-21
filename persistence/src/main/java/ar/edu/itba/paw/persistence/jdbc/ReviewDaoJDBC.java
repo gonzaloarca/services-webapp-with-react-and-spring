@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
-import ar.edu.itba.paw.interfaces.dao.UserDao;
 import exceptions.JobContractNotFoundException;
 import exceptions.JobPostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,10 @@ public class ReviewDaoJDBC implements ReviewDao {
         Arrays.stream(objs)
                 .forEach(obj -> zones.add(JobPost.Zone.values()[(int) obj]));
         return zones;
+    }
+
+    private static Integer getLimit(int page){
+        return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
     }
 
     private final RowMapper<Review> REVIEW_ROW_MAPPER = (resultSet, i) ->
@@ -91,10 +95,13 @@ public class ReviewDaoJDBC implements ReviewDao {
     }
 
     @Override
-    public List<Review> findAllReviews(long id) {
+    public List<Review> findAllReviews(long id,int page) {
+        Integer limit =getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract NATURAL JOIN review " +
-                        "WHERE post_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER);
+                        "WHERE post_id = ? LIMIT ? OFFSET ?", new Object[]{id,limit,offset}, REVIEW_ROW_MAPPER);
     }
 
     @Override
@@ -103,11 +110,14 @@ public class ReviewDaoJDBC implements ReviewDao {
                 new Object[]{id}, Integer.class);
     }
 
+
     @Override
-    public List<Review> findReviews(long id) {
+    public List<Review> findReviews(long id, int page) {
+        Integer limit =getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract NATURAL JOIN review WHERE package_id = ?",
-                new Object[]{id}, REVIEW_ROW_MAPPER);
+                new Object[]{id,limit,offset}, REVIEW_ROW_MAPPER);
     }
 
     @Override
@@ -118,10 +128,12 @@ public class ReviewDaoJDBC implements ReviewDao {
     }
 
     @Override
-    public List<Review> findProfessionalReviews(long id) {
+    public List<Review> findProfessionalReviews(long id, int page) {
+        Integer limit =getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract NATURAL JOIN review " +
-                        "WHERE professional_id = ?", new Object[]{id}, REVIEW_ROW_MAPPER);
+                        "WHERE professional_id = ? LIMIT ? OFFSET ?", new Object[]{id,limit,offset}, REVIEW_ROW_MAPPER);
     }
 
     @Override

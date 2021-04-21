@@ -13,6 +13,6 @@ INSERT INTO job_package(package_id, post_id, package_title, package_description,
 INSERT INTO job_package(package_id, post_id, package_title, package_description, package_price, package_rate_type, package_is_active) VALUES (DEFAULT, 1, 'Trabajo no tan simple', 'Instalacion de cableado electrico', 850.00, 0, true);
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Se me rompio una zapatilla');
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 2, NOW(), 'Arreglo de fusibles');
-INSERT INTO review(contract_id, rate, review_title, review_description) VALUES (1, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos');
-INSERT INTO review(contract_id, rate, review_title, review_description) VALUES (2, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
+INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (1, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos');
+INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (2, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
 COMMIT;

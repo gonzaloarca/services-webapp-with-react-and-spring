@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.services.nologin;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
-import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Review;
-import exceptions.ReviewNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +24,13 @@ public class NoLoginReviewService implements ReviewService {
 
     @Override
     public List<Review> findProfessionalReviews(long id) {
-        return reviewDao.findProfessionalReviews(id);
+        return reviewDao.findProfessionalReviews(id, HirenetUtils.ALL_PAGES);
     }
+
+    public List<Review> findProfessionalReviews(long id,int page) {
+        return reviewDao.findProfessionalReviews(id,page);
+    }
+
 
     @Override
     public Double findProfessionalAvgRate(long id) {
