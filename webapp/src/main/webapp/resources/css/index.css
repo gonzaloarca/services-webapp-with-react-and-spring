@@ -31,6 +31,10 @@
     margin: 20px;
 }
 
+.index-category-href:hover {
+    cursor: pointer;
+}
+
 .index-category-href img {
     width: 100%;
     height: 80%;
