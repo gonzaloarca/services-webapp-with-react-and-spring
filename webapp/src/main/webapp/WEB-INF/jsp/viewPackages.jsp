@@ -56,7 +56,7 @@
                 </a>
                 <br>
 
-                <a href="<c:url value="/job/${jobPost.id}/packages/add" "
+                <a href="<c:url value="/job/${jobPost.id}/packages/add"/>"
                    class="mt-4 btn btn-block btn-light add-package-btn text-uppercase">
                     <i style="font-size: 1.5rem" class="fas fa-plus-square text-primary mr-1"></i>
                     <span>Añadir nuevo paquete</span>
