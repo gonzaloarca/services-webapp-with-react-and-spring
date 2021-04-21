@@ -6,7 +6,7 @@
     flex-wrap: wrap;
 }
 
-.category {
+.category-href {
     position: relative;
     display: flex;
     justify-content: center;
@@ -19,11 +19,11 @@
     margin: 20px 5px;
 }
 
-.category:hover {
+.category-href:hover {
     text-decoration-color: white !important;
 }
 
-.category p {
+.category-href p {
     color: white;
     z-index: 3;
     font-size: 1.7rem;
@@ -41,7 +41,7 @@
     transition: background-color 200ms;
 }
 
-.category img {
+.category-href img {
     position: absolute;
     z-index: 1;
     width: 100%;
@@ -61,7 +61,7 @@
 }
 
 .category-search-bar {
-    width: 88%;
+    width: 100%;
     padding: 5px 20px;
     border-radius: 50px;
     background-color: #e8e8e8;

@@ -1,0 +1,16 @@
+<svg id="clock" xmlns="http://www.w3.org/2000/svg" width="101.682" height="101.682" viewBox="0 0 101.682 101.682">
+  <path id="Path_664" data-name="Path 664" d="M153.42,0,128,50.841l25.42,50.841A50.841,50.841,0,0,0,153.42,0Z" transform="translate(-102.58)" fill="#28abfa"/>
+  <path id="Path_665" data-name="Path 665" d="M0,50.841a50.841,50.841,0,0,0,50.841,50.841V0A50.841,50.841,0,0,0,0,50.841Z" fill="#14cfff"/>
+  <path id="Path_666" data-name="Path 666" d="M177.463,60,158,98.925l19.463,38.925a38.925,38.925,0,1,0,0-77.85Z" transform="translate(-126.622 -48.084)" fill="#c4f3ff"/>
+  <path id="Path_667" data-name="Path 667" d="M60,98.925A38.925,38.925,0,0,0,98.925,137.85V60A38.925,38.925,0,0,0,60,98.925Z" transform="translate(-48.084 -48.084)" fill="#fff"/>
+  <path id="Path_668" data-name="Path 668" d="M248.4,243.213l-8.426-8.426H236l3.972,8.426,4.213,4.213Z" transform="translate(-189.131 -188.159)" fill="#340d66"/>
+  <path id="Path_669" data-name="Path 669" d="M153.794,149.581l-4.213,4.213,21.134,21.134V166.5Z" transform="translate(-119.875 -119.875)" fill="#373e9f"/>
+  <path id="Path_670" data-name="Path 670" d="M256.964,149.227l-16.992,16.992L236,174.645h3.972l21.2-21.205Z" transform="translate(-189.131 -119.591)" fill="#373e9f"/>
+  <path id="Path_671" data-name="Path 671" d="M213.574,243.213l4.213,4.213L222,243.213v-8.426Z" transform="translate(-171.159 -188.159)" fill="#3857bc"/>
+  <path id="Path_672" data-name="Path 672" d="M250.965,90h-2.979L246,92.979l1.986,2.979h2.979Z" transform="translate(-197.145 -72.126)" fill="#340d66"/>
+  <path id="Path_673" data-name="Path 673" d="M241,90h2.979v5.958H241Z" transform="translate(-193.138 -72.126)" fill="#373e9f"/>
+  <path id="Path_674" data-name="Path 674" d="M250.965,392h-2.979L246,394.979l1.986,2.979h2.979Z" transform="translate(-197.145 -314.15)" fill="#340d66"/>
+  <path id="Path_675" data-name="Path 675" d="M241,392h2.979v5.958H241Z" transform="translate(-193.138 -314.15)" fill="#373e9f"/>
+  <path id="Path_676" data-name="Path 676" d="M0,0H5.958V5.958H0Z" transform="translate(17.874 53.82) rotate(-90)" fill="#373e9f"/>
+  <path id="Path_677" data-name="Path 677" d="M0,0H5.958V5.958H0Z" transform="translate(77.85 53.82) rotate(-90)" fill="#340d66"/>
+</svg>

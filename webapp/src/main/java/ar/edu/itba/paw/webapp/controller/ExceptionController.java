@@ -24,14 +24,21 @@ public class ExceptionController {
     @Autowired
     private UserService userService;
 
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    @org.springframework.web.bind.annotation.ExceptionHandler(
-            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})
-    public ModelAndView notFoundError() {
-        ModelAndView mav = new ModelAndView("error/404");
-        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
-        return mav;
-    }
+//    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+//    @org.springframework.web.bind.annotation.ExceptionHandler(
+//            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})
+//    public ModelAndView notFoundError() {
+//        ModelAndView mav = new ModelAndView("error/404");
+//        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+//        return mav;
+//    }
+//
+//    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
+//    public ModelAndView defaultErrorHandler() {
+//        ModelAndView mav = new ModelAndView("error/default");
+//        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+//        return mav;
+//    }
 
 //    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
 //    public ModelAndView defaultErrorHandler() {

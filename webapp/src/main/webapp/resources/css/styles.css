@@ -378,3 +378,35 @@ h3 {
 .custom-label {
     font-weight: bold;
 }
+.hirenet-grey-outline-btn {
+    border-color: #7e7e7e !important;
+    color: #7e7e7e !important;
+    background-color: transparent !important;
+}
+
+.hirenet-grey-outline-btn:hover {
+    background-color: #7e7e7e !important;
+    border-color: #7e7e7e !important;
+    color: white !important;
+}
+
+.hirenet-grey-outline-btn:active:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 108, 108, 0.5) !important;
+}
+
+/*White button*/
+.hirenet-white-btn {
+    font-weight: bold;
+    background-color: white;
+    border: transparent;
+}
+
+.hirenet-white-btn:active, .hirenet-white-btn:focus {
+    border-color: transparent !important;
+    outline: none !important;
+}
+
+.hirenet-white-btn:hover {
+    background-color: #e8e8e8;
+}
+

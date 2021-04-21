@@ -29,16 +29,16 @@
                     <spring:message code="navigation.publish"/>
                 </a>
             </li>
-            <%--            <li class="nav-item ${requestScope.path == "/categories" ? 'active': ''}">--%>
-            <%--                <a class="nav-link" href="${pageContext.request.contextPath}/categories">--%>
-            <%--                    <spring:message code="navigation.categories"/>--%>
-            <%--                </a>--%>
-            <%--            </li>--%>
+            <li class="nav-item ${requestScope.path == "/categories" ? 'active': ''}">
+                <a class="nav-link" href="${pageContext.request.contextPath}/categories">
+                    <spring:message code="navigation.categories"/>
+                </a>
+            </li>
 
             <c:if test="${requestScope.path != '/' && requestScope.path != '/login' && requestScope.path != '/register'
             && requestScope.path != '/error'}">
                 <%--@elvariable id="searchForm" type="ar.edu.itba.paw.webapp.form.SearchForm"--%>
-                <form:form class="form-inline ml-4 my-auto flex-grow-1"
+                <form:form class="form-inline ml-4 my-auto flex-grow-1" id="searchForm"
                            action="${pageContext.request.contextPath}/search"
                            method="get" modelAttribute="searchForm" acceptCharset="utf-8">
                     <spring:message code="navigation.search" var="queryPlaceholder"/>
@@ -50,12 +50,7 @@
                     <a type="button" class="btn btn-link navbar-link-button ml-auto" data-toggle="modal"
                        data-target="#zonesModal">
                         <i class="fas fa-map-marker-alt fa-lg mr-2"></i>
-                        <c:if test="${pickedZone == null}">
-                            <spring:message code="navigation.picklocation"/>
-                        </c:if>
-                        <c:if test="${pickedZone != null}">
-                            <spring:message code="${pickedZone.stringCode}"/>
-                        </c:if>
+                        <span id="zoneString"></span>
                         <form:errors path="zone" cssClass="search-form-error" element="p"/>
                     </a>
 
@@ -75,15 +70,15 @@
                                         <h4 class="my-3">
                                             <spring:message code="navigation.modal.title"/>
                                         </h4>
-                                        <div class="has-search">
-                                            <span class="fa fa-search form-control-feedback"></span>
-                                            <input id="locationFilter" type="text" class="form-control"
+                                        <div class="navbar-has-search">
+                                            <span class="fa fa-search navbar-form-control-feedback"></span>
+                                            <input id="locationFilter" type="text" class="navbar-form-control"
                                                    placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                                         </div>
                                         <div class="navbar-location-list-group">
                                             <c:forEach items="${requestScope.zoneValues}" var="zone">
-                                                <label class="navbar-location-list-group-item">
-                                                    <form:radiobutton path="zone" class="form-check-input"
+                                                <label class="navbar-location-list-group-item navbar-modal-zone">
+                                                    <form:radiobutton path="zone"
                                                                       value="${zone.value}"/>
                                                         <%--                                                TODO: CAMBIAR A CHECKBUTTON?--%>
                                                     <span class="location-name"><spring:message
@@ -95,13 +90,14 @@
                                     <div class="d-flex">
                                         <button type="button" class="btn btn-danger ml-auto mr-4" data-dismiss="modal">
                                             <spring:message code="navigation.modal.close"/></button>
-                                        <button class="btn btn-success" type="submit">
+                                        <button class="btn btn-success" id="pickLocationButton" type="submit">
                                             <spring:message code="navigation.modal.confirm"/></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <form:hidden path="category" id="categoryForm"/>
                 </form:form>
             </c:if>
             <c:if test="${requestScope.path == '/' || requestScope.path == '/login' || requestScope.path == '/register'
@@ -196,6 +192,35 @@
             }
         }
     });
+    // Seteo la ubicacion en variables auxiliares
+    let zoneId;
+    let zoneString;
+    $('.navbar-modal-zone').on('click', function (e) {
+        zoneId = e.target.querySelector("input").value;
+        zoneString = e.target.innerText;
+    })
+
+    // Cuando se hace el submit guardo las cookies
+    $('#pickLocationButton').on('click', function () {
+        sessionStorage.setItem("pickedZoneId", zoneId);
+        sessionStorage.setItem("pickedZoneString", zoneString);
+    })
+
+    // Para levantar la ubicacion en las cookies, en caso de existir
+    if ($("#searchForm")[0]) {
+        var auxZoneString = sessionStorage.getItem("pickedZoneString");
+        if (auxZoneString) {
+            $('#zoneString')[0].innerText = auxZoneString;
+            $('#zone' + (parseInt(sessionStorage.getItem('pickedZoneId')) + 1)).prop("checked", true);
+        } else
+            $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
+
+        // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
+        var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
+        if (auxCategoryId ) {
+            $('#categoryForm')[0].value = auxCategoryId;
+        }
+    }
 </script>
 </body>
 </html>
