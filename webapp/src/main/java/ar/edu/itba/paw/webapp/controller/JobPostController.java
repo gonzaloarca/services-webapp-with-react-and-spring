@@ -43,20 +43,29 @@ public class JobPostController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    PaginationService paginationService;
+
     @RequestMapping("/job/{postId}")
-    public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
+    public ModelAndView jobPostDetails(@PathVariable("postId") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        if (page < 1)
+            throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("jobPostDetails");
         JobPost jobPost = jobPostService.findById(id);
         List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
 
         mav.addObject("jobPost", jobPost);
+        mav.addObject("imageList", imageList);
+        mav.addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
         mav.addObject("packages", jobPackageService.findByPostId(id));
         mav.addObject("contractsCompleted",
                 jobContractService.findContractsQuantityByPostId(jobPost.getUser().getId()));
-        mav.addObject("avgRate", reviewService.findProfessionalAvgRate(jobPost.getUser().getId()));
-        mav.addObject("reviewsSize", reviewService.findProfessionalReviews(jobPost.getUser().getId()).size());
-        mav.addObject("imageList", imageList);
-        mav.addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
+        mav.addObject("avgRate", reviewService.findJobPostAvgRate(jobPost.getId()));
+        mav.addObject("totalReviewsSize", reviewService.findJobPostReviewsSize(id));
+        mav.addObject("reviews", reviewService.findReviewsByPostId(jobPost.getId(), page - 1));
+        int maxPage = paginationService.findMaxPageReviewsByPostId(id);
+        mav.addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
+        mav.addObject("maxPage", maxPage);
         return mav;
     }
 

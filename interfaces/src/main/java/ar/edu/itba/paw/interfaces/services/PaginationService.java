@@ -18,4 +18,6 @@ public interface PaginationService {
 
     int findMaxPageContractsByUserId(long id);
 
+    int findMaxPageReviewsByPostId(long id);
+
 }

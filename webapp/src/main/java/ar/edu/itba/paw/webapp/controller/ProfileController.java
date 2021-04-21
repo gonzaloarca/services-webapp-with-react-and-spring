@@ -59,7 +59,7 @@ public class ProfileController {
     private int getTotalContractsCompleted(@PathVariable("id") final long id) {
         return jobContractService.findContractsQuantityByProId(id);
     }
-    
+
     @RequestMapping(value = "/services")
     public ModelAndView profileWithServices(@PathVariable("id") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page, @ModelAttribute("user") User user) {
         if (page < 1)

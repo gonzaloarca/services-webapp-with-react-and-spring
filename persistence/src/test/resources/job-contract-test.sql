@@ -21,6 +21,6 @@ INSERT INTO job_package(package_id, post_id, package_title, package_description,
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 3, 3, NOW(), 'Se me rompieron las tuberias del banio');
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 3, NOW(), 'Se me rompio una tuberia en la cocina');
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 3, 2, NOW(), 'Instalacion de tomacorrientes');
-INSERT INTO review(contract_id, rate, review_title, review_description) VALUES (1, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos');
-INSERT INTO review(contract_id, rate, review_title, review_description) VALUES (2, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
+INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (1, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos');
+INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (2, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
 COMMIT;

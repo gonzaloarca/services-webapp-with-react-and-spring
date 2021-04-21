@@ -9,6 +9,10 @@ public interface ReviewService {
 
     Review create(long contractId, int rate, String title, String description);
 
+    List<Review> findReviewsByPostId(long id, int page);
+
+    List<Review> findReviewsByPostId(long id);
+
     List<Review> findProfessionalReviews(long id);
 
     List<Review> findProfessionalReviews(long id, int page);
@@ -24,5 +28,9 @@ public interface ReviewService {
     int findMaxPageReviewsByUserId(long id);
 
     int findProfessionalReviewsSize(long id);
+
+    int findMaxPageByPostId(long id);
+
+    Double findJobPostAvgRate(long id);
 
 }

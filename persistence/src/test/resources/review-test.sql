@@ -18,6 +18,6 @@ INSERT INTO job_post(post_id,user_id,post_title,post_available_hours,post_job_ty
 INSERT INTO post_zone(post_id, zone_id) VALUES (3,4);
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Se me rompio una zapatilla');
 INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Arreglo de fusibles');
-INSERT INTO review(contract_id, rate, review_title, review_description) VALUES (1, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos');
-INSERT INTO review(contract_id, rate, review_title, review_description) VALUES (2, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
+INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (1, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos');
+INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (2, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
 COMMIT;

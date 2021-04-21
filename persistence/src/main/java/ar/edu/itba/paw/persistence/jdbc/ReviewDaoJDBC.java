@@ -95,7 +95,7 @@ public class ReviewDaoJDBC implements ReviewDao {
     }
 
     @Override
-    public List<Review> findAllReviews(long id, int page) {
+    public List<Review> findReviewsByPostId(long id, int page) {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
 
@@ -106,13 +106,12 @@ public class ReviewDaoJDBC implements ReviewDao {
 
     @Override
     public int findJobPostReviewsSize(long id) {
-        return jdbcTemplate.queryForObject("SELECT reviews FROM full_post WHERE post_id = ?",
+        return jdbcTemplate.queryForObject("SELECT COUNT(contract_id) FROM full_contract NATURAL JOIN review WHERE post_id = ?",
                 new Object[]{id}, Integer.class);
     }
 
-
     @Override
-    public List<Review> findReviews(long id, int page) {
+    public List<Review> findReviewsByPackageId(long id, int page) {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
@@ -156,5 +155,20 @@ public class ReviewDaoJDBC implements ReviewDao {
         return jdbcTemplate.queryForObject(
                 "SELECT COUNT(contract_id) FROM full_contract NATURAL JOIN review " +
                         "WHERE professional_id = ?", new Object[]{id}, Integer.class);
+    }
+
+    @Override
+    public int findMaxPageReviewsByPostId(long id) {
+        Integer reviewsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) " +
+                "FROM full_contract NATURAL JOIN review WHERE post_id = ?", new Object[]{id}, Integer.class);
+        return (int) Math.ceil((double) reviewsCount / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public Double findJobPostAvgRate(long id) {
+        return jdbcTemplate.query("SELECT coalesce(avg(review_rate),0) as rating " +
+                        "FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post " +
+                        "WHERE post_id = ? GROUP BY post_id",
+                new Object[]{id}, (resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
     }
 }

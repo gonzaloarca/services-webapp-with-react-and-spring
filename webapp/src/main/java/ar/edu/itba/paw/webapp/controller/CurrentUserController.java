@@ -35,6 +35,8 @@ public class CurrentUserController {
 
     @RequestMapping(value = "/my-contracts")
     public ModelAndView myContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        if (page < 1)
+            throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("myContracts");
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
         int maxPage = paginationService.findMaxPageContractsByUserId(id);
@@ -53,7 +55,7 @@ public class CurrentUserController {
 
     @RequestMapping(value = "/rate-contract/{contractId}")
     public ModelAndView rateContract(@PathVariable("contractId") final long id,
-                                        @ModelAttribute("reviewForm") ReviewForm reviewForm) {
+                                     @ModelAttribute("reviewForm") ReviewForm reviewForm) {
         //TODO: VERIFICAR QUE SEA EL CLIENTE DESDE SPRING SECURITY
         if (!reviewService.findContractReview(id).isPresent()) {
             final ModelAndView mav = new ModelAndView("rateContract");
@@ -67,8 +69,8 @@ public class CurrentUserController {
 
     @RequestMapping(value = "/rate-contract/{contractId}", method = RequestMethod.POST)
     public ModelAndView rateContractSubmit(@PathVariable("contractId") final long id,
-                                              @Valid @ModelAttribute("reviewForm") ReviewForm reviewForm,
-                                              final BindingResult errors) {
+                                           @Valid @ModelAttribute("reviewForm") ReviewForm reviewForm,
+                                           final BindingResult errors) {
         if (!reviewService.findContractReview(id).isPresent()) {
             //TODO: VERIFICAR QUE SEA EL CLIENTE DESDE SPRING SECURITY
             if (errors.hasErrors())

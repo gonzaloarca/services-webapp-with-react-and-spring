@@ -1,7 +1,6 @@
 package jdbc;
 
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.persistence.jdbc.JobPostDaoJDBC;
 import ar.edu.itba.paw.persistence.jdbc.ReviewDaoJDBC;
 import config.TestConfig;
 import org.junit.Assert;
@@ -75,7 +74,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindAllReviews() {
-        List<Review> maybeUserReviews = reviewDaoJDBC.findAllReviews(JOB_POST.getId(),0);
+        List<Review> maybeUserReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(),0);
 
         Assert.assertEquals(maybeUserReviews.size(), 2);
         Assert.assertEquals(maybeUserReviews.get(0), REVIEW_1);
@@ -94,7 +93,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindReviews() {
-        List<Review> maybeReviews = reviewDaoJDBC.findReviews(JOB_PACKAGE.getId(),0);
+        List<Review> maybeReviews = reviewDaoJDBC.findReviewsByPackageId(JOB_PACKAGE.getId(),0);
 
         Assert.assertEquals(maybeReviews.size(), 2);
         Assert.assertEquals(maybeReviews.get(0), REVIEW_1);
