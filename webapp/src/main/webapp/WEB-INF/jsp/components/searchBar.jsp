@@ -3,7 +3,7 @@
     <%--@elvariable id="searchForm" type=""--%>
     <div class="landing-content-container">
         <div class="title-and-form">
-            <h1 class="landing-title"><spring:message code="navigation.index"/></h1>
+            <h1 class="landing-title"><spring:message code="index.searchBar.title"/></h1>
             <form:form action="${pageContext.request.contextPath}/search" method="get"
                        modelAttribute="searchForm"
                        class="home-search-form"

@@ -4,8 +4,7 @@
 <html>
 <head>
     <title>
-        <spring:message code="${jobPost.jobType.stringCode}" var="text"/>
-        <spring:message code="title.name" arguments="${text}"/>
+        <spring:message code="title.name" arguments="${jobPost.title}"/>
     </title>
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
