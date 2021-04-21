@@ -51,12 +51,12 @@ public class CurrentUserController {
         return mav;
     }
 
-    @RequestMapping(value = "/qualify-contract/{contractId}")
-    public ModelAndView qualifyContract(@PathVariable("contractId") final long id,
+    @RequestMapping(value = "/rate-contract/{contractId}")
+    public ModelAndView rateContract(@PathVariable("contractId") final long id,
                                         @ModelAttribute("reviewForm") ReviewForm reviewForm) {
         //TODO: VERIFICAR QUE SEA EL CLIENTE DESDE SPRING SECURITY
         if (!reviewService.findContractReview(id).isPresent()) {
-            final ModelAndView mav = new ModelAndView("qualifyContract");
+            final ModelAndView mav = new ModelAndView("rateContract");
             mav.addObject("jobCard", jobCardService.findByPostId(
                     jobContractService.findById(id)
                             .getJobPackage().getPostId()));
@@ -65,16 +65,16 @@ public class CurrentUserController {
         } else return new ModelAndView("redirect:/my-contracts");
     }
 
-    @RequestMapping(value = "/qualify-contract/{contractId}", method = RequestMethod.POST)
-    public ModelAndView qualifyContractSubmit(@PathVariable("contractId") final long id,
+    @RequestMapping(value = "/rate-contract/{contractId}", method = RequestMethod.POST)
+    public ModelAndView rateContractSubmit(@PathVariable("contractId") final long id,
                                               @Valid @ModelAttribute("reviewForm") ReviewForm reviewForm,
                                               final BindingResult errors) {
         if (!reviewService.findContractReview(id).isPresent()) {
             //TODO: VERIFICAR QUE SEA EL CLIENTE DESDE SPRING SECURITY
             if (errors.hasErrors())
-                return qualifyContract(id, reviewForm);
+                return rateContract(id, reviewForm);
 
-            reviewService.create(id, reviewForm.getRateForm(), reviewForm.getTitle(), reviewForm.getDescription());
+            reviewService.create(id, reviewForm.getRateValue(), reviewForm.getTitle(), reviewForm.getDescription());
         }
         return new ModelAndView("redirect:/my-contracts");
     }

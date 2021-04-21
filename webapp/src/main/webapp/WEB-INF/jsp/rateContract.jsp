@@ -6,7 +6,7 @@
 <head>
 
     <title>
-        <spring:message code="qualifycontract.title" var="text"/>
+        <spring:message code="ratecontract.title" var="text"/>
         <spring:message code="title.name" arguments="${text}"/>
     </title>
 
@@ -47,7 +47,7 @@
     <div class="qualify-service">
         <h2>
             <i class="bi bi-star-fill"></i>
-            <spring:message code="qualifycontract.review.qualifyprofessional"
+            <spring:message code="ratecontract.review.qualifyprofessional"
                             arguments="${jobCard.jobPost.user.username}"/>
         </h2>
 
@@ -60,41 +60,41 @@
     </div>
     <div class="qualify-form">
         <form:form modelAttribute="reviewForm"
-                   action="${pageContext.request.contextPath}/qualify-contract/${contractId}" method="post"
+                   action="${pageContext.request.contextPath}/rate-contract/${contractId}" method="post"
                    enctype="multipart/form-data">
             <h3 class="m-0">
-                <spring:message code="qualifycontract.review.pickrate"/></h3>
+                <spring:message code="ratecontract.review.pickrate"/></h3>
             <div class="qualify-rate">
-                <form:radiobutton path="rateForm" id="star5" name="rateForm" value="5"/>
-                <form:label path="rateForm" for="star5" title="text">5 stars</form:label>
-                <form:radiobutton path="rateForm" id="star4" name="rateForm" value="4"/>
-                <form:label path="rateForm" for="star4" title="text">4 stars</form:label>
-                <form:radiobutton path="rateForm" id="star3" name="rateForm" value="3"/>
-                <form:label path="rateForm" for="star3" title="text">3 stars</form:label>
-                <form:radiobutton path="rateForm" id="star2" name="rateForm" value="2"/>
-                <form:label path="rateForm" for="star2" title="text">2 stars</form:label>
-                <form:radiobutton path="rateForm" id="star1" name="rateForm" value="1" checked="checked"/>
-                <form:label path="rateForm" for="star1" title="text">1 star</form:label>
+                <form:radiobutton path="rateValue" id="star5" name="rateValue" value="5"/>
+                <form:label path="rateValue" for="star5" title="text">5 stars</form:label>
+                <form:radiobutton path="rateValue" id="star4" name="rateValue" value="4"/>
+                <form:label path="rateValue" for="star4" title="text">4 stars</form:label>
+                <form:radiobutton path="rateValue" id="star3" name="rateValue" value="3"/>
+                <form:label path="rateValue" for="star3" title="text">3 stars</form:label>
+                <form:radiobutton path="rateValue" id="star2" name="rateValue" value="2"/>
+                <form:label path="rateValue" for="star2" title="text">2 stars</form:label>
+                <form:radiobutton path="rateValue" id="star1" name="rateValue" value="1" checked="checked"/>
+                <form:label path="rateValue" for="star1" title="text">1 star</form:label>
             </div>
             <form:label path="description" class="custom-label">
-                <spring:message code="qualifycontract.review.description"/>
+                <spring:message code="ratecontract.review.description"/>
             </form:label>
-            <spring:message code="qualifycontract.review.description.placeholder" var="descriptionPlaceholder"/>
+            <spring:message code="ratecontract.review.description.placeholder" var="descriptionPlaceholder"/>
             <form:textarea class="form-control text-input" rows="6" path="description" maxlength="100"
                            placeholder="${descriptionPlaceholder}"/>
             <form:errors path="description" cssClass="form-error" element="p"/>
 
             <form:label path="title" class="custom-label">
-                <spring:message code="qualifycontract.review.title"/>
+                <spring:message code="ratecontract.review.title"/>
             </form:label>
-            <spring:message code="qualifycontract.review.title.placeholder" var="titlePlaceholder"/>
+            <spring:message code="ratecontract.review.title.placeholder" var="titlePlaceholder"/>
             <form:input type="text" class="form-control custom-input" name="title"
                         placeholder="${titlePlaceholder}" maxlength="100" path="title"/>
             <form:errors path="title" cssClass="form-error" element="p"/>
 
             <div class="submit-button-container p-5">
                 <button class="btn btn-primary hirenet-yellow-btn" type="submit">
-                    <spring:message code="qualifycontract.review.submit"/>
+                    <spring:message code="ratecontract.review.submit"/>
                 </button>
             </div>
         </form:form>

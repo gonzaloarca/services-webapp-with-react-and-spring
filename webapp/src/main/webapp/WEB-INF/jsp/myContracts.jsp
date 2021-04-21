@@ -76,7 +76,7 @@
                         </c:when>
                         <c:otherwise>
                             <a class="contract-review-text"
-                               href="${pageContext.request.contextPath}/qualify-contract/${contractCard.jobContract.id}">
+                               href="${pageContext.request.contextPath}/rate-contract/${contractCard.jobContract.id}">
                                 <h4 class="mb-0">
                                     <i class="bi bi-star"></i>
                                     <spring:message code="mycontracts.qualifycontract"/>

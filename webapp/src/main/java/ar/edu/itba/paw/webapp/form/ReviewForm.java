@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
@@ -10,7 +9,7 @@ public class ReviewForm {
     @Size(max = 100)
     private String description;
 
-    private int rateForm = 1;
+    private int rateValue = 1;
 
     @Size(max = 100)
     private String title;
@@ -23,12 +22,12 @@ public class ReviewForm {
         this.description = description;
     }
 
-    public int getRateForm() {
-        return rateForm;
+    public int getRateValue() {
+        return rateValue;
     }
 
-    public void setRateForm(int rate) {
-        this.rateForm = rate;
+    public void setRateValue(int rate) {
+        this.rateValue = rate;
     }
 
     public String getTitle() {
