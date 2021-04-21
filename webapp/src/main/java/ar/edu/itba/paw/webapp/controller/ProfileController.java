@@ -59,13 +59,7 @@ public class ProfileController {
     private int getTotalContractsCompleted(@PathVariable("id") final long id) {
         return jobContractService.findContractsQuantityByProId(id);
     }
-
-    @ModelAttribute("isPro")
-    private boolean isPro(@PathVariable("id") final long id) {
-        UserAuth auth = userService.getAuthInfo(getUser(id).getEmail()).orElseThrow(UserNotFoundException::new);
-        return auth.getRoles().contains(UserAuth.Role.PROFESSIONAL);
-    }
-
+    
     @RequestMapping(value = "/services")
     public ModelAndView profileWithServices(@PathVariable("id") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page, @ModelAttribute("user") User user) {
         if (page < 1)

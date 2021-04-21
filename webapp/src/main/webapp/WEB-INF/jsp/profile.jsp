@@ -61,14 +61,7 @@
                     </div>
                     <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
                     <h5 class="profile-subtitle">
-                        <c:choose>
-                            <c:when test="${isPro}">
-                                <spring:message code="account.settings.info.professional"/>
-                            </c:when>
-                            <c:otherwise>
-                                <spring:message code="account.settings.info.client"/>
-                            </c:otherwise>
-                        </c:choose>
+                        <spring:message code="account.settings.info.professional"/>
                     </h5>
                 </div>
             </div>

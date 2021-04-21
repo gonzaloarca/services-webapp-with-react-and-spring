@@ -302,7 +302,7 @@ h3 {
 .submit-button-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .form-step-title {

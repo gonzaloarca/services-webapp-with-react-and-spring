@@ -39,11 +39,18 @@
 .profile-list-selector {
     display: flex;
     color: #485696;
+    opacity: .50;
     align-items: center;
 }
 
-.profile-list-selector:focus {
+.profile-list-selector:hover {
     box-shadow: none;
+    opacity: 0.8;
+    color: #485696;
+}
+
+.profile-list-selector.disabled {
+    opacity: 1.0 !important;
 }
 
 /*REVIEW CARD*/
