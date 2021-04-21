@@ -49,51 +49,59 @@
     <div class="login-card">
         <div class="login-title-container">
             <h3 class="login-title">
-                <%--            TODO: Agregar alt--%>
-                <img class="login-icon" src="${pageContext.request.contextPath}/resources/images/log-in.svg" alt="">
+                <img class="login-icon" src="${pageContext.request.contextPath}/resources/images/log-in.svg"
+                     alt="<spring:message code="login.symbol" />">
                 <spring:message code="login.into.hirenet"/>
             </h3>
         </div>
         <div class="card p-5">
 
-            <form action="${pageContext.request.contextPath}/login" method="post"
-                  enctype="application/x-www-form-urlencoded">
+            <form action="${pageContext.request.contextPath}/login" method="post" id="form" onsubmit="disableBtn()"
+                  enctype="application/x-www-form-urlencoded" class="needs-validation" novalidate>
 
                 <div class="input-container">
                     <label for="email" class="form-text custom-label">
                         <spring:message code="login.email"/>
                     </label>
                     <spring:message code="login.email.placeholder" var="emailPlaceholder"/>
-                    <input type="email" class="form-control custom-input" id="email" name="email"
-                           placeholder="${emailPlaceholder}" maxlength="100"/>
+                    <div class="input-group has-validation">
+                        <input type="email" class="form-control custom-input" id="email" name="email"
+                               placeholder="${emailPlaceholder}" maxlength="100" required="required"/>
+                        <div class="invalid-feedback">
+                            <spring:message code="login.input.email"/>
+                        </div>
+                    </div>
                 </div>
 
                 <label for="password" class="form-text custom-label">
                     <spring:message code="login.password"/>
                 </label>
                 <spring:message code="login.password.placeholder" var="passwordPlaceholder"/>
-                <div class="input-group" id="show_hide_password">
+                <div class="input-group has-validation" id="show_hide_password">
                     <input type="password" class="form-control custom-input custom-password" name="password"
-                           placeholder="${passwordPlaceholder}" maxlength="100" id="password"/>
-                    <div class="input-group-addon password-eye">
+                           placeholder="${passwordPlaceholder}" maxlength="100" id="password" required/>
+                    <span class="input-group-text password-eye" id="inputGroupPostpend">
                         <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    </span>
+                    <div class="invalid-feedback">
+                        <spring:message code="login.input.pass"/>
                     </div>
                 </div>
                 <div class="login-error">
                     <c:if test="${param.error != null}">
                         <p class="form-error">
-                            ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION}
+                                ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION}
                         </p>
                     </c:if>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rememberMeCheck" id="rememberMeCheck">
+                    <label class="form-check-label" for="rememberMeCheck">
+                        <spring:message code="login.rememberme"/>
+                    </label>
+                </div>
                 <div class="submit-button-container">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="rememberMeCheck" id="rememberMeCheck">
-                        <label class="form-check-label" for="rememberMeCheck">
-                            <spring:message code="login.rememberme"/>
-                        </label>
-                    </div>
-                    <button class="btn btn-primary hirenet-blue-btn" type="submit" onclick="this.disabled=true;">
+                    <button class="btn btn-primary hirenet-blue-btn" type="submit" id="submitBtn">
                         <spring:message code="login.submit"/>
                     </button>
                 </div>
@@ -124,6 +132,39 @@
             }
         });
     });
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+    })()
+
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        var forms = document.querySelectorAll('.needs-validation');
+        var is_valid = true;
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    if (!form.checkValidity()) {
+                        is_valid = false;
+                    }
+                })
+        $("#submitBtn").attr("disabled", is_valid);
+    }
 </script>
 </body>
 </html>

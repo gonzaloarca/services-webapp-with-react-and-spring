@@ -56,7 +56,7 @@
 
     <c:url value="/create-job-post" var="postPath"/>
     <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post" cssClass="step-frame"
-                enctype="multipart/form-data">
+               class="needs-validation" novalidate="true" enctype="multipart/form-data" onsubmit="disableBtn()">
         <div class="form-error-container">
             <form:errors path="jobType" cssClass="form-error-list" element="p"/>
             <form:errors path="title" cssClass="form-error-list" element="p"/>
@@ -572,7 +572,7 @@
                         </button>
 
                         <button class="btn btn-primary hirenet-blue-btn text-uppercase"
-                                type="submit"  onclick="this.disabled=true;">
+                                type="submit" id="submitBtn">
                             Publicar
                         </button>
                     </div>
@@ -855,11 +855,47 @@
         }
     }
 
+    
     $('#package-title-overview').text($("#package-title-input").val())
 
     $('#package-description-overview').text($("#package-description-input").val())
 
     $('#package-title-overview').text($("#package-description-overview").val())
+
+
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+    })()
+
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        var forms = document.querySelectorAll('.needs-validation');
+        var is_valid = true;
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    if (!form.checkValidity()) {
+                        is_valid = false;
+                    }
+                })
+        $("#submitBtn").attr("disabled", is_valid);
+    }
 </script>
 </body>
 </html>

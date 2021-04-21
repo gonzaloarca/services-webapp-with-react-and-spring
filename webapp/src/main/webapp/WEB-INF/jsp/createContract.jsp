@@ -35,20 +35,20 @@
 
     <!-- Navigation -->
     <!-- TODO: implementar breadcrumb correctamente -->
-    <div class="row">
-        <nav aria-label="breadcrumb" style="width: 100%">
-            <ol class="breadcrumb bg-white">
-                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">
-                    <spring:message code="navigation.index"/>
-                </a></li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    <p class="capitalize-first-letter">
-                        <spring:message code="${jobPost.jobType.stringCode}"/>
-                    </p>
-                </li>
-            </ol>
-        </nav>
-    </div>
+<%--    <div class="row">--%>
+<%--        <nav aria-label="breadcrumb" style="width: 100%">--%>
+<%--            <ol class="breadcrumb bg-white">--%>
+<%--                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
+<%--                    <spring:message code="navigation.index"/>--%>
+<%--                </a></li>--%>
+<%--                <li class="breadcrumb-item active" aria-current="page">--%>
+<%--                    <p class="capitalize-first-letter">--%>
+<%--                        <spring:message code="${jobPost.jobType.stringCode}"/>--%>
+<%--                    </p>--%>
+<%--                </li>--%>
+<%--            </ol>--%>
+<%--        </nav>--%>
+<%--    </div>--%>
 
     <!-- Title Header -->
     <div class="row top-row">
@@ -92,8 +92,8 @@
                 <hr class="divider-bar"/>
                 <!-- Form Entries -->
                 <c:url value="/contract/package/${packId}" var="postUrl"/>
-                <form:form class="contract-input" modelAttribute="contractForm"
-                           action="${postUrl}" method="post"
+                <form:form class="contract-input needs-validation" modelAttribute="contractForm" novalidate="true"
+                           action="${postUrl}" method="post" id="contract-form" onsubmit="disableBtn()"
                            enctype="multipart/form-data">
 
                     <!-- Description -->
@@ -105,9 +105,14 @@
                             <form:label path="description" class="form-text">
                                 <spring:message code="contract.create.form.description"/>
                             </form:label>
-                            <spring:message code="contract.create.form.description.placeholder" var="descPlaceholder"/>
-                            <form:textarea class="form-control text-input" rows="6" path="description" maxlength="100"
-                                           placeholder="${descPlaceholder}"/>
+                            <div class="input-group has-validation">
+                                <spring:message code="contract.create.form.description.placeholder" var="descPlaceholder"/>
+                                <form:textarea class="form-control text-input" rows="6" path="description" maxlength="100"
+                                               placeholder="${descPlaceholder}" required="true"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="contract.create.invalid.description"/>
+                                </div>
+                            </div>
                             <form:errors path="description" cssClass="form-error" element="p"/>
                         </div>
                     </div>
@@ -121,14 +126,20 @@
                             <form:label path="image" class="form-text">
                                 <spring:message code="contract.create.form.image"/>
                             </form:label>
-                            <form:input type="file" path="image"/>
+                            <div class="input-group has-validation">
+                                <!--TODO validacion client side de imagenes -->
+                                <form:input type="file" path="image"/>
+                                <div class="invalid-feedback">
+                                    Tamaño de imagen superdado
+                                </div>
+                            </div>
                             <form:errors path="image" cssClass="form-error" element="p"/>
                         </div>
                     </div>
 
                     <!-- Submit Button -->
                     <div class="submit-button">
-                        <button class="btn btn-primary" type="submit"  onclick="this.disabled=true;">
+                        <button class="btn btn-primary" type="submit" id="submitBtn">
                             <spring:message code="contract.create.form.submit"/>
                         </button>
                     </div>
@@ -229,5 +240,39 @@
     </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation');
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+    })()
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        var forms = document.querySelectorAll('.needs-validation');
+        var is_valid = true;
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                        if (!form.checkValidity()) {
+                            is_valid = false;
+                        }
+                })
+        $("#submitBtn").attr("disabled", is_valid);
+    }
+</script>
 </body>
 </html>

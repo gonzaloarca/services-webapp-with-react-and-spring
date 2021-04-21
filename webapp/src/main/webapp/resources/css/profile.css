@@ -39,60 +39,16 @@
 .profile-list-selector {
     display: flex;
     color: #485696;
+    opacity: .50;
     align-items: center;
 }
 
-.profile-list-selector:focus {
+.profile-list-selector:hover {
     box-shadow: none;
-}
-
-/*REVIEW CARD*/
-.reviews-rate {
-    font-size: 80px;
-    margin: 0;
-}
-
-.reviews-rate-stars i {
-    font-size: 30px;
-}
-
-.reviews-summary-gray-text {
-    color: gray;
-    font-size: 18px;
-    margin-bottom: 0;
-    min-width: 2em;
-}
-
-.progress {
-    margin: 0 10px;
-    width: 100px;
-    height: 8px;
-}
-
-.review-username {
-    word-break: break-word;
-    flex: 1;
-    align-self: center;
-    padding: 0;
-    margin-left: 15px;
-}
-
-.review-title {
-    font-weight: bold;
-}
-
-.review-link {
+    opacity: 0.8;
     color: #485696;
 }
 
-.review-img {
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-}
-
-.profile-image-container {
-    display: flex;
-    justify-content: center;
+.profile-list-selector.disabled {
+    opacity: 1.0 !important;
 }

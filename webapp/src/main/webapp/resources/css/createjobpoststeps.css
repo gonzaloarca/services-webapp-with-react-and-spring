@@ -296,6 +296,7 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     margin-bottom: 0;
     overflow-wrap: break-word;
     width: 60%;
+    max-lines: 4;
 }
 
 .display-none {
@@ -331,3 +332,5 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     margin: 30px auto;
     padding: 10px 15px;
 }
+
+

@@ -412,3 +412,54 @@ h3 {
     background-color: #e8e8e8;
 }
 
+
+/*REVIEW CARD*/
+.reviews-rate {
+    font-size: 80px;
+    margin: 0;
+}
+
+.reviews-rate-stars i {
+    font-size: 30px;
+}
+
+.reviews-summary-gray-text {
+    color: gray;
+    font-size: 18px;
+    margin-bottom: 0;
+    min-width: 2em;
+}
+
+.progress {
+    margin: 0 10px;
+    width: 100px;
+    height: 8px;
+}
+
+.review-username {
+    word-break: break-word;
+    flex: 1;
+    align-self: center;
+    padding: 0;
+    margin-left: 15px;
+}
+
+.review-title {
+    font-weight: bold;
+}
+
+.review-link {
+    color: #485696;
+}
+
+.review-img {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.profile-image-container {
+    display: flex;
+    justify-content: center;
+}

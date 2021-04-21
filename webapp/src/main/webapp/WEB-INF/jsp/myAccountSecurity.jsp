@@ -52,8 +52,9 @@
 					<spring:message code="account.settings.security.passTitle"/>
 				</h5>
 				<div class="form-section">
-					<form:form modelAttribute="passChangeForm" enctype="multipart/form-data"
-							   action="${pageContext.request.contextPath}/account/security" method="post">
+					<form:form modelAttribute="passChangeForm" enctype="multipart/form-data" onsubmit="disableBtn()"
+							   action="${pageContext.request.contextPath}/account/security" method="post"
+								class="needs-validation" novalidate="true">
 
 						<!-- Ingreso de contraseña actual -->
 						<div class="row data-row">
@@ -62,12 +63,15 @@
 								<form:label path="currentPass" class="form-text custom-label">
 									${currentPassText}
 								</form:label>
-								<div class="input-group" id="show_hide_old_password">
+								<div class="input-group has-validation" id="show_hide_old_password">
 									<form:input type="password" class="form-control custom-input custom-password"
-												name="currentPass"
+												name="currentPass" required="true"
 												placeholder="${currentPassText}" maxlength="100" path="currentPass"/>
-									<div class="input-group-addon password-eye">
-										<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+									<span class="input-group-text password-eye" id="inputGroupPostpend">
+                                    	<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                	</span>
+									<div class="invalid-feedback">
+										<spring:message code="account.settings.security.empty"/>
 									</div>
 								</div>
 								<form:errors path="currentPass" cssClass="form-error" element="p"/>
@@ -83,12 +87,15 @@
 								<form:label path="newPass" class="form-text custom-label">
 									${newPassText}
 								</form:label>
-								<div class="input-group" id="show_hide_password">
+								<div class="input-group has-validation" id="show_hide_password">
 									<form:input type="password" class="form-control custom-input custom-password"
-												name="newPass"
+												name="newPass" required="true"
 												placeholder="${newPassText}" maxlength="100" path="newPass"/>
-									<div class="input-group-addon password-eye">
-										<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+									<span class="input-group-text password-eye" id="inputGroupPostpend">
+                                    	<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                	</span>
+									<div class="invalid-feedback">
+										<spring:message code="account.settings.security.empty"/>
 									</div>
 								</div>
 								<form:errors path="newPass" cssClass="form-error" element="p"/>
@@ -99,12 +106,15 @@
 								<form:label path="repeatNewPass" class="form-text custom-label">
 									${repeatPassText}
 								</form:label>
-								<div class="input-group" id="show_hide_password_repeat">
+								<div class="input-group has-validation" id="show_hide_password_repeat">
 									<form:input type="password" class="form-control custom-input custom-password"
-												name="repeatNewPass"
+												name="repeatNewPass" required="true"
 												placeholder="${repeatPassText}" maxlength="100" path="repeatNewPass"/>
-									<div class="input-group-addon password-eye">
-										<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+									<span class="input-group-text password-eye" id="inputGroupPostpend">
+                                    	<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                	</span>
+									<div class="invalid-feedback">
+										<spring:message code="account.settings.security.empty"/>
 									</div>
 								</div>
 								<form:errors path="repeatNewPass" cssClass="form-error" element="p"/>
@@ -119,7 +129,7 @@
 							</h5>
 							<!-- Submit Button -->
 							<div>
-								<button class="btn btn-primary" type="submit" onclick="this.disabled=true;">
+								<button class="btn btn-primary" type="submit" id="submitBtn">
 									<spring:message code="account.settings.security.save"/>
 								</button>
 							</div>
@@ -186,6 +196,39 @@
         });
     });
 
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        var forms = document.querySelectorAll('.needs-validation');
+        var is_valid = true;
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                if (!form.checkValidity()) {
+                    is_valid = false;
+                }
+            })
+        $("#submitBtn").attr("disabled", is_valid);
+    }
     //TODO client side validation?
 </script>
 </body>

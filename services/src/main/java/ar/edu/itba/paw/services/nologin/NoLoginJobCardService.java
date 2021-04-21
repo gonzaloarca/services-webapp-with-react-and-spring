@@ -94,6 +94,7 @@ public class NoLoginJobCardService implements JobCardService {
         jobPosts.forEach(jobPost -> {
             JobPackage min = jobPackageService.findByPostId(jobPost.getId())
                     .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(JobPackageNotFoundException::new);
+            //TODO si no existe JobPackage para un PostId, no seria no mostrar la JobCard en vez de tirar excepcion que rompe todo?
             //TODO: Mejorar excepciones
             jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
                     jobPostImageService.findPostImage(jobPost.getId()),

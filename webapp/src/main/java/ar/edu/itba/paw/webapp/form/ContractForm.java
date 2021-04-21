@@ -10,8 +10,6 @@ import javax.validation.constraints.Size;
 
 public class ContractForm {
 
-    // TODO: verificar size de las variables
-
     @NotBlank
     @Size(max = 100)
     private String description;

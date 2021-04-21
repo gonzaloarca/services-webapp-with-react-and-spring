@@ -60,7 +60,7 @@
                 <div class="ml-3 d-flex flex-column align-items-center">
                     <p>¿Desea agregar más paquetes?</p>
 
-                    <c:url value="/job/${postId}/view-packages" var="getPackagesPath"/>
+                    <c:url value="/job/${postId}/packages" var="getPackagesPath"/>
                     <a href="${getPackagesPath}" class="btn btn-primary text-uppercase">Agregar</a>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 .qualify-service {
     background-color: #FCB839;
     padding: 2vw;
+    word-break: break-word;
 }
 
 .content-container {

@@ -59,7 +59,6 @@ public class MainController {
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ModelAndView search(@Valid @ModelAttribute("searchForm") SearchForm form, final BindingResult errors,
                                final ModelAndView mav, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
-
         if (page < 1)
             throw new IllegalArgumentException();
 
