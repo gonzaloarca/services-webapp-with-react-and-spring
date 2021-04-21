@@ -11,7 +11,7 @@ public interface ReviewService {
 
     List<Review> findProfessionalReviews(long id);
 
-    List<Review> findProfessionalReviews(long id,int page);
+    List<Review> findProfessionalReviews(long id, int page);
 
     Double findProfessionalAvgRate(long id);
 
@@ -20,5 +20,9 @@ public interface ReviewService {
     int findJobPostReviewsSize(long id);
 
     Optional<Review> findContractReview(long id);
+
+    int findMaxPageReviewsByUserId(long id);
+
+    int findProfessionalReviewsSize(long id);
 
 }

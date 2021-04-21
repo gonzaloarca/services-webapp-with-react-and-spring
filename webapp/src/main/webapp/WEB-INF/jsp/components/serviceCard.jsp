@@ -25,7 +25,7 @@
             <div class="justify-content-between custom-row">
                 <h6 class="service-subtitle"><spring:message code="${requestScope.data.jobPost.jobType.stringCode}"/></h6>
                 <div class="custom-row">
-                    <jsp:include page="rateStars.jsp">
+                    <jsp:include page="components/rateStars.jsp">
                         <jsp:param name="rate" value="${requestScope.data.jobPost.rating}"/>
                     </jsp:include>
                     <h6 class="ml-3 service-subtitle">

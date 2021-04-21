@@ -99,4 +99,9 @@ public class NoLoginJobContractService implements JobContractService {
         return jobContractDao.findContractsQuantityByPostId(id);
     }
 
+    @Override
+    public int findMaxPageContractsByUserId(long id) {
+        return jobContractDao.findMaxPageContractsByUserId(id);
+    }
+
 }

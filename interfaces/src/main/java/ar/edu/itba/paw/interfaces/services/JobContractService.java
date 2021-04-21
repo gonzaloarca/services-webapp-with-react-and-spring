@@ -15,23 +15,26 @@ public interface JobContractService {
 
     List<JobContract> findByClientId(long id);
 
-    List<JobContract> findByClientId(long id,int page);
+    List<JobContract> findByClientId(long id, int page);
 
     List<JobContract> findByProId(long id);
 
-    List<JobContract> findByProId(long id,int page);
+    List<JobContract> findByProId(long id, int page);
 
 
     List<JobContract> findByPostId(long id);
 
-    List<JobContract> findByPostId(long id,int page);
+    List<JobContract> findByPostId(long id, int page);
 
     List<JobContract> findByPackageId(long id);
 
-    List<JobContract> findByPackageId(long id,int page);
+    List<JobContract> findByPackageId(long id, int page);
 
 
     int findContractsQuantityByProId(long id);
 
     int findContractsQuantityByPostId(long id);
+
+    int findMaxPageContractsByUserId(long id);
+
 }

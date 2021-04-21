@@ -14,7 +14,7 @@ public interface JobContractDao {
 
     Optional<JobContract> findById(long id);
 
-    List<JobContract> findByClientId(long id,int page);
+    List<JobContract> findByClientId(long id, int page);
 
     List<JobContract> findByProId(long id, int page);
 
@@ -25,5 +25,7 @@ public interface JobContractDao {
     int findContractsQuantityByProId(long id);
 
     int findContractsQuantityByPostId(long id);
+
+    int findMaxPageContractsByUserId(long id);
 
 }

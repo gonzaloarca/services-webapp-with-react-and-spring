@@ -52,7 +52,7 @@
             <c:set var="data" value="${contractCard.jobCard}" scope="request"/>
             <div class="row">
                 <div class="contract-service mr-4">
-                    <c:import url="components/serviceCard.jsp"/>
+                    <%@include file="components/serviceCard.jsp" %>
                 </div>
                 <div class="contract-buttons-card">
                     <spring:message code="mycontracts.contact.name"
@@ -90,6 +90,10 @@
                 <hr class="hr1"/>
             </c:if>
         </c:forEach>
+        <c:set var="listSize" value="${contractCards.size()}" scope="request"/>
+        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+        <%@include file="components/bottomPaginationBar.jsp" %>
     </div>
 </div>
 

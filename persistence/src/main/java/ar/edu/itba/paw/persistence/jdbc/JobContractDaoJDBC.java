@@ -22,7 +22,6 @@ import java.util.*;
 @Repository
 public class JobContractDaoJDBC implements JobContractDao {
 
-
     @Autowired
     private UserDao userDao;
 
@@ -32,7 +31,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Autowired
     private JobPostDao jobPostDao;
 
-    private static Integer getLimit(int page){
+    private static Integer getLimit(int page) {
         return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
     }
 
@@ -57,15 +56,15 @@ public class JobContractDaoJDBC implements JobContractDao {
                     JobPackage.RateType.values()[resultSet.getInt("package_rate_type")],
                     resultSet.getBoolean("package_is_active")
             ), new User(
-                    resultSet.getLong("professional_id"),
-                    resultSet.getString("professional_email"),
-                    resultSet.getString("professional_name"),
-                    resultSet.getString("professional_phone"),
-                    resultSet.getBoolean("professional_is_active"),
-                    true,       //TODO implementar
-                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
-                            resultSet.getString("professional_image_type"))
-            ),
+            resultSet.getLong("professional_id"),
+            resultSet.getString("professional_email"),
+            resultSet.getString("professional_name"),
+            resultSet.getString("professional_phone"),
+            resultSet.getBoolean("professional_is_active"),
+            true,       //TODO implementar
+            new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
+                    resultSet.getString("professional_image_type"))
+    ),
             resultSet.getDate("creation_date"),
             resultSet.getString("contract_description"),
             new ByteImage(resultSet.getBytes("image_data"), resultSet.getString("contract_image_type"))
@@ -83,13 +82,13 @@ public class JobContractDaoJDBC implements JobContractDao {
 
     @Override
     public JobContract create(long clientId, long packageId, String description) {
-        return create(clientId, packageId, description, new ByteImage(null ,null));
+        return create(clientId, packageId, description, new ByteImage(null, null));
     }
 
     @Override
     public JobContract create(long clientId, long packageId, String description, ByteImage image) {
         Date creationDate = new Date();
-        Map<String,Object> objectMap = new HashMap<>();
+        Map<String, Object> objectMap = new HashMap<>();
 
         objectMap.put("client_id", clientId);
         objectMap.put("package_id", packageId);
@@ -118,39 +117,39 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
     @Override
-    public List<JobContract> findByClientId(long id,int page) {
-        Integer limit =getLimit(page);
+    public List<JobContract> findByClientId(long id, int page) {
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract WHERE client_id = ? LIMIT ? OFFSET ?",
-                new Object[]{id,limit,offset}, JOB_CONTRACT_ROW_MAPPER);
+                new Object[]{id, limit, offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public List<JobContract> findByProId(long id,int page) {
-        Integer limit =getLimit(page);
+    public List<JobContract> findByProId(long id, int page) {
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract WHERE professional_id = ? LIMIT ? OFFSET ?",
-                new Object[]{id,limit,offset}, JOB_CONTRACT_ROW_MAPPER);
+                new Object[]{id, limit, offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
     public List<JobContract> findByPostId(long id, int page) {
-        Integer limit =getLimit(page);
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract WHERE post_id = ? LIMIT ? OFFSET ?",
-                new Object[]{id,limit,offset}, JOB_CONTRACT_ROW_MAPPER);
+                new Object[]{id, limit, offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
     public List<JobContract> findByPackageId(long id, int page) {
-        Integer limit =getLimit(page);
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract WHERE package_id = ? LIMIT ? OFFSET ?",
-                new Object[]{id,limit,offset}, JOB_CONTRACT_ROW_MAPPER);
+                new Object[]{id, limit, offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
@@ -170,6 +169,13 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "FROM contract " +
                         "NATURAL JOIN job_package " +
                         "WHERE post_id = ?", new Object[]{id}, Integer.class);
+    }
+
+    @Override
+    public int findMaxPageContractsByUserId(long id) {
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(contract_id) FROM contract WHERE client_id = ?",
+                new Object[]{id}, Integer.class);
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
 }

@@ -54,7 +54,7 @@
         <c:set var="data" value="${jobCard}" scope="request"/>
         <div class="card custom-card">
             <div class="card-body">
-                <c:import url="components/serviceCard.jsp"/>
+                <%@include file="components/serviceCard.jsp"%>
             </div>
         </div>
     </div>
@@ -65,16 +65,16 @@
             <h3 class="m-0">
                 <spring:message code="qualifycontract.review.pickrate"/></h3>
             <div class="qualify-rate">
-                <form:radiobutton path="rate" id="star5" name="rate" value="5"/>
-                <form:label path="rate" for="star5" title="text">5 stars</form:label>
-                <form:radiobutton path="rate" id="star4" name="rate" value="4"/>
-                <form:label path="rate" for="star4" title="text">4 stars</form:label>
-                <form:radiobutton path="rate" id="star3" name="rate" value="3"/>
-                <form:label path="rate" for="star3" title="text">3 stars</form:label>
-                <form:radiobutton path="rate" id="star2" name="rate" value="2"/>
-                <form:label path="rate" for="star2" title="text">2 stars</form:label>
-                <form:radiobutton path="rate" id="star1" name="rate" value="1" checked="checked"/>
-                <form:label path="rate" for="star1" title="text">1 star</form:label>
+                <form:radiobutton path="rateForm" id="star5" name="rateForm" value="5"/>
+                <form:label path="rateForm" for="star5" title="text">5 stars</form:label>
+                <form:radiobutton path="rateForm" id="star4" name="rateForm" value="4"/>
+                <form:label path="rateForm" for="star4" title="text">4 stars</form:label>
+                <form:radiobutton path="rateForm" id="star3" name="rateForm" value="3"/>
+                <form:label path="rateForm" for="star3" title="text">3 stars</form:label>
+                <form:radiobutton path="rateForm" id="star2" name="rateForm" value="2"/>
+                <form:label path="rateForm" for="star2" title="text">2 stars</form:label>
+                <form:radiobutton path="rateForm" id="star1" name="rateForm" value="1" checked="checked"/>
+                <form:label path="rateForm" for="star1" title="text">1 star</form:label>
             </div>
             <form:label path="description" class="custom-label">
                 <spring:message code="qualifycontract.review.description"/>

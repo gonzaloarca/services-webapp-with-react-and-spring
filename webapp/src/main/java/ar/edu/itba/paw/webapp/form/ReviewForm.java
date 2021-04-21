@@ -10,7 +10,7 @@ public class ReviewForm {
     @Size(max = 100)
     private String description;
 
-    private int rate = 1;
+    private int rateForm = 1;
 
     @Size(max = 100)
     private String title;
@@ -23,12 +23,12 @@ public class ReviewForm {
         this.description = description;
     }
 
-    public int getRate() {
-        return rate;
+    public int getRateForm() {
+        return rateForm;
     }
 
-    public void setRate(int rate) {
-        this.rate = rate;
+    public void setRateForm(int rate) {
+        this.rateForm = rate;
     }
 
     public String getTitle() {

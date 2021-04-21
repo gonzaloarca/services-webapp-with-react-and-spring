@@ -58,4 +58,16 @@ public class NoLoginReviewService implements ReviewService {
     public Optional<Review> findContractReview(long id) {
         return reviewDao.findReviewByContractId(id);
     }
+
+    @Override
+    public int findMaxPageReviewsByUserId(long id) {
+        return reviewDao.findMaxPageReviewsByUserId(id);
+    }
+
+    @Override
+    public int findProfessionalReviewsSize(long id) {
+        return reviewDao.findProfessionalReviewsSize(id);
+    }
+
+
 }

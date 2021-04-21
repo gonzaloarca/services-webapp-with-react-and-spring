@@ -107,7 +107,8 @@
                 <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
                 <c:set var="maxPage" value="${maxPage}" scope="request"/>
                 <c:set var="currentPages" value="${currentPages}" scope="request"/>
-                <c:set var="parameters" value="&zone=${param.zone}&query=${param.query}&${param.category}" scope="request"/>
+                <c:set var="parameters" value="&zone=${param.zone}&query=${param.query}&${param.category}"
+                       scope="request"/>
                 <%@include file="components/bottomPaginationBar.jsp" %>
             </c:when>
             <c:otherwise>
@@ -129,13 +130,13 @@
 </div>
 <jsp:include page="components/footer.jsp"/>
 <script>
-    let categoryIndex;
-
+    //Actualizo la categoria seleccionada en las cookies
     function updateCategorySelected(category) {
-        categoryIndex = sessionStorage.getItem("pickedCategoryId");
-        if (category && categoryIndex !== category) {
+        let categoryIndex = sessionStorage.getItem("pickedCategoryId");
+        if (category && parseInt(categoryIndex) !== parseInt(category))
             sessionStorage.setItem("pickedCategoryId", category);
-        }else sessionStorage.removeItem("pickedCategoryId");  //Pasa a tener ninguna categoria seleccionada
+        else
+            sessionStorage.removeItem("pickedCategoryId");
     }
 </script>
 </body>

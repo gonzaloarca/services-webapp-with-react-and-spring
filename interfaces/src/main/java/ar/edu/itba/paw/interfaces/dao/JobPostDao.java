@@ -21,11 +21,16 @@ public interface JobPostDao {
 
     List<JobPost> findAll(int page);
 
-    List<JobPost> search(String title, JobPost.Zone zone,int page);
+    List<JobPost> search(String query, JobPost.Zone zone, int page);
 
-    List<JobPost> searchWithCategory(String title, JobPost.Zone zone, JobPost.JobType jobType,int page);
+    List<JobPost> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, int page);
 
-    Integer findMaxPage();
+    int findSizeByUserId(long id);
+
+    int findMaxPage();
 
     int findMaxPageByUserId(long id);
+
+    int findMaxPageSearch(String query, JobPost.Zone zone, JobPost.JobType jobType);
+
 }

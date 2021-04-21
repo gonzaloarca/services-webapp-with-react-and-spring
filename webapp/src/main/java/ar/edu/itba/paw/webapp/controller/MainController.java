@@ -7,24 +7,18 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
-import exceptions.MismatchedTokensException;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotVerifiedException;
 import exceptions.VerificationTokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.ContentHandler;
-import java.security.InvalidParameterException;
-import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -49,24 +43,24 @@ public class MainController {
     private JobPostService jobPostService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value="page", required = false,defaultValue = "1") final int page) {
-        if(page < 1)
+    public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        if (page < 1)
             throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("jobCards", jobCardService.findAll(page-1));
+        mav.addObject("jobCards", jobCardService.findAll(page - 1));
         int maxPage = jobPostService.findMaxPage();
-        List<Integer> currentPages = paginationService.findCurrentPages(page,maxPage);
-        mav.addObject("maxPage",jobPostService.findMaxPage());
-        mav.addObject("currentPages",currentPages);
+        List<Integer> currentPages = paginationService.findCurrentPages(page, maxPage);
+        mav.addObject("maxPage", jobPostService.findMaxPage());
+        mav.addObject("currentPages", currentPages);
         mav.addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
         return mav;
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ModelAndView search(@Valid @ModelAttribute("searchForm") SearchForm form, final BindingResult errors,
-                               final ModelAndView mav, @RequestParam(value="page",required = false,defaultValue = "1") final int page) {
+                               final ModelAndView mav, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
 
-        if(page < 1)
+        if (page < 1)
             throw new IllegalArgumentException();
 
         if (errors.hasErrors()) {
@@ -78,12 +72,14 @@ public class MainController {
         final ModelAndView searchMav = new ModelAndView("search");
         searchMav.addObject("categories", JobPost.JobType.values());
         searchMav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
-        int maxPage = paginationService.findMaxPagesJobPost();
-        searchMav.addObject("maxPage",maxPage);
-        searchMav.addObject("currentPages",paginationService.findCurrentPages(page,maxPage));
+        int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(),
+                JobPost.Zone.values()[Integer.parseInt(form.getZone())],
+                (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()]);
+        searchMav.addObject("maxPage", maxPage);
+        searchMav.addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
         searchMav.addObject("jobCards", jobCardService.search(form.getQuery(),
                 JobPost.Zone.values()[Integer.parseInt(form.getZone())],
-                (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()],page-1)
+                (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()], page - 1)
         );
         return searchMav;
     }

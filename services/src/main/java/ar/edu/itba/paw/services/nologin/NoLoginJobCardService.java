@@ -103,4 +103,9 @@ public class NoLoginJobCardService implements JobCardService {
         return jobCards;
     }
 
+    @Override
+    public int findSizeByUserId(long id) {
+        return jobPostService.findSizeByUserId(id);
+    }
+
 }

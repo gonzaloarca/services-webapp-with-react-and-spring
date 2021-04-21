@@ -42,6 +42,10 @@
     align-items: center;
 }
 
+.profile-list-selector:focus {
+    box-shadow: none;
+}
+
 /*REVIEW CARD*/
 .reviews-rate {
     font-size: 80px;

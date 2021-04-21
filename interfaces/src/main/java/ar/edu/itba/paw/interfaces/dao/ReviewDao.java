@@ -21,4 +21,8 @@ public interface ReviewDao {
 
     Optional<Review> findReviewByContractId(long id);
 
+    int findMaxPageReviewsByUserId(long id);
+
+    int findProfessionalReviewsSize(long id);
+
 }

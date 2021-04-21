@@ -36,7 +36,7 @@ public class ReviewDaoJDBC implements ReviewDao {
         return zones;
     }
 
-    private static Integer getLimit(int page){
+    private static Integer getLimit(int page) {
         return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
     }
 
@@ -95,13 +95,13 @@ public class ReviewDaoJDBC implements ReviewDao {
     }
 
     @Override
-    public List<Review> findAllReviews(long id,int page) {
-        Integer limit =getLimit(page);
+    public List<Review> findAllReviews(long id, int page) {
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
 
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract NATURAL JOIN review " +
-                        "WHERE post_id = ? LIMIT ? OFFSET ?", new Object[]{id,limit,offset}, REVIEW_ROW_MAPPER);
+                        "WHERE post_id = ? LIMIT ? OFFSET ?", new Object[]{id, limit, offset}, REVIEW_ROW_MAPPER);
     }
 
     @Override
@@ -113,11 +113,11 @@ public class ReviewDaoJDBC implements ReviewDao {
 
     @Override
     public List<Review> findReviews(long id, int page) {
-        Integer limit =getLimit(page);
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract NATURAL JOIN review WHERE package_id = ?",
-                new Object[]{id,limit,offset}, REVIEW_ROW_MAPPER);
+                new Object[]{id, limit, offset}, REVIEW_ROW_MAPPER);
     }
 
     @Override
@@ -129,11 +129,11 @@ public class ReviewDaoJDBC implements ReviewDao {
 
     @Override
     public List<Review> findProfessionalReviews(long id, int page) {
-        Integer limit =getLimit(page);
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_contract NATURAL JOIN review " +
-                        "WHERE professional_id = ? LIMIT ? OFFSET ?", new Object[]{id,limit,offset}, REVIEW_ROW_MAPPER);
+                        "WHERE professional_id = ? LIMIT ? OFFSET ?", new Object[]{id, limit, offset}, REVIEW_ROW_MAPPER);
     }
 
     @Override
@@ -142,5 +142,19 @@ public class ReviewDaoJDBC implements ReviewDao {
                         "FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post " +
                         "NATURAL JOIN users WHERE user_id = ? GROUP BY user_id",
                 new Object[]{id}, (resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
+    }
+
+    @Override
+    public int findMaxPageReviewsByUserId(long id) {
+        Integer reviewsCount = jdbcTemplate.queryForObject("SELECT COUNT(contract_id) " +
+                "FROM full_contract NATURAL JOIN review WHERE professional_id = ?", new Object[]{id}, Integer.class);
+        return (int) Math.ceil((double) reviewsCount / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public int findProfessionalReviewsSize(long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COUNT(contract_id) FROM full_contract NATURAL JOIN review " +
+                        "WHERE professional_id = ?", new Object[]{id}, Integer.class);
     }
 }

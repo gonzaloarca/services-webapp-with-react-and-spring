@@ -31,7 +31,7 @@ public class JobPostDaoJDBC implements JobPostDao {
         return zones;
     }
 
-    private static Integer getLimit(int page){
+    private static Integer getLimit(int page) {
         return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
     }
 
@@ -84,7 +84,7 @@ public class JobPostDaoJDBC implements JobPostDao {
             }});
         }
 
-        return new JobPost(key.longValue(), user, title, availableHours, jobType, zones, 0.0,true);
+        return new JobPost(key.longValue(), user, title, availableHours, jobType, zones, 0.0, true);
     }
 
     @Override
@@ -95,78 +95,94 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
-    public List<JobPost> findByUserId(long id,int page) {
-        Integer limit =getLimit(page);
+    public List<JobPost> findByUserId(long id, int page) {
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_post WHERE user_id = ? LIMIT ? OFFSET ?",
-                new Object[]{id,limit,offset}, JOB_POST_ROW_MAPPER);
+                new Object[]{id, limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
-    public List<JobPost> findByJobType(JobPost.JobType jobType,int page) {
-        Integer limit =getLimit(page);
+    public List<JobPost> findByJobType(JobPost.JobType jobType, int page) {
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_post WHERE post_job_type = ? LIMIT ? OFFSET ?",
-                new Object[]{jobType.ordinal(),limit,offset}, JOB_POST_ROW_MAPPER);
+                new Object[]{jobType.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
     public List<JobPost> findByZone(JobPost.Zone zone, int page) {
-        Integer limit =getLimit(page);
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
                 "SELECT * FROM full_post WHERE ? = ANY(zones) LIMIT ? OFFSET ?",
-                new Object[]{zone.ordinal(),limit,offset}, JOB_POST_ROW_MAPPER);
+                new Object[]{zone.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
 
     @Override
     public List<JobPost> findAll(int page) {
-        Integer limit =getLimit(page);
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_post LIMIT ? OFFSET ?",new Object[]{limit,offset},
+                "SELECT * FROM full_post LIMIT ? OFFSET ?", new Object[]{limit, offset},
                 JOB_POST_ROW_MAPPER);
     }
-    
-    
+
+
     @Override
-    public List<JobPost> search(String title, Zone zone,int page) {
-        Integer limit =getLimit(page);
+    public List<JobPost> search(String query, Zone zone, int page) {
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        title = "%" + title + "%";
+        query = "%" + query + "%";
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones) LIMIT ? OFFSET ?",
-                new Object[]{title,zone.ordinal(),limit,offset},
+                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) LIMIT ? OFFSET ?",
+                new Object[]{query, zone.ordinal(), limit, offset},
                 JOB_POST_ROW_MAPPER
         );
     }
 
     @Override
-    public List<JobPost> searchWithCategory(String title, Zone zone, JobPost.JobType jobType,int page) {
-        title = "%" + title + "%";
-        Integer limit =getLimit(page);
+    public List<JobPost> searchWithCategory(String query, Zone zone, JobPost.JobType jobType, int page) {
+        query = "%" + query + "%";
+        Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE upper(post_title) LIKE upper(?) AND ? = ANY(zones) AND post_job_type = ? LIMIT ? OFFSET ?",
-                new Object[]{title,zone.ordinal(), jobType.ordinal(),limit,offset},
+                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_job_type = ? LIMIT ? OFFSET ?",
+                new Object[]{query, zone.ordinal(), jobType.ordinal(), limit, offset},
                 JOB_POST_ROW_MAPPER
         );
     }
 
     @Override
-    public Integer findMaxPage() {
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT count(post_id) FROM full_post",Integer.class);
+    public int findSizeByUserId(long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM full_post WHERE user_id = ?",
+                new Object[]{id}, Integer.class);
+    }
+
+    @Override
+    public int findMaxPage() {
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post", Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
     public int findMaxPageByUserId(long id) {
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT count(post_id) FROM full_post WHERE user_id = ?",new Object[]{id},Integer.class);
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post WHERE user_id = ?",
+                new Object[]{id}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+    }
 
+    @Override
+    public int findMaxPageSearch(String query, Zone zone, JobPost.JobType jobType) {
+        query = "%" + query + "%";
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post " +
+                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones)",
+                new Object[]{query, zone.ordinal()}, Integer.class);
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
 }

@@ -9,7 +9,6 @@ import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.SecurityContextProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,10 +27,10 @@ public class NoLoginJobPostService implements JobPostService {
     private UserService userService;
 
     @Override
-    public JobPost create(String email,String title, String availableHours, int jobType, int[] zones) {
+    public JobPost create(String email, String title, String availableHours, int jobType, int[] zones) {
 
         User user = userService.findByEmail(email).orElseThrow(RuntimeException::new);
-        userService.assignRole(user.getId(),UserAuth.Role.PROFESSIONAL.ordinal());
+        userService.assignRole(user.getId(), UserAuth.Role.PROFESSIONAL.ordinal());
         List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
         return jobPostDao.create(user.getId(), title, availableHours, parsedJobType, parsedZones);
@@ -49,29 +48,29 @@ public class NoLoginJobPostService implements JobPostService {
 
     @Override
     public List<JobPost> findByUserId(long id, int page) {
-        return jobPostDao.findByUserId(id,page);
+        return jobPostDao.findByUserId(id, page);
     }
 
 
     @Override
     public List<JobPost> findByJobType(JobPost.JobType jobType) {
-        return jobPostDao.findByJobType(jobType,HirenetUtils.ALL_PAGES);
+        return jobPostDao.findByJobType(jobType, HirenetUtils.ALL_PAGES);
     }
 
     @Override
-    public List<JobPost> findByJobType(JobPost.JobType jobType,int page) {
-        return jobPostDao.findByJobType(jobType,page);
+    public List<JobPost> findByJobType(JobPost.JobType jobType, int page) {
+        return jobPostDao.findByJobType(jobType, page);
     }
 
 
     @Override
     public List<JobPost> findByZone(JobPost.Zone zone) {
-        return jobPostDao.findByZone(zone,HirenetUtils.ALL_PAGES);
+        return jobPostDao.findByZone(zone, HirenetUtils.ALL_PAGES);
     }
 
     @Override
     public List<JobPost> findByZone(JobPost.Zone zone, int page) {
-        return jobPostDao.findByZone(zone,page);
+        return jobPostDao.findByZone(zone, page);
     }
 
     @Override
@@ -86,30 +85,40 @@ public class NoLoginJobPostService implements JobPostService {
 
 
     @Override
-    public List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
+    public List<JobPost> search(String query, JobPost.Zone zone, JobPost.JobType jobType) {
         if (jobType == null)
-            return jobPostDao.search(title, zone,HirenetUtils.ALL_PAGES);
+            return jobPostDao.search(query, zone, HirenetUtils.ALL_PAGES);
 
-        return jobPostDao.searchWithCategory(title, zone, jobType,HirenetUtils.ALL_PAGES);
+        return jobPostDao.searchWithCategory(query, zone, jobType, HirenetUtils.ALL_PAGES);
     }
 
 
     @Override
-    public List<JobPost> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page) {
+    public List<JobPost> search(String query, JobPost.Zone zone, JobPost.JobType jobType, int page) {
         if (jobType == null)
-            return jobPostDao.search(title, zone,page);
+            return jobPostDao.search(query, zone, page);
 
-        return jobPostDao.searchWithCategory(title, zone, jobType,page);
+        return jobPostDao.searchWithCategory(query, zone, jobType, page);
     }
 
     @Override
-    public Integer findMaxPage() {
+    public int findSizeByUserId(long id) {
+        return jobPostDao.findSizeByUserId(id);
+    }
+
+    @Override
+    public int findMaxPage() {
         return jobPostDao.findMaxPage();
     }
 
     @Override
     public int findMaxPageByUserId(long id) {
         return jobPostDao.findMaxPageByUserId(id);
+    }
+
+    @Override
+    public int findMaxPageSearch(String query, JobPost.Zone value, JobPost.JobType jobType) {
+        return jobPostDao.findMaxPageSearch(query, value, jobType);
     }
 
 }

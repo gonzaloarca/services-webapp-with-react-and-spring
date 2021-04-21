@@ -83,7 +83,7 @@
                             <jsp:param name="rate" value="${avgRate}"/>
                         </jsp:include>
                         <h5 class="ml-3 mb-0">
-                            (${reviews.size()})
+                            (${totalReviewsSize})
                         </h5>
                     </span>
                 </div>
@@ -108,21 +108,21 @@
                            aria-disabled="${(withServices)? 'true' : 'false'}"
                            href="${pageContext.request.contextPath}/profile/${user.id}/services">
                             <div><h4 class="mb-0"><spring:message code="profile.selector.services"/></h4></div>
-                            <div class="chip mb-0"><h5 class="mb-0">${services.size()}</h5></div>
+                            <div class="chip mb-0"><h5 class="mb-0">${servicesSize}</h5></div>
                         </a>
                         &nbsp;
                         <a type="button" class="btn profile-list-selector ${(!withServices)? 'disabled' : ''}"
                            aria-disabled="${(!withServices)? 'true' : 'false'}"
                            href="${pageContext.request.contextPath}/profile/${user.id}/reviews">
                             <div><h4 class="mb-0"><spring:message code="profile.selector.reviews"/></h4></div>
-                            <div class="chip mb-0"><h5 class="mb-0">${reviews.size()}</h5></div>
+                            <div class="chip mb-0"><h5 class="mb-0">${totalReviewsSize}</h5></div>
                         </a>
                     </div>
 
                     <c:if test="${withServices}">
                         <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
                             <c:set var="data" value="${jobCard}" scope="request"/>
-                            <c:import url="components/serviceCard.jsp"/>
+                            <%@include file="components/serviceCard.jsp" %>
                             <c:if test="${status.index != jobCards.size()-1}">
                                 <hr class="hr1"/>
                             </c:if>
@@ -145,7 +145,7 @@
                                     </jsp:include>
                                 </span>
                                 <h5 class="reviews-summary-gray-text mt-3"><spring:message code="profile.review.average"
-                                                                                           arguments="${reviews.size()}"/>
+                                                                                           arguments="${totalReviewsSize}"/>
                                 </h5>
                             </div>
                             <div class="col align-self-center">
@@ -207,6 +207,10 @@
                                 <hr class="hr1"/>
                             </c:if>
                         </c:forEach>
+                        <c:set var="listSize" value="${reviews.size()}" scope="request"/>
+                        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                        <%@include file="components/bottomPaginationBar.jsp" %>
                     </c:if>
                 </div>
             </div>
