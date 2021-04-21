@@ -90,17 +90,17 @@
                 <div class="login-error">
                     <c:if test="${param.error != null}">
                         <p class="form-error">
-                            ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION}
+                                ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION}
                         </p>
                     </c:if>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rememberMeCheck" id="rememberMeCheck">
+                    <label class="form-check-label" for="rememberMeCheck">
+                        <spring:message code="login.rememberme"/>
+                    </label>
+                </div>
                 <div class="submit-button-container">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="rememberMeCheck" id="rememberMeCheck">
-                        <label class="form-check-label" for="rememberMeCheck">
-                            <spring:message code="login.rememberme"/>
-                        </label>
-                    </div>
                     <button class="btn btn-primary hirenet-blue-btn" type="submit" id="submitBtn">
                         <spring:message code="login.submit"/>
                     </button>

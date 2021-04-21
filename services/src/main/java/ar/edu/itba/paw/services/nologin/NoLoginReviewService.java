@@ -23,12 +23,22 @@ public class NoLoginReviewService implements ReviewService {
     }
 
     @Override
+    public List<Review> findReviewsByPostId(long id) {
+        return reviewDao.findReviewsByPostId(id, HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<Review> findReviewsByPostId(long id, int page) {
+        return reviewDao.findReviewsByPostId(id, page);
+    }
+
+    @Override
     public List<Review> findProfessionalReviews(long id) {
         return reviewDao.findProfessionalReviews(id, HirenetUtils.ALL_PAGES);
     }
 
-    public List<Review> findProfessionalReviews(long id,int page) {
-        return reviewDao.findProfessionalReviews(id,page);
+    public List<Review> findProfessionalReviews(long id, int page) {
+        return reviewDao.findProfessionalReviews(id, page);
     }
 
 
@@ -69,5 +79,14 @@ public class NoLoginReviewService implements ReviewService {
         return reviewDao.findProfessionalReviewsSize(id);
     }
 
+    @Override
+    public int findMaxPageByPostId(long id) {
+        return reviewDao.findMaxPageReviewsByPostId(id);
+    }
+
+    @Override
+    public Double findJobPostAvgRate(long id) {
+        return reviewDao.findJobPostAvgRate(id);
+    }
 
 }

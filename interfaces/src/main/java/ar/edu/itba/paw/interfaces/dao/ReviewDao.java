@@ -9,11 +9,11 @@ public interface ReviewDao {
 
     Review create(long contractId, int rate, String title, String description);
 
-    List<Review> findAllReviews(long id, int page);
+    List<Review> findReviewsByPostId(long id, int page);
 
     int findJobPostReviewsSize(long id);
 
-    List<Review> findReviews(long id, int page);
+    List<Review> findReviewsByPackageId(long id, int page);
 
     Double findProfessionalAvgRate(long id);
 
@@ -24,5 +24,9 @@ public interface ReviewDao {
     int findMaxPageReviewsByUserId(long id);
 
     int findProfessionalReviewsSize(long id);
+
+    int findMaxPageReviewsByPostId(long id);
+
+    Double findJobPostAvgRate(long id);
 
 }

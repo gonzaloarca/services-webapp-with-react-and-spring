@@ -61,14 +61,7 @@
                     </div>
                     <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
                     <h5 class="profile-subtitle">
-                        <c:choose>
-                            <c:when test="${isPro}">
-                                <spring:message code="account.settings.info.professional"/>
-                            </c:when>
-                            <c:otherwise>
-                                <spring:message code="account.settings.info.client"/>
-                            </c:otherwise>
-                        </c:choose>
+                        <spring:message code="account.settings.info.professional"/>
                     </h5>
                 </div>
             </div>
@@ -170,38 +163,8 @@
                         <hr class="hr1"/>
 
                         <c:forEach var="review" items="${reviews}" varStatus="status">
-                            <div class="custom-row justify-content-between">
-                                <div class="custom-row">
-                                    <c:choose>
-                                        <c:when test="${review.client.image.string != null}">
-                                            <c:set var="profilePic"
-                                                   value="data:${review.client.image.type};base64,${review.client.image.string}"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <img class="review-img" src='${profilePic}'
-                                         alt="<spring:message code="profile.image"/>">
-                                    <div class="review-username">
-                                        <h4><c:out value="${review.client.username}"/></h4>
-                                            <%--                                        TODO: IMPLEMENTAR FECHA EN REVIEWS--%>
-                                            <%--                                        <h5>15/3/21</h5>--%>
-                                    </div>
-                                    <jsp:include page="components/rateStars.jsp">
-                                        <jsp:param name="rate" value="${review.rate}"/>
-                                    </jsp:include>
-                                </div>
-                            </div>
-                            <h4 class="mt-2 review-title"><c:out value="${review.title}"/></h4>
-                            <h5><c:out value="${review.description}"/></h5>
-                            <a href="${pageContext.request.contextPath}/job/${review.jobPost.id}">
-                                <h5 class="review-link mt-2">
-                                    <i class="bi bi-box-arrow-up-right"></i>
-                                    <spring:message code="profile.review.link"
-                                                    arguments="${review.jobPost.title}"/>
-                                </h5>
-                            </a>
+                            <c:set var="data" value="${review}" scope="request"/>
+                            <%@include file="components/reviewCard.jsp" %>
 
                             <c:if test="${status.index != reviews.size()-1}">
                                 <hr class="hr1"/>

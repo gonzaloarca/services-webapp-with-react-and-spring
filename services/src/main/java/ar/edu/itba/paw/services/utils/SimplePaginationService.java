@@ -70,4 +70,9 @@ public class SimplePaginationService implements PaginationService {
     public int findMaxPageContractsByUserId(long id) {
         return jobContractService.findMaxPageContractsByUserId(id);
     }
+
+    @Override
+    public int findMaxPageReviewsByPostId(long id) {
+        return reviewService.findMaxPageByPostId(id);
+    }
 }

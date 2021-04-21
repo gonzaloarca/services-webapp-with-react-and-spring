@@ -63,12 +63,16 @@ body {
     margin-bottom: 10px;
 }
 
-
 .login-title-container {
     background-color: #343e6d;
     padding: 10px;
     width: max-content;
     border-radius: 20px 20px 0 0;
+}
+
+.hirenet-blue-btn {
+    width: 100%;
+    margin-top: 20px;
 }
 
 .was-validated .form-check-input:valid ~ .form-check-label {

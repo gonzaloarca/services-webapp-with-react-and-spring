@@ -31,7 +31,6 @@
     <!--  Bootstrap icons   -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 
-
 </head>
 <body>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
@@ -49,10 +48,11 @@
     <%--            </li>--%>
     <%--        </ol>--%>
     <%--    </nav>--%>
-    <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">
-        <i class="fas fa-edit"></i>
-        <p>Editar publicacion</p>
-    </a>
+    <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
+    <%--    <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">--%>
+    <%--        <i class="fas fa-edit"></i>--%>
+    <%--        <p>Editar publicacion</p>--%>
+    <%--    </a>--%>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <c:choose>
@@ -70,7 +70,8 @@
                     <c:if test="${imageList.size() > 1}">
                         <ol class="carousel-indicators">
                             <c:forEach items="${imageList}" varStatus="status">
-                                <li data-target="#carousel" data-slide-to="${status.index}" class="${status.index == 0 ? 'active' : ''}"></li>
+                                <li data-target="#carousel" data-slide-to="${status.index}"
+                                    class="${status.index == 0 ? 'active' : ''}"></li>
                             </c:forEach>
                         </ol>
                         <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
@@ -98,30 +99,31 @@
     </div>
     <div class="card-body custom-row mt-2 p-0">
         <div class="center">
-
             <div class="card custom-card mb-4 bg-white rounded">
                 <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="fas fa-briefcase"></i>
-                            <p>
-                                <c:out value="${jobPost.title}"/>
-                            </p>
+                            <p><c:out value="${jobPost.title}"/></p>
                         </span>
 
                     <div class="summary custom-row">
-                        <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services" class="summary-item profile-item align-items-center">
+                        <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services"
+                           class="summary-item profile-item align-items-center">
                             <c:choose>
                                 <c:when test="${jobPost.user.image.string == null}">
-                                    <img class="ml-4" src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
+                                    <img src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
+                                         alt="avatar">
                                 </c:when>
                                 <c:otherwise>
-                                    <img class="ml-4" src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
+                                    <img src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}"
+                                         alt="avatar">
                                 </c:otherwise>
                             </c:choose>
                             <p><c:out value="${jobPost.user.username}"/></p>
+                            <i class="bi bi-chevron-compact-right"></i>
                         </a>
                         <div class="summary-item rate-item">
-                            <p>Calificacion promedio</p>
+                            <p><spring:message code="jobPost.jobs.avgRate"/></p>
                             <span class="custom-row align-items-center">
                                     <h2>
                                         ${avgRate}
@@ -130,12 +132,12 @@
                                         <jsp:param name="rate" value="${avgRate}"/>
                                     </jsp:include>
                                     <h5 class="ml-1 review-count">
-                                        (${reviewsSize})
+                                        (${totalReviewsSize})
                                     </h5>
                                 </span>
-                            <p class="align-items-center mt-0 opinion">
-                                Ver opiniones
-                            </p>
+                            <a class="mt-0 opinion" id="seeReviews">
+                                <spring:message code="jobPost.jobs.seeReviews"/>
+                            </a>
                         </div>
                         <div class="summary-item contracts-item">
                             <p class="mb-0 ml-3"><spring:message code="profile.completed.works"/></p>
@@ -173,7 +175,7 @@
                             </span>
                         <div class="custom-row zones">
                             <c:forEach items="${jobPost.zones}" var="zone">
-                                <p class="capitalize-first-letter" style="margin: 0 5px">
+                                <p class="capitalize-first-letter m-1">
                                     <spring:message code="${zone.stringCode}"/>
                                 </p>
                             </c:forEach>
@@ -181,7 +183,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="card custom-card mb-4 bg-white rounded">
                 <div class="card-body">
@@ -243,6 +244,30 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card custom-card mb-4 bg-white rounded" id="jobPostReviews">
+                <div class="card-body">
+                    <span class="card-title custom-row">
+                        <i class="bi bi-chat-left-fill"></i>
+                        <p>
+                            Opiniones
+                        </p>
+                    </span>
+                    <hr class="hr1"/>
+                    <c:forEach var="review" items="${reviews}" varStatus="status">
+                        <c:set var="data" value="${review}" scope="request"/>
+                        <%@include file="components/reviewCard.jsp" %>
+
+                        <c:if test="${status.index != reviews.size()-1}">
+                            <hr class="hr1"/>
+                        </c:if>
+                    </c:forEach>
+                    <c:set var="listSize" value="${reviews.size()}" scope="request"/>
+                    <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                    <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                    <%@include file="components/bottomPaginationBar.jsp" %>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -251,7 +276,11 @@
     $('.requestServiceBtn').on('click', function (e) {
         e.stopPropagation();
     });
-
+    $('#seeReviews').on('click', function () {
+        $('html,body').animate({
+                scrollTop: $('#jobPostReviews').offset().top
+            }, 'slow');
+    });
 </script>
 </body>
 </html>
