@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
@@ -21,6 +22,7 @@ import java.util.*;
 @Repository
 public class JobContractDaoJDBC implements JobContractDao {
 
+
     @Autowired
     private UserDao userDao;
 
@@ -29,6 +31,10 @@ public class JobContractDaoJDBC implements JobContractDao {
 
     @Autowired
     private JobPostDao jobPostDao;
+
+    private static Integer getLimit(int page){
+        return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
+    }
 
     private final static RowMapper<JobContract> JOB_CONTRACT_ROW_MAPPER = (resultSet, in) -> new JobContract(
             resultSet.getLong("contract_id"),
@@ -62,7 +68,7 @@ public class JobContractDaoJDBC implements JobContractDao {
             ),
             resultSet.getDate("creation_date"),
             resultSet.getString("contract_description"),
-            new ByteImage(resultSet.getBytes("image_data"), resultSet.getString("image_type"))
+            new ByteImage(resultSet.getBytes("image_data"), resultSet.getString("contract_image_type"))
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -90,7 +96,7 @@ public class JobContractDaoJDBC implements JobContractDao {
         objectMap.put("contract_description", description);
         objectMap.put("creation_date", new java.sql.Date(creationDate.getTime()));
         objectMap.put("image_data", image.getData());
-        objectMap.put("image_type", image.getType());
+        objectMap.put("contract_image_type", image.getType());
 
         Number key = jdbcInsert.executeAndReturnKey(objectMap);
 
@@ -112,33 +118,39 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
     @Override
-    public List<JobContract> findByClientId(long id) {
+    public List<JobContract> findByClientId(long id,int page) {
+        Integer limit =getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE client_id = ?",
-                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
+                "SELECT * FROM full_contract WHERE client_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id,limit,offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public List<JobContract> findByProId(long id) {
+    public List<JobContract> findByProId(long id,int page) {
+        Integer limit =getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE professional_id = ?",
-                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
+                "SELECT * FROM full_contract WHERE professional_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id,limit,offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public List<JobContract> findByPostId(long id) {
-
+    public List<JobContract> findByPostId(long id, int page) {
+        Integer limit =getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE post_id = ?",
-                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
+                "SELECT * FROM full_contract WHERE post_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id,limit,offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public List<JobContract> findByPackageId(long id) {
-
+    public List<JobContract> findByPackageId(long id, int page) {
+        Integer limit =getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE package_id = ?",
-                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER);
+                "SELECT * FROM full_contract WHERE package_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id,limit,offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override

@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @EnableWebSecurity
 @Configuration
 @ComponentScan({"ar.edu.itba.paw.webapp.auth"})
-public class AuthConfig extends WebSecurityConfigurerAdapter {
+public class  AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Value("classpath:key.txt")
     private Resource key;

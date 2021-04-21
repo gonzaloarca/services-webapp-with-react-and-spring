@@ -75,7 +75,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindAllReviews() {
-        List<Review> maybeUserReviews = reviewDaoJDBC.findAllReviews(JOB_POST.getId());
+        List<Review> maybeUserReviews = reviewDaoJDBC.findAllReviews(JOB_POST.getId(),0);
 
         Assert.assertEquals(maybeUserReviews.size(), 2);
         Assert.assertEquals(maybeUserReviews.get(0), REVIEW_1);
@@ -85,7 +85,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void findProfessionalReviews() {
-        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId());
+        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(),0);
 
         Assert.assertEquals(maybeUserReviews.size(), 2);
         Assert.assertEquals(maybeUserReviews.get(0), REVIEW_1);
@@ -94,7 +94,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindReviews() {
-        List<Review> maybeReviews = reviewDaoJDBC.findReviews(JOB_PACKAGE.getId());
+        List<Review> maybeReviews = reviewDaoJDBC.findReviews(JOB_PACKAGE.getId(),0);
 
         Assert.assertEquals(maybeReviews.size(), 2);
         Assert.assertEquals(maybeReviews.get(0), REVIEW_1);

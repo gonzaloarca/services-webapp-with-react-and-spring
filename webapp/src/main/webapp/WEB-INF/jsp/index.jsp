@@ -42,6 +42,7 @@
 <c:set var="path" value="/" scope="request"/>
 <c:set var="withoutColor" value="true" scope="request"/>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<c:set var="jobCardSize" value="${jobCards.size()}"/>
 <%@include file="components/customNavBar.jsp" %>
 <%@include file="components/searchBar.jsp" %>
 
@@ -93,6 +94,10 @@
                 </div>
             </c:if>
         </div>
+        <c:set var="listSize" value="${jobCardSize}" scope="request"/>
+        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+        <%@include file="components/bottomPaginationBar.jsp" %>
     </div>
 </div>
 <div class="landing-bottom landing-row-shadow">

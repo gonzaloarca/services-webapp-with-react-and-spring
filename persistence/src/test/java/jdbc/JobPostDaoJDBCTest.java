@@ -90,7 +90,7 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindByUserId() {
-        List<JobPost> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId());
+        List<JobPost> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId(),0);
 
         Assert.assertEquals(jobPosts.size(), 2);
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
@@ -98,7 +98,7 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindByJobType() {
-        List<JobPost> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType());
+        List<JobPost> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType(),0);
 
         Assert.assertEquals(2, jobPosts.size());
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
@@ -107,7 +107,7 @@ public class JobPostDaoJDBCTest {
     @Test
     public void testFindByZone() {
         JOB_POST.getZones().forEach((zone -> {
-            List<JobPost> jobPosts = jobPostDaoJDBC.findByZone(zone);
+            List<JobPost> jobPosts = jobPostDaoJDBC.findByZone(zone,0);
 
             jobPosts.forEach((jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone))));
         }));
@@ -115,7 +115,7 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindAll() {
-        List<JobPost> jobPosts = jobPostDaoJDBC.findAll();
+        List<JobPost> jobPosts = jobPostDaoJDBC.findAll(1);
 
         Assert.assertEquals(JOB_POSTS_QUANTITY,
                 jobPosts.size());
@@ -125,7 +125,7 @@ public class JobPostDaoJDBCTest {
     public void testSearch() {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.PALERMO;
-        List<JobPost> jobPosts = jobPostDaoJDBC.search(title, zone);
+        List<JobPost> jobPosts = jobPostDaoJDBC.search(title, zone, 0);
 
         Assert.assertFalse(jobPosts.isEmpty());
         Assert.assertEquals(2, jobPosts.size());
@@ -136,7 +136,7 @@ public class JobPostDaoJDBCTest {
         String title = "";
         JobPost.Zone zone = JobPost.Zone.PALERMO;
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-        List<JobPost> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType);
+        List<JobPost> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType,0);
 
         Assert.assertFalse(jobPosts.isEmpty());
         Assert.assertEquals(2, jobPosts.size());

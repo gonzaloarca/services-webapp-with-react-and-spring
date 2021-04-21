@@ -38,18 +38,18 @@
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
-<%--    <nav aria-label="breadcrumb">--%>
-<%--        <ol class="breadcrumb bg-white">--%>
-<%--            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
-<%--                <spring:message code="navigation.index"/>--%>
-<%--            </a></li>--%>
-<%--            <li class="breadcrumb-item active" aria-current="page">--%>
-<%--                <p class="capitalize-first-letter">--%>
-<%--                    <spring:message code="${jobPost.jobType.stringCode}"/>--%>
-<%--                </p>--%>
-<%--            </li>--%>
-<%--        </ol>--%>
-<%--    </nav>--%>
+    <%--    <nav aria-label="breadcrumb">--%>
+    <%--        <ol class="breadcrumb bg-white">--%>
+    <%--            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
+    <%--                <spring:message code="navigation.index"/>--%>
+    <%--            </a></li>--%>
+    <%--            <li class="breadcrumb-item active" aria-current="page">--%>
+    <%--                <p class="capitalize-first-letter">--%>
+    <%--                    <spring:message code="${jobPost.jobType.stringCode}"/>--%>
+    <%--                </p>--%>
+    <%--            </li>--%>
+    <%--        </ol>--%>
+    <%--    </nav>--%>
     <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">
         <i class="fas fa-edit"></i>
         <p>Editar publicacion</p>
@@ -95,11 +95,11 @@
             </c:choose>
         </div>
     </div>
-        <div class="card-body custom-row mt-2 p-0">
-            <div class="center">
+    <div class="card-body custom-row mt-2 p-0">
+        <div class="center">
 
-                <div class="card custom-card mb-4 bg-white rounded">
-                    <div class="card-body">
+            <div class="card custom-card mb-4 bg-white rounded">
+                <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="fas fa-briefcase"></i>
                             <p>
@@ -107,21 +107,21 @@
                             </p>
                         </span>
 
-                        <div class="summary custom-row">
-                            <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services" class="summary-item profile-item align-items-center">
-                                <c:choose>
-                                    <c:when test="${jobPost.user.image.string == null}">
-                                        <img class="ml-4" src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img class="ml-4" src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
-                                    </c:otherwise>
-                                </c:choose>
-                                <p><c:out value="${jobPost.user.username}"/></p>
-                            </a>
-                            <div class="summary-item rate-item">
-                                <p>Calificacion promedio</p>
-                                <span class="custom-row align-items-center">
+                    <div class="summary custom-row">
+                        <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services" class="summary-item profile-item align-items-center">
+                            <c:choose>
+                                <c:when test="${jobPost.user.image.string == null}">
+                                    <img class="ml-4" src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
+                                </c:when>
+                                <c:otherwise>
+                                    <img class="ml-4" src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
+                                </c:otherwise>
+                            </c:choose>
+                            <p><c:out value="${jobPost.user.username}"/></p>
+                        </a>
+                        <div class="summary-item rate-item">
+                            <p>Calificacion promedio</p>
+                            <span class="custom-row align-items-center">
                                     <h2>
                                         ${avgRate}
                                     </h2>
@@ -132,58 +132,58 @@
                                         (${reviewsSize})
                                     </h5>
                                 </span>
-                                <p class="align-items-center mt-0 opinion">
-                                    Ver opiniones
-                                </p>
-                            </div>
-                            <div class="summary-item contracts-item">
-                                <p class="mb-0 ml-3"><spring:message code="profile.completed.works"/></p>
-                                <div class="profile-completed-works-outline">
-                                    <div class="profile-completed-works">${totalContractsCompleted}</div>
-                                </div>
+                            <p class="align-items-center mt-0 opinion">
+                                Ver opiniones
+                            </p>
+                        </div>
+                        <div class="summary-item contracts-item">
+                            <p class="mb-0 ml-3"><spring:message code="profile.completed.works"/></p>
+                            <div class="profile-completed-works-outline">
+                                <div class="profile-completed-works">${totalContractsCompleted}</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="two-column">
-                    <div class="card custom-card mb-4 bg-white rounded two-column-item">
-                        <div class="card-body">
+            </div>
+            <div class="two-column">
+                <div class="card custom-card mb-4 bg-white rounded two-column-item">
+                    <div class="card-body">
                             <span class="card-title custom-row">
                                 <i class="far fa-clock"></i>
                                 <p>
                                     <spring:message code="jobPost.jobs.hours"/>
                                 </p>
                             </span>
-                            <div class="available-hours">
-                                <p>
-                                    <c:out value="${jobPost.availableHours}"/>
-                                </p>
-                            </div>
+                        <div class="available-hours">
+                            <p>
+                                <c:out value="${jobPost.availableHours}"/>
+                            </p>
                         </div>
                     </div>
+                </div>
 
-                    <div class="card custom-card mb-4 bg-white rounded two-column-item">
-                        <div class="card-body">
+                <div class="card custom-card mb-4 bg-white rounded two-column-item">
+                    <div class="card-body">
                             <span class="card-title custom-row">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <p>
                                     <spring:message code="jobPost.jobs.zones"/>
                                 </p>
                             </span>
-                            <div class="custom-row zones">
-                                <c:forEach items="${jobPost.zones}" var="zone">
-                                    <p class="capitalize-first-letter" style="margin: 0 5px">
-                                        <spring:message code="${zone.stringCode}"/>
-                                    </p>
-                                </c:forEach>
-                            </div>
+                        <div class="custom-row zones">
+                            <c:forEach items="${jobPost.zones}" var="zone">
+                                <p class="capitalize-first-letter" style="margin: 0 5px">
+                                    <spring:message code="${zone.stringCode}"/>
+                                </p>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
+            </div>
 
 
-                <div class="card custom-card mb-4 bg-white rounded">
-                    <div class="card-body">
+            <div class="card custom-card mb-4 bg-white rounded">
+                <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="bi bi-box-seam"></i>
                             <p>
@@ -191,59 +191,59 @@
                             </p>
                         </span>
 
-                        <div class="accordion mx-5" id="accordionPackages">
-                            <c:forEach items="${packages}" var="pack" varStatus="status">
-                                <div class="card custom-card mb-3">
-                                    <div class="card custom-card " id="heading${status.index}">
+                    <div class="accordion mx-5" id="accordionPackages">
+                        <c:forEach items="${packages}" var="pack" varStatus="status">
+                            <div class="card custom-card mb-3">
+                                <div class="card custom-card " id="heading${status.index}">
 
-                                        <button class="drop btn-block hirenet-blue-btn collapsed" type="button"
-                                                data-toggle="collapse" data-target="#collapse${status.index}"
-                                                aria-expanded="false"
-                                                aria-controls="collapse${status.index}">
-                                            <div class="package-info">
-                                                <i class="fa fa-chevron-down text-white"></i>
-                                                <i class="fa fa-chevron-up text-white"></i>
-                                                <p class="package-title">
-                                                    <c:out value="${pack.title}"/>
-                                                </p>
-                                                <div class="ml-auto custom-row end-items">
-                                                    <div class="package-price end-items-item">
-                                                        <p class="text-center mt-2">
-                                                            <spring:message code="jobPost.jobs.price"/>
-                                                        </p>
-                                                        <div class="chip">
-                                                            <spring:message code="${pack.rateType.stringCode}"
-                                                                            arguments="${pack.price}"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
-                                                        <a class="btn"
-                                                           href="${pageContext.request.contextPath}/contract/package/${pack.id}"
-                                                           role="button" type="submit">
-                                                            <spring:message code="jobPost.jobs.submit"/>
-                                                        </a>
+                                    <button class="drop btn-block hirenet-blue-btn collapsed" type="button"
+                                            data-toggle="collapse" data-target="#collapse${status.index}"
+                                            aria-expanded="false"
+                                            aria-controls="collapse${status.index}">
+                                        <div class="package-info">
+                                            <i class="fa fa-chevron-down text-white"></i>
+                                            <i class="fa fa-chevron-up text-white"></i>
+                                            <p class="package-title">
+                                                <c:out value="${pack.title}"/>
+                                            </p>
+                                            <div class="ml-auto custom-row end-items">
+                                                <div class="package-price end-items-item">
+                                                    <p class="text-center mt-2">
+                                                        <spring:message code="jobPost.jobs.price"/>
+                                                    </p>
+                                                    <div class="chip">
+                                                        <spring:message code="${pack.rateType.stringCode}"
+                                                                        arguments="${pack.price}"/>
                                                     </div>
                                                 </div>
+                                                <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
+                                                    <a class="btn"
+                                                       href="${pageContext.request.contextPath}/contract/package/${pack.id}"
+                                                       role="button" type="submit">
+                                                        <spring:message code="jobPost.jobs.submit"/>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </button>
-                                    </div>
-                                    <div id="collapse${status.index}" class="collapse package-desc"
-                                         aria-labelledby="heading${status.index}"
-                                         data-parent="#accordionPackages">
-                                        <div class="card-body">
-                                            <p class="package-text">
-                                                <spring:message code="jobPost.package.description"/><br/>
-                                                <c:out value="${pack.description}"/>
-                                            </p>
                                         </div>
+                                    </button>
+                                </div>
+                                <div id="collapse${status.index}" class="collapse package-desc"
+                                     aria-labelledby="heading${status.index}"
+                                     data-parent="#accordionPackages">
+                                    <div class="card-body">
+                                        <p class="package-text">
+                                            <spring:message code="jobPost.package.description"/><br/>
+                                            <c:out value="${pack.description}"/>
+                                        </p>
                                     </div>
                                 </div>
-                            </c:forEach>
-                        </div>
+                            </div>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
 <script>

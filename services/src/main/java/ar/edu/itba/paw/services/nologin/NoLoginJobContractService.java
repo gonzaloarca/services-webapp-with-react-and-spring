@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services.nologin;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
@@ -50,22 +51,42 @@ public class NoLoginJobContractService implements JobContractService {
 
     @Override
     public List<JobContract> findByClientId(long id) {
-        return jobContractDao.findByClientId(id);
+        return jobContractDao.findByClientId(id, HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<JobContract> findByClientId(long id,int page) {
+        return jobContractDao.findByClientId(id,page);
     }
 
     @Override
     public List<JobContract> findByProId(long id) {
-        return jobContractDao.findByProId(id);
+        return jobContractDao.findByProId(id,HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<JobContract> findByProId(long id, int page) {
+        return jobContractDao.findByProId(id,page);
     }
 
     @Override
     public List<JobContract> findByPostId(long id) {
-        return jobContractDao.findByPostId(id);
+        return jobContractDao.findByPostId(id,HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<JobContract> findByPostId(long id, int page) {
+        return jobContractDao.findByPostId(id,page);
     }
 
     @Override
     public List<JobContract> findByPackageId(long id) {
-        return jobContractDao.findByPackageId(id);
+        return jobContractDao.findByPackageId(id,HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<JobContract> findByPackageId(long id, int page) {
+        return jobContractDao.findByPackageId(id,page);
     }
 
     @Override
