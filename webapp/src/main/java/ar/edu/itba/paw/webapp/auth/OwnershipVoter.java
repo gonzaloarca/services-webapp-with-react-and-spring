@@ -11,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Component
@@ -72,6 +74,37 @@ public class OwnershipVoter implements AccessDecisionVoter {
                             return ACCESS_GRANTED;
                         else
                             return ACCESS_DENIED;
+                    }
+                case "create-job-post":
+                    if (paths.length == 1)
+                        return ACCESS_ABSTAIN;
+                    if(paths[1].matches("success\\?.*")){
+                        List<String> params = Arrays.asList(paths[1].split("[?|&]"));
+                        if(params.stream().anyMatch(param -> param.matches("postId=[0-9]+"))){
+                            String postParam = null;
+                            for (String param : params) {
+                                if(param.matches("postId=[0-9]+"))
+                                    postParam=param;
+                            }
+                            if(postParam != null){
+                                String postId = postParam.split("=")[1];
+                                try {
+                                    id = Integer.parseInt(postId);
+                                }catch (NumberFormatException e)
+                                {
+                                    return ACCESS_ABSTAIN;
+                                }
+                                try {
+                                    isOwner = jobPostService.findById(id).getUser().getEmail().equals(authentication.getName());
+                                }catch (NoSuchElementException e){
+                                    return ACCESS_ABSTAIN;
+                                }
+                                if(isOwner)
+                                    return ACCESS_GRANTED;
+                                else
+                                    return ACCESS_DENIED;
+                            }
+                        }
                     }
             }
 //

@@ -185,4 +185,18 @@ public class JobPostDaoJDBC implements JobPostDao {
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
+    @Override
+    public JobPost updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones) {
+        jdbcTemplate.update("UPDATE job_post SET post_title = ? , post_available_hours = ? , post_job_type = ? WHERE post_id = ?", title,availableHours,jobType.ordinal(),id);
+        jdbcTemplate.update("DELETE FROM post_zone WHERE post_id = ?", id);
+        for (Zone zone : zones) {
+            jdbcInsertZone.execute(new HashMap<String, Integer>() {{
+                put("post_id", (int) id);
+                put("zone_id", zone.ordinal());
+            }});
+        }
+        //TODO CAMBIAR
+        return findById(id).orElseThrow(NoSuchElementException::new);
+    }
+
 }

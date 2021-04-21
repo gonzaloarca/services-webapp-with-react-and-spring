@@ -5,9 +5,11 @@ import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
+import ar.edu.itba.paw.webapp.form.EditJobPostForm;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
 import ar.edu.itba.paw.webapp.form.PackageForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class JobPostController {
@@ -57,6 +60,28 @@ public class JobPostController {
         mav.addObject("reviewsSize", reviewService.findProfessionalReviews(jobPost.getUser().getId()).size());
         mav.addObject("imageList", imageList);
         mav.addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
+        return mav;
+    }
+
+    @RequestMapping(value = "/job/{postId}/edit",method = RequestMethod.GET)
+    public ModelAndView jobPostDetailsEdit(@PathVariable("postId") final long id,@ModelAttribute("editJobPostForm") final EditJobPostForm form) {
+        final ModelAndView mav = new ModelAndView("editJobPost")
+                .addObject("jobTypes", JobPost.JobType.values())
+                .addObject("zoneValues", JobPost.Zone.values());
+        EditJobPostForm jobPostForm = new EditJobPostForm();
+        JobPost jobPost = jobPostService.findById(id);
+        jobPostForm.setJobType(jobPost.getJobType().ordinal());
+            jobPostForm.setAvailableHours(jobPost.getAvailableHours());
+
+        int[] zoneInts = new int[jobPost.getZones().size()];
+        List<JobPost.Zone> zonesList = jobPost.getZones();
+        for (int i = 0; i< zonesList.size() ; i++) {
+            zoneInts[i] = zonesList.get(i).ordinal();
+        }
+        jobPostForm.setZones(zoneInts);
+        jobPostForm.setTitle(jobPost.getTitle());
+        mav.addObject("editJobPostForm",jobPostForm);
+        mav.addObject("id",id);
         return mav;
     }
 
@@ -98,8 +123,24 @@ public class JobPostController {
         return new ModelAndView("redirect:/create-job-post/success");
     }
 
+    @RequestMapping(path = "job/{postId}/edit", method = RequestMethod.POST)
+    public ModelAndView editJobPost(@Valid @ModelAttribute("editJobPostForm") final EditJobPostForm form,
+                                      final BindingResult errors, RedirectAttributes attr, Principal principal,@PathVariable("postId") final long id) {
+
+        if (errors.hasErrors()) {
+            return jobPostDetailsEdit(id,form);
+        }
+
+        String currentUserEmail = principal.getName();
+        JobPost jobPost = jobPostService.update(id, form.getTitle(), form.getAvailableHours(), form.getJobType(), form.getZones());
+
+        attr.addAttribute("postId", jobPost.getId());
+        return new ModelAndView("redirect:/job/"+jobPost.getId());
+    }
+
     @RequestMapping("/create-job-post/success")
-    public ModelAndView createSuccess(@RequestParam("postId") final long postId) {
+    public ModelAndView createSuccess(@RequestParam("postId") final long postId, Principal principal) {
+
         return new ModelAndView("createJobPostSuccess").addObject("postId", postId);
     }
 

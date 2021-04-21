@@ -121,4 +121,11 @@ public class NoLoginJobPostService implements JobPostService {
         return jobPostDao.findMaxPageSearch(query, value, jobType);
     }
 
+    @Override
+    public JobPost update(long id, String title, String availableHours, Integer jobType, int[] zones) {
+        List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
+        JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
+        return jobPostDao.updateById(id,title,availableHours,parsedJobType,parsedZones);
+    }
+
 }

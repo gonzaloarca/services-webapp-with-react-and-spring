@@ -33,4 +33,5 @@ public interface JobPostDao {
 
     int findMaxPageSearch(String query, JobPost.Zone zone, JobPost.JobType jobType);
 
+    JobPost updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
 }
