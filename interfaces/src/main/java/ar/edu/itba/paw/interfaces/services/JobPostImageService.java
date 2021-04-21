@@ -9,9 +9,11 @@ public interface JobPostImageService {
 
 	JobPostImage addImage(long postId, ByteImage image);
 
-//	List<JobPostImage> addImages(long postId, List<byte[]> byteImages);
+	List<JobPostImage> addImages(long postId, List<ByteImage> byteImages);
 
 	List<JobPostImage> findImages(long postId);
 
 	JobPostImage findPostImage(long postId);
+
+	boolean maxImagesUploaded(long postId);
 }

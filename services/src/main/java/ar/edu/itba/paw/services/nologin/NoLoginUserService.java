@@ -59,9 +59,9 @@ public class NoLoginUserService implements UserService {
 
         User registeredUser;
         if(image == null)
-            registeredUser = userDao.register(email, password, username, phone);
+            registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone);
         else
-            registeredUser = userDao.register(email, password, username, phone, image);
+            registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone, image);
 
         //TODO manejo de roles
         roles.forEach(role -> userDao.assignRole(registeredUser.getId(), role));

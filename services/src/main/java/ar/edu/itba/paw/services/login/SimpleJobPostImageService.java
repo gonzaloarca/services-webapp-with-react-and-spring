@@ -9,10 +9,13 @@ import ar.edu.itba.paw.models.JobPostImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SimpleJobPostImageService implements JobPostImageService {
+
+	private final int MAX_IMAGES_NUMBER = 5;
 
 	@Autowired
 	private JobPostImageDao jobPostImageDao;
@@ -26,17 +29,28 @@ public class SimpleJobPostImageService implements JobPostImageService {
 	@Override
 	public JobPostImage addImage(long postId, ByteImage image) {
 		jobPostService.findById(postId);			//TODO: ver si hay una mejor forma de checkear si existe
+
 		if(!imageService.isValidImage(image))
 			throw new RuntimeException("Invalid byte image");
+		if(maxImagesUploaded(postId))
+			return null;
 
 		return jobPostImageDao.addImage(postId, image);
 	}
 
-	//	@Override
-//	public List<JobPostImage> addImages(long postId, List<byte[]> byteImages) {
-//		jobPostService.findById(postId);			//TODO: ver si hay una mejor forma de checkear si existe
-//		return jobPostImageDao.addImages(postId, byteImages);
-//	}
+	@Override
+	public List<JobPostImage> addImages(long postId, List<ByteImage> byteImages) {
+		jobPostService.findById(postId);			//TODO: ver si hay una mejor forma de checkear si existe
+		List<JobPostImage> images = new ArrayList<>();
+		for(ByteImage image : byteImages){
+			if(!imageService.isValidImage(image))
+				throw new RuntimeException("Invalid byte image");
+			if(maxImagesUploaded(postId))
+				break;
+			images.add(jobPostImageDao.addImage(postId, image));
+		}
+		return images;
+	}
 
 	@Override
 	public List<JobPostImage> findImages(long postId) {
@@ -47,5 +61,10 @@ public class SimpleJobPostImageService implements JobPostImageService {
 	public JobPostImage findPostImage(long postId) {
 		jobPostService.findById(postId);			//TODO: ver si hay una mejor forma de checkear si existe
 		return jobPostImageDao.findPostImage(postId);
+	}
+
+	@Override
+	public boolean maxImagesUploaded(long postId) {
+		return jobPostImageDao.getImageCount(postId) >= MAX_IMAGES_NUMBER;
 	}
 }

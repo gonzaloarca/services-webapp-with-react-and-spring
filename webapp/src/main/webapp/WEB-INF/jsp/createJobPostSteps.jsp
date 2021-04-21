@@ -54,7 +54,8 @@
     </h3>
 
     <c:url value="/create-job-post" var="postPath"/>
-    <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post" cssClass="step-frame">
+    <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post" cssClass="step-frame"
+                enctype="multipart/form-data">
         <div class="form-error-container">
             <form:errors path="jobType" cssClass="form-error-list" element="p"/>
             <form:errors path="title" cssClass="form-error-list" element="p"/>
@@ -62,6 +63,7 @@
             <form:errors path="jobPackage.description" cssClass="form-error-list" element="p"/>
             <form:errors path="jobPackage.rateType" cssClass="form-error-list" element="p"/>
             <form:errors path="jobPackage.price" cssClass="form-error-list" element="p"/>
+            <form:errors path="servicePics" class="form-error-list" element="p"/>
             <form:errors path="availableHours" cssClass="form-error-list" element="p"/>
             <form:errors path="zones" cssClass="form-error-list" element="p"/>
         </div>
@@ -293,14 +295,14 @@
                     </form:label>
 
                     <div class="file-input-container">
-                        <form:input id="imageInput" type="file" path="" multiple="multiple"/>
+                        <form:input id="imageInput" type="file" path="servicePics" size="5" multiple="multiple"/>
                     </div>
 
                     <p class="img-upload-disclaimer mt-1">
                         <spring:message code="jobPost.create.filedisclaimer"/>
                     </p>
 
-                    <form:errors path="" class="form-error" element="p"/>
+                    <form:errors path="servicePics" class="form-error" element="p"/>
 
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"

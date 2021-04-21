@@ -70,4 +70,13 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 				JOB_POST_IMAGE_ROW_MAPPER
 		).stream().findFirst().orElse(null);
 	}
+
+	@Override
+	public int getImageCount(long postId) {
+		return jdbcTemplate.queryForObject(
+				"SELECT count(*) FROM post_image WHERE post_id = ?;",
+				new Object[]{postId},
+				Integer.class
+		);
+	}
 }

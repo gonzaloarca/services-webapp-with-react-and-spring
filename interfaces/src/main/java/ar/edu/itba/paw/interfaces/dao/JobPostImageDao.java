@@ -12,4 +12,6 @@ public interface JobPostImageDao {
 
 	JobPostImage findPostImage(long postId);
 
+	int getImageCount(long postId);
+
 }

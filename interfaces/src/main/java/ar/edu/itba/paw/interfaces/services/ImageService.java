@@ -10,5 +10,4 @@ public interface ImageService {
 
 	boolean isValidImage(ByteImage image);
 
-
 }

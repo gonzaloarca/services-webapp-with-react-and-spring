@@ -71,10 +71,12 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/reviews")
-    public ModelAndView profileWithReviews(@PathVariable("id") final long id) {
+    public ModelAndView profileWithReviews(@PathVariable("id") final long id, @ModelAttribute("user") User user) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("withServices", false);
         mav.addObject("reviewsByPoints", reviewService.findProfessionalReviewsByPoints(id));
+        UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
+        mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
         return mav;
     }
 }
