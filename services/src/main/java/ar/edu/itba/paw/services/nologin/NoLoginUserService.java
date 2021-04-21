@@ -44,8 +44,16 @@ public class NoLoginUserService implements UserService {
             if (user.isVerified())
                 throw new UserAlreadyExistsException();
 
+            //registrar usuario de nuevo
+            if(image == null)
+                userDao.updateUserById(user.getId(), username, phone);
+            else
+                userDao.updateUserById(user.getId(), username, phone, image);
+            userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
+
             VerificationToken token = verificationTokenService.create(user);
             mailingService.sendVerificationTokenEmail(user, token);
+
             throw new UserNotVerifiedException();
         }
 

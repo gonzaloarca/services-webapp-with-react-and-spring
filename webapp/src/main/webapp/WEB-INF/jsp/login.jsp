@@ -81,7 +81,9 @@
                 </div>
                 <div class="login-error">
                     <c:if test="${param.error != null}">
-                        <p class="form-error"><spring:message code="login.badcredentials"/></p>
+                        <p class="form-error">
+                            ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION}
+                        </p>
                     </c:if>
                 </div>
                 <div class="submit-button-container">

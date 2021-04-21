@@ -36,7 +36,8 @@ public class UserDaoJDBC implements UserDao {
     private final static RowMapper<UserAuth> USER_AUTH_ROW_MAPPER = ((resultSet, i) -> new UserAuth(
             resultSet.getString("user_email"),
             resultSet.getString("user_password"),
-            mapArrToList((Object[]) resultSet.getArray("roles").getArray())
+            mapArrToList((Object[]) resultSet.getArray("roles").getArray()),
+            resultSet.getBoolean("user_is_verified")
             ));
 
     private final JdbcTemplate jdbcTemplate;
@@ -105,8 +106,8 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
-        return jdbcTemplate.query("SELECT user_email,user_password,array_agg(role_id) as roles " +
-                "FROM users NATURAL JOIN user_role WHERE user_email = ? GROUP BY user_email,user_password",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT user_email,user_password,array_agg(role_id) as roles, user_is_verified " +
+                "FROM users NATURAL JOIN user_role WHERE user_email = ? GROUP BY user_email,user_password, user_is_verified",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
     }
 
     @Override

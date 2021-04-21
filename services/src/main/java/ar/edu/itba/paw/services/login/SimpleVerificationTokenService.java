@@ -45,17 +45,17 @@ public class SimpleVerificationTokenService implements VerificationTokenService 
 			long createTime = trueToken.getCreationDate().getEpochSecond();
 			long currentTime = Instant.now().getEpochSecond();
 
-			if (currentTime - createTime > AVAILABLE_TIME) {
-				verificationTokenDao.deleteToken(user.getId());
-				throw new VerificationTokenExpiredException();
-			}
-
 			if (token.equals(trueToken.getToken())) {
+				if (currentTime - createTime > AVAILABLE_TIME) {
+					verificationTokenDao.deleteToken(user.getId());
+					throw new VerificationTokenExpiredException();
+				}
 				verificationTokenDao.deleteToken(user.getId());
 				userDao.verifyUser(user.getId());
+				return;
 			}
+		}
 
-		} else
-			throw new NoSuchElementException();
+		throw new NoSuchElementException();
 	}
 }

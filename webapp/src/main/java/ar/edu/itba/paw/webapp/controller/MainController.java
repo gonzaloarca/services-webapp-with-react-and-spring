@@ -33,9 +33,6 @@ public class MainController {
     private UserService userService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private ImageService imageService;
 
     @Autowired
@@ -89,7 +86,7 @@ public class MainController {
         }
 
         try {
-            userService.register(registerForm.getEmail(), passwordEncoder.encode(registerForm.getPassword()),
+            userService.register(registerForm.getEmail(), registerForm.getPassword(),
                     registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1), byteImage);
         } catch (UserAlreadyExistsException e) {
             errors.rejectValue("email", "register.existingemail");

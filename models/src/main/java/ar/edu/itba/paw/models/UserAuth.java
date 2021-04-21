@@ -10,11 +10,14 @@ public class UserAuth {
 
     private final List<Role> roles;
 
+    private final boolean verified;
 
-    public UserAuth(String email, String password, List<Role> roles) {
+
+    public UserAuth(String email, String password, List<Role> roles, boolean verified) {
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.verified = verified;
     }
 
     public String getEmail() {
@@ -44,4 +47,7 @@ public class UserAuth {
         }
     }
 
+    public boolean isVerified() {
+        return verified;
+    }
 }
