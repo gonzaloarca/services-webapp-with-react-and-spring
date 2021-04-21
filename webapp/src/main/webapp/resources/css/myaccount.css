@@ -37,6 +37,8 @@
 	margin: auto 0 auto 0;
 	color: black;
 	font-weight: normal;
+	display: flex;
+	flex-direction: row;
 }
 
 .nav-option:hover {
@@ -53,7 +55,7 @@
 	width: 27px;
 	height: 27px;
 	border-radius: 27px;
-	display: flex inline;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 }
