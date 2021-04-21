@@ -32,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
-        "ar.edu.itba.paw.webapp.validation"})
+        "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.auth"})
 @Configuration
 @EnableAsync
 public class WebConfig {
@@ -127,6 +127,8 @@ public class WebConfig {
     Resource contractTemplate;
     @Value("classpath:contractEmailWithImage.html")
     Resource contractImageTemplate;
+    @Value("classpath:tokenEmail.html")
+    Resource tokenEmailTemplate;
 
     private SimpleMailMessage makeMessage(Resource template) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -149,6 +151,11 @@ public class WebConfig {
     @Bean(name = "contractEmailWithImage")
     public SimpleMailMessage contractEmailWithImage() {
         return makeMessage(contractImageTemplate);
+    }
+
+    @Bean(name = "tokenEmail")
+    public SimpleMailMessage tokenEmail() {
+        return makeMessage(tokenEmailTemplate);
     }
 
 }

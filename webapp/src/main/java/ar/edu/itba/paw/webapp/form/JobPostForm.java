@@ -1,10 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-//import ar.edu.itba.paw.webapp.validation.ValidImage;
-//import ar.edu.itba.paw.webapp.validation.ValidImageArray;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
+import ar.edu.itba.paw.webapp.validation.ValidImageList;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +20,9 @@ public class JobPostForm {
 
     @Valid
     private PackageForm jobPackage;
-//
-//    private MultipartFile[] servicePics;
+
+    @ValidImageList
+    private List<MultipartFile> servicePics;
 
     @NotBlank
     @Size(max = 100)
@@ -33,7 +30,6 @@ public class JobPostForm {
 
     @NotEmpty
     private int[] zones;
-
 
     public Integer getJobType() {
         return jobType;
@@ -46,10 +42,6 @@ public class JobPostForm {
     public PackageForm getJobPackage() {
         return jobPackage;
     }
-
-//    public MultipartFile[] getServicePics() {
-//        return servicePics;
-//    }
 
     public String getAvailableHours() {
         return availableHours;
@@ -71,15 +63,19 @@ public class JobPostForm {
         this.jobPackage = jobPackage;
     }
 
-//    public void setServicePics(MultipartFile[] servicePics) {
-//        this.servicePics = servicePics;
-//    }
-
     public void setAvailableHours(String availableHours) {
         this.availableHours = availableHours;
     }
 
     public void setZones(int[] zones) {
         this.zones = zones;
+    }
+
+    public List<MultipartFile> getServicePics() {
+        return servicePics;
+    }
+
+    public void setServicePics(List<MultipartFile> servicePics) {
+        this.servicePics = servicePics;
     }
 }

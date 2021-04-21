@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import exceptions.UserAlreadyExistsException;
+import exceptions.UserNotVerifiedException;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface UserService {
     User register(String email,String password, String username, String phone, List<Integer> role);
 
     User register(String email, String password, String username, String phone, List<Integer> role, ByteImage image)
-            throws UserAlreadyExistsException;
+            throws UserAlreadyExistsException, UserNotVerifiedException;
 
     User findById(long id);
 

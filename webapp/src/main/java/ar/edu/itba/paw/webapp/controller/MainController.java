@@ -3,13 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
-import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
-import ar.edu.itba.paw.webapp.utils.JobContractCard;
+import exceptions.MismatchedTokensException;
 import exceptions.UserAlreadyExistsException;
-import exceptions.UserNotFoundException;
+import exceptions.UserNotVerifiedException;
+import exceptions.VerificationTokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,8 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -35,25 +34,19 @@ public class MainController {
     private JobCardService jobCardService;
 
     @Autowired
-    private JobPostService jobPostService;
-
-    @Autowired
-    private JobContractService jobContractService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private ReviewService reviewService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ImageService imageService;
 
     @Autowired
+    private VerificationTokenService verificationTokenService;
+
+    @Autowired
     private PaginationService paginationService;
+
+    @Autowired
+    private JobPostService jobPostService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value="page", required = false,defaultValue = "1") final int page) {
@@ -65,6 +58,7 @@ public class MainController {
         List<Integer> currentPages = paginationService.findCurrentPages(page,maxPage);
         mav.addObject("maxPage",jobPostService.findMaxPage());
         mav.addObject("currentPages",currentPages);
+        mav.addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
         return mav;
     }
 
@@ -115,14 +109,16 @@ public class MainController {
         }
 
         try {
-            userService.register(registerForm.getEmail(), passwordEncoder.encode(registerForm.getPassword()),
+            userService.register(registerForm.getEmail(), registerForm.getPassword(),
                     registerForm.getName(), registerForm.getPhone(), Arrays.asList(0, 1), byteImage);
         } catch (UserAlreadyExistsException e) {
             errors.rejectValue("email", "register.existingemail");
             return register(registerForm);
+        } catch (UserNotVerifiedException e) {
+            return new ModelAndView("tokenViews").addObject("resend", true);
         }
 
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("tokenViews").addObject("send", true);
     }
 
     @RequestMapping(value = "/login")
@@ -143,5 +139,21 @@ public class MainController {
         return new ModelAndView("passwordChanged");
     }
 
+    @RequestMapping("/token")
+    public ModelAndView verifyToken(@RequestParam("user_id") final long user_id, @RequestParam("token") final String token) {
 
+        ModelAndView mav = new ModelAndView("tokenViews");
+        User user = userService.findById(user_id);
+
+        if (user.isVerified())
+            return new ModelAndView("error/404");
+
+        try {
+            verificationTokenService.verifyToken(user, token);
+        } catch (VerificationTokenExpiredException e) {
+            return mav.addObject("expired", true);
+        }
+
+        return mav.addObject("success", true);
+    }
 }

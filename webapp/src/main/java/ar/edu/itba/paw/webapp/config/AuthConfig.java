@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.HireNetAuthenticationFailureHandler;
 import ar.edu.itba.paw.webapp.auth.HireNetUserDetails;
 import ar.edu.itba.paw.webapp.auth.OwnershipVoter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.util.StreamUtils;
 
 import java.nio.charset.Charset;
@@ -70,6 +72,7 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("password")
                 .defaultSuccessUrl("/",false)
                 .loginPage("/login")
+                .failureHandler(authenticationFailureHandler())
             .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
@@ -101,6 +104,11 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
                 new AuthenticatedVoter(),
                 ownershipVoter);
         return new UnanimousBased(decisionVoters);
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new HireNetAuthenticationFailureHandler();
     }
 
 }

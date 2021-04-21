@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPackageService;
-import ar.edu.itba.paw.interfaces.services.JobPostImageService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.interfaces.services.ReviewService;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
@@ -13,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -37,6 +37,9 @@ public class JobPostController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private ImageService imageService;
 
     @RequestMapping("/job/{postId}")
     public ModelAndView jobPostDetails(@PathVariable("postId") final long id) {
@@ -76,6 +79,16 @@ public class JobPostController {
         PackageForm packageForm = form.getJobPackage();
 
         jobPackageService.create(jobPost.getId(), packageForm.getTitle(), packageForm.getDescription(), packageForm.getPrice(), packageForm.getRateType());
+
+        List<ByteImage> byteImages = new ArrayList<>();
+        for(MultipartFile file : form.getServicePics()){
+            try {
+                byteImages.add(imageService.create(file.getBytes(), file.getContentType()));
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+        jobPostImageService.addImages(jobPost.getId(), byteImages);
 
         return new ModelAndView("redirect:/job/" + jobPost.getId());
     }

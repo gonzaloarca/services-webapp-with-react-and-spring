@@ -215,7 +215,7 @@ h3 {
 }
 
 /* Para ratings */
-.star{
+.star {
     color: gold;
     font-size: 22px;
 }
@@ -302,7 +302,7 @@ h3 {
 .submit-button-container {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 .form-step-title {
@@ -322,6 +322,7 @@ h3 {
     align-items: center;
     margin-bottom: 20px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
 }
 
 .site-header h3 {
@@ -337,7 +338,7 @@ h3 {
 }
 
 /*SERVICE CARD*/
-.service-link, .service-link:link{
+.service-link, .service-link:link {
     text-decoration: none;
 }
 
@@ -378,6 +379,7 @@ h3 {
 .custom-label {
     font-weight: bold;
 }
+
 .hirenet-grey-outline-btn {
     border-color: #7e7e7e !important;
     color: #7e7e7e !important;

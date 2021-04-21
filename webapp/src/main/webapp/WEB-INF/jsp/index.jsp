@@ -49,97 +49,83 @@
 <div>
     <div style="z-index: 2" class="landing-row-shadow">
         <div class="landing-row">
-            <h3>Encuentre servicios de</h3>
-            <div class="category-list-container">
-                <div class="category">
-                    <%--                TODO: Alt correcto--%>
-                    <img src="<c:url value="/resources/images/teaching.jpeg"/>" alt="">
-                    <p>Enseñanza</p>
-                </div>
-
-                <div class="category">
-                    <%--                TODO: Alt correcto--%>
-                    <img src="<c:url value="/resources/images/teaching.jpeg"/>" alt="">
-                    <p>Plomería</p>
-                </div>
-
-                <div class="category">
-                    <%--                TODO: Alt correcto--%>
-                    <img src="<c:url value="/resources/images/teaching.jpeg"/>" alt="">
-                    <p>Limpieza</p>
-                </div>
-
-                <div class="category">
-                    <%--                TODO: Alt correcto--%>
-                    <img src="<c:url value="/resources/images/teaching.jpeg"/>" alt="">
-                    <p>Carpintería</p>
-                </div>
-
-                <div class="category">
-                    <%--                TODO: Alt correcto--%>
-                    <img src="<c:url value="/resources/images/morecategories1.svg"/>" alt="">
-                    <p>Ver más <i class="fas fa-chevron-right"></i></p>
+            <h3><spring:message code="index.jobs.title"/></h3>
+            <div class="index-category-list-container">
+                <c:forEach items="${categories}" var="category">
+                    <a class="index-category-href" onclick="redirectCategory(${category.value})">
+                        <spring:message code="${category.stringCode}" var="jobTypeName"/>
+                        <img src='<c:url value="/resources/images/${category.imagePath}" />'
+                             alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${category}"/>">
+                        <p>${jobTypeName}</p>
+                    </a>
+                </c:forEach>
+                <div class="index-category-href">
+                    <a href="${pageContext.request.contextPath}/categories">
+                        <img src="<c:url value="/resources/images/morecategories1.svg"/>"
+                             alt="<spring:message code="index.jobs.extraTypes"/>">
+                        <p><spring:message code="index.jobs.seeMore"/><i class="fas fa-chevron-right"></i></p>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <div style="background-color: white" class="landing-row-shadow">
-        <div class="landing-row">
-            <h3>Algunos de nuestros servicios destacados</h3>
-            <div class="job-display-container">
-                <c:choose>
-                <c:when test="${jobCardSize > 0}">
-                    <c:forEach items="${jobCards}" var="jobCard">
-                        <c:set var="data" value="${jobCard}" scope="request"/>
-                        <c:import url="components/jobCard.jsp"/>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <div class="result-div">
-                        <img class="mb-5" style="height: 60%"
-                             src="<c:url value="/resources/images/unavailable-1.svg"/> ">
-                        <p class="result-text">
-                            <spring:message code="index.jobs.noResults"/>
-                        </p>
-                        <p class="result-sub-text">
-                            <spring:message code="index.jobs.sorry"/>
-                        </p>
-                    </div>
-                </c:otherwise>
-                </c:choose>
-            </div>
-            <c:set var="listSize" value="${jobCardSize}" scope="request"/>
-            <c:set var="maxPage" value="${maxPage}" scope="request"/>
-            <c:set var="currentPages" value="${currentPages}" scope="request"/>
-            <%@include file="components/bottomPaginationBar.jsp" %>
+</div>
+<div style="background-color: white" class="landing-row-shadow">
+    <div class="landing-row">
+        <h3><spring:message code="index.services.title"/></h3>
+        <div class="job-display-container">
+            <c:if test="${jobCards.size() > 0}">
+                <c:forEach items="${jobCards}" var="jobCard">
+                    <c:set var="data" value="${jobCard}" scope="request"/>
+                    <c:import url="components/jobCard.jsp"/>
+                </c:forEach>
+            </c:if>
+            <c:if test="${jobCards.size() == 0}">
+                <div class="result-div">
+                    <img
+                            src="<c:url value="/resources/images/unavailable-1.svg"/> "
+                            alt="<spring:message code="index.jobs.noResults"/> ">
+                    <p class="result-text">
+                        <spring:message code="index.jobs.noResults"/>
+                    </p>
+                    <p class="result-sub-text">
+                        <spring:message code="index.jobs.sorry"/>
+                    </p>
+                </div>
+            </c:if>
         </div>
+        <c:set var="listSize" value="${jobCardSize}" scope="request"/>
+        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+        <%@include file="components/bottomPaginationBar.jsp" %>
     </div>
-    <div style="
-            background-image: url(<c:url value="/resources/images/publish-landing-bg-1.svg"/>);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-size: cover;
-            text-align: center;
-            padding-top: 60px;
-            color: #485696;
-            height: 350px;"
-         class="landing-row-shadow">
-        <h3>
-            ¿Desea publicar su servicio en nuestro sitio?
-            <br>
-            Hágalo ahora mismo
-        </h3>
-        <a class="btn hirenet-blue-btn mt-3" style="color: #fcb839">Publicar</a>
-        <div class="mt-5">
-            <jsp:include page="components/footer.jsp"/>
-        </div>
+</div>
+<div class="landing-bottom landing-row-shadow">
+    <h3>
+        <spring:message code="index.createJobPost.question"/>
+        <br>
+        <spring:message code="index.createJobPost.proposition"/>
+    </h3>
+    <a class="btn hirenet-blue-btn"><spring:message code="index.createJobPost.button"/></a>
+    <div class="mt-5">
+        <jsp:include page="components/footer.jsp"/>
     </div>
+</div>
 
 </div>
 <script>
-    $("")
+    // Para modificar el href con la ubicacion seleccionada
+    function redirectCategory(category) {
+        var auxZoneId = sessionStorage.getItem("pickedZoneId");
+        sessionStorage.setItem("pickedCategoryId", category);
+        if (auxZoneId) {
+            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' + auxZoneId +
+                '&query=&category=' + category;
+        } else {
+            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' +
+                '&query=&category=' + category;
+        }
+    }
 </script>
 </body>
 </html>
