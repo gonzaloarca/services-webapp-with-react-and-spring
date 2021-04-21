@@ -32,4 +32,6 @@ public interface UserDao {
     Optional<User> findUserByRoleAndId(UserAuth.Role role, long id);
 
     void changeUserPassword(long id, String password);
+
+    void verifyUser(long id);
 }

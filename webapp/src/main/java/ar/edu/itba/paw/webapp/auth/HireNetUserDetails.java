@@ -27,6 +27,6 @@ public class HireNetUserDetails implements UserDetailsService {
         //FIXME: Excepcion
         UserAuth user = userService.getAuthInfo(email).orElseThrow(() -> new UsernameNotFoundException("No user found for email " + email));
         Collection<? extends GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-        return new User(user.getEmail(),user.getPassword(),authorities);
+        return new User(user.getEmail(),user.getPassword(),user.isVerified(),true,true,true, authorities);
     }
 }

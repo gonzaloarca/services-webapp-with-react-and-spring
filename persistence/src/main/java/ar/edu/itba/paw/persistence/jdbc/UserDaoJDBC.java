@@ -6,16 +6,10 @@ import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.support.SqlLobValue;
-import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.io.ByteArrayInputStream;
-import java.sql.PreparedStatement;
 import java.util.*;
 
 @Repository
@@ -34,7 +28,7 @@ public class UserDaoJDBC implements UserDao {
             resultSet.getString("user_name"),
             resultSet.getString("user_phone"),
             resultSet.getBoolean("user_is_active"),
-            true, //TODO: implementar esto
+            resultSet.getBoolean("user_is_verified"),
             new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
                     resultSet.getString("image_type"))
     );
@@ -42,7 +36,8 @@ public class UserDaoJDBC implements UserDao {
     private final static RowMapper<UserAuth> USER_AUTH_ROW_MAPPER = ((resultSet, i) -> new UserAuth(
             resultSet.getString("user_email"),
             resultSet.getString("user_password"),
-            mapArrToList((Object[]) resultSet.getArray("roles").getArray())
+            mapArrToList((Object[]) resultSet.getArray("roles").getArray()),
+            resultSet.getBoolean("user_is_verified")
             ));
 
     private final JdbcTemplate jdbcTemplate;
@@ -65,13 +60,14 @@ public class UserDaoJDBC implements UserDao {
         objectMap.put("user_name", username);
         objectMap.put("user_phone", phone);
         objectMap.put("user_is_active", true);
+        objectMap.put("user_is_verified", false);
         objectMap.put("user_image", image.getData());
         objectMap.put("image_type", image.getType());
 
         Number key =  jdbcInsert.executeAndReturnKey(objectMap);
 
         return new User(key.longValue(), email, username,
-                phone, true, true,  //TODO implementar isVerified
+                phone, true, false,
                 new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType()));
     }
 
@@ -110,13 +106,13 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
-        return jdbcTemplate.query("SELECT user_email,user_password,array_agg(role_id) as roles " +
-                "FROM users NATURAL JOIN user_role WHERE user_email = ? GROUP BY user_email,user_password",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT user_email,user_password,array_agg(role_id) as roles, user_is_verified " +
+                "FROM users NATURAL JOIN user_role WHERE user_email = ? GROUP BY user_email,user_password, user_is_verified",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public void assignRole(long id, int role) {
-        Map<String, Object> objectMap = new HashMap<String,Object>();
+        Map<String, Object> objectMap = new HashMap<>();
         objectMap.put("user_id",id);
         objectMap.put("role_id",role);
         roleJdbcInsert.execute(objectMap);
@@ -131,12 +127,18 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
-        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image,image_type  FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image,image_type,user_is_verified  " +
+                "FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
                 .stream().findFirst();
     }
 
     @Override
     public void changeUserPassword(long id, String password) {
         jdbcTemplate.update("UPDATE users SET user_password = ? WHERE user_id = ?;", password, id);
+    }
+
+    @Override
+    public void verifyUser(long id) {
+        jdbcTemplate.update("UPDATE users SET user_is_verified = true WHERE user_id = ?;", id);
     }
 }

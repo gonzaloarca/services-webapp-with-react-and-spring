@@ -2,10 +2,7 @@ package ar.edu.itba.paw.services.utils;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
@@ -36,6 +33,10 @@ public class MailingServiceSpring implements MailingService {
     @Autowired
     @Qualifier("contractEmailWithImage")
     private SimpleMailMessage contractEmailWithImage;
+
+    @Autowired
+    @Qualifier("tokenEmail")
+    private SimpleMailMessage tokenEmail;
 
     private final HashMap<String, String> IMAGE_TYPE_TO_NAME;
 
@@ -93,6 +94,20 @@ public class MailingServiceSpring implements MailingService {
                 jobContract.getDescription());
 
         sendHtmlMessageWithAttachment(jobPost.getUser().getEmail(), subject, text, attachment);
+    }
+
+    @Async
+    @Override
+    public void sendVerificationTokenEmail(User user, VerificationToken token) {
+        //TODO i18n del email
+        //TODO direccion de la pagina posta
+        String url = "localhost:8080/token?user_id=" + user.getId() + "&token=" + token.getToken(),
+                subject = "Bienvenido a Hirenet";
+
+        String text = String.format(tokenEmail.getText(), user.getUsername(), user.getUsername(),
+                user.getEmail(), user.getPhone(), url);
+
+        sendHtmlMessage(user.getEmail(), subject, text);
     }
 
     /*

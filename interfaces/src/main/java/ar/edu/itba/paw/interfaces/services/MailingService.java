@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.*;
 
 import javax.activation.DataSource;
 
@@ -13,6 +11,8 @@ public interface MailingService {
     void sendHtmlMessageWithAttachment(String to, String subject, String html, DataSource attachment);
 
     void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost);
+
+    void sendVerificationTokenEmail(User user, VerificationToken token);
 
     /*
     void sendSimpleMessage(String to,String subject, String text);
