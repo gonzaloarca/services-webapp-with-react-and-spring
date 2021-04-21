@@ -3,14 +3,14 @@
     <%--@elvariable id="searchForm" type=""--%>
     <div class="landing-content-container">
         <div class="title-and-form">
-            <h1 class="landing-title">Encuentre y contrate el servicio que necesita</h1>
+            <h1 class="landing-title"><spring:message code="navigation.index"/></h1>
             <form:form action="${pageContext.request.contextPath}/search" method="get"
                        modelAttribute="searchForm"
                        class="home-search-form"
                        acceptCharset="utf-8">
                 <div class="search-inputs">
                     <div class="home-search-location">
-                        <form:select path="zone" class="custom-select w-100">
+                        <form:select path="zone" class="custom-select w-100" id="homeSelect">
                             <spring:message code="index.search.location.placeholder" var="locationPlaceholder"/>
                             <form:option value="" label="${locationPlaceholder}"/>
                             <c:forEach items="${zoneValues}" var="zone">
@@ -28,10 +28,11 @@
                                     placeholder="${typePlaceholder}" maxlength="100"/>
                         <form:errors path="query" cssClass="search-form-error" element="p"/>
                     </div>
-                    <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
+                    <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row" id="homeSearchButton">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
+                <form:hidden path="category" id="categoryForm"/>
             </form:form>
         </div>
 
@@ -39,31 +40,48 @@
             <div class="landing-instruction-outer-border">
                 <div class="landing-instruction-inner">
                     <h3>1</h3>
-                    <%--                TODO: Alt valido--%>
-                    <img src="<c:url value="/resources/images/location-1.svg"/>" alt="">
-                    <p>Seleccione su ubicación</p>
+                    <img src="<c:url value="/resources/images/location-1.svg"/>"
+                         alt="<spring:message code="index.search.location.icon"/>">
+                    <p><spring:message code="index.search.location"/></p>
                 </div>
             </div>
             <div class="landing-instruction-outer-border">
                 <div class="landing-instruction-inner">
                     <h3>2</h3>
-                    <%--                TODO: Alt valido--%>
-                    <img src="<c:url value="/resources/images/search1.svg"/>" alt="">
-                    <p>Busque el servicio que necesita</p>
+                    <img src="<c:url value="/resources/images/search1.svg"/>"
+                         alt="<spring:message code="index.search.service.icon"/>">
+                    <p><spring:message code="index.search.service"/></p>
                 </div>
             </div>
             <div class="landing-instruction-outer-border">
                 <div class="landing-instruction-inner">
                     <h3>3</h3>
-                    <%--                TODO: Alt valido--%>
-                    <img src="<c:url value="/resources/images/hire-1.svg"/>" alt="">
-                    <p>Contrate el servicio</p>
+                    <img src="<c:url value="/resources/images/hire-1.svg"/>"
+                         alt="<spring:message code="index.search.contract.icon"/>">
+                    <p><spring:message code="index.search.contract"/></p>
                 </div>
             </div>
         </div>
     </div>
-
-
     <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
          src='<c:url value="/resources/images/landingbg1.svg" />'/>
 </div>
+<script>
+    // Cuando se hace el submit guardo las cookies
+    var homeSelect = $('#homeSelect');
+    $('#homeSearchButton').on('click', function () {
+        sessionStorage.setItem("pickedZoneId", homeSelect[0].value);
+        sessionStorage.setItem("pickedZoneString", homeSelect[0].selectedOptions[0].label);
+    })
+
+    // Para levantar la ubicacion en las cookies, en caso de existir
+    var auxZoneId = sessionStorage.getItem("pickedZoneId");
+    if (auxZoneId) {
+        homeSelect[0].selectedIndex = parseInt(auxZoneId)+1;
+    }
+    // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
+    var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
+    if (auxCategoryId) {
+        $('#categoryForm')[0].value = auxCategoryId;
+    }
+</script>
