@@ -44,14 +44,14 @@ public class NoLoginUserServiceTest {
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
-    @Test
-    public void testRegisterNewUser() {
-        Mockito.when(userDaoJDBC.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone()))
-                .thenReturn(NEW_USER);
-        User createdUser = userService.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone());
-        Assert.assertNotNull(createdUser);
-        Assert.assertEquals(NEW_USER,createdUser);
-    }
+//    @Test
+//    public void testRegisterNewUser() {
+//        Mockito.when(userDaoJDBC.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone()))
+//                .thenReturn(NEW_USER);
+//        User createdUser = userService.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone());
+//        Assert.assertNotNull(createdUser);
+//        Assert.assertEquals(NEW_USER,createdUser);
+//    }
 
     @Test
     public void testRegisterUserAlreadyCreated(){

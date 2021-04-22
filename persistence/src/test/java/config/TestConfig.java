@@ -20,13 +20,13 @@ public class TestConfig {
     @Value("classpath:hsqldb.sql")
     private Resource hsqldbSql;
 
-    @Value("classpath:schema.sql")
+    @Value("classpath:schema_test.sql")
     private Resource schemaSql;
 
     @Value("classpath:migration_image_schema_test.sql")
     private Resource imageSchema;
 
-    @Value("classpath:migration_login-test.sql")
+    @Value("classpath:migration_login_test.sql")
     private Resource loginMigration;
 
     @Bean
@@ -51,8 +51,8 @@ public class TestConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
-        dbp.addScript(loginMigration);
         dbp.addScript(imageSchema);
+        dbp.addScript(loginMigration);
         return dbp;
     }
 

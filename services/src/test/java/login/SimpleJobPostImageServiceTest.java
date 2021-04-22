@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO: reescribir este test
-@RunWith(MockitoJUnitRunner.class)
-public class SimpleJobPostImageServiceTest {
+////TODO: reescribir este test
+//@RunWith(MockitoJUnitRunner.class)
+//public class SimpleJobPostImageServiceTest {
 	/*
 	private static final long POST_ID = 20;
 	private static final long FAKE_ID = 50;
@@ -108,4 +108,4 @@ public class SimpleJobPostImageServiceTest {
 		Assert.assertTrue(out.isEmpty());
 	}
 */
-}
+//}

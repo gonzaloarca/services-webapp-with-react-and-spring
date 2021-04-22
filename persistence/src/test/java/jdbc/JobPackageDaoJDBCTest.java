@@ -2,7 +2,6 @@ package jdbc;
 
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jdbc.JobPackageDaoJDBC;
 import config.TestConfig;
@@ -27,7 +26,7 @@ import java.util.Optional;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:job-package-test.sql")
+@Sql("classpath:job_package_test.sql")
 public class JobPackageDaoJDBCTest {
 
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(

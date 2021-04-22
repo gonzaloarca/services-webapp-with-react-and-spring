@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users
     image_type VARCHAR(100),
     user_image BYTEA,
     user_is_verified BOOLEAN NOT NULL DEFAULT false,
-    user_password VARCHAR(100) NOT NULL DEFAULT md5(random()::text)
+    user_password VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS job_post
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS job_package
 CREATE TABLE IF NOT EXISTS post_zone
 (
     post_id INTEGER NOT NULL,
-    zone_id INTEGER NOT NULL,
+    zone_id int NOT NULL,
     PRIMARY KEY (post_id, zone_id),
     FOREIGN KEY (post_id) REFERENCES job_post ON DELETE CASCADE
 );
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS contract
     contract_description TEXT NOT NULL,
     FOREIGN KEY (client_id) REFERENCES users ON DELETE SET NULL,
     FOREIGN KEY (package_id) REFERENCES job_package ON DELETE SET NULL,
-    contract_image_type VARCHAR,
+    contract_image_type VARCHAR(100),
     image_data BYTEA
 );
 
