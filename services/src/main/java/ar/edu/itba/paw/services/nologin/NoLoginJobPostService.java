@@ -108,7 +108,7 @@ public class NoLoginJobPostService implements JobPostService {
 
     @Override
     public int findMaxPage() {
-        return jobPostDao.findMaxPage();
+        return jobPostDao.findAllMaxPage();
     }
 
     @Override

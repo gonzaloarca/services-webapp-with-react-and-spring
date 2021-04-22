@@ -13,6 +13,8 @@ public interface ReviewDao {
 
     int findJobPostReviewsSize(long id);
 
+    Double findJobPostAvgRate(long id);
+
     List<Review> findReviewsByPackageId(long id, int page);
 
     Double findProfessionalAvgRate(long id);
@@ -26,7 +28,5 @@ public interface ReviewDao {
     int findProfessionalReviewsSize(long id);
 
     int findMaxPageReviewsByPostId(long id);
-
-    Double findJobPostAvgRate(long id);
 
 }

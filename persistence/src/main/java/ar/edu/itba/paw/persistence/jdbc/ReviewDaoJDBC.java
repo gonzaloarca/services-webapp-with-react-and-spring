@@ -115,7 +115,7 @@ public class ReviewDaoJDBC implements ReviewDao {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract NATURAL JOIN review WHERE package_id = ?",
+                "SELECT * FROM full_contract NATURAL JOIN review WHERE package_id = ? LIMIT ? OFFSET ?",
                 new Object[]{id, limit, offset}, REVIEW_ROW_MAPPER);
     }
 

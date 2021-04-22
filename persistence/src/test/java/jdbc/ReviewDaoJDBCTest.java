@@ -73,33 +73,89 @@ public class ReviewDaoJDBCTest {
     @Autowired
     private ReviewDaoJDBC reviewDaoJDBC;
 
-//    TODO: FIX tests
-//    @Test
-//    public void testFindAllReviews() {
-//        List<Review> maybeUserReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), 0);
-//
-//        Assert.assertEquals(2, maybeUserReviews.size());
-//        Assert.assertEquals(REVIEW_1, maybeUserReviews.get(0));
-//        Assert.assertEquals(REVIEW_2, maybeUserReviews.get(1));
-//    }
-//
-//
-//    @Test
-//    public void findProfessionalReviews() {
-//        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), 0);
-//
-//        Assert.assertEquals(2, maybeUserReviews.size());
-//        Assert.assertEquals(REVIEW_1, maybeUserReviews.get(0));
-//        Assert.assertEquals(REVIEW_2, maybeUserReviews.get(1));
-//    }
-//
-//    @Test
-//    public void testFindReviews() {
-//        List<Review> maybeReviews = reviewDaoJDBC.findReviewsByPackageId(JOB_PACKAGE.getId(), 0);
-//
-//        Assert.assertEquals(2, maybeReviews.size());
-//        Assert.assertEquals(REVIEW_1, maybeReviews.get(0));
-//        Assert.assertEquals(REVIEW_2, maybeReviews.get(1));
-//    }
+    @Test
+    public void testCreate() {
+        Review maybeReview = new Review(REVIEW_1.getRate(), REVIEW_1.getTitle(), REVIEW_1.getDescription(),
+                REVIEW_1.getClient(), REVIEW_1.getJobPost());
+
+        Assert.assertNotNull(maybeReview);
+        Assert.assertEquals(REVIEW_1.getTitle(), maybeReview.getTitle());
+        Assert.assertEquals(REVIEW_1.getDescription(), maybeReview.getDescription());
+        Assert.assertEquals(REVIEW_1.getRate(), maybeReview.getRate());
+        Assert.assertEquals(REVIEW_1.getClient(), maybeReview.getClient());
+        Assert.assertEquals(REVIEW_1.getJobPost(), maybeReview.getJobPost());
+        Assert.assertEquals(REVIEW_1, maybeReview);
+    }
+
+    @Test
+    public void testFindReviewsByPostId() {
+        List<Review> maybePostReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), 0);
+
+        Assert.assertEquals(2, maybePostReviews.size());
+
+        Assert.assertEquals(REVIEW_1.getTitle(), maybePostReviews.get(0).getTitle());
+        Assert.assertEquals(REVIEW_1.getDescription(), maybePostReviews.get(0).getDescription());
+        Assert.assertEquals(REVIEW_1.getRate(), maybePostReviews.get(0).getRate());
+        Assert.assertEquals(REVIEW_1.getClient(), maybePostReviews.get(0).getClient());
+        Assert.assertEquals(REVIEW_1.getJobPost(), maybePostReviews.get(0).getJobPost());
+        Assert.assertEquals(REVIEW_1, maybePostReviews.get(0));
+
+        Assert.assertEquals(REVIEW_2.getTitle(), maybePostReviews.get(1).getTitle());
+        Assert.assertEquals(REVIEW_2.getDescription(), maybePostReviews.get(1).getDescription());
+        Assert.assertEquals(REVIEW_2.getRate(), maybePostReviews.get(1).getRate());
+        Assert.assertEquals(REVIEW_2.getClient(), maybePostReviews.get(1).getClient());
+        Assert.assertEquals(REVIEW_2.getJobPost(), maybePostReviews.get(1).getJobPost());
+        Assert.assertEquals(REVIEW_2, maybePostReviews.get(1));
+    }
+
+    @Test
+    public void testFindReviewsByPostIdSize() {
+        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), 0);
+
+        int maybeReviewsByPostIdSize = reviewDaoJDBC.findJobPostReviewsSize(JOB_POST.getId());
+        Assert.assertEquals(reviews.size(), maybeReviewsByPostIdSize);
+    }
+
+    @Test
+    public void testFindJobPostAvgRate() {
+        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), 0);
+
+        double maybeAvg = reviewDaoJDBC.findJobPostAvgRate(JOB_POST.getId());
+        Assert.assertEquals(reviews.stream().mapToDouble(Review::getRate).average().orElse(0), maybeAvg, 0.0000001);
+    }
+
+    @Test
+    public void findProfessionalReviews() {
+        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), 0);
+
+        Assert.assertEquals(2, maybeUserReviews.size());
+        Assert.assertEquals(REVIEW_1, maybeUserReviews.get(0));
+        Assert.assertEquals(REVIEW_2, maybeUserReviews.get(1));
+    }
+
+    @Test
+    public void testFindProfessionalAvgRate() {
+        List<Review> reviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), 0);
+
+        double maybeAvg = reviewDaoJDBC.findProfessionalAvgRate(JOB_POST.getId());
+        Assert.assertEquals(reviews.stream().mapToDouble(Review::getRate).average().orElse(0), maybeAvg, 0.0000001);
+    }
+
+    @Test
+    public void testFindReviewsByPackageId() {
+        List<Review> maybeReviews = reviewDaoJDBC.findReviewsByPackageId(JOB_PACKAGE.getId(), 0);
+
+        Assert.assertEquals(2, maybeReviews.size());
+        Assert.assertEquals(REVIEW_1, maybeReviews.get(0));
+        Assert.assertEquals(REVIEW_2, maybeReviews.get(1));
+    }
+
+    @Test
+    public void testFindReviewByContractId() {
+        Optional<Review> maybeReview = reviewDaoJDBC.findReviewByContractId(JOB_CONTRACT.getId());
+
+        Assert.assertTrue(maybeReview.isPresent());
+        Assert.assertEquals(REVIEW_1, maybeReview.get());
+    }
 
 }

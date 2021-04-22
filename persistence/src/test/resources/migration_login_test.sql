@@ -34,38 +34,37 @@ GROUP BY job_post.post_id, post_title, post_available_hours, post_job_type, post
          user_email,
          user_name, user_phone, user_is_active, user_image, users.image_type;
 
--- DROP VIEW full_contract
 CREATE VIEW full_contract AS
 SELECT *
 FROM contract
          NATURAL JOIN job_package
          NATURAL JOIN (SELECT post_id,
-                           post_title,
-                           post_job_type,
-                           post_available_hours,
-                           post_is_active,
-                           ARRAY_AGG(DISTINCT zone_id) as zones,
-                           user_id
-                    FROM job_post
-                             NATURAL JOIN post_zone
-                    GROUP BY post_id, post_title, post_available_hours, post_job_type, post_is_active,
-                             user_id) AS posts
+                              post_title,
+                              post_job_type,
+                              post_available_hours,
+                              post_is_active,
+                              ARRAY_AGG(DISTINCT zone_id) as zones,
+                              user_id                     AS professional_id
+                       FROM job_post
+                                NATURAL JOIN post_zone
+                       GROUP BY post_id, post_title, post_available_hours, post_job_type, post_is_active,
+                                user_id) AS posts
          NATURAL JOIN (SELECT user_id        AS client_id,
-                           user_email     AS client_email,
-                           user_name      AS client_name,
-                           user_phone     AS client_phone,
-                           user_is_active as client_is_active,
-                           user_image     as client_image,
-                           image_type     as client_image_type
-                    FROM users) AS clients
+                              user_email     AS client_email,
+                              user_name      AS client_name,
+                              user_phone     AS client_phone,
+                              user_is_active as client_is_active,
+                              user_image     as client_image,
+                              image_type     as client_image_type
+                       FROM users) AS clients
          NATURAL JOIN (SELECT user_id        AS professional_id,
-                           user_email     AS professional_email,
-                           user_name      AS professional_name,
-                           user_phone     AS professional_phone,
-                           user_is_active as professional_is_active,
-                           user_image     as professional_image,
-                           image_type     as professional_image_type
-                    FROM users) AS professionals;
+                              user_email     AS professional_email,
+                              user_name      AS professional_name,
+                              user_phone     AS professional_phone,
+                              user_is_active as professional_is_active,
+                              user_image     as professional_image,
+                              image_type     as professional_image_type
+                       FROM users) AS professionals;
 
 CREATE TABLE IF NOT EXISTS verification_token
 (

@@ -1,4 +1,5 @@
 package jdbc;
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jdbc.JobContractDaoJDBC;
 import ar.edu.itba.paw.persistence.jdbc.JobPackageDaoJDBC;
@@ -177,30 +178,29 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByProId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByProId(USER1.getId(),0);
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByProId(USER1.getId(), 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         jobContracts.forEach(jobContract -> Assert.assertEquals(USER1.getId(), jobContract.getProfessional().getId()));
     }
-//      TODO: FIX tests
-//    @Test
-//    public void testFindByPackageId() {
-//        List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId(),0);
-//
-//        Assert.assertFalse(jobContracts.isEmpty());
-//        Assert.assertEquals(2, jobContracts.size());
-//        Assert.assertEquals(JOB_PACKAGE.getId(), jobContracts.get(0).getJobPackage().getId());
-//    }
-//
-//    @Test
-//    public void testFindByPostId() {
-//        List<JobContract> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId(),0);
-//
-//        Assert.assertFalse(jobContracts.isEmpty());
-//        Assert.assertEquals(3, jobContracts.size());  // dos son del package 1 y otro es del package 2
-//        jobContracts.forEach(jobContract ->
-//                Assert.assertEquals(JOB_POST.getId(), jobContract.getJobPackage().getPostId()));
-//    }
+    @Test
+    public void testFindByPackageId() {
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId(),0);
+
+        Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(2, jobContracts.size());
+        Assert.assertEquals(JOB_PACKAGE.getId(), jobContracts.get(0).getJobPackage().getId());
+    }
+
+    @Test
+    public void testFindByPostId() {
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId(),0);
+
+        Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(3, jobContracts.size());  // dos son del package 1 y otro es del package 2
+        jobContracts.forEach(jobContract ->
+                Assert.assertEquals(JOB_POST.getId(), jobContract.getJobPackage().getPostId()));
+    }
 
     @Test
     public void testFindContractsQuantityByProId() {

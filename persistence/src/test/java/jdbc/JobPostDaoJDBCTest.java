@@ -33,7 +33,7 @@ import java.util.Optional;
 public class JobPostDaoJDBCTest {
     private static final User USER = new User(1, "manurodriguez@gmail.com", "Manuel Rodriguez", "1109675432", false, true);
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
-    private static final JobPost JOB_POST = new JobPost(1, USER, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0,true);
+    private static final JobPost JOB_POST = new JobPost(1, USER, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0, true);
     private static final int JOB_POSTS_QUANTITY = 3;
 
     @Autowired
@@ -58,7 +58,6 @@ public class JobPostDaoJDBCTest {
     public void testCreate() {
         Mockito.when(mockUserDao.findById(Mockito.eq(USER.getId())))
                 .thenReturn(Optional.of(USER));
-
 
         JobPost jobPost = jobPostDaoJDBC.create(USER.getId(), JOB_POST.getTitle(), JOB_POST.getAvailableHours(),
                 JOB_POST.getJobType(), JOB_POST.getZones());
@@ -88,15 +87,24 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindByUserId() {
-        List<JobPost> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId(),0);
+        List<JobPost> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId(), 0);
 
         Assert.assertEquals(jobPosts.size(), 2);
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
     }
 
     @Test
+    public void testFindSizeByUserId() {
+        int size = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId(), 0).size();
+
+        int maybeSize = jobPostDaoJDBC.findSizeByUserId(JOB_POST.getUser().getId());
+
+        Assert.assertEquals(size, maybeSize);
+    }
+
+    @Test
     public void testFindByJobType() {
-        List<JobPost> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType(),0);
+        List<JobPost> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType(), 0);
 
         Assert.assertEquals(2, jobPosts.size());
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
