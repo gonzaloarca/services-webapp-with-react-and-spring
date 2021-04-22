@@ -4,8 +4,11 @@ CREATE TABLE IF NOT EXISTS users
     user_name            VARCHAR(100)        NOT NULL,
     user_email           VARCHAR(100) UNIQUE NOT NULL,
     user_phone           VARCHAR(100)        NOT NULL,
-    user_is_professional BOOLEAN             NOT NULL,
-    user_is_active       BOOLEAN             NOT NULL
+    user_is_active       BOOLEAN             NOT NULL,
+    image_type VARCHAR(100),
+    user_image BYTEA,
+    user_is_verified BOOLEAN NOT NULL DEFAULT false,
+    user_password VARCHAR(100) NOT NULL DEFAULT md5(random()::text)
 );
 
 CREATE TABLE IF NOT EXISTS job_post
@@ -25,7 +28,7 @@ CREATE TABLE IF NOT EXISTS job_package
     post_id             INTEGER          NOT NULL,
     package_title       VARCHAR(100)     NOT NULL,
     package_description TEXT             NOT NULL,
-    package_price       DOUBLE PRECISION NOT NULL,
+    package_price       DOUBLE PRECISION,
     package_rate_type   INTEGER          NOT NULL,
     package_is_active   BOOLEAN          NOT NULL,
     FOREIGN KEY (post_id) REFERENCES job_post ON DELETE CASCADE
@@ -47,7 +50,9 @@ CREATE TABLE IF NOT EXISTS contract
     creation_date        DATE NOT NULL,
     contract_description TEXT NOT NULL,
     FOREIGN KEY (client_id) REFERENCES users ON DELETE SET NULL,
-    FOREIGN KEY (package_id) REFERENCES job_package ON DELETE SET NULL
+    FOREIGN KEY (package_id) REFERENCES job_package ON DELETE SET NULL,
+    contract_image_type VARCHAR,
+    image_data BYTEA
 );
 
 CREATE TABLE IF NOT EXISTS review

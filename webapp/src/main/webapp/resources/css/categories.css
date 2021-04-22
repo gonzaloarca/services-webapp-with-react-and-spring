@@ -21,6 +21,7 @@
 
 .category-href:hover {
     text-decoration-color: white !important;
+    cursor: pointer;
 }
 
 .category-href p {

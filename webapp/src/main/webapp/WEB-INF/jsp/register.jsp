@@ -45,7 +45,7 @@
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
-<body>
+<body style="background: url('${pageContext.request.contextPath}/resources/images/background.jpg')" >
 <c:set var="withoutColor" value="true" scope="request"/>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <c:set var="path" value="/register" scope="request"/>

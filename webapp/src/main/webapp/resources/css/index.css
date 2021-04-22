@@ -71,7 +71,7 @@
 }
 
 .landing-bottom {
-    background-image: url("/resources/images/publish-landing-bg-1.svg");
+    /*background-image: url("/resources/images/publish-landing-bg-1.svg");*/
     display: flex;
     flex-direction: column;
     justify-content: center;
