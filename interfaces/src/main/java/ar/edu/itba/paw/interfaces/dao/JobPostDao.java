@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -12,13 +13,24 @@ public interface JobPostDao {
 
     Optional<JobPost> findById(long id);
 
-    Optional<List<JobPost>> findByUserId(long id);
+    List<JobPost> findByUserId(long id, int page);
 
-    Optional<List<JobPost>> findByJobType(JobPost.JobType jobType);
+    int findSizeByUserId(long id);
 
-    Optional<List<JobPost>> findByZone(JobPost.Zone zone);
+    int findMaxPageByUserId(long id);
 
-    Optional<List<JobPost>> findAll();
+    List<JobPost> findByJobType(JobPost.JobType jobType, int page);
 
-    Optional<List<JobPost>> search(String title, JobPost.Zone zone);
+    List<JobPost> findByZone(JobPost.Zone zone, int page);
+
+    List<JobPost> findAll(int page);
+
+    int findAllMaxPage();
+
+    List<JobPost> search(String query, JobPost.Zone zone, int page);
+
+    List<JobPost> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, int page);
+
+    int findMaxPageSearch(String query, JobPost.Zone zone, JobPost.JobType jobType);
+
 }

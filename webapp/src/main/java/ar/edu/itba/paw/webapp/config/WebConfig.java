@@ -14,7 +14,9 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -31,9 +33,16 @@ import java.nio.charset.StandardCharsets;
 
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
-        "ar.edu.itba.paw.webapp.validation"})
+        "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.auth"})
 @Configuration
+@EnableAsync
 public class WebConfig {
+
+    //FIXME poner la url correcta
+    @Bean(name = "webpageUrl")
+    public String webpageUrl() {
+        return "http://pawserver.it.itba.edu.ar/paw-2021a-03";
+    }
 
     @Bean
     public ViewResolver viewResolver() {
@@ -49,7 +58,13 @@ public class WebConfig {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
+
+//        PARA USO LOCAL
         ds.setUrl("jdbc:postgresql://localhost:5432/paw-2021a-03");
+
+//        PARA DEPLOY
+//        ds.setUrl("jdbc:postgresql://10.16.1.110:5432/paw-2021a-03");
+
         ds.setUsername("paw-2021a-03");
         ds.setPassword("4Jqbf4tiN");
 
@@ -58,6 +73,12 @@ public class WebConfig {
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
+
+    @Value("classpath:migration_image_schema.sql")
+    private Resource imageSchemaSql;
+
+    @Value("classpath:migration_login.sql")
+    private Resource loginMigration;
 
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
@@ -69,12 +90,14 @@ public class WebConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
+        dbp.addScript(imageSchemaSql);
+        dbp.addScript(loginMigration);
         return dbp;
     }
 
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
-        long MAX_FILE_SIZE = 5242880;       //5MB
+        long MAX_FILE_SIZE = 2 * 1024 * 1024;       //2MB
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
         multipartResolver.setMaxUploadSize(MAX_FILE_SIZE);
         return multipartResolver;
@@ -107,21 +130,39 @@ public class WebConfig {
         return mailSender;
     }
 
-    @Value("classpath:emailTemplate.html")
-    Resource emailTemplate;
+    @Value("classpath:contractEmail.html")
+    Resource contractTemplate;
+    @Value("classpath:contractEmailWithImage.html")
+    Resource contractImageTemplate;
+    @Value("classpath:tokenEmail.html")
+    Resource tokenEmailTemplate;
 
-    @Bean(name = "templateSimpleMessage")
-    public SimpleMailMessage templateSimpleMessage() {
+    private SimpleMailMessage makeMessage(Resource template) {
         SimpleMailMessage message = new SimpleMailMessage();
         String text="";
         try{
-            Reader reader = new InputStreamReader(emailTemplate.getInputStream());
+            Reader reader = new InputStreamReader(template.getInputStream());
             text = FileCopyUtils.copyToString(reader);
         } catch (IOException e) {
-           throw new UncheckedIOException(e);
+            throw new UncheckedIOException(e);
         }
         message.setText(text);
         return message;
+    }
+
+    @Bean(name = "contractEmail")
+    public SimpleMailMessage contractEmail() {
+        return makeMessage(contractTemplate);
+    }
+
+    @Bean(name = "contractEmailWithImage")
+    public SimpleMailMessage contractEmailWithImage() {
+        return makeMessage(contractImageTemplate);
+    }
+
+    @Bean(name = "tokenEmail")
+    public SimpleMailMessage tokenEmail() {
+        return makeMessage(tokenEmailTemplate);
     }
 
 }

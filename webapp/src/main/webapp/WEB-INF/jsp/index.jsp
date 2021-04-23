@@ -2,11 +2,11 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
-
 <html>
 <head>
     <title>
-        <spring:message code="navigation.index"/>
+        <spring:message code="navigation.index" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
@@ -33,99 +33,100 @@
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/index.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/searchBar.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<%--<%@ include file="customNavBar.jsp" %>--%>
-<jsp:include page="customNavBar.jsp">
-    <jsp:param name="path" value="/"/>
-</jsp:include>
-<div class="home-banner-container">
-    <form:form action="${pageContext.request.contextPath}/" method="post" modelAttribute="searchForm"
-               class="home-search-form">
-        <div class="search-instructions">
-            <div class="search-instruction-step">
-                <div class="blue-circle">
-                    <p class="circle-text">1</p>
+<c:set var="path" value="/" scope="request"/>
+<c:set var="withoutColor" value="true" scope="request"/>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<c:set var="jobCardSize" value="${jobCards.size()}"/>
+<%@include file="components/customNavBar.jsp" %>
+<%@include file="components/searchBar.jsp" %>
+
+<div>
+    <div style="z-index: 2" class="landing-row-shadow">
+        <div class="landing-row">
+            <h3><spring:message code="index.jobs.title"/></h3>
+            <div class="index-category-list-container">
+                <c:forEach items="${categories}" var="category">
+                    <a class="index-category-href" onclick="redirectCategory(${category.value})">
+                        <spring:message code="${category.stringCode}" var="jobTypeName"/>
+                        <img src='<c:url value="/resources/images/${category.imagePath}" />'
+                             alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${category}"/>">
+                        <p>${jobTypeName}</p>
+                    </a>
+                </c:forEach>
+                <div class="index-category-href">
+                    <a href="${pageContext.request.contextPath}/categories">
+                        <img src="<c:url value="/resources/images/morecategories1.svg"/>"
+                             alt="<spring:message code="index.jobs.extraTypes"/>">
+                        <p><spring:message code="index.jobs.seeMore"/><i class="fas fa-chevron-right"></i></p>
+                    </a>
                 </div>
-                <p class="search-instructions-text">
-                    <spring:message code="index.search.location"/>
-                </p>
-            </div>
-            <div class="search-instruction-step">
-                <div class="blue-circle">
-                    <p class="circle-text">2</p>
-                </div>
-                <p class="search-instructions-text">
-                    <spring:message code="index.search.jobType"/>
-                </p>
-            </div>
-            <div class="search-instruction-step">
-                <div class="blue-circle">
-                    <p class="circle-text">3</p>
-                </div>
-                <p class="search-instructions-text">
-                    <spring:message code="index.search.submit"/>
-                </p>
             </div>
         </div>
-
-        <div class="search-inputs">
-            <div class="home-search-location">
-                <form:select path="zone" class="custom-select w-100">
-                    <spring:message code="index.search.location.placeholder" var="locationPlaceholder"/>
-                    <form:option value="" label="${locationPlaceholder}"/>
-                    <c:forEach items="${zones}" var="zone">
-                        <form:option value="${zone.value}">
-                            <spring:message code="${zone.stringCode}"/>
-                        </form:option>
-                    </c:forEach>
-                </form:select>
-                <form:errors path="zone" cssClass="search-form-error" element="p"/>
-            </div>
-
-            <div class="home-search-bar-container home-search-bar-row">
-                <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
-                <form:input path="query" type="search" class="home-search-bar w-100 h-100"
-                            placeholder="${typePlaceholder}"/>
-                <form:errors path="query" cssClass="search-form-error" element="p"/>
-            </div>
-
-            <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-    </form:form>
-
-    <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
-         src='<c:url value="/resources/images/banner1.jpg" />'/>
-</div>
-<div class="content-container">
-    <h3>
-        <spring:message code="index.jobs.title"/>
-    </h3>
-    <hr class="hr1"/>
-    <div class="job-display-container">
-        <c:if test="${jobCards.size() > 0}">
-            <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
-                <c:set var="data" value="${jobCard}" scope="request"/>
-                <c:import url="jobCard.jsp"/>
-            </c:forEach>
-        </c:if>
-        <c:if test="${jobCards.size() == 0}">
-            <div class="result-div">
-                <i class="fas fa-cogs mb-4" style="font-size: 10rem;"></i>
-                <p class="result-text">
-                    <spring:message code="index.jobs.noResults"/>
-                </p>
-                <p class="result-sub-text">
-                    <spring:message code="index.jobs.sorry"/>
-                </p>
-            </div>
-        </c:if>
     </div>
 </div>
+<div style="background-color: white" class="landing-row-shadow">
+    <div class="landing-row">
+        <h3><spring:message code="index.services.title"/></h3>
+        <div class="job-display-container">
+            <c:if test="${jobCards.size() > 0}">
+                <c:forEach items="${jobCards}" var="jobCard">
+                    <c:set var="data" value="${jobCard}" scope="request"/>
+                    <c:import url="components/jobCard.jsp"/>
+                </c:forEach>
+            </c:if>
+            <c:if test="${jobCards.size() == 0}">
+                <div class="result-div">
+                    <img
+                            src="<c:url value="/resources/images/unavailable-1.svg"/> "
+                            alt="<spring:message code="index.jobs.noResults"/> ">
+                    <p class="result-text">
+                        <spring:message code="index.jobs.noResults"/>
+                    </p>
+                    <p class="result-sub-text">
+                        <spring:message code="index.jobs.sorry"/>
+                    </p>
+                </div>
+            </c:if>
+        </div>
+        <c:set var="listSize" value="${jobCardSize}" scope="request"/>
+        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+        <%@include file="components/bottomPaginationBar.jsp" %>
+    </div>
+</div>
+<div class="landing-bottom landing-row-shadow"
+     style="background: url('${pageContext.request.contextPath}/resources/images/publish-landing-bg-1.svg')" >
+    <h3>
+        <spring:message code="index.createJobPost.question"/>
+        <br>
+        <spring:message code="index.createJobPost.proposition"/>
+    </h3>
+    <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post"><spring:message code="index.createJobPost.button"/></a>
+    <div class="mt-5">
+        <jsp:include page="components/footer.jsp"/>
+    </div>
+</div>
+
+</div>
+<script>
+    // Para modificar el href con la ubicacion seleccionada
+    function redirectCategory(category) {
+        var auxZoneId = sessionStorage.getItem("pickedZoneId");
+        sessionStorage.setItem("pickedCategoryId", category);
+        if (auxZoneId) {
+            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' + auxZoneId +
+                '&query=&category=' + category;
+        } else {
+            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' +
+                '&query=&category=' + category;
+        }
+    }
+</script>
 </body>
 </html>

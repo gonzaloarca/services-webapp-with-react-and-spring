@@ -16,96 +16,216 @@
     object-fit: cover;
 }
 
-.custom-row {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .center {
     flex: 1;
     width: 90%;
+}
+
+.chip {
+    background-color: white;
+    border-radius: 12px;
+    color: #485696;
+    padding: 6px;
+    margin: 0 10px 20px;
+    text-align: center;
+    line-height: 1;
 }
 
 .card-title p {
     margin-left: 20px;
     font-size: 24px;
     font-weight: bold;
+    word-break: break-word;
     margin-bottom: 0;
 }
 
 .card-title i {
-    margin-left: 3vw;
     margin-top: 3px;
     font-size: 32px;
     line-height: 1;
     word-break: break-word;
 }
 
-.star {
-    color: gold;
-    font-size: 22px;
-}
-
-.custom-row .rating {
-    margin-left: 3vw;
-}
-
-.rating p {
-    color: gray;
-    margin-left: 10px;
-    font-size: 16px;
-}
-
 .summary {
-    background-color: #fcb839;
     display: inline-flex;
     border-radius: 8px;
-    margin: 0 3vw;
+    width: 100%;
 }
 
 .summary-item {
     background-color: white;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 6px;
     display: inline-flex;
     margin: 8px 15px;
+    border: 5px solid #fab739;
+    justify-content: center;
 }
 
 .summary-item img {
-    width: 50px;
-    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
     object-fit: cover;
     border-radius: 50%;
+    padding: 2px;
+    margin: 15px;
 }
 
 .summary-item p {
-    margin: auto 14px;
-    text-align: center;
-    max-width: 110px;
+    margin: 0 14px;
+    text-align: left;
     word-wrap: break-word;
+    font-weight: bold;
 }
 
 .summary-item i {
-    color: gray;
-    font-size: 32px;
+    font-size: 34px;
     align-self: center;
     margin-left: 5px;
 }
 
+.summary a:hover {
+    text-decoration: none;
+}
+
+/* profile item */
+.profile-item, .profile-item:link {
+    color: black;
+    flex: 1;
+}
+
+.profile-item:hover {
+    color: black;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    flex: 1;
+}
+
+.profile-item p {
+    width: 100%;
+    font-size: 22px;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+}
+
+/* rate item */
+.rate-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.rate-item p {
+    max-width: 100%;
+    font-size: 21px;
+}
+
+.rate-item .custom-row {
+    justify-content: center;
+}
+
+.rate-item h2 {
+    margin-bottom: 0;
+}
+
+.rate-item p {
+    text-align: center;
+}
+
+.rate-item .custom-row .review-count {
+    color: grey;
+    font-size: 15px;
+    margin: 0;
+}
+
+.rate-item .custom-row .rating {
+    margin-left: 0;
+}
+
+.rate-item .custom-row .rating .star {
+    color: gold;
+    font-size: 15px;
+}
+
+.rate-item .opinion {
+    color: #485696;
+    font-size: 16px;
+    opacity: 57%;
+    text-decoration: none;
+    align-self: center;
+    cursor: pointer;
+}
+
+/* contracts item*/
+
+.contracts-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal !important;
+}
+
+.contracts-item p {
+    font-size: 21px;
+}
+
+.contracts-item .profile-completed-works {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    background: #485696;
+}
+
+.contracts-item .profile-completed-works-outline {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fcb839;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.two-column {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.two-column-item {
+    width: 49%;
+}
+
 .available-hours {
-    margin: 0 3vw;
+    margin: 4vh 3vw;
     background-color: #EAEAEA;
     padding: 12px;
     border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .available-hours p {
     justify-content: center;
     margin: 0;
+    font-size: 1.25rem;
+    word-break: break-word;
 }
 
 .zones {
-    margin: 0 3vw;
+    margin: 5vh 3vw;
+    justify-content: center;
 }
 
 .zones p {
@@ -116,11 +236,24 @@
     margin: 0 10px 20px;
     text-align: center;
     line-height: 1;
+    font-size: 1.25rem;
 }
 
 .package-info {
     display: flex;
     align-items: center;
+}
+
+.package-info p {
+    color: white;
+}
+
+button[aria-expanded=true] .package-info .fa-chevron-down {
+    display: none;
+}
+
+button[aria-expanded=false] .package-info .fa-chevron-up {
+    display: none;
 }
 
 .accordion i {
@@ -129,7 +262,7 @@
 }
 
 .package-title {
-    font-size: 20px;
+    font-size: 28px;
     font-weight: bold;
     width: 50%;
     margin-left: 20px;
@@ -148,15 +281,72 @@
 
 .package-price p {
     font-size: 14px;
+    font-weight: normal;
     margin: 0;
 }
 
-.chip {
-    background-color: #485696;
-    border-radius: 12px;
-    color: white;
-    padding: 6px;
-    margin: 0 10px 20px;
-    text-align: center;
-    line-height: 1;
+.end-items {
+    flex-direction: row;
+    justify-content: flex-end;
+
 }
+
+.end-items-item {
+    display: flex;
+    flex-direction: column;
+}
+
+/*Alternative button*/
+
+.requestServiceBtn a {
+    font-weight: bold;
+    background-color: #8690FA;
+    border: transparent;
+    color: white;
+}
+
+.requestServiceBtn a:active, .requestServiceBtn a:focus {
+    background-color: #8690FA !important;
+    border-color: transparent !important;
+    box-shadow: 0 0 0 0.2rem rgba(52, 62, 109, 0.35) !important;
+    color: white;
+}
+
+.requestServiceBtn a:hover {
+    background-color: #6877e0;
+    color: white;
+}
+
+.edit-button, .edit-button:link {
+    justify-content: flex-end;
+    color: #485696
+}
+
+.edit-button:hover {
+    text-decoration: none
+}
+
+.edit-button p {
+    font-size: 16px;
+}
+
+.edit-button i {
+    font-size: 26px;
+    line-height: 22px;
+    margin-right: 5px;
+}
+
+.add-package-button {
+    margin-left: auto;
+}
+
+.add-package-button i {
+    font-size: 26px;
+    line-height: 32px;
+    margin-right: 5px;
+}
+
+.add-package-button p {
+    margin-top: 4px;
+}
+

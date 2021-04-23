@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.models.EncodedImage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPost.Zone;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,21 +31,28 @@ public class JobPostDaoJDBC implements JobPostDao {
         return zones;
     }
 
+    private static Integer getLimit(int page) {
+        return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
+    }
+
     private final static RowMapper<JobPost> JOB_POST_ROW_MAPPER = (resultSet, rowNum) -> new JobPost(
             resultSet.getLong("post_id"),
             new User(
                     resultSet.getLong("user_id"),
                     resultSet.getString("user_email"),
                     resultSet.getString("user_name"),
-                    "",
                     resultSet.getString("user_phone"),
-                    resultSet.getBoolean("user_is_professional"),
-                    resultSet.getBoolean("user_is_active")
+                    resultSet.getBoolean("user_is_active"),
+                    true, //TODO: implementar esto
+                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
+                            resultSet.getString("user_image_type"))
             ),
             resultSet.getString("post_title"),
             resultSet.getString("post_available_hours"),
             JobPost.JobType.values()[resultSet.getInt("post_job_type")],
-            JobPostDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
+            auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
+//            new ArrayList<>(Arrays.asList(Zone.values()[0], Zone.values()[1])),
+            resultSet.getDouble("rating"),
             resultSet.getBoolean("post_is_active"));
 
     private final JdbcTemplate jdbcTemplate;
@@ -65,8 +76,7 @@ public class JobPostDaoJDBC implements JobPostDao {
             put("post_is_active", true);
         }});
 
-        //TODO: Cambiar excepciones por excepciones propias
-        User user = userDao.findById(userId).orElseThrow(NoSuchElementException::new);
+        User user = userDao.findById(userId).orElseThrow(UserNotFoundException::new);
 
         for (Zone zone : zones) {
             jdbcInsertZone.execute(new HashMap<String, Integer>() {{
@@ -75,69 +85,105 @@ public class JobPostDaoJDBC implements JobPostDao {
             }});
         }
 
-        return new JobPost(key.longValue(), user, title, availableHours, jobType, zones, true);
+        return new JobPost(key.longValue(), user, title, availableHours, jobType, zones, 0.0, true);
     }
 
     @Override
     public Optional<JobPost> findById(long id) {
         return jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE post_id = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
+                "SELECT * FROM full_post WHERE post_id = ?",
                 new Object[]{id}, JOB_POST_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public Optional<List<JobPost>> findByUserId(long id) {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE user_id = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{id}, JOB_POST_ROW_MAPPER));
+    public List<JobPost> findByUserId(long id, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_post WHERE user_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id, limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobPost>> findByJobType(JobPost.JobType jobType) {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE post_job_type = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{jobType.ordinal()}, JOB_POST_ROW_MAPPER));
+    public List<JobPost> findByJobType(JobPost.JobType jobType, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_post WHERE post_job_type = ? LIMIT ? OFFSET ?",
+                new Object[]{jobType.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobPost>> findByZone(JobPost.Zone zone) {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE zone_id = ? " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{zone.ordinal()}, JOB_POST_ROW_MAPPER));
+    public List<JobPost> findByZone(JobPost.Zone zone, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_post WHERE ? && zones::int[] LIMIT ? OFFSET ?",
+                new Object[]{zone.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
-    @Override
-    public Optional<List<JobPost>> findAll() {
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone " +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                JOB_POST_ROW_MAPPER));
-    }
 
     @Override
-    public Optional<List<JobPost>> search(String title,Zone zone) {
-        title="%" + title + "%";
-        return Optional.of(jdbcTemplate.query(
-                "SELECT post_id,user_id,post_title,post_available_hours,post_job_type,array_agg(zone_id) as zones,user_email,user_name,user_phone,user_is_professional,user_is_active,post_is_active FROM job_post " +
-                        "NATURAL JOIN users " +
-                        "NATURAL JOIN post_zone WHERE zone_id = ? AND UPPER(post_title) LIKE UPPER(?)" +
-                        "GROUP BY post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active,user_email,user_name,user_phone,user_is_professional,user_is_active",
-                new Object[]{zone.ordinal(),title},
+    public List<JobPost> findAll(int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_post LIMIT ? OFFSET ?", new Object[]{limit, offset},
+                JOB_POST_ROW_MAPPER);
+    }
+
+
+    @Override
+    public List<JobPost> search(String query, Zone zone, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        query = "%" + query + "%";
+        return jdbcTemplate.query(
+                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) LIMIT ? OFFSET ?",
+                new Object[]{query, zone.ordinal(), limit, offset},
                 JOB_POST_ROW_MAPPER
-        ));
+        );
     }
+
+    @Override
+    public List<JobPost> searchWithCategory(String query, Zone zone, JobPost.JobType jobType, int page) {
+        query = "%" + query + "%";
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_job_type = ? LIMIT ? OFFSET ?",
+                new Object[]{query, zone.ordinal(), jobType.ordinal(), limit, offset},
+                JOB_POST_ROW_MAPPER
+        );
+    }
+
+    @Override
+    public int findSizeByUserId(long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM full_post WHERE user_id = ?",
+                new Object[]{id}, Integer.class);
+    }
+
+    @Override
+    public int findAllMaxPage() {
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post", Integer.class);
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public int findMaxPageByUserId(long id) {
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post WHERE user_id = ?",
+                new Object[]{id}, Integer.class);
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public int findMaxPageSearch(String query, Zone zone, JobPost.JobType jobType) {
+        query = "%" + query + "%";
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post " +
+                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones)",
+                new Object[]{query, zone.ordinal()}, Integer.class);
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+    }
+
 }

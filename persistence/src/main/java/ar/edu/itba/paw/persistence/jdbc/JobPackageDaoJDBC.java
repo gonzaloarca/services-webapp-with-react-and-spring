@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.models.Review;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,6 +17,10 @@ import java.util.Optional;
 
 @Repository
 public class JobPackageDaoJDBC implements JobPackageDao {
+
+    private static Integer getLimit(int page){
+        return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
+    }
 
     private final static RowMapper<JobPackage> JOB_PACKAGE_ROW_MAPPER = (resultSet, rowNum) -> new JobPackage(
             resultSet.getLong("package_id"),
@@ -35,7 +41,7 @@ public class JobPackageDaoJDBC implements JobPackageDao {
     }
 
     @Override
-    public JobPackage create(long postId, String title, String description, double price, JobPackage.RateType rateType) {
+    public JobPackage create(long postId, String title, String description, Double price, JobPackage.RateType rateType) {
         Number key = jdbcInsert.executeAndReturnKey(new HashMap<String,Object>(){{
             put("post_id",postId);
             put("package_title",title);
@@ -45,14 +51,7 @@ public class JobPackageDaoJDBC implements JobPackageDao {
             put("package_is_active",true);
         }});
 
-        JobPackage jobPackage = new JobPackage();
-        jobPackage.setId(key.longValue());
-        jobPackage.setPostId(postId);
-        jobPackage.setTitle(title);
-        jobPackage.setDescription(description);
-        jobPackage.setPrice(price);
-        jobPackage.setRateType(rateType);
-        return jobPackage;
+        return new JobPackage(key.longValue(),postId,title,description,price,rateType,true);
     }
 
     @Override
@@ -61,7 +60,10 @@ public class JobPackageDaoJDBC implements JobPackageDao {
     }
 
     @Override
-    public Optional<List<JobPackage>> findByPostId(long id) {
-        return Optional.of(jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ?",new Object[]{id},JOB_PACKAGE_ROW_MAPPER));
+    public List<JobPackage> findByPostId(long id,int page) {
+        Integer limit =getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ?",new Object[]{id},JOB_PACKAGE_ROW_MAPPER);
     }
+
 }

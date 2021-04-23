@@ -1,126 +1,154 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.webapp.exceptions.JobPostNotFoundException;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.form.LoginForm;
+import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
-import ar.edu.itba.paw.webapp.utils.JobCard;
+import exceptions.UserAlreadyExistsException;
+import exceptions.UserNotVerifiedException;
+import exceptions.VerificationTokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletContext;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
-//TODO: ver de separar en Controllers más especificos
 @Controller
 public class MainController {
 
     @Autowired
+    private JobCardService jobCardService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+
+    @Autowired
+    private PaginationService paginationService;
+
+    @Autowired
     private JobPostService jobPostService;
 
-    @Autowired
-    private JobContractService jobContractService;
-
-    @Autowired
-    private ServletContext servletContext;
-
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView home(@ModelAttribute("searchForm") SearchForm form) {
+    public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        if (page < 1)
+            throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("index");
-        List<JobCard> jobCards = new ArrayList<>();
-        Optional<List<JobPost>> homePosts = jobPostService.findAll();
-        if (homePosts.isPresent()) {
-            jobCards = createCards(homePosts.get());
-        }
-
-        mav.addObject("jobCards", jobCards);
-        mav.addObject("zones", JobPost.Zone.values());
+        mav.addObject("jobCards", jobCardService.findAll(page - 1));
+        int maxPage = jobPostService.findMaxPage();
+        List<Integer> currentPages = paginationService.findCurrentPages(page, maxPage);
+        mav.addObject("maxPage", jobPostService.findMaxPage());
+        mav.addObject("currentPages", currentPages);
+        mav.addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
         return mav;
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ModelAndView homeSubmitSearch(@Valid @ModelAttribute("searchForm") final SearchForm form,
-                                         final BindingResult errors) {
-        try {
-            if (errors.hasErrors())
-                return search("", form.getQuery(), form.getCategory(), form);
-
-            return new ModelAndView("redirect: search?query=" + URLEncoder.encode(form.getQuery(), "UTF-8") + "&zone=" + form.getZone());
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public ModelAndView search(@RequestParam() final String zone, @RequestParam() final String query,
-                               @RequestParam(value = "category", required = false) final String category,
-                               @ModelAttribute("searchForm") SearchForm form){
-        try {
-            String decodedQuery = URLDecoder.decode(query, "UTF-8");
-            form.setQuery(decodedQuery);
-        } catch (Exception e) {
-            throw new RuntimeException();
+    public ModelAndView search(@Valid @ModelAttribute("searchForm") SearchForm form, final BindingResult errors,
+                               final ModelAndView mav, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        if (page < 1)
+            throw new IllegalArgumentException();
+
+        if (errors.hasErrors()) {
+            ModelAndView errorMav = new ModelAndView(mav.getViewName());
+            errorMav.addObject(form);
+            errorMav.addObject("categories", JobPost.JobType.values());
+            return errorMav;
         }
-        final ModelAndView mav = new ModelAndView("search");
-        mav.addObject("zones", JobPost.Zone.values());
+        final ModelAndView searchMav = new ModelAndView("search");
+        searchMav.addObject("categories", JobPost.JobType.values());
+        searchMav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
+        int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(),
+                JobPost.Zone.values()[Integer.parseInt(form.getZone())],
+                (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()]);
+        searchMav.addObject("maxPage", maxPage);
+        searchMav.addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
+        searchMav.addObject("jobCards", jobCardService.search(form.getQuery(),
+                JobPost.Zone.values()[Integer.parseInt(form.getZone())],
+                (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()], page - 1)
+        );
+        return searchMav;
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public ModelAndView register(@ModelAttribute("registerForm") RegisterForm registerForm) {
+        return new ModelAndView("register");
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ModelAndView registerForm(@Valid @ModelAttribute("registerForm") RegisterForm registerForm, BindingResult errors) {
+        if (errors.hasErrors())
+            return register(registerForm);
+
+        ByteImage byteImage = null;
+
+        if (registerForm.getAvatar().getSize() != 0) {
+            try {
+                byteImage = imageService.create(registerForm.getAvatar().getBytes(), registerForm.getAvatar().getContentType());
+            } catch (IOException ignored) {
+                //Se ignora porque la imagen queda en valor null
+            }
+        }
+
+        try {
+            userService.register(registerForm.getEmail(), registerForm.getPassword(),
+                    registerForm.getName(), registerForm.getPhone(), byteImage);
+        } catch (UserAlreadyExistsException e) {
+            errors.rejectValue("email", "register.existingemail");
+            return register(registerForm);
+        } catch (UserNotVerifiedException e) {
+            return new ModelAndView("tokenViews").addObject("resend", true);
+        }
+
+        return new ModelAndView("tokenViews").addObject("send", true);
+    }
+
+    @RequestMapping(value = "/login")
+    public ModelAndView login(@ModelAttribute("loginForm") LoginForm loginForm) {
+        return new ModelAndView("login");
+    }
+
+    @RequestMapping("/categories")
+    public ModelAndView categories() {
+        ModelAndView mav = new ModelAndView("categories");
         mav.addObject("categories", JobPost.JobType.values());
-        List<JobCard> jobCards = new ArrayList<>();
-        if (zone.equals("")) {
-            mav.addObject("pickedZone", null);
-            return mav;
-        }
-        Optional<List<JobPost>> searchPost = jobPostService.search(form.getQuery(), JobPost.Zone.values()[Integer.parseInt(zone)]);
-        if (searchPost.isPresent()) {
-            jobCards = createCards(searchPost.get());
-        }
-        mav.addObject("jobCards", jobCards);
-        mav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
-        mav.addObject("query", form.getQuery());
-        if (form.getCategory() != null)
-            mav.addObject("pickedCategory", JobPost.JobType.values()[Integer.parseInt(form.getCategory())]);
         return mav;
-
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public ModelAndView searchSubmitSearch(@Valid @ModelAttribute("searchForm") SearchForm form,
-                                           final BindingResult errors) {
+    @RequestMapping("/password_changed")
+    public ModelAndView passwordChanged() {
+        SecurityContextHolder.clearContext();
+        return new ModelAndView("passwordChanged");
+    }
+
+    @RequestMapping("/token")
+    public ModelAndView verifyToken(@RequestParam("user_id") final long user_id, @RequestParam("token") final String token) {
+
+        ModelAndView mav = new ModelAndView("tokenViews");
+        User user = userService.findById(user_id);
+
+        if (user.isVerified())
+            return new ModelAndView("error/404");
 
         try {
-            if (errors.hasErrors())
-                return search("", form.getQuery(), form.getCategory(), form);
-
-            return new ModelAndView("redirect: search?query=" + URLEncoder.encode(form.getQuery(), "UTF-8") + "&zone=" + form.getZone());
-        } catch (Exception e) {
-            throw new RuntimeException();
+            verificationTokenService.verifyToken(user, token);
+        } catch (VerificationTokenExpiredException e) {
+            return mav.addObject("expired", true);
         }
-    }
 
-    private List<JobCard> createCards(List<JobPost> jobPosts) {
-        List<JobCard> jobCards = new ArrayList<>();
-
-        jobPosts.forEach(jobPost -> {
-            JobPackage min = jobPostService.findCheapestPackage(jobPost.getId()).orElseThrow(JobPostNotFoundException::new);
-            jobCards.add(new JobCard(
-                    jobPost, min.getRateType(), min.getPrice(),
-                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId())
-            ));
-        });
-        return jobCards;
+        return mav.addObject("success", true);
     }
 }

@@ -8,25 +8,15 @@
 .job-card-title {
     font-weight: bold;
     margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .job-card-type {
     color: gray;
-}
-
-.job-card-price-container {
-    margin: 20px 10% 0 10%;
-    padding: 10px 0;
-    border-radius: 15px;
-    background-color: #485696;
-}
-
-.job-card-price {
-    margin: 0 auto;
-    text-align: center;
-    color: white;
-    font-weight: normal;
-
 }
 
 .job-card-detail {
@@ -41,11 +31,23 @@ p.job-card-detail {
     left: 55px;
 }
 
+i.job-card-detail {
+    font-size: 25px;
+    color: gray;
+}
+
 .job-card {
     margin: 15px 10px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    width: 18rem;
 }
 
 .job-card:hover {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.job-card-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

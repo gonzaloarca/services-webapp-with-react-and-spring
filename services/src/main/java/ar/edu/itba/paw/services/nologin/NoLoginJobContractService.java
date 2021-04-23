@@ -1,22 +1,24 @@
 package ar.edu.itba.paw.services.nologin;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 public class NoLoginJobContractService implements JobContractService {
 
     @Autowired
-    private JobContractDao jobContract;
+    private JobContractDao jobContractDao;
 
     @Autowired
     private JobPackageService jobPackageService;
@@ -25,46 +27,81 @@ public class NoLoginJobContractService implements JobContractService {
     private UserService userService;
 
     @Override
-    public JobContract create(long packageId, String description, String client_email, String client_username, String client_phone) {
-        Optional<User> maybeUser = userService.findByEmail(client_email);
-        User client;
-        client = maybeUser.orElseGet(() -> userService.register(client_email, client_username, client_phone, false));
-
-        if(!jobPackageService.findById(packageId).isPresent())
-            // TODO: CAMBIAR A EXCEPCION PROPIA
-            throw new RuntimeException("Package no encontrado");
-
-        return jobContract.create(client.getId(), packageId, description);
+    public JobContract create(String clientEmail, long packageId, String description) {
+        return create(clientEmail, packageId, description, null);
     }
 
     @Override
-    public Optional<JobContract> findById(long id) {
-        return jobContract.findById(id);
+    public JobContract create(String clientEmail, long packageId, String description, ByteImage image) {
+        User user = userService.findByEmail(clientEmail).orElseThrow(NoSuchElementException::new);
+
+        jobPackageService.findById(packageId);
+//        client = maybeUser.orElseGet(() -> userService.register(client_email,"", client_username, client_phone, 1));
+
+        if(image == null)
+            return jobContractDao.create(user.getId(), packageId, description);
+
+        return jobContractDao.create(user.getId(), packageId, description, image);
     }
 
     @Override
-    public Optional<List<JobContract>> findByClientId(long id) {
-        return jobContract.findByClientId(id);
+    public JobContract findById(long id) {
+        return jobContractDao.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
-    public Optional<List<JobContract>> findByProId(long id) {
-        return jobContract.findByProId(id);
+    public List<JobContract> findByClientId(long id) {
+        return jobContractDao.findByClientId(id, HirenetUtils.ALL_PAGES);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPostId(long id) {
-        return jobContract.findByPostId(id);
+    public List<JobContract> findByClientId(long id,int page) {
+        return jobContractDao.findByClientId(id,page);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPackageId(long id) {
-        return jobContract.findByPackageId(id);
+    public List<JobContract> findByProId(long id) {
+        return jobContractDao.findByProId(id,HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<JobContract> findByProId(long id, int page) {
+        return jobContractDao.findByProId(id,page);
+    }
+
+    @Override
+    public List<JobContract> findByPostId(long id) {
+        return jobContractDao.findByPostId(id,HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<JobContract> findByPostId(long id, int page) {
+        return jobContractDao.findByPostId(id,page);
+    }
+
+    @Override
+    public List<JobContract> findByPackageId(long id) {
+        return jobContractDao.findByPackageId(id,HirenetUtils.ALL_PAGES);
+    }
+
+    @Override
+    public List<JobContract> findByPackageId(long id, int page) {
+        return jobContractDao.findByPackageId(id,page);
     }
 
     @Override
     public int findContractsQuantityByProId(long id) {
-        return jobContract.findContractsQuantityByProId(id);
+        return jobContractDao.findContractsQuantityByProId(id);
+    }
+
+    @Override
+    public int findContractsQuantityByPostId(long id) {
+        return jobContractDao.findContractsQuantityByPostId(id);
+    }
+
+    @Override
+    public int findMaxPageContractsByUserId(long id) {
+        return jobContractDao.findMaxPageContractsByUserId(id);
     }
 
 }

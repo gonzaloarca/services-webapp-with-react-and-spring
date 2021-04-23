@@ -1,13 +1,15 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
+import exceptions.JobPackageNotFoundException;
+import exceptions.JobPostNotFoundException;
+import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,16 +31,21 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Autowired
     private JobPostDao jobPostDao;
 
+    private static Integer getLimit(int page) {
+        return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
+    }
+
     private final static RowMapper<JobContract> JOB_CONTRACT_ROW_MAPPER = (resultSet, in) -> new JobContract(
             resultSet.getLong("contract_id"),
             new User(
                     resultSet.getLong("client_id"),
                     resultSet.getString("client_email"),
                     resultSet.getString("client_name"),
-                    "",
                     resultSet.getString("client_phone"),
-                    resultSet.getBoolean("client_is_professional"),
-                    resultSet.getBoolean("client_is_active")
+                    resultSet.getBoolean("client_is_active"),
+                    true,   //TODO implementar
+                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
+                            resultSet.getString("client_image_type"))
             ),
             new JobPackage(
                     resultSet.getLong("package_id"),
@@ -51,15 +58,16 @@ public class JobContractDaoJDBC implements JobContractDao {
             ), new User(
             resultSet.getLong("professional_id"),
             resultSet.getString("professional_email"),
-            resultSet.getString("professional_username"),
-            "",
+            resultSet.getString("professional_name"),
             resultSet.getString("professional_phone"),
-            resultSet.getBoolean("professional_is_professional"),
-            resultSet.getBoolean("professional_is_active")
+            resultSet.getBoolean("professional_is_active"),
+            true,       //TODO implementar
+            new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
+                    resultSet.getString("professional_image_type"))
     ),
             resultSet.getDate("creation_date"),
             resultSet.getString("contract_description"),
-            ""
+            new ByteImage(resultSet.getBytes("image_data"), resultSet.getString("contract_image_type"))
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -74,161 +82,74 @@ public class JobContractDaoJDBC implements JobContractDao {
 
     @Override
     public JobContract create(long clientId, long packageId, String description) {
+        return create(clientId, packageId, description, new ByteImage(null, null));
+    }
+
+    @Override
+    public JobContract create(long clientId, long packageId, String description, ByteImage image) {
         Date creationDate = new Date();
-        Number key = jdbcInsert.executeAndReturnKey(new HashMap<String, Object>() {{
-            put("client_id", clientId);
-            put("package_id", packageId);
-            put("contract_description", description);
-            put("creation_date", new java.sql.Date(creationDate.getTime()));
-        }});
+        Map<String, Object> objectMap = new HashMap<>();
 
-        //TODO: Cambiar excepciones por excepciones propias
-        User client = userDao.findById(clientId).orElseThrow(NoSuchElementException::new);
+        objectMap.put("client_id", clientId);
+        objectMap.put("package_id", packageId);
+        objectMap.put("contract_description", description);
+        objectMap.put("creation_date", new java.sql.Date(creationDate.getTime()));
+        objectMap.put("image_data", image.getData());
+        objectMap.put("contract_image_type", image.getType());
 
-        JobPackage jobPackage = jobPackageDao.findById(packageId).orElseThrow(NoSuchElementException::new);
+        Number key = jdbcInsert.executeAndReturnKey(objectMap);
 
-        JobPost jobPost = jobPostDao.findById(jobPackage.getPostId()).orElseThrow(NoSuchElementException::new);
+        JobPackage jobPackage = jobPackageDao.findById(packageId).orElseThrow(JobPackageNotFoundException::new);
 
-        //TODO: Revisar caso de nullPointerException
-        User profesional = userDao.findById(jobPost.getUser().getId()).orElseThrow(NoSuchElementException::new);
+        JobPost jobPost = jobPostDao.findById(jobPackage.getPostId()).orElseThrow(JobPostNotFoundException::new);
 
-        return new JobContract(key.longValue(), client, jobPackage, profesional, creationDate, description, "");
+        User client = userDao.findById(clientId).orElseThrow(UserNotFoundException::new);
+        User professional = userDao.findById(jobPost.getUser().getId()).orElseThrow(UserNotFoundException::new);
+
+        return new JobContract(key.longValue(), client, jobPackage, professional, creationDate, description, image);
     }
 
     @Override
     public Optional<JobContract> findById(long id) {
-
-
         return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE contract_id = ?"
-                , new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
-
-
+                "SELECT * FROM full_contract WHERE contract_id = ?",
+                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public Optional<List<JobContract>> findByClientId(long id) {
-        return Optional.of(
-                jdbcTemplate.query(
-                        "SELECT * " +
-                                "FROM contract " +
-                                "NATURAL JOIN job_package " +
-                                "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                                "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                                "user_name            AS client_name, " +
-                                "user_email           AS client_email, " +
-                                "user_phone           AS client_phone, " +
-                                "user_is_professional AS client_is_professional, " +
-                                "user_is_active       AS client_is_active " +
-                                "FROM users) AS clients " +
-                                "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                                "user_name            AS professional_username, " +
-                                "user_email           AS professional_email, " +
-                                "user_phone           AS professional_phone, " +
-                                "user_is_professional AS professional_is_professional, " +
-                                "user_is_active       AS professional_is_active " +
-                                "FROM users) AS professionals " +
-                                "WHERE client_id = ?"
-                        , new Object[]{id},
-                        JOB_CONTRACT_ROW_MAPPER));
+    public List<JobContract> findByClientId(long id, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_contract WHERE client_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id, limit, offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByProId(long id) {
-        //TODO
-        return Optional.of(jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE professional_id = ?",
-                new Object[]{id}, JOB_CONTRACT_ROW_MAPPER));
+    public List<JobContract> findByProId(long id, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_contract WHERE professional_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id, limit, offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPostId(long id) {
-
-        return Optional.of(jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE post_id = ?"
-                , new Object[]{id},
-                JOB_CONTRACT_ROW_MAPPER));
+    public List<JobContract> findByPostId(long id, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_contract WHERE post_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id, limit, offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<JobContract>> findByPackageId(long id) {
-
-        return Optional.of(jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "NATURAL JOIN (SELECT user_id              AS client_id, " +
-                        "user_name            AS client_name, " +
-                        "user_email           AS client_email, " +
-                        "user_phone           AS client_phone, " +
-                        "user_is_professional AS client_is_professional, " +
-                        "user_is_active       AS client_is_active " +
-                        "FROM users) AS clients " +
-                        "NATURAL JOIN (SELECT user_id              AS professional_id, " +
-                        "user_name            AS professional_username, " +
-                        "user_email           AS professional_email, " +
-                        "user_phone           AS professional_phone, " +
-                        "user_is_professional AS professional_is_professional, " +
-                        "user_is_active       AS professional_is_active " +
-                        "FROM users) AS professionals " +
-                        "WHERE package_id = ?"
-                , new Object[]{id},
-                JOB_CONTRACT_ROW_MAPPER));
+    public List<JobContract> findByPackageId(long id, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * FROM full_contract WHERE package_id = ? LIMIT ? OFFSET ?",
+                new Object[]{id, limit, offset}, JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
@@ -239,6 +160,22 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "NATURAL JOIN job_package " +
                         "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
                         "WHERE professional_id = ?", new Object[]{id}, Integer.class);
-
     }
+
+    @Override
+    public int findContractsQuantityByPostId(long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) " +
+                        "FROM contract " +
+                        "NATURAL JOIN job_package " +
+                        "WHERE post_id = ?", new Object[]{id}, Integer.class);
+    }
+
+    @Override
+    public int findMaxPageContractsByUserId(long id) {
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(contract_id) FROM contract WHERE client_id = ?",
+                new Object[]{id}, Integer.class);
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+    }
+
 }

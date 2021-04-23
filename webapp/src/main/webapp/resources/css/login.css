@@ -1,0 +1,80 @@
+.login-card {
+    width: 500px;
+    height: 600px;
+    margin: 150px auto auto;
+}
+
+.login-title {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+/*background para login y register*/
+body {
+    /*background-image: url("/resources/images/background.jpg");*/
+    background-size: cover;
+}
+
+/*login y register*/
+.bottom-link {
+    color: #485696;
+    text-align: center;
+    font-size: 16px;
+}
+
+.bottom-link-label {
+    margin-top: 10px;
+    color: grey;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.custom-password {
+    padding-right: 20px; !important;
+}
+
+.custom-password.is-valid, .was-validated .custom-password:valid {
+    padding-right: 50px; !important;
+}
+
+.custom-password:invalid {
+    padding-right: 50px; !important;
+}
+
+.password-eye a {
+    color: #5e5e5e !important;
+}
+
+.input-group-text {
+    background-color: #a7a7a7;
+}
+
+.login-error {
+    margin: 20px auto auto;
+}
+
+.login-icon {
+    height: 2rem;
+    margin-right: 10px;
+}
+
+.input-container {
+    margin-bottom: 10px;
+}
+
+.login-title-container {
+    background-color: #343e6d;
+    padding: 10px;
+    width: max-content;
+    border-radius: 20px 20px 0 0;
+}
+
+.hirenet-blue-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.was-validated .form-check-input:valid ~ .form-check-label {
+    color: black; !important;
+}

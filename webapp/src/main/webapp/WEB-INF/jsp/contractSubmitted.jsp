@@ -4,7 +4,8 @@
 <html>
 <head>
     <title>
-        <spring:message code="contract.success.page.title"/>
+        <spring:message code="contract.success.message" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <!-- Bootstrap 4.5.2 CSS minified -->
@@ -26,7 +27,8 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent page">
     <div class="message">
         <img src='<c:url value="/resources/images/thumbs.svg" />'
@@ -43,5 +45,6 @@
         </a>
     </div>
 </div>
+<jsp:include page="components/footer.jsp"/>
 </body>
 </html>

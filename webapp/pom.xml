@@ -13,9 +13,6 @@
     <packaging>war</packaging>
 
     <name>webapp Maven Webapp</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://pawserver.it.itba.edu.ar/paw-2021a-03/</url>
-
 
     <dependencies>
         <dependency>
@@ -64,6 +61,22 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
         </dependency>
     </dependencies>
 

@@ -4,9 +4,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-    <!-- TODO: poner titulo correcto -->
     <title>
-        <spring:message code="contract.create.page.title"/>
+        <spring:message code="contract.create.page.title" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <!-- Bootstrap 4.5.2 CSS minified -->
@@ -29,236 +29,250 @@
 
 </head>
 <body class="body">
-    <%@ include file="customNavBar.jsp" %>
-        <div class="content-container-transparent">
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
+<div class="content-container-transparent">
 
-            <!-- Navigation -->
-            <div class="row">
-                <nav aria-label="breadcrumb" style="width: 100%">
-                    <ol class="breadcrumb bg-white">
-                        <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">
-                            <spring:message code="navigation.index"/>
-                        </a></li>
-                        <li class="breadcrumb-item active" aria-current="page">
-                            <p class="capitalize-first-letter">
-                                <spring:message code="${jobPost.jobType.stringCode}"/>
-                            </p>
-                        </li>
-                    </ol>
-                </nav>
-            </div>
+    <!-- Navigation -->
+    <!-- TODO: implementar breadcrumb correctamente -->
+<%--    <div class="row">--%>
+<%--        <nav aria-label="breadcrumb" style="width: 100%">--%>
+<%--            <ol class="breadcrumb bg-white">--%>
+<%--                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
+<%--                    <spring:message code="navigation.index"/>--%>
+<%--                </a></li>--%>
+<%--                <li class="breadcrumb-item active" aria-current="page">--%>
+<%--                    <p class="capitalize-first-letter">--%>
+<%--                        <spring:message code="${jobPost.jobType.stringCode}"/>--%>
+<%--                    </p>--%>
+<%--                </li>--%>
+<%--            </ol>--%>
+<%--        </nav>--%>
+<%--    </div>--%>
 
-            <!-- Title Header -->
-            <div class="row top-row">
-                    <div class="header-container">
-                        <!--div class="header-back-button">
-                            <a class="header-back-icon">
-                                <i class="fas fa-arrow-left fa-2x"></i>
-                            </a>
-                        </div-->
-                        <h2 class="header-title">
-                            <spring:message code="contract.create.page.title"/>
-                        </h2>
-                    </div>
-                    <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                    <img class="header-img"
-                        src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
-                        alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
-            </div>
+    <!-- Title Header -->
+    <div class="row top-row">
+        <div class="header-container">
+            <!--div class="header-back-button">
+                <a class="header-back-icon">
+                    <i class="fas fa-arrow-left fa-2x"></i>
+                </a>
+            </div-->
+            <h2 class="header-title">
+                <spring:message code="contract.create.page.title"/>
+            </h2>
+        </div>
+        <c:choose>
+            <c:when test="${imageList.size() == 0}">
+                <c:url value="/resources/images/${jobPost.jobType.imagePath}" var="imageSrc"/>
+            </c:when>
+            <c:otherwise>
+                <c:set value="data:${imageList[0].image.type};base64,${imageList[0].image.string}"
+                       var="imageSrc"/>
+            </c:otherwise>
+        </c:choose>
+        <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
+        <img class="header-img"
+             src='${imageSrc}'
+             alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
+    </div>
 
-            <div class="row bottom-row">
+    <div class="row bottom-row">
 
-                <!-- Contract Form -->
-                <div class="first-col">
-                    <div class="contract-form">
-                        <!-- Title -->
-                        <h3 style="font-weight: bold">
-                            <spring:message code="contract.create.form.title"/>
-                        </h3>
-                        <p style="margin: 0">
-                            <spring:message code="contract.create.form.required"/>
-                        </p>
-                        <hr class="divider-bar"/>
-                        <!-- Form Entries -->
-                        <c:url value="/contract/package/${packId}" var="postUrl"/>
-                        <form:form class="contract-input" modelAttribute="contractForm"
-                                   action="${postUrl}" method="post"
-                                   enctype="multipart/form-data">
+        <!-- Contract Form -->
+        <div class="first-col">
+            <div class="contract-form">
+                <!-- Title -->
+                <h3 style="font-weight: bold">
+                    <spring:message code="contract.create.form.title"/>
+                </h3>
+                <p style="margin: 0">
+                    <spring:message code="contract.create.form.required"/>
+                </p>
+                <hr class="divider-bar"/>
+                <!-- Form Entries -->
+                <c:url value="/contract/package/${packId}" var="postUrl"/>
+                <form:form class="contract-input needs-validation" modelAttribute="contractForm" novalidate="true"
+                           action="${postUrl}" method="post" id="contract-form" onsubmit="disableBtn()"
+                           enctype="multipart/form-data">
 
-                            <!-- Name -->
-                            <div class="form-row">
-                                <div class="blue-circle">
-                                    <p class="circle-text">1</p>
-                                </div>
-                                <div class="col-10 label-and-input">
-                                    <form:label path="name" class="form-text">
-                                        <spring:message code="contract.create.form.name"/>
-                                    </form:label>
-                                    <spring:message code="contract.create.form.name.placeholder" var="namePlaceholder"/>
-                                    <form:input type="text" path="name"
-                                                class="form-control text-input"
-                                                placeholder='${namePlaceholder}'/>
-                                    <form:errors path="name" cssClass="form-error" element="p"/>
+                    <!-- Description -->
+                    <div class="form-row">
+                        <div class="blue-circle">
+                            <p class="circle-text">1</p>
+                        </div>
+                        <div class="col-10 label-and-input">
+                            <form:label path="description" class="form-text">
+                                <spring:message code="contract.create.form.description"/>
+                            </form:label>
+                            <div class="input-group has-validation">
+                                <spring:message code="contract.create.form.description.placeholder" var="descPlaceholder"/>
+                                <form:textarea class="form-control text-input" rows="6" path="description" maxlength="100"
+                                               placeholder="${descPlaceholder}" required="true"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="contract.create.invalid.description"/>
                                 </div>
                             </div>
-
-                            <!-- Email -->
-                            <div class="form-row">
-                                <div class="yellow-circle">
-                                    <p class="circle-text">2</p>
-                                </div>
-                                <div class="col-10 label-and-input">
-                                    <form:label path="email" class="form-text">
-                                        <spring:message code="contract.create.form.email"/>
-                                    </form:label>
-                                    <spring:message code="contract.create.form.email.placeholder" var="emailPlaceholder"/>
-                                    <form:input type="email" class="form-control text-input" path="email"
-                                           placeholder="${emailPlaceholder}"/>
-                                    <form:errors path="email" cssClass="form-error" element="p"/>
-                                </div>
-                            </div>
-
-                            <!-- Phone Number -->
-                            <div class="form-row">
-                                <div class="orange-circle">
-                                    <p class="circle-text">3</p>
-                                </div>
-                                <div class="col-10 label-and-input">
-                                    <form:label path="phone" class="form-text">
-                                        <spring:message code="contract.create.form.phone"/>
-                                    </form:label>
-                                    <spring:message code="contract.create.form.phone.placeholder" var="phonePlaceholder"/>
-                                    <form:input type="text" class="form-control text-input" path="phone"
-                                           placeholder="${phonePlaceholder}" style="width: 70%"/>
-                                    <form:errors path="phone" cssClass="form-error" element="p"/>
-                                </div>
-                            </div>
-
-                            <!-- Description -->
-                            <div class="form-row">
-                                <div class="blue-circle">
-                                    <p class="circle-text">4</p>
-                                </div>
-                                <div class="col-10 label-and-input">
-                                    <form:label path="description" class="form-text">
-                                        <spring:message code="contract.create.form.description"/>
-                                    </form:label>
-                                    <spring:message code="contract.create.form.description.placeholder" var="descPlaceholder"/>
-                                    <form:textarea class="form-control text-input" rows="6" path="description"
-                                              placeholder="${descPlaceholder}" />
-                                    <form:errors path="description" cssClass="form-error" element="p"/>
-                                </div>
-                            </div>
-
-                            <!-- Image -->
-                            <!-- TODO: implementar imagen en el proximo Sprint -->
-<%--                            <div class="form-row">--%>
-<%--                                <div class="yellow-circle">--%>
-<%--                                    <p class="circle-text">5</p>--%>
-<%--                                </div>--%>
-<%--                                <div class="col-10 label-and-input">--%>
-<%--                                    <form:label path="image" class="form-text">--%>
-<%--                                        <spring:message code="contract.create.form.image"/>--%>
-<%--                                    </form:label>--%>
-<%--                                    <form:input type="file" path="image"/>--%>
-<%--                                    <form:errors path="image" cssClass="form-error" element="p"/>--%>
-<%--                                </div>--%>
-<%--                            </div>--%>
-
-                            <!-- Submit Button -->
-                            <div class="submit-button">
-                                <button class="btn btn-primary" type="submit">
-                                    <spring:message code="contract.create.form.submit"/>
-                                </button>
-                            </div>
-
-                        </form:form>
-                    </div>
-                </div>
-
-                <!-- Job Detail -->
-                <div class="second-col">
-                    <div class="job-info">
-                        <h5 class="info-title">
-                            <spring:message code="contract.create.detail.title"/>
-                        </h5>
-                        <img class="info-img"
-                             src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
-                             alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
-                        <div class="container">
-                            <!-- Job Title -->
-                            <div class="row info-row">
-                                <div class="info-left-col">
-                                    <i class="fas fa-briefcase fa-2x"></i>
-                                </div>
-                                <p class="info-right-col">
-                                    <c:out value="${jobPost.title}"/>
-                                </p>
-                            </div>
-                            <hr class="divider-bar-info"/>
-                            <!-- Package Name -->
-                            <div class="row info-row">
-                                <div class="info-left-col">
-                                    <i class="fas fa-box-open fa-2x"></i>
-                                </div>
-                                <p class="info-right-col">
-                                    <c:out value="${jobPack.title}"/>
-                                </p>
-                            </div>
-                            <hr class="divider-bar-info"/>
-                            <!-- Location -->
-                            <div class="row info-row">
-                                <div class="info-left-col">
-                                    <i class="fas fa-map-marker-alt fa-2x"></i>
-                                </div>
-                                <div class="info-right-col" style="display: flex">
-                                    <c:forEach items="${jobPost.zones}" var="zone" varStatus="status">
-                                        <p class="capitalize-first-letter">
-                                            <spring:message code="${zone.stringCode}"/><c:if test="${status.index != jobPost.zones.size()-1}">,&nbsp</c:if>
-                                        </p>
-                                    </c:forEach>
-                                </div>
-                            </div>
-                            <hr class="divider-bar-info"/>
-                            <!-- Professional -->
-                            <div class="row info-row">
-                                <div class="info-left-col">
-                                    <!-- TODO: cambiar este icono por imagen de perfil -->
-                                    <i class="fas fa-user fa-2x"></i>
-                                </div>
-                                <p class="info-right-col">
-                                        <c:out value="${jobPost.user.username}"/>
-                                </p>
-                            </div>
-                            <hr class="divider-bar-info"/>
-                            <!-- Hours -->
-                            <div class="row info-row">
-                                <div class="info-left-col">
-                                    <i class="far fa-clock fa-2x"></i>
-                                </div>
-                                <p class="info-right-col">
-                                    <c:out value="${jobPost.availableHours}"/>
-                                </p>
-                            </div>
-                            <hr class="divider-bar-info"/>
-                            <!-- Price -->
-                            <div class="row info-row">
-                                <div class="info-left-col">
-                                    <i class="fas fa-dollar-sign fa-2x"></i>
-                                </div>
-                                <div class="info-right-col">
-                                    <p class="price-tag">
-                                        <spring:message code="${jobPack.rateType.stringCode}"
-                                                        arguments="${jobPack.price}"/>
-                                    </p>
-                                </div>
-                            </div>
+                            <form:errors path="description" cssClass="form-error" element="p"/>
                         </div>
                     </div>
 
-                </div>
+                    <!-- Image -->
+                    <div class="form-row">
+                        <div class="yellow-circle">
+                            <p class="circle-text">2</p>
+                        </div>
+                        <div class="col-10 label-and-input">
+                            <form:label path="image" class="form-text">
+                                <spring:message code="contract.create.form.image"/>
+                            </form:label>
+                            <div class="input-group has-validation">
+                                <!--TODO validacion client side de imagenes -->
+                                <form:input type="file" path="image"/>
+                                <div class="invalid-feedback">
+                                    Tamaño de imagen superdado
+                                </div>
+                            </div>
+                            <form:errors path="image" cssClass="form-error" element="p"/>
+                        </div>
+                    </div>
 
+                    <!-- Submit Button -->
+                    <div class="submit-button">
+                        <button class="btn btn-primary" type="submit" id="submitBtn">
+                            <spring:message code="contract.create.form.submit"/>
+                        </button>
+                    </div>
+
+                </form:form>
             </div>
         </div>
+
+        <!-- Job Detail -->
+        <div class="second-col">
+            <div class="job-info">
+                <h5 class="info-title">
+                    <spring:message code="contract.create.detail.title"/>
+                </h5>
+                <img class="info-img"
+                     src='${imageSrc}'
+                     alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
+                <div class="container">
+                    <!-- Job Title -->
+                    <div class="row info-row">
+                        <div class="info-left-col">
+                            <i class="fas fa-briefcase fa-2x"></i>
+                        </div>
+                        <p class="info-right-col">
+                            <c:out value="${jobPost.title}"/>
+                        </p>
+                    </div>
+                    <hr class="divider-bar-info"/>
+                    <!-- Package Name -->
+                    <div class="row info-row">
+                        <div class="info-left-col">
+                            <i class="fas fa-box-open fa-2x"></i>
+                        </div>
+                        <p class="info-right-col">
+                            <c:out value="${jobPack.title}"/>
+                        </p>
+                    </div>
+                    <hr class="divider-bar-info"/>
+                    <!-- Location -->
+                    <div class="row info-row">
+                        <div class="info-left-col">
+                            <i class="fas fa-map-marker-alt fa-2x"></i>
+                        </div>
+                        <div class="info-right-col" style="display: flex">
+                            <c:forEach items="${jobPost.zones}" var="zone" varStatus="status">
+                                <p class="capitalize-first-letter">
+                                    <spring:message code="${zone.stringCode}"/><c:if
+                                        test="${status.index != jobPost.zones.size()-1}">,&nbsp</c:if>
+                                </p>
+                            </c:forEach>
+                        </div>
+                    </div>
+                    <hr class="divider-bar-info"/>
+                    <!-- Professional -->
+                    <div class="row info-row">
+                        <div class="info-left-col">
+                            <c:choose>
+                                <c:when test="${jobPost.user.image.string == null}">
+                                    <img class="avatar-pic" src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
+                                </c:when>
+                                <c:otherwise>
+                                    <img class="avatar-pic" src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <p class="info-right-col">
+                            <c:out value="${jobPost.user.username}"/>
+                        </p>
+                    </div>
+                    <hr class="divider-bar-info"/>
+                    <!-- Hours -->
+                    <div class="row info-row">
+                        <div class="info-left-col">
+                            <i class="far fa-clock fa-2x"></i>
+                        </div>
+                        <p class="info-right-col">
+                            <c:out value="${jobPost.availableHours}"/>
+                        </p>
+                    </div>
+                    <hr class="divider-bar-info"/>
+                    <!-- Price -->
+                    <div class="row info-row">
+                        <div class="info-left-col">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                        <div class="info-right-col">
+                            <p class="price-tag">
+                                <spring:message code="${jobPack.rateType.stringCode}"
+                                                arguments="${jobPack.price}"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<jsp:include page="components/footer.jsp"/>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation');
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+    })()
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        var forms = document.querySelectorAll('.needs-validation');
+        var is_valid = true;
+        Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                        if (!form.checkValidity()) {
+                            is_valid = false;
+                        }
+                })
+        $("#submitBtn").attr("disabled", is_valid);
+    }
+</script>
 </body>
 </html>

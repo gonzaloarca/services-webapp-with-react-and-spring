@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services.nologin;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
@@ -19,23 +20,41 @@ public class NoLoginJobPackageService implements JobPackageService {
     private JobPostService jobPostService;
 
     @Override
-    public JobPackage create(long postId, String title, String description, double price, JobPackage.RateType rateType) {
+    public JobPackage create(long postId, String title, String description, String price, int rateType) {
         //TODO: CAMBIAR POR EXCEPCIONES PROPIAS
-        if (!jobPostService.findById(postId).isPresent())
-            throw new RuntimeException("Post no encontrado");
+
+        jobPostService.findById(postId);
+        Double parsedPrice=null;
+
+        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
+
+        //TODO: CAMBIAR POR EXCEPCIONES PROPIAS
+        if(!parsedRateType.equals(JobPackage.RateType.TBD)) {
+            if (price != null && !price.isEmpty()) {
+                parsedPrice = Double.parseDouble(price);
+            }else {
+                throw new RuntimeException("Error al cargar el form");
+            }
+        }
 
 
-        return jobPackageDao.create(postId, title, description, price, rateType);
+        return jobPackageDao.create(postId, title, description, parsedPrice, parsedRateType);
     }
 
     @Override
-    public Optional<JobPackage> findById(long id) {
-        return jobPackageDao.findById(id);
+    public JobPackage findById(long id) {
+        return jobPackageDao.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
-    public Optional<List<JobPackage>> findByPostId(long id) {
-        return jobPackageDao.findByPostId(id);
+    public List<JobPackage> findByPostId(long id) {
+        return jobPackageDao.findByPostId(id, HirenetUtils.ALL_PAGES);
     }
+
+    @Override
+    public List<JobPackage> findByPostId(long id,int page) {
+        return jobPackageDao.findByPostId(id,page);
+    }
+
 
 }

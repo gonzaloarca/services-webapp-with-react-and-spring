@@ -1,5 +1,10 @@
+.search-results {
+    flex: 1;
+}
+
 .search-title {
     display: inline-flex;
+    word-break: break-word;
 }
 
 .filter-card {
@@ -8,16 +13,36 @@
     min-width: 10vw;
 }
 
-h5 {
+h4 {
     color: #485696;
 }
 
 .category {
-    font-size: 16px;
+    font-size: 18px;
     color: #a7a7a7;
     margin-left: 1vw;
 }
 
+.category:link, .category:hover {
+    text-decoration: none;
+}
+
+.job-display-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
 .job-card {
-    flex-basis: 30.3% !important;
+    flex-basis: 27.3% !important;
+}
+
+.pickedCategory {
+    color: #485696;
+    font-weight: bold;
+    margin-left: 0.5vw;
+}
+
+.unselect-category {
+    color: black;
 }

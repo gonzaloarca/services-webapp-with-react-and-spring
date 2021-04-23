@@ -1,11 +1,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>
-        <spring:message code="search.title"/>
+        <spring:message code="search.title" var="text"/>
+        <spring:message code="title.name" arguments="${text}"/>
     </title>
 
     <%-- Bootstrap 4.5.2 CSS minified --%>
@@ -30,145 +31,113 @@
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/resources/css/index.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/search.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
-    <link rel="shortcut icon" href="#">
+    <link href="${pageContext.request.contextPath}/resources/css/searchBar.css" rel="stylesheet"/>
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
-<div class="home-banner-container">
-    <form:form action="${pageContext.request.contextPath}/search" method="post"
-               modelAttribute="searchForm"
-               class="home-search-form">
-        <div class="search-instructions">
-            <div class="search-instruction-step">
-                <div class="blue-circle">
-                    <p class="circle-text">1</p>
-                </div>
-                <p class="search-instructions-text">
-                    <spring:message code="index.search.location"/>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
+<div class="content-container d-flex">
+    <div class="custom-card filter-card">
+        <h3>
+            <spring:message code="search.filters"/>
+        </h3>
+        <hr class="hr1"/>
+        <h4>
+            <spring:message code="search.categories"/>
+        </h4>
+        <c:forEach items="${categories}" var="categorie" varStatus="status">
+            <span class="mb-1 custom-row align-items-center" onclick="updateCategorySelected(${categorie.value})">
+                <c:if test="${param.category == status.index}">
+                    <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
+                        <i class="fa fa-times unselect-category"></i>
+                    </a>
+                </c:if>
+                <p class="capitalize-first-letter">
+                    <a class="category ${param.category == status.index? 'pickedCategory':''}"
+                       href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=${status.index}">
+                        <spring:message code="${categorie.stringCode}"/>
+                    </a>
                 </p>
-            </div>
-            <div class="search-instruction-step">
-                <div class="blue-circle">
-                    <p class="circle-text">2</p>
+            </span>
+        </c:forEach>
+    </div>
+    <div class="search-results">
+        <c:choose>
+            <c:when test="${param.zone != null && param.zone != ''}">
+                <div class="search-title">
+                    <h3>
+                        <c:choose>
+                            <c:when test="${param.query == ''}">
+                                <spring:message code="search.noquery.results"/>
+                            </c:when>
+                            <c:otherwise>
+                                <spring:message code="search.results" arguments="${param.query}"/>
+                            </c:otherwise>
+                        </c:choose>
+                        <spring:message code="${pickedZone.stringCode}"/>
+                    </h3>
                 </div>
-                <p class="search-instructions-text">
-                    <spring:message code="index.search.jobType"/>
-                </p>
-            </div>
-            <div class="search-instruction-step">
-                <div class="blue-circle">
-                    <p class="circle-text">3</p>
+                <hr class="hr1"/>
+                <div class="job-display-container">
+                    <c:choose>
+                        <c:when test="${jobCards.size() > 0}">
+                            <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
+                                <c:set var="data" value="${jobCard}" scope="request"/>
+                                <c:import url="components/jobCard.jsp"/>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="result-div">
+                                <i class="fas fa-search mb-4"></i>
+                                <p class="result-text">
+                                    <spring:message code="search.jobs.noResults"/>
+                                </p>
+                                <p class="result-sub-text">
+                                    <spring:message code="index.jobs.sorry"/>
+                                </p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
-                <p class="search-instructions-text">
-                    <spring:message code="index.search.submit"/>
-                </p>
-            </div>
-        </div>
-
-        <div class="search-inputs">
-            <div class="home-search-location">
-                <form:select path="zone" class="custom-select w-100">
-                    <spring:message code="index.search.location.placeholder" var="locationPlaceholder"/>
-                    <form:option value="" label="${locationPlaceholder}"/>
-                    <c:forEach items="${zones}" var="zone">
-                        <form:option value="${zone.value}">
-                            <spring:message code="${zone.stringCode}"/>
-                        </form:option>
-                    </c:forEach>
-                </form:select>
-                <form:errors path="zone" cssClass="search-form-error" element="p"/>
-            </div>
-
-            <div class="home-search-bar-container home-search-bar-row">
-                <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
-                <form:input path="query" type="search" class="home-search-bar w-100 h-100"
-                            placeholder="${typePlaceholder}"/>
-                <form:errors path="query" cssClass="search-form-error" element="p"/>
-            </div>
-
-            <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-    </form:form>
-    <%--TODO: Poner alt correcto--%>
-    <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
-         src='<c:url value="/resources/images/banner1.jpg" />'/>
-</div>
-<div class="content-container" style="display: flex">
-    <%--    <div class="custom-card filter-card">--%>
-    <%--        <h4>--%>
-    <%--            <spring:message code="search.filters"/>--%>
-    <%--        </h4>--%>
-    <%--        <hr class="hr1"/>--%>
-    <%--        <h5>--%>
-    <%--            <spring:message code="search.categories"/>--%>
-    <%--        </h5>--%>
-    <%--        <c:forEach items="${categories}" var="categorie">--%>
-    <%--            <p class="mb-1 capitalize-first-letter"><a class="category"--%>
-    <%--                  href="${pageContext.request.contextPath}--%>
-    <%--                  /search?zone=${pickedZone}&query=${query}&category=${pickedCategory}">${categorie}</a>--%>
-    <%--            </p>--%>
-    <%--        </c:forEach>--%>
-    <%--    </div>--%>
-    <%--TODO:CAMBIAR ESTE STYLE CUANDO METAMOS FILTROS--%>
-    <div style="width: 100%">
-        <c:if test="${pickedZone != null}">
-            <div class="search-title">
-                <h3>
-                    <c:if test="${query.length() == 0}">
-                        <spring:message code="search.noquery.results"/>
-                    </c:if>
-                    <c:if test="${!(query.length() == 0)}">
-                        <spring:message code="search.results" arguments="${query}"/>
-                    </c:if>
-                        <%--                &nbsp--%>
-                    <spring:message code="${pickedZone.stringCode}"/>
-                    <c:if test="${pickedZone == null}">
+                <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
+                <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                <c:set var="parameters" value="&zone=${param.zone}&query=${param.query}&${param.category}"
+                       scope="request"/>
+                <%@include file="components/bottomPaginationBar.jsp" %>
+            </c:when>
+            <c:otherwise>
+                <div class="search-title " style="width: 100%; justify-content: center">
+                    <h3>
                         <spring:message code="search.badQuery"/>
-                    </c:if>
-                </h3>
-            </div>
-            <hr class="hr1"/>
-            <div class="job-display-container">
-                <c:if test="${jobCards.size() > 0}">
-                    <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
-                        <c:set var="data" value="${jobCard}" scope="request"/>
-                        <c:import url="jobCard.jsp"/>
-                    </c:forEach>
-                </c:if>
-                <c:if test="${jobCards.size() == 0}">
-                    <div class="result-div">
-                        <i class="fas fa-cogs mb-4"></i>
-                        <p class="result-text">
-                            <spring:message code="search.jobs.noResults"/>
-                        </p>
-                        <p class="result-sub-text">
-                            <spring:message code="index.jobs.sorry"/>
-                        </p>
-                    </div>
-                </c:if>
-            </div>
-        </c:if>
-
-        <c:if test="${pickedZone == null}">
-            <div class="search-title " style="width: 100%; justify-content: center">
-                <h3>
-                    <spring:message code="search.badQuery"/>
-                </h3>
-            </div>
-            <hr class="hr1"/>
-            <div class="result-div">
-                <i class="fas fa-search mb-4"></i>
-                <p class="result-text">
-                    <spring:message code="search.jobs.badSearch"/>
-                </p>
-            </div>
-        </c:if>
+                    </h3>
+                </div>
+                <hr class="hr1"/>
+                <div class="result-div">
+                    <i class="fas fa-search mb-4"></i>
+                    <p class="result-text">
+                        <spring:message code="search.jobs.badSearch"/>
+                    </p>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
+<jsp:include page="components/footer.jsp"/>
+<script>
+    //Actualizo la categoria seleccionada en las cookies
+    function updateCategorySelected(category) {
+        let categoryIndex = sessionStorage.getItem("pickedCategoryId");
+        if (category && parseInt(categoryIndex) !== parseInt(category))
+            sessionStorage.setItem("pickedCategoryId", category);
+        else
+            sessionStorage.removeItem("pickedCategoryId");
+    }
+</script>
 </body>
 </html>

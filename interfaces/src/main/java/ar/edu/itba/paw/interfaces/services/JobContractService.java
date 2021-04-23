@@ -1,23 +1,40 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface JobContractService {
 
-    JobContract create(long packageId, String description, String client_email, String client_username, String client_phone);
+    JobContract create(String client_email, long packageId, String description);
 
-    Optional<JobContract> findById(long id);
+    JobContract create(String client_email, long packageId, String description, ByteImage image);
 
-    Optional<List<JobContract>> findByClientId(long id);
+    JobContract findById(long id);
 
-    Optional<List<JobContract>> findByProId(long id);
+    List<JobContract> findByClientId(long id);
 
-    Optional<List<JobContract>> findByPostId(long id);
+    List<JobContract> findByClientId(long id, int page);
 
-    Optional<List<JobContract>> findByPackageId(long id);
+    List<JobContract> findByProId(long id);
+
+    List<JobContract> findByProId(long id, int page);
+
+
+    List<JobContract> findByPostId(long id);
+
+    List<JobContract> findByPostId(long id, int page);
+
+    List<JobContract> findByPackageId(long id);
+
+    List<JobContract> findByPackageId(long id, int page);
+
 
     int findContractsQuantityByProId(long id);
+
+    int findContractsQuantityByPostId(long id);
+
+    int findMaxPageContractsByUserId(long id);
+
 }

@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
@@ -21,20 +20,18 @@ import java.util.Optional;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:user-test.sql")
+@Sql("classpath:user_test.sql")
 public class UserDaoJDBCTest {
 
     private static final User USER = new User(
             1,
             "franquesada@mail.com",
             "Francisco Quesada",
-            "",
             "11-3456-3232",
             true,
             true
     );
 
-    @InjectMocks
     @Autowired
     UserDaoJDBC userDaoJDBC;
 
@@ -55,26 +52,25 @@ public class UserDaoJDBCTest {
                 3,
                 "manurodriguez@mail.com",
                 "Manuel Rodriguez",
-                "",
                 "11-4536-5656",
-                false,
+                true,
                 true
         );
+        String userTestPassword = "password";
 
-        User user = userDaoJDBC.register(userTest.getEmail(),userTest.getUsername(),userTest.getPhone(),userTest.isProfessional());
+        User user = userDaoJDBC.register(userTest.getEmail(),userTestPassword, userTest.getUsername(), userTest.getPhone());
 
         Assert.assertNotNull(user);
-        Assert.assertEquals(userTest,user);
-        Assert.assertEquals(userTest.getUsername(),user.getUsername());
-        Assert.assertEquals(userTest.getPhone(),user.getPhone());
-        Assert.assertEquals(userTest.isProfessional(),user.isProfessional());
+        Assert.assertEquals(userTest, user);
+        Assert.assertEquals(userTest.getUsername(), user.getUsername());
+        Assert.assertEquals(userTest.getPhone(), user.getPhone());
     }
 
     @Test
     public void testFindById() {
         Optional<User> user = userDaoJDBC.findById(USER.getId());
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER,user.get());
+        Assert.assertEquals(USER, user.get());
     }
 
     @Test
@@ -82,14 +78,7 @@ public class UserDaoJDBCTest {
         Optional<User> user = userDaoJDBC.findByEmail(USER.getEmail());
 
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER,user.get());
+        Assert.assertEquals(USER, user.get());
     }
 
-    @Test
-    public void testSwitchRole() {
-        Optional<User> user = userDaoJDBC.switchRole(USER.getId());
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER,user.get());
-        Assert.assertEquals(!USER.isProfessional(),user.get().isProfessional());
-    }
 }

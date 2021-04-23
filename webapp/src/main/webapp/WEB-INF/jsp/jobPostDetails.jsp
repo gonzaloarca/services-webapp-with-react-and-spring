@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>
-        <spring:message code="${jobPost.jobType.stringCode}"/>
+        <spring:message code="title.name" arguments="${jobPost.title}"/>
     </title>
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
@@ -31,131 +31,134 @@
     <!--  Bootstrap icons   -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 
-
 </head>
 <body>
-<%@ include file="customNavBar.jsp" %>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white">
-            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">
-                <spring:message code="navigation.index"/>
-            </a></li>
-            <li class="breadcrumb-item active" aria-current="page">
-                <p class="capitalize-first-letter">
-                    <spring:message code="${jobPost.jobType.stringCode}"/>
-                </p>
-            </li>
-        </ol>
-    </nav>
+    <%--    <nav aria-label="breadcrumb">--%>
+    <%--        <ol class="breadcrumb bg-white">--%>
+    <%--            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
+    <%--                <spring:message code="navigation.index"/>--%>
+    <%--            </a></li>--%>
+    <%--            <li class="breadcrumb-item active" aria-current="page">--%>
+    <%--                <p class="capitalize-first-letter">--%>
+    <%--                    <spring:message code="${jobPost.jobType.stringCode}"/>--%>
+    <%--                </p>--%>
+    <%--            </li>--%>
+    <%--        </ol>--%>
+    <%--    </nav>--%>
+    <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
+    <%--    <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">--%>
+    <%--        <i class="fas fa-edit"></i>--%>
+    <%--        <p>Editar publicacion</p>--%>
+    <%--    </a>--%>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
-            <!--ol class="carousel-indicators">
-                <li data-target="#carousel" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel" data-slide-to="1"></li>
-            </ol-->
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                    <img class="d-block w-100 h-100"
-                         src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
-                         alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
-                </div>
-            </div>
-            <!--a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a-->
+            <c:choose>
+                <c:when test="${imageList.size() == 0}">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
+                            <img class="d-block w-100 h-100"
+                                 src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
+                                 alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <c:if test="${imageList.size() > 1}">
+                        <ol class="carousel-indicators">
+                            <c:forEach items="${imageList}" varStatus="status">
+                                <li data-target="#carousel" data-slide-to="${status.index}"
+                                    class="${status.index == 0 ? 'active' : ''}"></li>
+                            </c:forEach>
+                        </ol>
+                        <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </c:if>
+                    <div class="carousel-inner">
+                        <c:forEach items="${imageList}" varStatus="status" var="postImage">
+                            <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
+                                <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
+                                <img class="d-block w-100 h-100"
+                                     src='data:${postImage.image.type};base64,${postImage.image.string}'
+                                     alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
+                            </div>
+                        </c:forEach>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
-
-        <div class="card-body custom-row mt-2">
-
-            <div class="side">
-            </div>
-
-            <div class="center">
-
-                <div class="card custom-card mb-4 bg-white rounded">
-                    <div class="card-body">
+    </div>
+    <div class="card-body custom-row mt-2 p-0">
+        <div class="center">
+            <div class="card custom-card mb-4 bg-white rounded">
+                <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="fas fa-briefcase"></i>
-                            <p>
-                                <c:out value="${jobPost.title}"/>
-                            </p>
+                            <p><c:out value="${jobPost.title}"/></p>
                         </span>
 
-
-                        <%--TODO: IMPLEMENTAR CALIFICACIONES--%>
-                        <%--                        <span class="custom-row rating ml-5">--%>
-                        <%--                            <c:set var="rate" value="${3.7}" scope="session"/>--%>
-                        <%--    &lt;%&ndash;                        TODO: CAMBIAR POR RATING VERDADERO&ndash;%&gt;--%>
-                        <%--                            <c:forEach var="i" begin="1" end="5">--%>
-                        <%--                                &lt;%&ndash;                            > 0.8 se rendondea para arriba, < 0.2 para abajo, el resto queda en 0.5&ndash;%&gt;--%>
-                        <%--                                <c:choose>--%>
-                        <%--                                    <c:when test="${i <= rate + 0.2}">--%>
-                        <%--                                        <i class="bi bi-star-fill star"></i>--%>
-                        <%--                                    </c:when>--%>
-                        <%--                                    <c:when test="${i-rate <= 0.8 && i-rate >= 0.2}">--%>
-                        <%--                                        <i class="bi bi-star-half star"></i>--%>
-                        <%--                                    </c:when>--%>
-                        <%--                                    <c:otherwise>--%>
-                        <%--                                        <i class="bi bi-star star"></i>--%>
-                        <%--                                    </c:otherwise>--%>
-                        <%--                                </c:choose>--%>
-                        <%--                            </c:forEach>--%>
-                        <%--                            <p>--%>
-                        <%--                                (43 calificaciones)--%>
-                        <%--                            </p>--%>
-                        <%--                        </span>--%>
-
-                        <div class="summary custom-row">
-                            <div class="summary-item">
-                                <%--TODO: CAMBIAR A FOTO DE USUARIO--%>
-                                <%--                                <img    src="${pageContext.request.contextPath}/resources/images/banner1.jpg"--%>
-                                <%--                                        alt="Primer foto">--%>
-                                <i class="fas fa-user fa-2x"></i>
-                                <p><c:out value="${jobPost.user.username}"/></p>
+                    <div class="summary custom-row">
+                        <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services"
+                           class="summary-item profile-item align-items-center">
+                            <c:choose>
+                                <c:when test="${jobPost.user.image.string == null}">
+                                    <img src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
+                                         alt="avatar">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}"
+                                         alt="avatar">
+                                </c:otherwise>
+                            </c:choose>
+                            <p><c:out value="${jobPost.user.username}"/></p>
+                            <i class="bi bi-chevron-compact-right"></i>
+                        </a>
+                        <div class="summary-item rate-item">
+                            <p><spring:message code="jobPost.jobs.avgRate"/></p>
+                            <span class="custom-row align-items-center">
+                                    <h2>
+                                        ${avgRate}
+                                    </h2>
+                                    <jsp:include page="components/rateStars.jsp">
+                                        <jsp:param name="rate" value="${avgRate}"/>
+                                    </jsp:include>
+                                    <h5 class="ml-1 review-count">
+                                        (${totalReviewsSize})
+                                    </h5>
+                                </span>
+                            <c:if test="${totalReviewsSize > 0}">
+                                <a class="mt-0 opinion" id="seeReviews">
+                                    <spring:message code="jobPost.jobs.seeReviews"/>
+                                </a>
+                            </c:if>
+                        </div>
+                        <div class="summary-item contracts-item">
+                            <p class="mb-0 ml-3"><spring:message code="profile.completed.works"/></p>
+                            <div class="profile-completed-works-outline">
+                                <div class="profile-completed-works">${totalContractsCompleted}</div>
                             </div>
-                            <div class="summary-item">
-                                <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="card custom-card mb-4 bg-white rounded two-column-item">
+                    <div class="card-body">
+                            <span class="card-title custom-row">
+                                <i class="far fa-clock"></i>
                                 <p>
-                                    <spring:message code="jobPost.jobs.completed" arguments="${contractsCompleted}"/>
+                                    <spring:message code="jobPost.jobs.hours"/>
                                 </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card custom-card mb-4 bg-white rounded">
-                    <div class="card-body">
-                        <span class="card-title custom-row">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <p>
-                                <spring:message code="jobPost.jobs.zones"/>
-                            </p>
-                        </span>
-                        <div class="custom-row zones">
-                            <c:forEach items="${jobPost.zones}" var="zone">
-                                <p class="capitalize-first-letter" style="margin: 0 5px">
-                                    <spring:message code="${zone.stringCode}"/>
-                                </p>
-                            </c:forEach>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card custom-card mb-4 bg-white rounded">
-                    <div class="card-body">
-                        <span class="card-title custom-row">
-                            <i class="far fa-clock"></i>
-                            <p>
-                                <spring:message code="jobPost.jobs.hours"/>
-                            </p>
-                        </span>
+                            </span>
                         <div class="available-hours">
                             <p>
                                 <c:out value="${jobPost.availableHours}"/>
@@ -164,9 +167,27 @@
                     </div>
                 </div>
 
-
-                <div class="card custom-card mb-4 bg-white rounded">
+                <div class="card custom-card mb-4 bg-white rounded two-column-item">
                     <div class="card-body">
+                            <span class="card-title custom-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <p>
+                                    <spring:message code="jobPost.jobs.zones"/>
+                                </p>
+                            </span>
+                        <div class="custom-row zones">
+                            <c:forEach items="${jobPost.zones}" var="zone">
+                                <p class="capitalize-first-letter m-1">
+                                    <spring:message code="${zone.stringCode}"/>
+                                </p>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card custom-card mb-4 bg-white rounded">
+                <div class="card-body">
                         <span class="card-title custom-row">
                             <i class="bi bi-box-seam"></i>
                             <p>
@@ -174,65 +195,95 @@
                             </p>
                         </span>
 
-                        <div class="accordion mx-5" id="accordionPackages">
-                            <c:forEach items="${packages}" var="pack" varStatus="status">
-                                <div class="card custom-card mb-3">
-                                    <div class="card custom-card " id="heading${status.index}">
+                    <div class="accordion mx-5" id="accordionPackages">
+                        <c:forEach items="${packages}" var="pack" varStatus="status">
+                            <div class="card custom-card mb-3">
+                                <div class="card custom-card " id="heading${status.index}">
 
-                                        <button class="btn btn-block collapsed" type="button"
-                                                data-toggle="collapse" data-target="#collapse${status.index}"
-                                                aria-expanded="false"
-                                                aria-controls="collapse${status.index}">
-                                            <div class="package-info">
-                                                <i class="fas fa-box-open"></i>
-                                                <p class="package-title">
-                                                    <c:out value="${pack.title}"/>
-                                                </p>
-                                                <div class="ml-auto custom-row">
-                                                    <div class="package-price">
-                                                        <p class="text-center">
-                                                            <spring:message code="jobPost.jobs.price"/>
-                                                        </p>
-                                                        <div class="chip">
-                                                            <spring:message code="${pack.rateType.stringCode}"
-                                                                            arguments="${pack.price}"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="align-self-center ml-4 mr-4 requestServiceBtn">
-                                                        <a class="btn btn-primary"
-                                                           href="${pageContext.request.contextPath}/contract/package/${pack.id}"
-                                                           role="button" type="submit">
-                                                            <spring:message code="jobPost.jobs.submit"/>
-                                                        </a>
+                                    <button class="drop btn-block hirenet-blue-btn collapsed" type="button"
+                                            data-toggle="collapse" data-target="#collapse${status.index}"
+                                            aria-expanded="false"
+                                            aria-controls="collapse${status.index}">
+                                        <div class="package-info">
+                                            <i class="fa fa-chevron-down text-white"></i>
+                                            <i class="fa fa-chevron-up text-white"></i>
+                                            <p class="package-title">
+                                                <c:out value="${pack.title}"/>
+                                            </p>
+                                            <div class="ml-auto custom-row end-items">
+                                                <div class="package-price end-items-item">
+                                                    <p class="text-center mt-2">
+                                                        <spring:message code="jobPost.jobs.price"/>
+                                                    </p>
+                                                    <div class="chip">
+                                                        <spring:message code="${pack.rateType.stringCode}"
+                                                                        arguments="${pack.price}"/>
                                                     </div>
                                                 </div>
+                                                <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
+                                                    <a class="btn"
+                                                       href="${pageContext.request.contextPath}/contract/package/${pack.id}"
+                                                       role="button" type="submit">
+                                                        <spring:message code="jobPost.jobs.submit"/>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </button>
-                                    </div>
-                                    <div id="collapse${status.index}" class="collapse package-desc"
-                                         aria-labelledby="heading${status.index}"
-                                         data-parent="#accordionPackages">
-                                        <div class="card-body">
-                                            <p class="package-text">
-                                                <spring:message code="jobPost.package.description"/><br/>
-                                                <c:out value="${pack.description}"/>
-                                            </p>
                                         </div>
+                                    </button>
+                                </div>
+                                <div id="collapse${status.index}" class="collapse package-desc"
+                                     aria-labelledby="heading${status.index}"
+                                     data-parent="#accordionPackages">
+                                    <div class="card-body">
+                                        <p class="package-text">
+                                            <spring:message code="jobPost.package.description"/><br/>
+                                            <c:out value="${pack.description}"/>
+                                        </p>
                                     </div>
                                 </div>
-                            </c:forEach>
-                        </div>
+                            </div>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
 
-            <div class="side"></div>
+            <c:if test="${totalReviewsSize > 0}">
+                <div class="card custom-card mb-4 bg-white rounded" id="jobPostReviews">
+                    <div class="card-body">
+                    <span class="card-title custom-row">
+                        <i class="bi bi-chat-left-fill"></i>
+                        <p>
+                            Opiniones
+                        </p>
+                    </span>
+                        <hr class="hr1"/>
+                        <c:forEach var="review" items="${reviews}" varStatus="status">
+                            <c:set var="data" value="${review}" scope="request"/>
+                            <%@include file="components/reviewCard.jsp" %>
+
+                            <c:if test="${status.index != reviews.size()-1}">
+                                <hr class="hr1"/>
+                            </c:if>
+                        </c:forEach>
+                        <c:set var="listSize" value="${reviews.size()}" scope="request"/>
+                        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                        <%@include file="components/bottomPaginationBar.jsp" %>
+                    </div>
+                </div>
+            </c:if>
         </div>
     </div>
 </div>
+<jsp:include page="components/footer.jsp"/>
 <script>
     $('.requestServiceBtn').on('click', function (e) {
         e.stopPropagation();
+    });
+    $('#seeReviews').on('click', function () {
+        $('html,body').animate({
+            scrollTop: $('#jobPostReviews').offset().top
+        }, 'slow');
     });
 </script>
 </body>
