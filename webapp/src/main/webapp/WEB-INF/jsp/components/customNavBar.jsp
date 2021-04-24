@@ -201,18 +201,20 @@
             }
         }
     });
-    // Seteo la ubicacion en variables auxiliares
-    let zoneId;
-    let zoneString;
-    $('.navbar-modal-zone').on('click', function (e) {
-        zoneId = e.target.querySelector("input").value;
-        zoneString = e.target.innerText;
-    })
 
     // Cuando se hace el submit guardo las cookies
     $('#pickLocationButton').on('click', function () {
-        sessionStorage.setItem("pickedZoneId", zoneId);
-        sessionStorage.setItem("pickedZoneString", zoneString);
+
+        const zonesInput = $('.navbar-location-list-group')[0].getElementsByTagName('input');
+        const zonesString = $('.navbar-location-list-group')[0].getElementsByTagName('span');
+        let found = false;
+        for (let i = 0; i < zonesInput.length && !found; i++) {
+            if (zonesInput[i].checked) {
+                sessionStorage.setItem("pickedZoneId", i);
+                sessionStorage.setItem("pickedZoneString", zonesString[i].innerText);
+                found = true;
+            }
+        }
     })
 
     // Para levantar la ubicacion en las cookies, en caso de existir

@@ -138,9 +138,11 @@
                                         (${totalReviewsSize})
                                     </h5>
                                 </span>
-                            <a class="mt-0 opinion" id="seeReviews">
-                                <spring:message code="jobPost.jobs.seeReviews"/>
-                            </a>
+                            <c:if test="${totalReviewsSize > 0}">
+                                <a class="mt-0 opinion" id="seeReviews">
+                                    <spring:message code="jobPost.jobs.seeReviews"/>
+                                </a>
+                            </c:if>
                         </div>
                         <div class="summary-item contracts-item">
                             <p class="mb-0 ml-3"><spring:message code="profile.completed.works"/></p>
@@ -252,29 +254,31 @@
                 </div>
             </div>
 
-            <div class="card custom-card mb-4 bg-white rounded" id="jobPostReviews">
-                <div class="card-body">
+            <c:if test="${totalReviewsSize > 0}">
+                <div class="card custom-card mb-4 bg-white rounded" id="jobPostReviews">
+                    <div class="card-body">
                     <span class="card-title custom-row">
                         <i class="bi bi-chat-left-fill"></i>
                         <p>
                             Opiniones
                         </p>
                     </span>
-                    <hr class="hr1"/>
-                    <c:forEach var="review" items="${reviews}" varStatus="status">
-                        <c:set var="data" value="${review}" scope="request"/>
-                        <%@include file="components/reviewCard.jsp" %>
+                        <hr class="hr1"/>
+                        <c:forEach var="review" items="${reviews}" varStatus="status">
+                            <c:set var="data" value="${review}" scope="request"/>
+                            <%@include file="components/reviewCard.jsp" %>
 
-                        <c:if test="${status.index != reviews.size()-1}">
-                            <hr class="hr1"/>
-                        </c:if>
-                    </c:forEach>
-                    <c:set var="listSize" value="${reviews.size()}" scope="request"/>
-                    <c:set var="maxPage" value="${maxPage}" scope="request"/>
-                    <c:set var="currentPages" value="${currentPages}" scope="request"/>
-                    <%@include file="components/bottomPaginationBar.jsp" %>
+                            <c:if test="${status.index != reviews.size()-1}">
+                                <hr class="hr1"/>
+                            </c:if>
+                        </c:forEach>
+                        <c:set var="listSize" value="${reviews.size()}" scope="request"/>
+                        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                        <%@include file="components/bottomPaginationBar.jsp" %>
+                    </div>
                 </div>
-            </div>
+            </c:if>
         </div>
     </div>
 </div>
@@ -285,8 +289,8 @@
     });
     $('#seeReviews').on('click', function () {
         $('html,body').animate({
-                scrollTop: $('#jobPostReviews').offset().top
-            }, 'slow');
+            scrollTop: $('#jobPostReviews').offset().top
+        }, 'slow');
     });
 </script>
 </body>

@@ -12,7 +12,7 @@
 
 /*background para login y register*/
 body {
-    background-image: url("/resources/images/background.jpg");
+    /*background-image: url("/resources/images/background.jpg");*/
     background-size: cover;
 }
 

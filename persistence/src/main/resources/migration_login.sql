@@ -1,6 +1,3 @@
-ALTER TABLE users
-    ADD COLUMN IF NOT EXISTS user_password VARCHAR(100) NOT NULL DEFAULT md5(random()::text);
-
 CREATE TABLE IF NOT EXISTS user_role
 (
     user_id INT 	NOT NULL,
@@ -8,13 +5,6 @@ CREATE TABLE IF NOT EXISTS user_role
     FOREIGN KEY (user_id) REFERENCES users,
     PRIMARY KEY (user_id, role_id)
 );
-
-ALTER TABLE users
-    DROP COLUMN IF EXISTS user_is_professional;
-
-ALTER TABLE IF EXISTS job_package
-    ALTER COLUMN package_price DROP NOT NULL;
-
 
 DROP VIEW IF EXISTS full_post;
 CREATE OR REPLACE VIEW full_post AS
@@ -75,9 +65,6 @@ FROM contract
          					  user_image     as professional_image,
 							  image_type	 as professional_image_type
                        FROM users) as professionals;
-
-ALTER TABLE users
-	ADD COLUMN IF NOT EXISTS user_is_verified BOOLEAN NOT NULL DEFAULT false;
 
 CREATE TABLE IF NOT EXISTS verification_token
 (

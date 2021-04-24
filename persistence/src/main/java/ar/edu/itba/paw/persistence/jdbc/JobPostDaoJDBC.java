@@ -50,7 +50,8 @@ public class JobPostDaoJDBC implements JobPostDao {
             resultSet.getString("post_title"),
             resultSet.getString("post_available_hours"),
             JobPost.JobType.values()[resultSet.getInt("post_job_type")],
-            JobPostDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
+            auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
+//            new ArrayList<>(Arrays.asList(Zone.values()[0], Zone.values()[1])),
             resultSet.getDouble("rating"),
             resultSet.getBoolean("post_is_active"));
 
@@ -117,7 +118,7 @@ public class JobPostDaoJDBC implements JobPostDao {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE ? = ANY(zones) LIMIT ? OFFSET ?",
+                "SELECT * FROM full_post WHERE ? && zones::int[] LIMIT ? OFFSET ?",
                 new Object[]{zone.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
@@ -164,7 +165,7 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
-    public int findMaxPage() {
+    public int findAllMaxPage() {
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post", Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }

@@ -100,7 +100,8 @@
         <%@include file="components/bottomPaginationBar.jsp" %>
     </div>
 </div>
-<div class="landing-bottom landing-row-shadow">
+<div class="landing-bottom landing-row-shadow"
+     style="background: url('${pageContext.request.contextPath}/resources/images/publish-landing-bg-1.svg')" >
     <h3>
         <spring:message code="index.createJobPost.question"/>
         <br>

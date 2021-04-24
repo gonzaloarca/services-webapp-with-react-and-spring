@@ -25,7 +25,7 @@ import java.util.List;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:job-post-image-test.sql")
+@Sql("classpath:job_post_image_test.sql")
 public class JobPostImageDaoJDBCTest {
 
 	@InjectMocks
@@ -42,6 +42,7 @@ public class JobPostImageDaoJDBCTest {
 		jdbcTemplate = new JdbcTemplate(ds);
 	}
 
+//	TODO:FIX TESTS
 	@Test
 	public void addImageTest() {
 		long post_id = 1;

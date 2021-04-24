@@ -168,11 +168,11 @@
                         </div>
                     </div>
 
-                    <div class="step-header-subtitle">
-                        <span><i class="fas fa-caret-right"></i>
-                            <spring:message code="jobPost.create.package.morePackagesHelp"/>
-                        </span>
-                    </div>
+<%--                    <div class="step-header-subtitle">--%>
+<%--                        <span><i class="fas fa-caret-right"></i>--%>
+<%--                            <spring:message code="jobPost.create.package.morePackagesHelp"/>--%>
+<%--                        </span>--%>
+<%--                    </div>--%>
 
                     <div class="step-subtitle">
                         <spring:message code="contract.create.form.required"/>
@@ -896,6 +896,56 @@
                 })
         $("#submitBtn").attr("disabled", is_valid);
     }
+    const checkboxList = $('.zone-checkbox');
+
+    for (let i = 0; i < checkboxList.length; i++) {
+        console.log(checkboxList[i].closest('.list-group-item'))
+        console.log(checkboxList[i])
+
+        let zoneString = checkboxList[i].closest('.list-group-item').getElementsByTagName('span')[0].textContent;
+        console.log("Afuera")
+        console.log(checkboxList[i])
+
+        if (checkboxList[i].checked) {
+            console.log("Adentro")
+
+//Lo agrego al div
+            $('#zoneContainer').append(
+                "<span class='zoneTag'>" + zoneString + "</span>");
+        }
+    };
+
+    $('#jobTitleOverview').text($('#jobTitle').val());
+
+    $('#availableHoursOverview').text($('#availableHoursInput').val());
+
+    $('#jobTypeOverview').text($("#jobTypeSelect").find(':selected').text());
+
+    const fileArray = $("#imageInput")[0].files;
+
+    if (fileArray.length > 0) {
+        let filesAmount = fileArray.length;
+
+        $('#imageCarousel').empty();
+
+        for (let i = 0; i < filesAmount; i++) {
+            let reader = new FileReader();
+
+            reader.onload = function (event) {
+                $($.parseHTML('<img>')).attr('src', event.target.result).addClass('carousel-img')
+                    .appendTo($('#imageCarousel'));
+            }
+
+            reader.readAsDataURL(fileArray[i]);
+        }
+    }
+
+
+    $('#package-title-overview').text($("#package-title-input").val())
+
+    $('#package-description-overview').text($("#package-description-input").val())
+
+    $('#package-title-overview').text($("#package-description-overview").val())
 </script>
 </body>
 </html>

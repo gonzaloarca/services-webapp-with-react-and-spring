@@ -1,6 +1,9 @@
 package nologin;
 
+import ar.edu.itba.paw.interfaces.services.MailingService;
+import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.VerificationToken;
 import ar.edu.itba.paw.persistence.jdbc.UserDaoJDBC;
 import ar.edu.itba.paw.services.nologin.NoLoginUserService;
 import org.junit.Assert;
@@ -12,7 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
 import java.util.Arrays;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,20 +40,33 @@ public class NoLoginUserServiceTest {
             true,
             true
     );
+    private static final VerificationToken TOKEN = new VerificationToken("", NEW_USER, Instant.now());
 
     @InjectMocks
     private NoLoginUserService userService = new NoLoginUserService();
 
     @Mock
+    private MailingService mailingService;  //necesario que este como Mock para el testRegisterNewUser
+
+    @Mock
     private UserDaoJDBC userDaoJDBC;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private VerificationTokenService verificationTokenService;
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
     public void testRegisterNewUser() {
-        Mockito.when(userDaoJDBC.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone()))
-                .thenReturn(NEW_USER);
+        Mockito.when(userDaoJDBC.register(Mockito.eq(NEW_USER.getEmail()),Mockito.eq(""),Mockito.eq(NEW_USER.getUsername()),
+                Mockito.eq(NEW_USER.getPhone()))).thenReturn(NEW_USER);
+        Mockito.when(passwordEncoder.encode(Mockito.eq(""))).thenReturn("");
+        Mockito.when(verificationTokenService.create(Mockito.eq(NEW_USER))).thenReturn(TOKEN);
+
         User createdUser = userService.register(NEW_USER.getEmail(),"",NEW_USER.getUsername(),NEW_USER.getPhone());
         Assert.assertNotNull(createdUser);
         Assert.assertEquals(NEW_USER,createdUser);
