@@ -50,12 +50,17 @@ public class JobPostController {
     PaginationService paginationService;
 
     @RequestMapping("/job/{postId}")
-    public ModelAndView jobPostDetails(@PathVariable("postId") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+    public ModelAndView jobPostDetails(@PathVariable("postId") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page,Principal principal) {
         if (page < 1)
             throw new IllegalArgumentException();
+        boolean isOwner = false;
         final ModelAndView mav = new ModelAndView("jobPostDetails");
         JobPost jobPost = jobPostService.findById(id);
+        if(principal != null && jobPost.getUser().getEmail().equals(principal.getName()))
+            isOwner=true;
         List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
+        //BUSCAR SI HAY UNA MEJOR MANERA
+        mav.addObject("isOwner",isOwner);
 
         mav.addObject("jobPost", jobPost);
         mav.addObject("imageList", imageList);

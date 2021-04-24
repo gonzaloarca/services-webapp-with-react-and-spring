@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.ConsensusBased;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -97,7 +98,7 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDecisionManager accessDecisionManager(){
-        List<AccessDecisionVoter<?>> decisionVoters = Arrays.asList(
+        List decisionVoters = Arrays.asList(
                 new WebExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter(),

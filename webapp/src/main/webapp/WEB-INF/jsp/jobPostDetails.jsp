@@ -51,7 +51,7 @@
     <%--    </nav>--%>
     <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
         <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
-        <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">
+        <a class="custom-row edit-button text-uppercase" href="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
             <i class="fas fa-edit"></i>
             <p>Editar publicacion</p>
         </a>
@@ -223,17 +223,15 @@
                                                                         arguments="${pack.price}"/>
                                                     </div>
                                                 </div>
-<%--                                                <sec:authorize url="${pageContext.request.contextPath}/contract/package/${pack.id}">--%>
-                                                <sec:authorize url="${pageContext.request.contextPath}/contract/package/${pack.id}">
-                                                <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
+                                                <c:if test="${!isOwner}">
+                                                    <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
                                                         <a class="btn"
                                                            href="${pageContext.request.contextPath}/contract/package/${pack.id}"
                                                            role="button" type="submit">
                                                             <spring:message code="jobPost.jobs.submit"/>
                                                         </a>
                                                     </div>
-                                                </sec:authorize>
-<%--                                                </sec:authorize>--%>
+                                                </c:if>
                                             </div>
                                         </div>
                                     </button>

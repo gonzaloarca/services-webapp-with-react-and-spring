@@ -37,10 +37,9 @@ public class OwnershipVoter implements AccessDecisionVoter {
 
     @Override
     public int vote(Authentication authentication, Object o, Collection collection) {
-        System.out.println(o);
         if(o instanceof FilterInvocation){
             FilterInvocation filterInvocation = (FilterInvocation) o;
-            String url = filterInvocation.getRequestUrl();
+                String url = filterInvocation.getRequestUrl();
 
             if(url.equals("/"))
                 return ACCESS_ABSTAIN;
@@ -79,6 +78,7 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         else
                             return ACCESS_DENIED;
                     }
+                    break;
                 case "create-job-post":
                     if (paths.length == 1)
                         return ACCESS_ABSTAIN;
@@ -110,6 +110,7 @@ public class OwnershipVoter implements AccessDecisionVoter {
                             }
                         }
                     }
+                    break;
                 case "contract":
                     if(paths.length <= 2)
                         return ACCESS_ABSTAIN;
@@ -127,6 +128,7 @@ public class OwnershipVoter implements AccessDecisionVoter {
                             return ACCESS_GRANTED;
                         }
                     }
+                    break;
             }
 //
         }

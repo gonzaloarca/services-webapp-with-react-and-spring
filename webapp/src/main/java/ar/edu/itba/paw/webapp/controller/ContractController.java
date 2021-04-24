@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.form.ContractForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,7 @@ public class ContractController {
     @Autowired
     private UserService userService;
 
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
@@ -59,6 +61,7 @@ public class ContractController {
         mav.addObject("imageList", imageList);
 
         return mav;
+
     }
 
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.POST)
