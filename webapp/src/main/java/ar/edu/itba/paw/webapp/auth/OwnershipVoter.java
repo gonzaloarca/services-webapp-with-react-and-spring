@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
+import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class OwnershipVoter implements AccessDecisionVoter {
 
     @Autowired
     private JobPostService jobPostService;
+
+    @Autowired
+    private JobPackageService jobPackageService;
 
     @Override
     public boolean supports(ConfigAttribute configAttribute) {
@@ -104,6 +108,23 @@ public class OwnershipVoter implements AccessDecisionVoter {
                                 else
                                     return ACCESS_DENIED;
                             }
+                        }
+                    }
+                case "contract":
+                    if(paths.length <= 2)
+                        return ACCESS_ABSTAIN;
+                    if(paths[1].equals("package")){
+                        try {
+                            id = Integer.parseInt(paths[2]);
+                        }catch (NumberFormatException e){
+                            return ACCESS_ABSTAIN;
+                        }
+                        long postId = jobPackageService.findById(id).getPostId();
+                        isOwner = jobPostService.findById(postId).getUser().getEmail().equals(authentication.getName());
+                        if(isOwner){
+                            return ACCESS_DENIED;
+                        }else{
+                            return ACCESS_GRANTED;
                         }
                     }
             }

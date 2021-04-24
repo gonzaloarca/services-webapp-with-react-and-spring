@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -49,10 +50,12 @@
     <%--        </ol>--%>
     <%--    </nav>--%>
     <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
-    <%--    <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">--%>
-    <%--        <i class="fas fa-edit"></i>--%>
-    <%--        <p>Editar publicacion</p>--%>
-    <%--    </a>--%>
+        <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
+        <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">
+            <i class="fas fa-edit"></i>
+            <p>Editar publicacion</p>
+        </a>
+        </sec:authorize>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <c:choose>
@@ -218,13 +221,17 @@
                                                                         arguments="${pack.price}"/>
                                                     </div>
                                                 </div>
+<%--                                                <sec:authorize url="${pageContext.request.contextPath}/contract/package/${pack.id}">--%>
+                                                <sec:authorize url="${pageContext.request.contextPath}/contract/package/${pack.id}">
                                                 <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
-                                                    <a class="btn"
-                                                       href="${pageContext.request.contextPath}/contract/package/${pack.id}"
-                                                       role="button" type="submit">
-                                                        <spring:message code="jobPost.jobs.submit"/>
-                                                    </a>
-                                                </div>
+                                                        <a class="btn"
+                                                           href="${pageContext.request.contextPath}/contract/package/${pack.id}"
+                                                           role="button" type="submit">
+                                                            <spring:message code="jobPost.jobs.submit"/>
+                                                        </a>
+                                                    </div>
+                                                </sec:authorize>
+<%--                                                </sec:authorize>--%>
                                             </div>
                                         </div>
                                     </button>
