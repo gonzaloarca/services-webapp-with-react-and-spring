@@ -2,7 +2,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="sprig" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>
@@ -168,11 +167,11 @@
                         </div>
                     </div>
 
-<%--                    <div class="step-header-subtitle">--%>
-<%--                        <span><i class="fas fa-caret-right"></i>--%>
-<%--                            <spring:message code="jobPost.create.package.morePackagesHelp"/>--%>
-<%--                        </span>--%>
-<%--                    </div>--%>
+                        <%--                    <div class="step-header-subtitle">--%>
+                        <%--                        <span><i class="fas fa-caret-right"></i>--%>
+                        <%--                            <spring:message code="jobPost.create.package.morePackagesHelp"/>--%>
+                        <%--                        </span>--%>
+                        <%--                    </div>--%>
 
                     <div class="step-subtitle">
                         <spring:message code="contract.create.form.required"/>
@@ -583,16 +582,11 @@
 </div>
 
 <script>
+
     // Script para habilitar tooltips de Bootstrap
     $(document).ready(function () {
         $("body").tooltip({selector: '[data-toggle=tooltip]'});
     });
-
-    // Eliminar div de errores si esta vacío
-    let errorContainer = $('.form-error-container');
-    if (errorContainer.children().length === 0) {
-        errorContainer.remove();
-    }
 
 
     // Script para deshabilitar el input de precio cuando esta TBD el radio
@@ -811,57 +805,11 @@
         $('#overview-price').text('$' + $(this).val());
     });
 
-    const checkboxList = $('.zone-checkbox');
-
-    for (let i = 0; i < checkboxList.length; i++) {
-        console.log(checkboxList[i].closest('.list-group-item'))
-        console.log(checkboxList[i])
-
-        let zoneString = checkboxList[i].closest('.list-group-item').getElementsByTagName('span')[0].textContent;
-        console.log("Afuera")
-        console.log(checkboxList[i])
-
-        if (checkboxList[i].checked) {
-            console.log("Adentro")
-
-//Lo agrego al div
-            $('#zoneContainer').append(
-                "<span class='zoneTag'>" + zoneString + "</span>");
-        }
-    };
-
-    $('#jobTitleOverview').text($('#jobTitle').val());
-
-    $('#availableHoursOverview').text($('#availableHoursInput').val());
-
-    $('#jobTypeOverview').text($("#jobTypeSelect").find(':selected').text());
-
-    const fileArray = $("#imageInput")[0].files;
-
-    if (fileArray.length > 0) {
-        let filesAmount = fileArray.length;
-
-        $('#imageCarousel').empty();
-
-        for (let i = 0; i < filesAmount; i++) {
-            let reader = new FileReader();
-
-            reader.onload = function (event) {
-                $($.parseHTML('<img>')).attr('src', event.target.result).addClass('carousel-img')
-                    .appendTo($('#imageCarousel'));
-            }
-
-            reader.readAsDataURL(fileArray[i]);
-        }
+    // Eliminar div de errores si esta vacío
+    let errorContainer = $('.form-error-container');
+    if (errorContainer.children().length === 0) {
+        errorContainer.remove();
     }
-
-    
-    $('#package-title-overview').text($("#package-title-input").val())
-
-    $('#package-description-overview').text($("#package-description-input").val())
-
-    $('#package-title-overview').text($("#package-description-overview").val())
-
 
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function () {
@@ -872,16 +820,16 @@
 
         // Loop over them and prevent submission
         Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
 
-                        form.classList.add('was-validated')
-                    }, false)
-                })
+                    form.classList.add('was-validated')
+                }, false)
+            })
     })()
 
     //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
@@ -889,11 +837,11 @@
         var forms = document.querySelectorAll('.needs-validation');
         var is_valid = true;
         Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    if (!form.checkValidity()) {
-                        is_valid = false;
-                    }
-                })
+            .forEach(function (form) {
+                if (!form.checkValidity()) {
+                    is_valid = false;
+                }
+            })
         $("#submitBtn").attr("disabled", is_valid);
     }
     const checkboxList = $('.zone-checkbox');
@@ -949,7 +897,3 @@
 </script>
 </body>
 </html>
-
-
-
-
