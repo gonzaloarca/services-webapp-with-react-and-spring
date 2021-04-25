@@ -19,7 +19,7 @@
                                 </form:option>
                             </c:forEach>
                         </form:select>
-                        <form:errors path="zone" cssClass="search-form-error" element="p"/>
+                        <p class="search-form-error" id="zoneError" style="display: none"><spring:message code="account.settings.security.empty"/></p>
                     </div>
 
                     <div class="home-search-bar-container home-search-bar-row">
@@ -28,7 +28,8 @@
                                     placeholder="${typePlaceholder}" maxlength="100"/>
                         <form:errors path="query" cssClass="search-form-error" element="p"/>
                     </div>
-                    <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row" id="homeSearchButton">
+                    <button type="submit" class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row"
+                            onclick="return homeSearchButton(this.event);">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -67,11 +68,23 @@
          src='<c:url value="/resources/images/landingbg1.svg" />'/>
 </div>
 <script>
-    // Cuando se hace el submit guardo las cookies
-    var homeSelect = $('#homeSelect');
-    $('#homeSearchButton').on('click', function () {
-        sessionStorage.setItem("pickedZoneId", homeSelect[0].value);
-        sessionStorage.setItem("pickedZoneString", homeSelect[0].selectedOptions[0].label);
+    // Cuando se hace el submit chequeo que se haya seleccionado una zona y de ser asi guardo las cookies
+    let homeSelect = $('#homeSelect');
+    function homeSearchButton () {
+        if(homeSelect[0].value === "")  {
+            $('#zoneError')[0].style.display = 'inherit';
+            return false;
+        }
+        else {
+            sessionStorage.setItem("pickedZoneId", homeSelect[0].value);
+            sessionStorage.setItem("pickedZoneString", homeSelect[0].selectedOptions[0].label);
+            return true;
+        }
+    }
+
+    // Saco el mensaje de error si es que existia
+    $('.home-search-location').on('click', function () {
+        $('#zoneError')[0].style.display = 'none';
     })
 
     // Para levantar la ubicacion en las cookies, en caso de existir

@@ -55,7 +55,8 @@
                     <spring:message code="navigation.search" var="queryPlaceholder"/>
                     <form:input class="form-control mr-sm-2" type="search" path="query"
                                 placeholder="${queryPlaceholder}" aria-label="Search"/>
-                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit"
+                            onclick="return submitSearchPost();">
                         <spring:message code="navigation.search"/>
                     </button>
                     <a type="button" class="btn btn-link navbar-link-button ml-auto" data-toggle="modal"
@@ -202,6 +203,7 @@
         }
     });
 
+    let zonePicked = false;
     // Cuando se hace el submit guardo las cookies
     $('#pickLocationButton').on('click', function () {
 
@@ -213,6 +215,7 @@
                 sessionStorage.setItem("pickedZoneId", i);
                 sessionStorage.setItem("pickedZoneString", zonesString[i].innerText);
                 found = true;
+                zonePicked = true;
             }
         }
     })
@@ -223,6 +226,7 @@
         if (auxZoneString) {
             $('#zoneString')[0].innerText = auxZoneString;
             $('#zone' + (parseInt(sessionStorage.getItem('pickedZoneId')) + 1)).prop("checked", true);
+            zonePicked = true;
         } else
             $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
 
@@ -231,6 +235,14 @@
         if (auxCategoryId) {
             $('#categoryForm')[0].value = auxCategoryId;
         }
+    }
+
+    // $('#zoneError')[0].display = none;
+    function submitSearchPost() {
+        if(!zonePicked) {
+            $('#zonesModal').modal('show');
+            return false;
+        }else return true;
     }
 </script>
 </body>
