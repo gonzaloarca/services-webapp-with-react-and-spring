@@ -15,11 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
-import java.util.Arrays;
+import java.time.LocalDateTime;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NoLoginUserServiceTest {
@@ -30,16 +29,16 @@ public class NoLoginUserServiceTest {
             "Francisco Quesada",
             "11-4578-9087",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final User NEW_USER = new User(
             1,
             "mrodriguez@gmail.com",
             "Manuel Rodriguez",
             "11-5678-4353",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final VerificationToken TOKEN = new VerificationToken("", NEW_USER, Instant.now());
 
     @InjectMocks

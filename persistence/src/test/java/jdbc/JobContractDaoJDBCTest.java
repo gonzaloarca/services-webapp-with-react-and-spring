@@ -1,5 +1,4 @@
 package jdbc;
-import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jdbc.JobContractDaoJDBC;
 import ar.edu.itba.paw.persistence.jdbc.JobPackageDaoJDBC;
@@ -23,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Rollback
@@ -37,8 +37,8 @@ public class JobContractDaoJDBCTest {
             "Francisco Quesada",
             "1147895678",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final List<UserAuth.Role> USER1_ROLES = Arrays.asList(UserAuth.Role.CLIENT, UserAuth.Role.PROFESSIONAL);
     private static final User USER2 = new User(
             2,
@@ -46,8 +46,8 @@ public class JobContractDaoJDBCTest {
             "Manuel Rodriguez",
             "1109675432",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final List<UserAuth.Role> USER2_ROLES = Arrays.asList(UserAuth.Role.CLIENT);
 
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(
@@ -64,8 +64,8 @@ public class JobContractDaoJDBCTest {
             JobPost.JobType.values()[1],
             ZONES,
             0.0,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final JobPackage JOB_PACKAGE = new JobPackage(
             1,
             1,
@@ -78,7 +78,7 @@ public class JobContractDaoJDBCTest {
             1, USER2,
             JOB_PACKAGE,
             USER1,
-            new Date(),
+            LocalDateTime.now(),
             "Se me rompio una zapatilla"
     );
 

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -8,12 +9,12 @@ public class JobContract {
     private final User client;
     private final JobPackage jobPackage;
     private final User professional;
-    private final Date creationDate;           //TODO: ver tipo de variable
+    private final LocalDateTime creationDate;           //TODO: ver tipo de variable
     private final String description;
     private final ByteImage image;
 
     //TODO: ver si este constructor está de mas, se usa en los tests
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description) {
+    public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
@@ -23,7 +24,7 @@ public class JobContract {
         image = null;
     }
 
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description,
+    public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description,
                        ByteImage image) {
         this.id = id;
         this.client = client;
@@ -46,7 +47,7 @@ public class JobContract {
         return client;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
@@ -61,6 +62,7 @@ public class JobContract {
     public ByteImage getImage() {
         return image;
     }
+
 
     @Override
     public String toString() {

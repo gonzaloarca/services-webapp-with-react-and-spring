@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Rollback
@@ -29,8 +30,8 @@ public class UserDaoJDBCTest {
             "Francisco Quesada",
             "11-3456-3232",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
 
     @Autowired
     UserDaoJDBC userDaoJDBC;
@@ -54,8 +55,8 @@ public class UserDaoJDBCTest {
                 "Manuel Rodriguez",
                 "11-4536-5656",
                 true,
-                true
-        );
+                true,
+                LocalDateTime.now());
         String userTestPassword = "password";
 
         User user = userDaoJDBC.register(userTest.getEmail(),userTestPassword, userTest.getUsername(), userTest.getPhone());

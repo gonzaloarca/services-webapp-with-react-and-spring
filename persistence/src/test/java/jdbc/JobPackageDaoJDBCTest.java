@@ -18,6 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,8 +43,8 @@ public class JobPackageDaoJDBCTest {
             "Francisco Quesada",
             "11-3456-3232",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
 
 
     private static final JobPost JOB_POST = new JobPost(
@@ -54,7 +55,7 @@ public class JobPackageDaoJDBCTest {
             JobPost.JobType.ELECTRICITY,
             ZONES,
             0.0,
-            true);
+            true, LocalDateTime.now());
 
     private static final JobPackage[] JOB_PACKAGES = {new JobPackage(
             1,

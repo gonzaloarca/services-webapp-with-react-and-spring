@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Rollback
@@ -27,8 +28,8 @@ public class ReviewDaoJDBCTest {
             "Francisco Quesada",
             "1147895678",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final List<UserAuth.Role> USER1_ROLES = Arrays.asList(UserAuth.Role.CLIENT, UserAuth.Role.PROFESSIONAL);
     private static final User USER2 = new User(
             2,
@@ -36,11 +37,11 @@ public class ReviewDaoJDBCTest {
             "Manuel Rodriguez",
             "1109675432",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final List<UserAuth.Role> USER2_ROLES = Arrays.asList(UserAuth.Role.CLIENT);
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
-    private static final JobPost JOB_POST = new JobPost(1, USER1, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0, true);
+    private static final JobPost JOB_POST = new JobPost(1, USER1, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0, true, LocalDateTime.now());
     private static final JobPackage JOB_PACKAGE = new JobPackage(
             1,
             1,
@@ -53,7 +54,7 @@ public class ReviewDaoJDBCTest {
             1, USER2,
             JOB_PACKAGE,
             USER1,
-            new Date(),
+            LocalDateTime.now(),
             "Se me rompio una zapatilla"
     );
 

@@ -13,11 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NoLoginJobPostServiceTest {
@@ -28,24 +28,24 @@ public class NoLoginJobPostServiceTest {
             "Francisco Quesada",
             "11-4578-9087",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final User EXISTING_USER_TO_PROF = new User(
             1,
             "fquesada@gmail.com",
             "Francisco Quesada",
             "11-4578-9087",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final User NEW_PROFESSIONAL = new User(
             1,
             "mrodriguez@gmail.com",
             "Manuel Rodriguez",
             "11-5678-4353",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(
             Arrays.asList(
                     JobPost.Zone.PALERMO,
@@ -59,8 +59,8 @@ public class NoLoginJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            0.0,true
-    );
+            0.0,true,
+            LocalDateTime.now());
     private static final JobPost JOB_POST_EXISTING_USER = new JobPost(
             1,
             EXISTING_USER_TO_PROF,
@@ -68,8 +68,8 @@ public class NoLoginJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            0.0,true
-    );
+            0.0,true,
+            LocalDateTime.now());
 
     @InjectMocks
     private NoLoginJobPostService jobPostService = new NoLoginJobPostService();

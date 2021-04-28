@@ -56,14 +56,14 @@ public class JobPackageDaoJDBC implements JobPackageDao {
 
     @Override
     public Optional<JobPackage> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM job_package WHERE package_id = ?",new Object[]{id},JOB_PACKAGE_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM job_package WHERE package_id = ? AND package_is_active = TRUE",new Object[]{id},JOB_PACKAGE_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<JobPackage> findByPostId(long id,int page) {
         Integer limit =getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ?",new Object[]{id},JOB_PACKAGE_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ? AND post_is_active = TRUE",new Object[]{id},JOB_PACKAGE_ROW_MAPPER);
     }
 
 }
