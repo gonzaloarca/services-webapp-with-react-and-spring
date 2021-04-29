@@ -30,7 +30,7 @@
 
 .qualify-rate:not(:checked) > input {
     position: absolute;
-    top: -9999px;
+    z-index: -1;
 }
 
 .qualify-rate:not(:checked) > label {

@@ -63,16 +63,19 @@
                                     arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
                     <a class="contract-contact-text"
                        onclick='openContactModal("${name}", "${email}", "${phone}")'>
-                        <h4 class="mb-3">
+                        <h5 class="mb-3">
                             <i class="fa fa-info-circle" aria-hidden="true"></i>
                             <spring:message code="mycontracts.contact"/>
-                        </h4>
+                        </h5>
                     </a>
                     <c:choose>
                         <c:when test="${contractCard.review != null}">
+                            <h7><spring:message code="mycontracts.yourReview"/></h7>
+                            <div class="gray-chip">
                             <jsp:include page="components/rateStars.jsp">
                                 <jsp:param name="rate" value="${contractCard.review.rate}"/>
                             </jsp:include>
+                            </div>
                         </c:when>
                         <c:otherwise>
                             <a class="contract-review-text"

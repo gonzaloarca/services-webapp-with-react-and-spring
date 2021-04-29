@@ -22,6 +22,7 @@
 </div>
 <h4 class="mt-2 review-title"><c:out value="${requestScope.data.title}"/></h4>
 <h5><c:out value="${requestScope.data.description}"/></h5>
+<c:if test="${requestScope.withLink}">
 <a href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
     <h5 class="review-link mt-2">
         <i class="bi bi-box-arrow-up-right"></i>
@@ -29,3 +30,4 @@
                         arguments="${requestScope.data.jobPost.title}"/>
     </h5>
 </a>
+</c:if>

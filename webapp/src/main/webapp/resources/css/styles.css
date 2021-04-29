@@ -248,6 +248,7 @@ h3 {
     padding: 6px 12px;
     text-align: center;
     line-height: 1;
+    width: fit-content;
 }
 
 /*Para precio, se utiliza en JobCard y en ServiceCard*/

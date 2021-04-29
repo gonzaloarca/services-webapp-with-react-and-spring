@@ -42,7 +42,7 @@ public class ProfileController {
 
     @ModelAttribute("avgRate")
     private Double getAvgRate(@PathVariable("id") final long id) {
-        return reviewService.findProfessionalAvgRate(id);
+        return Math.floor(reviewService.findProfessionalAvgRate(id) *100)/100;
     }
 
     @ModelAttribute("servicesSize")

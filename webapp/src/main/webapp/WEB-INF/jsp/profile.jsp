@@ -55,7 +55,7 @@
                                 <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
                             </c:otherwise>
                         </c:choose>
-                        <img class="card-image-top profile-img"
+                        <img class="profile-img"
                              src='${profilePic}'
                              alt="<spring:message code="profile.image"/>">
                     </div>
@@ -157,8 +157,8 @@
                                                     arguments="${6-i}"/></p>
                                             <div class="progress">
                                                 <div class="progress-bar bg-warning" role="progressbar"
-                                                     style="width: ${Integer.valueOf(reviewsByPoints[5-i]*100/reviews.size())};"
-                                                     aria-valuenow="${Integer.valueOf(reviewsByPoints.get(5-i)*100/reviews.size())}"
+                                                     style="width: ${reviewsByPoints[5-i]*100/reviews.size()};"
+                                                     aria-valuenow="${reviewsByPoints.get(5-i)*100/reviews.size()}"
                                                      aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                             <p class="reviews-summary-gray-text">${reviewsByPoints.get(5-i)}</p>
@@ -171,6 +171,7 @@
 
                         <c:forEach var="review" items="${reviews}" varStatus="status">
                             <c:set var="data" value="${review}" scope="request"/>
+                            <c:set var="withLink" value="${true}" scope="request"/>
                             <%@include file="components/reviewCard.jsp" %>
 
                             <c:if test="${status.index != reviews.size()-1}">

@@ -66,7 +66,7 @@ public class JobPostController {
         mav.addObject("packages", jobPackageService.findByPostId(id));
         mav.addObject("contractsCompleted",
                 jobContractService.findContractsQuantityByPostId(jobPost.getUser().getId()));
-        mav.addObject("avgRate", reviewService.findJobPostAvgRate(jobPost.getId()));
+        mav.addObject("avgRate", Math.floor(reviewService.findJobPostAvgRate(id) *100)/100);
         mav.addObject("totalReviewsSize", reviewService.findJobPostReviewsSize(id));
         mav.addObject("reviews", reviewService.findReviewsByPostId(jobPost.getId(), page - 1));
         int maxPage = paginationService.findMaxPageReviewsByPostId(id);
