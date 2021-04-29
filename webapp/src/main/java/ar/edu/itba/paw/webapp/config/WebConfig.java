@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
@@ -15,6 +16,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -36,6 +39,7 @@ import java.nio.charset.StandardCharsets;
         "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.auth"})
 @Configuration
 @EnableAsync
+@EnableTransactionManagement
 public class WebConfig {
 
     //FIXME poner la url correcta
@@ -80,6 +84,9 @@ public class WebConfig {
     @Value("classpath:migration_login.sql")
     private Resource loginMigration;
 
+    @Value("classpath:migration_delete.sql")
+    private Resource deleteMigration;
+
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
@@ -91,6 +98,7 @@ public class WebConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
         dbp.addScript(imageSchemaSql);
+        dbp.addScript(deleteMigration);
         dbp.addScript(loginMigration);
         return dbp;
     }
@@ -163,6 +171,11 @@ public class WebConfig {
     @Bean(name = "tokenEmail")
     public SimpleMailMessage tokenEmail() {
         return makeMessage(tokenEmailTemplate);
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(final DataSource ds){
+        return new DataSourceTransactionManager(ds);
     }
 
 }

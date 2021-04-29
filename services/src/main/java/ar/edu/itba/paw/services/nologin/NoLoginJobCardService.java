@@ -7,11 +7,13 @@ import ar.edu.itba.paw.models.JobPost;
 import exceptions.JobPackageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@Transactional
 @Service
 public class NoLoginJobCardService implements JobCardService {
 

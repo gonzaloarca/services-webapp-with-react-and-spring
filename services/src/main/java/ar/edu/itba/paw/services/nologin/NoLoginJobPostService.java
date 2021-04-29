@@ -10,10 +10,12 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class NoLoginJobPostService implements JobPostService {
 
@@ -122,10 +124,15 @@ public class NoLoginJobPostService implements JobPostService {
     }
 
     @Override
-    public JobPost update(long id, String title, String availableHours, Integer jobType, int[] zones) {
+    public boolean updateJobPost(long id, String title, String availableHours, Integer jobType, int[] zones) {
         List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
         return jobPostDao.updateById(id,title,availableHours,parsedJobType,parsedZones);
+    }
+
+    @Override
+    public boolean deleteJobPost(long id){
+        return jobPostDao.deleteJobPost(id);
     }
 
 }

@@ -13,7 +13,10 @@ SELECT job_post.post_id,
        post_available_hours,
        post_job_type,
        post_is_active,
-       user_id,
+       post_creation_date,
+       job_post.user_id,
+       user_creation_date,
+
        user_email,
        user_name,
        user_phone,
@@ -39,6 +42,7 @@ SELECT *
 FROM contract
          NATURAL JOIN job_package
          NATURAL JOIN (SELECT post_id,
+                              post_creation_date,
                               post_title,
                               post_job_type,
                               post_available_hours,
@@ -48,14 +52,15 @@ FROM contract
                        FROM job_post
                                 NATURAL JOIN post_zone
                        GROUP BY post_id, post_title, post_available_hours, post_job_type, post_is_active,
-                                user_id) AS posts
+                                user_id,post_creation_date) AS posts
          NATURAL JOIN (SELECT user_id        AS client_id,
                               user_email     AS client_email,
                               user_name      AS client_name,
                               user_phone     AS client_phone,
                               user_is_active as client_is_active,
                               user_image     as client_image,
-                              image_type     as client_image_type
+                              image_type     as client_image_type,
+                              user_creation_date as client_creation_date
                        FROM users) AS clients
          NATURAL JOIN (SELECT user_id        AS professional_id,
                               user_email     AS professional_email,
@@ -63,7 +68,8 @@ FROM contract
                               user_phone     AS professional_phone,
                               user_is_active as professional_is_active,
                               user_image     as professional_image,
-                              image_type     as professional_image_type
+                              image_type     as professional_image_type,
+                              user_creation_date as professional_creation_date
                        FROM users) AS professionals;
 
 CREATE TABLE IF NOT EXISTS verification_token

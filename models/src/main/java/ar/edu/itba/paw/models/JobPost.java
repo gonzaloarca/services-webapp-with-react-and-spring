@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,9 +13,10 @@ public class JobPost {
     private final boolean isActive;
     private final List<Zone> zones;
     private final double rating;
+    private final LocalDateTime creationDate;
 
     //Constructor para crear un post nuevo (esta activo)
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -22,11 +24,12 @@ public class JobPost {
         this.jobType = jobType;
         this.zones = zones;
         this.rating = rating;
+        this.creationDate = creationDate;
         this.isActive = true;
     }
 
     //Constructor para crear un post que puede no estar activo
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, boolean isActive) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, boolean isActive, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -35,6 +38,7 @@ public class JobPost {
         this.zones = zones;
         this.rating = rating;
         this.isActive = isActive;
+        this.creationDate = creationDate;
     }
 
     public long getId() {
@@ -67,6 +71,10 @@ public class JobPost {
 
     public double getRating() {
         return rating;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
     @Override

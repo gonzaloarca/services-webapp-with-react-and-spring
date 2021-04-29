@@ -14,10 +14,10 @@ INSERT INTO job_package(package_id, post_id, package_title, package_description,
 INSERT INTO job_post(post_id, user_id, post_title, post_available_hours, post_job_type, post_is_active) VALUES (DEFAULT,2,'Fontanero de segunda mano','Lunes a jueves 10 a 20',1,true);
 INSERT INTO post_zone(post_id, zone_id) VALUES (2,3);
 INSERT INTO job_package(package_id, post_id, package_title, package_description, package_price, package_rate_type, package_is_active) VALUES (DEFAULT,2,'Trabajo basico','arreglo de electrodomesticos',100.0,0,true);
-INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Se me rompio una zapatilla');
-INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Arreglo de fusibles');
+INSERT INTO contract(contract_id, client_id, package_id, contract_creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Se me rompio una zapatilla');
+INSERT INTO contract(contract_id, client_id, package_id, contract_creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Arreglo de fusibles');
 INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (1, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos');
 INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (2, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
-INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 2, NOW(), 'Arreglo de fusibles');
+INSERT INTO contract(contract_id, client_id, package_id, contract_creation_date, contract_description) VALUES (DEFAULT, 2, 2, NOW(), 'Arreglo de fusibles');
 INSERT INTO review(contract_id, review_rate, review_title, review_description) VALUES (3, 2, 'Medio pelo', 'Resolvio todo de forma ideal');
 COMMIT;

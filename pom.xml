@@ -140,6 +140,11 @@
                 <artifactId>spring-security-taglibs</artifactId>
                 <version>${org.springframework.security.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

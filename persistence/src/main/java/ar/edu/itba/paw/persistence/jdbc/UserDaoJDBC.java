@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository
@@ -30,8 +31,8 @@ public class UserDaoJDBC implements UserDao {
             resultSet.getBoolean("user_is_active"),
             resultSet.getBoolean("user_is_verified"),
             new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
-                    resultSet.getString("image_type"))
-    );
+                    resultSet.getString("image_type")),
+            resultSet.getTimestamp("user_creation_date").toLocalDateTime());
 
     private final static RowMapper<UserAuth> USER_AUTH_ROW_MAPPER = ((resultSet, i) -> new UserAuth(
             resultSet.getString("user_email"),
@@ -53,6 +54,7 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public User register(String email, String password, String username, String phone, ByteImage image) {
+        LocalDateTime creationDate = LocalDateTime.now();
         Map<String, Object> objectMap = new HashMap<>();
 
         objectMap.put("user_email", email);
@@ -63,12 +65,13 @@ public class UserDaoJDBC implements UserDao {
         objectMap.put("user_is_verified", false);
         objectMap.put("user_image", image.getData());
         objectMap.put("image_type", image.getType());
+        objectMap.put("user_creation_date",creationDate);
 
         Number key =  jdbcInsert.executeAndReturnKey(objectMap);
 
         return new User(key.longValue(), email, username,
                 phone, true, false,
-                new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType()));
+                new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType()), creationDate);
     }
 
     @Override
@@ -107,7 +110,7 @@ public class UserDaoJDBC implements UserDao {
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
         return jdbcTemplate.query("SELECT user_email,user_password,array_agg(role_id) as roles, user_is_verified " +
-                "FROM users NATURAL JOIN user_role WHERE user_email = ? GROUP BY user_email,user_password, user_is_verified",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
+                "FROM users NATURAL JOIN user_role WHERE user_email = ? AND user_is_active = TRUE GROUP BY user_email,user_password, user_is_verified",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
@@ -127,8 +130,8 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
-        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image,image_type,user_is_verified  " +
-                "FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
+        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image,image_type,user_is_verified,user_creation_date  " +
+                "FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? AND user_is_active = TRUE ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
                 .stream().findFirst();
     }
 
@@ -140,5 +143,10 @@ public class UserDaoJDBC implements UserDao {
     @Override
     public void verifyUser(long id) {
         jdbcTemplate.update("UPDATE users SET user_is_verified = true WHERE user_id = ?;", id);
+    }
+
+    @Override
+    public boolean deleteUser(long id) {
+        return jdbcTemplate.update("UPDATE users SET user_is_active = FALSE WHERE user_id = ?;", id) > 0;
     }
 }

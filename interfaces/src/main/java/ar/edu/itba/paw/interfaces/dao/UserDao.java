@@ -34,4 +34,6 @@ public interface UserDao {
     void changeUserPassword(long id, String password);
 
     void verifyUser(long id);
+
+    boolean deleteUser(long id);
 }

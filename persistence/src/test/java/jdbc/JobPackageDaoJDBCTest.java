@@ -18,6 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,8 +43,8 @@ public class JobPackageDaoJDBCTest {
             "Francisco Quesada",
             "11-3456-3232",
             true,
-            true
-    );
+            true,
+            LocalDateTime.now());
 
 
     private static final JobPost JOB_POST = new JobPost(
@@ -54,7 +55,7 @@ public class JobPackageDaoJDBCTest {
             JobPost.JobType.ELECTRICITY,
             ZONES,
             0.0,
-            true);
+            true, LocalDateTime.now());
 
     private static final JobPackage[] JOB_PACKAGES = {new JobPackage(
             1,
@@ -123,6 +124,20 @@ public class JobPackageDaoJDBCTest {
         List<JobPackage> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId(),0);
         Assert.assertEquals(jobPackages.size(), JOB_PACKAGES.length);
         jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
+    }
+    @Test
+    public void testEditPackage() {
+        JobPackage jobPackage = JOB_PACKAGES[0];
+
+        boolean ret = jobPackageDaojdbc.updatePackage(jobPackage.getId(),jobPackage.getTitle(),jobPackage.getDescription(),jobPackage.getPrice(),jobPackage.getRateType());
+        Assert.assertTrue(ret);
+    }
+
+    @Test
+    public void testDeletePackage() {
+        JobPackage jobPackage = JOB_PACKAGES[0];
+        boolean ret = jobPackageDaojdbc.deletePackage(jobPackage.getId());
+        Assert.assertTrue(ret);
     }
 
 }

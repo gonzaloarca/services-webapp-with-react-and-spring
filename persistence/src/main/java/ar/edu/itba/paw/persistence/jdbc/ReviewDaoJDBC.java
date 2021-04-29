@@ -51,8 +51,8 @@ public class ReviewDaoJDBC implements ReviewDao {
                             resultSet.getBoolean("client_is_active"),
                             true,   //TODO implementar
                             new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
-                                    resultSet.getString("client_image_type"))
-                    ),
+                                    resultSet.getString("client_image_type")),
+                            resultSet.getTimestamp("client_creation_date").toLocalDateTime()),
                     new JobPost(
                             resultSet.getLong("post_id"),
                             new User(
@@ -63,14 +63,15 @@ public class ReviewDaoJDBC implements ReviewDao {
                                     resultSet.getBoolean("professional_is_active"),
                                     true,       //TODO implementar
                                     new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
-                                            resultSet.getString("professional_image_type"))
-                            ),
+                                            resultSet.getString("professional_image_type")),
+                                    resultSet.getTimestamp("professional_creation_date").toLocalDateTime()),
                             resultSet.getString("post_title"),
                             resultSet.getString("post_available_hours"),
                             JobPost.JobType.values()[resultSet.getInt("post_job_type")],
                             ReviewDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
                             -1,
-                            resultSet.getBoolean("post_is_active"))
+                            resultSet.getBoolean("post_is_active"),
+                            resultSet.getTimestamp("post_creation_date").toLocalDateTime())
             );
 
     @Autowired
