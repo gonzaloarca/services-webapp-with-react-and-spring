@@ -139,7 +139,7 @@ public class JobPostDaoJDBCTest {
 //        Assert.assertFalse(jobPosts.isEmpty());
 //        Assert.assertEquals(2, jobPosts.size());
 //    }
-
+//
 //    @Test
 //    public void testSearchWithCategory() {
 //        String title = "";

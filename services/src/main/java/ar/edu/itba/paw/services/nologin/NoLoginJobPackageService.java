@@ -7,9 +7,11 @@ import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+@Transactional
 @Service
 public class NoLoginJobPackageService implements JobPackageService {
 
@@ -24,6 +26,8 @@ public class NoLoginJobPackageService implements JobPackageService {
         //TODO: CAMBIAR POR EXCEPCIONES PROPIAS
 
         jobPostService.findById(postId);
+
+        //FIXME: DO BEFORE
         Double parsedPrice=null;
 
         JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
@@ -54,6 +58,28 @@ public class NoLoginJobPackageService implements JobPackageService {
     @Override
     public List<JobPackage> findByPostId(long id,int page) {
         return jobPackageDao.findByPostId(id,page);
+    }
+
+    @Override
+    public boolean updateJobPackage(long id, String title, String description, String price, int rateType){
+
+        //FIXME: DO BEFORE
+        Double parsedPrice=null;
+        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
+        if(!parsedRateType.equals(JobPackage.RateType.TBD)) {
+            if (price != null && !price.isEmpty()) {
+                parsedPrice = Double.parseDouble(price);
+            }else {
+                throw new RuntimeException("Error al cargar el form");
+            }
+        }
+
+        return jobPackageDao.updatePackage(id,title,description,parsedPrice,parsedRateType);
+    }
+
+    @Override
+    public boolean deleteJobPackage(long id){
+        return jobPackageDao.deletePackage(id);
     }
 
 

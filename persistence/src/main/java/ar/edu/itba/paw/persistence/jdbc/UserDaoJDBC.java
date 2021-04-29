@@ -144,4 +144,9 @@ public class UserDaoJDBC implements UserDao {
     public void verifyUser(long id) {
         jdbcTemplate.update("UPDATE users SET user_is_verified = true WHERE user_id = ?;", id);
     }
+
+    @Override
+    public boolean deleteUser(long id) {
+        return jdbcTemplate.update("UPDATE users SET user_is_active = FALSE WHERE user_id = ?;", id) > 0;
+    }
 }

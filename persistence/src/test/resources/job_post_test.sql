@@ -16,6 +16,6 @@ INSERT INTO job_package(package_id, post_id, package_title, package_description,
 INSERT INTO job_package(package_id, post_id, package_title, package_description, package_price, package_rate_type, package_is_active) VALUES (DEFAULT, 1, 'Trabajo no tan simple', 'Instalacion de cableado electrico', 850.00, 0, true);
 INSERT INTO job_post(post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active) VALUES (DEFAULT,1,'Paseador de perros','Viernes a sabados 09hs - 14hs',3,true);
 INSERT INTO post_zone(post_id, zone_id) VALUES (3,4);
-INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Se me rompio una zapatilla');
-INSERT INTO contract(contract_id, client_id, package_id, creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Arreglo de fusibles');
+INSERT INTO contract(contract_id, client_id, package_id, contract_creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Se me rompio una zapatilla');
+INSERT INTO contract(contract_id, client_id, package_id, contract_creation_date, contract_description) VALUES (DEFAULT, 2, 1, NOW(), 'Arreglo de fusibles');
 COMMIT;

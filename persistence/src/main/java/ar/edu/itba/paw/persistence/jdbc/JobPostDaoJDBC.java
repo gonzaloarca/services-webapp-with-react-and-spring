@@ -191,8 +191,8 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
-    public JobPost updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones) {
-        jdbcTemplate.update("UPDATE job_post SET post_title = ? , post_available_hours = ? , post_job_type = ? WHERE post_id = ?", title,availableHours,jobType.ordinal(),id);
+    public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones) {
+        int rowsAffected = jdbcTemplate.update("UPDATE job_post SET post_title = ? , post_available_hours = ? , post_job_type = ? WHERE post_id = ?", title,availableHours,jobType.ordinal(),id);
         jdbcTemplate.update("DELETE FROM post_zone WHERE post_id = ?", id);
         for (Zone zone : zones) {
             jdbcInsertZone.execute(new HashMap<String, Integer>() {{
@@ -200,8 +200,12 @@ public class JobPostDaoJDBC implements JobPostDao {
                 put("zone_id", zone.ordinal());
             }});
         }
-        //TODO CAMBIAR
-        return findById(id).orElseThrow(NoSuchElementException::new);
+        return rowsAffected > 0;
+    }
+
+    @Override
+    public boolean deleteJobPost(long id){
+        return jdbcTemplate.update("UPDATE job_post SET post_is_active = FALSE WHERE post_id = ?",id) > 0;
     }
 
 }

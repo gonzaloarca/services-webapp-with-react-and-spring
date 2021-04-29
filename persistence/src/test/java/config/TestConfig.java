@@ -29,6 +29,9 @@ public class TestConfig {
     @Value("classpath:migration_login_test.sql")
     private Resource loginMigration;
 
+    @Value("classpath:migration_delete.sql")
+    private Resource deleteMigration;
+
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
@@ -52,6 +55,7 @@ public class TestConfig {
         dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
         dbp.addScript(imageSchema);
+        dbp.addScript(deleteMigration);
         dbp.addScript(loginMigration);
         return dbp;
     }

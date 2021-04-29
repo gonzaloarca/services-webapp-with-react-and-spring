@@ -125,5 +125,19 @@ public class JobPackageDaoJDBCTest {
         Assert.assertEquals(jobPackages.size(), JOB_PACKAGES.length);
         jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
     }
+    @Test
+    public void testEditPackage() {
+        JobPackage jobPackage = JOB_PACKAGES[0];
+
+        boolean ret = jobPackageDaojdbc.updatePackage(jobPackage.getId(),jobPackage.getTitle(),jobPackage.getDescription(),jobPackage.getPrice(),jobPackage.getRateType());
+        Assert.assertTrue(ret);
+    }
+
+    @Test
+    public void testDeletePackage() {
+        JobPackage jobPackage = JOB_PACKAGES[0];
+        boolean ret = jobPackageDaojdbc.deletePackage(jobPackage.getId());
+        Assert.assertTrue(ret);
+    }
 
 }

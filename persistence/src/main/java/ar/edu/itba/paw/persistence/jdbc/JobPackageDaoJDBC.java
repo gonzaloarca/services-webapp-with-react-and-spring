@@ -63,7 +63,18 @@ public class JobPackageDaoJDBC implements JobPackageDao {
     public List<JobPackage> findByPostId(long id,int page) {
         Integer limit =getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ? AND post_is_active = TRUE",new Object[]{id},JOB_PACKAGE_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ? AND package_is_active = TRUE",new Object[]{id},JOB_PACKAGE_ROW_MAPPER);
+    }
+
+    @Override
+    public boolean deletePackage(long id){
+        return jdbcTemplate.update("UPDATE job_package SET package_is_active = FALSE WHERE package_id=?",id) == 1;
+    }
+
+    @Override
+    public boolean updatePackage(long id, String title, String description, Double price, JobPackage.RateType rateType){
+        return jdbcTemplate.update("UPDATE job_package SET package_title = ?, package_description = ?, package_price = ?, package_rate_type = ? WHERE package_id = ?",
+                title,description,price,rateType.ordinal(),id) == 1;
     }
 
 }

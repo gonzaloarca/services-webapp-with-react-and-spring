@@ -38,5 +38,7 @@ public interface JobPostService {
 
     int findMaxPageSearch(String query, JobPost.Zone zone, JobPost.JobType jobType);
 
-    JobPost update(long id, String title, String availableHours, Integer jobType, int[] zones);
+    boolean updateJobPost(long id, String title, String availableHours, Integer jobType, int[] zones);
+
+    boolean deleteJobPost(long id);
 }

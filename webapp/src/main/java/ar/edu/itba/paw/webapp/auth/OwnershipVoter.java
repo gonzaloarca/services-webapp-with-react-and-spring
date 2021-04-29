@@ -72,11 +72,17 @@ public class OwnershipVoter implements AccessDecisionVoter {
                     }catch (NoSuchElementException e){
                         isOwner= false;
                     }
-                    if(paths.length > 2 && paths[2].equals("edit")){
-                        if(isOwner)
-                            return ACCESS_GRANTED;
-                        else
-                            return ACCESS_DENIED;
+                    if(paths.length > 2){
+                        if(paths[2].equals("edit")){
+                            if (isOwner)
+                                return ACCESS_GRANTED;
+                            else
+                                return ACCESS_DENIED;
+                        }else if(paths[2].equals("packages"))
+                            if(isOwner)
+                                return ACCESS_GRANTED;
+                            else
+                                return ACCESS_DENIED;
                     }
                     break;
                 case "create-job-post":

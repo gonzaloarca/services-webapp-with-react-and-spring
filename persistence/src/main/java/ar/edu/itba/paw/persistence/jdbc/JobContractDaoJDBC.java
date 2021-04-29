@@ -159,8 +159,8 @@ public class JobContractDaoJDBC implements JobContractDao {
                 "SELECT COUNT(*) " +
                         "FROM contract " +
                         "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id FROM job_post) AS posts " +
-                        "WHERE professional_id = ? AND professional_is_active = TRUE", new Object[]{id}, Integer.class);
+                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id,post_is_active FROM job_post) AS posts " +
+                        "WHERE professional_id = ? AND post_is_active = TRUE", new Object[]{id}, Integer.class);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class JobContractDaoJDBC implements JobContractDao {
                 "SELECT COUNT(*) " +
                         "FROM contract " +
                         "NATURAL JOIN job_package " +
-                        "WHERE post_id = ? AND post_is_active = TRUE", new Object[]{id}, Integer.class);
+                        "WHERE post_id = ?", new Object[]{id}, Integer.class);
     }
 
     @Override

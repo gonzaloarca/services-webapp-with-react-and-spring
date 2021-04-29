@@ -51,7 +51,7 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 		return jdbcTemplate.query(
 			"SELECT image_id, post_id, image_data, image_type " +
 					"FROM post_image " +
-					"WHERE post_id = ? AND post_is_active = TRUE " +
+					"WHERE post_id = ? " +
 					"GROUP BY image_id;",
 				new Object[]{postId},
 				JOB_POST_IMAGE_ROW_MAPPER
@@ -63,7 +63,7 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 		return jdbcTemplate.query(
 				"SELECT image_id, post_id, image_data, image_type " +
 						"FROM post_image " +
-						"WHERE post_id = ? AND post_is_active = TRUE " +
+						"WHERE post_id = ? " +
 						"GROUP BY image_id " +
 						"LIMIT 1;",
 				new Object[]{postId},
@@ -74,7 +74,7 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 	@Override
 	public int getImageCount(long postId) {
 		return jdbcTemplate.queryForObject(
-				"SELECT count(*) FROM post_image WHERE post_id = ? AND post_is_active = TRUE;",
+				"SELECT count(*) FROM post_image WHERE post_id = ?;",
 				new Object[]{postId},
 				Integer.class
 		);

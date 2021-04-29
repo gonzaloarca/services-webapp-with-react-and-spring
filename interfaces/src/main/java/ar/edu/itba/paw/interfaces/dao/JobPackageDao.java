@@ -14,4 +14,7 @@ public interface JobPackageDao {
 
     List<JobPackage> findByPostId(long id, int page);
 
+    boolean deletePackage(long id);
+
+    boolean updatePackage(long id, String title, String description, Double price, JobPackage.RateType rateType);
 }
