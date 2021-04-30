@@ -45,7 +45,7 @@
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
-<body style="background: url('${pageContext.request.contextPath}/resources/images/background.jpg')" >
+<body style="background: url('${pageContext.request.contextPath}/resources/images/background.jpg')">
 <c:set var="withoutColor" value="true" scope="request"/>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <c:set var="path" value="/register" scope="request"/>
@@ -111,7 +111,7 @@
                                     <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
                                 </span>
                                 <div class="invalid-feedback">
-                                    Este campo no puede estar vacío
+                                    <spring:message code="register.field.notEmpty"/>
                                 </div>
                             </div>
                             <form:errors path="password" cssClass="form-error" element="p"/>
@@ -128,7 +128,7 @@
                                     <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
                                 </span>
                                 <div class="invalid-feedback">
-                                    Este campo no puede estar vacío
+                                    <spring:message code="register.field.notEmpty"/>
                                 </div>
                             </div>
                             <form:errors path="repeatPassword" cssClass="form-error" element="p"/>
@@ -144,10 +144,11 @@
                     <p class="bottom-link-label">
                         <spring:message code="register.alreadyhasaccount"/>
                     </p>
-                    <div style="width: 100%; display: flex; justify-content: center"><a class="bottom-link"
-                                                                                        href="${pageContext.request.contextPath}/login">
-                        <spring:message code="register.login"/>
-                    </a>
+                    <div style="width: 100%; display: flex; justify-content: center">
+                        <a class="bottom-link"
+                           href="${pageContext.request.contextPath}/login">
+                            <spring:message code="register.login"/>
+                        </a>
                     </div>
                 </fieldset>
                 <fieldset id="register-step-2">
@@ -174,7 +175,7 @@
                     <form:errors path="avatar" cssClass="form-error" element="p"/>
                     <div class="register-button-container">
                         <button class="btn btn-outline-secondary back-btn" type="button">
-                            Volver atrás
+                            <spring:message code="register.goback"/>
                         </button>
 
                         <button class="btn btn-primary hirenet-blue-btn submit-btn" type="submit" id="submitBtn">
@@ -343,11 +344,11 @@
         var forms = document.querySelectorAll('.needs-validation');
         var is_valid = true;
         Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    if (!form.checkValidity()) {
-                        is_valid = false;
-                    }
-                })
+            .forEach(function (form) {
+                if (!form.checkValidity()) {
+                    is_valid = false;
+                }
+            })
         $("#submitBtn").attr("disabled", is_valid);
     }
 </script>

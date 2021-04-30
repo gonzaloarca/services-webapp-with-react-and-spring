@@ -79,8 +79,9 @@
                 </div>
                 <hr class="hr1"/>
                 <c:if test="${param.category != -1}">
-                    <a class="unselect-category" href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
-                        Filtrando por:
+                    <a class="unselect-category"
+                       href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
+                        <spring:message code="search.filteringBy"/>
                         <div class="chip">
                             <spring:message code="${categories[param.category].stringCode}"/>
                             <i class="fa fa-times-circle ml-1" aria-hidden="true"></i>

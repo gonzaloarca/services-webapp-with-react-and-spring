@@ -122,7 +122,7 @@ public class JobPostDaoJDBC implements JobPostDao {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE ? && zones::int[] AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM full_post WHERE ? = ANY(zones) AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{zone.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
     }
 

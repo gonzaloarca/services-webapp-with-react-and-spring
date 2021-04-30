@@ -50,7 +50,7 @@
 <div class="content-container-transparent mt-3">
     <h3>
         <img style="height: 30px; padding-bottom: 5px" src="<c:url value="/resources/images/add-1.svg"/>" alt="">
-        Publicar un nuevo servicio
+        <spring:message code="jobPost.create.tileExtended"/>
     </h3>
 
     <c:url value="/create-job-post" var="postPath"/>
@@ -76,8 +76,11 @@
                  src="<c:url value="/resources/images/job-1.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 1 de 6</p>
+                <h4>
+                    <spring:message code="jobPost.create.postData"/>
+                </h4>
+                <p class="step-subtitle">
+                    <spring:message code="jobPost.create.stepSubtitle" arguments="1, 6"/></p>
                 <br>
 
                 <div class="input-container">
@@ -101,7 +104,7 @@
                     <form:errors path="jobType" class="form-error" element="p"/>
                     <div class="button-controls">
                         <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
@@ -116,8 +119,12 @@
                  src="<c:url value="/resources/images/title1.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 2 de 6</p>
+                <h4>
+                    <spring:message code="jobPost.create.postData"/>
+                </h4>
+                <p class="step-subtitle">
+                    <spring:message code="jobPost.create.stepSubtitle" arguments="2, 6"/>
+                </p>
                 <br>
 
                 <div class="input-container">
@@ -132,10 +139,10 @@
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
                         <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
@@ -150,8 +157,12 @@
                  src="<c:url value="/resources/images/package1.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 3 de 6</p>
+                <h4>
+                    <spring:message code="jobPost.create.postData"/>
+                </h4>
+                <p class="step-subtitle">
+                    <spring:message code="jobPost.create.stepSubtitle" arguments="3, 6"/>
+                </p>
                 <br>
 
                 <div class="input-container">
@@ -266,10 +277,10 @@
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
                         <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
@@ -284,8 +295,12 @@
                  src="<c:url value="/resources/images/images1.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 4 de 6</p>
+                <h4>
+                    <spring:message code="jobPost.create.postData"/>
+                </h4>
+                <p class="step-subtitle">
+                    <spring:message code="jobPost.create.stepSubtitle" arguments="4, 6"/>
+                </p>
                 <br>
 
                 <div class="input-container">
@@ -307,10 +322,10 @@
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
                         <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
@@ -325,8 +340,12 @@
                  src="<c:url value="/resources/images/clock1.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 5 de 6</p>
+                <h4>
+                    <spring:message code="jobPost.create.postData"/>
+                </h4>
+                <p class="step-subtitle">
+                    <spring:message code="jobPost.create.stepSubtitle" arguments="5, 6"/>
+                </p>
                 <br>
 
                 <div class="input-container">
@@ -342,10 +361,10 @@
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
                         <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
@@ -360,8 +379,12 @@
                  src="<c:url value="/resources/images/location2.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 6 de 6</p>
+                <h4>
+                    <spring:message code="jobPost.create.postData"/>
+                </h4>
+                <p class="step-subtitle">
+                    <spring:message code="jobPost.create.stepSubtitle" arguments="6, 6"/>
+                </p>
                 <br>
 
                 <div class="input-container">
@@ -392,11 +415,11 @@
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
                         <button class="btn btn-primary hirenet-blue-btn text-uppercase continue-btn"
                                 type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
@@ -409,7 +432,7 @@
                  src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
 
             <div class="overview-container">
-                <h4>Resumen de la publicación</h4>
+                <h4><spring:message code="jobPost.create.overview.title"/></h4>
 
                 <div class="overview-content mt-4">
 
@@ -421,7 +444,7 @@
 
                             <div class="overview-field-container">
                                 <p class="overview-field-header">
-                                    Título
+                                    <spring:message code="jobPost.create.publication.placeholder"/>
                                 </p>
 
                                 <div class="overview-field-data-container">
@@ -436,7 +459,7 @@
 
                             <div class="overview-field-container">
                                 <p class="overview-field-header">
-                                    Tipo de servicio
+                                    <spring:message code="jobPost.create.service.type"/>
                                 </p>
 
                                 <div class="overview-field-data-container">
@@ -453,7 +476,7 @@
 
                             <div class="overview-field-container">
                                 <p class="overview-field-header">
-                                    Paquetes
+                                    <spring:message code="jobPost.packages.manage.title"/>
                                 </p>
 
                                 <div class="accordion" id="accordionPackages">
@@ -520,11 +543,11 @@
 
                             <div class="overview-field-container">
                                 <p class="overview-field-header">
-                                    Imágenes
+                                    <spring:message code="jobPost.create.overview.images"/>
                                 </p>
 
                                 <div id="imageCarousel">
-                                    No se seleccionaron imágenes
+                                    <spring:message code="jobPost.create.overview.noImagesUploaded"/>
                                 </div>
                             </div>
                         </div>
@@ -537,7 +560,7 @@
 
                             <div class="overview-field-container">
                                 <p class="overview-field-header">
-                                    Horarios
+                                    <spring:message code="jobPost.create.overview.availableHours"/>
                                 </p>
 
                                 <div class="overview-field-data-container">
@@ -552,7 +575,7 @@
 
                             <div class="overview-field-container">
                                 <p class="overview-field-header">
-                                    Zonas de disponibilidad
+                                    <spring:message code="jobPost.create.overview.availableZones"/>
                                 </p>
 
                                 <div id="zoneContainer" class="overview-field-data-container">
@@ -567,12 +590,12 @@
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
 
                         <button class="btn btn-primary hirenet-blue-btn text-uppercase"
                                 type="submit" id="submitBtn">
-                            Publicar
+                            <spring:message code="jobPost.create.submit"/>
                         </button>
                     </div>
                 </div>
@@ -587,7 +610,6 @@
     $(document).ready(function () {
         $("body").tooltip({selector: '[data-toggle=tooltip]'});
     });
-
 
     // Script para deshabilitar el input de precio cuando esta TBD el radio
     const tbdRadio = $("#tbd-radio");
@@ -826,7 +848,6 @@
                         event.preventDefault()
                         event.stopPropagation()
                     }
-
                     form.classList.add('was-validated')
                 }, false)
             })
@@ -844,6 +865,7 @@
             })
         $("#submitBtn").attr("disabled", is_valid);
     }
+
     const checkboxList = $('.zone-checkbox');
 
     for (let i = 0; i < checkboxList.length; i++) {
@@ -851,17 +873,15 @@
         console.log(checkboxList[i])
 
         let zoneString = checkboxList[i].closest('.list-group-item').getElementsByTagName('span')[0].textContent;
-        console.log("Afuera")
         console.log(checkboxList[i])
 
         if (checkboxList[i].checked) {
-            console.log("Adentro")
-
 //Lo agrego al div
             $('#zoneContainer').append(
                 "<span class='zoneTag'>" + zoneString + "</span>");
         }
-    };
+    }
+    ;
 
     $('#jobTitleOverview').text($('#jobTitle').val());
 
