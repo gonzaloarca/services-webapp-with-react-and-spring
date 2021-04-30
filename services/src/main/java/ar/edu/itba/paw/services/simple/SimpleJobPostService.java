@@ -85,42 +85,9 @@ public class SimpleJobPostService implements JobPostService {
         return jobPostDao.findAll(page);
     }
 
-
-    @Override
-    public List<JobPost> search(String query, JobPost.Zone zone, JobPost.JobType jobType) {
-        if (jobType == null)
-            return jobPostDao.search(query, zone, HirenetUtils.ALL_PAGES);
-
-        return jobPostDao.searchWithCategory(query, zone, jobType, HirenetUtils.ALL_PAGES);
-    }
-
-
-    @Override
-    public List<JobPost> search(String query, JobPost.Zone zone, JobPost.JobType jobType, int page) {
-        if (jobType == null)
-            return jobPostDao.search(query, zone, page);
-
-        return jobPostDao.searchWithCategory(query, zone, jobType, page);
-    }
-
     @Override
     public int findSizeByUserId(long id) {
         return jobPostDao.findSizeByUserId(id);
-    }
-
-    @Override
-    public int findMaxPage() {
-        return jobPostDao.findAllMaxPage();
-    }
-
-    @Override
-    public int findMaxPageByUserId(long id) {
-        return jobPostDao.findMaxPageByUserId(id);
-    }
-
-    @Override
-    public int findMaxPageSearch(String query, JobPost.Zone value, JobPost.JobType jobType) {
-        return jobPostDao.findMaxPageSearch(query, value, jobType);
     }
 
     @Override

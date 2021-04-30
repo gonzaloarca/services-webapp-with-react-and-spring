@@ -44,7 +44,7 @@ public class JobPostDaoJDBC implements JobPostDao {
                     resultSet.getString("user_name"),
                     resultSet.getString("user_phone"),
                     resultSet.getBoolean("user_is_active"),
-                    true, //TODO: implementar esto
+                    resultSet.getBoolean("user_is_verified"),
                     new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
                             resultSet.getString("user_image_type")),
                     resultSet.getTimestamp("user_creation_date").toLocalDateTime()),
@@ -166,28 +166,6 @@ public class JobPostDaoJDBC implements JobPostDao {
         return jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM full_post WHERE user_id = ? AND post_is_active = TRUE",
                 new Object[]{id}, Integer.class);
-    }
-
-    @Override
-    public int findAllMaxPage() {
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post WHERE post_is_active = TRUE", Integer.class);
-        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
-    }
-
-    @Override
-    public int findMaxPageByUserId(long id) {
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post WHERE user_id = ? AND post_is_active = TRUE",
-                new Object[]{id}, Integer.class);
-        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
-    }
-
-    @Override
-    public int findMaxPageSearch(String query, Zone zone, JobPost.JobType jobType) {
-        query = "%" + query + "%";
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post " +
-                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_is_active = TRUE",
-                new Object[]{query, zone.ordinal()}, Integer.class);
-        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
     @Override

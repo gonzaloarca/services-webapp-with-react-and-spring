@@ -48,9 +48,9 @@ public class MainController {
             throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("jobCards", jobCardService.findAll(page - 1));
-        int maxPage = jobPostService.findMaxPage();
+        int maxPage = jobCardService.findMaxPage();
         List<Integer> currentPages = paginationService.findCurrentPages(page, maxPage);
-        mav.addObject("maxPage", jobPostService.findMaxPage());
+        mav.addObject("maxPage", jobCardService.findMaxPage());
         mav.addObject("currentPages", currentPages);
         mav.addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
         return mav;

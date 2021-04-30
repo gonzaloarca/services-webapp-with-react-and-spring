@@ -87,6 +87,9 @@ public class WebConfig {
     @Value("classpath:migration_delete.sql")
     private Resource deleteMigration;
 
+    @Value("classpath:job_card_view.sql")
+    private Resource jobCardView;
+
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
@@ -100,6 +103,7 @@ public class WebConfig {
         dbp.addScript(imageSchemaSql);
         dbp.addScript(deleteMigration);
         dbp.addScript(loginMigration);
+        dbp.addScript(jobCardView);
         return dbp;
     }
 

@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.services.simple;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
+import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import exceptions.JobPackageNotFoundException;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Transactional
 @Service
@@ -21,94 +25,74 @@ public class SimpleJobCardService implements JobCardService {
     private JobPostService jobPostService;
 
     @Autowired
-    private JobContractService jobContractService;
-
-    @Autowired
-    private JobPackageService jobPackageService;
-
-    @Autowired
-    private JobPostImageService jobPostImageService;
-
-    @Autowired
-    private ReviewService reviewService;
-
+    private JobCardDao jobCardDao;
 
     @Override
     public List<JobCard> findAll() {
-        //TODO: Mejorar excepcion
-        return createCards(jobPostService.findAll());
+        return jobCardDao.findAll(HirenetUtils.ALL_PAGES);
     }
 
     @Override
     public List<JobCard> findAll(int page) {
-        //TODO: Mejorar excepcion
-        return createCards(jobPostService.findAll(page));
+        return jobCardDao.findAll(page);
     }
 
     @Override
     public List<JobCard> findByUserId(long id) {
-        //TODO: Mejorar excepcion
-        return createCards(jobPostService.findByUserId(id));
+        return jobCardDao.findByUserId(id, HirenetUtils.ALL_PAGES);
     }
 
     @Override
     public List<JobCard> findByUserId(long id,int page) {
-        //TODO: Mejorar excepcion
-        return createCards(jobPostService.findByUserId(id,page));
-    }
-
-    @Override
-    public List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType) {
-        //TODO: Mejorar excepcion
-        return createCards(jobPostService.search(title, zone, jobType));
+        return jobCardDao.findByUserId(id, page);
     }
 
     @Override
     public List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page) {
-        //TODO: Mejorar excepcion
-        return createCards(jobPostService.search(title, zone, jobType,page));
+        if (jobType == null)
+            return jobCardDao.search(title, zone, page);
+
+        return jobCardDao.searchWithCategory(title, zone, jobType, page);
     }
 
     @Override
     public List<JobCard> findByUserIdWithReview(long id) {
-        return createCards(jobPostService.findByUserId(id));
+        return findByUserIdWithReview(id, HirenetUtils.ALL_PAGES);
     }
 
     @Override
     public List<JobCard> findByUserIdWithReview(long id,int page) {
-        return createCards(jobPostService.findByUserId(id,page));
+        return jobCardDao.findByUserIdWithReview(id, page);
     }
 
     @Override
     public JobCard findByPostId(long id) {
-        JobPost jobPost = jobPostService.findById(id);
-        JobPackage min = jobPackageService.findByPostId(jobPost.getId())
-                .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(JobPackageNotFoundException::new);
-
-        return new JobCard(jobPost, min.getRateType(), min.getPrice(),
-                jobPostImageService.findPostImage(jobPost.getId()),
-                jobContractService.findContractsQuantityByPostId(jobPost.getId()),
-                reviewService.findJobPostReviewsSize(jobPost.getId()));
-    }
-
-    private List<JobCard> createCards(List<JobPost> jobPosts) {
-        List<JobCard> jobCards = new ArrayList<>();
-        jobPosts.forEach(jobPost -> {
-            JobPackage min = jobPackageService.findByPostId(jobPost.getId())
-                    .stream().min(Comparator.comparingDouble(JobPackage::getPrice)).orElseThrow(JobPackageNotFoundException::new);
-            //TODO si no existe JobPackage para un PostId, no seria no mostrar la JobCard en vez de tirar excepcion que rompe todo?
-            //TODO: Mejorar excepciones
-            jobCards.add(new JobCard(jobPost, min.getRateType(), min.getPrice(),
-                    jobPostImageService.findPostImage(jobPost.getId()),
-                    jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()),
-                     reviewService.findJobPostReviewsSize(jobPost.getId())));
-        });
-        return jobCards;
-    }
+        return jobCardDao.findByPostId(id).orElseThrow(NoSuchElementException::new);
+  }
 
     @Override
     public int findSizeByUserId(long id) {
         return jobPostService.findSizeByUserId(id);
+    }
+
+    @Override
+    public int findMaxPage() {
+        return jobCardDao.findAllMaxPage();
+    }
+
+    @Override
+    public int findMaxPageByUserId(long id) {
+        return jobCardDao.findMaxPageByUserId(id);
+    }
+
+    @Override
+    public int findMaxPageSearch(String query, JobPost.Zone value) {
+        return jobCardDao.findMaxPageSearch(query, value);
+    }
+
+    @Override
+    public int findMaxPageSearchWithCategory(String query, JobPost.Zone value, JobPost.JobType jobType) {
+        return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType);
     }
 
 }

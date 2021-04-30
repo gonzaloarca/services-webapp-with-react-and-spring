@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+//TODO hacer tests para JobCardDao
+
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
