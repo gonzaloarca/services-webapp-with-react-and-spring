@@ -157,7 +157,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public int findContractsQuantityByProId(long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) " +
-                        "FROM contract " +
+                        "FROM full_contract " +
                         "NATURAL JOIN job_package " +
                         "NATURAL JOIN (SELECT post_id, user_id AS professional_id,post_is_active FROM job_post) AS posts " +
                         "WHERE professional_id = ? AND post_is_active = TRUE", new Object[]{id}, Integer.class);
@@ -167,14 +167,14 @@ public class JobContractDaoJDBC implements JobContractDao {
     public int findContractsQuantityByPostId(long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) " +
-                        "FROM contract " +
+                        "FROM full_contract " +
                         "NATURAL JOIN job_package " +
                         "WHERE post_id = ?", new Object[]{id}, Integer.class);
     }
 
     @Override
     public int findMaxPageContractsByUserId(long id) {
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(contract_id) FROM contract WHERE client_id = ? AND client_is_active = TRUE",
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(contract_id) FROM full_contract WHERE client_id = ? AND client_is_active = TRUE",
                 new Object[]{id}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }

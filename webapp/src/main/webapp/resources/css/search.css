@@ -40,9 +40,17 @@ h4 {
 .pickedCategory {
     color: #485696;
     font-weight: bold;
-    margin-left: 0.5vw;
 }
 
-.unselect-category {
+.unselect-category, .unselect-category:hover {
+    text-decoration: none;
     color: black;
+    display: flex;
+    font-size: 16px;
+}
+
+.unselect-category .chip{
+    color: black;
+    margin-left: 15px;
+    background-color: #dbdbdb;
 }

@@ -52,11 +52,6 @@
         </h4>
         <c:forEach items="${categories}" var="categorie" varStatus="status">
             <span class="mb-1 custom-row align-items-center" onclick="updateCategorySelected(${categorie.value})">
-                <c:if test="${param.category == status.index}">
-                    <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
-                        <i class="fa fa-times unselect-category"></i>
-                    </a>
-                </c:if>
                 <p class="capitalize-first-letter">
                     <a class="category ${param.category == status.index? 'pickedCategory':''}"
                        href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=${status.index}">
@@ -83,6 +78,15 @@
                     </h3>
                 </div>
                 <hr class="hr1"/>
+                <c:if test="${param.category != -1}">
+                    <a class="unselect-category" href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
+                        Filtrando por:
+                        <div class="chip">
+                            <spring:message code="${categories[param.category].stringCode}"/>
+                            <i class="fa fa-times-circle ml-1" aria-hidden="true"></i>
+                        </div>
+                    </a>
+                </c:if>
                 <div class="job-display-container">
                     <c:choose>
                         <c:when test="${jobCards.size() > 0}">
