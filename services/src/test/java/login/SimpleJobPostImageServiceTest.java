@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.services.login.SimpleJobPostImageService;
+import ar.edu.itba.paw.services.simple.SimpleJobPostImageService;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

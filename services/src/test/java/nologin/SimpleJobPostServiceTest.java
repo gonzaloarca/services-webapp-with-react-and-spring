@@ -3,8 +3,8 @@ package nologin;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.nologin.NoLoginJobPostService;
-import ar.edu.itba.paw.services.nologin.NoLoginUserService;
+import ar.edu.itba.paw.services.simple.SimpleJobPostService;
+import ar.edu.itba.paw.services.simple.SimpleUserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NoLoginJobPostServiceTest {
+public class SimpleJobPostServiceTest {
 
     private static final User EXISTING_USER = new User(
             1,
@@ -72,10 +72,10 @@ public class NoLoginJobPostServiceTest {
             LocalDateTime.now());
 
     @InjectMocks
-    private NoLoginJobPostService jobPostService = new NoLoginJobPostService();
+    private SimpleJobPostService jobPostService = new SimpleJobPostService();
 
     @Mock
-    private NoLoginUserService userService;
+    private SimpleUserService userService;
 
     @Mock
     private JobPostDao jobPostDao;

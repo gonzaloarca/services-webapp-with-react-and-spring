@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services.nologin;
+package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Transactional
 @Service
-public class NoLoginReviewService implements ReviewService {
+public class SimpleReviewService implements ReviewService {
 
     @Autowired
     private ReviewDao reviewDao;

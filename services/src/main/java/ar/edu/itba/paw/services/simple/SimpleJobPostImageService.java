@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services.login;
+package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;

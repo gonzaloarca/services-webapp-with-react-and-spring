@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services.nologin;
+package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.MailingService;
@@ -20,7 +20,7 @@ import java.util.*;
 
 @Transactional
 @Service
-public class NoLoginUserService implements UserService {
+public class SimpleUserService implements UserService {
 
     @Autowired
     private UserDao userDao;

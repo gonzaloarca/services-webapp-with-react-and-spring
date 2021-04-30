@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services.nologin;
+package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public class NoLoginJobCardService implements JobCardService {
+public class SimpleJobCardService implements JobCardService {
 
     @Autowired
     private JobPostService jobPostService;

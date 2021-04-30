@@ -4,8 +4,8 @@ import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.nologin.NoLoginJobPackageService;
-import ar.edu.itba.paw.services.nologin.NoLoginJobPostService;
+import ar.edu.itba.paw.services.simple.SimpleJobPackageService;
+import ar.edu.itba.paw.services.simple.SimpleJobPostService;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NoLoginJobPackageServiceTest {
+public class SimpleJobPackageServiceTest {
     private static final JobPackage JOB_PACKAGE = new JobPackage(
             7, 2, "Arreglos menores", "Canerias rotas", 200.00, JobPackage.RateType.ONE_TIME, true);
     private static final User PROFESSIONAL = new User(
@@ -30,26 +30,26 @@ public class NoLoginJobPackageServiceTest {
             Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO), 0.0,true, LocalDateTime.now());
 
     @InjectMocks
-    NoLoginJobPackageService noLoginJobPackageService = new NoLoginJobPackageService();
+    SimpleJobPackageService simpleJobPackageService = new SimpleJobPackageService();
 
     @Mock
     JobPackageDao jobPackageDao;
 
     @Mock
-    NoLoginJobPostService noLoginJobPostService;
+    SimpleJobPostService simpleJobPostService;
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
     public void createSuccess() {
-        Mockito.when(noLoginJobPostService.findById(Mockito.eq(JOB_PACKAGE.getPostId())))
+        Mockito.when(simpleJobPostService.findById(Mockito.eq(JOB_PACKAGE.getPostId())))
                 .thenReturn(JOB_POST);
 
         Mockito.when(jobPackageDao.create(JOB_PACKAGE.getPostId(), JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
                 JOB_PACKAGE.getPrice(), JOB_PACKAGE.getRateType())).thenReturn(JOB_PACKAGE);
 
-        JobPackage maybePackage = noLoginJobPackageService.create(JOB_PACKAGE.getPostId(), JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
+        JobPackage maybePackage = simpleJobPackageService.create(JOB_PACKAGE.getPostId(), JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
                 JOB_PACKAGE.getPrice().toString(), JOB_PACKAGE.getRateType().getValue());
 
         Assert.assertNotNull(maybePackage);
@@ -60,9 +60,9 @@ public class NoLoginJobPackageServiceTest {
     public void createNoExistingPostId() {
         exceptionRule.expect(RuntimeException.class);
 
-        Mockito.when(noLoginJobPostService.findById(Mockito.eq(JOB_PACKAGE.getId()+1))).thenThrow(RuntimeException.class);
+        Mockito.when(simpleJobPostService.findById(Mockito.eq(JOB_PACKAGE.getId()+1))).thenThrow(RuntimeException.class);
 
-        noLoginJobPackageService.create(JOB_PACKAGE.getId() + 1, JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
+        simpleJobPackageService.create(JOB_PACKAGE.getId() + 1, JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
                 JOB_PACKAGE.getPrice().toString(), JOB_PACKAGE.getRateType().getValue());
     }
 

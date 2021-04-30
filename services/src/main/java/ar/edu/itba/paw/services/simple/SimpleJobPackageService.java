@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services.nologin;
+package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
@@ -13,7 +13,7 @@ import java.util.*;
 
 @Transactional
 @Service
-public class NoLoginJobPackageService implements JobPackageService {
+public class SimpleJobPackageService implements JobPackageService {
 
     @Autowired
     private JobPackageDao jobPackageDao;

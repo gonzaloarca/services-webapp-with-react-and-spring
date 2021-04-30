@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services.nologin;
+package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 
 @Transactional
 @Service
-public class NoLoginJobContractService implements JobContractService {
+public class SimpleJobContractService implements JobContractService {
 
     @Autowired
     private JobContractDao jobContractDao;

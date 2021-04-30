@@ -5,7 +5,7 @@ import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.VerificationToken;
 import ar.edu.itba.paw.persistence.jdbc.UserDaoJDBC;
-import ar.edu.itba.paw.services.nologin.NoLoginUserService;
+import ar.edu.itba.paw.services.simple.SimpleUserService;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NoLoginUserServiceTest {
+public class SimpleUserServiceTest {
 
     private static final User EXISTING_USER = new User(
             1,
@@ -42,7 +42,7 @@ public class NoLoginUserServiceTest {
     private static final VerificationToken TOKEN = new VerificationToken("", NEW_USER, Instant.now());
 
     @InjectMocks
-    private NoLoginUserService userService = new NoLoginUserService();
+    private SimpleUserService userService = new SimpleUserService();
 
     @Mock
     private MailingService mailingService;  //necesario que este como Mock para el testRegisterNewUser
