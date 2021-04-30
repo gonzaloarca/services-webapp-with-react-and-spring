@@ -1,4 +1,4 @@
-package nologin;
+package simple;
 
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;

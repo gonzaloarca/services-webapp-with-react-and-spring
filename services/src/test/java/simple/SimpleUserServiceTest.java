@@ -1,4 +1,4 @@
-package nologin;
+package simple;
 
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
