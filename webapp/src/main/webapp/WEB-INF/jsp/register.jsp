@@ -182,10 +182,10 @@
                     <div class="file-input-container input-group has-validation">
                         <form:input type="file" path="avatar" onchange="readURL(this);" id="imageInput"/>
                         <button class="btn btn-outline-secondary cancel-btn" id="clear_image" type="button">
-                            <spring:message code="register.image.clear"/>
+                            <spring:message code="image.clear"/>
                         </button>
                         <div class="invalid-feedback" style="background-color: white">
-                            <spring:message code="register.image.invalid"/>
+                            <spring:message code="image.invalid"/>
                         </div>
                     </div>
 
@@ -401,6 +401,7 @@
             passRepeatInput.setCustomValidity(message);
         })
 
+        //Limpiar imagen
         let clearBtn = document.querySelector('#clear_image');
         clearBtn.addEventListener('click', function () {
             let imageInput = document.querySelector('#imageInput');

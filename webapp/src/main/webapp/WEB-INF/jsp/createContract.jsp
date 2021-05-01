@@ -126,11 +126,13 @@
                             <form:label path="image" class="form-text">
                                 <spring:message code="contract.create.form.image"/>
                             </form:label>
-                            <div class="input-group has-validation">
-                                <!--TODO validacion client side de imagenes -->
-                                <form:input type="file" path="image"/>
-                                <div class="invalid-feedback">
-                                    Tamaño de imagen superdado
+                            <div class="input-group has-validation file-input-container" id="image-container">
+                                <form:input type="file" path="image" id="imageInput" onchange="validateImage(this);"/>
+                                <button class="btn btn-outline-secondary cancel-btn" id="clear_image" type="button">
+                                    <spring:message code="image.clear"/>
+                                </button>
+                                <div class="invalid-feedback" style="background-color: white; margin: 0">
+                                    <spring:message code="image.invalid"/>
                                 </div>
                             </div>
                             <form:errors path="image" cssClass="form-error" element="p"/>
@@ -260,7 +262,16 @@
                         form.classList.add('was-validated')
                     }, false)
                 })
+
+        //Limpiar imagen
+        let clearBtn = document.querySelector('#clear_image');
+        let imageInput = document.querySelector('#imageInput');
+        clearBtn.addEventListener('click', function () {
+            imageInput.value = '';
+            readURL(imageInput);
+        })
     })()
+
     //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
     function disableBtn() {
         var forms = document.querySelectorAll('.needs-validation');
@@ -272,6 +283,25 @@
                         }
                 })
         $("#submitBtn").attr("disabled", is_valid);
+    }
+
+    function validateImage(input) {
+        document.querySelector("#image-container").classList.add('was-validated');
+        if (input.files && input.files[0]) {
+            //Validacion de imagen
+            let fileSize = input.files[0].size;
+            if(fileSize > 2 * 1024 * 1024) {
+                input.setCustomValidity('Max File Size Exceeded');
+                return;
+            }
+            let fileType = input.files[0].type;
+            const validTypes = ["image/jpg", "image/jpeg", "image/png"];
+            if (!validTypes.includes(fileType)) {
+                input.setCustomValidity('File Type not Supported');
+                return;
+            }
+            input.setCustomValidity('');
+        }
     }
 </script>
 </body>
