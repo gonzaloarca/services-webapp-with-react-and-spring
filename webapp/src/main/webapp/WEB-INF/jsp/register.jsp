@@ -60,7 +60,7 @@
     </div>
 
 
-    <form:form modelAttribute="registerForm" class="needs-validation" novalidate="true" onsubmit="disableBtn()"
+    <form:form modelAttribute="registerForm" class="needs-validation" novalidate="true"
                action="${pageContext.request.contextPath}/register" method="post"
                enctype="multipart/form-data" id="register-form">
         <div class="card p-5">
@@ -72,18 +72,28 @@
                                 <spring:message code="register.name"/>
                             </form:label>
                             <spring:message code="register.name" var="namePlaceholder"/>
-                            <form:input type="text" class="form-control custom-input" name="name"
-                                        placeholder="${namePlaceholder}" maxlength="100" path="name"/>
-                            <form:errors path="name" cssClass="form-error" element="p"/>
+                            <div class="input-group has-validation">
+                                <form:input type="text" class="form-control custom-input" name="name" required="true"
+                                            placeholder="${namePlaceholder}" maxlength="100" path="name"/>
+                                <form:errors path="name" cssClass="form-error" element="p"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="register.field.notEmpty"/>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-5">
                             <form:label path="phone" class="form-text custom-label">
                                 <spring:message code="register.phone"/>
                             </form:label>
-                            <spring:message code="register.phone" var="phonePlaceholder"/>
-                            <form:input type="text" class="form-control custom-input" name="phone"
-                                        placeholder="${phonePlaceholder}" maxlength="100" path="phone"/>
-                            <form:errors path="phone" cssClass="form-error" element="p"/>
+                            <div class="input-group has-validation">
+                                <spring:message code="register.phone" var="phonePlaceholder"/>
+                                <form:input type="text" class="form-control custom-input" name="phone" required="true"
+                                            placeholder="${phonePlaceholder}" pattern="^\+?[0-9- ]{7,50}" path="phone"/>
+                                <form:errors path="phone" cssClass="form-error" element="p"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="Pattern.registerForm.phone"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -91,10 +101,15 @@
                         <form:label path="email" class="form-text custom-label">
                             <spring:message code="register.email"/>
                         </form:label>
-                        <spring:message code="register.email" var="emailPlaceholder"/>
-                        <form:input type="email" class="form-control custom-input" name="email"
-                                    placeholder="${emailPlaceholder}" maxlength="100" path="email"/>
-                        <form:errors path="email" cssClass="form-error" element="p"/>
+                        <div class="input-group has-validation">
+                            <spring:message code="register.email" var="emailPlaceholder"/>
+                            <form:input type="email" class="form-control custom-input" name="email" required="true"
+                                        placeholder="${emailPlaceholder}" maxlength="100" path="email"/>
+                            <form:errors path="email" cssClass="form-error" element="p"/>
+                            <div class="invalid-feedback">
+                                <spring:message code="Email"/>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -105,13 +120,13 @@
                             <spring:message code="register.password" var="passwordPlaceholder"/>
                             <div class="input-group has-validation" id="show_hide_password">
                                 <form:input type="password" class="form-control custom-input custom-password"
-                                            name="password" required="true"
-                                            placeholder="${passwordPlaceholder}" maxlength="100" path="password"/>
+                                            name="password" required="true" minlength="8" maxlength="100"
+                                            id="password" placeholder="${passwordPlaceholder}" path="password"/>
                                 <span class="input-group-text password-eye" id="inputGroupPostpend">
                                     <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
                                 </span>
                                 <div class="invalid-feedback">
-                                    <spring:message code="register.field.notEmpty"/>
+                                    <spring:message code="register.password.invalid"/>
                                 </div>
                             </div>
                             <form:errors path="password" cssClass="form-error" element="p"/>
@@ -122,13 +137,13 @@
                             </form:label>
                             <div class="input-group has-validation" id="show_hide_password_repeat">
                                 <form:input type="password" class="form-control custom-input custom-password"
-                                            name="repeatPassword"
-                                            placeholder="${passwordPlaceholder}" maxlength="100" path="repeatPassword"/>
+                                            name="repeatPassword" id="repeatPassword"
+                                            placeholder="${passwordPlaceholder}" path="repeatPassword"/>
                                 <span class="input-group-text password-eye" id="inputGroupPostpend">
                                     <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
                                 </span>
                                 <div class="invalid-feedback">
-                                    <spring:message code="register.field.notEmpty"/>
+                                    <spring:message code="register.password.notMatch"/>
                                 </div>
                             </div>
                             <form:errors path="repeatPassword" cssClass="form-error" element="p"/>
@@ -151,7 +166,7 @@
                         </a>
                     </div>
                 </fieldset>
-                <fieldset id="register-step-2">
+                <fieldset id="register-step-2" disabled>
                     <h5 class="form-step-title">
                         <spring:message code="register.selectimage"/>
                     </h5>
@@ -231,6 +246,20 @@
 
     $('.continue-btn').click(function () {
         if (animating) return false;
+
+        //Validacion Client-Side:
+        let form = document.querySelector('#register-form');
+        let is_valid = true;
+
+        if (!form.checkValidity()) {
+            is_valid = false;
+        }
+        form.classList.add('was-validated')
+
+        //Si algun form-input fue invalido, no permito el cambio de animación
+        if(!is_valid)
+            return false;
+
         animating = true;
 
         registerStep1 = $('#register-step-1');
@@ -238,6 +267,7 @@
 
         //show the next fieldset
         registerStep2.show();
+        registerStep2.attr("disabled", false);
         //hide the current fieldset with style
         registerStep1.animate({opacity: 0}, {
             step: function (now, mx) {
@@ -274,6 +304,7 @@
 
         //show the previous fieldset
         registerStep1.show();
+        registerStep1.attr("disabled", false);
         //hide the current fieldset with style
         registerStep2.animate({opacity: 0}, {
             step: function (now, mx) {
@@ -290,6 +321,7 @@
             duration: 800,
             complete: function () {
                 registerStep1.css({'position': 'relative'})
+                registerStep2.attr("disabled", true);
                 registerStep2.hide();
                 animating = false;
             },
@@ -318,39 +350,34 @@
         }
     }
 
-    // // Example starter JavaScript for disabling form submissions if there are invalid fields
-    // (function () {
-    //     'use strict'
-    //
-    //     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    //     var forms = document.querySelectorAll('.needs-validation');
-    //
-    //     // Loop over them and prevent submission
-    //     Array.prototype.slice.call(forms)
-    //             .forEach(function (form) {
-    //                 form.addEventListener('submit', function (event) {
-    //                     if (!form.checkValidity()) {
-    //                         event.preventDefault()
-    //                         event.stopPropagation()
-    //                     }
-    //
-    //                     form.classList.add('was-validated')
-    //                 }, false)
-    //             })
-    // })()
+    //Agrego la validacion al hacer submit y desactivo el boton si está validado
+    (function () {
+        let form = document.querySelector('#register-form');
+        let is_valid = true;
 
-    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
-    function disableBtn() {
-        var forms = document.querySelectorAll('.needs-validation');
-        var is_valid = true;
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                if (!form.checkValidity()) {
-                    is_valid = false;
-                }
-            })
-        $("#submitBtn").attr("disabled", is_valid);
-    }
+        form.addEventListener('submit', function (event) {
+            console.log('Estoy aca');
+            if (!form.checkValidity()) {
+                is_valid = false;
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+            $("#submitBtn").attr("disabled", is_valid);
+        }, false)
+
+        form.addEventListener('input', function () {
+            let passInput = document.querySelector('#password');
+            let passRepeatInput = document.querySelector('#repeatPassword');
+            let message = '';
+
+            if (passInput.value !== passRepeatInput.value)
+                message = 'Passwords do not match';     //Mensaje Default
+
+            passRepeatInput.setCustomValidity(message);
+        })
+    })()
 </script>
 </body>
 </html>
