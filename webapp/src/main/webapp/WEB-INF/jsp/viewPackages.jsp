@@ -57,12 +57,13 @@
                 <br>
 
                 <a href="<c:url value="/job/${jobPost.id}/packages/add"/>"
-                   class="mt-4 btn btn-block btn-light add-package-btn text-uppercase">
+                   style="margin-top: 40px"
+                   class="btn btn-block btn-light add-package-btn text-uppercase">
                     <i style="font-size: 1.5rem" class="fas fa-plus-square text-primary mr-1"></i>
                     <span>Añadir nuevo paquete</span>
                 </a>
 
-                <div class="accordion mt-4" id="accordionPackages">
+                <div style="margin-top: 40px" class="accordion" id="accordionPackages">
                     <c:forEach items="${packages}" var="pack" varStatus="status">
                         <div class="editable-package-container">
                             <div class="card custom-card flex-grow-1 mb-3 border-radius-package">

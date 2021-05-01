@@ -92,8 +92,8 @@ public class JobPostController {
         }
         jobPostForm.setZones(zoneInts);
         jobPostForm.setTitle(jobPost.getTitle());
-        mav.addObject("editJobPostForm",jobPostForm);
-        mav.addObject("id",id);
+        mav.addObject("editJobPostForm", jobPostForm);
+        mav.addObject("id", id);
         return mav;
     }
 
@@ -107,17 +107,19 @@ public class JobPostController {
 
     @RequestMapping(path = "/create-job-post", method = RequestMethod.POST)
     public ModelAndView submitJobPost(@Valid @ModelAttribute("createJobPostForm") final JobPostForm form,
-                                      final BindingResult errors, RedirectAttributes attr, Principal principal) {
+                                      final BindingResult errors, Principal principal) {
 
         if (errors.hasErrors()) {
             return createJobPost(form);
         }
 
         String currentUserEmail = principal.getName();
-        JobPost jobPost = jobPostService.create(currentUserEmail, form.getTitle(), form.getAvailableHours(), form.getJobType(), form.getZones());
+        JobPost jobPost = jobPostService.create(currentUserEmail, form.getTitle(), form.getAvailableHours(),
+                form.getJobType(), form.getZones());
         PackageForm packageForm = form.getJobPackage();
 
-        jobPackageService.create(jobPost.getId(), packageForm.getTitle(), packageForm.getDescription(), packageForm.getPrice(), packageForm.getRateType());
+        jobPackageService.create(jobPost.getId(), packageForm.getTitle(), packageForm.getDescription(),
+                packageForm.getPrice(), packageForm.getRateType());
 
         List<ByteImage> byteImages = new ArrayList<>();
         for (MultipartFile file : form.getServicePics()) {
@@ -131,13 +133,12 @@ public class JobPostController {
         }
         jobPostImageService.addImages(jobPost.getId(), byteImages);
 
-        attr.addAttribute("postId", jobPost.getId());
-        return new ModelAndView("redirect:/create-job-post/success");
+        return new ModelAndView("redirect:/create-job-post/success?postId=" + jobPost.getId());
     }
 
     @RequestMapping(path = "job/{postId}/edit", method = RequestMethod.POST)
     public ModelAndView editJobPost(@Valid @ModelAttribute("editJobPostForm") final EditJobPostForm form,
-                                      final BindingResult errors, RedirectAttributes attr, Principal principal,@PathVariable("postId") final long id) {
+                                      final BindingResult errors ,@PathVariable("postId") final long id) {
 
         if (errors.hasErrors()) {
             return jobPostDetailsEdit(id,form);
@@ -147,17 +148,16 @@ public class JobPostController {
             throw new RuntimeException();
         }
 
-        attr.addAttribute("postId", id);
-        return new ModelAndView("redirect:/job/"+id);
+        return new ModelAndView("redirect:/job/" + id);
     }
 
     @RequestMapping("/create-job-post/success")
-    public ModelAndView createSuccess(@RequestParam("postId") final long postId, Principal principal) {
+    public ModelAndView createSuccess(@RequestParam("postId") final long postId) {
 
         return new ModelAndView("createJobPostSuccess").addObject("postId", postId);
     }
 
-    @RequestMapping(value = "/job/{postId}/packages",method = RequestMethod.GET)
+    @RequestMapping(value = "/job/{postId}/packages", method = RequestMethod.GET)
     public ModelAndView viewPackages(@ModelAttribute("deletePackageForm") DeletePackageForm form,
                                      @PathVariable final long postId) {
         JobPost jobPost = jobPostService.findById(postId);
@@ -185,12 +185,12 @@ public class JobPostController {
     @RequestMapping(path = "/job/{postId}/packages/add", method = RequestMethod.GET)
     public ModelAndView addPackage(@ModelAttribute("createPackageForm") PackageForm form,
                                    @PathVariable final long postId) {
-        return new ModelAndView("addPackage");
+        return new ModelAndView("addPackage").addObject("postId", postId);
     }
 
     @RequestMapping(path = "/job/{postId}/packages/add", method = RequestMethod.POST)
     public ModelAndView submitPackage(@Valid @ModelAttribute("createPackageForm") PackageForm form,
-                                      final BindingResult errors, RedirectAttributes attr,
+                                      final BindingResult errors,
                                       @PathVariable final long postId) {
         if (errors.hasErrors()) {
             return addPackage(form, postId);
@@ -198,12 +198,11 @@ public class JobPostController {
 
         jobPackageService.create(postId, form.getTitle(), form.getDescription(), form.getPrice(), form.getRateType());
 
-        attr.addAttribute("postId", postId);
         return new ModelAndView("redirect:/job/" + postId + "/packages/add/success");
     }
 
-    @RequestMapping("/job/{postId}/packages/add/success")
-    public ModelAndView addSuccess(@PathVariable final long postId) {
+    @RequestMapping(path = "/job/{postId}/packages/add/success", method = RequestMethod.GET)
+    public ModelAndView addPackageSuccess(@PathVariable final long postId) {
         return new ModelAndView("addPackageSuccess").addObject("postId", postId);
     }
 

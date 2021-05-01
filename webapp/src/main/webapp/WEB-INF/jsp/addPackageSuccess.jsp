@@ -7,7 +7,7 @@
 <html>
 <head>
     <title>
-        <spring:message code="jobPost.create.success.title" var="text"/>
+        <spring:message code="jobPost.packages.add.success.title" var="text"/>
         <spring:message code="title.name" arguments="${text}"/>
     </title>
 
@@ -25,6 +25,7 @@
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/createjobpoststeps.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/packages.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icon.svg">
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
@@ -36,38 +37,30 @@
 
 <div class="content-container-transparent mt-3">
     <h3>
-        <img style="height: 30px; padding-bottom: 5px" src="<c:url value="/resources/images/add-1.svg"/>" alt="">
-        Publicar un nuevo servicio
+        <i class="mr-2 fas fa-cube"></i>
+        Administrar paquetes
     </h3>
 
     <div class="step-frame">
         <div style="padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center"
              class="step-container">
-            <img class="mb-4" style="height: 150px" src="<c:url value="/resources/images/success1.svg"/>" alt=""/>
-            <h4 class="mb-4">¡Servicio publicado exitosamente!</h4>
+            <img class="mb-4" style="height: 150px" src="<c:url value="/resources/images/package-success1.svg"/>" alt=""/>
+            <h4 class="mb-4">¡Paquete añadido exitosamente!</h4>
 
-            <c:url value="/job/${postId}" var="getJobPath"/>
-            <a href='${getJobPath}' class="btn btn-primary text-uppercase">
-                Ir al servicio
+            <a href="<c:url value="/job/${postId}/packages/add"/>"
+               style="margin-bottom: 20px"
+               class="btn btn-light add-package-btn text-uppercase custom-row align-items-center">
+                <i style="font-size: 1.5rem" class="fas fa-plus-square text-primary mr-2"></i>
+                <span>Añadir otro</span>
             </a>
-        </div>
 
-        <div class="add-package-reminder">
-            <div class="d-flex justify-content-center align-items-center">
-                <div>
-<%--                    TODO: Agregar alt valido--%>
-                    <img src="<c:url value="/resources/images/package1.svg"/>"/>
-                </div>
-                <div class="ml-3 d-flex flex-column align-items-center">
-                    <p>¿Desea agregar más paquetes?</p>
+            <a href='<c:url value="/job/${postId}"/>' class="btn btn-primary text-uppercase">
+                Regresar al servicio
+            </a>
 
-                    <c:url value="/job/${postId}/packages" var="getPackagesPath"/>
-                    <a href="${getPackagesPath}" class="btn btn-primary text-uppercase">Agregar</a>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
-
 </body>
 </html>

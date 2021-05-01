@@ -1,5 +1,4 @@
 .packages-container-wrapper {
-    position: absolute;
     margin: 40px auto;
     width: 100%;
 }
@@ -14,6 +13,7 @@
     position: relative;
     width: 700px;
     margin: auto;
+    height: max-content;
 }
 
 .package-info {
@@ -140,7 +140,6 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     border: none;
     font-weight: bold;
     background-color: #e8e8e8;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 .add-package-btn:hover {

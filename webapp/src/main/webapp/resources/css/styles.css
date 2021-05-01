@@ -210,7 +210,7 @@ h3 {
 }
 
 .custom-row {
-    display: flex;
+    display: flex !important;
     flex-wrap: wrap;
 }
 
