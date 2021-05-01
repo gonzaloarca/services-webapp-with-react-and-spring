@@ -179,8 +179,14 @@
                             <spring:message code="register.imagepreview"/>
                         </p>
                     </div>
-                    <div class="file-input-container">
-                        <form:input type="file" path="avatar" onchange="readURL(this);"/>
+                    <div class="file-input-container input-group has-validation">
+                        <form:input type="file" path="avatar" onchange="readURL(this);" id="imageInput"/>
+                        <button class="btn btn-outline-secondary cancel-btn" id="clear_image" type="button">
+                            <spring:message code="register.image.clear"/>
+                        </button>
+                        <div class="invalid-feedback" style="background-color: white">
+                            <spring:message code="register.image.invalid"/>
+                        </div>
                     </div>
 
                     <p class="img-upload-disclaimer">
@@ -288,6 +294,7 @@
             duration: 800,
             complete: function () {
                 registerStep1.hide();
+                form.classList.remove('was-validated');
                 animating = false;
             },
             //this comes from the custom easing plugin
@@ -336,9 +343,23 @@
     });
 
     // Script para ver vista previa de imagen subida
-
     function readURL(input) {
         if (input.files && input.files[0]) {
+
+            //Validacion de imagen
+            let fileSize = input.files[0].size;
+            if(fileSize > 2 * 1024 * 1024) {
+                input.setCustomValidity('Max File Size Exceeded');
+                return;
+            }
+            let fileType = input.files[0].type;
+            const validTypes = ["image/jpg", "image/jpeg", "image/png"];
+            if (!validTypes.includes(fileType)) {
+                input.setCustomValidity('File Type not Supported');
+                return;
+            }
+            input.setCustomValidity('');
+
             let reader = new FileReader();
 
             reader.onload = function (e) {
@@ -347,6 +368,9 @@
             };
 
             reader.readAsDataURL(input.files[0]);
+        } else {
+            $('#img-preview')
+                .attr('src', "${pageContext.request.contextPath}/resources/images/defaultavatar.svg");
         }
     }
 
@@ -356,14 +380,13 @@
         let is_valid = true;
 
         form.addEventListener('submit', function (event) {
-            console.log('Estoy aca');
             if (!form.checkValidity()) {
                 is_valid = false;
                 event.preventDefault()
                 event.stopPropagation()
             }
 
-            form.classList.add('was-validated')
+            form.classList.add('was-validated');
             $("#submitBtn").attr("disabled", is_valid);
         }, false)
 
@@ -376,6 +399,13 @@
                 message = 'Passwords do not match';     //Mensaje Default
 
             passRepeatInput.setCustomValidity(message);
+        })
+
+        let clearBtn = document.querySelector('#clear_image');
+        clearBtn.addEventListener('click', function () {
+            let imageInput = document.querySelector('#imageInput');
+            imageInput.value = '';
+            readURL(imageInput);
         })
     })()
 </script>

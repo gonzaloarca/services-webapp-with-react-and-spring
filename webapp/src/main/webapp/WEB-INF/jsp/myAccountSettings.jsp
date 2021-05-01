@@ -99,7 +99,7 @@
                             <form:input type="text" class="form-control custom-input" name="name" required="true"
                                         placeholder="${namePlaceholder}" maxlength="100" path="name"/>
                             <div class="invalid-feedback">
-                                <spring:message code="account.settings.security.empty"/>
+                                <spring:message code="register.field.notEmpty"/>
                             </div>
                             <form:errors path="name" cssClass="form-error" element="p"/>
                         </div>
@@ -108,9 +108,9 @@
                                 <spring:message code="register.phone"/>
                             </form:label>
                             <form:input type="text" class="form-control custom-input" name="phone" required="true"
-                                        placeholder="${phonePlaceholder}" maxlength="100" path="phone"/>
+                                        placeholder="${phonePlaceholder}" pattern="^\+?[0-9- ]{7,50}" path="phone"/>
                             <div class="invalid-feedback">
-                                <spring:message code="account.settings.security.empty"/>
+                                <spring:message code="Pattern.registerForm.phone"/>
                             </div>
                             <form:errors path="phone" cssClass="form-error" element="p"/>
                         </div>
@@ -134,8 +134,14 @@
                                 </div>
                             </div>
                             <div class="col-8 image-input">
-                                <div class="file-input-container">
-                                    <form:input type="file" path="avatar" onchange="readURL(this);"/>
+                                <div class="file-input-container input-group has-validation">
+                                    <form:input type="file" path="avatar" onchange="readURL(this);" id="imageInput"/>
+                                    <button class="btn btn-outline-secondary cancel-btn" id="clear_image" type="button">
+                                        <spring:message code="register.image.clear"/>
+                                    </button>
+                                    <div class="invalid-feedback" style="background-color: white">
+                                        <spring:message code="register.image.invalid"/>
+                                    </div>
                                 </div>
                                 <form:errors path="avatar" cssClass="form-error" element="p"/>
                             </div>
@@ -164,6 +170,21 @@
     // Script para ver vista previa de imagen subida
     function readURL(input) {
         if (input.files && input.files[0]) {
+
+            //Validacion de imagen
+            let fileSize = input.files[0].size;
+            if(fileSize > 2 * 1024 * 1024) {
+                input.setCustomValidity('Max File Size Exceeded');
+                return;
+            }
+            let fileType = input.files[0].type;
+            const validTypes = ["image/jpg", "image/jpeg", "image/png"];
+            if (!validTypes.includes(fileType)) {
+                input.setCustomValidity('File Type not Supported');
+                return;
+            }
+            input.setCustomValidity('');
+
             let reader = new FileReader();
 
             reader.onload = function (e) {
@@ -172,28 +193,34 @@
             };
 
             reader.readAsDataURL(input.files[0]);
+        } else {
+            $('#img-preview')
+                .attr('src', "${pageContext.request.contextPath}/resources/images/defaultavatar.svg");
         }
     }
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function () {
         'use strict'
 
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
+        let form = document.querySelector('.needs-validation')
 
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
 
-                        form.classList.add('was-validated')
-                    }, false)
-                })
+            form.classList.add('was-validated')
+        })
+
+        let clearBtn = document.querySelector('#clear_image');
+        clearBtn.addEventListener('click', function () {
+            let imageInput = document.querySelector('#imageInput');
+            imageInput.value = '';
+            readURL(imageInput);
+        })
     })()
+
     //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
     function disableBtn() {
         var forms = document.querySelectorAll('.needs-validation');
