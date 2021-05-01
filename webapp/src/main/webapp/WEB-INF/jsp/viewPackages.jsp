@@ -66,7 +66,7 @@
                 <div style="margin-top: 40px" class="accordion" id="accordionPackages">
                     <c:forEach items="${packages}" var="pack" varStatus="status">
                         <div class="editable-package-container">
-                            <div class="card custom-card flex-grow-1 mb-3 border-radius-package">
+                            <div class="card custom-card flex-grow-1 mb-3 border-radius-package" style="height: max-content">
                                 <div class="card custom-card border-radius-package"
                                      id="heading${status.index}">
 
