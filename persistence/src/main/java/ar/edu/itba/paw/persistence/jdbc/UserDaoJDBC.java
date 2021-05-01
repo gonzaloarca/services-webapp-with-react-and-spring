@@ -109,8 +109,9 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
-        return jdbcTemplate.query("SELECT user_email,user_password,array_agg(role_id) as roles, user_is_verified " +
-                "FROM users NATURAL JOIN user_role WHERE user_email = ? AND user_is_active = TRUE GROUP BY user_email,user_password, user_is_verified",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT user_email,user_password,array_remove(array_agg(role_id),null) as roles, user_is_verified " +
+                "FROM users LEFT JOIN user_role ur on users.user_id = ur.user_id " +
+                "WHERE user_email = ? AND user_is_active = TRUE GROUP BY user_email,user_password, user_is_verified",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
