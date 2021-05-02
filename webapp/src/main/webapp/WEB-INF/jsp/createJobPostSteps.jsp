@@ -54,7 +54,7 @@
     </h3>
 
     <c:url value="/create-job-post" var="postPath"/>
-    <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post"
+    <form:form modelAttribute="createJobPostForm" action="${postPath}" method="post" id="post-form"
                class="needs-validation" novalidate="true" enctype="multipart/form-data" onsubmit="disableBtn()">
         <div class="form-error-container">
             <form:errors path="jobType" cssClass="form-error-list" element="p"/>
@@ -70,7 +70,7 @@
 
         <div class="step-frame">
             <div class="step-container-wrapper" id="step-wrapper1">
-
+                <fieldset class="fieldset-step" id="fieldset-step-1">
                 <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                      src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
                 <img style="height: 55px; position: absolute; top: 10px; right: 20px"
@@ -92,16 +92,21 @@
 
                         <spring:message code="jobPost.create.service.type" var="serviceType"/>
 
-                        <form:select path="jobType" class="form-control w-100" id="jobTypeSelect">
-                            <form:option value="" label="${serviceType}"/>
+                        <span class="input-group has-validation">
+                            <form:select path="jobType" class="form-control w-100" id="jobTypeSelect" required="true">
+                                <form:option value="" label="${serviceType}"/>
 
-                            <c:forEach items="${jobTypes}" var="type">
-                                <form:option value="${type.value}">
-                                    <spring:message code="${type.stringCode}"/>
-                                </form:option>
-                            </c:forEach>
+                                <c:forEach items="${jobTypes}" var="type">
+                                    <form:option value="${type.value}">
+                                        <spring:message code="${type.stringCode}"/>
+                                    </form:option>
+                                </c:forEach>
 
-                        </form:select>
+                            </form:select>
+                            <div class="invalid-feedback">
+                                    <spring:message code="NotNull.createJobPostForm.jobType"/>
+                            </div>
+                        </span>
                         <form:errors path="jobType" class="form-error" element="p"/>
                         <div class="button-controls">
                             <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
@@ -110,10 +115,11 @@
                         </div>
                     </div>
                 </div>
+                </fieldset>
             </div>
 
             <div class="step-container-wrapper" id="step-wrapper2">
-
+                <fieldset class="fieldset-step" id="fieldset-step-2" disabled>
                 <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                      src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
                 <img style="height: 75px; position: absolute; top: 5px; right: 10px"
@@ -133,10 +139,15 @@
                                     class="step-header-label">
                             <spring:message code="jobPost.create.publication.title"/>
                         </form:label>
-                        <spring:message code="jobPost.create.publication.placeholder" var="titlePlaceholder"/>
-                        <form:input path="title" id="jobTitle" type="text" class="form-control"
-                                    placeholder="${titlePlaceholder}" maxlength="100"/>
-                        <form:errors path="title" class="form-error" element="p"/>
+                        <span class="input-group has-validation">
+                            <spring:message code="jobPost.create.publication.placeholder" var="titlePlaceholder"/>
+                            <form:input path="title" id="jobTitle" type="text" class="form-control" required="true"
+                                        placeholder="${titlePlaceholder}" maxlength="100"/>
+                            <form:errors path="title" class="form-error" element="p"/>
+                            <div class="invalid-feedback">
+                                <spring:message code="field.string.notEmpty"/>
+                            </div>
+                        </span>
                         <div class="button-controls">
                             <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                     type="button">
@@ -148,10 +159,11 @@
                         </div>
                     </div>
                 </div>
+                </fieldset>
             </div>
 
             <div class="step-container-wrapper" id="step-wrapper3">
-
+                <fieldset class="fieldset-step" id="fieldset-step-3" disabled>
                 <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                      src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
                 <img style="height: 85px; position: absolute; top: 0; right: 10px"
@@ -196,11 +208,14 @@
                             </form:label>
 
                             <spring:message code="jobPost.create.package.title" var="pTitlePlaceholder"/>
-
-                            <form:input path="jobPackage.title" id="package-title-input" type="text"
-                                        class="form-control"
-                                        placeholder="${pTitlePlaceholder}" maxlength="100"/>
-
+                            <span class="input-group has-validation">
+                                <form:input path="jobPackage.title" id="package-title-input" type="text"
+                                            class="form-control" required="true"
+                                            placeholder="${pTitlePlaceholder}" maxlength="100"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="field.string.notEmpty"/>
+                                </div>
+                            </span>
                             <form:errors path="jobPackage.title" class="form-error" element="p"/>
                         </div>
 
@@ -212,10 +227,15 @@
 
                             <spring:message code="jobPost.create.package.descriptionPlaceholder"
                                             var="descriptionPlaceholder"/>
-                            <form:textarea path="jobPackage.description" id="package-description-input"
-                                           class="form-control"
-                                           placeholder="${descriptionPlaceholder}" maxlength="100"
-                                           rows="3"/>
+                            <span class="input-group has-validation">
+                                <form:textarea path="jobPackage.description" id="package-description-input"
+                                               class="form-control" required="true"
+                                               placeholder="${descriptionPlaceholder}" maxlength="100"
+                                               rows="3"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="field.string.notEmpty"/>
+                                </div>
+                            </span>
 
                             <form:errors path="jobPackage.description" class="form-error" element="p"/>
                         </div>
@@ -255,6 +275,9 @@
                                     </form:label>
                                 </div>
                             </div>
+                            <div class="invalid-feedback" id="radioFeedback">
+                                <spring:message code="NotNull.createJobPostForm.jobPackage.rateType"/>
+                            </div>
                             <form:errors path="jobPackage.rateType" class="form-error" element="p"/>
                         </div>
 
@@ -262,7 +285,7 @@
                             <form:label path="jobPackage.price" for="package-price-input">
                                 <spring:message code="jobPost.create.package.price"/>
                             </form:label>
-                            <div class="input-group">
+                            <div class="input-group has-validation">
                                 <div class="input-group-prepend">
                                 <span class="input-group-text">
                                     <spring:message code="jobPost.create.package.argentinePeso"/>
@@ -272,6 +295,9 @@
                                 <form:input path="jobPackage.price" id="package-price-input" type="number" step="any"
                                             class="form-control" min="0" max="99999999999"
                                             placeholder="${pricePlaceholder}"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="jobPost.create.price.invalid"/>
+                                </div>
                             </div>
                             <form:errors path="jobPackage.price" class="form-error" element="p"/>
                         </div>
@@ -281,16 +307,18 @@
                                     type="button">
                                 <spring:message code="jobPost.create.goBack"/>
                             </button>
-                            <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
+                            <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button"
+                                    onclick="checkRadio()">
                                 <spring:message code="jobPost.create.next"/>
                             </button>
                         </div>
                     </div>
                 </div>
+                </fieldset>
             </div>
 
             <div class="step-container-wrapper" id="step-wrapper4">
-
+                <fieldset class="fieldset-step" id="fieldset-step-4" disabled>
                 <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                      src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
                 <img style="height: 55px; position: absolute; top: 10px; right: 20px"
@@ -312,6 +340,7 @@
                         </form:label>
 
                         <div class="file-input-container">
+                            <!-- TODO client side validation de las imagenes -->
                             <form:input id="imageInput" type="file" path="servicePics" size="5" multiple="multiple"/>
                         </div>
 
@@ -332,10 +361,11 @@
                         </div>
                     </div>
                 </div>
+                </fieldset>
             </div>
 
             <div class="step-container-wrapper" id="step-wrapper5">
-
+                <fieldset class="fieldset-step" id="fieldset-step-5" disabled>
                 <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                      src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
                 <img style="height: 80px; position: absolute; top: 5px; right: 20px"
@@ -356,9 +386,14 @@
                             <spring:message code="jobPost.create.availableHours"/>
                         </form:label>
                         <spring:message code="jobPost.create.availableHours.placeholder" var="hoursPlaceholder"/>
-                        <form:textarea path="availableHours" id="availableHoursInput" class="form-control"
-                                       placeholder="${hoursPlaceholder}"
-                                       rows="5" maxlength="100"/>
+                        <span class="input-group has-validation">
+                            <form:textarea path="availableHours" id="availableHoursInput" class="form-control"
+                                           placeholder="${hoursPlaceholder}" required="true"
+                                           rows="5" maxlength="100"/>
+                            <div class="invalid-feedback">
+                                <spring:message code="field.string.notEmpty"/>
+                            </div>
+                        </span>
                         <form:errors path="availableHours" class="form-error" element="p"/>
                         <div class="button-controls">
                             <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
@@ -371,10 +406,11 @@
                         </div>
                     </div>
                 </div>
+                </fieldset>
             </div>
 
             <div class="step-container-wrapper" id="step-wrapper6">
-
+                <fieldset class="fieldset-step" id="fieldset-step-6" disabled>
                 <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                      src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
                 <img style="height: 80px; position: absolute; top: 10px; right: 20px"
@@ -397,7 +433,7 @@
 
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
-                            <input id="locationFilter" type="text" class="form-control"
+                            <input id="locationFilter" type="text" class="form-control zone-search"
                                    placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                         </div>
 
@@ -413,6 +449,9 @@
                             </c:forEach>
                         </div>
 
+                        <div class="invalid-feedback" id="zones-feedback">
+                            <spring:message code="jobPost.create.zones.invalid"/>
+                        </div>
                         <form:errors path="zones" class="form-error" element="p"/>
                         <div class="button-controls">
                             <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
@@ -420,12 +459,13 @@
                                 <spring:message code="jobPost.create.goBack"/>
                             </button>
                             <button class="btn btn-primary hirenet-blue-btn text-uppercase continue-btn"
-                                    type="button">
+                                    type="button" onclick="checkZones()">
                                 <spring:message code="jobPost.create.next"/>
                             </button>
                         </div>
                     </div>
                 </div>
+                </fieldset>
             </div>
 
             <div class="step-container-wrapper" id="overview-wrapper">
@@ -664,12 +704,22 @@
 
     $('.continue-btn').click(function () {
         if (animating) return false;
+
+        //Validacion Client-Side:
+        let form = document.querySelector('#post-form');
+
+        if (!form.checkValidity()) {
+            this.closest('.fieldset-step').classList.add('was-validated');
+            return false;
+        }
+
         animating = true;
 
         currentStep = $(this).closest('.step-container-wrapper');
         nextStep = currentStep.next();
 
         nextStep.show();
+        nextStep[0].children[0].removeAttribute("disabled");
 
         currentStep.animate({opacity: 0}, {
             step: function (now, mx) {
@@ -720,6 +770,7 @@
             complete: function () {
                 previousStep.css({'position': 'relative'})
                 currentStep.hide();
+                currentStep[0].children[0].setAttribute("disabled", "");
                 animating = false;
             },
 
@@ -840,47 +891,27 @@
         errorContainer.remove();
     }
 
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
-
     //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
     function disableBtn() {
-        var forms = document.querySelectorAll('.needs-validation');
+        let form = document.querySelector('#post-form');
         var is_valid = true;
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                if (!form.checkValidity()) {
-                    is_valid = false;
-                }
-            })
+
+        if (!form.checkValidity()) {
+            is_valid = false;
+        }
+
+        form.classList.add('was-validated');
         $("#submitBtn").attr("disabled", is_valid);
     }
 
     const checkboxList = $('.zone-checkbox');
 
     for (let i = 0; i < checkboxList.length; i++) {
-        console.log(checkboxList[i].closest('.list-group-item'))
-        console.log(checkboxList[i])
+        // console.log(checkboxList[i].closest('.list-group-item'))
+        // console.log(checkboxList[i])
 
         let zoneString = checkboxList[i].closest('.list-group-item').getElementsByTagName('span')[0].textContent;
-        console.log(checkboxList[i])
+        // console.log(checkboxList[i])
 
         if (checkboxList[i].checked) {
 //Lo agrego al div
@@ -941,6 +972,43 @@
         $('#hourly-suffix').hide();
     }
 
+    function checkRadio() {
+        let message = "";
+        let feedback = document.querySelector('#radioFeedback');
+        let priceInput = document.querySelector('#package-price-input');
+        if(!hourlyRadio[0].checked && !oneTimeRadio[0].checked && !tbdRadio[0].checked){
+            message = "No radio selected";    //Mensaje default
+            feedback.style.setProperty("display", "flex");
+        } else {
+            feedback.style.setProperty("display", "none");
+        }
+        hourlyRadio[0].setCustomValidity(message);
+        oneTimeRadio[0].setCustomValidity(message);
+        tbdRadio[0].setCustomValidity(message);
+        if((hourlyRadio[0].checked || oneTimeRadio[0].checked) && priceInput.value === "")
+            priceInput.setCustomValidity("Price is obligatory");    //Mensaje Default
+        else
+            priceInput.setCustomValidity("");
+    }
+
+    function checkZones() {
+        let zones = document.querySelectorAll(".zone-checkbox");
+        let is_valid = false;
+        let message = '';
+        zones.forEach(function (zone) {
+            if (zone.checked === true)
+                is_valid = true;
+        });
+        if (!is_valid) {
+            message = 'Please choose a zone';       //Mensaje default
+            document.querySelector('#zones-feedback').style.setProperty("display", "flex");
+        } else {
+            document.querySelector('#zones-feedback').style.setProperty("display", "none");
+        }
+        zones.forEach(function (zone) {
+            zone.setCustomValidity(message);
+        });
+    }
 </script>
 </body>
 </html>

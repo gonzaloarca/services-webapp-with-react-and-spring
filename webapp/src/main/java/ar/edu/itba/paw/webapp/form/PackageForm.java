@@ -1,18 +1,18 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.validation.PriceNotEmpty;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @PriceNotEmpty
 public class PackageForm {
-    @NotEmpty
+    @NotBlank
     @Size(max = 100)
     private String title;
 
-    @NotEmpty
+    @NotBlank
     @Size(max = 100)
     private String description;
 

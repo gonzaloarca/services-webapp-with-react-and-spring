@@ -77,7 +77,7 @@
                                             placeholder="${namePlaceholder}" maxlength="100" path="name"/>
                                 <form:errors path="name" cssClass="form-error" element="p"/>
                                 <div class="invalid-feedback">
-                                    <spring:message code="register.field.notEmpty"/>
+                                    <spring:message code="field.string.notEmpty"/>
                                 </div>
                             </div>
                         </div>
@@ -305,7 +305,6 @@
 
         //show the previous fieldset
         registerStep1.show();
-        registerStep1.attr("disabled", false);
         //hide the current fieldset with style
         registerStep2.animate({opacity: 0}, {
             step: function (now, mx) {

@@ -99,7 +99,7 @@
                             <form:input type="text" class="form-control custom-input" name="name" required="true"
                                         placeholder="${namePlaceholder}" maxlength="100" path="name"/>
                             <div class="invalid-feedback">
-                                <spring:message code="register.field.notEmpty"/>
+                                <spring:message code="field.string.notEmpty"/>
                             </div>
                             <form:errors path="name" cssClass="form-error" element="p"/>
                         </div>

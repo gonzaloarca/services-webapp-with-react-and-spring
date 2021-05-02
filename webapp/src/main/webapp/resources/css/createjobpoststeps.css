@@ -334,4 +334,11 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     padding: 10px 15px;
 }
 
+.zone-search {
+    background-image: none !important;
+    border-color: white !important;
+}
 
+.zone-search:focus {
+    box-shadow: none !important;
+}
