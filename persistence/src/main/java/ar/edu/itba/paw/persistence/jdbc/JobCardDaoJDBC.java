@@ -93,7 +93,7 @@ public class JobCardDaoJDBC implements JobCardDao {
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         query = "%" + query + "%";
         return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM job_cards WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{query, zone.ordinal(), limit, offset},
                 JOB_CARD_ROW_MAPPER
         );
@@ -105,7 +105,7 @@ public class JobCardDaoJDBC implements JobCardDao {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM job_cards WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{query, zone.ordinal(), jobType.ordinal(), limit, offset},
                 JOB_CARD_ROW_MAPPER
         );
@@ -144,7 +144,7 @@ public class JobCardDaoJDBC implements JobCardDao {
     public int findMaxPageSearch(String query, JobPost.Zone zone) {
         query = "%" + query + "%";
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM job_cards " +
-                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_is_active = TRUE",
+                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE",
                 new Object[]{query, zone.ordinal()}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
@@ -153,7 +153,7 @@ public class JobCardDaoJDBC implements JobCardDao {
     public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType) {
         query = "%" + query + "%";
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM job_cards " +
-                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_is_active = TRUE AND ? = post_job_type",
+                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE AND ? = post_job_type",
                 new Object[]{query, zone.ordinal(), jobType.ordinal()}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
