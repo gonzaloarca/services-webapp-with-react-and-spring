@@ -42,10 +42,10 @@ public class AccountController {
 		//TODO: no setear el form al inicio?
 		form.setName(currentUser.getUsername());
 		form.setPhone(currentUser.getPhone());
-		mav.addObject("namePlaceholder", currentUser.getUsername());
-		mav.addObject("phonePlaceholder", currentUser.getPhone());
-		mav.addObject("user", currentUser);
-		mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
+		mav.addObject("namePlaceholder", currentUser.getUsername())
+		.addObject("phonePlaceholder", currentUser.getPhone())
+		.addObject("user", currentUser)
+		.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
 
 		return	mav;
 	}

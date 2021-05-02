@@ -318,20 +318,27 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
 }
 
 .edit-button, .edit-button:link {
+    display: inline-block;
+    margin: 0;
     justify-content: flex-end;
-    color: #485696
+    color: #485696;
+    padding: 5px 10px;
 }
 
 .edit-button:hover {
-    text-decoration: none
+    text-decoration: none;
+    background-color: #d8d8d8;
+    border-radius: 10px;
+    padding: 5px 10px;
+    transition: background-color 300ms;
 }
 
 .edit-button p {
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .edit-button i {
-    font-size: 26px;
+    font-size: 1.5rem;
     line-height: 22px;
     margin-right: 5px;
 }

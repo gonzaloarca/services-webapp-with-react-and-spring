@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,6 +49,14 @@ public class WebConfig {
     @Bean(name = "webpageUrl")
     public String webpageUrl() {
         return "http://pawserver.it.itba.edu.ar/paw-2021a-03";
+    }
+
+    @Autowired
+    private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
+
+    @PostConstruct
+    public void init() {
+        requestMappingHandlerAdapter.setIgnoreDefaultModelOnRedirect(true);
     }
 
     @Bean

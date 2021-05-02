@@ -50,12 +50,16 @@
     <%--        </ol>--%>
     <%--    </nav>--%>
     <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
-        <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
-        <a class="custom-row edit-button text-uppercase" href="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
-            <i class="fas fa-edit"></i>
-            <p>Editar publicacion</p>
-        </a>
-        </sec:authorize>
+    <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
+        <div class="flex custom-row justify-content-end">
+            <a class="edit-button text-uppercase align-items-center my-2"
+               href="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
+                <div class="custom-row"><i class="fas fa-edit"></i>
+                    <p class="mb-0 ml-2">Editar publicacion</p>
+                </div>
+            </a>
+        </div>
+    </sec:authorize>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <c:choose>
@@ -191,12 +195,22 @@
 
             <div class="card custom-card mb-4 bg-white rounded">
                 <div class="card-body">
-                        <span class="card-title custom-row">
-                            <i class="bi bi-box-seam"></i>
-                            <p>
-                                <spring:message code="jobPost.jobs.packages"/>
-                            </p>
-                        </span>
+                    <div class="card-title custom-row align-items-center justify-content-between">
+                        <div class="custom-row"><i class="bi bi-box-seam"></i>
+                        <p>
+                            <spring:message code="jobPost.jobs.packages"/>
+                        </p>
+                        </div>
+                        <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/packages">
+                            <a class="custom-row edit-button text-uppercase align-items-center"
+                               href="${pageContext.request.contextPath}/job/${jobPost.id}/packages">
+                                <i class="fas fa-cube m-0"></i>
+                                <p class="ml-2 font-weight-normal">Administrar paquetes</p>
+                            </a>
+                        </sec:authorize>
+                    </div>
+
+
 
                     <div class="accordion mx-5" id="accordionPackages">
                         <c:forEach items="${packages}" var="pack" varStatus="status">

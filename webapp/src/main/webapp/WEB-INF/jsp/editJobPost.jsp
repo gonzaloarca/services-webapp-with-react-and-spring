@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>
-        <spring:message code="jobPost.create.title" var="text"/>
+        <spring:message code="jobPost.edit.title" var="text"/>
         <spring:message code="title.name" arguments="${text}"/>
     </title>
 
@@ -50,8 +50,8 @@
 
 <div class="content-container-transparent mt-3">
     <h3>
-        <img style="height: 30px; padding-bottom: 5px" src="<c:url value="/resources/images/add-1.svg"/>" alt="">
-        Editar un servicio
+        <img style="height: 30px; padding-bottom: 5px; margin-right: 5px" src="<c:url value="/resources/images/edit-icon.svg"/>" alt="">
+        <spring:message code="jobPost.edit.title"/>
     </h3>
 
         <c:url value="/job/${id}/edit" var="postPath"/>
