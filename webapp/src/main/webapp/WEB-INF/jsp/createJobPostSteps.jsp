@@ -252,7 +252,7 @@
                                                       class="form-check-input" name="inlineRadioOptions"
                                                       value="0"/>
                                     <form:label path="jobPackage.rateType" for="hourly-radio"
-                                                class="form-check-label">
+                                                class="form-check-label  radio-label">
                                         <spring:message code="jobPost.create.package.hourly"/>
                                     </form:label>
                                 </div>
@@ -261,17 +261,17 @@
                                                       class="form-check-input" name="inlineRadioOptions"
                                                       value="1"/>
                                     <form:label path="jobPackage.rateType" for="onetime-radio"
-                                                class="form-check-label">
+                                                class="form-check-label radio-label">
                                         <spring:message code="jobPost.create.package.oneTime"/>
                                     </form:label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <form:radiobutton path="jobPackage.rateType" id="tbd-radio"
-                                                      class="form-check-input"
+                                                      class="form-check-input radio-btn"
                                                       name="inlineRadioOptions"
                                                       value="2"/>
                                     <form:label path="jobPackage.rateType" for="tbd-radio"
-                                                class="form-check-label">
+                                                class="form-check-label radio-label">
                                         <spring:message code="jobPost.create.package.tbd"/>
                                     </form:label>
                                 </div>
@@ -440,7 +440,7 @@
 
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
-                            <input id="locationFilter" type="text" class="form-control zone-search"
+                            <input id="locationFilter" type="text" class="form-control zone-search" oninput="filterZones(this)"
                                    placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                         </div>
 
@@ -450,8 +450,8 @@
                                     <form:checkbox path="zones" class="form-check-input zone-checkbox"
                                                    value="${zone.value}"/>
                                     <span class="location-name">
-                                    <spring:message code="${zone.stringCode}"/>
-                                </span>
+                                        <spring:message code="${zone.stringCode}"/>
+                                    </span>
                                 </label>
                             </c:forEach>
                         </div>
@@ -685,12 +685,10 @@
     });
 
     // Script para habilitar filtro por nombre de ubicaciones
-
-    $('#locationFilter').on('keyup', function () {
-        const filter = $(this)[0].value.toUpperCase();
+     function filterZones(input) {
+        const filter = $(input)[0].value.toUpperCase();
         const list = $('.location-list');
         const listElems = list[0].getElementsByTagName('label');
-
         // Iterar por la lista y esconder los elementos que no matcheen
         for (let i = 0; i < listElems.length; i++) {
             let a = listElems[i].getElementsByTagName("span")[0];
@@ -701,7 +699,7 @@
                 listElems[i].style.display = "none";
             }
         }
-    });
+    }
 
     // Script para navegar entre pasos
 
@@ -921,7 +919,7 @@
         // console.log(checkboxList[i])
 
         if (checkboxList[i].checked) {
-//Lo agrego al div
+            //Lo agrego al div
             $('#zoneContainer').append(
                 "<span class='zoneTag'>" + zoneString + "</span>");
         }
@@ -992,7 +990,7 @@
         hourlyRadio[0].setCustomValidity(message);
         oneTimeRadio[0].setCustomValidity(message);
         tbdRadio[0].setCustomValidity(message);
-        if((hourlyRadio[0].checked || oneTimeRadio[0].checked) && priceInput.value === "")
+        if(!tbdRadio[0].checked && priceInput.value === "")
             priceInput.setCustomValidity("Price is obligatory");    //Mensaje Default
         else
             priceInput.setCustomValidity("");

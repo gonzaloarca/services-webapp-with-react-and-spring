@@ -32,7 +32,6 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<c:set var="path" value="/create-job-post" scope="request"/>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <%@include file="components/customNavBar.jsp" %>
 
@@ -118,7 +117,7 @@
                                                   class="form-check-input" name="inlineRadioOptions"
                                                   value="0"/>
                                 <form:label path="rateType" for="hourly-radio"
-                                            class="form-check-label">
+                                            class="form-check-label radio-label">
                                     <spring:message code="jobPost.create.package.hourly"/>
                                 </form:label>
                             </div>
@@ -127,7 +126,7 @@
                                                   class="form-check-input" name="inlineRadioOptions"
                                                   value="1"/>
                                 <form:label path="rateType" for="onetime-radio"
-                                            class="form-check-label">
+                                            class="form-check-label radio-label">
                                     <spring:message code="jobPost.create.package.oneTime"/>
                                 </form:label>
                             </div>
@@ -137,7 +136,7 @@
                                                   name="inlineRadioOptions"
                                                   value="2"/>
                                 <form:label path="rateType" for="tbd-radio"
-                                            class="form-check-label">
+                                            class="form-check-label radio-label">
                                     <spring:message code="jobPost.create.package.tbd"/>
                                 </form:label>
                             </div>
@@ -238,7 +237,7 @@
         hourlyRadio[0].setCustomValidity(message);
         onetimeRadio[0].setCustomValidity(message);
         tbdRadio[0].setCustomValidity(message);
-        if((hourlyRadio[0].checked || onetimeRadio[0].checked) && priceInput.value === "")
+        if(!tbdRadio[0].checked && priceInput.value === "")
             priceInput.setCustomValidity("Price is obligatory");    //Mensaje Default
         else
             priceInput.setCustomValidity("");

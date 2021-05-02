@@ -349,3 +349,7 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
 .zone-search:focus {
     box-shadow: none !important;
 }
+
+.radio-label {
+    color: black !important;
+}
