@@ -59,8 +59,8 @@
                              src='${profilePic}'
                              alt="<spring:message code="profile.image"/>">
                     </div>
-                    <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
-                    <h5 class="profile-subtitle">
+                    <h4 class="card-title mt-2 mb-0 profile-title"><c:out value="${user.username}"/></h4>
+                    <p class="profile-subtitle">
                         <c:choose>
                             <c:when test="${isPro}">
                                 <spring:message code="account.settings.info.professional"/>
@@ -69,12 +69,12 @@
                                 <spring:message code="account.settings.info.client"/>
                             </c:otherwise>
                         </c:choose>
-                    </h5>
+                    </p>
                 </div>
             </div>
             <div class="card custom-card mt-3">
                 <div class="card-body">
-                    <h5 class="profile-subtitle"><spring:message code="profile.reviews.average"/></h5>
+                    <p class="profile-subtitle"><spring:message code="profile.reviews.average"/></p>
                     <span class="custom-row rating align-items-center">
                         <h1 class="mr-3">
                             ${avgRate}
@@ -94,7 +94,7 @@
                         <div class="profile-completed-works-outline">
                             <div class="profile-completed-works">${totalContractsCompleted}</div>
                         </div>
-                        <h4 class="mb-0 ml-3"><spring:message code="profile.completed.works"/></h4>
+                        <h5 class="mb-0 ml-3"><spring:message code="profile.completed.works"/></h5>
                     </div>
                 </div>
             </div>
@@ -103,19 +103,19 @@
         <div class="col-8">
             <div class="card custom-card">
                 <div class="card-body">
-                    <div class="card-title row ml-3">
+                    <div class="ml-1 mb-4 card-title row">
                         <a type="button" class="btn profile-list-selector ${(withServices)? 'disabled' : ''}"
                            aria-disabled="${(withServices)? 'true' : 'false'}"
                            href="${pageContext.request.contextPath}/profile/${user.id}/services">
-                            <div><h4 class="mb-0"><spring:message code="profile.selector.services"/></h4></div>
-                            <div class="chip mb-0"><h5 class="mb-0">${servicesSize}</h5></div>
+                            <div><h5 class="mb-0"><spring:message code="profile.selector.services"/></h5></div>
+                            <div class="chip mb-0"><p class="mb-0">${servicesSize}</p></div>
                         </a>
                         &nbsp;
                         <a type="button" class="btn profile-list-selector ${(!withServices)? 'disabled' : ''}"
                            aria-disabled="${(!withServices)? 'true' : 'false'}"
                            href="${pageContext.request.contextPath}/profile/${user.id}/reviews">
-                            <div><h4 class="mb-0"><spring:message code="profile.selector.reviews"/></h4></div>
-                            <div class="chip mb-0"><h5 class="mb-0">${totalReviewsSize}</h5></div>
+                            <div><h5 class="mb-0"><spring:message code="profile.selector.reviews"/></h5></div>
+                            <div class="chip mb-0"><p class="mb-0">${totalReviewsSize}</p></div>
                         </a>
                     </div>
 

@@ -1,7 +1,9 @@
 .profile-img {
     border-radius: 50%;
-    width: 320px;
-    height: 320px;
+    min-height: 200px;
+    min-width: 200px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
 }
 
@@ -41,12 +43,15 @@
     color: #485696;
     opacity: .50;
     align-items: center;
+    transition: opacity 200ms;
+    padding: 0;
 }
 
 .profile-list-selector:hover {
     box-shadow: none;
     opacity: 0.8;
     color: #485696;
+    transition: opacity 200ms;
 }
 
 .profile-list-selector.disabled {

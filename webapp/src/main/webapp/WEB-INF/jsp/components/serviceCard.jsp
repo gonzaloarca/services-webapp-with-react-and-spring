@@ -3,8 +3,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <a class="service-link" href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
-    <div class="row no-gutters">
-        <div class="col-md-3">
+    <div style="display: flex; justify-content: space-between">
+        <div>
             <c:choose>
                 <c:when test="${requestScope.data.postImage == null}">
                     <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
@@ -18,24 +18,25 @@
                  src='${imageSrc}'
                  alt="<spring:message code="profile.service.image"/>">
         </div>
-        <div class="col-md-9 px-3">
-            <h4 class="service-title">
+        <div class="service-info px-3">
+            <h5 class="service-title">
                 <c:out value="${requestScope.data.jobPost.title}"/>
-            </h4>
+            </h5>
             <div class="justify-content-between custom-row">
-                <h6 class="service-subtitle"><spring:message code="${requestScope.data.jobPost.jobType.stringCode}"/></h6>
+                <p class="service-subtitle"><spring:message code="${requestScope.data.jobPost.jobType.stringCode}"/></p>
                 <div class="custom-row">
                     <jsp:include page="components/rateStars.jsp">
                         <jsp:param name="rate" value="${requestScope.data.jobPost.rating}"/>
                     </jsp:include>
-                    <h6 class="ml-3 service-subtitle">
+                    <p class="ml-3 service-subtitle">
                         (${requestScope.data.reviewsCount})
-                    </h6>
+                    </p>
                 </div>
             </div>
 
             <div class="d-flex mt-2">
                 <div class="price-container">
+                    <i class="fas fa-tag mr-2 text-white"></i>
                     <p class="price">
                         <spring:message code="${requestScope.data.rateType.stringCode}"
                                         arguments="${requestScope.data.price}"/>
@@ -46,10 +47,10 @@
             <div class="d-flex">
                 <div class="custom-row service-contracted-times gray-chip">
                     <i class="fas fa-check mr-2"></i>
-                    <h6 class="m-0">
+                    <p class="m-0">
                         <spring:message code="profile.service.contract.quantity"
                                         arguments="${requestScope.data.contractsCompleted}"/>
-                    </h6>
+                    </p>
                 </div>
             </div>
         </div>
