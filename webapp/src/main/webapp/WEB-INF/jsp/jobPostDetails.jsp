@@ -227,7 +227,7 @@
                                             <p class="package-title">
                                                 <c:out value="${pack.title}"/>
                                             </p>
-                                            <div class="ml-auto custom-row end-items">
+                                            <div class="custom-row end-items">
                                                 <div class="package-price end-items-item">
                                                     <p class="text-center mt-2">
                                                         <spring:message code="jobPost.jobs.price"/>
