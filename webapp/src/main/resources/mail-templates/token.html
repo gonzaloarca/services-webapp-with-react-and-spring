@@ -4,7 +4,7 @@
     <style>
         p {
             color: black;
-            margin: 6px 0;
+            margin: 1px 0;
         }
 
         .body {
@@ -38,7 +38,7 @@
             margin-bottom: 4px;
         }
 
-        a {
+        .verify {
             display: flex;
             justify-content: center;
         }
@@ -65,7 +65,9 @@
             <p th:text="${phone}"></p>
         </div>
         <h4 th:text="#{mail.token.pleaseVerify}"></h4>
-        <a th:href="${url}" th:text="#{mail.token.verifyAccount}"></a>&nbsp;
+        <div class="verify">
+            <a th:href="${url}" th:text="#{mail.token.verifyAccount}"></a>&nbsp;
+        </div>
         <p th:text="#{mail.token.disclaimer}"></p>
     </div>
 </div>

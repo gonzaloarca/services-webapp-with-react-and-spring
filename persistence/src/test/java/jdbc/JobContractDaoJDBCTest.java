@@ -28,7 +28,7 @@ import java.util.*;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:job_contract_test.sql")
+@Sql("classpath:db_data_test.sql")
 public class JobContractDaoJDBCTest {
 
     private static final User USER1 = new User(
@@ -79,7 +79,8 @@ public class JobContractDaoJDBCTest {
             JOB_PACKAGE,
             USER1,
             LocalDateTime.now(),
-            "Se me rompio una zapatilla"
+            "Se me rompio una zapatilla",
+            null
     );
 
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";
@@ -135,14 +136,12 @@ public class JobContractDaoJDBCTest {
         Assert.assertEquals(USER1, jobContract.getClient());
         Assert.assertEquals(USER1.getUsername(), jobContract.getClient().getUsername());
         Assert.assertEquals(USER1.getPhone(), jobContract.getClient().getPhone());
-//        Assert.assertEquals(USER2.getUserImage(), jobContract.getClient().getUserImage());
         Assert.assertEquals(USER1.isActive(), jobContract.getClient().isActive());
 
         Assert.assertEquals(USER2, jobContract.getProfessional());
         Assert.assertEquals(USER2.getEmail(), jobContract.getProfessional().getEmail());
         Assert.assertEquals(USER2.getUsername(), jobContract.getProfessional().getUsername());
         Assert.assertEquals(USER2.getPhone(), jobContract.getProfessional().getPhone());
-//        Assert.assertEquals(USER1.getUserImage(), jobContract.getProfessional().getUserImage());
         Assert.assertEquals(USER2.isActive(), jobContract.getProfessional().isActive());
 
         Assert.assertEquals(JOB_PACKAGE, jobContract.getJobPackage());
@@ -156,7 +155,6 @@ public class JobContractDaoJDBCTest {
         Assert.assertNotNull(jobContract.getCreationDate());
         Assert.assertEquals(JOB_CONTRACT.getId() + JOB_CONTRACTS_TOTAL_QUANTITY, jobContract.getId());
         Assert.assertEquals(DESCRIPTION, jobContract.getDescription());
-//        Assert.assertEquals(IMAGE_DATA, jobContract.getImageData());
     }
 
     @Test
@@ -164,7 +162,6 @@ public class JobContractDaoJDBCTest {
         Optional<JobContract> jobContract = jobContractDaoJDBC.findById(JOB_CONTRACT.getId());
         Assert.assertTrue(jobContract.isPresent());
         Assert.assertEquals(JOB_CONTRACT.getId(), jobContract.get().getId());
-//        Assert.assertEquals(JOB_CONTRACT.getImageData(), jobContract.get().getImageData());
     }
 
     @Test

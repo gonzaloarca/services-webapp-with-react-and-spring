@@ -21,18 +21,17 @@ import java.util.Optional;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:user_test.sql")
+@Sql("classpath:db_data_test.sql")
 public class UserDaoJDBCTest {
 
-    private static final User USER = new User(
+    private static final User USER1 = new User(
             1,
-            "franquesada@mail.com",
+            "franquesada@gmail.com",
             "Francisco Quesada",
-            "11-3456-3232",
+            "1147895678",
             true,
             true,
             LocalDateTime.now());
-
     @Autowired
     UserDaoJDBC userDaoJDBC;
 
@@ -50,7 +49,7 @@ public class UserDaoJDBCTest {
     public void testRegister() {
 
         User userTest = new User(
-                3,
+                5,
                 "manurodriguez@mail.com",
                 "Manuel Rodriguez",
                 "11-4536-5656",
@@ -69,17 +68,17 @@ public class UserDaoJDBCTest {
 
     @Test
     public void testFindById() {
-        Optional<User> user = userDaoJDBC.findById(USER.getId());
+        Optional<User> user = userDaoJDBC.findById(USER1.getId());
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER, user.get());
+        Assert.assertEquals(USER1, user.get());
     }
 
     @Test
     public void testFindByEmail() {
-        Optional<User> user = userDaoJDBC.findByEmail(USER.getEmail());
+        Optional<User> user = userDaoJDBC.findByEmail(USER1.getEmail());
 
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER, user.get());
+        Assert.assertEquals(USER1, user.get());
     }
 
 }

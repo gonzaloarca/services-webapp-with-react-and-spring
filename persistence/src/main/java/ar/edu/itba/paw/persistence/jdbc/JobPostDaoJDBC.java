@@ -44,7 +44,7 @@ public class JobPostDaoJDBC implements JobPostDao {
                     resultSet.getString("user_name"),
                     resultSet.getString("user_phone"),
                     resultSet.getBoolean("user_is_active"),
-                    true, //TODO: implementar esto
+                    true,
                     new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
                             resultSet.getString("user_image_type")),
                     resultSet.getTimestamp("user_creation_date").toLocalDateTime()),
@@ -122,7 +122,7 @@ public class JobPostDaoJDBC implements JobPostDao {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE ? = ANY(zones) AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM full_post WHERE ? IN(UNNEST(zones)) AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{zone.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
@@ -166,7 +166,7 @@ public class JobPostDaoJDBC implements JobPostDao {
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         query = "%" + query + "%";
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{query, zone.ordinal(), limit, offset},
                 JOB_POST_ROW_MAPPER
         );
@@ -178,7 +178,7 @@ public class JobPostDaoJDBC implements JobPostDao {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{query, zone.ordinal(), jobType.ordinal(), limit, offset},
                 JOB_POST_ROW_MAPPER
         );
@@ -208,7 +208,7 @@ public class JobPostDaoJDBC implements JobPostDao {
     public int findMaxPageSearch(String query, Zone zone, JobPost.JobType jobType) {
         query = "%" + query + "%";
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post " +
-                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_is_active = TRUE",
+                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_is_active = TRUE",
                 new Object[]{query, zone.ordinal()}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }

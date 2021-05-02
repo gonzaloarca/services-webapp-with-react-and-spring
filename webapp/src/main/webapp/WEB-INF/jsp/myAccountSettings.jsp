@@ -75,12 +75,6 @@
                         </c:choose>
                     </div>
                 </div>
-                <!-- TODO logica para convertirme en profesional -->
-                <%--					<a href="#" class="centered-div">--%>
-                <%--						<button class="btn btn-pro">--%>
-                <%--							Convertirme en Profesional--%>
-                <%--						</button>--%>
-                <%--					</a>--%>
             </div>
             <hr class="divider-bar"/>
             <!-- Editar Informacion -->

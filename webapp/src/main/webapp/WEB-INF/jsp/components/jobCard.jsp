@@ -4,7 +4,6 @@
 <html>
 <body>
 <div class="card job-card">
-    <%-- TODO: Poner alt correcto e imagen de usuario--%>
     <spring:message code="${requestScope.data.jobPost.jobType.stringCode}" var="jobTypeName"/>
 
     <c:choose>
