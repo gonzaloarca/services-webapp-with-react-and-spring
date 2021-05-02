@@ -3,10 +3,9 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.*;
 
 import javax.activation.DataSource;
+import java.util.Map;
 
 public interface MailingService {
-
-    void sendHtmlMessage(String to, String subject, String html);
 
     void sendHtmlMessageWithAttachment(String to, String subject, String html, DataSource attachment);
 
@@ -14,11 +13,7 @@ public interface MailingService {
 
     void sendVerificationTokenEmail(User user, VerificationToken token);
 
-    /*
-    void sendSimpleMessage(String to,String subject, String text);
+    void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,
+                                           String templateName, DataSource attachment);
 
-    void sendTemplatedMessage(String to, String subject, Object... templateArgs);
-
-    void sendTemplatedHTMLMessage(String to, String subject, Object... templateArgs);
-     */
 }

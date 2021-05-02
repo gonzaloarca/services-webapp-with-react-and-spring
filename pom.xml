@@ -34,7 +34,7 @@
         <commons-fileupload-version>1.4</commons-fileupload-version>
         <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
         <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
-        <javax.mail.version>1.4.7</javax.mail.version>
+        <javax.mail.version>1.6.2</javax.mail.version>
         <org.springframework.security.version>4.0.4.RELEASE</org.springframework.security.version>
     </properties>
 
@@ -116,8 +116,8 @@
                 <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
                 <version>${javax.mail.version}</version>
             </dependency>
             <dependency>
@@ -144,6 +144,11 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
                 <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.thymeleaf</groupId>
+                <artifactId>thymeleaf-spring4</artifactId>
+                <version>3.0.12.RELEASE</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

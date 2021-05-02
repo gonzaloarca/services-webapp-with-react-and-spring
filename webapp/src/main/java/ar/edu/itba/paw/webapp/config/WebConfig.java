@@ -13,27 +13,24 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
 import java.util.Properties;
 import java.nio.charset.StandardCharsets;
 
@@ -105,6 +102,7 @@ public class WebConfig {
         dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
+
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
@@ -149,44 +147,29 @@ public class WebConfig {
         return mailSender;
     }
 
-    @Value("classpath:contractEmail.html")
-    Resource contractTemplate;
-    @Value("classpath:contractEmailWithImage.html")
-    Resource contractImageTemplate;
-    @Value("classpath:tokenEmail.html")
-    Resource tokenEmailTemplate;
-
-    private SimpleMailMessage makeMessage(Resource template) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        String text="";
-        try{
-            Reader reader = new InputStreamReader(template.getInputStream());
-            text = FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-        message.setText(text);
-        return message;
-    }
-
-    @Bean(name = "contractEmail")
-    public SimpleMailMessage contractEmail() {
-        return makeMessage(contractTemplate);
-    }
-
-    @Bean(name = "contractEmailWithImage")
-    public SimpleMailMessage contractEmailWithImage() {
-        return makeMessage(contractImageTemplate);
-    }
-
-    @Bean(name = "tokenEmail")
-    public SimpleMailMessage tokenEmail() {
-        return makeMessage(tokenEmailTemplate);
+    @Bean
+    public PlatformTransactionManager transactionManager(final DataSource ds) {
+        return new DataSourceTransactionManager(ds);
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(final DataSource ds){
-        return new DataSourceTransactionManager(ds);
+    public ITemplateResolver thymeleafTemplateResolver() {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("mail-templates/");
+
+        templateResolver.setSuffix(".html");
+        templateResolver.setCacheable(false);
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding("UTF-8");
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+        templateEngine.setTemplateEngineMessageSource(messageSource());
+        return templateEngine;
     }
 
 }
