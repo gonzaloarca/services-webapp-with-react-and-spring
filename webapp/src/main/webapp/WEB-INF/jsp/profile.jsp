@@ -72,31 +72,13 @@
                     </p>
                 </div>
             </div>
-            <div class="card custom-card mt-3">
-                <div class="card-body">
-                    <p class="profile-subtitle"><spring:message code="profile.reviews.average"/></p>
-                    <span class="custom-row rating align-items-center justify-content-center">
-                        <h1 class="mr-3">
-                            ${avgRate}
-                        </h1>
-                        <jsp:include page="components/rateStars.jsp">
-                            <jsp:param name="rate" value="${avgRate}"/>
-                        </jsp:include>
-                        <p class="ml-1 mb-0">
-                            (${totalReviewsSize})
-                        </p>
-                    </span>
-                </div>
-            </div>
-            <div class="card custom-card mt-3">
-                <div class="card-body">
-                    <div class="row align-items-center justify-content-center">
-                        <div class="profile-completed-works-outline">
-                            <div class="profile-completed-works">${totalContractsCompleted}</div>
-                        </div>
-                        <h5 class="mb-0 ml-3"><spring:message code="profile.completed.works"/></h5>
-                    </div>
-                </div>
+
+            <div class="mt-3">
+                <jsp:include page="components/avgRateAndCompletedContracts.jsp">
+                    <jsp:param name="avgRate" value="${avgRate}"/>
+                    <jsp:param name="totalContractsCompleted" value="${totalContractsCompleted}"/>
+                    <jsp:param name="totalReviewsSize" value="${totalReviewsSize}"/>
+                </jsp:include>
             </div>
         </div>
 

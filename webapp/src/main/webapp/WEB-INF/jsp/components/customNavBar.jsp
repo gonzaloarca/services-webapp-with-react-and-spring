@@ -45,6 +45,14 @@
                     </a>
                 </li>
             </sec:authorize>
+            <sec:authorize access="hasRole('ROLE_PROFESSIONAL')">
+                <li class="nav-item ${requestScope.path == "/analytics" ? 'active': ''}">
+                    <a class="nav-link"
+                       href="${pageContext.request.contextPath}/analytics">
+                        <spring:message code="navigation.analytics"/>
+                    </a>
+                </li>
+            </sec:authorize>
 
             <c:if test="${requestScope.path != '/' && requestScope.path != '/login' && requestScope.path != '/register'
             && requestScope.path != '/error'}">

@@ -149,7 +149,7 @@
                             </c:if>
                         </div>
                         <div class="summary-item contracts-item">
-                            <p class="mb-0 ml-3"><spring:message code="profile.completed.works"/></p>
+                            <p class="mb-0 ml-3"><spring:message code="highlight.completed.works"/></p>
                             <div class="profile-completed-works-outline">
                                 <div class="profile-completed-works">${totalContractsCompleted}</div>
                             </div>
