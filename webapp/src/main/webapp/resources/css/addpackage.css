@@ -24,3 +24,7 @@
     border: transparent !important;
     box-shadow: none !important;
 }
+
+.radio-label {
+    color: black !important;
+}

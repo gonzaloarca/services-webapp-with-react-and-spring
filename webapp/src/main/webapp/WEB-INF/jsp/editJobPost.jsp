@@ -44,7 +44,6 @@
 <body>
 
 
-<c:set var="path" value="/create-job-post" scope="request"/>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <%@include file="components/customNavBar.jsp" %>
 
@@ -216,7 +215,7 @@
 
                     <div class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input id="locationFilter" type="text" class="form-control zone-search"
+                        <input id="locationFilter" type="text" class="form-control zone-search" oninput="filterZones(this)"
                                placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                     </div>
 
@@ -362,9 +361,8 @@
     const tbdRadio = $("#tbd-radio");
 
     // Script para habilitar filtro por nombre de ubicaciones
-
-    $('#locationFilter').on('keyup', function () {
-        const filter = $(this)[0].value.toUpperCase();
+    function filterZones(input) {
+        const filter = $(input)[0].value.toUpperCase();
         const list = $('.location-list');
         const listElems = list[0].getElementsByTagName('label');
 
@@ -378,7 +376,7 @@
                 listElems[i].style.display = "none";
             }
         }
-    });
+    }
 
     // Script para navegar entre pasos
 
