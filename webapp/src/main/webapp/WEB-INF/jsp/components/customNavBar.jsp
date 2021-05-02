@@ -175,8 +175,8 @@
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/account/details">
                         <i class="fas fa-user-cog navbar-dropdown-icon"></i><spring:message
                             code="navigation.dropdowon.myaccount"/></a>
-                    <a class="dropdown-item mt-3" href="${pageContext.request.contextPath}/logout">
-                        <div class="ml-3"><spring:message
+                    <a class="dropdown-item mt-1" href="${pageContext.request.contextPath}/logout">
+                        <div class="ml-2"><spring:message
                                 code="navigation.dropdowon.logout"/></div>
                     </a>
                 </div>
