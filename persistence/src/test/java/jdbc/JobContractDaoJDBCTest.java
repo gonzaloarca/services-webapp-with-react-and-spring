@@ -79,7 +79,8 @@ public class JobContractDaoJDBCTest {
             JOB_PACKAGE,
             USER1,
             LocalDateTime.now(),
-            "Se me rompio una zapatilla"
+            "Se me rompio una zapatilla",
+            null
     );
 
     private static final String DESCRIPTION = "Se me rompio la toma de corriente";

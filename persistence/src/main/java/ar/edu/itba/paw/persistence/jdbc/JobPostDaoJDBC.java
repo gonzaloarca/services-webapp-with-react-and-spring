@@ -44,7 +44,7 @@ public class JobPostDaoJDBC implements JobPostDao {
                     resultSet.getString("user_name"),
                     resultSet.getString("user_phone"),
                     resultSet.getBoolean("user_is_active"),
-                    true, //TODO: implementar esto
+                    true,
                     new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
                             resultSet.getString("user_image_type")),
                     resultSet.getTimestamp("user_creation_date").toLocalDateTime()),

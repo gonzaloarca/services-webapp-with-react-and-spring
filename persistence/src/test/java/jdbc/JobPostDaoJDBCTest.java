@@ -118,7 +118,6 @@ public class JobPostDaoJDBCTest {
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
     }
 
-    //    TODO: FIX tests
     @Test
     public void testFindByZone() {
         JOB_POST.getZones().forEach((zone -> {
@@ -136,7 +135,6 @@ public class JobPostDaoJDBCTest {
                 jobPosts.size());
     }
 
-    //    TODO: FIX tests
     @Test
     public void testSearch() {
         String title = "Electricista";

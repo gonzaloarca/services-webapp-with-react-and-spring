@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS review
     review_rate      INTEGER NOT NULL,
     review_title       TEXT,
     review_description TEXT    NOT NULL,
+    review_creation_date TIMESTAMP DEFAULT current_timestamp,
     FOREIGN KEY (contract_id) REFERENCES contract ON DELETE CASCADE,
     PRIMARY KEY (contract_id)
 );

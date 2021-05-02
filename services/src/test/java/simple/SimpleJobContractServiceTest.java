@@ -60,7 +60,7 @@ public class SimpleJobContractServiceTest {
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
+                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION, null));
 
         JobContract maybeContract = simpleJobContractService.create(CLIENT.getEmail(),JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription());
 
@@ -81,7 +81,7 @@ public class SimpleJobContractServiceTest {
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION));
+                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION, null));
 
         JobContract maybeContract = simpleJobContractService.create(CLIENT.getEmail(),JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription());
 

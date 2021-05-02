@@ -38,3 +38,13 @@
 --         END;
 --     END;
 -- $$ LANGUAGE plpgsql;
+-- DO $$
+--     BEGIN
+--         BEGIN
+            ALTER TABLE review ADD COLUMN IF NOT EXISTS review_creation_date TIMESTAMP DEFAULT current_timestamp;
+--         EXCEPTION
+--             WHEN duplicate_column THEN
+--                 NULL;
+--         END;
+--     END;
+-- $$ LANGUAGE plpgsql;
