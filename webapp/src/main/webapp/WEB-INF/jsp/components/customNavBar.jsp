@@ -79,30 +79,30 @@
                                         <img class="navbar-modal-icon"
                                              src="${pageContext.request.contextPath}/resources/images/location2.svg"
                                              alt="<spring:message code="navigation.modal.locationicon"/>"/>
-                                        <h4 class="my-3">
+                                        <h5 class="my-4 font-weight-bold">
                                             <spring:message code="navigation.modal.title"/>
-                                        </h4>
+                                        </h5>
                                         <div class="navbar-has-search">
                                             <span class="fa fa-search navbar-form-control-feedback"></span>
-                                            <input id="locationFilter" type="text" class="navbar-form-control"
+                                            <input id="locationFilter" type="text" class="form-control navbar-form-control"
                                                    placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                                         </div>
-                                        <div class="navbar-location-list-group">
+                                        <div class="list-group navbar-location-list-group">
                                             <c:forEach items="${requestScope.zoneValues}" var="zone">
-                                                <label class="navbar-location-list-group-item navbar-modal-zone">
+                                                <label class="list-group-item navbar-location-list-group-item navbar-modal-zone">
                                                     <form:radiobutton path="zone"
                                                                       value="${zone.value}"/>
                                                         <%--                                                TODO: CAMBIAR A CHECKBUTTON?--%>
-                                                    <span class="location-name"><spring:message
+                                                    <span class="location-name ml-2"><spring:message
                                                             code="${zone.stringCode}"/></span>
                                                 </label>
                                             </c:forEach>
                                         </div>
                                     </div>
                                     <div class="d-flex">
-                                        <button type="button" class="btn btn-danger ml-auto mr-4" data-dismiss="modal">
+                                        <button type="button" class="btn btn-danger ml-auto mr-2 text-uppercase" data-dismiss="modal">
                                             <spring:message code="navigation.modal.close"/></button>
-                                        <button class="btn btn-success" id="pickLocationButton" type="submit">
+                                        <button class="btn btn-success text-uppercase" id="pickLocationButton" type="submit">
                                             <spring:message code="navigation.modal.confirm"/></button>
                                     </div>
                                 </div>
