@@ -96,7 +96,7 @@ public class JobContractDaoJDBC implements JobContractDao {
         objectMap.put("contract_description", description);
         objectMap.put("image_data", image.getData());
         objectMap.put("contract_image_type", image.getType());
-        objectMap.put("contract_creation_date",timeStamp);
+        objectMap.put("contract_creation_date", timeStamp);
 
         Number key = jdbcInsert.executeAndReturnKey(objectMap);
 
