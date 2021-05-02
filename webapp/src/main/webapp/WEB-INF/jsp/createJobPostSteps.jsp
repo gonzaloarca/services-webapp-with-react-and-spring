@@ -339,9 +339,15 @@
                             <spring:message code="jobPost.create.images"/>
                         </form:label>
 
-                        <div class="file-input-container">
-                            <!-- TODO client side validation de las imagenes -->
-                            <form:input id="imageInput" type="file" path="servicePics" size="5" multiple="multiple"/>
+                        <div class="file-input-container input-group has-validation">
+                            <form:input id="imageInput" type="file" path="servicePics" size="5" multiple="multiple"
+                                        onchange="verifyFiles(this)"/>
+                            <button class="btn btn-outline-secondary cancel-btn" id="clear_image" type="button" onclick="clearFiles()">
+                                <spring:message code="image.clear"/>
+                            </button>
+                            <div class="invalid-feedback" style="background-color: white; margin: 0">
+                                <spring:message code="jobPost.create.images.invalid"/>
+                            </div>
                         </div>
 
                         <p class="img-upload-disclaimer mt-1">
@@ -1008,6 +1014,46 @@
         zones.forEach(function (zone) {
             zone.setCustomValidity(message);
         });
+    }
+
+    function verifyFiles(input) {
+        if (input.files && input.files[0]) {
+            const validTypes = ["image/jpg", "image/jpeg", "image/png"];
+            document.querySelector('#fieldset-step-4').classList.add('was-validated');
+            let is_valid = true;
+            let totalSize = 0;
+
+            //Validacion de imagen
+            if(input.files.length > 5){
+                input.setCustomValidity('Max number reached');   //Mensaje default
+                return;
+            }
+
+            Array.prototype.forEach.call(input.files, function (file) {
+                let fileSize = file.size;
+                totalSize += fileSize;
+                if(totalSize > 2 * 1024 * 1024) {
+                    is_valid = false;
+                    return;
+                }
+                let fileType = file.type;
+                if (!validTypes.includes(fileType)) {
+                    is_valid = false;
+                }
+            })
+
+            if(is_valid)
+                input.setCustomValidity('');
+            else
+                input.setCustomValidity('Invalid Files');   //Mensaje default
+
+        }
+    }
+
+    function clearFiles() {
+        let imageInput = document.querySelector('#imageInput');
+        imageInput.value = '';
+        imageInput.setCustomValidity('');
     }
 </script>
 </body>
