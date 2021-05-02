@@ -25,6 +25,8 @@ public interface JobPostDao {
 
     List<JobPost> findAll(int page);
 
+    List<JobPost> findRelatedJobPosts(long professional_id);
+
     int findAllMaxPage();
 
     List<JobPost> search(String query, JobPost.Zone zone, int page);
