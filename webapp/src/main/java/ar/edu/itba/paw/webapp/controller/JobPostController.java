@@ -73,23 +73,29 @@ public class JobPostController {
 
     @RequestMapping(value = "/job/{postId}/edit", method = RequestMethod.GET)
     public ModelAndView jobPostDetailsEdit(@PathVariable("postId") final long id, @ModelAttribute("editJobPostForm") final EditJobPostForm form) {
-        final ModelAndView mav = new ModelAndView("editJobPost")
-                .addObject("jobTypes", JobPost.JobType.values())
-                .addObject("zoneValues", JobPost.Zone.values());
-        EditJobPostForm jobPostForm = new EditJobPostForm();
+        EditJobPostForm jobPostForm;
         JobPost jobPost = jobPostService.findById(id);
-        jobPostForm.setJobType(jobPost.getJobType().ordinal());
-        jobPostForm.setAvailableHours(jobPost.getAvailableHours());
 
-        int[] zoneInts = new int[jobPost.getZones().size()];
-        List<JobPost.Zone> zonesList = jobPost.getZones();
-        for (int i = 0; i < zonesList.size(); i++) {
-            zoneInts[i] = zonesList.get(i).ordinal();
+        // Si algun campo del form viene en null es porque todavia no hubo errores en validacion, por lo cual cargo el
+        // model dentro del form asi la vista levanta los datos correctos
+        if (form.getTitle() == null) {
+            jobPostForm = new EditJobPostForm();
+            jobPostForm.setJobType(jobPost.getJobType().ordinal());
+            jobPostForm.setAvailableHours(jobPost.getAvailableHours());
+            int[] zoneInts = new int[jobPost.getZones().size()];
+            List<JobPost.Zone> zonesList = jobPost.getZones();
+            for (int i = 0; i < zonesList.size(); i++) {
+                zoneInts[i] = zonesList.get(i).ordinal();
+            }
+            jobPostForm.setZones(zoneInts);
+            jobPostForm.setTitle(jobPost.getTitle());
+        } else {
+            jobPostForm = form;
         }
-        jobPostForm.setZones(zoneInts);
-        jobPostForm.setTitle(jobPost.getTitle());
-        mav.addObject("editJobPostForm", jobPostForm).addObject("id", id);
-        return mav;
+
+        return new ModelAndView().addObject("jobTypes", JobPost.JobType.values())
+                .addObject("zoneValues", JobPost.Zone.values())
+                .addObject("editJobPostForm", jobPostForm).addObject("id", id);
     }
 
     @RequestMapping(path = "/create-job-post", method = RequestMethod.GET)

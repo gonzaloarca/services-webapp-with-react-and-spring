@@ -59,7 +59,7 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
 .package-title {
     margin-bottom: 0;
     overflow-wrap: break-word;
-    width: 60%;
+    width: 270px;
     max-lines: 4;
 }
 
