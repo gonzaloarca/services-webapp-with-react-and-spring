@@ -36,9 +36,9 @@ SELECT full_post.post_id,
 FROM full_post
          NATURAL JOIN job_package pack
          LEFT JOIN post_image pi ON full_post.post_id = pi.post_id
-WHERE package_price = (SELECT MIN(package_price)
-                       FROM job_package
-                       WHERE post_id = full_post.post_id)
+WHERE COALESCE((package_price = (SELECT MIN(package_price)
+                                 FROM job_package
+                                 WHERE post_id = full_post.post_id)), TRUE)
   AND COALESCE((pi.image_id = (SELECT MIN(image_id)
                                FROM post_image
                                WHERE post_id = full_post.post_id)), TRUE)
