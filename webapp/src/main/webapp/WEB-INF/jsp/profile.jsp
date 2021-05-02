@@ -43,9 +43,9 @@
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
     <div class="row">
-        <div class="d-block col-4">
+        <div class="d-block col-3">
             <div class="card custom-card">
-                <div class="card-body">
+                <div class="card-body p-0">
                     <div class="profile-image-container">
                         <c:choose>
                             <c:when test="${user.image.string != null}">
@@ -59,8 +59,8 @@
                              src='${profilePic}'
                              alt="<spring:message code="profile.image"/>">
                     </div>
-                    <h4 class="card-title mt-2 mb-0 profile-title"><c:out value="${user.username}"/></h4>
-                    <p class="profile-subtitle">
+                    <h4 class="card-title profile-title mt-2 ml-3 mb-0"><c:out value="${user.username}"/></h4>
+                    <p class="profile-subtitle ml-3 mb-2">
                         <c:choose>
                             <c:when test="${isPro}">
                                 <spring:message code="account.settings.info.professional"/>
@@ -75,16 +75,16 @@
             <div class="card custom-card mt-3">
                 <div class="card-body">
                     <p class="profile-subtitle"><spring:message code="profile.reviews.average"/></p>
-                    <span class="custom-row rating align-items-center">
+                    <span class="custom-row rating align-items-center justify-content-center">
                         <h1 class="mr-3">
                             ${avgRate}
                         </h1>
                         <jsp:include page="components/rateStars.jsp">
                             <jsp:param name="rate" value="${avgRate}"/>
                         </jsp:include>
-                        <h5 class="ml-3 mb-0">
+                        <p class="ml-1 mb-0">
                             (${totalReviewsSize})
-                        </h5>
+                        </p>
                     </span>
                 </div>
             </div>
@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        <div class="col-8">
+        <div class="col-9">
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="ml-1 mb-4 card-title row">
