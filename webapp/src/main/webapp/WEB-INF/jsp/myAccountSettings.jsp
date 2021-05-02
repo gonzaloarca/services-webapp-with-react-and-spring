@@ -175,12 +175,14 @@
             let fileSize = input.files[0].size;
             if(fileSize > 2 * 1024 * 1024) {
                 input.setCustomValidity('Max File Size Exceeded');
+                setDefaultAvatar();
                 return;
             }
             let fileType = input.files[0].type;
             const validTypes = ["image/jpg", "image/jpeg", "image/png"];
             if (!validTypes.includes(fileType)) {
                 input.setCustomValidity('File Type not Supported');
+                setDefaultAvatar();
                 return;
             }
             input.setCustomValidity('');
@@ -194,10 +196,15 @@
 
             reader.readAsDataURL(input.files[0]);
         } else {
-            $('#img-preview')
-                .attr('src', "${pageContext.request.contextPath}/resources/images/defaultavatar.svg");
+            setDefaultAvatar();
         }
     }
+
+    function setDefaultAvatar() {
+        $('#img-preview')
+            .attr('src', "${pageContext.request.contextPath}/resources/images/defaultavatar.svg");
+    }
+
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function () {
         'use strict'

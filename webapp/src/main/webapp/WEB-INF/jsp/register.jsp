@@ -184,7 +184,7 @@
                         <button class="btn btn-outline-secondary cancel-btn" id="clear_image" type="button">
                             <spring:message code="image.clear"/>
                         </button>
-                        <div class="invalid-feedback" style="background-color: white">
+                        <div class="invalid-feedback" style="background-color: white; margin: 0">
                             <spring:message code="image.invalid"/>
                         </div>
                     </div>
@@ -255,16 +255,11 @@
 
         //Validacion Client-Side:
         let form = document.querySelector('#register-form');
-        let is_valid = true;
 
         if (!form.checkValidity()) {
-            is_valid = false;
-        }
-        form.classList.add('was-validated')
-
-        //Si algun form-input fue invalido, no permito el cambio de animación
-        if(!is_valid)
+            document.querySelector('#register-step-1').classList.add('was-validated');
             return false;
+        }
 
         animating = true;
 
@@ -294,7 +289,6 @@
             duration: 800,
             complete: function () {
                 registerStep1.hide();
-                form.classList.remove('was-validated');
                 animating = false;
             },
             //this comes from the custom easing plugin
@@ -345,17 +339,20 @@
     // Script para ver vista previa de imagen subida
     function readURL(input) {
         if (input.files && input.files[0]) {
+            document.querySelector('#register-step-2').classList.add('was-validated');
 
             //Validacion de imagen
             let fileSize = input.files[0].size;
             if(fileSize > 2 * 1024 * 1024) {
                 input.setCustomValidity('Max File Size Exceeded');
+                setDefaultAvatar();
                 return;
             }
             let fileType = input.files[0].type;
             const validTypes = ["image/jpg", "image/jpeg", "image/png"];
             if (!validTypes.includes(fileType)) {
                 input.setCustomValidity('File Type not Supported');
+                setDefaultAvatar();
                 return;
             }
             input.setCustomValidity('');
@@ -369,9 +366,13 @@
 
             reader.readAsDataURL(input.files[0]);
         } else {
-            $('#img-preview')
-                .attr('src', "${pageContext.request.contextPath}/resources/images/defaultavatar.svg");
+            setDefaultAvatar();
         }
+    }
+
+    function setDefaultAvatar() {
+        $('#img-preview')
+            .attr('src', "${pageContext.request.contextPath}/resources/images/defaultavatar.svg");
     }
 
     //Agrego la validacion al hacer submit y desactivo el boton si está validado
