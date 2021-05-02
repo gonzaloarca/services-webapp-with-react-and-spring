@@ -9,20 +9,9 @@ public class JobContract {
     private final User client;
     private final JobPackage jobPackage;
     private final User professional;
-    private final LocalDateTime creationDate;           //TODO: ver tipo de variable
+    private final LocalDateTime creationDate;
     private final String description;
     private final ByteImage image;
-
-    //TODO: ver si este constructor está de mas, se usa en los tests
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description) {
-        this.id = id;
-        this.client = client;
-        this.jobPackage = jobPackage;
-        this.professional = professional;
-        this.creationDate = creationDate;
-        this.description = description;
-        image = null;
-    }
 
     public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description,
                        ByteImage image) {

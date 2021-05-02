@@ -63,7 +63,7 @@ public class JobPackageDaoJDBC implements JobPackageDao {
     public List<JobPackage> findByPostId(long id,int page) {
         Integer limit =getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ? AND package_is_active = TRUE",new Object[]{id},JOB_PACKAGE_ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ? AND package_is_active = TRUE ORDER BY package_id",new Object[]{id},JOB_PACKAGE_ROW_MAPPER);
     }
 
     @Override

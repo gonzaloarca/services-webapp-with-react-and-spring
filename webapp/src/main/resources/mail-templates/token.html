@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <style>
+        p {
+            color: black;
+            margin: 1px 0;
+        }
+
+        .body {
+            padding: 20px;
+            background-color: #efefef !important;
+            display: flex;
+        }
+
+        .card {
+            margin: auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+        }
+
+        .title {
+            color: #485696;
+        }
+
+        .bold {
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .custom-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        h4 {
+            margin-bottom: 4px;
+        }
+
+        .verify {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body class="body">
+<div class="card">
+    <h1 class="title" th:text="#{mail.token.welcome}"></h1>
+    <h3 th:text="#{mail.token.greetings(${username})}"></h3>
+    <p th:text="#{mail.token.newAccount}"></p>
+    <p th:text="#{mail.token.accountInfo}"></p>
+    <div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.token.name}"></p>&nbsp;
+            <p th:text="${username}"></p>
+        </div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.token.email}"></p>&nbsp;
+            <p th:text="${email}"></p>
+        </div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.token.phone}"></p>&nbsp;
+            <p th:text="${phone}"></p>
+        </div>
+        <h4 th:text="#{mail.token.pleaseVerify}"></h4>
+        <div class="verify">
+            <a th:href="${url}" th:text="#{mail.token.verifyAccount}"></a>&nbsp;
+        </div>
+        <p th:text="#{mail.token.disclaimer}"></p>
+    </div>
+</div>
+</body>
+</html>

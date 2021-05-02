@@ -32,12 +32,19 @@ import java.util.Optional;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:job_post_test.sql")
+@Sql("classpath:db_data_test.sql")
 public class JobPostDaoJDBCTest {
-    private static final User USER = new User(1, "manurodriguez@gmail.com", "Manuel Rodriguez", "1109675432", false, true, LocalDateTime.now());
+    private static final User USER1 = new User(
+            1,
+            "franquesada@gmail.com",
+            "Francisco Quesada",
+            "1147895678",
+            true,
+            true,
+            LocalDateTime.now());
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
-    private static final JobPost JOB_POST = new JobPost(1, USER, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0, true, LocalDateTime.now());
-    private static final int JOB_POSTS_QUANTITY = 3;
+    private static final JobPost JOB_POST = new JobPost(1, USER1, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0, true, LocalDateTime.now());
+    private static final int JOB_POSTS_QUANTITY = 4;
 
     @Autowired
     private DataSource ds;
@@ -59,10 +66,10 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testCreate() {
-        Mockito.when(mockUserDao.findById(Mockito.eq(USER.getId())))
-                .thenReturn(Optional.of(USER));
+        Mockito.when(mockUserDao.findById(Mockito.eq(USER1.getId())))
+                .thenReturn(Optional.of(USER1));
 
-        JobPost jobPost = jobPostDaoJDBC.create(USER.getId(), JOB_POST.getTitle(), JOB_POST.getAvailableHours(),
+        JobPost jobPost = jobPostDaoJDBC.create(USER1.getId(), JOB_POST.getTitle(), JOB_POST.getAvailableHours(),
                 JOB_POST.getJobType(), JOB_POST.getZones());
 
         Assert.assertNotNull(jobPost);
@@ -113,11 +120,10 @@ public class JobPostDaoJDBCTest {
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
     }
 
-//    TODO: FIX tests
     @Test
     public void testFindByZone() {
         JOB_POST.getZones().forEach((zone -> {
-            List<JobPost> jobPosts = jobPostDaoJDBC.findByZone(zone,0);
+            List<JobPost> jobPosts = jobPostDaoJDBC.findByZone(zone, 0);
 
             jobPosts.forEach((jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone))));
         }));
@@ -131,7 +137,6 @@ public class JobPostDaoJDBCTest {
                 jobPosts.size());
     }
 
-//    TODO: FIX tests
     @Test
     public void testSearch() {
         String title = "Electricista";
@@ -147,7 +152,7 @@ public class JobPostDaoJDBCTest {
         String title = "";
         JobPost.Zone zone = JobPost.Zone.PALERMO;
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-        List<JobPost> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType,0);
+        List<JobPost> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType, 0);
 
         Assert.assertFalse(jobPosts.isEmpty());
         Assert.assertEquals(2, jobPosts.size());

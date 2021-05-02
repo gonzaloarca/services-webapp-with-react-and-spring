@@ -1,5 +1,4 @@
 .step-container-wrapper {
-    position: absolute;
     width: 100%;
     margin: 0 auto;
 }
@@ -119,6 +118,13 @@
 .file-input-container {
     background-color: #e8e8e8;
     border-radius: 5px;
+    justify-content: space-between;
+}
+
+.cancel-btn {
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: white;
 }
 
 .location-list {
@@ -234,14 +240,16 @@
     color: red;
     display: list-item;
     margin-left: 20px;
+    margin-bottom: 7px;
 }
 
 .form-error-container {
     padding: 10px;
-    margin-bottom: 30px;
+    margin: 30px auto;
     background-color: rgba(255, 225, 225, 1);
     border: 1px solid red;
     border-radius: 10px;
+    width: 70%;
 }
 
 .package-info {
@@ -333,4 +341,11 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     padding: 10px 15px;
 }
 
+.zone-search {
+    background-image: none !important;
+    border-color: white !important;
+}
 
+.zone-search:focus {
+    box-shadow: none !important;
+}

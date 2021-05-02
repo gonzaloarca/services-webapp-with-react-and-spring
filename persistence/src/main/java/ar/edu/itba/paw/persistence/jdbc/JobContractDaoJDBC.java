@@ -44,7 +44,7 @@ public class JobContractDaoJDBC implements JobContractDao {
                     resultSet.getString("client_name"),
                     resultSet.getString("client_phone"),
                     resultSet.getBoolean("client_is_active"),
-                    true,   //TODO implementar
+                    true,
                     new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
                             resultSet.getString("client_image_type")),
                     resultSet.getTimestamp("client_creation_date").toLocalDateTime()),
@@ -62,7 +62,7 @@ public class JobContractDaoJDBC implements JobContractDao {
             resultSet.getString("professional_name"),
             resultSet.getString("professional_phone"),
             resultSet.getBoolean("professional_is_active"),
-            true,       //TODO implementar
+            true,
             new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
                     resultSet.getString("professional_image_type")),
             resultSet.getTimestamp("professional_creation_date").toLocalDateTime()),

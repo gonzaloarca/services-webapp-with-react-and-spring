@@ -1,0 +1,26 @@
+.package-input {
+    font-size: 1rem;
+    margin-bottom: 25px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.input-group-text {
+    background-color: #485696 !important;
+    color: white;
+}
+
+.form-control[readonly] {
+    background-color: #c3c3c3 !important;
+}
+
+.form-control[readonly]:focus {
+    outline: 0 !important;
+    border: transparent !important;
+    box-shadow: none !important;
+}

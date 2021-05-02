@@ -15,6 +15,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository
@@ -49,7 +51,7 @@ public class ReviewDaoJDBC implements ReviewDao {
                             resultSet.getString("client_name"),
                             resultSet.getString("client_phone"),
                             resultSet.getBoolean("client_is_active"),
-                            true,   //TODO implementar
+                            true,
                             new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
                                     resultSet.getString("client_image_type")),
                             resultSet.getTimestamp("client_creation_date").toLocalDateTime()),
@@ -61,7 +63,7 @@ public class ReviewDaoJDBC implements ReviewDao {
                                     resultSet.getString("professional_name"),
                                     resultSet.getString("professional_phone"),
                                     resultSet.getBoolean("professional_is_active"),
-                                    true,       //TODO implementar
+                                    true,
                                     new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
                                             resultSet.getString("professional_image_type")),
                                     resultSet.getTimestamp("professional_creation_date").toLocalDateTime()),
@@ -71,7 +73,8 @@ public class ReviewDaoJDBC implements ReviewDao {
                             ReviewDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
                             -1,
                             resultSet.getBoolean("post_is_active"),
-                            resultSet.getTimestamp("post_creation_date").toLocalDateTime())
+                            resultSet.getTimestamp("post_creation_date").toLocalDateTime()),
+                    resultSet.getTimestamp("review_creation_date").toLocalDateTime()
             );
 
     @Autowired
@@ -82,17 +85,19 @@ public class ReviewDaoJDBC implements ReviewDao {
 
     @Override
     public Review create(long contractId, int rate, String title, String description) {
+        LocalDateTime timeStamp = LocalDateTime.now();
         jdbcInsert.execute(new HashMap<String, Object>() {{
             put("contract_id", contractId);
             put("review_rate", rate);
             put("review_title", title);
             put("review_description", description);
+            put("review_creation_date", timeStamp);
         }});
 
         JobContract jobContract = jobContractDao.findById(contractId).orElseThrow(JobContractNotFoundException::new);
         JobPost jobPost = jobPostDao.findById(jobContract.getJobPackage().getPostId()).orElseThrow(JobPostNotFoundException::new);
 
-        return new Review(rate, title, description, jobContract.getClient(), jobPost);
+        return new Review(rate, title, description, jobContract.getClient(), jobPost, timeStamp);
     }
 
     @Override

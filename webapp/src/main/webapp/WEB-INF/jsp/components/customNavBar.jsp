@@ -220,6 +220,10 @@
         }
     })
 
+    $('.navbar-location-list-group-item').on('click', function () {
+        $('#pickLocationButton').attr("disabled", false);
+    })
+
     // Para levantar la ubicacion en las cookies, en caso de existir
     if ($("#searchForm")[0]) {
         var auxZoneString = sessionStorage.getItem("pickedZoneString");
@@ -227,9 +231,10 @@
             $('#zoneString')[0].innerText = auxZoneString;
             $('#zone' + (parseInt(sessionStorage.getItem('pickedZoneId')) + 1)).prop("checked", true);
             zonePicked = true;
-        } else
+        } else {
             $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
-
+            $('#pickLocationButton').attr("disabled", true);
+        }
         // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
         var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
         if (auxCategoryId) {
@@ -239,10 +244,10 @@
 
     // $('#zoneError')[0].display = none;
     function submitSearchPost() {
-        if(!zonePicked) {
+        if (!zonePicked) {
             $('#zonesModal').modal('show');
             return false;
-        }else return true;
+        } else return true;
     }
 </script>
 </body>

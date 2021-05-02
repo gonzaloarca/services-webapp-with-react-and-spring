@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Review {
@@ -8,16 +9,18 @@ public class Review {
     private String description;
     private User client;
     private JobPost jobPost;
+    private LocalDateTime creationDate;
 
     public Review() {
     }
 
-    public Review(int rate, String title, String description, User client, JobPost jobPost) {
+    public Review(int rate, String title, String description, User client, JobPost jobPost, LocalDateTime creationDate) {
         this.rate = rate;
         this.title = title;
         this.description = description;
         this.client = client;
         this.jobPost = jobPost;
+        this.creationDate = creationDate;
     }
 
     public int getRate() {
@@ -38,6 +41,10 @@ public class Review {
 
     public JobPost getJobPost() {
         return jobPost;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
     @Override

@@ -1,41 +1,37 @@
 package ar.edu.itba.paw.webapp.validation;
 
 import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.webapp.form.PackageForm;
 import org.springframework.beans.BeanWrapperImpl;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
-public class PriceNotEmptyValidator implements ConstraintValidator<PriceNotEmpty, Object> {
+public class PriceNotEmptyValidator implements ConstraintValidator<PriceNotEmpty, PackageForm> {
 
     @Override
     public void initialize(PriceNotEmpty constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(Object value,
+    public boolean isValid(PackageForm form,
                            ConstraintValidatorContext context) {
         //TODO: Paramterizar mensajes respecto de messages.properties correctamente
-        Integer ordinal = (Integer) new BeanWrapperImpl(value).getPropertyValue("rateType");
+        Integer ordinal = form.getRateType();
+        String price = form.getPrice();
 
         if (ordinal == null) {
             return false;
         }
 
-        JobPackage.RateType rateType = JobPackage.RateType
-                .values()[ordinal];
-        String price = (String) new BeanWrapperImpl(value).getPropertyValue("price");
-
-        if (rateType != JobPackage.RateType.TBD) {
-            if (price == null || price.isEmpty()) {
-                return false;
-            } else if (!Pattern.matches("^(?=.+)(?:[1-9]\\d*|0)?(?:\\.\\d+)?$", price)) {
+        if (ordinal != JobPackage.RateType.TBD.ordinal() &&
+                (price == null || price.isEmpty() ||
+                        !Pattern.matches("^(?=.+)(?:[1-9]\\d*|0)?(?:\\.\\d+)?$", price))) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("El precio debe ser un número decimal válido")
+                context.buildConstraintViolationWithTemplate("Introduzca un precio válido").addNode("price")
                         .addConstraintViolation();
                 return false;
-            }
         }
 
         return true;
