@@ -148,6 +148,7 @@
                                 <spring:message code="field.string.notEmpty"/>
                             </div>
                         </span>
+                        <form:errors path="title" class="form-error" element="p"/>
                         <div class="button-controls">
                             <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                     type="button">
@@ -900,7 +901,7 @@
     //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
     function disableBtn() {
         let form = document.querySelector('#post-form');
-        var is_valid = true;
+        let is_valid = true;
 
         if (!form.checkValidity()) {
             is_valid = false;

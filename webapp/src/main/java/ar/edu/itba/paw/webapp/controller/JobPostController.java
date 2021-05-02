@@ -93,7 +93,7 @@ public class JobPostController {
             jobPostForm = form;
         }
 
-        return new ModelAndView().addObject("jobTypes", JobPost.JobType.values())
+        return new ModelAndView("editJobPost").addObject("jobTypes", JobPost.JobType.values())
                 .addObject("zoneValues", JobPost.Zone.values())
                 .addObject("editJobPostForm", jobPostForm).addObject("id", id);
     }
@@ -187,7 +187,9 @@ public class JobPostController {
         } else
             editPackageForm = form;
 
-        return new ModelAndView("editPackage").addObject("editPackageForm", editPackageForm);
+        return new ModelAndView("editPackage")
+                .addObject("editPackageForm", editPackageForm)
+                .addObject("existing", true);
     }
 
     @RequestMapping(path = "/job/{postId}/packages/{packageId}/edit", method = RequestMethod.POST)
@@ -212,13 +214,15 @@ public class JobPostController {
     }
 
     @RequestMapping(path = "/job/{postId}/packages/add", method = RequestMethod.GET)
-    public ModelAndView addPackage(@ModelAttribute("createPackageForm") PackageForm form,
+    public ModelAndView addPackage(@ModelAttribute("editPackageForm") PackageForm form,
                                    @PathVariable final long postId) {
-        return new ModelAndView("addPackage").addObject("postId", postId);
+        return new ModelAndView("editPackage")
+                .addObject("existing", false)
+                .addObject("packageId", null);
     }
 
     @RequestMapping(path = "/job/{postId}/packages/add", method = RequestMethod.POST)
-    public ModelAndView submitPackage(@Valid @ModelAttribute("createPackageForm") PackageForm form,
+    public ModelAndView submitPackage(@Valid @ModelAttribute("editPackageForm") PackageForm form,
                                       final BindingResult errors,
                                       @PathVariable final long postId) {
         if (errors.hasErrors()) {

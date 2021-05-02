@@ -55,8 +55,8 @@
     </h3>
 
         <c:url value="/job/${id}/edit" var="postPath"/>
-    <form:form modelAttribute="editJobPostForm" action="${postPath}" method="post" cssClass="step-frame"
-               enctype="multipart/form-data">
+    <form:form modelAttribute="editJobPostForm" action="${postPath}" method="post" cssClass="step-frame" novalidate="true"
+               enctype="multipart/form-data" class="needs-validation" id="edit-post-form" onsubmit="disableBtn()">
         <div class="form-error-container">
             <form:errors path="jobType" cssClass="form-error-list" element="p"/>
             <form:errors path="title" cssClass="form-error-list" element="p"/>
@@ -65,15 +65,17 @@
         </div>
 
         <div class="step-container-wrapper" id="step-wrapper1">
-
+            <fieldset class="fieldset-step" id="fieldset-step-1">
             <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                  src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
             <img style="height: 55px; position: absolute; top: 10px; right: 20px"
                  src="<c:url value="/resources/images/job-1.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 1 de 4</p>
+                <h4>
+                    <spring:message code="jobPost.create.postData"/>
+                </h4>
+                <p class="step-subtitle"><spring:message code="jobPost.create.stepSubtitle" arguments="1, 4"/></p>
                 <br>
 
                 <div class="input-container">
@@ -84,36 +86,42 @@
 
                     <spring:message code="jobPost.create.service.type" var="serviceType"/>
 
-                    <form:select path="jobType" class="form-control w-100" id="jobTypeSelect">
-                        <form:option value="" label="${serviceType}"/>
+                    <span class="input-group has-validation">
+                            <form:select path="jobType" class="form-control w-100" id="jobTypeSelect" required="true">
+                                <form:option value="" label="${serviceType}"/>
 
-                        <c:forEach items="${jobTypes}" var="type">
-                            <form:option value="${type.value}">
-                                <spring:message code="${type.stringCode}"/>
-                            </form:option>
-                        </c:forEach>
+                                <c:forEach items="${jobTypes}" var="type">
+                                    <form:option value="${type.value}">
+                                        <spring:message code="${type.stringCode}"/>
+                                    </form:option>
+                                </c:forEach>
 
-                    </form:select>
+                            </form:select>
+                            <div class="invalid-feedback">
+                                    <spring:message code="NotNull.editJobPostForm.jobType"/>
+                            </div>
+                        </span>
                     <form:errors path="jobType" class="form-error" element="p"/>
                     <div class="button-controls">
                         <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
             </div>
+            </fieldset>
         </div>
 
         <div class="step-container-wrapper" id="step-wrapper2">
-
+            <fieldset class="fieldset-step" id="fieldset-step-2" disabled>
             <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                  src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
             <img style="height: 75px; position: absolute; top: 5px; right: 10px"
                  src="<c:url value="/resources/images/title1.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 2 de 4</p>
+                <h4><spring:message code="jobPost.create.postData"/></h4>
+                <p class="step-subtitle"><spring:message code="jobPost.create.stepSubtitle" arguments="2, 4"/></p>
                 <br>
 
                 <div class="input-container">
@@ -122,33 +130,41 @@
                         <spring:message code="jobPost.create.publication.title"/>
                     </form:label>
                     <spring:message code="jobPost.create.publication.placeholder" var="titlePlaceholder"/>
-                    <form:input path="title" id="jobTitle" type="text" class="form-control"
-                                placeholder="${titlePlaceholder}" maxlength="100"/>
+                    <span class="input-group has-validation">
+                            <spring:message code="jobPost.create.publication.placeholder" var="titlePlaceholder"/>
+                            <form:input path="title" id="jobTitle" type="text" class="form-control" required="true"
+                                        placeholder="${titlePlaceholder}" maxlength="100"/>
+                            <form:errors path="title" class="form-error" element="p"/>
+                            <div class="invalid-feedback">
+                                <spring:message code="field.string.notEmpty"/>
+                            </div>
+                        </span>
                     <form:errors path="title" class="form-error" element="p"/>
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
                         <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
             </div>
+            </fieldset>
         </div>
 
 
         <div class="step-container-wrapper" id="step-wrapper5">
-
+            <fieldset class="fieldset-step" id="fieldset-step-5" disabled>
             <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                  src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
             <img style="height: 80px; position: absolute; top: 5px; right: 20px"
                  src="<c:url value="/resources/images/clock1.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 3 de 4</p>
+                <h4><spring:message code="jobPost.create.postData"/></h4>
+                <p class="step-subtitle"><spring:message code="jobPost.create.stepSubtitle" arguments="3, 4"/></p>
                 <br>
 
                 <div class="input-container">
@@ -157,33 +173,39 @@
                         <spring:message code="jobPost.create.availableHours"/>
                     </form:label>
                     <spring:message code="jobPost.create.availableHours.placeholder" var="hoursPlaceholder"/>
-                    <form:textarea path="availableHours" id="availableHoursInput" class="form-control"
-                                   placeholder="${hoursPlaceholder}"
-                                   rows="5" maxlength="100"/>
+                    <span class="input-group has-validation">
+                            <form:textarea path="availableHours" id="availableHoursInput" class="form-control"
+                                           placeholder="${hoursPlaceholder}" required="true"
+                                           rows="5" maxlength="100"/>
+                            <div class="invalid-feedback">
+                                <spring:message code="field.string.notEmpty"/>
+                            </div>
+                        </span>
                     <form:errors path="availableHours" class="form-error" element="p"/>
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
                         <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase" type="button">
-                            Siguiente
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
             </div>
+            </fieldset>
         </div>
 
         <div class="step-container-wrapper" id="step-wrapper6">
-
+            <fieldset class="fieldset-step" id="fieldset-step-6" disabled>
             <img style="height: 120px; position: absolute; top: -65px; right: -40px"
                  src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
             <img style="height: 80px; position: absolute; top: 10px; right: 20px"
                  src="<c:url value="/resources/images/location2.svg"/>" alt="">
 
             <div class="step-container">
-                <h4>Datos de la publicación</h4>
-                <p class="step-subtitle">Paso 4 de 4</p>
+                <h4><spring:message code="jobPost.create.postData"/></h4>
+                <p class="step-subtitle"><spring:message code="jobPost.create.stepSubtitle" arguments="4, 4"/></p>
                 <br>
 
                 <div class="input-container">
@@ -194,7 +216,7 @@
 
                     <div class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input id="locationFilter" type="text" class="form-control"
+                        <input id="locationFilter" type="text" class="form-control zone-search"
                                placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                     </div>
 
@@ -210,19 +232,23 @@
                         </c:forEach>
                     </div>
 
+                    <div class="invalid-feedback" id="zones-feedback">
+                        <spring:message code="jobPost.create.zones.invalid"/>
+                    </div>
                     <form:errors path="zones" class="form-error" element="p"/>
                     <div class="button-controls">
                         <button class="back-btn btn btn-outline-secondary hirenet-grey-outline-btn text-uppercase mr-2"
                                 type="button">
-                            Volver atrás
+                            <spring:message code="jobPost.create.goBack"/>
                         </button>
                         <button class="btn btn-primary hirenet-blue-btn text-uppercase continue-btn"
-                                type="button">
-                            Siguiente
+                                type="button" onclick="checkZones()">
+                            <spring:message code="jobPost.create.next"/>
                         </button>
                     </div>
                 </div>
             </div>
+            </fieldset>
         </div>
 
         <div class="step-container-wrapper" id="overview-wrapper">
@@ -309,8 +335,8 @@
                         </button>
 
                         <button class="btn btn-primary hirenet-blue-btn text-uppercase"
-                                type="submit" >
-                            Publicar
+                                type="submit" id="submitBtn">
+                            Confirmar
                         </button>
                     </div>
                 </div>
@@ -362,12 +388,22 @@
 
     $('.continue-btn').click(function () {
         if (animating) return false;
+
+        //Validacion Client-Side:
+        let form = document.querySelector('#edit-post-form');
+
+        if (!form.checkValidity()) {
+            this.closest('.fieldset-step').classList.add('was-validated');
+            return false;
+        }
+
         animating = true;
 
         currentStep = $(this).closest('.step-container-wrapper');
         nextStep = currentStep.next();
 
         nextStep.show();
+        nextStep[0].children[0].removeAttribute("disabled");
 
         currentStep.animate({opacity: 0}, {
             step: function (now, mx) {
@@ -418,6 +454,7 @@
             complete: function () {
                 previousStep.css({'position': 'relative'})
                 currentStep.hide();
+                currentStep[0].children[0].setAttribute("disabled", "");
                 animating = false;
             },
 
@@ -473,15 +510,14 @@
     const checkboxList = $('.zone-checkbox');
 
     for (let i = 0; i < checkboxList.length; i++) {
-        console.log(checkboxList[i].closest('.list-group-item'))
-        console.log(checkboxList[i])
+        // console.log(checkboxList[i])
 
         let zoneString = checkboxList[i].closest('.list-group-item').getElementsByTagName('span')[0].textContent;
-        console.log("Afuera")
-        console.log(checkboxList[i])
+        // console.log("Afuera")
+        // console.log(checkboxList[i])
 
         if (checkboxList[i].checked) {
-            console.log("Adentro")
+            // console.log("Adentro")
 
 //Lo agrego al div
             $('#zoneContainer').append(
@@ -494,6 +530,38 @@
     $('#availableHoursOverview').text($('#availableHoursInput').val());
 
     $('#jobTypeOverview').text($("#jobTypeSelect").find(':selected').text());
+
+    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+    function disableBtn() {
+        let form = document.querySelector('#edit-post-form');
+        let is_valid = true;
+
+        if (!form.checkValidity()) {
+            is_valid = false;
+        }
+
+        form.classList.add('was-validated');
+        $("#submitBtn").attr("disabled", is_valid);
+    }
+
+    function checkZones() {
+        let zones = document.querySelectorAll(".zone-checkbox");
+        let is_valid = false;
+        let message = '';
+        zones.forEach(function (zone) {
+            if (zone.checked === true)
+                is_valid = true;
+        });
+        if (!is_valid) {
+            message = 'Please choose a zone';       //Mensaje default
+            document.querySelector('#zones-feedback').style.setProperty("display", "flex");
+        } else {
+            document.querySelector('#zones-feedback').style.setProperty("display", "none");
+        }
+        zones.forEach(function (zone) {
+            zone.setCustomValidity(message);
+        });
+    }
 
 </script>
 </body>

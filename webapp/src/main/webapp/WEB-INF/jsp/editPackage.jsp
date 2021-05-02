@@ -39,7 +39,7 @@
 <div class="content-container-transparent mt-3 mb-3 pb-2">
     <h3>
         <i class="mr-2 fas fa-cube"></i>
-        Administrar paquetes
+        <spring:message code="jobPost.packages.title"/>
     </h3>
 
     <div class="packages-frame">
@@ -50,12 +50,24 @@
                 <img style="height: 85px; position: absolute; top: 0; right: 10px"
                      src="<c:url value="/resources/images/package1.svg"/>" alt="">
 
-                <h4 class="font-weight-bold">Editar paquete</h4>
+                <h4 class="font-weight-bold">
+                    <c:if test="${existing == true}">
+                        <spring:message code="jobPost.packages.edit.title"/>
+                    </c:if>
+                    <c:if test="${existing != true}">
+                        <spring:message code="jobPost.packages.add.title"/>
+                    </c:if>
+                </h4>
 
+                <c:if test="${existing == true}">
+                    <c:url value="/job/${postId}/packages/${packageId}/edit" var="postPath"/>
+                </c:if>
+                <c:if test="${existing != true}">
+                    <c:url value="/job/${postId}/packages/add" var="postPath"/>
+                </c:if>
 
-                <c:url value="/job/${postId}/packages/${packageId}/edit" var="postPath"/>
-                <form:form modelAttribute="editPackageForm" method="post" action="${postPath}"
-                           cssClass="mt-4">
+                <form:form modelAttribute="editPackageForm" method="post" action="${postPath}" id="pack-form"
+                           cssClass="mt-4" class="needs-validation" novalidate="true">
                     <div class="package-input">
                         <form:label path="title" for="package-title-input">
                             <spring:message code="jobPost.create.package.title"/>
@@ -63,9 +75,14 @@
 
                         <spring:message code="jobPost.create.package.title" var="pTitlePlaceholder"/>
 
-                        <form:input path="title" id="package-title-input" type="text" class="form-control"
-                                    placeholder="${pTitlePlaceholder}" maxlength="100"/>
-
+                        <span class="input-group has-validation">
+                                <form:input path="title" id="package-title-input" type="text"
+                                            class="form-control" required="true"
+                                            placeholder="${pTitlePlaceholder}" maxlength="100"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="field.string.notEmpty"/>
+                                </div>
+                        </span>
                         <form:errors path="title" class="form-error" element="p"/>
                     </div>
 
@@ -77,10 +94,15 @@
 
                         <spring:message code="jobPost.create.package.descriptionPlaceholder"
                                         var="descriptionPlaceholder"/>
-                        <form:textarea path="description" id="package-description-input"
-                                       class="form-control"
-                                       placeholder="${descriptionPlaceholder}" maxlength="100"
-                                       rows="3"/>
+                        <span class="input-group has-validation">
+                                <form:textarea path="description" id="package-description-input"
+                                               class="form-control" required="true"
+                                               placeholder="${descriptionPlaceholder}" maxlength="100"
+                                               rows="3"/>
+                                <div class="invalid-feedback">
+                                    <spring:message code="field.string.notEmpty"/>
+                                </div>
+                        </span>
 
                         <form:errors path="description" class="form-error" element="p"/>
                     </div>
@@ -120,6 +142,9 @@
                                 </form:label>
                             </div>
                         </div>
+                        <div class="invalid-feedback" id="radioFeedback">
+                            <spring:message code="NotNull.createJobPostForm.jobPackage.rateType"/>
+                        </div>
                         <form:errors path="rateType" class="form-error" element="p"/>
                     </div>
 
@@ -127,7 +152,7 @@
                         <form:label path="price" for="package-price-input">
                             <spring:message code="jobPost.create.package.price"/>
                         </form:label>
-                        <div class="input-group">
+                        <div class="input-group has-validation">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">
                                     <spring:message code="jobPost.create.package.argentinePeso"/>
@@ -137,13 +162,16 @@
                             <form:input path="price" id="package-price-input" type="number" step="any"
                                         class="form-control" min="0" max="99999999999"
                                         placeholder="${pricePlaceholder}"/>
+                            <div class="invalid-feedback">
+                                <spring:message code="jobPost.create.price.invalid"/>
+                            </div>
                         </div>
                         <form:errors path="price" class="form-error" element="p"/>
                     </div>
 
                     <button class="btn btn-block btn-primary text-uppercase" style="margin: 40px 0 !important;"
-                            type="submit">
-                        Confirmar
+                            type="submit" id="submitBtn">
+                        <spring:message code="jobPost.package.edit.confirm"/>
                     </button>
                 </form:form>
             </div>
@@ -180,6 +208,41 @@
     if (onetimeRadio.checked && priceInput.val() !== "")
         priceInput.val("");
 
+
+    let form = document.querySelector('#pack-form');
+
+    form.addEventListener('submit', function (event) {
+        let is_valid = true;
+
+        checkRadio();
+        if (!form.checkValidity()) {
+            is_valid = false;
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        form.classList.add('was-validated');
+        $("#submitBtn").attr("disabled", is_valid);
+    })
+
+    function checkRadio() {
+        let message = "";
+        let feedback = document.querySelector('#radioFeedback');
+        let priceInput = document.querySelector('#package-price-input');
+        if(!hourlyRadio[0].checked && !onetimeRadio[0].checked && !tbdRadio[0].checked){
+            message = "No radio selected";    //Mensaje default
+            feedback.style.setProperty("display", "flex");
+        } else {
+            feedback.style.setProperty("display", "none");
+        }
+        hourlyRadio[0].setCustomValidity(message);
+        onetimeRadio[0].setCustomValidity(message);
+        tbdRadio[0].setCustomValidity(message);
+        if((hourlyRadio[0].checked || onetimeRadio[0].checked) && priceInput.value === "")
+            priceInput.setCustomValidity("Price is obligatory");    //Mensaje Default
+        else
+            priceInput.setCustomValidity("");
+    }
 </script>
 </body>
 </html>
