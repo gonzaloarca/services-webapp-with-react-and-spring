@@ -13,6 +13,7 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
@@ -30,6 +31,7 @@ import java.nio.charset.StandardCharsets;
         "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.auth"})
 @Configuration
 @EnableTransactionManagement
+@EnableAsync
 public class WebConfig {
 
     @Autowired
@@ -76,9 +78,6 @@ public class WebConfig {
     @Value("classpath:migration_login.sql")
     private Resource loginMigration;
 
-    @Value("classpath:migration_delete.sql")
-    private Resource deleteMigration;
-
     @Value("classpath:job_card_view.sql")
     private Resource jobCardView;
 
@@ -94,7 +93,6 @@ public class WebConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
         dbp.addScript(imageSchemaSql);
-        dbp.addScript(deleteMigration);
         dbp.addScript(loginMigration);
         dbp.addScript(jobCardView);
         return dbp;
