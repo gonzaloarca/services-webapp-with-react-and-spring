@@ -3,10 +3,10 @@ package ar.edu.itba.paw.services.utils;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.models.*;
+import exceptions.MailCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -54,16 +54,16 @@ public class MailingServiceSpring implements MailingService {
     public void sendHtmlMessageWithAttachment(String to, String subject, String html, DataSource attachment) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
 
+        MimeMessageHelper helper;
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
             helper.setText(html, true);
             helper.setTo(to);
             helper.setSubject(subject);
             if (attachment != null)
                 helper.addAttachment(IMAGE_TYPE_TO_NAME.get(attachment.getContentType()), attachment);
         } catch (MessagingException e) {
-            //TODO: PONER EXCEPCION ADECUADA
-            throw new RuntimeException();
+            throw new MailCreationException();
         }
         emailSender.send(mimeMessage);
     }
@@ -102,9 +102,8 @@ public class MailingServiceSpring implements MailingService {
 
         sendMessageUsingThymeleafTemplate(jobPost.getUser().getEmail(),
                 messageSource.getMessage("mail.contract.subject",
-                        new Object[]{jobContract.getClient().getUsername()}, Locale.forLanguageTag("es")),
+                        new Object[]{jobContract.getClient().getUsername()}, Locale.getDefault()),
                 data, "contract", attachment);
-        //TODO: FIX LOCALE
     }
 
     @Async
@@ -118,9 +117,8 @@ public class MailingServiceSpring implements MailingService {
 
         sendMessageUsingThymeleafTemplate(user.getEmail(),
                 messageSource.getMessage("mail.token.subject",
-                        new Object[]{user.getUsername()}, Locale.forLanguageTag("es")),
+                        new Object[]{user.getUsername()}, Locale.getDefault()),
                 data, "token", null);
-        //TODO: FIX LOCALE
     }
 
 }

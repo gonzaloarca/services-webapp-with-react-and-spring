@@ -20,7 +20,7 @@ import java.util.*;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:review_test.sql")
+@Sql("classpath:db_data_test.sql")
 public class ReviewDaoJDBCTest {
     private static final User USER1 = new User(
             1,

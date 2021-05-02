@@ -13,40 +13,24 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.util.Properties;
 import java.nio.charset.StandardCharsets;
 
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
         "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.auth"})
 @Configuration
-@EnableAsync
 @EnableTransactionManagement
 public class WebConfig {
-
-    //FIXME poner la url correcta
-    @Bean(name = "webpageUrl")
-    public String webpageUrl() {
-        return "http://pawserver.it.itba.edu.ar/paw-2021a-03";
-    }
 
     @Autowired
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
@@ -112,14 +96,6 @@ public class WebConfig {
         return dbp;
     }
 
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        long MAX_FILE_SIZE = 2 * 1024 * 1024;       //2MB
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(MAX_FILE_SIZE);
-        return multipartResolver;
-    }
-
     @Bean
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
@@ -130,46 +106,8 @@ public class WebConfig {
     }
 
     @Bean
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
-
-        mailSender.setUsername("paw.hirenet@gmail.com");
-        mailSender.setPassword("paw12345");
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
-
-        return mailSender;
-    }
-
-    @Bean
     public PlatformTransactionManager transactionManager(final DataSource ds) {
         return new DataSourceTransactionManager(ds);
-    }
-
-    @Bean
-    public ITemplateResolver thymeleafTemplateResolver() {
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("mail-templates/");
-
-        templateResolver.setSuffix(".html");
-        templateResolver.setCacheable(false);
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding("UTF-8");
-        return templateResolver;
-    }
-
-    @Bean
-    public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
-        templateEngine.setTemplateEngineMessageSource(messageSource());
-        return templateEngine;
     }
 
 }
