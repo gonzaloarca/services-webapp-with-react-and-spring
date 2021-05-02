@@ -47,10 +47,10 @@ a.navbar-brand {
 }
 
 .navbar-location-list-group-item {
-    justify-content: left !important;
+    justify-content: start !important;
     margin-bottom: 10px;
     background-color: #eeeeee;
-    font-size: 18px;
+    font-size: 1rem;
     padding: 5px;
 }
 
@@ -65,6 +65,11 @@ a.navbar-brand {
 
 .navbar-has-search {
     margin: auto;
+}
+
+.navbar-form-control {
+    border-radius: 2rem !important;
+    width: 80% !important;
 }
 
 .navbar-has-search .navbar-form-control {
