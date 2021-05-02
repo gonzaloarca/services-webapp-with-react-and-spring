@@ -17,10 +17,6 @@ public class JobCard {
         this.postImage = postImage;
     }
 
-    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, JobPostImage postImage, int contractsCompleted) {
-        this(jobPost,rateType,price,postImage,contractsCompleted,-1);
-    }
-
     public JobPost getJobPost() {
         return jobPost;
     }

@@ -17,8 +17,6 @@ public interface JobPostDao {
 
     int findSizeByUserId(long id);
 
-    int findMaxPageByUserId(long id);
-
     List<JobPost> findByJobType(JobPost.JobType jobType, int page);
 
     List<JobPost> findByZone(JobPost.Zone zone, int page);
@@ -27,13 +25,9 @@ public interface JobPostDao {
 
     List<JobPost> findRelatedJobPosts(long professional_id);
 
-    int findAllMaxPage();
-
     List<JobPost> search(String query, JobPost.Zone zone, int page);
 
     List<JobPost> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, int page);
-
-    int findMaxPageSearch(String query, JobPost.Zone zone, JobPost.JobType jobType);
 
     boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
 

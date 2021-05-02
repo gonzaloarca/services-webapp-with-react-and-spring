@@ -1,31 +1,26 @@
-package ar.edu.itba.paw.interfaces.services;
+package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface JobCardService {
-
-    List<JobCard> findAll();
+public interface JobCardDao {
 
     List<JobCard> findAll(int page);
 
-    List<JobCard> findByUserId(long id);
-
     List<JobCard> findByUserId(long id, int page);
 
-    List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page);
+    List<JobCard> search(String query, JobPost.Zone zone, int page);
 
-    List<JobCard> findByUserIdWithReview(long id);
+    List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, int page);
 
     List<JobCard> findByUserIdWithReview(long id, int page);
 
-    JobCard findByPostId(long id);
+    Optional<JobCard> findByPostId(long id);
 
-    int findSizeByUserId(long id);
-
-    int findMaxPage();
+    int findAllMaxPage();
 
     int findMaxPageByUserId(long id);
 
