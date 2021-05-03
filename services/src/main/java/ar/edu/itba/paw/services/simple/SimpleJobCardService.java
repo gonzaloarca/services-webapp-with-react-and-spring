@@ -64,16 +64,6 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobCard> findByUserIdWithReview(long id) {
-        return findByUserIdWithReview(id, HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobCard> findByUserIdWithReview(long id,int page) {
-        return jobCardDao.findByUserIdWithReview(id, page);
-    }
-
-    @Override
     public JobCard findByPostId(long id) {
         return jobCardDao.findByPostId(id).orElseThrow(NoSuchElementException::new);
   }

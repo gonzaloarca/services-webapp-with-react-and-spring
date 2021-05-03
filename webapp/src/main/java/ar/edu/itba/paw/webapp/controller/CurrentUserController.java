@@ -59,6 +59,7 @@ public class CurrentUserController {
         if (page < 1)
             throw new IllegalArgumentException();
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
+        //TODO: VERIFICAR QUE SEA PROFESSIONAL
         int maxPage = paginationService.findMaxPageRelatedJobCards(id);
         List<AnalyticRanking> analyticRankings = new ArrayList<>();
         userService.findUserJobTypes(id).forEach((jobType -> analyticRankings.add(new AnalyticRanking(jobType,

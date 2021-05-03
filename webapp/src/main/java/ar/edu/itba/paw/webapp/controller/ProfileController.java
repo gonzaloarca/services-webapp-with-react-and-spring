@@ -73,7 +73,7 @@ public class ProfileController {
         int maxPage = paginationService.findMaxPageJobPostsByUserId(id);
         mav.addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
         mav.addObject("maxPage", maxPage);
-        mav.addObject("jobCards", jobCardService.findByUserIdWithReview(id, page - 1));
+        mav.addObject("jobCards", jobCardService.findByUserId(id, page - 1));
         return mav;
     }
 

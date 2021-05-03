@@ -17,10 +17,6 @@ public interface JobCardService {
 
     List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page);
 
-    List<JobCard> findByUserIdWithReview(long id);
-
-    List<JobCard> findByUserIdWithReview(long id, int page);
-
     JobCard findByPostId(long id);
 
     List<JobCard> findRelatedJobCards(long professional_id, int page);

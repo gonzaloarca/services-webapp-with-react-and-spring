@@ -1,4 +1,6 @@
 package jdbc;
+
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jdbc.JobContractDaoJDBC;
 import ar.edu.itba.paw.persistence.jdbc.JobPackageDaoJDBC;
@@ -166,7 +168,7 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByClientId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByClientId(USER2.getId(),0);
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByClientId(USER2.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         System.out.println(jobContracts);
@@ -175,14 +177,15 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByProId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByProId(USER1.getId(), 0);
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByProId(USER1.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         jobContracts.forEach(jobContract -> Assert.assertEquals(USER1.getId(), jobContract.getProfessional().getId()));
     }
+
     @Test
     public void testFindByPackageId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId(),0);
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(3, jobContracts.size());
@@ -191,7 +194,7 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindByPostId() {
-        List<JobContract> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId(),0);
+        List<JobContract> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(4, jobContracts.size()); //3 del package1 y 1 del package2

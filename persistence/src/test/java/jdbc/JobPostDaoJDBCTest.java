@@ -1,5 +1,6 @@
 package jdbc;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jdbc.JobPostDaoJDBC;
@@ -97,7 +98,7 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindByUserId() {
-        List<JobPost> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId(), 0);
+        List<JobPost> jobPosts = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(jobPosts.size(), 2);
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
@@ -105,7 +106,7 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindSizeByUserId() {
-        int size = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId(), 0).size();
+        int size = jobPostDaoJDBC.findByUserId(JOB_POST.getUser().getId(), HirenetUtils.ALL_PAGES).size();
 
         int maybeSize = jobPostDaoJDBC.findSizeByUserId(JOB_POST.getUser().getId());
 
@@ -114,7 +115,7 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindByJobType() {
-        List<JobPost> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType(), 0);
+        List<JobPost> jobPosts = jobPostDaoJDBC.findByJobType(JOB_POST.getJobType(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(2, jobPosts.size());
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
@@ -123,7 +124,7 @@ public class JobPostDaoJDBCTest {
     @Test
     public void testFindByZone() {
         JOB_POST.getZones().forEach((zone -> {
-            List<JobPost> jobPosts = jobPostDaoJDBC.findByZone(zone, 0);
+            List<JobPost> jobPosts = jobPostDaoJDBC.findByZone(zone, HirenetUtils.ALL_PAGES);
 
             jobPosts.forEach((jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone))));
         }));
@@ -131,31 +132,10 @@ public class JobPostDaoJDBCTest {
 
     @Test
     public void testFindAll() {
-        List<JobPost> jobPosts = jobPostDaoJDBC.findAll(0);
+        List<JobPost> jobPosts = jobPostDaoJDBC.findAll(HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(JOB_POSTS_QUANTITY,
                 jobPosts.size());
     }
 
-    @Test
-    public void testSearch() {
-        String title = "Electricista";
-        JobPost.Zone zone = JobPost.Zone.PALERMO;
-        List<JobPost> jobPosts = jobPostDaoJDBC.search(title, zone, 0);
-
-        Assert.assertFalse(jobPosts.isEmpty());
-        Assert.assertEquals(2, jobPosts.size());
-    }
-
-    @Test
-    public void testSearchWithCategory() {
-        String title = "";
-        JobPost.Zone zone = JobPost.Zone.PALERMO;
-        JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-        List<JobPost> jobPosts = jobPostDaoJDBC.searchWithCategory(title, zone, jobType, 0);
-
-        Assert.assertFalse(jobPosts.isEmpty());
-        Assert.assertEquals(2, jobPosts.size());
-        System.out.println(jobPosts);
-    }
 }
