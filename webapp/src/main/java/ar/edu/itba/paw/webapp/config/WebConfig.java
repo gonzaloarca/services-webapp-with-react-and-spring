@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -110,6 +111,11 @@ public class WebConfig {
     @Bean
     public PlatformTransactionManager transactionManager(final DataSource ds) {
         return new DataSourceTransactionManager(ds);
+    }
+
+    @Bean
+    public LevenshteinDistance levenshteinDistance() {
+        return new LevenshteinDistance();       //Se le puede indicar un threshold en el constructor
     }
 
 }

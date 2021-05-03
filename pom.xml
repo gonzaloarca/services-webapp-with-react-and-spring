@@ -36,6 +36,8 @@
         <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
         <javax.mail.version>1.6.2</javax.mail.version>
         <org.springframework.security.version>4.0.4.RELEASE</org.springframework.security.version>
+        <thymeleaf.spring4.version>3.0.12.RELEASE</thymeleaf.spring4.version>
+        <apache.commons.text.version>1.9</apache.commons.text.version>
     </properties>
 
     <dependencyManagement>
@@ -148,7 +150,12 @@
             <dependency>
                 <groupId>org.thymeleaf</groupId>
                 <artifactId>thymeleaf-spring4</artifactId>
-                <version>3.0.12.RELEASE</version>
+                <version>${thymeleaf.spring4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${apache.commons.text.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
