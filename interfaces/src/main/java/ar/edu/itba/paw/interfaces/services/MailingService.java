@@ -3,13 +3,14 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.*;
 
 import javax.activation.DataSource;
+import java.util.Locale;
 import java.util.Map;
 
 public interface MailingService {
 
     void sendHtmlMessageWithAttachment(String to, String subject, String html, DataSource attachment);
 
-    void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost);
+    void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost, Locale locale);
 
     void sendVerificationTokenEmail(User user, VerificationToken token);
 

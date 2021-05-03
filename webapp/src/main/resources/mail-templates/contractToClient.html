@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <style>
+        p {
+            color: black;
+            margin: 1px 0;
+        }
+
+        h3 {
+            color: black;
+        }
+
+        .body {
+            padding: 20px;
+            background-color: #efefef !important;
+            display: flex;
+        }
+
+        .card {
+            margin: auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+        }
+
+        .title {
+            color: #485696;
+        }
+
+        .bold {
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .custom-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body class="body">
+<div class="card">
+    <h1 class="title" th:text="#{mail.contractToClient.newContract}"></h1>
+    <h3 th:text="#{mail.contractToClient.greetings(${client})}"></h3>
+    <p th:text="#{mail.contractToClient.contact(${jobPackageTitle}, #{${jobPackageRateType}(${jobPackagePrice})},
+     ${jobPostTitle})}"></p>
+    <br/>
+    <p th:text="#{mail.contractToClient.professional.info}"></p>
+    <div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.contractToClient.professional.name}"></p>&nbsp;
+            <p th:text="${professional}"></p>
+        </div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.contractToClient.professional.email}"></p>&nbsp;
+            <p th:text="${professionalEmail}"></p>
+        </div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.contractToClient.professional.phone}"></p>&nbsp;
+            <p th:text="${professionalPhone}"></p>
+        </div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.contractToClient.description}"></p>&nbsp;
+            <p th:text="${contractDescription}"></p>
+            <br/>
+        </div>
+        <p th:if="${hasAttachment}" th:text="#{mail.contractToClient.attachedImage}"></p>
+        <h4 th:text="#{mail.contractToClient.contactClient}"></h4>
+    </div>
+</div>
+</body>
+</html>

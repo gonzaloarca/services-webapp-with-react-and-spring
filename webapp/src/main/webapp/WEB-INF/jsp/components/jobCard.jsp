@@ -46,7 +46,14 @@
         <li class="list-group-item job-card-detail">
             <i class="fas fa-check job-card-detail"></i>
             <p class="job-card-detail">
-                <spring:message code="jobCard.jobs.completed" arguments="${requestScope.data.contractsCompleted}"/>
+                <c:choose>
+                    <c:when test="${requestScope.data.contractsCompleted == 1}">
+                        <spring:message code="jobPost.jobs.completed.onlyOne"/>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="jobPost.jobs.completed" arguments="${requestScope.data.contractsCompleted}"/>
+                    </c:otherwise>
+                </c:choose>
             </p>
         </li>
 

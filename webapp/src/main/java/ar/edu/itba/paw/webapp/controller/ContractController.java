@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.form.ContractForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.security.Principal;
+import java.util.Locale;
 
 @RequestMapping("/contract")
 @Controller
@@ -89,7 +91,7 @@ public class ContractController {
             }
         }
 
-        mailingService.sendContractEmail(jobContract, jobPack, jobPost);
+        mailingService.sendContractEmail(jobContract, jobPack, jobPost, LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/contract/package/" + packId + "/success");
     }

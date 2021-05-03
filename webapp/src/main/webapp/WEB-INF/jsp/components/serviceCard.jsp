@@ -53,8 +53,15 @@
                 <div class="custom-row service-contracted-times gray-chip">
                     <i class="fas fa-check mr-2"></i>
                     <p class="m-0">
-                        <spring:message code="profile.service.contract.quantity"
-                                        arguments="${requestScope.data.contractsCompleted}"/>
+                        <c:choose>
+                            <c:when test="${requestScope.data.contractsCompleted}">
+                                <spring:message code="profile.service.contract.quantity.onlyOne"/>
+                            </c:when>
+                            <c:otherwise>
+                                <spring:message code="profile.service.contract.quantity"
+                                                arguments="${requestScope.data.contractsCompleted}"/>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
                 </div>
             </div>

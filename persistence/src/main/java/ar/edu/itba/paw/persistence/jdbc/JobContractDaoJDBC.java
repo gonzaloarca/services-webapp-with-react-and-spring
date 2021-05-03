@@ -161,14 +161,14 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Override
     public int findContractsQuantityByProId(long id) {
         return jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM full_contract NATURAL JOIN job_package NATURAL JOIN (SELECT post_id, user_id AS professional_id,post_is_active FROM job_post) AS posts WHERE professional_id = ?",
+                "SELECT COUNT(*) FROM full_contract WHERE professional_id = ?",
                 new Object[]{id}, Integer.class);
     }
 
     @Override
     public int findContractsQuantityByPostId(long id) {
         return jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM full_contract NATURAL JOIN job_package WHERE post_id = ?",
+                "SELECT COUNT(*) FROM full_contract WHERE post_id = ?",
                 new Object[]{id}, Integer.class);
     }
 
