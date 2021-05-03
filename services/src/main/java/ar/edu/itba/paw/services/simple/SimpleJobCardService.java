@@ -64,19 +64,14 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobCard> findByUserIdWithReview(long id) {
-        return findByUserIdWithReview(id, HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobCard> findByUserIdWithReview(long id,int page) {
-        return jobCardDao.findByUserIdWithReview(id, page);
-    }
-
-    @Override
     public JobCard findByPostId(long id) {
         return jobCardDao.findByPostId(id).orElseThrow(NoSuchElementException::new);
   }
+
+    @Override
+    public JobCard findByPostIdWithInactive(long id) {
+        return jobCardDao.findByPostIdWithInactive(id).orElseThrow(NoSuchElementException::new);
+    }
 
     @Override
     public List<JobCard> findRelatedJobCards(long professional_id, int page) {
@@ -114,7 +109,7 @@ public class SimpleJobCardService implements JobCardService {
 
         Arrays.stream(JobPost.JobType.values()).forEach(jobType -> {
             String typeName = messageSource.getMessage(jobType.getStringCode(), null, LocaleContextHolder.getLocale());
-            int distance = levenshteinDistance.apply(query, typeName);
+            int distance = levenshteinDistance.apply(query.toLowerCase(), typeName.toLowerCase());
             double similarity = 1.0 - ((double) distance/Math.max(query.length(), typeName.length()));
 
             if(similarity > THRESHOLD)

@@ -23,3 +23,90 @@
 .content-container {
     min-height: 0;
 }
+
+.options-title {
+    margin: 30px 20px 10px 20px;
+    font-weight: bold;
+}
+
+.divider-bar {
+    border-top: 2px solid rgba(0, 0, 0, 0.05);
+    margin: 0;
+}
+
+.nav-option {
+    display: flex;
+    min-height: 50px;
+    padding: 0;
+}
+
+.nav-option:hover {
+    background-color: #efefef;
+}
+
+.active {
+    background-color: #efefef;
+}
+
+.option-icon {
+    margin-left: 15px;
+    margin-right: 10px;
+    min-width: 27px;
+    min-height: 27px;
+    border-radius: 27px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contracts-option {
+    margin: auto 0 auto 0;
+    color: black;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+}
+
+.yellow-line {
+    display: inline-block;
+    border-left: 3px solid #FCB839;
+}
+
+.blue-line {
+    display: inline-block;
+    border-left: 3px solid #8690FA;
+}
+
+.empty-line {
+    display: inline-block;
+    border-left: 3px solid transparent;
+}
+
+.pro-icon {
+    color: white;
+    background-color: #8690FA;
+}
+
+.client-icon {
+    color: white;
+    background-color: #FCB839;
+}
+
+.contracts-sections {
+    width: 25%;
+    margin-right: 10px;
+    min-height: 0;
+    padding: 0;
+}
+
+.contracts-container {
+    width: 75%;
+    margin-left: 10px;
+    min-height: 0;
+    padding: 0;
+}
+
+.main-body {
+    display: flex;
+    align-items: flex-start;
+}

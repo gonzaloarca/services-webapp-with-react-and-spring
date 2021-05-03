@@ -36,9 +36,9 @@
             </li>
 
             <sec:authorize access="isAuthenticated()">
-                <li class="nav-item ${requestScope.path == "/my-contracts" ? 'active': ''}">
+                <li class="nav-item ${requestScope.path == "/my-contracts/client" || "/my-contracts/professional" ? 'active': ''}">
                     <a class="nav-link"
-                       href="${pageContext.request.contextPath}/my-contracts">
+                       href="${pageContext.request.contextPath}/my-contracts/client">
                         <spring:message code="navigation.mycontracts"/>
                     </a>
                 </li>
@@ -95,7 +95,8 @@
                                         </h5>
                                         <div class="navbar-has-search">
                                             <span class="fa fa-search navbar-form-control-feedback"></span>
-                                            <input id="locationFilter" type="text" class="form-control navbar-form-control"
+                                            <input id="locationFilter" type="text"
+                                                   class="form-control navbar-form-control"
                                                    placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                                         </div>
                                         <div class="list-group navbar-location-list-group">
@@ -111,9 +112,11 @@
                                         </div>
                                     </div>
                                     <div class="d-flex">
-                                        <button type="button" class="btn btn-danger ml-auto mr-2 text-uppercase" data-dismiss="modal">
+                                        <button type="button" class="btn btn-danger ml-auto mr-2 text-uppercase"
+                                                data-dismiss="modal">
                                             <spring:message code="navigation.modal.close"/></button>
-                                        <button class="btn btn-success text-uppercase" id="pickLocationButton" type="submit">
+                                        <button class="btn btn-success text-uppercase" id="pickLocationButton"
+                                                type="submit">
                                             <spring:message code="navigation.modal.confirm"/></button>
                                     </div>
                                 </div>
@@ -150,7 +153,8 @@
                         </c:when>
                         <c:otherwise>
                             <img class="navbar-user-img"
-                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar" id="navbar-avatar">
+                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar"
+                                 id="navbar-avatar">
                         </c:otherwise>
                     </c:choose>
                 </button>

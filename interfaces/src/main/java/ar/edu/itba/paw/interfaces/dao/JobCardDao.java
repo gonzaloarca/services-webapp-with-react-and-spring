@@ -16,9 +16,9 @@ public interface JobCardDao {
 
     List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page);
 
-    List<JobCard> findByUserIdWithReview(long id, int page);
-
     Optional<JobCard> findByPostId(long id);
+
+    Optional<JobCard> findByPostIdWithInactive(long id);
 
     List<JobCard> findRelatedJobCards(long professional_id, int page);
 

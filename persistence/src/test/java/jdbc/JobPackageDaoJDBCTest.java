@@ -1,5 +1,6 @@
 package jdbc;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
@@ -121,7 +122,7 @@ public class JobPackageDaoJDBCTest {
 
     @Test
     public void testFindByPostId() {
-        List<JobPackage> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId(),0);
+        List<JobPackage> jobPackages = jobPackageDaojdbc.findByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
         Assert.assertEquals(jobPackages.size(), JOB_PACKAGES.length);
         jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
     }

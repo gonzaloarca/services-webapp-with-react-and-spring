@@ -1,5 +1,6 @@
 package jdbc;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jdbc.ReviewDaoJDBC;
 import config.TestConfig;
@@ -99,7 +100,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindReviewsByPostId() {
-        List<Review> maybePostReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), 0);
+        List<Review> maybePostReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(2, maybePostReviews.size());
 
@@ -120,7 +121,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindReviewsByPostIdSize() {
-        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), 0);
+        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
         int maybeReviewsByPostIdSize = reviewDaoJDBC.findJobPostReviewsSize(JOB_POST.getId());
         Assert.assertEquals(reviews.size(), maybeReviewsByPostIdSize);
@@ -128,7 +129,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindJobPostAvgRate() {
-        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), 0);
+        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
         double maybeAvg = reviewDaoJDBC.findJobPostAvgRate(JOB_POST.getId());
         Assert.assertEquals(reviews.stream().mapToDouble(Review::getRate).average().orElse(0), maybeAvg, 0.0000001);
@@ -136,7 +137,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void findProfessionalReviews() {
-        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), 0);
+        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(2, maybeUserReviews.size());
         Assert.assertEquals(REVIEW_1, maybeUserReviews.get(0));
@@ -145,7 +146,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindProfessionalAvgRate() {
-        List<Review> reviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), 0);
+        List<Review> reviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), HirenetUtils.ALL_PAGES);
 
         double maybeAvg = reviewDaoJDBC.findProfessionalAvgRate(JOB_POST.getId());
         Assert.assertEquals(reviews.stream().mapToDouble(Review::getRate).average().orElse(0), maybeAvg, 0.0000001);
@@ -153,7 +154,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindReviewsByPackageId() {
-        List<Review> maybeReviews = reviewDaoJDBC.findReviewsByPackageId(JOB_PACKAGE.getId(), 0);
+        List<Review> maybeReviews = reviewDaoJDBC.findReviewsByPackageId(JOB_PACKAGE.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(2, maybeReviews.size());
         Assert.assertEquals(REVIEW_1, maybeReviews.get(0));
