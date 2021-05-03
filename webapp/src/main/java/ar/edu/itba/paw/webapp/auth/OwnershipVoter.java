@@ -76,16 +76,13 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         isOwner= false;
                     }
                     if(paths.length > 2){
-                        if(paths[2].equals("edit")){
+
+                        if(paths[2].equals("edit") || paths[2].equals("packages") || paths[2].equals("delete") ){
                             if (isOwner)
                                 return ACCESS_GRANTED;
                             else
                                 return ACCESS_DENIED;
-                        }else if(paths[2].equals("packages"))
-                            if(isOwner)
-                                return ACCESS_GRANTED;
-                            else
-                                return ACCESS_DENIED;
+                        }
                     }
                     break;
                 case "create-job-post":
@@ -157,6 +154,7 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         else
                             return ACCESS_DENIED;
                     }
+                    break;
             }
 //
         }

@@ -51,11 +51,18 @@
     <%--    </nav>--%>
     <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
     <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
-        <div class="flex custom-row justify-content-end">
+        <div class="flex custom-row justify-content-end align-items-center">
             <a class="edit-button text-uppercase align-items-center my-2"
                href="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
                 <div class="custom-row"><i class="fas fa-edit"></i>
                     <p class="mb-0 ml-2">Editar publicacion</p>
+                </div>
+            </a>
+            <div class="vl align-items-center my-2 owner-options-vl"></div>
+            <a class="delete-button text-uppercase align-items-center my-2"
+               href="${pageContext.request.contextPath}/job/${jobPost.id}/delete">
+                <div class="custom-row"><i class="fas fa-trash-alt"></i>
+                    <p class="mb-0 ml-2">Eliminar publicacion</p>
                 </div>
             </a>
         </div>

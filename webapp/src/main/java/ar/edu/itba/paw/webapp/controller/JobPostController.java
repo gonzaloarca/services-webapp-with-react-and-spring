@@ -242,4 +242,16 @@ public class JobPostController {
     }
 
 
+    //TODO: Este comporatmiento se repite en profile delete job post, tal vez sea mejor mergearlos
+    @RequestMapping(path = "/job/{postId}/delete")
+    public ModelAndView deleteJobPost(@PathVariable("postId") int postId){
+        //FIXME: Excepcion correcta
+        if(!jobPostService.deleteJobPost(postId)){
+            throw new RuntimeException();
+        }
+        //TODO: Redireccionar a un success de delete?
+        return new ModelAndView("redirect:/");
+    }
+
+
 }
