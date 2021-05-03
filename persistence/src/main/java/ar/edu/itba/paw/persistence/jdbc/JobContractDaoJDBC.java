@@ -172,7 +172,7 @@ public class JobContractDaoJDBC implements JobContractDao {
                         "FROM full_contract " +
                         "NATURAL JOIN job_package " +
                         "NATURAL JOIN (SELECT post_id, user_id AS professional_id,post_is_active FROM job_post) AS posts " +
-                        "WHERE professional_id = ? AND post_is_active = TRUE", new Object[]{id}, Integer.class);
+                        "WHERE professional_id = ?", new Object[]{id}, Integer.class);
     }
 
     @Override
@@ -185,10 +185,19 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
     @Override
-    public int findMaxPageContractsByUserId(long id) {
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(contract_id) FROM full_contract WHERE client_id = ? AND client_is_active = TRUE",
+    public int findMaxPageContractsByClientId(long id) {
+        Integer totalContractCount = jdbcTemplate
+                .queryForObject("SELECT COUNT(contract_id) FROM full_contract WHERE client_id = ?",
                 new Object[]{id}, Integer.class);
-        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+        return (int) Math.ceil((double) totalContractCount / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public int findMaxPageContractsByProId(long id) {
+        Integer totalContractCount = jdbcTemplate
+                .queryForObject("SELECT COUNT(contract_id) FROM full_contract WHERE professional_id = ?",
+                new Object[]{id}, Integer.class);
+        return (int) Math.ceil((double) totalContractCount / HirenetUtils.PAGE_SIZE);
     }
 
 }

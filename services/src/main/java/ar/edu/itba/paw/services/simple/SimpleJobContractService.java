@@ -108,8 +108,13 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public int findMaxPageContractsByUserId(long id) {
-        return jobContractDao.findMaxPageContractsByUserId(id);
+    public int findMaxPageContractsByClientId(long id) {
+        return jobContractDao.findMaxPageContractsByClientId(id);
+    }
+
+    @Override
+    public int findMaxPageContractsByProId(long id) {
+        return jobContractDao.findMaxPageContractsByProId(id);
     }
 
     @Override
