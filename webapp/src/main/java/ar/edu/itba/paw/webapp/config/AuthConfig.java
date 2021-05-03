@@ -65,7 +65,7 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
                 .accessDecisionManager(accessDecisionManager())
                 .antMatchers("/contract/**","/my-contracts", "/qualify-contract/**").hasRole("CLIENT")
                 .antMatchers("/login","/register").anonymous()
-                .antMatchers("/account/**", "/create-job-post").authenticated()
+                .antMatchers("/account/**", "/create-job-post", "/my-contracts/**").authenticated()
                 .antMatchers("/**").permitAll()
             .and().formLogin()
                 .usernameParameter("email")

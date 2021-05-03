@@ -44,7 +44,7 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageJobPosts() {
+    public int findMaxPageJobCards() {
         return jobCardService.findMaxPage();
     }
 
@@ -67,8 +67,13 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageContractsByUserId(long id) {
-        return jobContractService.findMaxPageContractsByUserId(id);
+    public int findMaxPageContractsByClientId(long id) {
+        return jobContractService.findMaxPageContractsByClientId(id);
+    }
+
+    @Override
+    public int findMaxPageContractsByProId(long id) {
+        return jobContractService.findMaxPageContractsByProId(id);
     }
 
     @Override

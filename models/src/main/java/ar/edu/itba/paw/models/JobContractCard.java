@@ -1,13 +1,9 @@
-package ar.edu.itba.paw.webapp.utils;
-
-import ar.edu.itba.paw.models.JobCard;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.Review;
+package ar.edu.itba.paw.models;
 
 public class JobContractCard {
-    private JobContract jobContract;
-    private JobCard jobCard;
-    private Review review;
+    private final JobContract jobContract;
+    private final JobCard jobCard;
+    private final Review review;
 
     public JobContractCard(JobContract jobContract, JobCard jobCard, Review review) {
         this.jobContract = jobContract;

@@ -11,10 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -25,10 +22,6 @@ public class JobCardDaoJDBC implements JobCardDao {
         Arrays.stream(objs)
                 .forEach(obj -> zones.add(JobPost.Zone.values()[(int) obj]));
         return zones;
-    }
-
-    private static Integer getLimit(int page) {
-        return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
     }
 
     private final static RowMapper<JobCard> JOB_CARD_ROW_MAPPER = (resultSet, i) -> new JobCard(
@@ -73,61 +66,70 @@ public class JobCardDaoJDBC implements JobCardDao {
 
     @Override
     public List<JobCard> findAll(int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        List<Object> parameters = new ArrayList<>();
+        if (page != HirenetUtils.ALL_PAGES) {
+            parameters.add(HirenetUtils.PAGE_SIZE);
+            parameters.add(HirenetUtils.PAGE_SIZE * page);
+        }
         return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE post_is_active = TRUE LIMIT ? OFFSET ?", new Object[]{limit, offset},
-                JOB_CARD_ROW_MAPPER);
+                "SELECT * FROM job_cards WHERE post_is_active = TRUE " +
+                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
+                parameters.toArray(), JOB_CARD_ROW_MAPPER);
     }
 
     @Override
     public List<JobCard> findByUserId(long id, int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
+        if (page != HirenetUtils.ALL_PAGES) {
+            parameters.add(HirenetUtils.PAGE_SIZE);
+            parameters.add(HirenetUtils.PAGE_SIZE * page);
+        }
         return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE user_id = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{id, limit, offset}, JOB_CARD_ROW_MAPPER);
+                "SELECT * FROM job_cards WHERE user_id = ? AND post_is_active = TRUE " +
+                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
+                parameters.toArray(), JOB_CARD_ROW_MAPPER);
     }
 
     @Override
-    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes,  int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        query = "%" + query + "%";
-        String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
-        return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?) " +
-                        "OR post_job_type in (" + types + ")) " +
-                        "AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) " +
-                        "AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{query, zone.ordinal(), limit, offset},
-                JOB_CARD_ROW_MAPPER
-        );
+    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, int page) {
+        List<Object> parameters = new ArrayList<>(Arrays.asList("%" + query + "%", zone.ordinal()));
+
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?)");
+
+        if (!similarTypes.isEmpty()) {
+            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
+            sqlQuery.append(" OR post_job_type in (")
+                    .append(types)
+                    .append(")");
+        }
+
+        sqlQuery.append(") AND ? IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_is_active = TRUE")
+                .append(" ORDER BY post_creation_date");
+
+        addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_CARD_ROW_MAPPER);
     }
 
     @Override
     public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
-        query = "%" + query + "%";
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
-        return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?) " +
-                        "OR post_job_type in (" + types + ")) " +
-                        "AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) " +
-                        "AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{query, zone.ordinal(), jobType.ordinal(), limit, offset},
-                JOB_CARD_ROW_MAPPER
-        );
-    }
+        List<Object> parameters = new ArrayList<>(Arrays.asList("%" + query + "%", zone.ordinal(), jobType.ordinal()));
 
-    @Override
-    public List<JobCard> findByUserIdWithReview(long id, int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE user_id = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{id, limit, offset}, JOB_CARD_ROW_MAPPER);
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?)");
+
+        if (!similarTypes.isEmpty()) {
+            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
+            sqlQuery.append(" OR post_job_type in (")
+                    .append(types)
+                    .append(")");
+        }
+
+        sqlQuery.append(") AND ? IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_job_type = ? AND post_is_active = TRUE")
+                .append(" ORDER BY post_creation_date");
+
+        addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_CARD_ROW_MAPPER);
     }
 
     @Override
@@ -138,11 +140,18 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
     @Override
+    public Optional<JobCard> findByPostIdWithInactive(long id) {
+        return jdbcTemplate.query(
+                "SELECT * FROM job_cards WHERE post_id = ?",
+                new Object[]{id}, JOB_CARD_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
     public List<JobCard> findRelatedJobCards(long professional_id, int page) {
         List<Object> parameters = new ArrayList<>(Arrays.asList(professional_id,
                 LocalDateTime.now().minusDays(30), professional_id));
         if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(getLimit(page));
+            parameters.add(HirenetUtils.PAGE_SIZE);
             parameters.add(HirenetUtils.PAGE_SIZE * page);
         }
         return jdbcTemplate.query(
@@ -184,19 +193,17 @@ public class JobCardDaoJDBC implements JobCardDao {
 
     @Override
     public int findMaxPageSearch(String query, JobPost.Zone zone) {
-        query = "%" + query + "%";
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM job_cards " +
                         "WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE",
-                new Object[]{query, zone.ordinal()}, Integer.class);
+                new Object[]{"%" + query + "%", zone.ordinal()}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
     public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType) {
-        query = "%" + query + "%";
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM job_cards " +
                         "WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE AND ? = post_job_type",
-                new Object[]{query, zone.ordinal(), jobType.ordinal()}, Integer.class);
+                new Object[]{"%" + query + "%", zone.ordinal(), jobType.ordinal()}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
@@ -219,7 +226,15 @@ public class JobCardDaoJDBC implements JobCardDao {
                         "    FROM job_post" +
                         "    WHERE ? = user_id) "
                 , new Object[]{professional_id, professional_id}, Integer.class);
-
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+    }
+
+    private void addPaging(StringBuilder sqlQuery, int page) {
+        if (page != HirenetUtils.ALL_PAGES) {
+            sqlQuery.append(" LIMIT ")
+                    .append(HirenetUtils.PAGE_SIZE)
+                    .append(" OFFSET ")
+                    .append(HirenetUtils.PAGE_SIZE * page);
+        }
     }
 }

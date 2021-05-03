@@ -32,10 +32,6 @@ public class JobPostDaoJDBC implements JobPostDao {
         return zones;
     }
 
-    private static Integer getLimit(int page) {
-        return page == HirenetUtils.ALL_PAGES ? null : HirenetUtils.PAGE_SIZE;
-    }
-
     private final static RowMapper<JobPost> JOB_POST_ROW_MAPPER = (resultSet, rowNum) -> new JobPost(
             resultSet.getLong("post_id"),
             new User(
@@ -52,7 +48,6 @@ public class JobPostDaoJDBC implements JobPostDao {
             resultSet.getString("post_available_hours"),
             JobPost.JobType.values()[resultSet.getInt("post_job_type")],
             auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
-//            new ArrayList<>(Arrays.asList(Zone.values()[0], Zone.values()[1])),
             resultSet.getDouble("rating"),
             resultSet.getBoolean("post_is_active"),
             resultSet.getTimestamp("post_creation_date").toLocalDateTime());
@@ -101,63 +96,55 @@ public class JobPostDaoJDBC implements JobPostDao {
 
     @Override
     public List<JobPost> findByUserId(long id, int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
+        if (page != HirenetUtils.ALL_PAGES) {
+            parameters.add(HirenetUtils.PAGE_SIZE);
+            parameters.add(HirenetUtils.PAGE_SIZE * page);
+        }
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE user_id = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{id, limit, offset}, JOB_POST_ROW_MAPPER);
+                "SELECT * FROM full_post WHERE user_id = ? AND post_is_active = TRUE " +
+                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
+                parameters.toArray(), JOB_POST_ROW_MAPPER);
     }
 
     @Override
     public List<JobPost> findByJobType(JobPost.JobType jobType, int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        List<Object> parameters = new ArrayList<>(Collections.singletonList(jobType.ordinal()));
+        if (page != HirenetUtils.ALL_PAGES) {
+            parameters.add(HirenetUtils.PAGE_SIZE);
+            parameters.add(HirenetUtils.PAGE_SIZE * page);
+        }
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{jobType.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
+                "SELECT * FROM full_post WHERE post_job_type = ? AND post_is_active = TRUE " +
+                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
+                parameters.toArray(), JOB_POST_ROW_MAPPER);
     }
 
     @Override
     public List<JobPost> findByZone(JobPost.Zone zone, int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        List<Object> parameters = new ArrayList<>(Collections.singletonList(zone.ordinal()));
+        if (page != HirenetUtils.ALL_PAGES) {
+            parameters.add(HirenetUtils.PAGE_SIZE);
+            parameters.add(HirenetUtils.PAGE_SIZE * page);
+        }
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE ? IN(UNNEST(zones)) AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{zone.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
+                "SELECT * FROM full_post WHERE ? IN(UNNEST(zones)) AND post_is_active = TRUE " +
+                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
+                parameters.toArray(), JOB_POST_ROW_MAPPER);
     }
 
 
     @Override
     public List<JobPost> findAll(int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        List<Object> parameters = new ArrayList<>();
+        if (page != HirenetUtils.ALL_PAGES) {
+            parameters.add(HirenetUtils.PAGE_SIZE);
+            parameters.add(HirenetUtils.PAGE_SIZE * page);
+        }
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE post_is_active = TRUE LIMIT ? OFFSET ?", new Object[]{limit, offset},
-                JOB_POST_ROW_MAPPER);
-    }
-
-    @Override
-    public List<JobPost> search(String query, Zone zone, int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        query = "%" + query + "%";
-        return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{query, zone.ordinal(), limit, offset},
-                JOB_POST_ROW_MAPPER
-        );
-    }
-
-    @Override
-    public List<JobPost> searchWithCategory(String query, Zone zone, JobPost.JobType jobType, int page) {
-        query = "%" + query + "%";
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
-        return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
-                new Object[]{query, zone.ordinal(), jobType.ordinal(), limit, offset},
-                JOB_POST_ROW_MAPPER
-        );
+                "SELECT * FROM full_post WHERE post_is_active = TRUE " +
+                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
+                parameters.toArray(), JOB_POST_ROW_MAPPER);
     }
 
     @Override

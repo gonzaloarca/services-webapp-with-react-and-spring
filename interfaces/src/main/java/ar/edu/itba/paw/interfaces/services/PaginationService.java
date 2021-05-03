@@ -8,7 +8,7 @@ public interface PaginationService {
 
     List<Integer> findCurrentPages(int page, int maxPage);
 
-    int findMaxPageJobPosts();
+    int findMaxPageJobCards();
 
     int findMaxPageReviewsByUserId(long id);
 
@@ -16,7 +16,9 @@ public interface PaginationService {
 
     int findMaxPageJobPostsSearch(String query, JobPost.Zone zone, JobPost.JobType jobType);
 
-    int findMaxPageContractsByUserId(long id);
+    int findMaxPageContractsByClientId(long id);
+
+    int findMaxPageContractsByProId(long id);
 
     int findMaxPageReviewsByPostId(long id);
 

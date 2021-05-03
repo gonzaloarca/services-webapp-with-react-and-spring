@@ -23,10 +23,6 @@ public interface JobPostDao {
 
     List<JobPost> findAll(int page);
 
-    List<JobPost> search(String query, JobPost.Zone zone, int page);
-
-    List<JobPost> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, int page);
-
     boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
 
     boolean deleteJobPost(long id);

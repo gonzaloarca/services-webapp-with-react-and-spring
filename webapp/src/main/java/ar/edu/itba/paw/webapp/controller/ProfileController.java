@@ -41,7 +41,7 @@ public class ProfileController {
 
     @ModelAttribute("avgRate")
     private Double getAvgRate(@PathVariable("id") final long id) {
-        return Math.floor(reviewService.findProfessionalAvgRate(id) *100)/100;
+        return Math.floor(reviewService.findProfessionalAvgRate(id) * 100) / 100;
     }
 
     @ModelAttribute("servicesSize")
@@ -66,15 +66,14 @@ public class ProfileController {
                                             @ModelAttribute("deleteJobPostForm") DeleteItemForm form) {
         if (page < 1)
             throw new IllegalArgumentException();
-        final ModelAndView mav = new ModelAndView("profile");
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
-        mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
-        mav.addObject("withServices", true);
         int maxPage = paginationService.findMaxPageJobPostsByUserId(id);
-        mav.addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
-        mav.addObject("maxPage", maxPage);
-        mav.addObject("jobCards", jobCardService.findByUserIdWithReview(id, page - 1));
-        return mav;
+        return new ModelAndView("profile")
+                .addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
+                .addObject("withServices", true)
+                .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
+                .addObject("maxPage", maxPage)
+                .addObject("jobCards", jobCardService.findByUserId(id, page - 1));
     }
 
     @RequestMapping(value = "/reviews")
@@ -83,14 +82,14 @@ public class ProfileController {
             throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("profile");
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
-        mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
-        mav.addObject("withServices", false);
-        mav.addObject("reviews", reviewService.findProfessionalReviews(id, page - 1));
         int maxPage = paginationService.findMaxPageReviewsByUserId(id);
-        mav.addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
-        mav.addObject("maxPage", maxPage);
-        mav.addObject("reviewsByPoints", reviewService.findProfessionalReviewsByPoints(id));
-        return mav;
+        return new ModelAndView("profile")
+                .addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
+                .addObject("withServices", false)
+                .addObject("reviews", reviewService.findProfessionalReviews(id, page - 1))
+                .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
+                .addObject("maxPage", maxPage)
+                .addObject("reviewsByPoints", reviewService.findProfessionalReviewsByPoints(id));
     }
 
     @RequestMapping(value = "/services/delete", method = RequestMethod.POST)
