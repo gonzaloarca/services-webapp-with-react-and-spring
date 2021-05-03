@@ -39,18 +39,15 @@ public class MainController {
     @Autowired
     private PaginationService paginationService;
 
-    @Autowired
-    private JobPostService jobPostService;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
         if (page < 1)
             throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("jobCards", jobCardService.findAll(page - 1));
-        int maxPage = jobPostService.findMaxPage();
+        int maxPage = jobCardService.findMaxPage();
         List<Integer> currentPages = paginationService.findCurrentPages(page, maxPage);
-        mav.addObject("maxPage", jobPostService.findMaxPage());
+        mav.addObject("maxPage", jobCardService.findMaxPage());
         mav.addObject("currentPages", currentPages);
         mav.addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
         return mav;

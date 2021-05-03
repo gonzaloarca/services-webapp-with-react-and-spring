@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -12,40 +14,33 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.util.Properties;
 import java.nio.charset.StandardCharsets;
 
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
         "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.auth"})
 @Configuration
-@EnableAsync
 @EnableTransactionManagement
+@EnableAsync
 public class WebConfig {
 
-    //FIXME poner la url correcta
-    @Bean(name = "webpageUrl")
-    public String webpageUrl() {
-        return "http://pawserver.it.itba.edu.ar/paw-2021a-03";
+    @Autowired
+    private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
+
+    @PostConstruct
+    public void init() {
+        requestMappingHandlerAdapter.setIgnoreDefaultModelOnRedirect(true);
     }
 
     @Bean
@@ -84,8 +79,8 @@ public class WebConfig {
     @Value("classpath:migration_login.sql")
     private Resource loginMigration;
 
-    @Value("classpath:migration_delete.sql")
-    private Resource deleteMigration;
+    @Value("classpath:job_card_view.sql")
+    private Resource jobCardView;
 
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
@@ -94,21 +89,14 @@ public class WebConfig {
         dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
+
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
         dbp.addScript(imageSchemaSql);
-        dbp.addScript(deleteMigration);
         dbp.addScript(loginMigration);
+        dbp.addScript(jobCardView);
         return dbp;
-    }
-
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        long MAX_FILE_SIZE = 2 * 1024 * 1024;       //2MB
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(MAX_FILE_SIZE);
-        return multipartResolver;
     }
 
     @Bean
@@ -121,61 +109,13 @@ public class WebConfig {
     }
 
     @Bean
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
-
-        mailSender.setUsername("paw.hirenet@gmail.com");
-        mailSender.setPassword("paw12345");
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
-
-        return mailSender;
-    }
-
-    @Value("classpath:contractEmail.html")
-    Resource contractTemplate;
-    @Value("classpath:contractEmailWithImage.html")
-    Resource contractImageTemplate;
-    @Value("classpath:tokenEmail.html")
-    Resource tokenEmailTemplate;
-
-    private SimpleMailMessage makeMessage(Resource template) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        String text="";
-        try{
-            Reader reader = new InputStreamReader(template.getInputStream());
-            text = FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-        message.setText(text);
-        return message;
-    }
-
-    @Bean(name = "contractEmail")
-    public SimpleMailMessage contractEmail() {
-        return makeMessage(contractTemplate);
-    }
-
-    @Bean(name = "contractEmailWithImage")
-    public SimpleMailMessage contractEmailWithImage() {
-        return makeMessage(contractImageTemplate);
-    }
-
-    @Bean(name = "tokenEmail")
-    public SimpleMailMessage tokenEmail() {
-        return makeMessage(tokenEmailTemplate);
+    public PlatformTransactionManager transactionManager(final DataSource ds) {
+        return new DataSourceTransactionManager(ds);
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(final DataSource ds){
-        return new DataSourceTransactionManager(ds);
+    public LevenshteinDistance levenshteinDistance() {
+        return new LevenshteinDistance();       //Se le puede indicar un threshold en el constructor
     }
 
 }

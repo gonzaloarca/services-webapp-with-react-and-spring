@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.ByteImage;
+import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import exceptions.UserAlreadyExistsException;
@@ -37,4 +38,9 @@ public interface UserService {
 
     void changeUserPassword(String email, String password);
 
+    //TODO: TEST
+    List<JobPost.JobType> findUserJobTypes(long id);
+
+    //TODO: TEST
+    int findUserRankingInJobType(long id, JobPost.JobType jobType);
 }

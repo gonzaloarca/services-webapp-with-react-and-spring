@@ -20,7 +20,7 @@ import java.util.*;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:review_test.sql")
+@Sql("classpath:db_data_test.sql")
 public class ReviewDaoJDBCTest {
     private static final User USER1 = new User(
             1,
@@ -36,6 +36,14 @@ public class ReviewDaoJDBCTest {
             "manurodriguez@gmail.com",
             "Manuel Rodriguez",
             "1109675432",
+            true,
+            true,
+            LocalDateTime.now());
+    private static final User USER3 = new User(
+            5,
+            "juliansicardi@gmail.com",
+            "Julian Sicardi",
+            "123123123",
             true,
             true,
             LocalDateTime.now());
@@ -55,16 +63,17 @@ public class ReviewDaoJDBCTest {
             JOB_PACKAGE,
             USER1,
             LocalDateTime.now(),
-            "Se me rompio una zapatilla"
+            "Se me rompio una zapatilla",
+            null
     );
-
+    private static final LocalDateTime date = LocalDateTime.now();
     private static final Review REVIEW_1 = new Review(
             4,
             "Muy bueno",
-            "Resolvio todo en cuestion de minutos", USER2, JOB_POST
+            "Resolvio todo en cuestion de minutos", USER2, JOB_POST, date
     );
     private static final Review REVIEW_2 = new Review(
-            2, "Medio pelo", "Resolvio todo de forma ideal", USER2, JOB_POST
+            2, "Medio pelo", "Resolvio todo de forma ideal", USER3, JOB_POST, date
     );
 
     @Autowired
@@ -77,7 +86,7 @@ public class ReviewDaoJDBCTest {
     @Test
     public void testCreate() {
         Review maybeReview = new Review(REVIEW_1.getRate(), REVIEW_1.getTitle(), REVIEW_1.getDescription(),
-                REVIEW_1.getClient(), REVIEW_1.getJobPost());
+                REVIEW_1.getClient(), REVIEW_1.getJobPost(), date);
 
         Assert.assertNotNull(maybeReview);
         Assert.assertEquals(REVIEW_1.getTitle(), maybeReview.getTitle());

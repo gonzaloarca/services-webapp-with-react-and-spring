@@ -52,19 +52,20 @@
             </a>
         </div>
 
-<%--        <div class="add-package-reminder">--%>
-<%--            <div class="d-flex justify-content-center align-items-center">--%>
-<%--                <div>--%>
-<%--                    <img src="<c:url value="/resources/images/package1.svg"/>"/>--%>
-<%--                </div>--%>
-<%--                <div class="ml-3 d-flex flex-column align-items-center">--%>
-<%--                    <p>¿Desea agregar más paquetes?</p>--%>
+        <div class="add-package-reminder">
+            <div class="d-flex justify-content-center align-items-center">
+                <div>
+<%--                    TODO: Agregar alt valido--%>
+                    <img src="<c:url value="/resources/images/package1.svg"/>"/>
+                </div>
+                <div class="ml-3 d-flex flex-column align-items-center">
+                    <p>¿Desea agregar más paquetes?</p>
 
-<%--                    <c:url value="/job/${postId}/packages" var="getPackagesPath"/>--%>
-<%--                    <a href="${getPackagesPath}" class="btn btn-primary text-uppercase">Agregar</a>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
+                    <c:url value="/job/${postId}/packages" var="getPackagesPath"/>
+                    <a href="${getPackagesPath}" class="btn btn-primary text-uppercase">Agregar</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

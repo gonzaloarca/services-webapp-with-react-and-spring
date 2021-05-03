@@ -210,7 +210,7 @@ h3 {
 }
 
 .custom-row {
-    display: flex;
+    display: flex !important;
     flex-wrap: wrap;
 }
 
@@ -218,10 +218,6 @@ h3 {
 .star {
     color: gold;
     font-size: 22px;
-}
-
-.custom-row .rating {
-    margin-left: 3vw;
 }
 
 .rating p {
@@ -253,6 +249,8 @@ h3 {
 
 /*Para precio, se utiliza en JobCard y en ServiceCard*/
 .price-container {
+    display: flex;
+    align-items: center;
     padding: 1vh 1vw;
     border-radius: 15px;
     background-color: #485696;
@@ -345,20 +343,24 @@ h3 {
 
 .service-img {
     border-radius: 15px;
-    height: 180px;
-    width: 180px;
+    height: 150px;
+    width: 150px;
     object-fit: cover;
+}
+
+.service-info {
+    min-width: 77%;
 }
 
 .service-title {
     color: #485696;
     line-height: 1.1em;
-    height: 2.2em;
+    width: 100%;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
 }
 
 .service-subtitle {
@@ -370,6 +372,51 @@ h3 {
     color: gray;
     margin-top: 10px;
     align-items: center;
+}
+
+.service-controls-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    padding: 5px;
+    margin-left: 12px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    height: max-content;
+}
+
+.service-controls-container i {
+    margin-left: 0;
+}
+
+.service-control-edit {
+    text-align: left;
+    width: 100%;
+    padding: 2px;
+}
+
+.service-control-edit:hover {
+    text-decoration: none;
+    color: #007bff;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
+}
+
+.service-control-delete {
+    color: red;
+    text-align: left;
+    padding: 2px;
+}
+
+.service-control-delete:hover {
+    text-decoration: none;
+    color: red;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
 }
 
 /*INPUTS DE FORMS*/
@@ -412,7 +459,6 @@ h3 {
 .hirenet-white-btn:hover {
     background-color: #e8e8e8;
 }
-
 
 /*REVIEW CARD*/
 .reviews-rate {
@@ -463,4 +509,10 @@ h3 {
 .profile-image-container {
     display: flex;
     justify-content: center;
+}
+
+.job-display-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }

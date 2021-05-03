@@ -71,7 +71,7 @@
                                 <spring:message code="search.noquery.results"/>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.results" arguments="${param.query}"/>
+                                <spring:message htmlEscape="true" code="search.results" arguments="${param.query}"/>
                             </c:otherwise>
                         </c:choose>
                         <spring:message code="${pickedZone.stringCode}"/>
@@ -112,7 +112,7 @@
                 <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
                 <c:set var="maxPage" value="${maxPage}" scope="request"/>
                 <c:set var="currentPages" value="${currentPages}" scope="request"/>
-                <c:set var="parameters" value="&zone=${param.zone}&query=${param.query}&${param.category}"
+                <c:set var="parameters" value="&zone=${param.zone}&query=${param.query}&category=${param.category}"
                        scope="request"/>
                 <%@include file="components/bottomPaginationBar.jsp" %>
             </c:when>

@@ -86,19 +86,6 @@
     background-color: #c8c8c8;
 }
 
-.custom-file-label {
-    margin-right: 30%;
-    background-color: #e8e8e8;
-    border: transparent;
-}
-
-/*TODO: Internacionalizar el contenido*/
-.custom-file-label::after {
-    background-color: #ffc800;
-    content: "Examinar" !important;
-}
-
-
 .location-list {
     overflow: auto;
     height: 200px;

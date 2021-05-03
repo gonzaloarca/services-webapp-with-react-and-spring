@@ -1,6 +1,11 @@
+.content-container-transparent {
+    width: 80vw;
+    max-width: 984px;
+}
 
 .card-body {
-    padding: 0;
+    padding: 20px !important;
+
 }
 
 .side {
@@ -33,7 +38,7 @@
 
 .card-title p {
     margin-left: 20px;
-    font-size: 24px;
+    font-size: 1.2rem;
     font-weight: bold;
     word-break: break-word;
     margin-bottom: 0;
@@ -41,38 +46,40 @@
 
 .card-title i {
     margin-top: 3px;
-    font-size: 32px;
+    font-size: 1.6rem;
     line-height: 1;
     word-break: break-word;
 }
 
 .summary {
-    display: inline-flex;
+    display: flex;
     border-radius: 8px;
     width: 100%;
+    justify-content: center;
 }
 
 .summary-item {
     background-color: white;
     border-radius: 15px;
     padding: 6px;
-    display: inline-flex;
+    display: flex;
     margin: 8px 15px;
     border: 5px solid #fab739;
-    justify-content: center;
+    justify-content: space-evenly;
 }
 
 .summary-item img {
+    margin: 0 5px;
     min-width: 50px;
     min-height: 50px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
     border-radius: 50%;
-    padding: 2px;
-    margin: 15px;
 }
 
 .summary-item p {
-    margin: 0 14px;
+    margin: 0 8px;
     text-align: left;
     word-wrap: break-word;
     font-weight: bold;
@@ -81,7 +88,6 @@
 .summary-item i {
     font-size: 34px;
     align-self: center;
-    margin-left: 5px;
 }
 
 .summary a:hover {
@@ -90,19 +96,18 @@
 
 /* profile item */
 .profile-item, .profile-item:link {
+    width: 200px;
     color: black;
-    flex: 1;
 }
 
 .profile-item:hover {
     color: black;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-    flex: 1;
 }
 
 .profile-item p {
-    width: 100%;
-    font-size: 22px;
+    width: 60%;
+    font-size: 1.1rem;
     word-break: break-word;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -113,14 +118,14 @@
 
 /* rate item */
 .rate-item {
+    width: 200px;
     display: flex;
     flex-direction: column;
-    flex: 1;
 }
 
 .rate-item p {
     max-width: 100%;
-    font-size: 21px;
+    font-size: 1rem;
 }
 
 .rate-item .custom-row {
@@ -162,7 +167,7 @@
 /* contracts item*/
 
 .contracts-item {
-    flex: 1;
+    width: 200px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -171,7 +176,7 @@
 }
 
 .contracts-item p {
-    font-size: 21px;
+    font-size: 1rem;
 }
 
 .contracts-item .profile-completed-works {
@@ -207,7 +212,8 @@
 }
 
 .available-hours {
-    margin: 4vh 3vw;
+    margin: 20px;
+    height: 60%;
     background-color: #EAEAEA;
     padding: 12px;
     border-radius: 8px;
@@ -219,7 +225,7 @@
 .available-hours p {
     justify-content: center;
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     word-break: break-word;
 }
 
@@ -231,7 +237,7 @@
 .zones p {
     background-color: #7e7e7e;
     color: white;
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 10px;
     margin: 0 10px 20px;
     text-align: center;
@@ -241,6 +247,7 @@
 
 .package-info {
     display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -262,9 +269,9 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
 }
 
 .package-title {
-    font-size: 28px;
+    font-size: 1.1rem;
     font-weight: bold;
-    width: 50%;
+    min-width: 300px;
     margin-left: 20px;
     margin-bottom: 0;
 }
@@ -318,20 +325,57 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
 }
 
 .edit-button, .edit-button:link {
+    display: inline-block;
+    margin: 0;
     justify-content: flex-end;
-    color: #485696
+    color: #485696;
+    padding: 5px 10px;
 }
 
 .edit-button:hover {
-    text-decoration: none
+    text-decoration: none;
+    background-color: #d8d8d8;
+    border-radius: 10px;
+    padding: 5px 10px;
+    transition: background-color 300ms;
 }
 
 .edit-button p {
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .edit-button i {
-    font-size: 26px;
+    font-size: 1.5rem;
+    line-height: 22px;
+    margin-right: 5px;
+}
+
+.owner-options-vl{
+    border-color: #485696 !important;
+}
+
+.delete-button, .delete-button:link {
+    display: inline-block;
+    margin: 0;
+    justify-content: flex-end;
+    color: red !important;
+    padding: 5px 10px;
+}
+
+.delete-button:hover {
+    text-decoration: none;
+    background-color: #d8d8d8;
+    border-radius: 10px;
+    padding: 5px 10px;
+    transition: background-color 300ms;
+}
+
+.delete-button p {
+    font-size: 1rem;
+}
+
+.delete-button i {
+    font-size: 1.5rem;
     line-height: 22px;
     margin-right: 5px;
 }

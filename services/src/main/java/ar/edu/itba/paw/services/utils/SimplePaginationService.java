@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services.utils;
 
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.interfaces.services.PaginationService;
-import ar.edu.itba.paw.interfaces.services.ReviewService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +13,13 @@ import java.util.List;
 public class SimplePaginationService implements PaginationService {
 
     @Autowired
-    private JobPostService jobPostService;
-
-    @Autowired
     private ReviewService reviewService;
 
     @Autowired
     private JobContractService jobContractService;
+
+    @Autowired
+    private JobCardService jobCardService;
 
     @Override
     public List<Integer> findCurrentPages(int page, int maxPage) {
@@ -48,7 +45,7 @@ public class SimplePaginationService implements PaginationService {
 
     @Override
     public int findMaxPageJobPosts() {
-        return jobPostService.findMaxPage();
+        return jobCardService.findMaxPage();
     }
 
     @Override
@@ -58,12 +55,15 @@ public class SimplePaginationService implements PaginationService {
 
     @Override
     public int findMaxPageJobPostsByUserId(long id) {
-        return jobPostService.findMaxPageByUserId(id);
+        return jobCardService.findMaxPageByUserId(id);
     }
 
     @Override
     public int findMaxPageJobPostsSearch(String query, JobPost.Zone zone, JobPost.JobType jobType) {
-        return jobPostService.findMaxPageSearch(query, zone, jobType);
+        if (jobType == null)
+            return jobCardService.findMaxPageSearch(query, zone);
+
+        return jobCardService.findMaxPageSearchWithCategory(query, zone, jobType);
     }
 
     @Override
@@ -74,5 +74,10 @@ public class SimplePaginationService implements PaginationService {
     @Override
     public int findMaxPageReviewsByPostId(long id) {
         return reviewService.findMaxPageByPostId(id);
+    }
+
+    @Override
+    public int findMaxPageRelatedJobCards(long professional_id) {
+        return jobCardService.findMaxPageRelatedJobCards(professional_id);
     }
 }

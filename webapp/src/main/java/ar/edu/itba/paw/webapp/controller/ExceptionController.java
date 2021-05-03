@@ -24,6 +24,7 @@ public class ExceptionController {
     @Autowired
     private UserService userService;
 
+    //TODO descomentar esto
 //    @ResponseStatus(code = HttpStatus.NOT_FOUND)
 //    @org.springframework.web.bind.annotation.ExceptionHandler(
 //            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})

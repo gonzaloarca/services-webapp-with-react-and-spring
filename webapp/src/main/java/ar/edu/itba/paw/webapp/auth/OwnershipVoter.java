@@ -29,6 +29,9 @@ public class OwnershipVoter implements AccessDecisionVoter {
     @Autowired
     private JobPackageService jobPackageService;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public boolean supports(ConfigAttribute configAttribute) {
         return true;
@@ -73,16 +76,13 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         isOwner= false;
                     }
                     if(paths.length > 2){
-                        if(paths[2].equals("edit")){
+
+                        if(paths[2].equals("edit") || paths[2].equals("packages") || paths[2].equals("delete") ){
                             if (isOwner)
                                 return ACCESS_GRANTED;
                             else
                                 return ACCESS_DENIED;
-                        }else if(paths[2].equals("packages"))
-                            if(isOwner)
-                                return ACCESS_GRANTED;
-                            else
-                                return ACCESS_DENIED;
+                        }
                     }
                     break;
                 case "create-job-post":
@@ -133,6 +133,26 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         }else{
                             return ACCESS_GRANTED;
                         }
+                    }
+                    break;
+                case "profile":
+                    if(paths.length <= 3)
+                        return ACCESS_ABSTAIN;
+                    try {
+                        id = Integer.parseInt(paths[1]);
+                    }catch (NumberFormatException e){
+                        return ACCESS_ABSTAIN;
+                    }
+                    try{
+                        isOwner = userService.findById(id).getEmail().equals(authentication.getName());
+                    }catch (NoSuchElementException e){
+                        isOwner= false;
+                    }
+                    if(paths[2].equals("services") && paths[3].equals("delete")){
+                        if(isOwner)
+                            return ACCESS_GRANTED;
+                        else
+                            return ACCESS_DENIED;
                     }
                     break;
             }

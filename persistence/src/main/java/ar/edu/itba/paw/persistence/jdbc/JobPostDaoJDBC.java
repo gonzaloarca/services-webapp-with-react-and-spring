@@ -44,7 +44,7 @@ public class JobPostDaoJDBC implements JobPostDao {
                     resultSet.getString("user_name"),
                     resultSet.getString("user_phone"),
                     resultSet.getBoolean("user_is_active"),
-                    true, //TODO: implementar esto
+                    resultSet.getBoolean("user_is_verified"),
                     new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
                             resultSet.getString("user_image_type")),
                     resultSet.getTimestamp("user_creation_date").toLocalDateTime()),
@@ -122,7 +122,7 @@ public class JobPostDaoJDBC implements JobPostDao {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE ? = ANY(zones) AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM full_post WHERE ? IN(UNNEST(zones)) AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{zone.ordinal(), limit, offset}, JOB_POST_ROW_MAPPER);
     }
 
@@ -136,14 +136,13 @@ public class JobPostDaoJDBC implements JobPostDao {
                 JOB_POST_ROW_MAPPER);
     }
 
-
     @Override
     public List<JobPost> search(String query, Zone zone, int page) {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         query = "%" + query + "%";
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{query, zone.ordinal(), limit, offset},
                 JOB_POST_ROW_MAPPER
         );
@@ -155,7 +154,7 @@ public class JobPostDaoJDBC implements JobPostDao {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM full_post WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(UNNEST(zones)) AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{query, zone.ordinal(), jobType.ordinal(), limit, offset},
                 JOB_POST_ROW_MAPPER
         );
@@ -169,30 +168,8 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
-    public int findAllMaxPage() {
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post WHERE post_is_active = TRUE", Integer.class);
-        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
-    }
-
-    @Override
-    public int findMaxPageByUserId(long id) {
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post WHERE user_id = ? AND post_is_active = TRUE",
-                new Object[]{id}, Integer.class);
-        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
-    }
-
-    @Override
-    public int findMaxPageSearch(String query, Zone zone, JobPost.JobType jobType) {
-        query = "%" + query + "%";
-        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_post " +
-                        "WHERE UPPER(post_title) LIKE UPPER(?) AND ? = ANY(zones) AND post_is_active = TRUE",
-                new Object[]{query, zone.ordinal()}, Integer.class);
-        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
-    }
-
-    @Override
     public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones) {
-        int rowsAffected = jdbcTemplate.update("UPDATE job_post SET post_title = ? , post_available_hours = ? , post_job_type = ? WHERE post_id = ?", title,availableHours,jobType.ordinal(),id);
+        int rowsAffected = jdbcTemplate.update("UPDATE job_post SET post_title = ? , post_available_hours = ? , post_job_type = ? WHERE post_id = ?", title, availableHours, jobType.ordinal(), id);
         jdbcTemplate.update("DELETE FROM post_zone WHERE post_id = ?", id);
         for (Zone zone : zones) {
             jdbcInsertZone.execute(new HashMap<String, Integer>() {{
@@ -204,8 +181,8 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
-    public boolean deleteJobPost(long id){
-        return jdbcTemplate.update("UPDATE job_post SET post_is_active = FALSE WHERE post_id = ?",id) > 0;
+    public boolean deleteJobPost(long id) {
+        return jdbcTemplate.update("UPDATE job_post SET post_is_active = FALSE WHERE post_id = ?", id) > 0;
     }
 
 }

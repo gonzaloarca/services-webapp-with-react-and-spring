@@ -27,7 +27,7 @@ import java.util.Optional;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:job_package_test.sql")
+@Sql("classpath:db_data_test.sql")
 public class JobPackageDaoJDBCTest {
 
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(

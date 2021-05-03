@@ -4,13 +4,12 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -61,7 +60,10 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/services")
-    public ModelAndView profileWithServices(@PathVariable("id") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page, @ModelAttribute("user") User user) {
+    public ModelAndView profileWithServices(@PathVariable("id") final long id,
+                                            @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
+                                            @ModelAttribute("user") User user,
+                                            @ModelAttribute("deleteJobPostForm") DeleteItemForm form) {
         if (page < 1)
             throw new IllegalArgumentException();
         final ModelAndView mav = new ModelAndView("profile");
@@ -90,4 +92,15 @@ public class ProfileController {
         mav.addObject("reviewsByPoints", reviewService.findProfessionalReviewsByPoints(id));
         return mav;
     }
+
+    @RequestMapping(value = "/services/delete", method = RequestMethod.POST)
+    public ModelAndView deleteJobPostFromProfile(@ModelAttribute DeleteItemForm form, @PathVariable final long id) {
+        // FIXME: Error al eliminar
+        if (!jobPostService.deleteJobPost(form.getId())) {
+            throw new RuntimeException();
+        }
+
+        return new ModelAndView("redirect:/profile/" + id + "/services");
+    }
+
 }

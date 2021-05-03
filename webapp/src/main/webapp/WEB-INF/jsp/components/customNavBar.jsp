@@ -35,13 +35,19 @@
                 </a>
             </li>
 
-            <div class="vl"></div>
-
             <sec:authorize access="isAuthenticated()">
                 <li class="nav-item ${requestScope.path == "/my-contracts" ? 'active': ''}">
                     <a class="nav-link"
                        href="${pageContext.request.contextPath}/my-contracts">
                         <spring:message code="navigation.mycontracts"/>
+                    </a>
+                </li>
+            </sec:authorize>
+            <sec:authorize access="hasRole('ROLE_PROFESSIONAL')">
+                <li class="nav-item ${requestScope.path == "/analytics" ? 'active': ''}">
+                    <a class="nav-link"
+                       href="${pageContext.request.contextPath}/analytics">
+                        <spring:message code="navigation.analytics"/>
                     </a>
                 </li>
             </sec:authorize>
@@ -52,13 +58,18 @@
                 <form:form class="form-inline ml-4 my-auto flex-grow-1 justify-content-between" id="searchForm"
                            action="${pageContext.request.contextPath}/search"
                            method="get" modelAttribute="searchForm" acceptCharset="utf-8">
+
                     <spring:message code="navigation.search" var="queryPlaceholder"/>
-                    <form:input class="form-control mr-sm-2" type="search" path="query"
-                                placeholder="${queryPlaceholder}" aria-label="Search"/>
-                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit"
-                            onclick="return submitSearchPost();">
-                        <spring:message code="navigation.search"/>
-                    </button>
+
+                    <div style="position: relative; width: 45%">
+                        <form:input class="form-control mr-sm-2 w-100" type="search" path="query"
+                                    placeholder="${queryPlaceholder}" aria-label="Search" id="search-input"/>
+                        <button class="" type="submit"
+                                onclick="return submitSearchPost();" id="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
                     <a type="button" class="btn btn-link navbar-link-button ml-auto" data-toggle="modal"
                        data-target="#zonesModal">
                         <i class="fas fa-map-marker-alt fa-lg mr-2"></i>
@@ -79,30 +90,30 @@
                                         <img class="navbar-modal-icon"
                                              src="${pageContext.request.contextPath}/resources/images/location2.svg"
                                              alt="<spring:message code="navigation.modal.locationicon"/>"/>
-                                        <h4 class="my-3">
+                                        <h5 class="my-4 font-weight-bold">
                                             <spring:message code="navigation.modal.title"/>
-                                        </h4>
+                                        </h5>
                                         <div class="navbar-has-search">
                                             <span class="fa fa-search navbar-form-control-feedback"></span>
-                                            <input id="locationFilter" type="text" class="navbar-form-control"
+                                            <input id="locationFilter" type="text" class="form-control navbar-form-control"
                                                    placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                                         </div>
-                                        <div class="navbar-location-list-group">
+                                        <div class="list-group navbar-location-list-group">
                                             <c:forEach items="${requestScope.zoneValues}" var="zone">
-                                                <label class="navbar-location-list-group-item navbar-modal-zone">
+                                                <label class="list-group-item navbar-location-list-group-item navbar-modal-zone">
                                                     <form:radiobutton path="zone"
                                                                       value="${zone.value}"/>
                                                         <%--                                                TODO: CAMBIAR A CHECKBUTTON?--%>
-                                                    <span class="location-name"><spring:message
+                                                    <span class="location-name ml-2"><spring:message
                                                             code="${zone.stringCode}"/></span>
                                                 </label>
                                             </c:forEach>
                                         </div>
                                     </div>
                                     <div class="d-flex">
-                                        <button type="button" class="btn btn-danger ml-auto mr-4" data-dismiss="modal">
+                                        <button type="button" class="btn btn-danger ml-auto mr-2 text-uppercase" data-dismiss="modal">
                                             <spring:message code="navigation.modal.close"/></button>
-                                        <button class="btn btn-success" id="pickLocationButton" type="submit">
+                                        <button class="btn btn-success text-uppercase" id="pickLocationButton" type="submit">
                                             <spring:message code="navigation.modal.confirm"/></button>
                                     </div>
                                 </div>
@@ -135,11 +146,11 @@
                         <c:when test="${currentUser.image.string == null}">
                             <img class="navbar-user-img"
                                  src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
-                                 alt="avatar">
+                                 alt="avatar" id="navbar-avatar">
                         </c:when>
                         <c:otherwise>
                             <img class="navbar-user-img"
-                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar">
+                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar" id="navbar-avatar">
                         </c:otherwise>
                     </c:choose>
                 </button>
@@ -175,8 +186,8 @@
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/account/details">
                         <i class="fas fa-user-cog navbar-dropdown-icon"></i><spring:message
                             code="navigation.dropdowon.myaccount"/></a>
-                    <a class="dropdown-item mt-3" href="${pageContext.request.contextPath}/logout">
-                        <div class="ml-3"><spring:message
+                    <a class="dropdown-item mt-1" href="${pageContext.request.contextPath}/logout">
+                        <div class="ml-2"><spring:message
                                 code="navigation.dropdowon.logout"/></div>
                     </a>
                 </div>
@@ -220,6 +231,10 @@
         }
     })
 
+    $('.navbar-location-list-group-item').on('click', function () {
+        $('#pickLocationButton').attr("disabled", false);
+    })
+
     // Para levantar la ubicacion en las cookies, en caso de existir
     if ($("#searchForm")[0]) {
         var auxZoneString = sessionStorage.getItem("pickedZoneString");
@@ -227,9 +242,10 @@
             $('#zoneString')[0].innerText = auxZoneString;
             $('#zone' + (parseInt(sessionStorage.getItem('pickedZoneId')) + 1)).prop("checked", true);
             zonePicked = true;
-        } else
+        } else {
             $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
-
+            $('#pickLocationButton').attr("disabled", true);
+        }
         // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
         var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
         if (auxCategoryId) {
@@ -239,10 +255,10 @@
 
     // $('#zoneError')[0].display = none;
     function submitSearchPost() {
-        if(!zonePicked) {
+        if (!zonePicked) {
             $('#zonesModal').modal('show');
             return false;
-        }else return true;
+        } else return true;
     }
 </script>
 </body>

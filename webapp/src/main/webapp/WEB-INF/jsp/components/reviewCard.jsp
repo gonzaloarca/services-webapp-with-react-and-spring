@@ -13,8 +13,10 @@
          alt="<spring:message code="profile.image"/>">
     <div class="review-username">
         <h4><c:out value="${requestScope.data.client.username}"/></h4>
-        <%--                                        TODO: IMPLEMENTAR FECHA EN REVIEWS--%>
-        <%--                                        <h5>15/3/21</h5>--%>
+        <h5>
+            <spring:message htmlEscape="true" code="date.format.YYYY_MM_DD" arguments="${requestScope.data.creationDate.year},
+                ${requestScope.data.creationDate.monthValue},${requestScope.data.creationDate.dayOfMonth}"/>
+        </h5>
     </div>
     <jsp:include page="components/rateStars.jsp">
         <jsp:param name="rate" value="${requestScope.data.rate}"/>
@@ -23,11 +25,11 @@
 <h4 class="mt-2 review-title"><c:out value="${requestScope.data.title}"/></h4>
 <h5><c:out value="${requestScope.data.description}"/></h5>
 <c:if test="${requestScope.withLink}">
-<a href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
-    <h5 class="review-link mt-2">
-        <i class="bi bi-box-arrow-up-right"></i>
-        <spring:message code="profile.review.link"
-                        arguments="${requestScope.data.jobPost.title}"/>
-    </h5>
-</a>
+    <a href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
+        <h5 class="review-link mt-2">
+            <i class="bi bi-box-arrow-up-right"></i>
+            <spring:message htmlEscape="true" code="profile.review.link"
+                            arguments="${requestScope.data.jobPost.title}"/>
+        </h5>
+    </a>
 </c:if>

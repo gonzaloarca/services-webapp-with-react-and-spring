@@ -1,5 +1,6 @@
 package jdbc;
 
+import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jdbc.UserDaoJDBC;
 import config.TestConfig;
@@ -16,22 +17,29 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:user_test.sql")
+@Sql("classpath:db_data_test.sql")
 public class UserDaoJDBCTest {
 
-    private static final User USER = new User(
+    private static final User USER1 = new User(
             1,
-            "franquesada@mail.com",
+            "franquesada@gmail.com",
             "Francisco Quesada",
-            "11-3456-3232",
+            "1147895678",
             true,
             true,
             LocalDateTime.now());
+
+    private static final List<JobPost.JobType> USER1_JOBTYPES = Arrays.asList(JobPost.JobType.values()[1], JobPost.JobType.values()[3]);
+
+    private static int USER1_RANKING_IN_JOBTYPE1 = 2;
 
     @Autowired
     UserDaoJDBC userDaoJDBC;
@@ -50,7 +58,7 @@ public class UserDaoJDBCTest {
     public void testRegister() {
 
         User userTest = new User(
-                3,
+                6,
                 "manurodriguez@mail.com",
                 "Manuel Rodriguez",
                 "11-4536-5656",
@@ -69,17 +77,31 @@ public class UserDaoJDBCTest {
 
     @Test
     public void testFindById() {
-        Optional<User> user = userDaoJDBC.findById(USER.getId());
+        Optional<User> user = userDaoJDBC.findById(USER1.getId());
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER, user.get());
+        Assert.assertEquals(USER1, user.get());
     }
 
     @Test
     public void testFindByEmail() {
-        Optional<User> user = userDaoJDBC.findByEmail(USER.getEmail());
+        Optional<User> user = userDaoJDBC.findByEmail(USER1.getEmail());
 
         Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(USER, user.get());
+        Assert.assertEquals(USER1, user.get());
     }
 
+    @Test
+    public void testFindUserJobTypes() {
+        List<JobPost.JobType> maybeJobTypes = userDaoJDBC.findUserJobTypes(USER1.getId());
+
+        Assert.assertEquals(USER1_JOBTYPES.size(), maybeJobTypes.size());
+        USER1_JOBTYPES.forEach((jobType -> Assert.assertTrue(maybeJobTypes.contains(jobType))));
+    }
+
+    @Test
+    public void testFindUserRankingInJobType() {
+        int maybeRank = userDaoJDBC.findUserRankingInJobType(USER1.getId(), JobPost.JobType.values()[1]);
+
+        Assert.assertEquals(USER1_RANKING_IN_JOBTYPE1, maybeRank);
+    }
 }

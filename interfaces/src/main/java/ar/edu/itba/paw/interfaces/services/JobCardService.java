@@ -15,8 +15,6 @@ public interface JobCardService {
 
     List<JobCard> findByUserId(long id, int page);
 
-    List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType);
-
     List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page);
 
     List<JobCard> findByUserIdWithReview(long id);
@@ -25,6 +23,17 @@ public interface JobCardService {
 
     JobCard findByPostId(long id);
 
+    List<JobCard> findRelatedJobCards(long professional_id, int page);
+
     int findSizeByUserId(long id);
 
+    int findMaxPage();
+
+    int findMaxPageByUserId(long id);
+
+    int findMaxPageSearch(String query, JobPost.Zone zone);
+
+    int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType);
+
+    int findMaxPageRelatedJobCards(long professional_id);
 }

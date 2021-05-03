@@ -3,19 +3,24 @@ package ar.edu.itba.paw.services.utils;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.models.*;
+import exceptions.MailCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class MailingServiceSpring implements MailingService {
@@ -27,16 +32,10 @@ public class MailingServiceSpring implements MailingService {
     private JavaMailSender emailSender;
 
     @Autowired
-    @Qualifier("contractEmail")
-    private SimpleMailMessage contractEmail;
+    private MessageSource messageSource;
 
     @Autowired
-    @Qualifier("contractEmailWithImage")
-    private SimpleMailMessage contractEmailWithImage;
-
-    @Autowired
-    @Qualifier("tokenEmail")
-    private SimpleMailMessage tokenEmail;
+    private SpringTemplateEngine thymeleafTemplateEngine;
 
     @Autowired
     @Qualifier("webpageUrl")
@@ -52,90 +51,74 @@ public class MailingServiceSpring implements MailingService {
     }
 
     @Override
-    public void sendHtmlMessage(String to, String subject, String html) {
-        sendHtmlMessageWithAttachment(to, subject, html, null);
-    }
-
-    @Override
     public void sendHtmlMessageWithAttachment(String to, String subject, String html, DataSource attachment) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
 
+        MimeMessageHelper helper;
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,"utf-8");
+            helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
             helper.setText(html, true);
             helper.setTo(to);
             helper.setSubject(subject);
             if (attachment != null)
                 helper.addAttachment(IMAGE_TYPE_TO_NAME.get(attachment.getContentType()), attachment);
-        }catch (MessagingException e){
-            //TODO: PONER EXCEPCION ADECUADA
-            throw new RuntimeException();
+        } catch (MessagingException e) {
+            throw new MailCreationException();
         }
         emailSender.send(mimeMessage);
+    }
+
+    @Override
+    public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,
+                                                  String templateName, DataSource attachment) {
+        Context thymeleafContext = new Context();
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = thymeleafTemplateEngine.process(templateName, thymeleafContext);
+
+        sendHtmlMessageWithAttachment(to, subject, htmlBody, attachment);
     }
 
     @Async
     @Override
     public void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost) {
-        //TODO: i18n del email
-        String  clientName = jobContract.getClient().getUsername(),
-                subject = clientName + " quiere contratar tu servicio",
-                text;
-        SimpleMailMessage message;
         DataSource attachment = null;
         ByteImage image = jobContract.getImage();
 
-        if(imageService.isValidImage(image)) {
-            message = contractEmailWithImage;
+        if (imageService.isValidImage(image)) {
             attachment = new ByteArrayDataSource(image.getData(), image.getType());
-        } else {
-            message = contractEmail;
         }
 
-        text = String.format(message.getText(), jobPost.getUser().getUsername(),
-                jobPack.getTitle(), jobPack.getPrice(), jobPost.getTitle(),
-                clientName, jobContract.getClient().getEmail(), jobContract.getClient().getPhone(),
-                jobContract.getDescription());
+        Map<String, Object> data = new HashMap<>();
+        data.put("professional", jobPost.getUser().getUsername());
+        data.put("jobPackageTitle", jobPack.getTitle());
+        data.put("jobPackagePrice", String.valueOf(Math.round(jobPack.getPrice() * 100 / 100)));
+        data.put("jobPackageRateType", jobPack.getRateType().getStringCode());
+        data.put("jobPostTitle", jobPost.getTitle());
+        data.put("client", jobContract.getClient().getUsername());
+        data.put("clientEmail", jobContract.getClient().getEmail());
+        data.put("clientPhone", jobContract.getClient().getPhone());
+        data.put("contractDescription", jobContract.getDescription());
+        data.put("hasAttachment", attachment != null);
 
-        sendHtmlMessageWithAttachment(jobPost.getUser().getEmail(), subject, text, attachment);
+        sendMessageUsingThymeleafTemplate(jobPost.getUser().getEmail(),
+                messageSource.getMessage("mail.contract.subject",
+                        new Object[]{jobContract.getClient().getUsername()}, Locale.getDefault()),
+                data, "contract", attachment);
     }
 
     @Async
     @Override
     public void sendVerificationTokenEmail(User user, VerificationToken token) {
-        //TODO i18n del email
-        //TODO direccion de la pagina posta
-        String url = webpageUrl + "/token?user_id=" + user.getId() + "&token=" + token.getToken(),
-                subject = "Bienvenido a Hirenet";
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", user.getUsername());
+        data.put("email", user.getEmail());
+        data.put("phone", user.getPhone());
+        data.put("url", webpageUrl + "/token?user_id=" + user.getId() + "&token=" + token.getToken());
 
-        String text = String.format(tokenEmail.getText(), user.getUsername(), user.getUsername(),
-                user.getEmail(), user.getPhone(), url);
-
-        sendHtmlMessage(user.getEmail(), subject, text);
+        sendMessageUsingThymeleafTemplate(user.getEmail(),
+                messageSource.getMessage("mail.token.subject",
+                        new Object[]{user.getUsername()}, Locale.getDefault()),
+                data, "token", null);
     }
-
-    /*
-    @Override
-    public void sendSimpleMessage(String to, String subject, String text) {
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
-        emailSender.send(message);
-    }
-
-    @Override
-    public void sendTemplatedHTMLMessage(String to, String subject, Object... templateArgs){
-        String text = String.format(template.getText(), templateArgs);
-        sendHtmlMessage(to,subject,text);
-    }
-
-    @Override
-    public void sendTemplatedMessage(String to, String subject, Object... templateArgs){
-        String text = String.format(template.getText(), templateArgs);
-        sendSimpleMessage(to,subject,text);
-    }
-    */
 
 }

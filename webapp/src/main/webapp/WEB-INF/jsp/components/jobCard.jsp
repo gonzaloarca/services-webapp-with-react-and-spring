@@ -4,11 +4,10 @@
 <html>
 <body>
 <div class="card job-card">
-    <%-- TODO: Poner alt correcto e imagen de usuario--%>
     <spring:message code="${requestScope.data.jobPost.jobType.stringCode}" var="jobTypeName"/>
 
     <c:choose>
-        <c:when test="${requestScope.data.postImage == null}">
+        <c:when test="${requestScope.data.postImage.image.string == null}">
             <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
         </c:when>
         <c:otherwise>
@@ -27,7 +26,7 @@
         <div>
             <div class="price-container mt-4 mx-4">
                 <p class="price">
-                    <spring:message code="${requestScope.data.rateType.stringCode}"
+                    <spring:message htmlEscape="true" code="${requestScope.data.rateType.stringCode}"
                                     arguments="${requestScope.data.price}"/>
                 </p>
             </div>

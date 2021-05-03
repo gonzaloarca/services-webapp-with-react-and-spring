@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS user_role
     PRIMARY KEY (user_id, role_id)
 );
 
-DROP VIEW IF EXISTS full_post;
+DROP VIEW IF EXISTS full_post CASCADE;
 CREATE OR REPLACE VIEW full_post AS
 SELECT job_post.post_id,
        post_title,
@@ -18,6 +18,7 @@ SELECT job_post.post_id,
        user_name,
        user_phone,
        user_is_active,
+       user_is_verified,
        user_image,
        users.image_type 					as user_image_type,
        coalesce(avg(review_rate), 0)        AS rating,
@@ -33,9 +34,10 @@ FROM job_post
          LEFT JOIN contract ON contract.package_id = job_package.package_id
          LEFT JOIN review ON review.contract_id = contract.contract_id
 GROUP BY job_post.post_id, post_title, post_available_hours, post_job_type, post_is_active, user_id, user_email,
-         user_name, user_phone, user_is_active, user_image, users.image_type,post_creation_date,user_creation_date;
+         user_name, user_phone, user_is_active, user_is_verified, user_image, users.image_type,post_creation_date,
+         user_creation_date;
 
-DROP VIEW IF EXISTS full_contract;
+DROP VIEW IF EXISTS full_contract CASCADE;
 CREATE OR REPLACE VIEW full_contract AS
 SELECT *
 FROM contract

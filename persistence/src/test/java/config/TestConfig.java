@@ -29,8 +29,8 @@ public class TestConfig {
     @Value("classpath:migration_login_test.sql")
     private Resource loginMigration;
 
-    @Value("classpath:migration_delete.sql")
-    private Resource deleteMigration;
+    @Value("classpath:job_card_view_test.sql")
+    private Resource jobCardView;
 
     @Bean
     public DataSource dataSource() {
@@ -55,10 +55,9 @@ public class TestConfig {
         dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
         dbp.addScript(imageSchema);
-        dbp.addScript(deleteMigration);
         dbp.addScript(loginMigration);
+        dbp.addScript(jobCardView);
         return dbp;
     }
-
 
 }

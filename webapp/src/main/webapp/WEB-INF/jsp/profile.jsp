@@ -1,6 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+
 <html>
 <head>
     <title>
@@ -43,9 +44,9 @@
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
     <div class="row">
-        <div class="d-block col-4">
+        <div class="d-block col-3">
             <div class="card custom-card">
-                <div class="card-body">
+                <div class="card-body p-0">
                     <div class="profile-image-container">
                         <c:choose>
                             <c:when test="${user.image.string != null}">
@@ -59,8 +60,8 @@
                              src='${profilePic}'
                              alt="<spring:message code="profile.image"/>">
                     </div>
-                    <h3 class="card-title mt-2 profile-title"><c:out value="${user.username}"/></h3>
-                    <h5 class="profile-subtitle">
+                    <h4 class="card-title profile-title"><c:out value="${user.username}"/></h4>
+                    <p class="profile-subtitle ml-3 mb-2">
                         <c:choose>
                             <c:when test="${isPro}">
                                 <spring:message code="account.settings.info.professional"/>
@@ -69,53 +70,35 @@
                                 <spring:message code="account.settings.info.client"/>
                             </c:otherwise>
                         </c:choose>
-                    </h5>
+                    </p>
                 </div>
             </div>
-            <div class="card custom-card mt-3">
-                <div class="card-body">
-                    <h5 class="profile-subtitle"><spring:message code="profile.reviews.average"/></h5>
-                    <span class="custom-row rating align-items-center">
-                        <h1 class="mr-3">
-                            ${avgRate}
-                        </h1>
-                        <jsp:include page="components/rateStars.jsp">
-                            <jsp:param name="rate" value="${avgRate}"/>
-                        </jsp:include>
-                        <h5 class="ml-3 mb-0">
-                            (${totalReviewsSize})
-                        </h5>
-                    </span>
-                </div>
-            </div>
-            <div class="card custom-card mt-3">
-                <div class="card-body">
-                    <div class="row align-items-center justify-content-center">
-                        <div class="profile-completed-works-outline">
-                            <div class="profile-completed-works">${totalContractsCompleted}</div>
-                        </div>
-                        <h4 class="mb-0 ml-3"><spring:message code="profile.completed.works"/></h4>
-                    </div>
-                </div>
+
+            <div class="mt-3">
+                <jsp:include page="components/avgRateAndCompletedContracts.jsp">
+                    <jsp:param name="avgRate" value="${avgRate}"/>
+                    <jsp:param name="totalContractsCompleted" value="${totalContractsCompleted}"/>
+                    <jsp:param name="totalReviewsSize" value="${totalReviewsSize}"/>
+                </jsp:include>
             </div>
         </div>
 
-        <div class="col-8">
+        <div class="col-9">
             <div class="card custom-card">
                 <div class="card-body">
-                    <div class="card-title row ml-3">
+                    <div class="ml-1 mb-4 card-title row">
                         <a type="button" class="btn profile-list-selector ${(withServices)? 'disabled' : ''}"
                            aria-disabled="${(withServices)? 'true' : 'false'}"
                            href="${pageContext.request.contextPath}/profile/${user.id}/services">
-                            <div><h4 class="mb-0"><spring:message code="profile.selector.services"/></h4></div>
-                            <div class="chip mb-0"><h5 class="mb-0">${servicesSize}</h5></div>
+                            <div><h5 class="mb-0"><spring:message code="profile.selector.services"/></h5></div>
+                            <div class="chip mb-0"><p class="mb-0">${servicesSize}</p></div>
                         </a>
                         &nbsp;
                         <a type="button" class="btn profile-list-selector ${(!withServices)? 'disabled' : ''}"
                            aria-disabled="${(!withServices)? 'true' : 'false'}"
                            href="${pageContext.request.contextPath}/profile/${user.id}/reviews">
-                            <div><h4 class="mb-0"><spring:message code="profile.selector.reviews"/></h4></div>
-                            <div class="chip mb-0"><h5 class="mb-0">${totalReviewsSize}</h5></div>
+                            <div><h5 class="mb-0"><spring:message code="profile.selector.reviews"/></h5></div>
+                            <div class="chip mb-0"><p class="mb-0">${totalReviewsSize}</p></div>
                         </a>
                     </div>
 

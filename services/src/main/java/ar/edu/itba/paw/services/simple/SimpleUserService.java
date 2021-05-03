@@ -4,10 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserAuth;
-import ar.edu.itba.paw.models.VerificationToken;
+import ar.edu.itba.paw.models.*;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
 import exceptions.UserNotVerifiedException;
@@ -129,4 +126,13 @@ public class SimpleUserService implements UserService {
         userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
     }
 
+    @Override
+    public List<JobPost.JobType> findUserJobTypes(long id) {
+        return userDao.findUserJobTypes(id);
+    }
+
+    @Override
+    public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
+        return userDao.findUserRankingInJobType(id, jobType);
+    }
 }
