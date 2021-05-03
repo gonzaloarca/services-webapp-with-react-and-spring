@@ -104,7 +104,7 @@ public class SimpleJobCardService implements JobCardService {
 
         Arrays.stream(JobPost.JobType.values()).forEach(jobType -> {
             String typeName = messageSource.getMessage(jobType.getStringCode(), null, LocaleContextHolder.getLocale());
-            int distance = levenshteinDistance.apply(query, typeName);
+            int distance = levenshteinDistance.apply(query.toLowerCase(), typeName.toLowerCase());
             double similarity = 1.0 - ((double) distance/Math.max(query.length(), typeName.length()));
 
             if(similarity > THRESHOLD)
