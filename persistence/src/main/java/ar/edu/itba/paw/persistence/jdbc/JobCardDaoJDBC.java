@@ -103,7 +103,8 @@ public class JobCardDaoJDBC implements JobCardDao {
                     .append(")");
         }
 
-        sqlQuery.append(") AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE");
+        sqlQuery.append(") AND ? IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_is_active = TRUE")
+                .append(" ORDER BY post_creation_date");
 
         addPaging(sqlQuery, page);
 
@@ -123,7 +124,8 @@ public class JobCardDaoJDBC implements JobCardDao {
                     .append(")");
         }
 
-        sqlQuery.append(") AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_job_type = ? AND post_is_active = TRUE");
+        sqlQuery.append(") AND ? IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_job_type = ? AND post_is_active = TRUE")
+                .append(" ORDER BY post_creation_date");
 
         addPaging(sqlQuery, page);
 
