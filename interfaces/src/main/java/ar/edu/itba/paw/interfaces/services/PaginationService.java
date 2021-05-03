@@ -16,7 +16,9 @@ public interface PaginationService {
 
     int findMaxPageJobPostsSearch(String query, JobPost.Zone zone, JobPost.JobType jobType);
 
-    int findMaxPageContractsByUserId(long id);
+    int findMaxPageContractsByClientId(long id);
+
+    int findMaxPageContractsByProId(long id);
 
     int findMaxPageReviewsByPostId(long id);
 

@@ -108,8 +108,13 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public int findMaxPageContractsByUserId(long id) {
-        return jobContractDao.findMaxPageContractsByUserId(id);
+    public int findMaxPageContractsByClientId(long id) {
+        return jobContractDao.findMaxPageContractsByClientId(id);
+    }
+
+    @Override
+    public int findMaxPageContractsByProId(long id) {
+        return jobContractDao.findMaxPageContractsByProId(id);
     }
 
     @Override
@@ -117,6 +122,18 @@ public class SimpleJobContractService implements JobContractService {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
         findByClientId(id, page - 1).
+                forEach(jobContract -> jobContractCards.add(
+                        new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
+                                reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
+                );
+        return jobContractCards;
+    }
+
+    @Override
+    public List<JobContractCard> findJobContractCardsByProId(long id, int page) {
+        List<JobContractCard> jobContractCards = new ArrayList<>();
+
+        findByProId(id, page - 1).
                 forEach(jobContract -> jobContractCards.add(
                         new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
                                 reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
