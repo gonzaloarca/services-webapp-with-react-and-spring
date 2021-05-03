@@ -12,9 +12,9 @@ public interface JobCardDao {
 
     List<JobCard> findByUserId(long id, int page);
 
-    List<JobCard> search(String query, JobPost.Zone zone, int page);
+    List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, int page);
 
-    List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, int page);
+    List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page);
 
     List<JobCard> findByUserIdWithReview(long id, int page);
 

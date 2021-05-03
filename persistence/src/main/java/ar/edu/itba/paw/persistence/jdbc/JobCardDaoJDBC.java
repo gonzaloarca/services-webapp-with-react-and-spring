@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class JobCardDaoJDBC implements JobCardDao {
@@ -88,24 +89,32 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
     @Override
-    public List<JobCard> search(String query, JobPost.Zone zone, int page) {
+    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes,  int page) {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
         query = "%" + query + "%";
+        String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
         return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?) " +
+                        "OR post_job_type in (" + types + ")) " +
+                        "AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) " +
+                        "AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{query, zone.ordinal(), limit, offset},
                 JOB_CARD_ROW_MAPPER
         );
     }
 
     @Override
-    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, int page) {
+    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
         query = "%" + query + "%";
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
         return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
+                "SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?) " +
+                        "OR post_job_type in (" + types + ")) " +
+                        "AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) " +
+                        "AND post_job_type = ? AND post_is_active = TRUE LIMIT ? OFFSET ?",
                 new Object[]{query, zone.ordinal(), jobType.ordinal(), limit, offset},
                 JOB_CARD_ROW_MAPPER
         );

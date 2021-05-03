@@ -7,15 +7,16 @@ import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import exceptions.JobPackageNotFoundException;
+import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.apache.commons.text.similarity.LevenshteinResults;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Transactional
 @Service
@@ -26,6 +27,12 @@ public class SimpleJobCardService implements JobCardService {
 
     @Autowired
     private JobCardDao jobCardDao;
+
+    @Autowired
+    private LevenshteinDistance levenshteinDistance;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public List<JobCard> findAll() {
@@ -49,10 +56,12 @@ public class SimpleJobCardService implements JobCardService {
 
     @Override
     public List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page) {
-        if (jobType == null)
-            return jobCardDao.search(title, zone, page);
+        List<JobPost.JobType> similarTypes = getSimilarTypes(title);
 
-        return jobCardDao.searchWithCategory(title, zone, jobType, page);
+        if (jobType == null)
+            return jobCardDao.search(title, zone, similarTypes, page);
+
+        return jobCardDao.searchWithCategory(title, zone, jobType, similarTypes, page);
     }
 
     @Override
@@ -93,6 +102,22 @@ public class SimpleJobCardService implements JobCardService {
     @Override
     public int findMaxPageSearchWithCategory(String query, JobPost.Zone value, JobPost.JobType jobType) {
         return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType);
+    }
+
+    private List<JobPost.JobType> getSimilarTypes(String query) {
+        final double THRESHOLD = 0.7;       //TODO ajustar este valor
+        List<JobPost.JobType> types = new ArrayList<>();
+
+        Arrays.stream(JobPost.JobType.values()).forEach(jobType -> {
+            String typeName = messageSource.getMessage(jobType.getStringCode(), null, LocaleContextHolder.getLocale());
+            int distance = levenshteinDistance.apply(query, typeName);
+            double similarity = 1.0 - ((double) distance/Math.max(query.length(), typeName.length()));
+
+            if(similarity > THRESHOLD)
+                types.add(jobType);
+        });
+
+        return types;
     }
 
 }

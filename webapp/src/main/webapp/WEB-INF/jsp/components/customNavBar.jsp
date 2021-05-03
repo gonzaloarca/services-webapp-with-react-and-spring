@@ -35,8 +35,6 @@
                 </a>
             </li>
 
-            <div class="vl"></div>
-
             <sec:authorize access="isAuthenticated()">
                 <li class="nav-item ${requestScope.path == "/my-contracts" ? 'active': ''}">
                     <a class="nav-link"
@@ -60,13 +58,18 @@
                 <form:form class="form-inline ml-4 my-auto flex-grow-1 justify-content-between" id="searchForm"
                            action="${pageContext.request.contextPath}/search"
                            method="get" modelAttribute="searchForm" acceptCharset="utf-8">
+
                     <spring:message code="navigation.search" var="queryPlaceholder"/>
-                    <form:input class="form-control mr-sm-2" type="search" path="query"
-                                placeholder="${queryPlaceholder}" aria-label="Search"/>
-                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit"
-                            onclick="return submitSearchPost();">
-                        <spring:message code="navigation.search"/>
-                    </button>
+
+                    <div style="position: relative; width: 45%">
+                        <form:input class="form-control mr-sm-2 w-100" type="search" path="query"
+                                    placeholder="${queryPlaceholder}" aria-label="Search" id="search-input"/>
+                        <button class="" type="submit"
+                                onclick="return submitSearchPost();" id="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
                     <a type="button" class="btn btn-link navbar-link-button ml-auto" data-toggle="modal"
                        data-target="#zonesModal">
                         <i class="fas fa-map-marker-alt fa-lg mr-2"></i>
@@ -143,11 +146,11 @@
                         <c:when test="${currentUser.image.string == null}">
                             <img class="navbar-user-img"
                                  src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
-                                 alt="avatar">
+                                 alt="avatar" id="navbar-avatar">
                         </c:when>
                         <c:otherwise>
                             <img class="navbar-user-img"
-                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar">
+                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar" id="navbar-avatar">
                         </c:otherwise>
                     </c:choose>
                 </button>
