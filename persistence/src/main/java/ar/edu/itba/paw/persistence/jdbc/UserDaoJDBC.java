@@ -162,19 +162,25 @@ public class UserDaoJDBC implements UserDao {
     @Override
     public List<JobPost.JobType> findUserJobTypes(long id) {
         return jdbcTemplate.query("SELECT array_agg(DISTINCT post_job_type) AS job_types " +
-                        "FROM user NATURAL JOIN job_post WHERE user_id = ?"
-                , new Object[]{id}, (resultSet, i) -> mapArrJobTypeToList((Object[])
+                        "FROM users NATURAL JOIN job_post WHERE user_id = ?",
+                new Object[]{id}, (resultSet, i) -> mapArrJobTypeToList((Object[])
                         resultSet.getArray("job_types").getArray())).stream().findFirst().orElse(new ArrayList<>());
     }
 
     @Override
     public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
-        return jdbcTemplate.queryForObject("SELECT rank " +
-                "FROM (" +
-                "    SELECT user_id, ROW_NUMBER() OVER (ORDER BY SUM(contracts) DESC) AS rank" +
-                "                  FROM job_cards WHERE post_job_type = ?" +
-                "                  GROUP BY user_id" +
-                "     ) AS rankings " +
-                "WHERE user_id = ?", new Object[]{jobType.ordinal(), id}, Integer.class);
+        return jdbcTemplate.queryForObject(
+                "SELECT rank" +
+                " FROM (" +
+                "         SELECT user_id, ROW_NUMBER() OVER () AS rank" +
+                "         FROM (SELECT user_id" +
+                "               FROM job_cards" +
+                "               WHERE post_job_type = ?" +
+                "               GROUP BY user_id" +
+                "               ORDER BY SUM(contracts) DESC" +
+//                         ORDERBY esta en una subquery para que funcione correctamente con HSQLDB
+                "              ) AS users_ordered_by_contract" +
+                "     ) AS rankings" +
+                " WHERE user_id = ?", new Object[]{jobType.ordinal(), id}, Integer.class);
     }
 }

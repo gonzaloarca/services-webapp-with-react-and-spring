@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.webapp.utils.AnalyticRanking;
 import ar.edu.itba.paw.webapp.utils.JobContractCard;
@@ -45,7 +44,7 @@ public class CurrentUserController {
         jobContractService.findByClientId(id, page - 1).
                 forEach(jobContract -> jobContractCards.add(
                         new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
-                                reviewService.findContractReview(jobContract.getId()).orElse(null)))
+                                reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
                 );
 
         return new ModelAndView("myContracts")
@@ -60,7 +59,7 @@ public class CurrentUserController {
         if (page < 1)
             throw new IllegalArgumentException();
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
-        int maxPage = paginationService.findMaxPageRelatedJobPosts(id);
+        int maxPage = paginationService.findMaxPageRelatedJobCards(id);
         List<AnalyticRanking> analyticRankings = new ArrayList<>();
         userService.findUserJobTypes(id).forEach((jobType -> analyticRankings.add(new AnalyticRanking(jobType,
                 userService.findUserRankingInJobType(id, jobType)))));
@@ -70,7 +69,7 @@ public class CurrentUserController {
                 .addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(id))
                 .addObject("totalReviewsSize", reviewService.findProfessionalReviewsSize(id))
                 .addObject("analyticRankings", analyticRankings)
-                .addObject("jobCards", jobCardService.findRelatedJobPosts(id, page - 1))
+                .addObject("jobCards", jobCardService.findRelatedJobCards(id, page - 1))
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage);
     }

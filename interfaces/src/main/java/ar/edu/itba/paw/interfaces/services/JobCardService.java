@@ -23,7 +23,7 @@ public interface JobCardService {
 
     JobCard findByPostId(long id);
 
-    List<JobCard> findRelatedJobPosts(long professional_id, int page);
+    List<JobCard> findRelatedJobCards(long professional_id, int page);
 
     int findSizeByUserId(long id);
 
@@ -35,5 +35,5 @@ public interface JobCardService {
 
     int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType);
 
-    int findMaxPageRelatedJobPosts(long professional_id);
+    int findMaxPageRelatedJobCards(long professional_id);
 }

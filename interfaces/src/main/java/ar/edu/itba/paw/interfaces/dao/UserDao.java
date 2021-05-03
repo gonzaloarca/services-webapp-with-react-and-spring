@@ -38,9 +38,7 @@ public interface UserDao {
 
     boolean deleteUser(long id);
 
-    //TODO: TEST
     List<JobPost.JobType> findUserJobTypes(long id);
 
-    //TODO: TEST
     int findUserRankingInJobType(long id, JobPost.JobType jobType);
 }

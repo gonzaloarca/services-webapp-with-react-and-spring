@@ -4,12 +4,14 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
+import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -128,9 +130,13 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
     @Override
-    public List<JobCard> findRelatedJobPosts(long professional_id, int page) {
-        Integer limit = getLimit(page);
-        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+    public List<JobCard> findRelatedJobCards(long professional_id, int page) {
+        List<Object> parameters = new ArrayList<>(Arrays.asList(professional_id,
+                LocalDateTime.now().minusDays(30), professional_id));
+        if (page != HirenetUtils.ALL_PAGES) {
+            parameters.add(getLimit(page));
+            parameters.add(HirenetUtils.PAGE_SIZE * page);
+        }
         return jdbcTemplate.query(
                 "SELECT * " +
                         "FROM job_cards" +
@@ -140,7 +146,7 @@ public class JobCardDaoJDBC implements JobCardDao {
                         "    FROM full_contract pro1_contracts" +
                         "             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id" +
                         "    WHERE ? <> pro2_contracts.professional_id" +
-                        "      AND pro2_contracts.contract_creation_date >= now()::date-30" +
+                        "      AND pro2_contracts.contract_creation_date >= ?" +
                         "    GROUP BY pro2_contracts.post_id) AS recommended_posts " +
                         "WHERE post_is_active = TRUE" +
                         "  AND post_job_type IN (" +
@@ -148,11 +154,11 @@ public class JobCardDaoJDBC implements JobCardDao {
                         "    FROM job_post" +
                         "    WHERE ? = user_id) " +
                         "ORDER BY clients_in_common DESC, contracts DESC " +
-                        " LIMIT ? OFFSET ?",
+                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
                 // Obtiene las cards de otros profesionales con el que comparte clientes(los cuales contrataron al otro
                 // profesional en los ultimos 30 dias) y tipo de trabajo,
                 // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
-                new Object[]{professional_id, professional_id, limit, offset}, JOB_CARD_ROW_MAPPER);
+                parameters.toArray(), JOB_CARD_ROW_MAPPER);
     }
 
     @Override
@@ -188,23 +194,23 @@ public class JobCardDaoJDBC implements JobCardDao {
 
 
     @Override
-    public int findMaxPageRelatedJobPosts(long professional_id) {
+    public int findMaxPageRelatedJobCards(long professional_id) {
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) " +
-                "FROM job_cards" +
-                "         NATURAL JOIN (" +
-                "    SELECT DISTINCT pro2_contracts.post_id, " +
-                "COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common" +
-                "    FROM full_contract pro1_contracts" +
-                "             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id" +
-                "    WHERE ? <> pro2_contracts.professional_id" +
-                "      AND pro2_contracts.contract_creation_date >= now()::date-30" +
-                "    GROUP BY pro2_contracts.post_id) AS recommended_posts " +
-                "WHERE post_is_active = TRUE" +
-                "  AND post_job_type IN (" +
-                "    SELECT DISTINCT post_job_type" +
-                "    FROM job_post" +
-                "    WHERE ? = user_id) "
-                , new Object[]{professional_id, professional_id},Integer.class);
+                        "FROM job_cards" +
+                        "         NATURAL JOIN (" +
+                        "    SELECT DISTINCT pro2_contracts.post_id, " +
+                        "COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common" +
+                        "    FROM full_contract pro1_contracts" +
+                        "             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id" +
+                        "    WHERE ? <> pro2_contracts.professional_id" +
+                        "      AND pro2_contracts.contract_creation_date >= now()::date-30" +
+                        "    GROUP BY pro2_contracts.post_id) AS recommended_posts " +
+                        "WHERE post_is_active = TRUE" +
+                        "  AND post_job_type IN (" +
+                        "    SELECT DISTINCT post_job_type" +
+                        "    FROM job_post" +
+                        "    WHERE ? = user_id) "
+                , new Object[]{professional_id, professional_id}, Integer.class);
 
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }

@@ -1,5 +1,6 @@
 package jdbc;
 
+import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jdbc.UserDaoJDBC;
 import config.TestConfig;
@@ -16,6 +17,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Rollback
@@ -32,6 +36,11 @@ public class UserDaoJDBCTest {
             true,
             true,
             LocalDateTime.now());
+
+    private static final List<JobPost.JobType> USER1_JOBTYPES = Arrays.asList(JobPost.JobType.values()[1], JobPost.JobType.values()[3]);
+
+    private static int USER1_RANKING_IN_JOBTYPE1 = 2;
+
     @Autowired
     UserDaoJDBC userDaoJDBC;
 
@@ -49,7 +58,7 @@ public class UserDaoJDBCTest {
     public void testRegister() {
 
         User userTest = new User(
-                5,
+                6,
                 "manurodriguez@mail.com",
                 "Manuel Rodriguez",
                 "11-4536-5656",
@@ -81,4 +90,18 @@ public class UserDaoJDBCTest {
         Assert.assertEquals(USER1, user.get());
     }
 
+    @Test
+    public void testFindUserJobTypes() {
+        List<JobPost.JobType> maybeJobTypes = userDaoJDBC.findUserJobTypes(USER1.getId());
+
+        Assert.assertEquals(USER1_JOBTYPES.size(), maybeJobTypes.size());
+        USER1_JOBTYPES.forEach((jobType -> Assert.assertTrue(maybeJobTypes.contains(jobType))));
+    }
+
+    @Test
+    public void testFindUserRankingInJobType() {
+        int maybeRank = userDaoJDBC.findUserRankingInJobType(USER1.getId(), JobPost.JobType.values()[1]);
+
+        Assert.assertEquals(USER1_RANKING_IN_JOBTYPE1, maybeRank);
+    }
 }

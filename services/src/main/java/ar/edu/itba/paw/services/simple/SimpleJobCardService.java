@@ -4,16 +4,11 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
-import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
-import exceptions.JobPackageNotFoundException;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -71,8 +66,8 @@ public class SimpleJobCardService implements JobCardService {
   }
 
     @Override
-    public List<JobCard> findRelatedJobPosts(long professional_id, int page) {
-        return jobCardDao.findRelatedJobPosts(professional_id, page);
+    public List<JobCard> findRelatedJobCards(long professional_id, int page) {
+        return jobCardDao.findRelatedJobCards(professional_id, page);
     }
 
     @Override
@@ -101,8 +96,8 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public int findMaxPageRelatedJobPosts(long professional_id) {
-        return jobCardDao.findMaxPageRelatedJobPosts(professional_id);
+    public int findMaxPageRelatedJobCards(long professional_id) {
+        return jobCardDao.findMaxPageRelatedJobCards(professional_id);
     }
 
 }

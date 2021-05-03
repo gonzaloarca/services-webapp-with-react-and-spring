@@ -77,7 +77,7 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageRelatedJobPosts(long professional_id) {
-        return jobCardService.findMaxPageRelatedJobPosts(professional_id);
+    public int findMaxPageRelatedJobCards(long professional_id) {
+        return jobCardService.findMaxPageRelatedJobCards(professional_id);
     }
 }

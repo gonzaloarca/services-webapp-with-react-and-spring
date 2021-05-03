@@ -39,6 +39,14 @@ public class ReviewDaoJDBCTest {
             true,
             true,
             LocalDateTime.now());
+    private static final User USER3 = new User(
+            5,
+            "juliansicardi@gmail.com",
+            "Julian Sicardi",
+            "123123123",
+            true,
+            true,
+            LocalDateTime.now());
     private static final List<UserAuth.Role> USER2_ROLES = Arrays.asList(UserAuth.Role.CLIENT);
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
     private static final JobPost JOB_POST = new JobPost(1, USER1, "Electricista Matriculado", "Lun a Viernes 10hs - 14hs", JobPost.JobType.values()[1], ZONES, 0.0, true, LocalDateTime.now());
@@ -58,7 +66,6 @@ public class ReviewDaoJDBCTest {
             "Se me rompio una zapatilla",
             null
     );
-
     private static final LocalDateTime date = LocalDateTime.now();
     private static final Review REVIEW_1 = new Review(
             4,
@@ -66,7 +73,7 @@ public class ReviewDaoJDBCTest {
             "Resolvio todo en cuestion de minutos", USER2, JOB_POST, date
     );
     private static final Review REVIEW_2 = new Review(
-            2, "Medio pelo", "Resolvio todo de forma ideal", USER2, JOB_POST, date
+            2, "Medio pelo", "Resolvio todo de forma ideal", USER3, JOB_POST, date
     );
 
     @Autowired
