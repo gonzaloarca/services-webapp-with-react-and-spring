@@ -38,6 +38,10 @@
         <org.springframework.security.version>4.0.4.RELEASE</org.springframework.security.version>
         <thymeleaf.spring4.version>3.0.12.RELEASE</thymeleaf.spring4.version>
         <apache.commons.text.version>1.9</apache.commons.text.version>
+        <org.slf4j.version>1.7.5</org.slf4j.version>
+        <logback.version>1.1.2</logback.version>
+        <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
+        <maven-war-plugin.version>2.6</maven-war-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -157,6 +161,32 @@
                 <artifactId>commons-text</artifactId>
                 <version>${apache.commons.text.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.logback-extensions</groupId>
+                <artifactId>logback-ext-spring</artifactId>
+                <version>${logback-ext-spring.version}</version>
+                <scope>runtime</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -209,6 +239,14 @@
                 <plugin>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>${maven-project-info-reports-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven-war-plugin.version}</version>
+                    <configuration>
+                        <packagingExcludes>**/logback-test.xml</packagingExcludes>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
