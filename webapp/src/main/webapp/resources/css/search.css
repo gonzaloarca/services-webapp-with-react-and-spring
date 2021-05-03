@@ -27,12 +27,6 @@ h4 {
     text-decoration: none;
 }
 
-.job-display-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-}
-
 .job-card {
     flex-basis: 30% !important;
 }

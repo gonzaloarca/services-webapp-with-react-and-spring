@@ -89,9 +89,9 @@ public class JobContractDaoJDBCTest {
 
     private static final String IMAGE_TYPE = "image/jpg";
 
-    private static final int JOB_CONTRACTS_PRO_QUANTITY = 3;
+    private static final int JOB_CONTRACTS_PRO1_QUANTITY = 4;
 
-    private static final int JOB_CONTRACTS_TOTAL_QUANTITY = JOB_CONTRACTS_PRO_QUANTITY + 2;
+    private static final int JOB_CONTRACTS_TOTAL_QUANTITY = JOB_CONTRACTS_PRO1_QUANTITY + 5;
 
     @Autowired
     private DataSource ds;
@@ -185,7 +185,7 @@ public class JobContractDaoJDBCTest {
         List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACT.getJobPackage().getId(),0);
 
         Assert.assertFalse(jobContracts.isEmpty());
-        Assert.assertEquals(2, jobContracts.size());
+        Assert.assertEquals(3, jobContracts.size());
         Assert.assertEquals(JOB_PACKAGE.getId(), jobContracts.get(0).getJobPackage().getId());
     }
 
@@ -194,7 +194,7 @@ public class JobContractDaoJDBCTest {
         List<JobContract> jobContracts = jobContractDaoJDBC.findByPostId(JOB_CONTRACT.getJobPackage().getPostId(),0);
 
         Assert.assertFalse(jobContracts.isEmpty());
-        Assert.assertEquals(3, jobContracts.size());  // dos son del package 1 y otro es del package 2
+        Assert.assertEquals(4, jobContracts.size()); //3 del package1 y 1 del package2
         jobContracts.forEach(jobContract ->
                 Assert.assertEquals(JOB_POST.getId(), jobContract.getJobPackage().getPostId()));
     }
@@ -203,7 +203,7 @@ public class JobContractDaoJDBCTest {
     public void testFindContractsQuantityByProId() {
         int ans = jobContractDaoJDBC.findContractsQuantityByProId(USER1.getId());
 
-        Assert.assertEquals(JOB_CONTRACTS_PRO_QUANTITY, ans);
+        Assert.assertEquals(JOB_CONTRACTS_PRO1_QUANTITY, ans);
     }
 
     @Test

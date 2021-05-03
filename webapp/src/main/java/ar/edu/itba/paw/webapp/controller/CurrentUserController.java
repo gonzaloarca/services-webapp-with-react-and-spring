@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
+import ar.edu.itba.paw.webapp.utils.AnalyticRanking;
 import ar.edu.itba.paw.webapp.utils.JobContractCard;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class CurrentUserController {
         jobContractService.findByClientId(id, page - 1).
                 forEach(jobContract -> jobContractCards.add(
                         new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
-                                reviewService.findContractReview(jobContract.getId()).orElse(null)))
+                                reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
                 );
 
         return new ModelAndView("myContracts")
@@ -53,20 +53,26 @@ public class CurrentUserController {
                 .addObject("contractCards", jobContractCards);
     }
 
-
     @RequestMapping("/analytics")
-    public ModelAndView analytics(Principal principal) {
+    public ModelAndView analytics(Principal principal,
+                                  @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        if (page < 1)
+            throw new IllegalArgumentException();
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
-        List<JobCard> jobCards = jobCardService.findByUserId(id);
+        int maxPage = paginationService.findMaxPageRelatedJobCards(id);
+        List<AnalyticRanking> analyticRankings = new ArrayList<>();
+        userService.findUserJobTypes(id).forEach((jobType -> analyticRankings.add(new AnalyticRanking(jobType,
+                userService.findUserRankingInJobType(id, jobType)))));
         return new ModelAndView("analytics")
                 .addObject("user", userService.getUserByRoleAndId(1, id))
                 .addObject("avgRate", reviewService.findProfessionalAvgRate(id))
                 .addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(id))
                 .addObject("totalReviewsSize", reviewService.findProfessionalReviewsSize(id))
-                .addObject("jobCards", jobCards);
-        // FIXME: debe devolver un array de jobcards(hasta 4 por categoria)
+                .addObject("analyticRankings", analyticRankings)
+                .addObject("jobCards", jobCardService.findRelatedJobCards(id, page - 1))
+                .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
+                .addObject("maxPage", maxPage);
     }
-
 
     @RequestMapping(value = "/rate-contract/{contractId}")
     public ModelAndView rateContract(@PathVariable("contractId") final long id,

@@ -20,4 +20,5 @@ public interface PaginationService {
 
     int findMaxPageReviewsByPostId(long id);
 
+    int findMaxPageRelatedJobCards(long professional_id);
 }

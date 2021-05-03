@@ -137,30 +137,6 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
-    public List<JobPost> findRelatedJobPosts(long professional_id) {
-        return jdbcTemplate.query(
-                "SELECT * " +
-                        "FROM full_post" +
-                        "         NATURAL JOIN (" +
-                        "    SELECT DISTINCT pro2_contracts.post_id, COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common" +
-                        "    FROM full_contract pro1_contracts" +
-                        "             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id" +
-                        "    WHERE ? <> pro2_contracts.professional_id" +
-                        "      AND pro2_contracts.contract_creation_date >= now()::date-30" +
-                        "    GROUP BY pro2_contracts.post_id) AS recommended_posts " +
-                        "WHERE post_is_active = TRUE" +
-                        "  AND post_job_type IN (" +
-                        "    SELECT DISTINCT post_job_type" +
-                        "    FROM job_post" +
-                        "    WHERE ? = user_id) " +
-                        "ORDER BY clients_in_common DESC, contracts DESC"
-                // Obtiene los posts de otros profesionales con el que comparte clientes(los cuales contrataron al otro
-                // profesional en los ultimos 30 dias) y tipo de trabajo,
-                // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
-                , new Object[]{professional_id, professional_id}, JOB_POST_ROW_MAPPER);
-    }
-
-    @Override
     public List<JobPost> search(String query, Zone zone, int page) {
         Integer limit = getLimit(page);
         int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;

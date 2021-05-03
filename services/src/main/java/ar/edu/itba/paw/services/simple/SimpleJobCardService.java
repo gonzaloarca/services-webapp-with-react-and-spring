@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
-import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import exceptions.JobPackageNotFoundException;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -80,6 +79,11 @@ public class SimpleJobCardService implements JobCardService {
   }
 
     @Override
+    public List<JobCard> findRelatedJobCards(long professional_id, int page) {
+        return jobCardDao.findRelatedJobCards(professional_id, page);
+    }
+
+    @Override
     public int findSizeByUserId(long id) {
         return jobPostService.findSizeByUserId(id);
     }
@@ -118,6 +122,11 @@ public class SimpleJobCardService implements JobCardService {
         });
 
         return types;
+    }
+
+    @Override
+    public int findMaxPageRelatedJobCards(long professional_id) {
+        return jobCardDao.findMaxPageRelatedJobCards(professional_id);
     }
 
 }

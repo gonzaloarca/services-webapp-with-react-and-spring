@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class JobCard {
     private final JobPost jobPost;
     private final JobPackage.RateType rateType;
@@ -39,5 +41,18 @@ public class JobCard {
 
     public JobPostImage getPostImage() {
         return postImage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JobCard jobCard = (JobCard) o;
+        return jobPost.equals(jobCard.jobPost);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(jobPost);
     }
 }
