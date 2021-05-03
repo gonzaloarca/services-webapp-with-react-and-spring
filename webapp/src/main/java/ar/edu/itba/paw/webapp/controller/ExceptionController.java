@@ -6,6 +6,8 @@ import exceptions.JobPackageNotFoundException;
 import exceptions.JobPostNotFoundException;
 import exceptions.ReviewNotFoundException;
 import exceptions.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,24 +23,28 @@ import java.util.Optional;
 @ControllerAdvice
 public class ExceptionController {
 
+    private final Logger exceptionLogger = LoggerFactory.getLogger(ExceptionController.class);
+
     @Autowired
     private UserService userService;
 
     //TODO descomentar esto
-//    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-//    @org.springframework.web.bind.annotation.ExceptionHandler(
-//            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})
-//    public ModelAndView notFoundError() {
-//        ModelAndView mav = new ModelAndView("error/404");
-//        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
-//        return mav;
-//    }
-//
-//    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
-//    public ModelAndView defaultErrorHandler() {
-//        ModelAndView mav = new ModelAndView("error/default");
-//        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
-//        return mav;
-//    }
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    @org.springframework.web.bind.annotation.ExceptionHandler(
+            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})
+    public ModelAndView notFoundError(RuntimeException e) {
+        exceptionLogger.debug("Exception handled: {}",e.getMessage());
+        ModelAndView mav = new ModelAndView("error/404");
+        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+        return mav;
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
+    public ModelAndView defaultErrorHandler(Exception e) {
+        exceptionLogger.debug("Exception handled: {}",e.getMessage());
+        ModelAndView mav = new ModelAndView("error/default");
+        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+        return mav;
+    }
 
 }

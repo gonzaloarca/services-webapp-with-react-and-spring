@@ -4,19 +4,18 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @ControllerAdvice
-public class UserControllerAdvice {
+public class NavBarControllerAdvice {
+
+    private final Logger userControllerAdviceLogger = LoggerFactory.getLogger(NavBarControllerAdvice.class);
 
     @Autowired
     UserService userService;
@@ -26,6 +25,7 @@ public class UserControllerAdvice {
         User currentUser = null;
         if (principal != null) {
             currentUser = userService.findByEmail(principal.getName()).orElse(null);
+            userControllerAdviceLogger.debug("Current user is: {}",currentUser);
         }
         return currentUser;
     }

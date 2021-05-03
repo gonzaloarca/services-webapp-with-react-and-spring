@@ -56,3 +56,5 @@ Thumbs.db
 
 logs/
 
+logback-test.xml
+

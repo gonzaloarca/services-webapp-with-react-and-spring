@@ -59,11 +59,13 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageJobPostsSearch(String query, JobPost.Zone zone, JobPost.JobType jobType) {
-        if (jobType == null)
-            return jobCardService.findMaxPageSearch(query, zone);
+    public int findMaxPageJobPostsSearch(String query, int zone, int jobType) {
+        JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
+        JobPost.JobType parsedJobType = jobType == -1 ? null : JobPost.JobType.values()[jobType];
+        if (parsedJobType == null)
+            return jobCardService.findMaxPageSearch(query, parsedZone);
 
-        return jobCardService.findMaxPageSearchWithCategory(query, zone, jobType);
+        return jobCardService.findMaxPageSearchWithCategory(query, parsedZone, parsedJobType);
     }
 
     @Override

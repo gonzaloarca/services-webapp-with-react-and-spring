@@ -49,8 +49,9 @@ public class OwnershipVoter implements AccessDecisionVoter {
 
             String[] paths = url.substring(1).split("/");
             int id;
+            boolean isOwner;
             switch (paths[0]){
-                case "qualify-contract":
+                case "rate-contract":
                     if(paths.length == 1)
                         return ACCESS_ABSTAIN;
                     try {
@@ -58,9 +59,11 @@ public class OwnershipVoter implements AccessDecisionVoter {
                     }catch (NumberFormatException e){
                         return ACCESS_ABSTAIN;
                     }
-                    if(jobContractService.findById(id).getClient().getEmail().equals(authentication.getName()))
+                    isOwner = jobContractService.findById(id).getClient().getEmail().equals(authentication.getName());
+                    if(isOwner)
                         return ACCESS_GRANTED;
-                    break;
+                    else
+                        return ACCESS_DENIED;
                 case "job":
                     if(paths.length == 1)
                         return ACCESS_ABSTAIN;
@@ -69,7 +72,6 @@ public class OwnershipVoter implements AccessDecisionVoter {
                     }catch (NumberFormatException e){
                         return ACCESS_ABSTAIN;
                     }
-                    boolean isOwner;
                     try{
                         isOwner = jobPostService.findById(id).getUser().getEmail().equals(authentication.getName());
                     }catch (NoSuchElementException e){
