@@ -209,11 +209,10 @@
     let form = document.querySelector('#pack-form');
 
     form.addEventListener('submit', function (event) {
-        let is_valid = true;
+        let is_valid = form.checkValidity();
 
         checkRadio();
-        if (!form.checkValidity()) {
-            is_valid = false;
+        if (!is_valid) {
             event.preventDefault();
             event.stopPropagation();
         }

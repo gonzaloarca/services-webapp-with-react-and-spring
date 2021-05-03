@@ -5,8 +5,8 @@
         <div class="title-and-form">
             <h1 class="landing-title"><spring:message code="index.searchBar.title"/></h1>
             <form:form action="${pageContext.request.contextPath}/search" method="get"
-                       modelAttribute="searchForm"
-                       class="home-search-form"
+                       modelAttribute="searchForm" id="search-form"
+                       class="home-search-form" novalidate="true"
                        acceptCharset="utf-8">
                 <div class="search-inputs">
                     <div class="home-search-location">
@@ -19,17 +19,22 @@
                                 </form:option>
                             </c:forEach>
                         </form:select>
-                        <p class="search-form-error" id="zoneError" style="display: none"><spring:message code="account.settings.security.empty"/></p>
+                        <p class="search-form-error" id="zoneError" style="display: none">
+                            <spring:message code="search.zones.invalid"/>
+                        </p>
                     </div>
 
                     <div class="home-search-bar-container home-search-bar-row">
                         <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
-                        <form:input path="query" type="search" class="home-search-bar w-100 h-100"
-                                    placeholder="${typePlaceholder}" maxlength="100"/>
+                        <form:input path="query" type="search" class="home-search-bar w-100 h-100" id="queryInput"
+                                    placeholder="${typePlaceholder}" maxlength="100" required="true"/>
+                        <p class="search-form-error" id="queryError" style="display: none">
+                            <spring:message code="search.query.invalid"/>
+                        </p>
                         <form:errors path="query" cssClass="search-form-error" element="p"/>
                     </div>
                     <button type="submit" class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row"
-                            onclick="return homeSearchButton(this.event);">
+                            id="submitBtn">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -69,18 +74,36 @@
 </div>
 <script>
     // Cuando se hace el submit chequeo que se haya seleccionado una zona y de ser asi guardo las cookies
-    let homeSelect = $('#homeSelect');
-    function homeSearchButton () {
+    let form = document.querySelector('#search-form');
+    form.addEventListener('submit', function (event) {
+
+        let homeSelect = $('#homeSelect');
         if(homeSelect[0].value === "")  {
             $('#zoneError')[0].style.display = 'inherit';
-            return false;
+            homeSelect[0].setCustomValidity("error");
+            event.preventDefault();
+            event.stopPropagation();
         }
         else {
+            $('#zoneError')[0].style.display = 'none';
+            homeSelect[0].setCustomValidity("");
             sessionStorage.setItem("pickedZoneId", homeSelect[0].value);
             sessionStorage.setItem("pickedZoneString", homeSelect[0].selectedOptions[0].label);
-            return true;
         }
-    }
+
+        let querySearch = $('#queryInput');
+        if(querySearch[0].value === "") {
+            $('#queryError')[0].style.display = 'inherit';
+            querySearch[0].setCustomValidity("error");
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            $('#queryError')[0].style.display = 'none';
+            querySearch[0].setCustomValidity("");
+        }
+
+        $("#submitBtn").attr("disabled", is_valid);
+    })
 
     // Saco el mensaje de error si es que existia
     $('.home-search-location').on('click', function () {

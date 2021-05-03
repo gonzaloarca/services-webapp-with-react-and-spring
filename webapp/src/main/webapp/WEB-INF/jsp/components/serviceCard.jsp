@@ -1,5 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <div style="display: flex; justify-content: space-between">
@@ -9,7 +10,7 @@
 
         <div>
             <c:choose>
-                <c:when test="${requestScope.data.postImage == null}">
+                <c:when test="${requestScope.data.postImage.image.string == null}">
                     <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
                 </c:when>
                 <c:otherwise>
@@ -59,7 +60,7 @@
             </div>
         </div>
     </a>
-    <c:if test="${requestScope.isEditable}">
+    <sec:authorize url="/job/${requestScope.data.jobPost.id}/edit">
         <div class="service-controls-container">
             <a href="<c:url value="/job/${requestScope.data.jobPost.id}/edit"/>"
                class="btn service-control-edit btn-link text-uppercase">
@@ -67,8 +68,8 @@
                 Editar
             </a>
 
-            <c:url value="/profile/${currentUser.id}/services" var="postPath"/>
-            <%--@elvariable id="deleteJobPostForm" type="ar.edu.itba.paw.webapp.form.DeleteItemForm"--%>
+            <c:url value="/profile/${currentUser.id}/services/delete" var="postPath"/>
+                <%--@elvariable id="deleteJobPostForm" type="ar.edu.itba.paw.webapp.form.DeleteItemForm"--%>
             <form:form modelAttribute="deleteJobPostForm" action="${postPath}" method="post"
                        cssStyle="margin-bottom: 0">
                 <button type="submit" class="btn service-control-delete text-uppercase">
@@ -79,7 +80,7 @@
                 <form:hidden path="id" value="${requestScope.data.jobPost.id}"/>
             </form:form>
         </div>
-    </c:if>
+    </sec:authorize>
 
 
 </div>

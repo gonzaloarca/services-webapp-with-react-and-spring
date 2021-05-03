@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -92,7 +93,7 @@ public class ProfileController {
         return mav;
     }
 
-    @RequestMapping(value = "/services", method = RequestMethod.POST)
+    @RequestMapping(value = "/services/delete", method = RequestMethod.POST)
     public ModelAndView deleteJobPostFromProfile(@ModelAttribute DeleteItemForm form, @PathVariable final long id) {
         // FIXME: Error al eliminar
         if (!jobPostService.deleteJobPost(form.getId())) {
