@@ -71,7 +71,7 @@
                                 <spring:message code="search.noquery.results"/>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.results" arguments="${param.query}"/>
+                                <spring:message htmlEscape="true" code="search.results" arguments="${param.query}"/>
                             </c:otherwise>
                         </c:choose>
                         <spring:message code="${pickedZone.stringCode}"/>

@@ -229,7 +229,7 @@
                         </div>
                         <div class="info-right-col">
                             <p class="price-tag">
-                                <spring:message code="${jobPack.rateType.stringCode}"
+                                <spring:message htmlEscape="true" code="${jobPack.rateType.stringCode}"
                                                 arguments="${jobPack.price}"/>
                             </p>
                         </div>

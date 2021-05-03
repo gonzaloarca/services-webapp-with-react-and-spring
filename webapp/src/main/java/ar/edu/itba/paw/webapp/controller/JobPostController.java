@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
-import ar.edu.itba.paw.webapp.form.DeletePackageForm;
+import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import ar.edu.itba.paw.webapp.form.EditJobPostForm;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
 import ar.edu.itba.paw.webapp.form.PackageForm;
@@ -64,10 +64,10 @@ public class JobPostController {
                         jobContractService.findContractsQuantityByPostId(jobPost.getUser().getId()))
                 .addObject("avgRate",
                         Math.floor(reviewService.findJobPostAvgRate(id) * 100) / 100)
-        .addObject("totalReviewsSize", reviewService.findJobPostReviewsSize(id))
-        .addObject("reviews", reviewService.findReviewsByPostId(jobPost.getId(), page - 1))
-        .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
-        .addObject("maxPage", maxPage);
+                .addObject("totalReviewsSize", reviewService.findJobPostReviewsSize(id))
+                .addObject("reviews", reviewService.findReviewsByPostId(jobPost.getId(), page - 1))
+                .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
+                .addObject("maxPage", maxPage);
         return mav;
     }
 
@@ -159,7 +159,7 @@ public class JobPostController {
     }
 
     @RequestMapping(value = "/job/{postId}/packages", method = RequestMethod.GET)
-    public ModelAndView viewPackages(@ModelAttribute("deletePackageForm") DeletePackageForm form,
+    public ModelAndView viewPackages(@ModelAttribute("deletePackageForm") DeleteItemForm form,
                                      @PathVariable final long postId) {
         JobPost jobPost = jobPostService.findById(postId);
         List<JobPackage> jobPackages = jobPackageService.findByPostId(postId);
@@ -199,7 +199,7 @@ public class JobPostController {
             return editPackage(form, postId, packageId);
 
         //FIXME: Error al updatear
-        if(!jobPackageService.updateJobPackage(packageId, form.getTitle(), form.getDescription(), form.getPrice(),
+        if (!jobPackageService.updateJobPackage(packageId, form.getTitle(), form.getDescription(), form.getPrice(),
                 form.getRateType()))
             throw new RuntimeException();
 
@@ -207,9 +207,11 @@ public class JobPostController {
     }
 
     @RequestMapping(path = "/job/{postId}/packages", method = RequestMethod.POST)
-    public ModelAndView deletePackage(@ModelAttribute("deletePackageForm") DeletePackageForm form,
+    public ModelAndView deletePackage(@ModelAttribute("deletePackageForm") DeleteItemForm form,
                                       @PathVariable final long postId) {
-        jobPackageService.deleteJobPackage(form.getId());
+        //FIXME: Error al eliminar
+        if (!jobPackageService.deleteJobPackage(form.getId()))
+            throw new RuntimeException();
         return viewPackages(form, postId);
     }
 

@@ -2,8 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<a class="service-link" href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
-    <div style="display: flex; justify-content: space-between">
+<div style="display: flex; justify-content: space-between">
+    <a style="display: flex; justify-content: space-between"
+       class="service-link"
+       href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
+
         <div>
             <c:choose>
                 <c:when test="${requestScope.data.postImage == null}">
@@ -23,7 +26,8 @@
                 <c:out value="${requestScope.data.jobPost.title}"/>
             </h5>
             <div class="justify-content-between custom-row">
-                <p class="service-subtitle"><spring:message code="${requestScope.data.jobPost.jobType.stringCode}"/></p>
+                <p class="service-subtitle"><spring:message
+                        code="${requestScope.data.jobPost.jobType.stringCode}"/></p>
                 <div class="custom-row">
                     <jsp:include page="components/rateStars.jsp">
                         <jsp:param name="rate" value="${requestScope.data.jobPost.rating}"/>
@@ -38,7 +42,7 @@
                 <div class="price-container">
                     <i class="fas fa-tag mr-2 text-white"></i>
                     <p class="price">
-                        <spring:message code="${requestScope.data.rateType.stringCode}"
+                        <spring:message htmlEscape="true" code="${requestScope.data.rateType.stringCode}"
                                         arguments="${requestScope.data.price}"/>
                     </p>
                 </div>
@@ -54,5 +58,28 @@
                 </div>
             </div>
         </div>
-    </div>
-</a>
+    </a>
+    <c:if test="${requestScope.isEditable}">
+        <div class="service-controls-container">
+            <a href="<c:url value="/job/${requestScope.data.jobPost.id}/edit"/>"
+               class="btn service-control-edit btn-link text-uppercase">
+                <i class="fas fa-edit"></i>
+                Editar
+            </a>
+
+            <c:url value="/profile/${currentUser.id}/services" var="postPath"/>
+            <%--@elvariable id="deleteJobPostForm" type="ar.edu.itba.paw.webapp.form.DeleteItemForm"--%>
+            <form:form modelAttribute="deleteJobPostForm" action="${postPath}" method="post"
+                       cssStyle="margin-bottom: 0">
+                <button type="submit" class="btn service-control-delete text-uppercase">
+                    <i class="fas fa-trash-alt"></i>
+                    Eliminar
+                </button>
+
+                <form:hidden path="id" value="${requestScope.data.jobPost.id}"/>
+            </form:form>
+        </div>
+    </c:if>
+
+
+</div>

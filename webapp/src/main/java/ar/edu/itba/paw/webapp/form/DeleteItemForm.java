@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-public class DeletePackageForm {
+public class DeleteItemForm {
     long id;
 
     public long getId() {

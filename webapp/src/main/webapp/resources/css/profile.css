@@ -7,6 +7,10 @@
     object-fit: cover;
 }
 
+.content-container-transparent {
+    width: 90vw;
+}
+
 .profile-title {
     font-weight: bold;
 }

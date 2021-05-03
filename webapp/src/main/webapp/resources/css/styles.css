@@ -349,18 +349,15 @@ h3 {
 }
 
 .service-info {
-    width: 80%;
+    width: 60%;
 }
 
 .service-title {
     color: #485696;
     line-height: 1.1em;
-    height: 1.5em;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    max-lines: 3;
+    word-break: break-word;
+    width: 100%;
 }
 
 .service-subtitle {
@@ -372,6 +369,49 @@ h3 {
     color: gray;
     margin-top: 10px;
     align-items: center;
+}
+
+.service-controls-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    padding: 5px;
+    margin-left: 12px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    height: max-content;
+}
+
+.service-controls-container i {
+    margin-left: 0;
+}
+
+.service-control-edit {
+    text-align: left;
+    width: 100%;
+}
+
+.service-control-edit:hover {
+    text-decoration: none;
+    color: #007bff;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
+}
+
+.service-control-delete {
+    color: red;
+    text-align: left;
+}
+
+.service-control-delete:hover {
+    text-decoration: none;
+    color: red;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
 }
 
 /*INPUTS DE FORMS*/

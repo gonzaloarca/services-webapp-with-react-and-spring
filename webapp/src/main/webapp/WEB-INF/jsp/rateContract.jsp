@@ -47,7 +47,7 @@
     <div class="qualify-service">
         <h2>
             <i class="bi bi-star-fill"></i>
-            <spring:message code="ratecontract.review.qualifyprofessional"
+            <spring:message htmlEscape="true" code="ratecontract.review.qualifyprofessional"
                             arguments="${jobCard.jobPost.user.username}"/>
         </h2>
 

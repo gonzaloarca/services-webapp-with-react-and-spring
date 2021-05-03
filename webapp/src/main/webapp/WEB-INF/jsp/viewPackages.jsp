@@ -52,7 +52,8 @@
 
                 <a class="mt-4 ml-4" href="<c:url value="/job/${jobPost.id}"/>">
                     <i class="mr-2 fas fa-external-link-alt"></i>
-                    <spring:message code="jobPost.packages.manage.postTitle" arguments="<b>${jobPost.title}</b>"/>
+                    <spring:message htmlEscape="true" code="jobPost.packages.manage.postTitle"
+                                    arguments="${jobPost.title}"/>
                 </a>
                 <br>
 
@@ -67,7 +68,7 @@
                     <c:forEach items="${packages}" var="pack" varStatus="status">
                         <hr style="border-top: 2px solid rgba(0,0,0,0.1)">
                         <div class="editable-package-container">
-                            <div class="card custom-card flex-grow-1 mb-3 border-radius-package" >
+                            <div class="card custom-card flex-grow-1 mb-3 border-radius-package">
                                 <div class="card custom-card border-radius-package"
                                      id="heading${status.index}">
 
@@ -88,7 +89,7 @@
                                                         <spring:message code="jobPost.jobs.price"/>
                                                     </p>
                                                     <div class="chip">
-                                                        <spring:message code="${pack.rateType.stringCode}"
+                                                        <spring:message htmlEscape="true" code="${pack.rateType.stringCode}"
                                                                         arguments="${pack.price}"/>
                                                     </div>
                                                 </div>

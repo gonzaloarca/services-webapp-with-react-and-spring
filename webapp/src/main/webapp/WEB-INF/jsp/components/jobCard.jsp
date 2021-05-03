@@ -26,7 +26,7 @@
         <div>
             <div class="price-container mt-4 mx-4">
                 <p class="price">
-                    <spring:message code="${requestScope.data.rateType.stringCode}"
+                    <spring:message htmlEscape="true" code="${requestScope.data.rateType.stringCode}"
                                     arguments="${requestScope.data.price}"/>
                 </p>
             </div>

@@ -14,7 +14,7 @@
     <div class="review-username">
         <h4><c:out value="${requestScope.data.client.username}"/></h4>
         <h5>
-            <spring:message code="date.format.YYYY_MM_DD" arguments="${requestScope.data.creationDate.year},
+            <spring:message htmlEscape="true" code="date.format.YYYY_MM_DD" arguments="${requestScope.data.creationDate.year},
                 ${requestScope.data.creationDate.monthValue},${requestScope.data.creationDate.dayOfMonth}"/>
         </h5>
     </div>
@@ -28,7 +28,7 @@
     <a href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
         <h5 class="review-link mt-2">
             <i class="bi bi-box-arrow-up-right"></i>
-            <spring:message code="profile.review.link"
+            <spring:message htmlEscape="true" code="profile.review.link"
                             arguments="${requestScope.data.jobPost.title}"/>
         </h5>
     </a>

@@ -1,6 +1,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+
+<%@ page buffer="256kb" %>
 <html>
 <head>
 
@@ -55,11 +57,11 @@
                     <%@include file="components/serviceCard.jsp" %>
                 </div>
                 <div class="contract-buttons-card">
-                    <spring:message code="mycontracts.contact.name"
+                    <spring:message htmlEscape="true" code="mycontracts.contact.name"
                                     arguments="${contractCard.jobCard.jobPost.user.username}" var="name"/>
-                    <spring:message code="mycontracts.contact.email"
+                    <spring:message htmlEscape="true" code="mycontracts.contact.email"
                                     arguments="${contractCard.jobCard.jobPost.user.email}" var="email"/>
-                    <spring:message code="mycontracts.contact.phone"
+                    <spring:message htmlEscape="true" code="mycontracts.contact.phone"
                                     arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
                     <a class="contract-contact-text"
                        onclick='openContactModal("${name}", "${email}", "${phone}")'>

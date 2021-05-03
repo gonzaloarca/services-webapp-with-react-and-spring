@@ -233,7 +233,7 @@
                                                         <spring:message code="jobPost.jobs.price"/>
                                                     </p>
                                                     <div class="chip">
-                                                        <spring:message code="${pack.rateType.stringCode}"
+                                                        <spring:message htmlEscape="true" code="${pack.rateType.stringCode}"
                                                                         arguments="${pack.price}"/>
                                                     </div>
                                                 </div>

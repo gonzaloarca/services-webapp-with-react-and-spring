@@ -1,6 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+
 <html>
 <head>
     <title>
@@ -104,6 +105,7 @@
                     <c:if test="${withServices}">
                         <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
                             <c:set var="data" value="${jobCard}" scope="request"/>
+                            <c:set var="isEditable" value="true" scope="request"/>
                             <%@include file="components/serviceCard.jsp" %>
                             <c:if test="${status.index != jobCards.size()-1}">
                                 <hr class="hr1"/>
