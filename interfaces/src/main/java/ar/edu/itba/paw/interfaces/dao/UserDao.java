@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.ByteImage;
+import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 
@@ -36,4 +37,10 @@ public interface UserDao {
     void verifyUser(long id);
 
     boolean deleteUser(long id);
+
+    //TODO: TEST
+    List<JobPost.JobType> findUserJobTypes(long id);
+
+    //TODO: TEST
+    int findUserRankingInJobType(long id, JobPost.JobType jobType);
 }

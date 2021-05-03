@@ -128,6 +128,34 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
     @Override
+    public List<JobCard> findRelatedJobPosts(long professional_id, int page) {
+        Integer limit = getLimit(page);
+        int offset = page == HirenetUtils.ALL_PAGES ? 0 : HirenetUtils.PAGE_SIZE * page;
+        return jdbcTemplate.query(
+                "SELECT * " +
+                        "FROM job_cards" +
+                        "         NATURAL JOIN (" +
+                        "    SELECT DISTINCT pro2_contracts.post_id, " +
+                        "COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common" +
+                        "    FROM full_contract pro1_contracts" +
+                        "             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id" +
+                        "    WHERE ? <> pro2_contracts.professional_id" +
+                        "      AND pro2_contracts.contract_creation_date >= now()::date-30" +
+                        "    GROUP BY pro2_contracts.post_id) AS recommended_posts " +
+                        "WHERE post_is_active = TRUE" +
+                        "  AND post_job_type IN (" +
+                        "    SELECT DISTINCT post_job_type" +
+                        "    FROM job_post" +
+                        "    WHERE ? = user_id) " +
+                        "ORDER BY clients_in_common DESC, contracts DESC " +
+                        " LIMIT ? OFFSET ?",
+                // Obtiene las cards de otros profesionales con el que comparte clientes(los cuales contrataron al otro
+                // profesional en los ultimos 30 dias) y tipo de trabajo,
+                // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
+                new Object[]{professional_id, professional_id, limit, offset}, JOB_CARD_ROW_MAPPER);
+    }
+
+    @Override
     public int findAllMaxPage() {
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM job_cards WHERE post_is_active = TRUE", Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
@@ -155,6 +183,29 @@ public class JobCardDaoJDBC implements JobCardDao {
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM job_cards " +
                         "WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE AND ? = post_job_type",
                 new Object[]{query, zone.ordinal(), jobType.ordinal()}, Integer.class);
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+    }
+
+
+    @Override
+    public int findMaxPageRelatedJobPosts(long professional_id) {
+        Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) " +
+                "FROM job_cards" +
+                "         NATURAL JOIN (" +
+                "    SELECT DISTINCT pro2_contracts.post_id, " +
+                "COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common" +
+                "    FROM full_contract pro1_contracts" +
+                "             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id" +
+                "    WHERE ? <> pro2_contracts.professional_id" +
+                "      AND pro2_contracts.contract_creation_date >= now()::date-30" +
+                "    GROUP BY pro2_contracts.post_id) AS recommended_posts " +
+                "WHERE post_is_active = TRUE" +
+                "  AND post_job_type IN (" +
+                "    SELECT DISTINCT post_job_type" +
+                "    FROM job_post" +
+                "    WHERE ? = user_id) "
+                , new Object[]{professional_id, professional_id},Integer.class);
+
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 }

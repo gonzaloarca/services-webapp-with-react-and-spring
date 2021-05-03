@@ -71,6 +71,11 @@ public class SimpleJobCardService implements JobCardService {
   }
 
     @Override
+    public List<JobCard> findRelatedJobPosts(long professional_id, int page) {
+        return jobCardDao.findRelatedJobPosts(professional_id, page);
+    }
+
+    @Override
     public int findSizeByUserId(long id) {
         return jobPostService.findSizeByUserId(id);
     }
@@ -93,6 +98,11 @@ public class SimpleJobCardService implements JobCardService {
     @Override
     public int findMaxPageSearchWithCategory(String query, JobPost.Zone value, JobPost.JobType jobType) {
         return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType);
+    }
+
+    @Override
+    public int findMaxPageRelatedJobPosts(long professional_id) {
+        return jobCardDao.findMaxPageRelatedJobPosts(professional_id);
     }
 
 }

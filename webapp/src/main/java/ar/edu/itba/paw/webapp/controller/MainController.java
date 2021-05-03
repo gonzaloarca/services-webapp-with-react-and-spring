@@ -39,9 +39,6 @@ public class MainController {
     @Autowired
     private PaginationService paginationService;
 
-    @Autowired
-    private JobPostService jobPostService;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
         if (page < 1)

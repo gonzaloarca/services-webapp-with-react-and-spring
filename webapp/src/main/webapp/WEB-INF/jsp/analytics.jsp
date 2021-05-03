@@ -72,15 +72,16 @@
                 <jsp:param name="totalReviewsSize" value="${totalReviewsSize}"/>
             </jsp:include>
         </div>
-        <c:forEach begin="1" end="4" var="i">
+        <c:forEach items="${analyticRankings}" var="analyticRanking">
             <div class="highlight card custom-card">
                 <div class="d-flex align-items-center card-body">
                     <div class="w-100">
                         <p class="analytics-highlight-title">
-                            <spring:message code="highlight.ranking" arguments="${i}"/>
+                            <spring:message code="highlight.ranking" arguments="${analyticRanking.ranking}"/>
                         </p>
                         <p class="analytics-highlight-subtitle">
-                            <spring:message code="highlight.rankingCategory" arguments="pEasdasd asd asd asd asdpe"/>
+                            <spring:message var="jobType" code="${analyticRanking.jobType.stringCode}"/>
+                            <spring:message code="highlight.rankingCategory" arguments="${jobType}"/>
                         </p>
                     </div>
                 </div>
@@ -89,27 +90,21 @@
     </div>
 
     <c:if test="${jobCards.size() > 0}">
-        <%--         TODO: VERIFICAR QE LA LISTA TOTAL SEA VACIA--%>
         <div class="card custom-card mt-5">
             <p class="card-header"><spring:message code="analytics.relatedPosts"/></p>
             <div class="card-body">
-                <c:forEach begin="1" end="2" var="i">
-                    <c:if test="${jobCards.size() > 0}">
-                        <p class="analytics-related-job-type"><spring:message code="analytics.relatedJobType"
-                                                                              arguments="testtest${i}"/></p>
-                        <%--                TODO: CHECKEAR QUE HAY CARDS EN LA CATEGORIA--%>
-                        <hr class="hr1"/>
-                        <div class="job-display-container">
-                            <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
-                                <c:set var="data" value="${jobCard}" scope="request"/>
-                                <c:import url="components/jobCard.jsp"/>
-                            </c:forEach>
-                        </div>
-                    </c:if>
-                    <br/>
-                </c:forEach>
+                <div class="job-display-container">
+                    <c:forEach items="${jobCards}" var="jobCard" varStatus="status">
+                        <c:set var="data" value="${jobCard}" scope="request"/>
+                        <c:import url="components/jobCard.jsp"/>
+                    </c:forEach>
+                </div>
             </div>
         </div>
+        <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
+        <c:set var="maxPage" value="${maxPage}" scope="request"/>
+        <c:set var="currentPages" value="${currentPages}" scope="request"/>
+        <%@include file="components/bottomPaginationBar.jsp" %>
     </c:if>
 </div>
 <jsp:include page="components/footer.jsp"/>

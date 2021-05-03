@@ -16,10 +16,17 @@ import java.util.*;
 @Repository
 public class UserDaoJDBC implements UserDao {
 
-    private static List<UserAuth.Role> mapArrToList(Object[] roles){
+    private static List<UserAuth.Role> mapArrRoleToList(Object[] roles) {
         List<UserAuth.Role> list = new ArrayList<>();
         Arrays.stream(roles)
                 .forEach(obj -> list.add(UserAuth.Role.values()[(int) obj]));
+        return list;
+    }
+
+    private static List<JobPost.JobType> mapArrJobTypeToList(Object[] roles) {
+        List<JobPost.JobType> list = new ArrayList<>();
+        Arrays.stream(roles)
+                .forEach(obj -> list.add(JobPost.JobType.values()[(int) obj]));
         return list;
     }
 
@@ -37,9 +44,9 @@ public class UserDaoJDBC implements UserDao {
     private final static RowMapper<UserAuth> USER_AUTH_ROW_MAPPER = ((resultSet, i) -> new UserAuth(
             resultSet.getString("user_email"),
             resultSet.getString("user_password"),
-            mapArrToList((Object[]) resultSet.getArray("roles").getArray()),
+            mapArrRoleToList((Object[]) resultSet.getArray("roles").getArray()),
             resultSet.getBoolean("user_is_verified")
-            ));
+    ));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -65,9 +72,9 @@ public class UserDaoJDBC implements UserDao {
         objectMap.put("user_is_verified", false);
         objectMap.put("user_image", image.getData());
         objectMap.put("image_type", image.getType());
-        objectMap.put("user_creation_date",creationDate);
+        objectMap.put("user_creation_date", creationDate);
 
-        Number key =  jdbcInsert.executeAndReturnKey(objectMap);
+        Number key = jdbcInsert.executeAndReturnKey(objectMap);
 
         return new User(key.longValue(), email, username,
                 phone, true, false,
@@ -81,58 +88,59 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<User> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?", new Object[]{id}, USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE user_email = ?",new Object[]{email},USER_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_email = ?", new Object[]{email}, USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public Optional<User> updateUserByEmail(String email,String phone, String name){
-        jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ? WHERE user_email = ?", phone,name,email);
-        return jdbcTemplate.query("SELECT * FROM users WHERE user_email = ?",new Object[]{email},USER_ROW_MAPPER).stream().findFirst();
+    public Optional<User> updateUserByEmail(String email, String phone, String name) {
+        jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ? WHERE user_email = ?", phone, name, email);
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_email = ?", new Object[]{email}, USER_ROW_MAPPER).stream().findFirst();
     }
+
     @Override
-    public Optional<User> updateUserById(long id, String name, String phone){
-        jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ? WHERE user_id = ?", phone,name,id);
-        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+    public Optional<User> updateUserById(long id, String name, String phone) {
+        jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ? WHERE user_id = ?", phone, name, id);
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?", new Object[]{id}, USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<User> updateUserById(long id, String name, String phone, ByteImage image) {
         jdbcTemplate.update("UPDATE users SET user_phone = ?, user_name = ?, user_image = (?), image_type = ? WHERE user_id = ?;",
                 phone, name, image.getData(), image.getType(), id);
-        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?",new Object[]{id},USER_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM users WHERE user_id = ?", new Object[]{id}, USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
         return jdbcTemplate.query("SELECT user_email,user_password,array_remove(array_agg(role_id),null) as roles, user_is_verified " +
                 "FROM users LEFT JOIN user_role ur on users.user_id = ur.user_id " +
-                "WHERE user_email = ? AND user_is_active = TRUE GROUP BY user_email,user_password, user_is_verified",new Object[]{email},USER_AUTH_ROW_MAPPER).stream().findFirst();
+                "WHERE user_email = ? AND user_is_active = TRUE GROUP BY user_email,user_password, user_is_verified", new Object[]{email}, USER_AUTH_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public void assignRole(long id, int role) {
         Map<String, Object> objectMap = new HashMap<>();
-        objectMap.put("user_id",id);
-        objectMap.put("role_id",role);
+        objectMap.put("user_id", id);
+        objectMap.put("role_id", role);
         roleJdbcInsert.execute(objectMap);
     }
 
     @Override
     public List<UserAuth.Role> findRoles(long id) {
-        return jdbcTemplate.query("SELECT array_agg(role_id) as roles FROM user_role WHERE user_id = ? GROUP BY user_id",new Object[]{id},(resultSet, i) -> {
-            return mapArrToList((Object[]) resultSet.getArray("roles").getArray());
-        }).stream().findFirst().orElse(new ArrayList<>());
+        return jdbcTemplate.query("SELECT array_agg(role_id) as roles FROM user_role WHERE user_id = ? GROUP BY user_id",
+                new Object[]{id}, (resultSet, i) -> mapArrRoleToList((Object[])
+                        resultSet.getArray("roles").getArray())).stream().findFirst().orElse(new ArrayList<>());
     }
 
     @Override
     public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
         return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image,image_type,user_is_verified,user_creation_date  " +
-                "FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? AND user_is_active = TRUE ",new Object[]{id,role.ordinal()},USER_ROW_MAPPER)
+                "FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? AND user_is_active = TRUE ", new Object[]{id, role.ordinal()}, USER_ROW_MAPPER)
                 .stream().findFirst();
     }
 
@@ -149,5 +157,24 @@ public class UserDaoJDBC implements UserDao {
     @Override
     public boolean deleteUser(long id) {
         return jdbcTemplate.update("UPDATE users SET user_is_active = FALSE WHERE user_id = ?;", id) > 0;
+    }
+
+    @Override
+    public List<JobPost.JobType> findUserJobTypes(long id) {
+        return jdbcTemplate.query("SELECT array_agg(DISTINCT post_job_type) AS job_types " +
+                        "FROM user NATURAL JOIN job_post WHERE user_id = ?"
+                , new Object[]{id}, (resultSet, i) -> mapArrJobTypeToList((Object[])
+                        resultSet.getArray("job_types").getArray())).stream().findFirst().orElse(new ArrayList<>());
+    }
+
+    @Override
+    public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
+        return jdbcTemplate.queryForObject("SELECT rank " +
+                "FROM (" +
+                "    SELECT user_id, ROW_NUMBER() OVER (ORDER BY SUM(contracts) DESC) AS rank" +
+                "                  FROM job_cards WHERE post_job_type = ?" +
+                "                  GROUP BY user_id" +
+                "     ) AS rankings " +
+                "WHERE user_id = ?", new Object[]{jobType.ordinal(), id}, Integer.class);
     }
 }

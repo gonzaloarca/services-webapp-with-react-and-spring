@@ -59,7 +59,7 @@
                              src='${profilePic}'
                              alt="<spring:message code="profile.image"/>">
                     </div>
-                    <h4 class="card-title profile-title mt-2 ml-3 mb-0"><c:out value="${user.username}"/></h4>
+                    <h4 class="card-title profile-title"><c:out value="${user.username}"/></h4>
                     <p class="profile-subtitle ml-3 mb-2">
                         <c:choose>
                             <c:when test="${isPro}">

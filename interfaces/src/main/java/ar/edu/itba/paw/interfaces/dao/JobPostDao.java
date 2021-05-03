@@ -23,8 +23,6 @@ public interface JobPostDao {
 
     List<JobPost> findAll(int page);
 
-    List<JobPost> findRelatedJobPosts(long professional_id);
-
     List<JobPost> search(String query, JobPost.Zone zone, int page);
 
     List<JobPost> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, int page);

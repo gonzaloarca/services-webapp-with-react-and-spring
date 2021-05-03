@@ -415,7 +415,6 @@ h3 {
     background-color: #e8e8e8;
 }
 
-
 /*REVIEW CARD*/
 .reviews-rate {
     font-size: 80px;
@@ -465,4 +464,10 @@ h3 {
 .profile-image-container {
     display: flex;
     justify-content: center;
+}
+
+.job-display-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }

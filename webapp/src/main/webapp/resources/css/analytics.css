@@ -60,3 +60,7 @@
     font-size: 18px;
     margin: 0;
 }
+
+.job-card {
+    flex-basis: 22% !important;
+}

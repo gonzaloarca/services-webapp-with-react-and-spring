@@ -74,13 +74,13 @@
     <div class="landing-row">
         <h3><spring:message code="index.services.title"/></h3>
         <div class="job-display-container">
-            <c:if test="${jobCards.size() > 0}">
+            <c:if test="${jobCardSize > 0}">
                 <c:forEach items="${jobCards}" var="jobCard">
                     <c:set var="data" value="${jobCard}" scope="request"/>
                     <c:import url="components/jobCard.jsp"/>
                 </c:forEach>
             </c:if>
-            <c:if test="${jobCards.size() == 0}">
+            <c:if test="${jobCardSize == 0}">
                 <div class="result-div">
                     <img
                             src="<c:url value="/resources/images/unavailable-1.svg"/> "
