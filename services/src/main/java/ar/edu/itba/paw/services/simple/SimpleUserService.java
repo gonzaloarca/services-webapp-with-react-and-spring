@@ -33,7 +33,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User register(String email, String password, String username, String phone,
-                         ByteImage image) throws UserAlreadyExistsException, UserNotVerifiedException{
+                         ByteImage image) throws UserAlreadyExistsException, UserNotVerifiedException {
         Optional<User> maybeUser = userDao.findByEmail(email);
 
         if (maybeUser.isPresent()) {
@@ -43,7 +43,7 @@ public class SimpleUserService implements UserService {
                 throw new UserAlreadyExistsException();
 
             //registrar usuario de nuevo
-            if(image == null)
+            if (image == null)
                 userDao.updateUserById(user.getId(), username, phone);
             else
                 userDao.updateUserById(user.getId(), username, phone, image);
@@ -56,7 +56,7 @@ public class SimpleUserService implements UserService {
         }
 
         User registeredUser;
-        if(image == null)
+        if (image == null)
             registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone);
         else
             registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone, image);
@@ -117,7 +117,7 @@ public class SimpleUserService implements UserService {
     @Override
     public boolean validCredentials(String email, String password) {
         UserAuth auth = userDao.findAuthInfo(email).orElseThrow(UserNotFoundException::new);
-        return passwordEncoder.matches(password,auth.getPassword());
+        return passwordEncoder.matches(password, auth.getPassword());
     }
 
     @Override
@@ -134,5 +134,14 @@ public class SimpleUserService implements UserService {
     @Override
     public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
         return userDao.findUserRankingInJobType(id, jobType);
+    }
+
+    @Override
+    public List<AnalyticRanking> findUserAnalyticRankings(long id) {
+        List<AnalyticRanking> analyticRankings = new ArrayList<>();
+        findUserJobTypes(id).forEach((jobType -> analyticRankings.add(new AnalyticRanking(jobType,
+                findUserRankingInJobType(id, jobType)))));
+
+        return analyticRankings;
     }
 }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
+import ar.edu.itba.paw.models.JobContractCard;
 
 import java.util.List;
 
@@ -21,7 +22,6 @@ public interface JobContractService {
 
     List<JobContract> findByProId(long id, int page);
 
-
     List<JobContract> findByPostId(long id);
 
     List<JobContract> findByPostId(long id, int page);
@@ -30,11 +30,11 @@ public interface JobContractService {
 
     List<JobContract> findByPackageId(long id, int page);
 
-
     int findContractsQuantityByProId(long id);
 
     int findContractsQuantityByPostId(long id);
 
     int findMaxPageContractsByUserId(long id);
 
+    List<JobContractCard> findJobContractCardsByClientId(long id, int page);
 }
