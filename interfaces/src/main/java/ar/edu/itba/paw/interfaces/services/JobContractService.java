@@ -39,4 +39,6 @@ public interface JobContractService {
     int findMaxPageContractsByProId(long id);
 
     List<JobContractCard> findJobContractCardsByClientId(long id, int page);
+
+    List<JobContractCard> findJobContractCardsByProId(long id, int page);
 }

@@ -128,4 +128,16 @@ public class SimpleJobContractService implements JobContractService {
                 );
         return jobContractCards;
     }
+
+    @Override
+    public List<JobContractCard> findJobContractCardsByProId(long id, int page) {
+        List<JobContractCard> jobContractCards = new ArrayList<>();
+
+        findByProId(id, page - 1).
+                forEach(jobContract -> jobContractCards.add(
+                        new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
+                                reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
+                );
+        return jobContractCards;
+    }
 }
