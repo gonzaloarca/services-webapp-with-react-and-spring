@@ -349,15 +349,18 @@ h3 {
 }
 
 .service-info {
-    width: 60%;
+    min-width: 77%;
 }
 
 .service-title {
     color: #485696;
     line-height: 1.1em;
-    max-lines: 3;
-    word-break: break-word;
     width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
 }
 
 .service-subtitle {
@@ -391,6 +394,7 @@ h3 {
 .service-control-edit {
     text-align: left;
     width: 100%;
+    padding: 2px;
 }
 
 .service-control-edit:hover {
@@ -404,6 +408,7 @@ h3 {
 .service-control-delete {
     color: red;
     text-align: left;
+    padding: 2px;
 }
 
 .service-control-delete:hover {

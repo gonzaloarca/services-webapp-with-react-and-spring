@@ -4,13 +4,13 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <div style="display: flex; justify-content: space-between">
-    <a style="display: flex; justify-content: space-between"
+    <a style="display: flex; justify-content: start; width: 83%"
        class="service-link"
        href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
 
         <div>
             <c:choose>
-                <c:when test="${requestScope.data.postImage == null}">
+                <c:when test="${requestScope.data.postImage.image.string == null}">
                     <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
                 </c:when>
                 <c:otherwise>
