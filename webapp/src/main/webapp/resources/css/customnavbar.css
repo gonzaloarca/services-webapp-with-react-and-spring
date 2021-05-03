@@ -1,3 +1,12 @@
+.nav-link {
+    font-size: 0.95rem !important;
+    font-weight: normal !important;
+}
+
+.navbar {
+    height: 65px;
+}
+
 .navbar-color {
     background-color: #485696;
 }
@@ -87,12 +96,20 @@ a.navbar-brand {
     color: #aaa;
 }
 
+#navbarDropdown {
+    padding: 0 10px;
+}
+
+#navbar-avatar {
+    margin: 0 !important;
+}
+
 .navbar-user-img {
     border-radius: 50%;
     height: 40px;
     width: 40px;
-    object-fit: cover;
     margin: 10px;
+    object-fit: cover;
 }
 
 .navbar-dropdown-toggle.dropdown-toggle::after, .navbar-dropdown-toggle.dropdown-toggle:focus {
@@ -167,4 +184,50 @@ a.navbar-brand {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
     border: none;
 
+}
+
+#search-input {
+    border-radius: 2rem;
+    background-color: white;
+    padding-right: 40px;
+}
+
+#search-input {
+    border-radius: 2rem;
+    background-color: white;
+    border: .2rem solid transparent;
+    padding-right: 40px;
+    transition: border 200ms;
+}
+
+#search-input:focus {
+    border: .2rem solid #9ca5ff;
+    transition: border 200ms;
+}
+
+#search-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 40px;
+    background-color: transparent;
+    border-radius: 2rem;
+    color: #7e7e7e;
+    border: none;
+    transition: background-color 200ms;
+}
+
+#search-button:focus {
+    outline: none;
+}
+
+#search-button:hover {
+    border: none;
+    background-color: #00000020;
+    transition: background-color 200ms;
+}
+
+#search-button:active {
+    background-color: #00000035;
 }
