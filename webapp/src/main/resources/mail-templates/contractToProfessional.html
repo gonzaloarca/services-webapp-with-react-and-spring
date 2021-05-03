@@ -42,32 +42,32 @@
 </head>
 <body class="body">
 <div class="card">
-    <h1 class="title" th:text="#{mail.contract.newContract}"></h1>
-    <h3 th:text="#{mail.contract.greetings(${professional})}"></h3>
-    <p th:text="#{mail.contract.contact(${jobPackageTitle}, #{${jobPackageRateType}(${jobPackagePrice})},
+    <h1 class="title" th:text="#{mail.contractToPro.newContract}"></h1>
+    <h3 th:text="#{mail.contractToPro.greetings(${professional})}"></h3>
+    <p th:text="#{mail.contractToPro.contact(${jobPackageTitle}, #{${jobPackageRateType}(${jobPackagePrice})},
      ${jobPostTitle})}"></p>
     <br/>
-    <p th:text="#{mail.contract.client.info}"></p>
+    <p th:text="#{mail.contractToPro.client.info}"></p>
     <div>
         <div class="custom-row">
-            <p class="bold" th:text="#{mail.contract.client.name}"></p>&nbsp;
+            <p class="bold" th:text="#{mail.contractToPro.client.name}"></p>&nbsp;
             <p th:text="${client}"></p>
         </div>
         <div class="custom-row">
-            <p class="bold" th:text="#{mail.contract.client.email}"></p>&nbsp;
+            <p class="bold" th:text="#{mail.contractToPro.client.email}"></p>&nbsp;
             <p th:text="${clientEmail}"></p>
         </div>
         <div class="custom-row">
-            <p class="bold" th:text="#{mail.contract.client.phone}"></p>&nbsp;
+            <p class="bold" th:text="#{mail.contractToPro.client.phone}"></p>&nbsp;
             <p th:text="${clientPhone}"></p>
         </div>
         <div class="custom-row">
-            <p class="bold" th:text="#{mail.contract.client.description}"></p>&nbsp;
+            <p class="bold" th:text="#{mail.contractToPro.description}"></p>&nbsp;
             <p th:text="${contractDescription}"></p>
             <br/>
         </div>
-        <p th:if="${hasAttachment}" th:text="#{mail.contract.client.attachedImage}"></p>
-        <h4 th:text="#{mail.contract.contactClient}"></h4>
+        <p th:if="${hasAttachment}" th:text="#{mail.contractToPro.attachedImage}"></p>
+        <h4 th:text="#{mail.contractToPro.contactClient}"></h4>
     </div>
 </div>
 </body>

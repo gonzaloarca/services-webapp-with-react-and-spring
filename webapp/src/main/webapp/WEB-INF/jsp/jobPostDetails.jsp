@@ -205,7 +205,14 @@
                     <div class="card-title custom-row align-items-center justify-content-between">
                         <div class="custom-row"><i class="bi bi-box-seam"></i>
                         <p>
-                            <spring:message code="jobPost.jobs.packages"/>
+                            <c:choose>
+                                <c:when test="${packages.size() == 1}">
+                                    <spring:message code="jobPost.jobs.packages"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <spring:message code="jobPost.jobs.packages.onlyOne"/>
+                                </c:otherwise>
+                            </c:choose>
                         </p>
                         </div>
                         <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/packages">
