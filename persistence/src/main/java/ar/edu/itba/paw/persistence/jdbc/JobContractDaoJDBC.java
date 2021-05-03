@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import exceptions.JobPackageNotFoundException;
 import exceptions.JobPostNotFoundException;
 import exceptions.UserNotFoundException;
@@ -116,72 +117,59 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Override
     public List<JobContract> findByClientId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE client_id = ? " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_CONTRACT_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE client_id = ?");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
     public List<JobContract> findByProId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE professional_id = ? " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_CONTRACT_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE professional_id = ? ");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
     public List<JobContract> findByPostId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE post_id = ? AND post_is_active = TRUE " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_CONTRACT_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE post_id = ? AND post_is_active = TRUE");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
     public List<JobContract> findByPackageId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE package_id = ? AND package_is_active = TRUE " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_CONTRACT_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE package_id = ? AND package_is_active = TRUE ");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_CONTRACT_ROW_MAPPER);
     }
 
     @Override
     public int findContractsQuantityByProId(long id) {
         return jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) " +
-                        "FROM full_contract " +
-                        "NATURAL JOIN job_package " +
-                        "NATURAL JOIN (SELECT post_id, user_id AS professional_id,post_is_active FROM job_post) AS posts " +
-                        "WHERE professional_id = ?", new Object[]{id}, Integer.class);
+                "SELECT COUNT(*) FROM full_contract NATURAL JOIN job_package NATURAL JOIN (SELECT post_id, user_id AS professional_id,post_is_active FROM job_post) AS posts WHERE professional_id = ?",
+                new Object[]{id}, Integer.class);
     }
 
     @Override
     public int findContractsQuantityByPostId(long id) {
         return jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) " +
-                        "FROM full_contract " +
-                        "NATURAL JOIN job_package " +
-                        "WHERE post_id = ?", new Object[]{id}, Integer.class);
+                "SELECT COUNT(*) FROM full_contract NATURAL JOIN job_package WHERE post_id = ?",
+                new Object[]{id}, Integer.class);
     }
 
     @Override
