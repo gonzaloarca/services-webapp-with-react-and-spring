@@ -93,37 +93,41 @@ public class JobCardDaoJDBC implements JobCardDao {
     @Override
     public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, int page) {
         List<Object> parameters = new ArrayList<>(Arrays.asList("%" + query + "%", zone.ordinal()));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
+
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?)");
+
+        if (!similarTypes.isEmpty()) {
+            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
+            sqlQuery.append(" OR post_job_type in (")
+                    .append(types)
+                    .append(")");
         }
-        String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
-        return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?) " +
-                        "OR post_job_type in (" + types + ")) " +
-                        "AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) " +
-                        "AND post_is_active = TRUE " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_CARD_ROW_MAPPER
-        );
+
+        sqlQuery.append(") AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_is_active = TRUE");
+
+        addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_CARD_ROW_MAPPER);
     }
 
     @Override
     public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
         List<Object> parameters = new ArrayList<>(Arrays.asList("%" + query + "%", zone.ordinal(), jobType.ordinal()));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
+
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?)");
+
+        if (!similarTypes.isEmpty()) {
+            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
+            sqlQuery.append(" OR post_job_type in (")
+                    .append(types)
+                    .append(")");
         }
-        String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
-        return jdbcTemplate.query(
-                "SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?) " +
-                        "OR post_job_type in (" + types + ")) " +
-                        "AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) " +
-                        "AND post_job_type = ? AND post_is_active = TRUE " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_CARD_ROW_MAPPER
-        );
+
+        sqlQuery.append(") AND ? IN(SELECT UNNEST(zones) FROM job_cards jc WHERE jc.post_id = job_cards.post_id) AND post_job_type = ? AND post_is_active = TRUE");
+
+        addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_CARD_ROW_MAPPER);
     }
 
     @Override
@@ -214,5 +218,14 @@ public class JobCardDaoJDBC implements JobCardDao {
                         "    WHERE ? = user_id) "
                 , new Object[]{professional_id, professional_id}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
+    }
+
+    private void addPaging(StringBuilder sqlQuery, int page) {
+        if (page != HirenetUtils.ALL_PAGES) {
+            sqlQuery.append(" LIMIT ")
+                    .append(HirenetUtils.PAGE_SIZE)
+                    .append(" OFFSET ")
+                    .append(HirenetUtils.PAGE_SIZE * page);
+        }
     }
 }
