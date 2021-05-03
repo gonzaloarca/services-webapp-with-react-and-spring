@@ -9,7 +9,7 @@
 
         <div>
             <c:choose>
-                <c:when test="${requestScope.data.postImage == null}">
+                <c:when test="${requestScope.data.postImage.image.string == null}">
                     <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
                 </c:when>
                 <c:otherwise>
