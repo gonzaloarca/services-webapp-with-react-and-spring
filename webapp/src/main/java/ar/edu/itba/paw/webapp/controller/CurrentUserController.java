@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.models.AnalyticRanking;
 import ar.edu.itba.paw.models.JobContractCard;
@@ -34,14 +35,31 @@ public class CurrentUserController {
     @Autowired
     PaginationService paginationService;
 
-    @RequestMapping(value = "/my-contracts")
-    public ModelAndView myContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+    @RequestMapping(value = "/my-contracts/professional")
+    public ModelAndView myProContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
         if (page < 1)
             throw new IllegalArgumentException();
+
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
-        int maxPage = paginationService.findMaxPageContractsByUserId(id);
+        int maxPage = paginationService.findMaxPageContractsByProId(id);
 
         return new ModelAndView("myContracts")
+                .addObject("contractType", 1)
+                .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
+                .addObject("maxPage", maxPage)
+                .addObject("contractCards", jobContractService.findJobContractCardsByProId(id, page - 1));
+    }
+
+    @RequestMapping(value = "/my-contracts/client")
+    public ModelAndView myClientContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        if (page < 1)
+            throw new IllegalArgumentException();
+
+        long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
+        int maxPage = paginationService.findMaxPageContractsByClientId(id);
+
+        return new ModelAndView("myContracts")
+                .addObject("contractType", 0)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage)
                 .addObject("contractCards", jobContractService.findJobContractCardsByClientId(id, page - 1));

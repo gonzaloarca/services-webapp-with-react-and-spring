@@ -69,6 +69,11 @@ public class SimpleJobCardService implements JobCardService {
   }
 
     @Override
+    public JobCard findByPostIdWithInactive(long id) {
+        return jobCardDao.findByPostIdWithInactive(id).orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
     public List<JobCard> findRelatedJobCards(long professional_id, int page) {
         return jobCardDao.findRelatedJobCards(professional_id, page);
     }

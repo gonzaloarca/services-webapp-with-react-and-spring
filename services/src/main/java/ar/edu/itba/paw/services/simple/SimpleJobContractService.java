@@ -121,9 +121,9 @@ public class SimpleJobContractService implements JobContractService {
     public List<JobContractCard> findJobContractCardsByClientId(long id, int page) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
-        findByClientId(id, page - 1).
+        findByClientId(id, page).
                 forEach(jobContract -> jobContractCards.add(
-                        new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
+                        new JobContractCard(jobContract, jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
                                 reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
                 );
         return jobContractCards;
@@ -133,9 +133,12 @@ public class SimpleJobContractService implements JobContractService {
     public List<JobContractCard> findJobContractCardsByProId(long id, int page) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
-        findByProId(id, page - 1).
+        List<JobContract> contracts = findByProId(id, page);
+        jobCardService.findByPostIdWithInactive(contracts.get(0).getJobPackage().getPostId());
+
+        contracts.
                 forEach(jobContract -> jobContractCards.add(
-                        new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
+                        new JobContractCard(jobContract, jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
                                 reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
                 );
         return jobContractCards;

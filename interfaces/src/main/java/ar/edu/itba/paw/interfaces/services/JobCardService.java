@@ -19,6 +19,8 @@ public interface JobCardService {
 
     JobCard findByPostId(long id);
 
+    JobCard findByPostIdWithInactive(long id);
+
     List<JobCard> findRelatedJobCards(long professional_id, int page);
 
     int findSizeByUserId(long id);

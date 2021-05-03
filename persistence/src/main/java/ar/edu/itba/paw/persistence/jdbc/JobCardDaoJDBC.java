@@ -140,6 +140,13 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
     @Override
+    public Optional<JobCard> findByPostIdWithInactive(long id) {
+        return jdbcTemplate.query(
+                "SELECT * FROM job_cards WHERE post_id = ?",
+                new Object[]{id}, JOB_CARD_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
     public List<JobCard> findRelatedJobCards(long professional_id, int page) {
         List<Object> parameters = new ArrayList<>(Arrays.asList(professional_id,
                 LocalDateTime.now().minusDays(30), professional_id));
