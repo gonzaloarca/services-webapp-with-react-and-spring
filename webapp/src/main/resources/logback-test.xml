@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
     <property name="defaultPattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
-    <appender name="STDOUT" class="ch.qos.logback.core.rolling.ConsoleAppender">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${defaultPattern:-}</pattern>
         </encoder>
@@ -12,6 +12,10 @@
     </logger>
 
     <logger name="org.springframework.security" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="org.postgresql" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 

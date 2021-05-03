@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import exceptions.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/profile/{id}")
 public class ProfileController {
+
+    private final Logger profileControllerLogger = LoggerFactory.getLogger(ProfileController.class);
 
     @Autowired
     UserService userService;
@@ -64,8 +68,14 @@ public class ProfileController {
                                             @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
                                             @ModelAttribute("user") User user,
                                             @ModelAttribute("deleteJobPostForm") DeleteItemForm form) {
-        if (page < 1)
+        if (page < 1) {
+            profileControllerLogger.debug("Invalid page: {}",page);
+            //TODO Excepcion
             throw new IllegalArgumentException();
+        }
+        final ModelAndView mav = new ModelAndView("profile");
+
+        profileControllerLogger.debug("Getting auth info for user: {}",user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
         int maxPage = paginationService.findMaxPageJobPostsByUserId(id);
         return new ModelAndView("profile")
@@ -78,9 +88,13 @@ public class ProfileController {
 
     @RequestMapping(value = "/reviews")
     public ModelAndView profileWithReviews(@PathVariable("id") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page, @ModelAttribute("user") User user) {
-        if (page < 1)
+        if (page < 1) {
+            profileControllerLogger.debug("Invalid page: {}",page);
             throw new IllegalArgumentException();
+        }
         final ModelAndView mav = new ModelAndView("profile");
+
+        profileControllerLogger.debug("Getting auth info for user: {}",user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
         int maxPage = paginationService.findMaxPageReviewsByUserId(id);
         return new ModelAndView("profile")
@@ -95,7 +109,9 @@ public class ProfileController {
     @RequestMapping(value = "/services/delete", method = RequestMethod.POST)
     public ModelAndView deleteJobPostFromProfile(@ModelAttribute DeleteItemForm form, @PathVariable final long id) {
         // FIXME: Error al eliminar
+        profileControllerLogger.debug("Deleting post {}",form.getId());
         if (!jobPostService.deleteJobPost(form.getId())) {
+            profileControllerLogger.debug("Error deleting job post: {}",form.getId());
             throw new RuntimeException();
         }
 

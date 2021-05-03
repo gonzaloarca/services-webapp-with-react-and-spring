@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -35,6 +37,8 @@ import java.nio.charset.StandardCharsets;
 @EnableAsync
 public class WebConfig {
 
+    private final Logger webConfigLogger = LoggerFactory.getLogger(WebConfig.class);
+
     @Autowired
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
@@ -57,15 +61,18 @@ public class WebConfig {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
-
+        webConfigLogger.debug("Datasoruce driver set to {}", ds.getDriver());
 //        PARA USO LOCAL
         ds.setUrl("jdbc:postgresql://localhost:5432/paw-2021a-03");
 
 //        PARA DEPLOY
 //        ds.setUrl("jdbc:postgresql://10.16.1.110:5432/paw-2021a-03");
+        webConfigLogger.debug("Datasource URL set to {}", ds.getUrl());
 
         ds.setUsername("paw-2021a-03");
         ds.setPassword("4Jqbf4tiN");
+        webConfigLogger.debug("Datasoruce username and password set to {} and {}", ds.getUsername(), ds.getPassword());
+
 
         return ds;
     }
@@ -92,9 +99,13 @@ public class WebConfig {
 
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
+        webConfigLogger.debug("Running SQL script: {}", schemaSql.getFilename());
         dbp.addScript(schemaSql);
+        webConfigLogger.debug("Running SQL script: {}", imageSchemaSql.getFilename());
         dbp.addScript(imageSchemaSql);
+        webConfigLogger.debug("Running SQL script: {}", loginMigration.getFilename());
         dbp.addScript(loginMigration);
+        webConfigLogger.debug("Running SQL script: {}", jobCardView.getFilename());
         dbp.addScript(jobCardView);
         return dbp;
     }

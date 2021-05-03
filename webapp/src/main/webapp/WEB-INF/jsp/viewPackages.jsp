@@ -116,17 +116,18 @@
                                     <i class="fas fa-edit"></i>
                                     Editar
                                 </a>
+                                <c:if test="${packages.size() > 1}">
+                                    <c:url value="/job/${jobPost.id}/packages" var="postPath"/>
+                                    <form:form modelAttribute="deletePackageForm" action="${postPath}" method="post"
+                                               cssStyle="margin-bottom: 0">
+                                        <button type="submit" class="btn package-control-delete text-uppercase">
+                                            <i class="fas fa-trash-alt"></i>
+                                            Eliminar
+                                        </button>
 
-                                <c:url value="/job/${jobPost.id}/packages" var="postPath"/>
-                                <form:form modelAttribute="deletePackageForm" action="${postPath}" method="post"
-                                           cssStyle="margin-bottom: 0">
-                                    <button type="submit" class="btn package-control-delete text-uppercase">
-                                        <i class="fas fa-trash-alt"></i>
-                                        Eliminar
-                                    </button>
-
-                                    <form:hidden path="id" value="${pack.id}"/>
-                                </form:form>
+                                        <form:hidden path="id" value="${pack.id}"/>
+                                    </form:form>
+                                </c:if>
                             </div>
                         </div>
                     </c:forEach>

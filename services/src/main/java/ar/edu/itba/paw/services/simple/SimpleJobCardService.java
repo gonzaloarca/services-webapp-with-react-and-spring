@@ -5,10 +5,7 @@ import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
-import exceptions.JobPackageNotFoundException;
 import org.apache.commons.text.similarity.LevenshteinDistance;
-import org.apache.commons.text.similarity.LevenshteinResults;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -54,13 +51,14 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobCard> search(String title, JobPost.Zone zone, JobPost.JobType jobType, int page) {
+    public List<JobCard> search(String title, int zone, int jobType, int page) {
         List<JobPost.JobType> similarTypes = getSimilarTypes(title);
+        JobPost.JobType parsedJobType = jobType == -1 ? null : JobPost.JobType.values()[jobType];
+        JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
+        if (parsedJobType == null)
+            return jobCardDao.search(title, parsedZone, similarTypes, page);
 
-        if (jobType == null)
-            return jobCardDao.search(title, zone, similarTypes, page);
-
-        return jobCardDao.searchWithCategory(title, zone, jobType, similarTypes, page);
+        return jobCardDao.searchWithCategory(title, parsedZone, parsedJobType, similarTypes, page);
     }
 
     @Override

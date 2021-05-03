@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.webapp.form.ContractForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,8 @@ import java.util.Locale;
 @RequestMapping("/contract")
 @Controller
 public class ContractController {
+
+    private final Logger contractControllerLogger = LoggerFactory.getLogger(ContractController.class);
 
     @Autowired
     private JobPackageService jobPackageService;
@@ -51,13 +55,13 @@ public class ContractController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
                                        @ModelAttribute("contractForm") final ContractForm form) {
 
         final ModelAndView mav = new ModelAndView("createContract");
+        contractControllerLogger.debug("Finding images for post {}",jobPost.getId());
         List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
 
         mav.addObject("imageList", imageList);
@@ -73,24 +77,29 @@ public class ContractController {
                                        @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors,
                                        Principal principal) {
         if (errors.hasErrors()) {
+            contractControllerLogger.debug("Contract form has errors: {}",errors.getAllErrors().toString());
             return createContract(packId, jobPost, form);
         }
 
         String email = principal.getName();
         JobContract jobContract;
 
-        if (form.getImage().getSize() == 0)
+        if (form.getImage().getSize() == 0) {
+            contractControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{}",packId,email,form.getDescription());
             jobContract = jobContractService.create(email, packId, form.getDescription());
-        else {
+        }else {
             try {
+                contractControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{} with image",packId,email,form.getDescription());
                 jobContract = jobContractService.create(email, packId, form.getDescription(),
                         imageService.create(form.getImage().getBytes(), form.getImage().getContentType()));
             } catch (IOException e) {
+                contractControllerLogger.debug("Error creating contract");
                 //fixme
                 throw new RuntimeException(e.getMessage());
             }
         }
 
+        contractControllerLogger.debug("Senfing email to professional for package {}, post {} and contract {}",jobPack.getId(),jobPost.getId(),jobContract.getId());
         mailingService.sendContractEmail(jobContract, jobPack, jobPost, LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/contract/package/" + packId + "/success");
