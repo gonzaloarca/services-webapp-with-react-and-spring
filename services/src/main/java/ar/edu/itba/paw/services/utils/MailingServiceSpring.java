@@ -80,7 +80,7 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost) {
+    public void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost, Locale locale) {
         DataSource attachment = null;
         ByteImage image = jobContract.getImage();
 
@@ -97,13 +97,20 @@ public class MailingServiceSpring implements MailingService {
         data.put("client", jobContract.getClient().getUsername());
         data.put("clientEmail", jobContract.getClient().getEmail());
         data.put("clientPhone", jobContract.getClient().getPhone());
+        data.put("professionalEmail", jobContract.getProfessional().getEmail());
+        data.put("professionalPhone", jobContract.getProfessional().getPhone());
         data.put("contractDescription", jobContract.getDescription());
         data.put("hasAttachment", attachment != null);
 
         sendMessageUsingThymeleafTemplate(jobPost.getUser().getEmail(),
-                messageSource.getMessage("mail.contract.subject",
-                        new Object[]{jobContract.getClient().getUsername()}, Locale.getDefault()),
-                data, "contract", attachment);
+                messageSource.getMessage("mail.contractToPro.subject",
+                        new Object[]{jobContract.getClient().getUsername()}, locale),
+                data, "contractToProfessional", attachment);
+
+        sendMessageUsingThymeleafTemplate(jobContract.getClient().getEmail(),
+                messageSource.getMessage("mail.contractToClient.subject",
+                        new Object[]{jobPost.getTitle()}, locale),
+                data, "contractToClient", attachment);
     }
 
     @Async

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import exceptions.JobContractNotFoundException;
 import exceptions.JobPostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,15 +100,13 @@ public class ReviewDaoJDBC implements ReviewDao {
     @Override
     public List<Review> findReviewsByPostId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_contract NATURAL JOIN review " +
-                        "WHERE post_id = ? " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), REVIEW_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder()
+                .append("SELECT * FROM full_contract NATURAL JOIN review WHERE post_id = ?");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), REVIEW_ROW_MAPPER);
     }
 
     @Override
@@ -119,14 +118,13 @@ public class ReviewDaoJDBC implements ReviewDao {
     @Override
     public List<Review> findReviewsByPackageId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_contract NATURAL JOIN review WHERE package_id = ? " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), REVIEW_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder()
+                .append("SELECT * FROM full_contract NATURAL JOIN review WHERE package_id = ?");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), REVIEW_ROW_MAPPER);
     }
 
     @Override
@@ -139,51 +137,45 @@ public class ReviewDaoJDBC implements ReviewDao {
     @Override
     public List<Review> findProfessionalReviews(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_contract NATURAL JOIN review " +
-                        "WHERE professional_id = ? " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), REVIEW_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder()
+                .append("SELECT * FROM full_contract NATURAL JOIN review WHERE professional_id = ?");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), REVIEW_ROW_MAPPER);
     }
 
     @Override
     public Double findProfessionalAvgRate(long id) {
-        return jdbcTemplate.query("SELECT coalesce(avg(review_rate),0) as rating " +
-                        "FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "NATURAL JOIN users WHERE user_id = ? GROUP BY user_id",
+        return jdbcTemplate.query("SELECT coalesce(avg(review_rate),0) as rating FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post NATURAL JOIN users WHERE user_id = ? GROUP BY user_id",
                 new Object[]{id}, (resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
     }
 
     @Override
     public int findMaxPageReviewsByUserId(long id) {
-        Integer reviewsCount = jdbcTemplate.queryForObject("SELECT COUNT(contract_id) " +
-                "FROM full_contract NATURAL JOIN review WHERE professional_id = ?", new Object[]{id}, Integer.class);
+        Integer reviewsCount = jdbcTemplate.queryForObject("SELECT COUNT(contract_id) FROM full_contract NATURAL JOIN review WHERE professional_id = ?",
+                new Object[]{id}, Integer.class);
         return (int) Math.ceil((double) reviewsCount / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
     public int findProfessionalReviewsSize(long id) {
         return jdbcTemplate.queryForObject(
-                "SELECT COUNT(contract_id) FROM full_contract NATURAL JOIN review " +
-                        "WHERE professional_id = ?", new Object[]{id}, Integer.class);
+                "SELECT COUNT(contract_id) FROM full_contract NATURAL JOIN review WHERE professional_id = ?",
+                new Object[]{id}, Integer.class);
     }
 
     @Override
     public int findMaxPageReviewsByPostId(long id) {
-        Integer reviewsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) " +
-                "FROM full_contract NATURAL JOIN review WHERE post_id = ?", new Object[]{id}, Integer.class);
+        Integer reviewsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM full_contract NATURAL JOIN review WHERE post_id = ?",
+                new Object[]{id}, Integer.class);
         return (int) Math.ceil((double) reviewsCount / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
     public Double findJobPostAvgRate(long id) {
-        return jdbcTemplate.query("SELECT coalesce(avg(review_rate),0) as rating " +
-                        "FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "WHERE post_id = ? GROUP BY post_id",
+        return jdbcTemplate.query("SELECT coalesce(avg(review_rate),0) as rating FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE post_id = ? GROUP BY post_id",
                 new Object[]{id}, (resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
     }
 }

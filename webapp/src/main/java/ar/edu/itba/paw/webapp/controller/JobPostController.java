@@ -71,7 +71,7 @@ public class JobPostController {
         mav.addObject("isOwner", isOwner).addObject("jobPost", jobPost)
                 .addObject("imageList", imageList)
                 .addObject("totalContractsCompleted",
-                        jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()));
+                        jobContractService.findContractsQuantityByPostId(jobPost.getId()));
 
         jobPostControllerLogger.debug("Finding packages for post: {}",id);
         mav.addObject("packages", jobPackageService.findByPostId(id))

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.Review;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -49,19 +50,19 @@ public class JobPackageDaoJDBC implements JobPackageDao {
 
     @Override
     public Optional<JobPackage> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM job_package WHERE package_id = ? AND package_is_active = TRUE", new Object[]{id}, JOB_PACKAGE_ROW_MAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM job_package WHERE package_id = ? AND package_is_active = TRUE",
+                new Object[]{id}, JOB_PACKAGE_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<JobPackage> findByPostId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query("SELECT * FROM job_package WHERE post_id = ? AND package_is_active = TRUE ORDER BY package_id " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                new Object[]{id}, JOB_PACKAGE_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM job_package WHERE post_id = ? AND package_is_active = TRUE ORDER BY package_id");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_PACKAGE_ROW_MAPPER);
     }
 
     @Override

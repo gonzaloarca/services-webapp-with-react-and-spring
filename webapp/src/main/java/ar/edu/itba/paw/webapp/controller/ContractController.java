@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.form.ContractForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.security.Principal;
+import java.util.Locale;
 
 @RequestMapping("/contract")
 @Controller
@@ -98,7 +100,7 @@ public class ContractController {
         }
 
         contractControllerLogger.debug("Senfing email to professional for package {}, post {} and contract {}",jobPack.getId(),jobPost.getId(),jobContract.getId());
-        mailingService.sendContractEmail(jobContract, jobPack, jobPost);
+        mailingService.sendContractEmail(jobContract, jobPack, jobPost, LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/contract/package/" + packId + "/success");
     }

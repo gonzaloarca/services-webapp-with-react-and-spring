@@ -127,8 +127,16 @@
                                         <jsp:param name="rate" value="${avgRate}"/>
                                     </jsp:include>
                                 </span>
-                                <h5 class="reviews-summary-gray-text mt-3"><spring:message code="profile.review.average"
-                                                                                           arguments="${totalReviewsSize}"/>
+                                <h5 class="reviews-summary-gray-text mt-3">
+                                    <c:choose>
+                                        <c:when test="${totalReviewsSize == 1}">
+                                            <spring:message code="profile.review.average.fromOne"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <spring:message code="profile.review.average"
+                                                            arguments="${totalReviewsSize}"/>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </h5>
                             </div>
                             <div class="col align-self-center">

@@ -37,7 +37,7 @@ public class CurrentUserController {
     private ReviewService reviewService;
 
     @Autowired
-    PaginationService paginationService;
+    private PaginationService paginationService;
 
     @RequestMapping(value = "/my-contracts/professional")
     public ModelAndView myProContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {

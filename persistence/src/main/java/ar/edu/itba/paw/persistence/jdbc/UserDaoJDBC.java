@@ -117,9 +117,13 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
-        return jdbcTemplate.query("SELECT user_email,user_password,array_remove(array_agg(role_id),null) as roles, user_is_verified " +
-                "FROM users LEFT JOIN user_role ur on users.user_id = ur.user_id " +
-                "WHERE user_email = ? AND user_is_active = TRUE GROUP BY user_email,user_password, user_is_verified", new Object[]{email}, USER_AUTH_ROW_MAPPER).stream().findFirst();
+        String sqlQuery = new StringBuilder()
+                .append("SELECT user_email,user_password,array_remove(array_agg(role_id),null) as roles, user_is_verified ")
+                .append("FROM users LEFT JOIN user_role ur on users.user_id = ur.user_id ")
+                .append("WHERE user_email = ? AND user_is_active = TRUE GROUP BY user_email,user_password, user_is_verified")
+                .toString();
+
+        return jdbcTemplate.query( sqlQuery, new Object[]{email}, USER_AUTH_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
@@ -139,9 +143,12 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
-        return jdbcTemplate.query("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image,image_type,user_is_verified,user_creation_date  " +
-                "FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? AND user_is_active = TRUE ", new Object[]{id, role.ordinal()}, USER_ROW_MAPPER)
-                .stream().findFirst();
+        String sqlQuery = new StringBuilder()
+                .append("SELECT user_id,user_name,user_email,user_is_active,user_phone,user_image,image_type,user_is_verified,user_creation_date  ")
+                .append("FROM users NATURAL JOIN user_role WHERE user_id = ? AND role_id = ? AND user_is_active = TRUE ")
+                .toString();
+
+        return jdbcTemplate.query( sqlQuery, new Object[]{id, role.ordinal()}, USER_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
@@ -161,26 +168,27 @@ public class UserDaoJDBC implements UserDao {
 
     @Override
     public List<JobPost.JobType> findUserJobTypes(long id) {
-        return jdbcTemplate.query("SELECT array_agg(DISTINCT post_job_type) AS job_types " +
-                        "FROM users NATURAL JOIN job_post WHERE user_id = ?",
+        return jdbcTemplate.query("SELECT array_agg(DISTINCT post_job_type) AS job_types FROM users NATURAL JOIN job_post WHERE user_id = ?",
                 new Object[]{id}, (resultSet, i) -> mapArrJobTypeToList((Object[])
                         resultSet.getArray("job_types").getArray())).stream().findFirst().orElse(new ArrayList<>());
     }
 
     @Override
     public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
-        return jdbcTemplate.queryForObject(
-                "SELECT rank" +
-                " FROM (" +
-                "         SELECT user_id, ROW_NUMBER() OVER () AS rank" +
-                "         FROM (SELECT user_id" +
-                "               FROM job_cards" +
-                "               WHERE post_job_type = ?" +
-                "               GROUP BY user_id" +
-                "               ORDER BY SUM(contracts) DESC" +
-//                         ORDERBY esta en una subquery para que funcione correctamente con HSQLDB
-                "              ) AS users_ordered_by_contract" +
-                "     ) AS rankings" +
-                " WHERE user_id = ?", new Object[]{jobType.ordinal(), id}, Integer.class);
+        String sqlQuery = new StringBuilder()
+                .append("SELECT rank FROM (")
+                .append("         SELECT user_id, ROW_NUMBER() OVER () AS rank")
+                .append("         FROM (SELECT user_id")
+                .append("               FROM job_cards")
+                .append("               WHERE post_job_type = ?")
+                .append("               GROUP BY user_id")
+                .append("               ORDER BY SUM(contracts) DESC")
+                //                         ORDERBY esta en una subquery para que funcione correctamente con HSQLDB
+                .append("              ) AS users_ordered_by_contract")
+                .append("     ) AS rankings")
+                .append(" WHERE user_id = ?")
+                .toString();
+
+        return jdbcTemplate.queryForObject(sqlQuery, new Object[]{jobType.ordinal(), id}, Integer.class);
     }
 }
