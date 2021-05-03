@@ -147,6 +147,7 @@
     justify-items: left;
     margin-bottom: 0;
     margin-left: 10px;
+    word-break: break-word;
 }
 
 .price-tag {

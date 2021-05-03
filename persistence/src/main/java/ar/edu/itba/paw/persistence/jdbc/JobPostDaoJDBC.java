@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.JobPost.Zone;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -97,54 +98,44 @@ public class JobPostDaoJDBC implements JobPostDao {
     @Override
     public List<JobPost> findByUserId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE user_id = ? AND post_is_active = TRUE " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_POST_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_post WHERE user_id = ? AND post_is_active = TRUE");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_POST_ROW_MAPPER);
     }
 
     @Override
     public List<JobPost> findByJobType(JobPost.JobType jobType, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(jobType.ordinal()));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE post_job_type = ? AND post_is_active = TRUE " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_POST_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_post WHERE post_job_type = ? AND post_is_active = TRUE");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_POST_ROW_MAPPER);
     }
 
     @Override
     public List<JobPost> findByZone(JobPost.Zone zone, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(zone.ordinal()));
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE ? IN(UNNEST(zones)) AND post_is_active = TRUE " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_POST_ROW_MAPPER);
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_post WHERE ? IN(UNNEST(zones)) AND post_is_active = TRUE");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), parameters.toArray(), JOB_POST_ROW_MAPPER);
     }
 
 
     @Override
     public List<JobPost> findAll(int page) {
-        List<Object> parameters = new ArrayList<>();
-        if (page != HirenetUtils.ALL_PAGES) {
-            parameters.add(HirenetUtils.PAGE_SIZE);
-            parameters.add(HirenetUtils.PAGE_SIZE * page);
-        }
-        return jdbcTemplate.query(
-                "SELECT * FROM full_post WHERE post_is_active = TRUE " +
-                        (page == HirenetUtils.ALL_PAGES ? "" : "LIMIT ? OFFSET ?"),
-                parameters.toArray(), JOB_POST_ROW_MAPPER);
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_post WHERE post_is_active = TRUE");
+
+        PagingUtil.addPaging(sqlQuery, page);
+
+        return jdbcTemplate.query(sqlQuery.toString(), JOB_POST_ROW_MAPPER);
     }
 
     @Override
@@ -156,7 +147,8 @@ public class JobPostDaoJDBC implements JobPostDao {
 
     @Override
     public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones) {
-        int rowsAffected = jdbcTemplate.update("UPDATE job_post SET post_title = ? , post_available_hours = ? , post_job_type = ? WHERE post_id = ?", title, availableHours, jobType.ordinal(), id);
+        int rowsAffected = jdbcTemplate.update("UPDATE job_post SET post_title = ? , post_available_hours = ? , post_job_type = ? WHERE post_id = ?",
+                title, availableHours, jobType.ordinal(), id);
         jdbcTemplate.update("DELETE FROM post_zone WHERE post_id = ?", id);
         for (Zone zone : zones) {
             jdbcInsertZone.execute(new HashMap<String, Integer>() {{

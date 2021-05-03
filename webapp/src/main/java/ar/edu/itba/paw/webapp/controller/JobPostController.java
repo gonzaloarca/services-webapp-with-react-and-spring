@@ -57,7 +57,7 @@ public class JobPostController {
                 .addObject("jobPost", jobPost)
                 .addObject("imageList", imageList)
                 .addObject("totalContractsCompleted",
-                        jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()))
+                        jobContractService.findContractsQuantityByPostId(jobPost.getId()))
                 .addObject("packages", jobPackageService.findByPostId(id))
                 .addObject("contractsCompleted",
                         jobContractService.findContractsQuantityByPostId(jobPost.getUser().getId()))

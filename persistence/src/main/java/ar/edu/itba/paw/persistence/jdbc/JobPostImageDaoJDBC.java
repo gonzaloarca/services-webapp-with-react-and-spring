@@ -49,10 +49,7 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 	@Override
 	public List<JobPostImage> findImages(long postId) {
 		return jdbcTemplate.query(
-			"SELECT image_id, post_id, image_data, image_type " +
-					"FROM post_image " +
-					"WHERE post_id = ? " +
-					"GROUP BY image_id;",
+			"SELECT image_id, post_id, image_data, image_type FROM post_image WHERE post_id = ? GROUP BY image_id;",
 				new Object[]{postId},
 				JOB_POST_IMAGE_ROW_MAPPER
 		);
@@ -61,11 +58,7 @@ public class JobPostImageDaoJDBC implements JobPostImageDao {
 	@Override
 	public JobPostImage findPostImage(long postId) {
 		return jdbcTemplate.query(
-				"SELECT image_id, post_id, image_data, image_type " +
-						"FROM post_image " +
-						"WHERE post_id = ? " +
-						"GROUP BY image_id " +
-						"LIMIT 1;",
+				"SELECT image_id, post_id, image_data, image_type FROM post_image WHERE post_id = ? GROUP BY image_id LIMIT 1;",
 				new Object[]{postId},
 				JOB_POST_IMAGE_ROW_MAPPER
 		).stream().findFirst().orElse(null);

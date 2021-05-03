@@ -27,7 +27,6 @@ SELECT full_post.post_id,
        pi.image_type          AS card_image_type,
        (SELECT COUNT(*)
         FROM full_contract
-                 NATURAL JOIN job_package
         WHERE post_id = full_post.post_id)
                               AS post_contract_count,
        (SELECT COUNT(contract_id)
