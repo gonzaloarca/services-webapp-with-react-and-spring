@@ -44,7 +44,7 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageJobPosts() {
+    public int findMaxPageJobCards() {
         return jobCardService.findMaxPage();
     }
 

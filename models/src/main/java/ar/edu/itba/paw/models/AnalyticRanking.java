@@ -1,10 +1,8 @@
-package ar.edu.itba.paw.webapp.utils;
-
-import ar.edu.itba.paw.models.JobPost;
+package ar.edu.itba.paw.models;
 
 public class AnalyticRanking {
-    private JobPost.JobType jobType;
-    private int ranking;
+    private final JobPost.JobType jobType;
+    private final int ranking;
 
     public AnalyticRanking(JobPost.JobType jobType, int ranking) {
         this.jobType = jobType;

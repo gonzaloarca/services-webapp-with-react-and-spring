@@ -2,8 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
-import ar.edu.itba.paw.webapp.utils.AnalyticRanking;
-import ar.edu.itba.paw.webapp.utils.JobContractCard;
+import ar.edu.itba.paw.models.AnalyticRanking;
+import ar.edu.itba.paw.models.JobContractCard;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,17 +40,11 @@ public class CurrentUserController {
             throw new IllegalArgumentException();
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
         int maxPage = paginationService.findMaxPageContractsByUserId(id);
-        List<JobContractCard> jobContractCards = new ArrayList<>();
-        jobContractService.findByClientId(id, page - 1).
-                forEach(jobContract -> jobContractCards.add(
-                        new JobContractCard(jobContract, jobCardService.findByPostId(jobContract.getJobPackage().getPostId()),
-                                reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
-                );
 
         return new ModelAndView("myContracts")
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage)
-                .addObject("contractCards", jobContractCards);
+                .addObject("contractCards", jobContractService.findJobContractCardsByClientId(id, page - 1));
     }
 
     @RequestMapping("/analytics")
@@ -61,15 +55,12 @@ public class CurrentUserController {
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
         //TODO: VERIFICAR QUE SEA PROFESSIONAL
         int maxPage = paginationService.findMaxPageRelatedJobCards(id);
-        List<AnalyticRanking> analyticRankings = new ArrayList<>();
-        userService.findUserJobTypes(id).forEach((jobType -> analyticRankings.add(new AnalyticRanking(jobType,
-                userService.findUserRankingInJobType(id, jobType)))));
         return new ModelAndView("analytics")
                 .addObject("user", userService.getUserByRoleAndId(1, id))
                 .addObject("avgRate", reviewService.findProfessionalAvgRate(id))
                 .addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(id))
                 .addObject("totalReviewsSize", reviewService.findProfessionalReviewsSize(id))
-                .addObject("analyticRankings", analyticRankings)
+                .addObject("analyticRankings", userService.findUserAnalyticRankings(id))
                 .addObject("jobCards", jobCardService.findRelatedJobCards(id, page - 1))
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage);

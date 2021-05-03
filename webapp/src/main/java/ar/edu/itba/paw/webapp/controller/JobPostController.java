@@ -45,7 +45,6 @@ public class JobPostController {
         if (page < 1)
             throw new IllegalArgumentException();
         boolean isOwner = false;
-        final ModelAndView mav = new ModelAndView("jobPostDetails");
         JobPost jobPost = jobPostService.findById(id);
         if (principal != null && jobPost.getUser().getEmail().equals(principal.getName()))
             isOwner = true;
@@ -54,8 +53,8 @@ public class JobPostController {
         //TODO: BUSCAR SI HAY UNA MEJOR MANERA
 
         int maxPage = paginationService.findMaxPageReviewsByPostId(id);
-
-        mav.addObject("isOwner", isOwner).addObject("jobPost", jobPost)
+        return new ModelAndView("jobPostDetails").addObject("isOwner", isOwner)
+                .addObject("jobPost", jobPost)
                 .addObject("imageList", imageList)
                 .addObject("totalContractsCompleted",
                         jobContractService.findContractsQuantityByProId(jobPost.getUser().getId()))
@@ -68,7 +67,6 @@ public class JobPostController {
                 .addObject("reviews", reviewService.findReviewsByPostId(jobPost.getId(), page - 1))
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage);
-        return mav;
     }
 
     @RequestMapping(value = "/job/{postId}/edit", method = RequestMethod.GET)
@@ -244,9 +242,9 @@ public class JobPostController {
 
     //TODO: Este comporatmiento se repite en profile delete job post, tal vez sea mejor mergearlos
     @RequestMapping(path = "/job/{postId}/delete")
-    public ModelAndView deleteJobPost(@PathVariable("postId") int postId){
+    public ModelAndView deleteJobPost(@PathVariable("postId") int postId) {
         //FIXME: Excepcion correcta
-        if(!jobPostService.deleteJobPost(postId)){
+        if (!jobPostService.deleteJobPost(postId)) {
             throw new RuntimeException();
         }
         //TODO: Redireccionar a un success de delete?

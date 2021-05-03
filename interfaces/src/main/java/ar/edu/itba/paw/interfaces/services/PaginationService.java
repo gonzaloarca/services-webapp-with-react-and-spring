@@ -8,7 +8,7 @@ public interface PaginationService {
 
     List<Integer> findCurrentPages(int page, int maxPage);
 
-    int findMaxPageJobPosts();
+    int findMaxPageJobCards();
 
     int findMaxPageReviewsByUserId(long id);
 

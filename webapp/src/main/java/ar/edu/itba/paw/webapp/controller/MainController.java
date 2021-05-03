@@ -43,41 +43,37 @@ public class MainController {
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
         if (page < 1)
             throw new IllegalArgumentException();
-        final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("jobCards", jobCardService.findAll(page - 1));
-        int maxPage = jobCardService.findMaxPage();
-        List<Integer> currentPages = paginationService.findCurrentPages(page, maxPage);
-        mav.addObject("maxPage", jobCardService.findMaxPage());
-        mav.addObject("currentPages", currentPages);
-        mav.addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
-        return mav;
+        int maxPage = paginationService.findMaxPageJobCards();
+        return new ModelAndView("index")
+                .addObject("jobCards", jobCardService.findAll(page - 1))
+                .addObject("maxPage", maxPage)
+                .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
+                .addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ModelAndView search(@Valid @ModelAttribute("searchForm") SearchForm form, final BindingResult errors,
-                               final ModelAndView mav, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+                               final ModelAndView mav,
+                               @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
         if (page < 1)
             throw new IllegalArgumentException();
 
         if (errors.hasErrors()) {
-            ModelAndView errorMav = new ModelAndView(mav.getViewName());
-            errorMav.addObject(form);
-            errorMav.addObject("categories", JobPost.JobType.values());
-            return errorMav;
+            return new ModelAndView(mav.getViewName()).addObject(form)
+                    .addObject("categories", JobPost.JobType.values());
         }
-        final ModelAndView searchMav = new ModelAndView("search");
-        searchMav.addObject("categories", JobPost.JobType.values());
-        searchMav.addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())]);
         int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(),
                 JobPost.Zone.values()[Integer.parseInt(form.getZone())],
                 (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()]);
-        searchMav.addObject("maxPage", maxPage);
-        searchMav.addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
-        searchMav.addObject("jobCards", jobCardService.search(form.getQuery(),
-                JobPost.Zone.values()[Integer.parseInt(form.getZone())],
-                (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()], page - 1)
-        );
-        return searchMav;
+        return new ModelAndView("search")
+                .addObject("categories", JobPost.JobType.values())
+                .addObject("pickedZone", JobPost.Zone.values()[Integer.parseInt(form.getZone())])
+                .addObject("maxPage", maxPage)
+                .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
+                .addObject("jobCards", jobCardService.search(form.getQuery(),
+                        JobPost.Zone.values()[Integer.parseInt(form.getZone())],
+                        (form.getCategory() == -1) ? null : JobPost.JobType.values()[form.getCategory()], page - 1)
+                );
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -120,9 +116,8 @@ public class MainController {
 
     @RequestMapping("/categories")
     public ModelAndView categories() {
-        ModelAndView mav = new ModelAndView("categories");
-        mav.addObject("categories", JobPost.JobType.values());
-        return mav;
+        return new ModelAndView("categories")
+                .addObject("categories", JobPost.JobType.values());
     }
 
     @RequestMapping("/password_changed")
