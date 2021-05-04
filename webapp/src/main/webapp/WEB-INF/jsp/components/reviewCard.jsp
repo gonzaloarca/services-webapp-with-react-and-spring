@@ -14,8 +14,7 @@
     <div class="review-username">
         <h4><c:out value="${requestScope.data.client.username}"/></h4>
         <h5>
-            <spring:message htmlEscape="true" code="date.format.YYYY_MM_DD" arguments="${requestScope.data.creationDate.year},
-                ${requestScope.data.creationDate.monthValue},${requestScope.data.creationDate.dayOfMonth}"/>
+            <spring:message htmlEscape="true" code="date.format.YYYY_MM_DD" arguments="${requestScope.data.creationDate.year},${String.format('%02d',requestScope.data.creationDate.monthValue)},${String.format('%02d',requestScope.data.creationDate.dayOfMonth)}"/>
         </h5>
     </div>
     <jsp:include page="components/rateStars.jsp">

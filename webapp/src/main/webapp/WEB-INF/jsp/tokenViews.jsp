@@ -42,6 +42,9 @@
                 <p class="text">
                     <spring:message code="token.view.email.text"/>
                 </p>
+                <a type="button" class="btn btn-primary" style="display: block;margin: 10px auto; width: 100px"
+                   href="${pageContext.request.contextPath}/login"><spring:message
+                        code="navigation.login"/></a>
             </c:when>
             <c:when test="${send}">
                 <img src='<c:url value="/resources/images/emailnotification.svg" />'
@@ -79,9 +82,8 @@
                 </p>
             </c:when>
         </c:choose>
-        <a class="btn btn-primary" href="${pageContext.request.contextPath}/" role="button" type="submit">
-            <spring:message code="button.return"/>
-        </a>
+        <a type="submit" class="btn btn-primary" href="${pageContext.request.contextPath}/" role="button">
+            <spring:message code="button.return"/></a>
     </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
