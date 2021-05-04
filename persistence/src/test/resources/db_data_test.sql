@@ -14,12 +14,12 @@ INSERT INTO job_post(post_id, user_id, post_title, post_available_hours, post_jo
 INSERT INTO job_post(post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active) VALUES (DEFAULT,1,'Paseador de perros','Viernes a sabados 09hs - 14hs',3,true);
 INSERT INTO job_post(post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active) VALUES (DEFAULT,2,'Electricista no matriculado','Lun a Jueves 13hs - 14hs',1,true);
 INSERT INTO job_post(post_id, user_id, post_title, post_available_hours, post_job_type, post_is_active) VALUES (DEFAULT, 4, 'Plomero Matriculado', 'Miercoles a Viernes 10hs - 14hs', 2, true);
+INSERT INTO post_zone(post_id, zone_id) VALUES (1, 0);
 INSERT INTO post_zone(post_id, zone_id) VALUES (1, 1);
-INSERT INTO post_zone(post_id, zone_id) VALUES (1, 2);
-INSERT INTO post_zone(post_id, zone_id) VALUES (2, 3);
-INSERT INTO post_zone(post_id, zone_id) VALUES (3,3);
-INSERT INTO post_zone(post_id, zone_id) VALUES (3,1);
-INSERT INTO post_zone(post_id, zone_id) VALUES (4,4);
+INSERT INTO post_zone(post_id, zone_id) VALUES (2, 2);
+INSERT INTO post_zone(post_id, zone_id) VALUES (3, 3);
+INSERT INTO post_zone(post_id, zone_id) VALUES (3, 1);
+INSERT INTO post_zone(post_id, zone_id) VALUES (4, 4);
 INSERT INTO job_package(package_id, post_id, package_title, package_description, package_price, package_rate_type, package_is_active) VALUES (DEFAULT, 1, 'Trabajo Simple', 'Arreglos de tomacorrientes', 200.00, 0, true);
 INSERT INTO job_package(package_id, post_id, package_title, package_description, package_price, package_rate_type, package_is_active) VALUES (DEFAULT, 1, 'Trabajo no tan simple', 'Instalacion de cableado electrico', 850.00, 0, true);
 INSERT INTO job_package(package_id, post_id, package_title, package_description, package_price, package_rate_type, package_is_active) VALUES (DEFAULT, 2, 'Trabajo Complejo', 'Arreglos de canerias', 500.00, 0, true);
