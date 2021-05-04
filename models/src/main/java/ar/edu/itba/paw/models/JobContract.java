@@ -12,9 +12,10 @@ public class JobContract {
     private final LocalDateTime creationDate;
     private final String description;
     private final ByteImage image;
+    private final EncodedImage encodedImage;
 
     public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description,
-                       ByteImage image) {
+                       ByteImage image, EncodedImage encodedImage) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
@@ -22,6 +23,7 @@ public class JobContract {
         this.creationDate = creationDate;
         this.description = description;
         this.image = image;
+        this.encodedImage = encodedImage;
     }
 
     public JobPackage getJobPackage() {
@@ -52,6 +54,9 @@ public class JobContract {
         return image;
     }
 
+    public EncodedImage getEncodedImage() {
+        return encodedImage;
+    }
 
     @Override
     public String toString() {

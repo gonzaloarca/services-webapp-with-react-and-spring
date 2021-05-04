@@ -1,6 +1,7 @@
 package simple;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.simple.SimpleJobPostService;
@@ -59,7 +60,7 @@ public class SimpleJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            0.0,true,
+            0.0, true,
             LocalDateTime.now());
     private static final JobPost JOB_POST_EXISTING_USER = new JobPost(
             1,
@@ -68,14 +69,14 @@ public class SimpleJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            0.0,true,
+            0.0, true,
             LocalDateTime.now());
 
     @InjectMocks
     private SimpleJobPostService jobPostService = new SimpleJobPostService();
 
     @Mock
-    private SimpleUserService userService;
+    private UserService userService;
 
     @Mock
     private JobPostDao jobPostDao;
@@ -84,33 +85,32 @@ public class SimpleJobPostServiceTest {
     public void testCreatePostNewUser() {
         Mockito.when(userService.findByEmail(NEW_PROFESSIONAL.getEmail()))
                 .thenReturn(Optional.of(NEW_PROFESSIONAL));
-        Mockito.when(jobPostDao.create(NEW_PROFESSIONAL.getId(), JOB_POST_NEW_USER.getTitle(), JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType(),ZONES))
+        Mockito.when(jobPostDao.create(NEW_PROFESSIONAL.getId(), JOB_POST_NEW_USER.getTitle(), JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType(), ZONES))
                 .thenReturn(JOB_POST_NEW_USER);
         int[] zonesInt = new int[ZONES.size()];
         for (int i = 0; i < ZONES.size(); i++) {
             zonesInt[i] = ZONES.get(i).ordinal();
         }
-        JobPost jobPost = jobPostService.create(NEW_PROFESSIONAL.getEmail(), JOB_POST_NEW_USER.getTitle(), JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType().ordinal(),zonesInt );
+        JobPost jobPost = jobPostService.create(NEW_PROFESSIONAL.getEmail(), JOB_POST_NEW_USER.getTitle(),
+                JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType().ordinal(), zonesInt);
 
         Assert.assertEquals(jobPost, JOB_POST_NEW_USER);
 
     }
 
     @Test
-    public void testCreatePostExistingUserNoProf(){
+    public void testCreatePostExistingUserNoProf() {
         Mockito.when(userService.findByEmail(EXISTING_USER.getEmail()))
                 .thenReturn(Optional.of(EXISTING_USER));
-//        Mockito.when(userService.switchRole(EXISTING_USER.getId()))
-//                .thenReturn(Optional.of(EXISTING_USER_TO_PROF));
-        Mockito.when(jobPostDao.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType(),ZONES))
+        Mockito.when(jobPostDao.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType(), ZONES))
                 .thenReturn(JOB_POST_EXISTING_USER);
         int[] zonesInt = new int[ZONES.size()];
         for (int i = 0; i < ZONES.size(); i++) {
             zonesInt[i] = ZONES.get(i).ordinal();
         }
-        JobPost jobPost = jobPostService.create(EXISTING_USER.getEmail(),JOB_POST_EXISTING_USER.getTitle(),JOB_POST_EXISTING_USER.getAvailableHours(),JOB_POST_EXISTING_USER.getJobType().ordinal(),zonesInt);
+        JobPost jobPost = jobPostService.create(EXISTING_USER.getEmail(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(), zonesInt);
 
-        Assert.assertEquals(JOB_POST_EXISTING_USER,jobPost);
-        Assert.assertEquals(0,0);
+        Assert.assertEquals(JOB_POST_EXISTING_USER, jobPost);
+        Assert.assertEquals(0, 0);
     }
 }

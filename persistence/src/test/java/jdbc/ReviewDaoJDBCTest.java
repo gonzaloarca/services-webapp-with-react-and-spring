@@ -241,18 +241,18 @@ public class ReviewDaoJDBCTest {
     private static final String IMAGE_TYPE = "image/jpg";
 
     private static final JobContract[] JOB_CONTRACTS_PACKAGE1 = new JobContract[]{
-            new JobContract(1,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una zapatilla",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(2,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles facil",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(3,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(10,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una zapatilla",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(11,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles facil",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(12,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(13,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Instalacion de tomacorrientes",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(14,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una tuberia en la cocina",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(15,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompieron las tuberias del baño",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(16,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(17,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(18,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA, IMAGE_TYPE))
+            new JobContract(1,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una zapatilla",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(2,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles facil",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(3,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(10,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una zapatilla",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(11,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles facil",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(12,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(13,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Instalacion de tomacorrientes",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(14,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una tuberia en la cocina",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(15,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompieron las tuberias del baño",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(16,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(17,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
+            new JobContract(18,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE))
     };
 
     private static final Review[] REVIEWS = new Review[]{

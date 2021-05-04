@@ -7,6 +7,8 @@ import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobContractCard;
 import ar.edu.itba.paw.models.User;
+import exceptions.JobPackageNotFoundException;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +23,6 @@ public class SimpleJobContractService implements JobContractService {
 
     @Autowired
     private JobContractDao jobContractDao;
-
-    @Autowired
-    private JobPackageService jobPackageService;
-
-    @Autowired
-    private JobPostService jobPostService;
 
     @Autowired
     private UserService userService;
@@ -44,7 +40,7 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public JobContract create(String clientEmail, long packageId, String description, ByteImage image) {
-        User user = userService.findByEmail(clientEmail).orElseThrow(NoSuchElementException::new);
+        User user = userService.findByEmail(clientEmail).orElseThrow(UserNotFoundException::new);
 
         if (image == null)
             return jobContractDao.create(user.getId(), packageId, description);
@@ -54,7 +50,7 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public JobContract findById(long id) {
-        return jobContractDao.findById(id).orElseThrow(NoSuchElementException::new);
+        return jobContractDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
     }
 
     @Override

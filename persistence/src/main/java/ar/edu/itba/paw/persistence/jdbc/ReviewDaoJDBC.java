@@ -86,7 +86,7 @@ public class ReviewDaoJDBC implements ReviewDao {
                         pro,
                         LocalDateTime.now(),
                         resultSet.getString("contract_description"),
-                        null
+                        null,null
                 ),
                 resultSet.getTimestamp("review_creation_date").toLocalDateTime()
         );

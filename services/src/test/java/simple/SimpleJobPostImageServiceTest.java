@@ -44,16 +44,11 @@ public class SimpleJobPostImageServiceTest {
 
 	private final List<JobPostImage> jobPostImages = new ArrayList<>();
 
-	private int n;
-
 	@InjectMocks
 	private final SimpleJobPostImageService jobPostImageService = new SimpleJobPostImageService();
 
 	@Mock
 	private JobPostImageDao jobPostImageDao;
-
-	@Mock
-	private JobPostService jobPostService;
 
 	@Mock
 	private ImageService imageService;
@@ -63,16 +58,8 @@ public class SimpleJobPostImageServiceTest {
 
 	@Test
 	public void addImagesSuccess() {
-		n = 0;
-
-		Mockito.when(jobPostService.findById(Mockito.eq(POST_ID)))
-				.thenReturn(JOB_POST);
-
 		Mockito.when(imageService.isValidImage(Mockito.any()))
 				.thenReturn(true);
-
-		Mockito.when(jobPostImageDao.getImageCount(POST_ID))
-				.thenReturn(n++);
 
 		Mockito.when(jobPostImageDao.addImage(POST_ID, byteImage1))
 				.thenReturn(new JobPostImage(1, POST_ID, encodedImage1));
@@ -95,9 +82,6 @@ public class SimpleJobPostImageServiceTest {
 	@Test
 	public void addImageException() {
 		exceptionRule.expect(RuntimeException.class);
-
-		Mockito.when(jobPostService.findById(Mockito.eq(FAKE_ID)))
-				.thenThrow(RuntimeException.class);
 
 		jobPostImageService.addImage(FAKE_ID, byteImage1);
 	}

@@ -34,4 +34,6 @@ public interface JobCardService {
     int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType);
 
     int findMaxPageRelatedJobCards(long professional_id);
+
+    public List<JobPost.JobType> getSimilarTypes(String query);
 }

@@ -54,9 +54,9 @@ public class SimpleReviewService implements ReviewService {
         List<Integer> answer = new ArrayList<>();
         while (answer.size() < 5)
             answer.add(0);
-        findProfessionalReviews(id).forEach((review) -> {
-            answer.set(review.getRate() - 1, answer.get(review.getRate() - 1) + 1);
-        });
+        
+        findProfessionalReviews(id).forEach((review) ->
+                answer.set(review.getRate() - 1, answer.get(review.getRate() - 1) + 1));
 
         return answer;
     }

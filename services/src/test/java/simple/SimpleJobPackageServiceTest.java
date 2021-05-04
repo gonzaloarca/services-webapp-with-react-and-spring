@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.simple.SimpleJobPackageService;
 import ar.edu.itba.paw.services.simple.SimpleJobPostService;
+import exceptions.JobPackageNotFoundException;
+import exceptions.JobPostNotFoundException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,16 +56,6 @@ public class SimpleJobPackageServiceTest {
 
         Assert.assertNotNull(maybePackage);
         Assert.assertEquals(JOB_PACKAGE, maybePackage);
-    }
-
-    @Test
-    public void createNoExistingPostId() {
-        exceptionRule.expect(RuntimeException.class);
-
-        Mockito.when(simpleJobPostService.findById(Mockito.eq(JOB_PACKAGE.getId()+1))).thenThrow(RuntimeException.class);
-
-        simpleJobPackageService.create(JOB_PACKAGE.getId() + 1, JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
-                JOB_PACKAGE.getPrice().toString(), JOB_PACKAGE.getRateType().getValue());
     }
 
 }

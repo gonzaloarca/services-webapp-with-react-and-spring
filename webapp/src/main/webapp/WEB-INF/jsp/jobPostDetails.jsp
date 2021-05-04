@@ -72,10 +72,11 @@
     </c:if>
     <c:if test="${!jobPost.active}">
         <!--TODO mejorar el diseño de esto -->
-        <div class="inactive-header">
-            <div class="inactive-text">
+        <div class="removed-post-disclaimer mx-0 mb-4">
+            <i class="fas fa-exclamation-triangle mx-1"></i>
+            <span class="inactive-text">
                 <spring:message code="jobPost.inactive"/>
-            </div>
+            </span>
         </div>
     </c:if>
     <div class="card custom-card mb-4 bg-white rounded">
