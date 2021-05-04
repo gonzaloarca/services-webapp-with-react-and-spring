@@ -1,5 +1,10 @@
 package exceptions;
 
 public class MismatchedTokensException extends RuntimeException {
-	//TODO implementar
+
+    private static final String MESSAGE = "Tokens don't match";
+
+    public MismatchedTokensException() {
+        super(MESSAGE);
+    }
 }

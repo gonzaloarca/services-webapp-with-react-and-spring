@@ -1,5 +1,10 @@
 package exceptions;
 
 public class UserAlreadyExistsException extends RuntimeException{
-	//TODO implmentar
+
+    private static final String MESSAGE = "User already exists";
+
+    public UserAlreadyExistsException() {
+        super(MESSAGE);
+    }
 }

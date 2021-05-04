@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <div>
     <h4 class="options-title">
-        Contratos
+        <spring:message code="contract.options.title"/>
     </h4>
     <hr class="divider-bar"/>
     <nav class="nav flex-column">
@@ -19,7 +19,7 @@
             </c:choose>
             <div class="contracts-option ${param.selected == '0' ? 'font-weight-bold' : ''}">
                 <i class="fas fa-users fa-sm option-icon client-icon"></i>
-                Servicios que yo contraté
+                <spring:message code="contract.options.mine"/>
             </div>
         </a>
         <a class="nav-link nav-option ${param.selected == '1' ? 'active' : ''}"
@@ -34,7 +34,7 @@
             </c:choose>
             <div class="contracts-option ${param.selected == '1' ? 'font-weight-bold' : ''}">
                 <i class="fas fa-user fa-sm option-icon pro-icon"></i>
-                Mis servicios
+                <spring:message code="contract.options.myServices"/>
             </div>
         </a>
 

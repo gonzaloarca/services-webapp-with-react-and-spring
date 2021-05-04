@@ -29,22 +29,22 @@ public class ExceptionController {
     private UserService userService;
 
     //TODO descomentar esto
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    @org.springframework.web.bind.annotation.ExceptionHandler(
-            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})
-    public ModelAndView notFoundError(RuntimeException e) {
-        exceptionLogger.debug("Exception handled: {}",e.getMessage());
-        ModelAndView mav = new ModelAndView("error/404");
-        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
-        return mav;
-    }
-
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler(Exception e) {
-        exceptionLogger.debug("Exception handled: {}",e.getMessage());
-        ModelAndView mav = new ModelAndView("error/default");
-        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
-        return mav;
-    }
+//    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+//    @org.springframework.web.bind.annotation.ExceptionHandler(
+//            {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})
+//    public ModelAndView notFoundError(RuntimeException e) {
+//        exceptionLogger.debug("Exception handled: {}",e.getMessage());
+//        ModelAndView mav = new ModelAndView("error/404");
+//        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+//        return mav;
+//    }
+//
+//    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
+//    public ModelAndView defaultErrorHandler(Exception e) {
+//        exceptionLogger.debug("Exception handled: {}",e.getMessage());
+//        ModelAndView mav = new ModelAndView("error/default");
+//        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+//        return mav;
+//    }
 
 }

@@ -38,7 +38,7 @@
 <div class="content-container-transparent mt-3">
     <h3>
         <i class="mr-2 fas fa-cube"></i>
-        Administrar paquetes
+        <spring:message code="jobPost.packages.title"/>
     </h3>
 
     <div class="packages-frame">
@@ -48,7 +48,9 @@
             <img style="height: 85px; position: absolute; top: 0; right: 10px"
                  src="<c:url value="/resources/images/package1.svg"/>" alt="">
             <div class="packages-container">
-                <h4 class="font-weight-bold">Paquetes del servicio</h4>
+                <h4 class="font-weight-bold">
+                    <spring:message code="packages.view.title"/>
+                </h4>
 
                 <a class="mt-4 ml-4" href="<c:url value="/job/${jobPost.id}"/>">
                     <i class="mr-2 fas fa-external-link-alt"></i>
@@ -61,7 +63,9 @@
                    style="margin-top: 40px"
                    class="btn btn-block btn-light add-package-btn text-uppercase">
                     <i style="font-size: 1.5rem" class="fas fa-plus-square text-primary mr-1"></i>
-                    <span>Añadir nuevo paquete</span>
+                    <span>
+                        <spring:message code="packages.view.add"/>
+                    </span>
                 </a>
 
                 <div style="margin-top: 40px" class="accordion" id="accordionPackages">
@@ -114,7 +118,7 @@
                                 <a href="<c:url value="/job/${jobPost.id}/packages/${pack.id}/edit"/>"
                                    class="btn package-control-edit btn-link text-uppercase">
                                     <i class="fas fa-edit"></i>
-                                    Editar
+                                    <spring:message code="edit"/>
                                 </a>
                                 <c:if test="${packages.size() > 1}">
                                     <c:url value="/job/${jobPost.id}/packages" var="postPath"/>
@@ -122,7 +126,7 @@
                                                cssStyle="margin-bottom: 0">
                                         <button type="submit" class="btn package-control-delete text-uppercase">
                                             <i class="fas fa-trash-alt"></i>
-                                            Eliminar
+                                            <spring:message code="delete"/>
                                         </button>
 
                                         <form:hidden path="id" value="${pack.id}"/>

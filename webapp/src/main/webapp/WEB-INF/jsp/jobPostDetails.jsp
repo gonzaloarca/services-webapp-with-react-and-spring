@@ -286,7 +286,7 @@
                     <span class="card-title custom-row">
                         <i class="bi bi-chat-left-fill"></i>
                         <p>
-                            Opiniones
+                            <spring:message code="jobPost.job.opinions"/>
                         </p>
                     </span>
                         <hr class="hr1"/>

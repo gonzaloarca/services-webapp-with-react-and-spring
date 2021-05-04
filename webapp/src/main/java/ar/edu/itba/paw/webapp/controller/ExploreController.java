@@ -32,7 +32,7 @@ public class ExploreController {
             throw new IllegalArgumentException();
         }
         int maxPage = paginationService.findMaxPageJobCards();
-        return new ModelAndView("index  ")
+        return new ModelAndView("index")
                 .addObject("jobCards", jobCardService.findAll(page - 1))
                 .addObject("maxPage", maxPage)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))

@@ -1,5 +1,11 @@
 package exceptions;
 
 public class JobContractNotFoundException extends RuntimeException {
-    //TODO: IMPLEMENTAR
+
+    private static final String MESSAGE = "Job Contract Not Found";
+
+    public JobContractNotFoundException() {
+        super(MESSAGE);
+    }
+
 }

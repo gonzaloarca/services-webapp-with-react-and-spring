@@ -1,5 +1,10 @@
 package exceptions;
 
 public class VerificationTokenExpiredException extends RuntimeException{
-	//TODO implementar
+
+    private static final String MESSAGE = "Token has expired";
+
+    public VerificationTokenExpiredException() {
+        super(MESSAGE);
+    }
 }

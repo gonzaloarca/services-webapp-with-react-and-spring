@@ -72,7 +72,7 @@
             <a href="<c:url value="/job/${requestScope.data.jobPost.id}/edit"/>"
                class="btn service-control-edit btn-link text-uppercase">
                 <i class="fas fa-edit"></i>
-                Editar
+                <spring:message code="edit"/>
             </a>
 
             <c:url value="/profile/${currentUser.id}/services/delete" var="postPath"/>
@@ -81,7 +81,7 @@
                        cssStyle="margin-bottom: 0">
                 <button type="submit" class="btn service-control-delete text-uppercase">
                     <i class="fas fa-trash-alt"></i>
-                    Eliminar
+                    <spring:message code="delete"/>
                 </button>
 
                 <form:hidden path="id" value="${requestScope.data.jobPost.id}"/>

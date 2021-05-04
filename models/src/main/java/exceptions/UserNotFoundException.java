@@ -1,5 +1,10 @@
 package exceptions;
 
 public class UserNotFoundException extends RuntimeException {
-	//TODO implementar
+
+    private static final String MESSAGE = "User not found";
+
+    public UserNotFoundException() {
+        super(MESSAGE);
+    }
 }

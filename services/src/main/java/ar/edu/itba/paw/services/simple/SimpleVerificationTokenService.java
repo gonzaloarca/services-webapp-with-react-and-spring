@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.models.VerificationToken;
+import exceptions.MismatchedTokensException;
 import exceptions.VerificationTokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,8 @@ public class SimpleVerificationTokenService implements VerificationTokenService 
 				userDao.assignRole(user.getId(), UserAuth.Role.CLIENT.ordinal());
 				return;
 			}
+
+			throw new MismatchedTokensException();
 		}
 
 		throw new NoSuchElementException();

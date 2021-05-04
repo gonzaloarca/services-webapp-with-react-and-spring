@@ -38,24 +38,29 @@
 <div class="content-container-transparent mt-3">
     <h3>
         <i class="mr-2 fas fa-cube"></i>
-        Administrar paquetes
+        <spring:message code="jobPost.packages.title"/>
     </h3>
 
     <div class="step-frame">
         <div style="padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center"
              class="step-container">
-            <img class="mb-4" style="height: 150px" src="<c:url value="/resources/images/package-success1.svg"/>" alt=""/>
-            <h4 class="mb-4">¡Paquete añadido exitosamente!</h4>
+            <img class="mb-4" style="height: 150px" src="<c:url value="/resources/images/package-success1.svg"/>"
+                 alt="<spring:message code="jobPost.packages.add.success.title"/>"/>
+            <h4 class="mb-4">
+                <spring:message code="package.add.success"/>
+            </h4>
 
             <a href="<c:url value="/job/${postId}/packages/add"/>"
                style="margin-bottom: 20px"
                class="btn btn-light add-package-btn text-uppercase custom-row align-items-center">
                 <i style="font-size: 1.5rem" class="fas fa-plus-square text-primary mr-2"></i>
-                <span>Añadir otro</span>
+                <span>
+                    <spring:message code="package.add.another"/>
+                </span>
             </a>
 
             <a href='<c:url value="/job/${postId}"/>' class="btn btn-primary text-uppercase">
-                Regresar al servicio
+                <spring:message code="package.add.return"/>
             </a>
 
 
