@@ -50,7 +50,7 @@
     <%--        </ol>--%>
     <%--    </nav>--%>
     <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
-    <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
+    <c:if test="${isOwner}">
         <div class="flex custom-row justify-content-end align-items-center">
             <a class="edit-button text-uppercase align-items-center my-2"
                href="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
@@ -66,7 +66,7 @@
                 </div>
             </a>
         </div>
-    </sec:authorize>
+    </c:if>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <c:choose>
@@ -204,27 +204,25 @@
                 <div class="card-body">
                     <div class="card-title custom-row align-items-center justify-content-between">
                         <div class="custom-row"><i class="bi bi-box-seam"></i>
-                        <p>
-                            <c:choose>
-                                <c:when test="${packages.size() == 1}">
-                                    <spring:message code="jobPost.jobs.packages"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <spring:message code="jobPost.jobs.packages.onlyOne"/>
-                                </c:otherwise>
-                            </c:choose>
-                        </p>
+                            <p>
+                                <c:choose>
+                                    <c:when test="${packages.size() == 1}">
+                                        <spring:message code="jobPost.jobs.packages.onlyOne"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <spring:message code="jobPost.jobs.packages"/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
                         </div>
-                        <sec:authorize url="${pageContext.request.contextPath}/job/${jobPost.id}/packages">
+                        <c:if test="${isOwner}">
                             <a class="custom-row edit-button text-uppercase align-items-center"
                                href="${pageContext.request.contextPath}/job/${jobPost.id}/packages">
                                 <i class="fas fa-cube m-0"></i>
                                 <p class="ml-2 font-weight-normal">Administrar paquetes</p>
                             </a>
-                        </sec:authorize>
+                        </c:if>
                     </div>
-
-
 
                     <div class="accordion mx-5" id="accordionPackages">
                         <c:forEach items="${packages}" var="pack" varStatus="status">
@@ -247,7 +245,8 @@
                                                         <spring:message code="jobPost.jobs.price"/>
                                                     </p>
                                                     <div class="chip">
-                                                        <spring:message htmlEscape="true" code="${pack.rateType.stringCode}"
+                                                        <spring:message htmlEscape="true"
+                                                                        code="${pack.rateType.stringCode}"
                                                                         arguments="${pack.price}"/>
                                                     </div>
                                                 </div>
