@@ -71,15 +71,13 @@ public class JobCardDaoJDBCTest {
             500.00, JobPackage.RateType.values()[0],
             true
     );
-    private static int CONTRACTS_COMPLETED_JOB_POST_USER2 = 4;
-    private static int REVIEWS_COUNT_JOB_POST_USER2 = 0;
     private static final JobCard JOB_CARD_USER2 = new JobCard(
             JOB_POST_USER2,
             JOB_PACKAGE_USER2.getRateType(),
             JOB_PACKAGE_USER2.getPrice(),
             null,
-            CONTRACTS_COMPLETED_JOB_POST_USER2,
-            REVIEWS_COUNT_JOB_POST_USER2
+            4,
+            0
     );
 
     @Autowired

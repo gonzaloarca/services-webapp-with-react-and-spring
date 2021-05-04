@@ -88,6 +88,10 @@
     function redirectCategory(category) {
         var auxZoneId = sessionStorage.getItem("pickedZoneId");
         sessionStorage.setItem("pickedCategoryId", category);
+        if (!auxZoneId) {
+            $('#zonesModal').modal('show');
+            return false;
+        }
         if (auxZoneId) {
             window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' + auxZoneId +
                 '&query=&category=' + category;

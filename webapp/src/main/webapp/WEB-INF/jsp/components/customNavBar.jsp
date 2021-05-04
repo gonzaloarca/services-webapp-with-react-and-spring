@@ -257,7 +257,6 @@
         }
     }
 
-    // $('#zoneError')[0].display = none;
     function submitSearchPost() {
         if (!zonePicked) {
             $('#zonesModal').modal('show');

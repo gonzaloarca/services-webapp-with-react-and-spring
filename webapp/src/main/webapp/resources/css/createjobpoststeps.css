@@ -183,6 +183,11 @@
     font-weight: bold;
 }
 
+#zoneContainer {
+    max-height: 180px;
+    overflow-y: auto;
+}
+
 .overview-field-data-container {
     background-color: #343e6d;
     padding: 10px;
@@ -200,6 +205,13 @@
 
 .overview-content .row {
     margin-top: 30px;
+}
+
+.overview-svg-1 {
+    height: 45px;
+    position: absolute;
+    right: 4px;
+    top: -18px;
 }
 
 #zoneContainer {
@@ -270,7 +282,6 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     font-size: 20px;
     margin: auto 0 auto 1vw;
 }
-
 
 .package-desc {
     background-color: #EAEAEA;
@@ -352,4 +363,11 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
 
 .radio-label {
     color: black !important;
+}
+
+.step-circle-svg {
+    height: 120px;
+    position: absolute;
+    top: -65px;
+    right: -40px;
 }

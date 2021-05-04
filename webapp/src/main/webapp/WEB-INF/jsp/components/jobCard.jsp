@@ -23,8 +23,28 @@
         <h6 class="card-text job-card-type capitalize-first-letter">
             <c:out value="${jobTypeName}"/>
         </h6>
+        <c:choose>
+            <c:when test="${requestScope.data.reviewsCount == 0}">
+                <div class="gray-chip job-card-no-reviews">
+                    <i class="bi bi-star-fill star"></i>
+                    <p>
+                        <spring:message code="jobCard.jobs.noReviews"/>
+                    </p>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="custom-row">
+                    <jsp:include page="rateStars.jsp">
+                        <jsp:param name="rate" value="${requestScope.data.jobPost.rating}"/>
+                    </jsp:include>
+                    <p class="ml-3 service-subtitle">
+                        (${requestScope.data.reviewsCount})
+                    </p>
+                </div>
+            </c:otherwise>
+        </c:choose>
         <div>
-            <div class="price-container mt-4 mx-4">
+            <div class="price-container mx-4">
                 <p class="price">
                     <spring:message htmlEscape="true" code="${requestScope.data.rateType.stringCode}"
                                     arguments="${requestScope.data.price}"/>
@@ -51,7 +71,8 @@
                         <spring:message code="jobPost.jobs.completed.onlyOne"/>
                     </c:when>
                     <c:otherwise>
-                        <spring:message code="jobPost.jobs.completed" arguments="${requestScope.data.contractsCompleted}"/>
+                        <spring:message code="jobPost.jobs.completed"
+                                        arguments="${requestScope.data.contractsCompleted}"/>
                     </c:otherwise>
                 </c:choose>
             </p>

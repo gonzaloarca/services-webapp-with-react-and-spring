@@ -30,6 +30,9 @@
     <%-- FontAwesome Icons--%>
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
 
+    <!--  Bootstrap icons   -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/search.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
