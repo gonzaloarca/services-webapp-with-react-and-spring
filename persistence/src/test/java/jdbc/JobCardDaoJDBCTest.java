@@ -109,7 +109,7 @@ public class JobCardDaoJDBCTest {
         List<JobCard> jobCards = jobCardDaoJDBCTest.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
-        Assert.assertEquals(2, jobCards.size());
+        Assert.assertEquals(4, jobCards.size());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class JobCardDaoJDBCTest {
         List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(),HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
-        Assert.assertEquals(2, jobCards.size());
+        Assert.assertEquals(4, jobCards.size());
     }
 
     @Test
@@ -128,7 +128,7 @@ public class JobCardDaoJDBCTest {
         List<JobCard> jobCards = jobCardDaoJDBCTest.findAll(HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
-        Assert.assertEquals(4, jobCards.size());
+        Assert.assertEquals(10, jobCards.size());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class JobCardDaoJDBCTest {
         List<JobCard> jobCards = jobCardDaoJDBCTest.findByUserId(USER1.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
-        Assert.assertEquals(2, jobCards.size());
+        Assert.assertEquals(9, jobCards.size());
     }
 
     @Test

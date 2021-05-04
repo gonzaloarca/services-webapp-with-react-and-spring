@@ -16,7 +16,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -39,40 +38,59 @@ public class ReviewDaoJDBC implements ReviewDao {
         return zones;
     }
 
-    private final RowMapper<Review> REVIEW_ROW_MAPPER = (resultSet, i) ->
-            new Review(resultSet.getInt("review_rate"), resultSet.getString("review_title"),
-                    resultSet.getString("review_description"),
-                    new User(
-                            resultSet.getLong("client_id"),
-                            resultSet.getString("client_email"),
-                            resultSet.getString("client_name"),
-                            resultSet.getString("client_phone"),
-                            resultSet.getBoolean("client_is_active"),
-                            true,
-                            new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
-                                    resultSet.getString("client_image_type")),
-                            resultSet.getTimestamp("client_creation_date").toLocalDateTime()),
-                    new JobPost(
-                            resultSet.getLong("post_id"),
-                            new User(
-                                    resultSet.getLong("professional_id"),
-                                    resultSet.getString("professional_email"),
-                                    resultSet.getString("professional_name"),
-                                    resultSet.getString("professional_phone"),
-                                    resultSet.getBoolean("professional_is_active"),
-                                    true,
-                                    new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
-                                            resultSet.getString("professional_image_type")),
-                                    resultSet.getTimestamp("professional_creation_date").toLocalDateTime()),
-                            resultSet.getString("post_title"),
-                            resultSet.getString("post_available_hours"),
-                            JobPost.JobType.values()[resultSet.getInt("post_job_type")],
-                            ReviewDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
-                            -1,
-                            resultSet.getBoolean("post_is_active"),
-                            resultSet.getTimestamp("post_creation_date").toLocalDateTime()),
-                    resultSet.getTimestamp("review_creation_date").toLocalDateTime()
-            );
+    private final RowMapper<Review> REVIEW_ROW_MAPPER = (resultSet, i) -> {
+        User client = new User(
+                resultSet.getLong("client_id"),
+                resultSet.getString("client_email"),
+                resultSet.getString("client_name"),
+                resultSet.getString("client_phone"),
+                resultSet.getBoolean("client_is_active"),
+                true,
+                new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("client_image")),
+                        resultSet.getString("client_image_type")),
+                resultSet.getTimestamp("client_creation_date").toLocalDateTime());
+        User pro = new User(
+                resultSet.getLong("professional_id"),
+                resultSet.getString("professional_email"),
+                resultSet.getString("professional_name"),
+                resultSet.getString("professional_phone"),
+                resultSet.getBoolean("professional_is_active"),
+                true,
+                new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("professional_image")),
+                        resultSet.getString("professional_image_type")),
+                resultSet.getTimestamp("professional_creation_date").toLocalDateTime());
+        JobPost post = new JobPost(
+                resultSet.getLong("post_id"),
+                pro,
+                resultSet.getString("post_title"),
+                resultSet.getString("post_available_hours"),
+                JobPost.JobType.values()[resultSet.getInt("post_job_type")],
+                ReviewDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
+                -1,
+                resultSet.getBoolean("post_is_active"),
+                resultSet.getTimestamp("post_creation_date").toLocalDateTime());
+        return new Review(resultSet.getInt("review_rate"), resultSet.getString("review_title"),
+                resultSet.getString("review_description"),
+                client,
+                post,
+                new JobContract(
+                        resultSet.getLong("contract_id"),
+                        client,
+                        new JobPackage(resultSet.getLong("package_id"),
+                                resultSet.getLong("post_id"),
+                                resultSet.getString("package_title"),
+                                resultSet.getString("package_description"),
+                                resultSet.getDouble("package_price"),
+                                JobPackage.RateType.values()[resultSet.getInt("package_rate_type")],
+                                resultSet.getBoolean("package_is_active")),
+                        pro,
+                        LocalDateTime.now(),
+                        resultSet.getString("contract_description"),
+                        null
+                ),
+                resultSet.getTimestamp("review_creation_date").toLocalDateTime()
+        );
+    };
 
     @Autowired
     public ReviewDaoJDBC(DataSource ds) {
@@ -94,7 +112,7 @@ public class ReviewDaoJDBC implements ReviewDao {
         JobContract jobContract = jobContractDao.findById(contractId).orElseThrow(JobContractNotFoundException::new);
         JobPost jobPost = jobPostDao.findById(jobContract.getJobPackage().getPostId()).orElseThrow(JobPostNotFoundException::new);
 
-        return new Review(rate, title, description, jobContract.getClient(), jobPost, timeStamp);
+        return new Review(rate, title, description, jobContract.getClient(), jobPost,jobContract, timeStamp);
     }
 
     @Override

@@ -156,6 +156,8 @@ public class JobPostDaoJDBC implements JobPostDao {
     public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<Zone> zones) {
         int rowsAffected = jdbcTemplate.update("UPDATE job_post SET post_title = ? , post_available_hours = ? , post_job_type = ? WHERE post_id = ?",
                 title, availableHours, jobType.ordinal(), id);
+        if(rowsAffected == 0)
+            return false;
         jdbcTemplate.update("DELETE FROM post_zone WHERE post_id = ?", id);
         for (Zone zone : zones) {
             jdbcInsertZone.execute(new HashMap<String, Integer>() {{
@@ -163,7 +165,7 @@ public class JobPostDaoJDBC implements JobPostDao {
                 put("zone_id", zone.ordinal());
             }});
         }
-        return rowsAffected > 0;
+        return true;
     }
 
     @Override

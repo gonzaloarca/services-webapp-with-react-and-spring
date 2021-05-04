@@ -37,9 +37,9 @@ public class UserDaoJDBCTest {
             true,
             LocalDateTime.now());
 
-    private static final List<JobPost.JobType> USER1_JOBTYPES = Arrays.asList(JobPost.JobType.values()[1], JobPost.JobType.values()[3]);
+    private static final List<JobPost.JobType> USER1_JOBTYPES = Arrays.asList(JobPost.JobType.values()[1],JobPost.JobType.values()[2], JobPost.JobType.values()[3]);
 
-    private static int USER1_RANKING_IN_JOBTYPE1 = 2;
+    private static final int USER1_RANKING_IN_JOBTYPE1 = 1;
 
     @Autowired
     UserDaoJDBC userDaoJDBC;
@@ -58,7 +58,7 @@ public class UserDaoJDBCTest {
     public void testRegister() {
 
         User userTest = new User(
-                6,
+                12,
                 "manurodriguez@mail.com",
                 "Manuel Rodriguez",
                 "11-4536-5656",

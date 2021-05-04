@@ -94,7 +94,7 @@ public class JobPackageDaoJDBCTest {
             true
     ), new JobPackage(
             8,
-            1,
+            JOB_POST.getId(),
             "Trabajo Complejo 2",
             "Arreglos de canerias",
             500.00,
@@ -102,7 +102,7 @@ public class JobPackageDaoJDBCTest {
             true
     ), new JobPackage(
             9,
-            1,
+            JOB_POST.getId(),
             "Trabajo barato 2",
             "Arreglos varios",
             500.00,
@@ -110,14 +110,14 @@ public class JobPackageDaoJDBCTest {
             true
     ), new JobPackage(
             10,
-            1,
+            JOB_POST.getId(),
             "Trabajo barato 2",
             "Arreglos varios",
             500.00, JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
             11,
-            1,
+            JOB_POST.getId(),
             "Trabajo Experto 2",
             "Presupuesto y desarrollo de proyectos",
             500.00,
@@ -125,7 +125,7 @@ public class JobPackageDaoJDBCTest {
             true
     ), new JobPackage(
             12,
-            1,
+            JOB_POST.getId(),
             "Trabajo Experto 2",
             "Presupuesto y desarrollo de proyectos",
             500.00,
