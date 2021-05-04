@@ -113,7 +113,7 @@
                             <div class="form-check form-check-inline">
                                 <form:radiobutton path="rateType" id="hourly-radio"
                                                   class="form-check-input" name="inlineRadioOptions"
-                                                  value="0"/>
+                                                  value="0" onclick="checkRadio()"/>
                                 <form:label path="rateType" for="hourly-radio"
                                             class="form-check-label radio-label">
                                     <spring:message code="jobPost.create.package.hourly"/>
@@ -122,7 +122,7 @@
                             <div class="form-check form-check-inline">
                                 <form:radiobutton path="rateType" id="onetime-radio"
                                                   class="form-check-input" name="inlineRadioOptions"
-                                                  value="1"/>
+                                                  value="1" onclick="checkRadio()"/>
                                 <form:label path="rateType" for="onetime-radio"
                                             class="form-check-label radio-label">
                                     <spring:message code="jobPost.create.package.oneTime"/>
@@ -132,7 +132,7 @@
                                 <form:radiobutton path="rateType" id="tbd-radio"
                                                   class="form-check-input"
                                                   name="inlineRadioOptions"
-                                                  value="2"/>
+                                                  value="2" onclick="checkRadio()"/>
                                 <form:label path="rateType" for="tbd-radio"
                                             class="form-check-label radio-label">
                                     <spring:message code="jobPost.create.package.tbd"/>
@@ -158,7 +158,7 @@
                             <spring:message code="jobPost.create.package.price" var="pricePlaceholder"/>
                             <form:input path="price" id="package-price-input" type="number" step="any"
                                         class="form-control" min="0" max="99999999999"
-                                        placeholder="${pricePlaceholder}"/>
+                                        placeholder="${pricePlaceholder}" onkeyup="checkRadio()"/>
                             <div class="invalid-feedback">
                                 <spring:message code="jobPost.create.price.invalid"/>
                             </div>
@@ -207,10 +207,12 @@
 
 
     let form = document.querySelector('#pack-form');
+    let validated = false;
 
     form.addEventListener('submit', function (event) {
         let is_valid = form.checkValidity();
 
+        validated = true;
         checkRadio();
         if (!is_valid) {
             event.preventDefault();
@@ -227,7 +229,8 @@
         let priceInput = document.querySelector('#package-price-input');
         if(!hourlyRadio[0].checked && !onetimeRadio[0].checked && !tbdRadio[0].checked){
             message = "No radio selected";    //Mensaje default
-            feedback.style.setProperty("display", "flex");
+            if (validated)
+                feedback.style.setProperty("display", "flex");
         } else {
             feedback.style.setProperty("display", "none");
         }

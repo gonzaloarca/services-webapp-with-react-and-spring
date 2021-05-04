@@ -252,7 +252,7 @@
                                     <div class="form-check form-check-inline">
                                         <form:radiobutton path="jobPackage.rateType" id="hourly-radio"
                                                           class="form-check-input" name="inlineRadioOptions"
-                                                          value="0"/>
+                                                          value="0" onclick="checkRadio()"/>
                                         <form:label path="jobPackage.rateType" for="hourly-radio"
                                                     class="form-check-label  radio-label">
                                             <spring:message code="jobPost.create.package.hourly"/>
@@ -261,7 +261,7 @@
                                     <div class="form-check form-check-inline">
                                         <form:radiobutton path="jobPackage.rateType" id="onetime-radio"
                                                           class="form-check-input" name="inlineRadioOptions"
-                                                          value="1"/>
+                                                          value="1" onclick="checkRadio()"/>
                                         <form:label path="jobPackage.rateType" for="onetime-radio"
                                                     class="form-check-label radio-label">
                                             <spring:message code="jobPost.create.package.oneTime"/>
@@ -271,7 +271,7 @@
                                         <form:radiobutton path="jobPackage.rateType" id="tbd-radio"
                                                           class="form-check-input radio-btn"
                                                           name="inlineRadioOptions"
-                                                          value="2"/>
+                                                          value="2" onclick="checkRadio()"/>
                                         <form:label path="jobPackage.rateType" for="tbd-radio"
                                                     class="form-check-label radio-label">
                                             <spring:message code="jobPost.create.package.tbd"/>
@@ -296,7 +296,7 @@
                                     </div>
                                     <spring:message code="jobPost.create.package.price" var="pricePlaceholder"/>
                                     <form:input path="jobPackage.price" id="package-price-input" type="number"
-                                                step="any"
+                                                step="any"  onkeyup="checkRadio()"
                                                 class="form-control" min="0" max="99999999999"
                                                 placeholder="${pricePlaceholder}"/>
                                     <div class="invalid-feedback">
@@ -313,7 +313,7 @@
                                 </button>
                                 <button class="continue-btn btn btn-primary hirenet-blue-btn text-uppercase"
                                         type="button"
-                                        onclick="checkRadio()">
+                                        onclick="packageValidated = true; checkRadio()">
                                     <spring:message code="jobPost.create.next"/>
                                 </button>
                             </div>
@@ -985,13 +985,16 @@
         $('#hourly-suffix').hide();
     }
 
+    let packageValidated = false;
+
     function checkRadio() {
         let message = "";
         let feedback = document.querySelector('#radioFeedback');
         let priceInput = document.querySelector('#package-price-input');
         if (!hourlyRadio[0].checked && !oneTimeRadio[0].checked && !tbdRadio[0].checked) {
             message = "No radio selected";    //Mensaje default
-            feedback.style.setProperty("display", "flex");
+            if (packageValidated)
+                feedback.style.setProperty("display", "flex");
         } else {
             feedback.style.setProperty("display", "none");
         }
