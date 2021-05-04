@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
+import exceptions.JobPackageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,24 +20,18 @@ public class SimpleJobPackageService implements JobPackageService {
     @Autowired
     private JobPackageDao jobPackageDao;
 
-    @Autowired
-    private JobPostService jobPostService;
-
     @Override
     public JobPackage create(long postId, String title, String description, String price, int rateType) {
 
-
         JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
-
         Double parsedPrice = parsePrice(parsedRateType,price);
-
 
         return jobPackageDao.create(postId, title, description, parsedPrice, parsedRateType);
     }
 
     @Override
     public JobPackage findById(long id) {
-        return jobPackageDao.findById(id).orElseThrow(NoSuchElementException::new);
+        return jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
     }
 
     @Override
@@ -51,11 +46,8 @@ public class SimpleJobPackageService implements JobPackageService {
 
     @Override
     public boolean updateJobPackage(long id, String title, String description, String price, int rateType){
-
         JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
-
         Double parsedPrice = parsePrice(parsedRateType,price);
-
 
         return jobPackageDao.updatePackage(id,title,description,parsedPrice,parsedRateType);
     }
@@ -66,12 +58,11 @@ public class SimpleJobPackageService implements JobPackageService {
     }
 
     private Double parsePrice(JobPackage.RateType rateType, String price){
-        Double parsedPrice=null;
         if(!rateType.equals(JobPackage.RateType.TBD)) {
             if (price != null && !price.isEmpty()) {
                 return Double.parseDouble(price);
             }else {
-                throw new RuntimeException("Error al cargar el form");
+                throw new RuntimeException("Error loading form");
             }
         }
         return null;

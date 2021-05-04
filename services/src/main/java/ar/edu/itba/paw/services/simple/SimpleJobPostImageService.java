@@ -30,7 +30,7 @@ public class SimpleJobPostImageService implements JobPostImageService {
 	public JobPostImage addImage(long postId, ByteImage image) {
 
 		if(!imageService.isValidImage(image))
-			throw new RuntimeException("Invalid byte image");
+			throw new IllegalArgumentException("Invalid byte image");
 		if(maxImagesUploaded(postId))
 			return null;
 
@@ -42,7 +42,7 @@ public class SimpleJobPostImageService implements JobPostImageService {
 		List<JobPostImage> images = new ArrayList<>();
 		for(ByteImage image : byteImages){
 			if(!imageService.isValidImage(image))
-				throw new RuntimeException("Invalid byte image");
+				throw new IllegalArgumentException("Invalid byte image");
 			if(maxImagesUploaded(postId))
 				break;
 			images.add(jobPostImageDao.addImage(postId, image));

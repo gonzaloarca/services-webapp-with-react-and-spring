@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
+
 @Transactional
 @Service
 public class SimpleJobCardService implements JobCardService {
@@ -46,25 +48,24 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobCard> findByUserId(long id,int page) {
+    public List<JobCard> findByUserId(long id, int page) {
         return jobCardDao.findByUserId(id, page);
     }
 
     @Override
     public List<JobCard> search(String title, int zone, int jobType, int page) {
         List<JobPost.JobType> similarTypes = getSimilarTypes(title);
-        JobPost.JobType parsedJobType = jobType == -1 ? null : JobPost.JobType.values()[jobType];
         JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
-        if (parsedJobType == null)
+        if (jobType == SEARCH_WITHOUT_CATEGORIES)
             return jobCardDao.search(title, parsedZone, similarTypes, page);
-
-        return jobCardDao.searchWithCategory(title, parsedZone, parsedJobType, similarTypes, page);
+        else
+            return jobCardDao.searchWithCategory(title, parsedZone, JobPost.JobType.values()[jobType], similarTypes, page);
     }
 
     @Override
     public JobCard findByPostId(long id) {
         return jobCardDao.findByPostId(id).orElseThrow(NoSuchElementException::new);
-  }
+    }
 
     @Override
     public JobCard findByPostIdWithInactive(long id) {
@@ -108,9 +109,9 @@ public class SimpleJobCardService implements JobCardService {
         Arrays.stream(JobPost.JobType.values()).forEach(jobType -> {
             String typeName = messageSource.getMessage(jobType.getStringCode(), null, LocaleContextHolder.getLocale());
             int distance = levenshteinDistance.apply(query.toLowerCase(), typeName.toLowerCase());
-            double similarity = 1.0 - ((double) distance/Math.max(query.length(), typeName.length()));
+            double similarity = 1.0 - ((double) distance / Math.max(query.length(), typeName.length()));
 
-            if(similarity > THRESHOLD)
+            if (similarity > THRESHOLD)
                 types.add(jobType);
         });
 
