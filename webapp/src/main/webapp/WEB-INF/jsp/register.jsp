@@ -105,11 +105,11 @@
                             <spring:message code="register.email" var="emailPlaceholder"/>
                             <form:input type="email" class="form-control custom-input" name="email" required="true"
                                         placeholder="${emailPlaceholder}" maxlength="100" path="email"/>
-                            <form:errors path="email" cssClass="form-error" element="p"/>
                             <div class="invalid-feedback">
                                 <spring:message code="Email"/>
                             </div>
                         </div>
+                        <form:errors path="email" cssClass="form-error" element="p"/>
                     </div>
 
                     <div class="row">

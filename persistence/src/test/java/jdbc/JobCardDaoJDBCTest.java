@@ -86,11 +86,9 @@ public class JobCardDaoJDBCTest {
     @InjectMocks
     @Autowired
     private JobCardDaoJDBC jobCardDaoJDBCTest;
-    private JdbcTemplate jdbcTemplate;
 
     @Before
     public void setUp() {
-        jdbcTemplate = new JdbcTemplate(ds);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -104,11 +102,10 @@ public class JobCardDaoJDBCTest {
         Assert.assertEquals(JOB_CARD_USER2, maybeJobCards.get(0));
     }
 
-//    FIXME
     @Test
     public void testSearch() {
         String title = "Electricista";
-        JobPost.Zone zone = JobPost.Zone.PALERMO;
+        JobPost.Zone zone = JobPost.Zone.values()[1];
         List<JobCard> jobCards = jobCardDaoJDBCTest.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
@@ -118,12 +115,32 @@ public class JobCardDaoJDBCTest {
     @Test
     public void testSearchWithCategory() {
         String title = "";
-        JobPost.Zone zone = JobPost.Zone.PALERMO;
+        JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
         List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(),HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(2, jobCards.size());
-        System.out.println(jobCards);
+    }
+
+    @Test
+    public void findAllTest() {
+        List<JobCard> jobCards = jobCardDaoJDBCTest.findAll(HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(4, jobCards.size());
+    }
+
+    @Test
+    public void findByUserIdTest() {
+        List<JobCard> jobCards = jobCardDaoJDBCTest.findByUserId(USER1.getId(), HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(2, jobCards.size());
+    }
+
+    @Test
+    public void findByPostIdTest() {
+        Assert.assertTrue(jobCardDaoJDBCTest.findByPostId(1).isPresent());
     }
 }
