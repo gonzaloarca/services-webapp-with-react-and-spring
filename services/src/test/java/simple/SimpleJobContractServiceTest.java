@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.simple.SimpleJobContractService;
 import ar.edu.itba.paw.services.simple.SimpleJobPackageService;
 import ar.edu.itba.paw.services.simple.SimpleUserService;
-import exceptions.JobPackageNotFoundException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,7 +49,6 @@ public class SimpleJobContractServiceTest {
     @Mock
     private JobContractDao jobContractDao;
 
-
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
@@ -64,9 +62,11 @@ public class SimpleJobContractServiceTest {
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION, null, null));
+                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL,
+                        CREATION_DATE, CONTRACT_DESCRIPTION, null, null));
 
-        JobContract maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription());
+        JobContract maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(),
+                JOB_PACKAGE.getDescription());
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -85,7 +85,8 @@ public class SimpleJobContractServiceTest {
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE, CONTRACT_DESCRIPTION, null, null));
+                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL, CREATION_DATE,
+                        CONTRACT_DESCRIPTION, null, null));
 
         JobContract maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription());
 

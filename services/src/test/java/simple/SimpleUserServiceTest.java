@@ -22,9 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleUserServiceTest {

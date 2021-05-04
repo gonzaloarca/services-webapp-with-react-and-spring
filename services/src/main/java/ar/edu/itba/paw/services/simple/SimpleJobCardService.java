@@ -102,7 +102,8 @@ public class SimpleJobCardService implements JobCardService {
         return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType);
     }
 
-    private List<JobPost.JobType> getSimilarTypes(String query) {
+    @Override
+    public List<JobPost.JobType> getSimilarTypes(String query) {
         final double THRESHOLD = 0.5;
         List<JobPost.JobType> types = new ArrayList<>();
 

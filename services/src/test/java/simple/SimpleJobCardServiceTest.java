@@ -2,12 +2,8 @@ package simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
-import ar.edu.itba.paw.interfaces.services.JobCardService;
-import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.persistence.jdbc.JobCardDaoJDBC;
 import ar.edu.itba.paw.services.simple.SimpleJobCardService;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,8 +12,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-
-import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleJobCardServiceTest {
@@ -36,7 +30,7 @@ public class SimpleJobCardServiceTest {
         SimpleJobCardService spy = Mockito.spy(simpleJobCardService);
         Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY);
 
-        spy.search(QUERY, ZONE.ordinal(), SEARCH_WITHOUT_CATEGORIES, HirenetUtils.ALL_PAGES);
+        spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, HirenetUtils.ALL_PAGES);
 
         Mockito.verify(jobCardDao).search(Mockito.eq(QUERY), Mockito.eq(ZONE),
                 Mockito.eq(new ArrayList<>()), Mockito.eq(HirenetUtils.ALL_PAGES));
