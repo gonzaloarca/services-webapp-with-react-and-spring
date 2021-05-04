@@ -129,7 +129,9 @@
                onclick='openDetailsModal("${contractCard.jobContract.description}", "${encodedImage.type}",
                        "${encodedImage.string}")'>
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
-                <p>Detalles</p>
+                <p>
+                    <spring:message code="mycontract.details"/>
+                </p>
             </a>
             <hr class="divider-bar-thick">
 
@@ -210,11 +212,15 @@
                     <div class="modal-body p-4 d-flex justify-content-around">
                         <%--                            TODO: Poner alt valido--%>
                         <div id="details-image-container">
-                            <p id="details-modal-image-header" class="font-weight-bold">Imagen adjunta</p>
+                            <p id="details-modal-image-header" class="font-weight-bold">
+                                <spring:message code="mycontracts.modal.image"/>
+                            </p>
                             <img id="details-modal-image" src="">
                         </div>
                         <div id="details-description-container">
-                            <p class="font-weight-bold">Descripción del trabajo requerido</p>
+                            <p class="font-weight-bold">
+                                <spring:message code="mycontracts.modal.description"/>
+                            </p>
                             <p id="details-modal-description"></p>
                         </div>
 
@@ -265,7 +271,9 @@
 
     </div>
     <div style="color: #485696; margin: 0 50px" class="d-flex justify-content-start">
-        <p style=" margin: 0 20px;"><i class="fas fa-cube mr-2"></i>Paquete contratado</p>
+        <p style=" margin: 0 20px;"><i class="fas fa-cube mr-2"></i>
+            <spring:message code="mycontracts.card.hired"/>
+        </p>
         <p style="font-weight: bold; size: 1.1rem;"><c:out value="${contractCard.jobContract.jobPackage.title}"/></p>
     </div>
 </div>
