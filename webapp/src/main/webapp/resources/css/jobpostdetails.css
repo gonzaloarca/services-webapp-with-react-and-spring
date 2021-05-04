@@ -394,17 +394,6 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     margin-top: 4px;
 }
 
-.inactive-header {
-    background-color: #c8c8c8;
-    display: flex;
-    align-content: center;
-    justify-content: start;
-    margin-bottom: 1.5rem !important;
-    padding: 1rem 1rem 1rem 4rem;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-}
-
 .inactive-text {
-    font-weight: bold;
     font-size: large;
 }
