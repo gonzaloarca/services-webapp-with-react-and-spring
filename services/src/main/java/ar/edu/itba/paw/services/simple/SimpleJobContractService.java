@@ -3,10 +3,6 @@ package ar.edu.itba.paw.services.simple;
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPackageService;
-import ar.edu.itba.paw.interfaces.services.ReviewService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobContractCard;
@@ -28,6 +24,9 @@ public class SimpleJobContractService implements JobContractService {
 
     @Autowired
     private JobPackageService jobPackageService;
+
+    @Autowired
+    private JobPostService jobPostService;
 
     @Autowired
     private UserService userService;
@@ -126,9 +125,11 @@ public class SimpleJobContractService implements JobContractService {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
         findByClientId(id, page).
-                forEach(jobContract -> jobContractCards.add(
-                        new JobContractCard(jobContract, jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
-                                reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
+                forEach(jobContract ->
+                                jobContractCards.add(
+                                        new JobContractCard(jobContract, jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
+                                                reviewService.findContractReview(jobContract.getId()).orElse(null)))
+                        //puede no tener una review
                 );
         return jobContractCards;
     }
@@ -137,13 +138,13 @@ public class SimpleJobContractService implements JobContractService {
     public List<JobContractCard> findJobContractCardsByProId(long id, int page) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
-        List<JobContract> contracts = findByProId(id, page);
-        jobCardService.findByPostIdWithInactive(contracts.get(0).getJobPackage().getPostId());
-
-        contracts.
-                forEach(jobContract -> jobContractCards.add(
-                        new JobContractCard(jobContract, jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
-                                reviewService.findContractReview(jobContract.getId()).orElse(null)))  //puede no tener una review
+        findByProId(id, page)
+                .forEach(jobContract ->
+                                jobContractCards.add(
+                                        new JobContractCard(jobContract, jobCardService
+                                                .findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
+                                                reviewService.findContractReview(jobContract.getId()).orElse(null)))
+                        //puede no tener una review
                 );
         return jobContractCards;
     }

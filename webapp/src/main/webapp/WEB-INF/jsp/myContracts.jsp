@@ -63,45 +63,7 @@
                     <c:when test="${contractCards.size() > 0}">
                         <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
                             <c:set var="data" value="${contractCard.jobCard}" scope="request"/>
-                            <div class="row">
-                                <div class="contract-service mr-4">
-                                    <%@include file="components/serviceCard.jsp" %>
-                                </div>
-                                <div class="contract-buttons-card">
-                                    <spring:message htmlEscape="true" code="mycontracts.contact.name"
-                                                    arguments="${contractCard.jobCard.jobPost.user.username}" var="name"/>
-                                    <spring:message htmlEscape="true" code="mycontracts.contact.email"
-                                                    arguments="${contractCard.jobCard.jobPost.user.email}" var="email"/>
-                                    <spring:message htmlEscape="true" code="mycontracts.contact.phone"
-                                                    arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
-                                    <a class="contract-contact-text"
-                                       onclick='openContactModal("${name}", "${email}", "${phone}")'>
-                                        <h5 class="mb-3">
-                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                            <spring:message code="mycontracts.contact"/>
-                                        </h5>
-                                    </a>
-                                    <c:choose>
-                                        <c:when test="${contractCard.review != null}">
-                                            <h7><spring:message code="mycontracts.yourReview"/></h7>
-                                            <div class="gray-chip">
-                                                <jsp:include page="components/rateStars.jsp">
-                                                    <jsp:param name="rate" value="${contractCard.review.rate}"/>
-                                                </jsp:include>
-                                            </div>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <a class="contract-review-text"
-                                               href="${pageContext.request.contextPath}/rate-contract/${contractCard.jobContract.id}">
-                                                <h4 class="mb-0">
-                                                    <i class="bi bi-star"></i>
-                                                    <spring:message code="mycontracts.qualifycontract"/>
-                                                </h4>
-                                            </a>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
+                            <%@include file="components/contractCard.jsp" %>
                             <c:if test="${status.index != contractCards.size()-1}">
                                 <hr class="hr1"/>
                             </c:if>
@@ -128,26 +90,6 @@
 
 <jsp:include page="components/footer.jsp"/>
 
-<%--Modal de contacto--%>
-<div class="modal fade" tabindex="-1" id="modal" aria-labelledby="modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">
-                    <spring:message code="mycontracts.contact.title"/></h3>
-            </div>
-            <div class="modal-body">
-                <h5 id="modalProfessionalName"></h5>
-                <h5 id="modalProfessionalEmail"></h5>
-                <h5 id="modalProfessionalPhone"></h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <spring:message code="mycontracts.contact.close"/></button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     function openContactModal(name, email, phone) {

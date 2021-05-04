@@ -238,13 +238,14 @@ h3 {
 }
 
 .gray-chip {
-    background-color: #efefef;
+    background-color: #f5f5f5;
     border-radius: 18px;
     color: white;
     padding: 6px 12px;
+    margin: 2px;
     text-align: center;
     line-height: 1;
-    width: fit-content;
+    width: max-content;
 }
 
 /*Para precio, se utiliza en JobCard y en ServiceCard*/
@@ -349,12 +350,13 @@ h3 {
 }
 
 .service-info {
-    min-width: 77%;
+    min-width: 70%;
 }
 
 .service-title {
     color: #485696;
     line-height: 1.1em;
+    font-size: 1.2rem;
     width: 100%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -515,4 +517,58 @@ h3 {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+}
+
+.contract-control-contact {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+    padding: 2px;
+    color: #485696;
+}
+
+.contract-control-contact:hover {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
+}
+
+.contract-control-rate {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+    padding: 2px;
+    color: #FCB839;
+}
+
+.contract-control-rate:hover {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
+    color: #FCB839;
+}
+
+.contact-modal-row {
+    padding: 10px;
+    margin: 5px;
+    width: max-content;
+}
+
+.divider-bar-thick {
+    margin: 2px;
+    border-width: 2px;
+}
+
+.removed-post-disclaimer {
+    background-color: #ffedbc;
+    border: 1px solid rgb(182, 132, 35);
+    color: rgb(182, 132, 35);
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px 10px 0 10px;
+    opacity: 0.7;
 }
