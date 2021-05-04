@@ -49,22 +49,33 @@
     <%--            </li>--%>
     <%--        </ol>--%>
     <%--    </nav>--%>
-    <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
-    <c:if test="${isOwner}">
+    <c:if test="${isOwner && jobPost.active}">
         <div class="flex custom-row justify-content-end align-items-center">
             <a class="edit-button text-uppercase align-items-center my-2"
                href="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
                 <div class="custom-row"><i class="fas fa-edit"></i>
-                    <p class="mb-0 ml-2">Editar publicacion</p>
+                    <p class="mb-0 ml-2">
+                        <spring:message code="jobPost.edit"/>
+                    </p>
                 </div>
             </a>
             <div class="vl align-items-center my-2 owner-options-vl"></div>
             <a class="delete-button text-uppercase align-items-center my-2"
                href="${pageContext.request.contextPath}/job/${jobPost.id}/delete">
                 <div class="custom-row"><i class="fas fa-trash-alt"></i>
-                    <p class="mb-0 ml-2">Eliminar publicacion</p>
+                    <p class="mb-0 ml-2">
+                        <spring:message code="jobPost.delete"/>
+                    </p>
                 </div>
             </a>
+        </div>
+    </c:if>
+    <c:if test="${!jobPost.active}">
+        <!--TODO mejorar el diseño de esto -->
+        <div class="inactive-header">
+            <div class="inactive-text">
+                <spring:message code="jobPost.inactive"/>
+            </div>
         </div>
     </c:if>
     <div class="card custom-card mb-4 bg-white rounded">
@@ -90,11 +101,15 @@
                         </ol>
                         <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
+                            <span class="sr-only">
+                                <spring:message code="jobPost.create.goBack"/>
+                            </span>
                         </a>
                         <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
+                            <span class="sr-only">
+                                <spring:message code="jobPost.create.next"/>
+                            </span>
                         </a>
                     </c:if>
                     <div class="carousel-inner">
@@ -215,11 +230,13 @@
                                 </c:choose>
                             </p>
                         </div>
-                        <c:if test="${isOwner}">
+                        <c:if test="${isOwner && jobPost.active}">
                             <a class="custom-row edit-button text-uppercase align-items-center"
                                href="${pageContext.request.contextPath}/job/${jobPost.id}/packages">
                                 <i class="fas fa-cube m-0"></i>
-                                <p class="ml-2 font-weight-normal">Administrar paquetes</p>
+                                <p class="ml-2 font-weight-normal">
+                                    <spring:message code="jobPost.packages.title"/>
+                                </p>
                             </a>
                         </c:if>
                     </div>
@@ -250,7 +267,7 @@
                                                                         arguments="${pack.price}"/>
                                                     </div>
                                                 </div>
-                                                <c:if test="${!isOwner}">
+                                                <c:if test="${!isOwner && jobPost.active}">
                                                     <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
                                                         <a class="btn"
                                                            href="${pageContext.request.contextPath}/contract/package/${pack.id}"

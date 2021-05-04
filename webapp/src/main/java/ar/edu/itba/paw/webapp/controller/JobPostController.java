@@ -54,7 +54,7 @@ public class JobPostController {
         boolean isOwner = false;
         final ModelAndView mav = new ModelAndView("jobPostDetails");
         jobPostControllerLogger.debug("Finding job post by id: {}",id);
-        JobPost jobPost = jobPostService.findById(id);
+        JobPost jobPost = jobPostService.findByIdWithInactive(id);
         if (principal != null && jobPost.getUser().getEmail().equals(principal.getName())) {
             isOwner = true;
         }

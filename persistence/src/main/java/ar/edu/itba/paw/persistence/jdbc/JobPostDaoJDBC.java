@@ -96,6 +96,13 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
+    public Optional<JobPost> findByIdWithInactive(long id) {
+        return jdbcTemplate.query(
+                "SELECT * FROM full_post WHERE post_id = ?",
+                new Object[]{id}, JOB_POST_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
     public List<JobPost> findByUserId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
 

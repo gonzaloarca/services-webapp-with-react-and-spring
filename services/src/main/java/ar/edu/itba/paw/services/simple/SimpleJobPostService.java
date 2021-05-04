@@ -44,6 +44,11 @@ public class SimpleJobPostService implements JobPostService {
     }
 
     @Override
+    public JobPost findByIdWithInactive(long id) {
+        return jobPostDao.findByIdWithInactive(id).orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
     public List<JobPost> findByUserId(long id) {
         return jobPostDao.findByUserId(id, HirenetUtils.ALL_PAGES);
     }

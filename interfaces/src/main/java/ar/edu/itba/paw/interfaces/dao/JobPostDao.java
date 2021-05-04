@@ -13,6 +13,8 @@ public interface JobPostDao {
 
     Optional<JobPost> findById(long id);
 
+    Optional<JobPost> findByIdWithInactive(long id);
+
     List<JobPost> findByUserId(long id, int page);
 
     int findSizeByUserId(long id);

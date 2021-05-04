@@ -10,6 +10,8 @@ public interface JobPostService {
 
     JobPost findById(long id);
 
+    JobPost findByIdWithInactive(long id);
+
     List<JobPost> findByUserId(long id);
 
     List<JobPost> findByUserId(long id, int page);
