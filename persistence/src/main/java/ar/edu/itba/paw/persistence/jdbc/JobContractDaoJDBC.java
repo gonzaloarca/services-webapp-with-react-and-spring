@@ -65,7 +65,9 @@ public class JobContractDaoJDBC implements JobContractDao {
             resultSet.getTimestamp("professional_creation_date").toLocalDateTime()),
             resultSet.getTimestamp("contract_creation_date").toLocalDateTime(),
             resultSet.getString("contract_description"),
-            new ByteImage(resultSet.getBytes("image_data"), resultSet.getString("contract_image_type"))
+            new ByteImage(resultSet.getBytes("image_data"), resultSet.getString("contract_image_type")),
+            new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("image_data")),
+                    resultSet.getString("contract_image_type"))
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -104,7 +106,8 @@ public class JobContractDaoJDBC implements JobContractDao {
         User client = userDao.findById(clientId).orElseThrow(UserNotFoundException::new);
         User professional = userDao.findById(jobPost.getUser().getId()).orElseThrow(UserNotFoundException::new);
 
-        return new JobContract(key.longValue(), client, jobPackage, professional, timeStamp, description, image);
+        return new JobContract(key.longValue(), client, jobPackage, professional, timeStamp, description, image,
+                new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType()));
     }
 
     @Override

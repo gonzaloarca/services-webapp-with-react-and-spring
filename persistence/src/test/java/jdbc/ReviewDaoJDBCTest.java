@@ -65,6 +65,7 @@ public class ReviewDaoJDBCTest {
             USER1,
             LocalDateTime.now(),
             "Se me rompio una zapatilla",
+            null,
             null
     );
     private static final LocalDateTime date = LocalDateTime.now();

@@ -82,6 +82,7 @@ public class JobContractDaoJDBCTest {
             USER1,
             LocalDateTime.now(),
             "Se me rompio una zapatilla",
+            null,
             null
     );
 

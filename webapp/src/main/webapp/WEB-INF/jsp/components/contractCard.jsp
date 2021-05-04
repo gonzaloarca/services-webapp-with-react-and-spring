@@ -1,9 +1,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
-
 <div>
+    <c:set value="${contractCard.jobContract.encodedImage}" var="encodedImage"/>
     <c:if test="${!contractCard.jobCard.jobPost.active}">
         <div class="removed-post-disclaimer">
             <i class="fas fa-exclamation-triangle"></i>
@@ -76,12 +75,18 @@
             <spring:message htmlEscape="true" code="mycontracts.contact.phone"
                             arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
 
+            <a class="btn contract-control-details btn-link text-uppercase"
+               onclick='openDetailsModal("${contractCard.jobContract.description}", "${encodedImage.type}",
+                       "${encodedImage.string}")'>
+                <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
+                <p>Detalles</p>
+            </a>
+
             <a class="btn contract-control-contact btn-link text-uppercase"
                onclick='openContactModal("${name}", "${email}", "${phone}")'>
                 <i class="fa fa-info-circle mr-1" aria-hidden="true"></i>
-                <spring:message code="mycontracts.contact"/>
+                <p><spring:message code="mycontracts.contact"/></p>
             </a>
-
 
             <c:choose>
                 <c:when test="${contractCard.review != null}">
@@ -100,8 +105,7 @@
                         <a class="contract-control-rate text-uppercase"
                            href="${pageContext.request.contextPath}/rate-contract/${contractCard.jobContract.id}">
                             <i class="bi bi-star mr-1"></i>
-                            <spring:message code="mycontracts.qualifycontract"/>
-
+                            <p><spring:message code="mycontracts.ratecontract"/></p>
                         </a>
                     </c:if>
                 </c:otherwise>
@@ -110,7 +114,7 @@
         </div>
 
         <%--Modal de contacto--%>
-        <div class="modal fade" tabindex="-1" id="modal" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" id="contact-modal" aria-labelledby="modal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -138,7 +142,55 @@
                 </div>
             </div>
         </div>
+        <%--        Modal de detalles de contrato--%>
 
+        <div class="modal fade" tabindex="-1" id="details-modal"
+             aria-labelledby="modal" aria-hidden="true">
+            <div id="details-modal-dialog" class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold">
+                            <spring:message code="mycontracts.details.title"/></h5>
+                    </div>
+                    <div class="modal-body d-flex">
+                        <%--                            TODO: Poner alt valido--%>
+                        <img id="details-modal-image" src="">
+                        <p id="details-modal-description"></p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <spring:message code="mycontracts.contact.close"/></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openContactModal(name, email, phone) {
+                $('#modalProfessionalName').text(name);
+                $('#modalProfessionalEmail').text(email);
+                $('#modalProfessionalPhone').text(phone);
+                $('#contact-modal').modal('show');
+            }
+
+            function openDetailsModal(description, imageType, image) {
+                const imageElem = $('#details-modal-image');
+                const modalDialog = $('#details-modal-dialog');
+                imageElem.attr('src', 'data:' + imageType + ';base64,' + image);
+                if (image === "") {
+                    imageElem.hide();
+                    modalDialog.removeClass('modal-lg');
+                } else {
+                    imageElem.show();
+                    modalDialog.addClass('modal-lg');
+                }
+
+
+                $('#details-modal-description').text(description);
+                $('#details-modal').modal('show');
+            }
+        </script>
 
     </div>
 </div>
