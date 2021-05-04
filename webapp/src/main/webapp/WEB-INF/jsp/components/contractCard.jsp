@@ -1,6 +1,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+
 <div>
     <c:set value="${contractCard.jobContract.encodedImage}" var="encodedImage"/>
     <c:if test="${!contractCard.jobCard.jobPost.active}">
@@ -152,10 +154,16 @@
                         <h5 class="modal-title font-weight-bold">
                             <spring:message code="mycontracts.details.title"/></h5>
                     </div>
-                    <div class="modal-body d-flex">
+                    <div class="modal-body p-4 d-flex justify-content-around">
                         <%--                            TODO: Poner alt valido--%>
-                        <img id="details-modal-image" src="">
-                        <p id="details-modal-description"></p>
+                            <div id="details-image-container">
+                                <p id="details-modal-image-header" class="font-weight-bold">Imagen adjunta</p>
+                                <img id="details-modal-image" src="">
+                            </div>
+                            <div id="details-description-container">
+                                <p class="font-weight-bold">Descripción del trabajo requerido</p>
+                                <p id="details-modal-description"></p>
+                            </div>
 
                     </div>
                     <div class="modal-footer">
@@ -176,13 +184,23 @@
 
             function openDetailsModal(description, imageType, image) {
                 const imageElem = $('#details-modal-image');
+                const imageHeader = $('#details-modal-image-header');
+                const imageContainer = $('#details-image-container');
+                const descriptionContainer = $('#details-description-container');
                 const modalDialog = $('#details-modal-dialog');
-                imageElem.attr('src', 'data:' + imageType + ';base64,' + image);
+
                 if (image === "") {
+                    imageContainer.hide();
                     imageElem.hide();
+                    imageHeader.hide();
+                    descriptionContainer.css('width', '100%');
                     modalDialog.removeClass('modal-lg');
                 } else {
+                    imageElem.attr('src', 'data:' + imageType + ';base64,' + image);
+                    imageContainer.show();
                     imageElem.show();
+                    imageHeader.show();
+                    descriptionContainer.css('width', '45%');
                     modalDialog.addClass('modal-lg');
                 }
 

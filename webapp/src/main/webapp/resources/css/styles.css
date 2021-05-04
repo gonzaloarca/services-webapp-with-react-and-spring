@@ -603,9 +603,39 @@ h3 {
 }
 
 #details-modal-image {
-    width: 50%;
+    width: 100%;
+    padding: 20px;
     height: 400px;
     object-fit: contain;
     border-radius: 10px;
+    background-color: #485696;
+}
+
+#details-modal-image-header {
+    display: inline-block;
+    width: max-content;
+}
+
+#details-modal-description {
+    border-radius: 10px;
     background-color: #e8e8e8;
+    padding: 8px;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    word-break: break-word;
+}
+
+#details-image-container {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: 0 10px;
+}
+
+#details-description-container {
+    width: 45%;
 }

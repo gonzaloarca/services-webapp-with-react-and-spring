@@ -395,5 +395,5 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
 }
 
 .inactive-text {
-    font-size: large;
+    font-size: 1rem;
 }
