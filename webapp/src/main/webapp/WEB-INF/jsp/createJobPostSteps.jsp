@@ -701,7 +701,7 @@
         for (let i = 0; i < listElems.length; i++) {
             let a = listElems[i].getElementsByTagName("span")[0];
             let txtValue = a.textContent || a.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            if (txtValue.toUpperCase().startsWith(filter.trim())) {
                 listElems[i].style.display = "";
             } else {
                 listElems[i].style.display = "none";
