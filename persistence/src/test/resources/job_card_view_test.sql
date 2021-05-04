@@ -32,7 +32,9 @@ SELECT full_post.post_id,
         FROM full_contract
                  NATURAL JOIN review
         WHERE post_id = full_post.post_id)
-                              AS post_reviews_size
+                              AS post_reviews_size,
+       COALESCE(((bayesian_c + rating) * reviews / NULLIF((bayesian_c + reviews),0)),0)
+                              AS bayesian_rating
 FROM full_post
          NATURAL JOIN job_package pack
          LEFT JOIN post_image pi ON full_post.post_id = pi.post_id
@@ -45,4 +47,4 @@ WHERE (COALESCE(package_price,0) = (SELECT COALESCE(MIN(package_price),0)
 GROUP BY full_post.post_id, post_title, post_available_hours, post_job_type, post_is_active, user_id, user_email,
          user_name, user_phone, user_is_active, user_is_verified, user_image, user_image_type, rating, zones, contracts,
          reviews, post_creation_date, user_creation_date, package_price, pi.image_id, pi.image_data,
-         pi.image_type, post_contract_count, post_reviews_size;
+         pi.image_type, post_contract_count, post_reviews_size, bayesian_c;

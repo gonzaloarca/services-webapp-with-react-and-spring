@@ -26,7 +26,9 @@ SELECT job_post.post_id,
        count(distinct contract.contract_id) as contracts,
        count(DISTINCT review.contract_id)   as reviews,
        post_creation_date,
-       user_creation_date
+       user_creation_date,
+       COALESCE(PERCENTILE_CONT(0.25) WITHIN GROUP ( ORDER BY review_rate ASC ),0)
+                                            as bayesian_c
 FROM job_post
          NATURAL JOIN users
          NATURAL JOIN post_zone
