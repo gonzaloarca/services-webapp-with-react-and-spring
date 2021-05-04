@@ -102,7 +102,7 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     private List<JobPost.JobType> getSimilarTypes(String query) {
-        final double THRESHOLD = 0.7;       //TODO ajustar este valor
+        final double THRESHOLD = 0.5;
         List<JobPost.JobType> types = new ArrayList<>();
 
         Arrays.stream(JobPost.JobType.values()).forEach(jobType -> {
