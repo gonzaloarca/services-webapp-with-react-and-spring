@@ -15,7 +15,6 @@ public class SimpleImageService implements ImageService {
 		return new ByteImage(data, type);
 	}
 
-	// TODO: definir los tipos de imagen aceptados:
 	// http://www.java2s.com/Code/Java/Network-Protocol/MapfileextensionstoMIMEtypesBasedontheApachemimetypesfile.htm
 	@Override
 	public boolean isValidType(String type) {

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.models.JobPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,23 +24,11 @@ public class SimpleJobPackageService implements JobPackageService {
 
     @Override
     public JobPackage create(long postId, String title, String description, String price, int rateType) {
-        //TODO: CAMBIAR POR EXCEPCIONES PROPIAS
 
-        jobPostService.findById(postId);
-
-        //FIXME: DO BEFORE
-        Double parsedPrice=null;
 
         JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
 
-        //TODO: CAMBIAR POR EXCEPCIONES PROPIAS
-        if(!parsedRateType.equals(JobPackage.RateType.TBD)) {
-            if (price != null && !price.isEmpty()) {
-                parsedPrice = Double.parseDouble(price);
-            }else {
-                throw new RuntimeException("Error al cargar el form");
-            }
-        }
+        Double parsedPrice = parsePrice(parsedRateType,price);
 
 
         return jobPackageDao.create(postId, title, description, parsedPrice, parsedRateType);
@@ -63,16 +52,10 @@ public class SimpleJobPackageService implements JobPackageService {
     @Override
     public boolean updateJobPackage(long id, String title, String description, String price, int rateType){
 
-        //FIXME: DO BEFORE
-        Double parsedPrice=null;
         JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
-        if(!parsedRateType.equals(JobPackage.RateType.TBD)) {
-            if (price != null && !price.isEmpty()) {
-                parsedPrice = Double.parseDouble(price);
-            }else {
-                throw new RuntimeException("Error al cargar el form");
-            }
-        }
+
+        Double parsedPrice = parsePrice(parsedRateType,price);
+
 
         return jobPackageDao.updatePackage(id,title,description,parsedPrice,parsedRateType);
     }
@@ -80,6 +63,18 @@ public class SimpleJobPackageService implements JobPackageService {
     @Override
     public boolean deleteJobPackage(long id){
         return jobPackageDao.deletePackage(id);
+    }
+
+    private Double parsePrice(JobPackage.RateType rateType, String price){
+        Double parsedPrice=null;
+        if(!rateType.equals(JobPackage.RateType.TBD)) {
+            if (price != null && !price.isEmpty()) {
+                return Double.parseDouble(price);
+            }else {
+                throw new RuntimeException("Error al cargar el form");
+            }
+        }
+        return null;
     }
 
 
