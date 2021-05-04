@@ -46,9 +46,6 @@ public class SimpleJobContractService implements JobContractService {
     public JobContract create(String clientEmail, long packageId, String description, ByteImage image) {
         User user = userService.findByEmail(clientEmail).orElseThrow(NoSuchElementException::new);
 
-        jobPackageService.findById(packageId);
-//        client = maybeUser.orElseGet(() -> userService.register(client_email,"", client_username, client_phone, 1));
-
         if (image == null)
             return jobContractDao.create(user.getId(), packageId, description);
 
