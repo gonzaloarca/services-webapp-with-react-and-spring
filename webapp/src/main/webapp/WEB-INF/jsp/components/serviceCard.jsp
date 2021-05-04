@@ -54,7 +54,7 @@
                     <i class="fas fa-check mr-2"></i>
                     <p class="m-0">
                         <c:choose>
-                            <c:when test="${requestScope.data.contractsCompleted}">
+                            <c:when test="${requestScope.data.contractsCompleted == 1}">
                                 <spring:message code="profile.service.contract.quantity.onlyOne"/>
                             </c:when>
                             <c:otherwise>

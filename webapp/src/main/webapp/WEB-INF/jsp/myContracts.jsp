@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 
-<%@ page buffer="128kb" %>
 <html>
 <head>
 
@@ -91,13 +90,6 @@
 <jsp:include page="components/footer.jsp"/>
 
 
-<script>
-    function openContactModal(name, email, phone) {
-        $('#modalProfessionalName').text(name);
-        $('#modalProfessionalEmail').text(email);
-        $('#modalProfessionalPhone').text(phone);
-        $('#modal').modal('show');
-    }
-</script>
+
 </body>
 </html>

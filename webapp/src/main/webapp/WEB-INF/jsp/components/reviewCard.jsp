@@ -1,4 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:set var="dateStringAux" value="${requestScope.data.creationDate}" />
+<fmt:parseDate value="${dateStringAux}" var="theDate"
+               pattern="yyyy-MM-dd'T'HH:mm:ss.S" />
+<spring:message code="date.format" var="dateFormat"/>
+<fmt:formatDate value="${theDate}" pattern="${dateFormat}" var="dateFormatted"/>
+
 <div class="custom-row justify-content-between">
     <c:choose>
         <c:when test="${requestScope.data.client.image.string != null}">
@@ -11,24 +19,24 @@
     </c:choose>
     <img class="review-img" src='${profilePic}'
          alt="<spring:message code="profile.image"/>">
-    <div class="review-username">
-        <h4><c:out value="${requestScope.data.client.username}"/></h4>
-        <h5>
-            <spring:message htmlEscape="true" code="date.format.YYYY_MM_DD" arguments="${requestScope.data.creationDate.year},${String.format('%02d',requestScope.data.creationDate.monthValue)},${String.format('%02d',requestScope.data.creationDate.dayOfMonth)}"/>
-        </h5>
+    <div class="review-header">
+        <p class="mb-0 font-weight-bold"><c:out value="${requestScope.data.client.username}"/></p>
+        <p class="mb-0 text-black-50">
+            <c:out value="${dateFormatted}" />
+        </p>
     </div>
     <jsp:include page="components/rateStars.jsp">
         <jsp:param name="rate" value="${requestScope.data.rate}"/>
     </jsp:include>
 </div>
-<h4 class="mt-2 review-title"><c:out value="${requestScope.data.title}"/></h4>
-<h5><c:out value="${requestScope.data.description}"/></h5>
+<p class="mt-2 mb-0 review-title"><c:out value="${requestScope.data.title}"/></p>
+<p><c:out value="${requestScope.data.description}"/></p>
 <c:if test="${requestScope.withLink}">
     <a href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
-        <h5 class="review-link mt-2">
+        <p class="review-link mt-2">
             <i class="bi bi-box-arrow-up-right"></i>
             <spring:message htmlEscape="true" code="profile.review.link"
                             arguments="${requestScope.data.jobPost.title}"/>
-        </h5>
+        </p>
     </a>
 </c:if>

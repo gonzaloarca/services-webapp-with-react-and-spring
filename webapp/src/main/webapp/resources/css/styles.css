@@ -216,7 +216,7 @@ h3 {
 
 /* Para ratings */
 .star {
-    color: gold;
+    color: #FCB839;
     font-size: 22px;
 }
 
@@ -485,7 +485,7 @@ h3 {
     height: 8px;
 }
 
-.review-username {
+.review-header {
     word-break: break-word;
     flex: 1;
     align-self: center;
@@ -517,6 +517,23 @@ h3 {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+}
+
+.contract-control-details {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+    padding: 2px;
+    color: #8690FA;
+}
+
+.contract-control-details:hover {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    color: #8690FA;
+    width: 100%;
 }
 
 .contract-control-contact {
@@ -552,6 +569,18 @@ h3 {
     color: #FCB839;
 }
 
+.contract-control-details p {
+    margin-bottom: 0;
+}
+
+.contract-control-contact p {
+    margin-bottom: 0;
+}
+
+.contract-control-rate p {
+    margin-bottom: 0;
+}
+
 .contact-modal-row {
     padding: 10px;
     margin: 5px;
@@ -571,4 +600,12 @@ h3 {
     padding: 5px;
     margin: 10px 10px 0 10px;
     opacity: 0.8;
+}
+
+#details-modal-image {
+    width: 50%;
+    height: 400px;
+    object-fit: contain;
+    border-radius: 10px;
+    background-color: #e8e8e8;
 }
