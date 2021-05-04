@@ -1,18 +1,66 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
+<%--Seteo de variable para formateo de fechas--%>
+<c:set var="dateStringAux" value="${contractCard.jobContract.creationDate}"/>
+<fmt:parseDate value="${dateStringAux}" var="theDate"
+               pattern="yyyy-MM-dd'T'HH:mm:ss.S"/>
+<spring:message code="date.format" var="dateFormat"/>
+<fmt:formatDate value="${theDate}" pattern="${dateFormat}" var="dateFormatted"/>
+
+<%--Seteo de variable para la imagen de los detalles del contrato--%>
+<c:set value="${contractCard.jobContract.encodedImage}" var="encodedImage"/>
+
+<%--Seteo de variable para la imagen y texto a mostrar en el usuario que contrato/el dueño del servicio dependiendo del caso --%>
+<c:choose>
+    <c:when test="${requestScope.isOwner}">
+        <c:set value="${contractCard.jobContract.client.image}" var="userImage"/>
+        <c:set value="mycontracts.hiredBy" var="hireDataMessageCode"/>
+        <c:set value="mycontracts.reviewed" var="reviewCaption"/>
+    </c:when>
+    <c:otherwise>
+        <c:set value="${contractCard.jobCard.jobPost.user.image}" var="userImage"/>
+        <c:set value="mycontracts.hiredPro" var="hireDataMessageCode"/>
+        <c:set value="mycontracts.yourReview" var="reviewCaption"/>
+    </c:otherwise>
+</c:choose>
+
 <div>
-    <c:set value="${contractCard.jobContract.encodedImage}" var="encodedImage"/>
+
+    <div class="hire-details-container">
+        <div class="hire-user-container">
+
+            <c:choose>
+                <c:when test="${userImage.string != null}">
+                    <c:set var="profilePic" value="data:${userImage.type};base64,${userImage.string}"/>
+                </c:when>
+                <c:otherwise>
+                    <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
+                </c:otherwise>
+            </c:choose>
+            <%--            TODO: Poner alt valido--%>
+            <img class="user-avatar" src="${profilePic}">
+            <p><spring:message htmlEscape="true" code="${hireDataMessageCode}"
+                               arguments="${contractCard.jobContract.client.username}"/></p>
+        </div>
+
+        <div class="hire-date-container">
+            <p><spring:message code="mycontracts.creationDate" arguments="${dateFormatted}"/></p>
+        </div>
+
+    </div>
+
     <c:if test="${!contractCard.jobCard.jobPost.active}">
         <div class="removed-post-disclaimer">
             <i class="fas fa-exclamation-triangle"></i>
-            La publicación ha sido eliminada
+            <spring:message code="jobPost.inactive"/>
         </div>
     </c:if>
-    <div style="display: flex; justify-content: space-between; padding: 20px">
-        <div style="display: flex; justify-content: start; width: 83%">
+    <div style="display: flex; justify-content: space-between; padding: 20px; flex-wrap: wrap">
+        <div style="display: flex; justify-content: start; flex-grow: 5">
             <div>
                 <c:choose>
                     <c:when test="${requestScope.data.postImage.image.string == null}">
@@ -83,6 +131,7 @@
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
                 <p>Detalles</p>
             </a>
+            <hr class="divider-bar-thick">
 
             <a class="btn contract-control-contact btn-link text-uppercase"
                onclick='openContactModal("${name}", "${email}", "${phone}")'>
@@ -92,10 +141,10 @@
 
             <c:choose>
                 <c:when test="${contractCard.review != null}">
-                    <div style="color: #787878; margin: 0 5px;">
+                    <div style="color: #787878; width: 100% ">
                         <hr class="divider-bar-thick">
-                        <spring:message code="mycontracts.yourReview"/>
-                        <div class="gray-chip">
+                        <p class="my-1 mx-auto text-center"><spring:message code="${reviewCaption}"/></p>
+                        <div class="gray-chip mx-auto">
                             <jsp:include page="components/rateStars.jsp">
                                 <jsp:param name="rate" value="${contractCard.review.rate}"/>
                             </jsp:include>
@@ -103,12 +152,16 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <c:if test="${contractCard.jobCard.jobPost.active}">
+                    <c:if test="${contractCard.jobCard.jobPost.active && !requestScope.isOwner}">
                         <a class="contract-control-rate text-uppercase"
                            href="${pageContext.request.contextPath}/rate-contract/${contractCard.jobContract.id}">
                             <i class="bi bi-star mr-1"></i>
                             <p><spring:message code="mycontracts.ratecontract"/></p>
                         </a>
+                    </c:if>
+                    <c:if test="${requestScope.isOwner}">
+                        <hr class="divider-bar-thick">
+                        <p class="text-black-50" style="margin: 0 auto"><spring:message code="mycontracts.unrated"/></p>
                     </c:if>
                 </c:otherwise>
             </c:choose>
@@ -156,14 +209,14 @@
                     </div>
                     <div class="modal-body p-4 d-flex justify-content-around">
                         <%--                            TODO: Poner alt valido--%>
-                            <div id="details-image-container">
-                                <p id="details-modal-image-header" class="font-weight-bold">Imagen adjunta</p>
-                                <img id="details-modal-image" src="">
-                            </div>
-                            <div id="details-description-container">
-                                <p class="font-weight-bold">Descripción del trabajo requerido</p>
-                                <p id="details-modal-description"></p>
-                            </div>
+                        <div id="details-image-container">
+                            <p id="details-modal-image-header" class="font-weight-bold">Imagen adjunta</p>
+                            <img id="details-modal-image" src="">
+                        </div>
+                        <div id="details-description-container">
+                            <p class="font-weight-bold">Descripción del trabajo requerido</p>
+                            <p id="details-modal-description"></p>
+                        </div>
 
                     </div>
                     <div class="modal-footer">
@@ -210,5 +263,9 @@
             }
         </script>
 
+    </div>
+    <div style="color: #485696; margin: 0 50px" class="d-flex justify-content-start">
+        <p style=" margin: 0 20px;"><i class="fas fa-cube mr-2"></i>Paquete contratado</p>
+        <p style="font-weight: bold; size: 1.1rem;"><c:out value="${contractCard.jobContract.jobPackage.title}"/></p>
     </div>
 </div>

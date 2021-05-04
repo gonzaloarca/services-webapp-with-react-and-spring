@@ -357,12 +357,12 @@ h3 {
     color: #485696;
     line-height: 1.1em;
     font-size: 1.2rem;
-    width: 100%;
+    width: 300px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
 }
 
 .service-subtitle {
@@ -382,6 +382,8 @@ h3 {
     justify-content: start;
     align-items: start;
     padding: 5px;
+    margin-top: 10px;
+    flex: 1;
     margin-left: 12px;
     border-radius: 10px;
     background-color: white;
@@ -522,7 +524,7 @@ h3 {
 .contract-control-details {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: center;
     width: 100%;
     padding: 2px;
     color: #8690FA;
@@ -539,7 +541,7 @@ h3 {
 .contract-control-contact {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: center;
     width: 100%;
     padding: 2px;
     color: #485696;
@@ -555,7 +557,7 @@ h3 {
 .contract-control-rate {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: center;
     width: 100%;
     padding: 2px;
     color: #FCB839;
@@ -589,7 +591,12 @@ h3 {
 
 .divider-bar-thick {
     margin: 2px;
-    border-width: 2px;
+    border: 0;
+    clear:both;
+    display:block;
+    width: 96%;
+    background-color:#c8c8c8;
+    height: 1px;
 }
 
 .removed-post-disclaimer {
@@ -638,4 +645,44 @@ h3 {
 
 #details-description-container {
     width: 45%;
+}
+
+.hire-details-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #485696;
+    border-radius: 2rem;
+    width: 98%;
+    margin: 10px auto;
+
+}
+
+.hire-details-container p {
+    margin-bottom: 0;
+}
+
+.hire-user-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 5px;
+    color: white;
+}
+
+.hire-date-container {
+    background-color: white;
+    color: #485696;
+    border-radius: 2rem;
+    padding: 5px 10px;
+    margin: 7px;
+}
+
+.user-avatar {
+    border-radius: 100%;
+    width: 35px;
+    height: 35px;
+    min-width: 30px;
+    min-height: 30px;
+    margin: 0 10px 0 2px;
+    object-fit: cover;
 }
