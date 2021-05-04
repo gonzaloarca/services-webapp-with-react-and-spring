@@ -135,6 +135,7 @@
                                     <spring:message code="image.invalid"/>
                                 </div>
                             </div>
+                            <spring:message code="register.filedisclaimer"/>
                             <form:errors path="image" cssClass="form-error" element="p"/>
                         </div>
                     </div>
@@ -268,7 +269,7 @@
         let imageInput = document.querySelector('#imageInput');
         clearBtn.addEventListener('click', function () {
             imageInput.value = '';
-            readURL(imageInput);
+            validateImage(imageInput);
         })
     })()
 
@@ -302,6 +303,7 @@
             }
             input.setCustomValidity('');
         }
+        input.setCustomValidity('');
     }
 </script>
 </body>

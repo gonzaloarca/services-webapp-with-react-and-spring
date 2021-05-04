@@ -86,7 +86,7 @@ public class JobCardDaoJDBC implements JobCardDao {
 
     @Override
     public List<JobCard> findAll(int page) {
-        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM job_cards WHERE post_is_active = TRUE ORDER BY bayesian_rating DESC");
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM job_cards WHERE post_is_active = TRUE ORDER BY rating DESC");
 
         PagingUtil.addPaging(sqlQuery, page);
 
@@ -118,7 +118,7 @@ public class JobCardDaoJDBC implements JobCardDao {
         }
 
         sqlQuery.append(") AND ? IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_is_active = TRUE")
-                .append(" ORDER BY bayesian_rating DESC");
+                .append(" ORDER BY rating DESC");
 
         PagingUtil.addPaging(sqlQuery, page);
 
@@ -139,7 +139,7 @@ public class JobCardDaoJDBC implements JobCardDao {
         }
 
         sqlQuery.append(") AND ? IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_job_type = ? AND post_is_active = TRUE")
-                .append(" ORDER BY bayesian_rating DESC");
+                .append(" ORDER BY rating DESC");
 
         PagingUtil.addPaging(sqlQuery, page);
 

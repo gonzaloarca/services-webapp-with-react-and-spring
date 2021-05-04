@@ -54,7 +54,7 @@
                     <spring:message code="token.view.register.success"/>
                 </h1>
                 <p class="text">
-                    <spring:message code="token.view.register.text"/>
+                    <spring:message code="token.view.email.sent"/>
                 </p>
             </c:when>
             <c:when test="${resend}">
