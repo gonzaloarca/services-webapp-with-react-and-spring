@@ -2,6 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 
+<%--Seteo de variable para verificar si el currentUser es el dueño del jobPost en el contract--%>
+<c:set var="isOwner" value="${contractType == 1}" scope="request"/>
+
 <html>
 <head>
 
@@ -73,8 +76,20 @@
                         <div style="display: flex; align-items: center; flex-direction: column">
                             <img style="height: 200px; width: 40%; margin: 30px 0"
                                  src='<c:url value="/resources/images/contract1.svg"/>'/>
-                            <h4 class="font-weight-bold">No hay contratos para mostrar</h4>
-                            <p>Para tener contratos, primero solicite algún servicio</p>
+                            <h4 class="font-weight-bold">
+                                <spring:message code="mycontracts.noContractsHeader"/>
+                            </h4>
+
+                            <c:choose>
+                                <c:when test="${isOwner}">
+                                    <c:set value="mycontracts.noContractsSubtitlePro" var="noContractsSubtitle"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:set value="mycontracts.noContractsSubtitleClient" var="noContractsSubtitle"/>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <p><spring:message code="${noContractsSubtitle}"/></p>
                         </div>
                     </c:otherwise>
                 </c:choose>

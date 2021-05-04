@@ -50,6 +50,7 @@ a.navbar-brand {
 
 .navbar-location-list-group {
     overflow: auto;
+    min-height: 200px;
     max-height: 200px;
     width: 350px;
     margin: 20px auto;
@@ -58,9 +59,8 @@ a.navbar-brand {
 .navbar-location-list-group-item {
     justify-content: start !important;
     margin-bottom: 10px;
-    background-color: #eeeeee;
     font-size: 1rem;
-    padding: 5px;
+    padding: 10px;
 }
 
 .navbar-location-list-group-item:hover {
