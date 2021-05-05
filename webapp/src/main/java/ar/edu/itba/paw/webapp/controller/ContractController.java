@@ -14,8 +14,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -47,13 +50,7 @@ public class ContractController {
     private ImageService imageService;
 
     @Autowired
-    private ReviewService reviewService;
-
-    @Autowired
-    private JobCardService jobCardService;
-
-    @Autowired
-    private UserService userService;
+    private LocaleResolver localeResolver;
 
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
@@ -75,7 +72,7 @@ public class ContractController {
                                        @ModelAttribute("jobPack") final JobPackage jobPack,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
                                        @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors,
-                                       Principal principal) {
+                                       Principal principal, HttpServletRequest servletRequest) {
         if (errors.hasErrors()) {
             contractControllerLogger.debug("Contract form has errors: {}",errors.getAllErrors().toString());
             return createContract(packId, jobPost, form);
@@ -100,7 +97,7 @@ public class ContractController {
         }
 
         contractControllerLogger.debug("Senfing email to professional for package {}, post {} and contract {}",jobPack.getId(),jobPost.getId(),jobContract.getId());
-        mailingService.sendContractEmail(jobContract, jobPack, jobPost, LocaleContextHolder.getLocale());
+        mailingService.sendContractEmail(jobContract, jobPack, jobPost, localeResolver.resolveLocale(servletRequest));
 
         return new ModelAndView("redirect:/contract/package/" + packId + "/success");
     }

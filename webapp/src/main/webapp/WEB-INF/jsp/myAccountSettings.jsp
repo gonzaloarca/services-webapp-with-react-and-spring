@@ -149,7 +149,7 @@
                             </c:if>
                         </h5>
 
-                        <button class="btn btn-primary hirenet-blue-btn" type="submit" id="submitBtn"">
+                        <button class="btn btn-primary hirenet-blue-btn" type="submit" id="submitBtn">
                             <spring:message code="account.settings.security.save"/>
                         </button>
 

@@ -70,8 +70,8 @@ public class MailingServiceSpring implements MailingService {
 
     @Override
     public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,
-                                                  String templateName, DataSource attachment) {
-        Context thymeleafContext = new Context();
+                                                  String templateName, DataSource attachment, Locale locale) {
+        Context thymeleafContext = new Context(locale);
         thymeleafContext.setVariables(templateModel);
         String htmlBody = thymeleafTemplateEngine.process(templateName, thymeleafContext);
 
@@ -105,12 +105,12 @@ public class MailingServiceSpring implements MailingService {
         sendMessageUsingThymeleafTemplate(jobPost.getUser().getEmail(),
                 messageSource.getMessage("mail.contractToPro.subject",
                         new Object[]{jobContract.getClient().getUsername()}, locale),
-                data, "contractToProfessional", attachment);
+                data, "contractToProfessional", attachment, locale);
 
         sendMessageUsingThymeleafTemplate(jobContract.getClient().getEmail(),
                 messageSource.getMessage("mail.contractToClient.subject",
                         new Object[]{jobPost.getTitle()}, locale),
-                data, "contractToClient", attachment);
+                data, "contractToClient", attachment, locale);
     }
 
     @Async
@@ -125,7 +125,7 @@ public class MailingServiceSpring implements MailingService {
         sendMessageUsingThymeleafTemplate(user.getEmail(),
                 messageSource.getMessage("mail.token.subject",
                         new Object[]{user.getUsername()}, Locale.getDefault()),
-                data, "token", null);
+                data, "token", null, Locale.getDefault());
     }
 
 }

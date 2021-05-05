@@ -17,7 +17,6 @@ public class PriceNotEmptyValidator implements ConstraintValidator<PriceNotEmpty
     @Override
     public boolean isValid(PackageForm form,
                            ConstraintValidatorContext context) {
-        //TODO: Paramterizar mensajes respecto de messages.properties correctamente
         Integer ordinal = form.getRateType();
         String price = form.getPrice();
 

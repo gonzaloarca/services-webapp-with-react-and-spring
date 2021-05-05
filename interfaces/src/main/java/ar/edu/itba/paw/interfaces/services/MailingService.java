@@ -15,6 +15,6 @@ public interface MailingService {
     void sendVerificationTokenEmail(User user, VerificationToken token);
 
     void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,
-                                           String templateName, DataSource attachment);
+                                           String templateName, DataSource attachment, Locale locale);
 
 }
