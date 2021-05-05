@@ -27,10 +27,8 @@ import java.util.*;
 public class ReviewDaoJDBCTest {
     private static final List<UserAuth.Role> USER1_ROLES = Arrays.asList(UserAuth.Role.CLIENT, UserAuth.Role.PROFESSIONAL);
     private static final List<UserAuth.Role> USER2_ROLES = Arrays.asList(UserAuth.Role.CLIENT);
-
-    private static final LocalDateTime creationDate = LocalDateTime.of(2021, Month.MAY,4,1,9,46);
-
-    private static final User USER1 = new User(
+    private static final LocalDateTime creationDate = LocalDateTime.now();
+    private static final User PROFESSIONAL = new User(
             1,
             "franquesada@gmail.com",
             "Francisco Quesada",
@@ -38,7 +36,7 @@ public class ReviewDaoJDBCTest {
             true,
             true,
             LocalDateTime.now());
-    private static final User USER2 = new User(
+    private static final User CLIENT = new User(
             2,
             "manurodriguez@gmail.com",
             "Manuel Rodriguez",
@@ -47,124 +45,21 @@ public class ReviewDaoJDBCTest {
             true,
             LocalDateTime.now());
     private static final List<JobPost.Zone> ZONES = new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1], JobPost.Zone.values()[2]));
-    private static final JobPost[] JOB_POSTS = new JobPost[]{
-            new JobPost(
-                    1,
-                    USER1,
-                    "Electricista Matriculado",
-                    "Lun a Viernes 10hs - 14hs",
-                    JobPost.JobType.values()[1],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    2,
-                    USER1,
-                    "Paseador de perros",
-                    "Viernes a sabados 09hs - 14hs",
-                    JobPost.JobType.values()[3],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    4,
-                    USER1,
-                    "Plomero Matriculado 2",
-                    "Miercoles a Viernes 10hs - 14hs",
-                    JobPost.JobType.values()[2],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    5,
-                    USER1,
-                    "Electricista Matriculado 2",
-                    "Lun a Viernes 10hs - 14hs",
-                    JobPost.JobType.values()[1],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    6,
-                    USER1,
-                    "Paseador de perros 2",
-                    "Viernes a sabados 09hs - 14hs",
-                    JobPost.JobType.values()[3],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    7,
-                    USER1,
-                    "Electricista no matriculado 2",
-                    "Lun a Jueves 13hs - 14hs",
-                    JobPost.JobType.values()[1],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    8,
-                    USER1,
-                    "Plomero Matriculado 2",
-                    "Miercoles a Viernes 10hs - 14hs",
-                    JobPost.JobType.values()[2],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    9,
-                    USER1,
-                    "Plomero Matriculado 3",
-                    "Miercoles a Viernes 10hs - 14hs",
-                    JobPost.JobType.values()[2],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    10,
-                    USER1,
-                    "Plomero Matriculado 4",
-                    "Miercoles a Viernes 10hs - 14hs",
-                    JobPost.JobType.values()[2],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            ),
-            new JobPost(
-                    3,
-                    USER2,
-                    "Electricista no matriculado",
-                    "Lun a Jueves 13hs - 14hs",
-                    JobPost.JobType.values()[1],
-                    ZONES, 0.0,
-                    true,
-                    LocalDateTime.now()
-            )};
-
-    private static final JobPost INACTIVE_JOB_POST = new JobPost(
-            11,
-            USER1,
-            "Plomero Inactivo",
-            "Miercoles a Viernes 10hs - 14hs",
-            JobPost.JobType.values()[2],
+    private static final JobPost JOB_POST = new JobPost(
+            1,
+            PROFESSIONAL,
+            "Electricista Matriculado",
+            "Lun a Viernes 10hs - 14hs",
+            JobPost.JobType.values()[1],
             ZONES, 0.0,
             true,
             LocalDateTime.now()
-
     );
 
     private static final JobPackage[] JOB_PACKAGES = {
             new JobPackage(
                     1,
-                    JOB_POSTS[0].getId(),
+                    JOB_POST.getId(),
                     "Trabajo simple",
                     "Arreglo basico de electrodomesticos",
                     200.0,
@@ -172,62 +67,62 @@ public class ReviewDaoJDBCTest {
                     true
             ), new JobPackage(
             2,
-            JOB_POSTS[0].getId(),
+            JOB_POST.getId(),
             "Trabajo no tan simple",
             "Instalacion de cableado electrico",
             850.00,
             JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
-            6,
-            JOB_POSTS[0].getId(),
+            3,
+            JOB_POST.getId(),
             "Trabajo simple 2",
             "Arreglo basico de electrodomesticos",
             200.0,
             JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
-            7,
-            JOB_POSTS[0].getId(),
+            4,
+            JOB_POST.getId(),
             "Trabajo no tan simple 2",
             "Instalacion de cableado electrico",
             850.00,
             JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
-            8,
-            JOB_POSTS[0].getId(),
+            5,
+            JOB_POST.getId(),
             "Trabajo Complejo 2",
             "Arreglos de canerias",
             500.00,
             JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
-            9,
-            JOB_POSTS[0].getId(),
+            6,
+            JOB_POST.getId(),
             "Trabajo barato 2",
             "Arreglos varios",
             500.00,
             JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
-            10,
-            JOB_POSTS[0].getId(),
+            7,
+            JOB_POST.getId(),
             "Trabajo barato 2",
             "Arreglos varios",
             500.00, JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
-            11,
-            JOB_POSTS[0].getId(),
+            8,
+            JOB_POST.getId(),
             "Trabajo Experto 2",
             "Presupuesto y desarrollo de proyectos",
             500.00,
             JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
-            12,
-            JOB_POSTS[0].getId(),
+            9,
+            JOB_POST.getId(),
             "Trabajo Experto 2",
             "Presupuesto y desarrollo de proyectos",
             500.00,
@@ -241,29 +136,29 @@ public class ReviewDaoJDBCTest {
     private static final String IMAGE_TYPE = "image/jpg";
 
     private static final JobContract[] JOB_CONTRACTS_PACKAGE1 = new JobContract[]{
-            new JobContract(1,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una zapatilla",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(2,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles facil",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(3,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(10,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una zapatilla",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(11,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles facil",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(12,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Arreglo de fusibles",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(13,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Instalacion de tomacorrientes",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(14,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio una tuberia en la cocina",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(15,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompieron las tuberias del baño",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(16,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(17,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE)),
-            new JobContract(18,USER2,JOB_PACKAGES[0],USER1,LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA, IMAGE_TYPE),new EncodedImage("image_data_for_testing",IMAGE_TYPE))
+            new JobContract(1, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(2, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(3, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(4, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(5, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(6, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(7, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Instalacion de tomacorrientes", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(8, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Se me rompio una tuberia en la cocina", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(9, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Se me rompieron las tuberias del baño", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(10, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Se me rompio la caldera", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(11, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null),
+            new JobContract(12, CLIENT, JOB_PACKAGES[0], PROFESSIONAL, LocalDateTime.now(), "Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE), null)
     };
 
     private static final Review[] REVIEWS = new Review[]{
-            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[0],creationDate),
-            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[1],creationDate),
-            new Review(2,"Medio pelo","Resolvio todo de forma ideal",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[2],creationDate),
-            new Review(2,"Medio pelo","Resolvio todo de forma ideal",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[3],creationDate),
-            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[4],creationDate),
-            new Review(2,"Medio pelo","Resolvio todo de forma ideal",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[5],creationDate),
-            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[6],creationDate),
-            new Review(2,"Medio pelo","Resolvio todo de forma ideal",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[7],creationDate),
+            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[0],creationDate),
+            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[1],creationDate),
+            new Review(2,"Medio pelo","Resolvio todo de forma ideal",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[2],creationDate),
+            new Review(2,"Medio pelo","Resolvio todo de forma ideal",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[3],creationDate),
+            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[4],creationDate),
+            new Review(2,"Medio pelo","Resolvio todo de forma ideal",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[5],creationDate),
+            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[6],creationDate),
+            new Review(2,"Medio pelo","Resolvio todo de forma ideal",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[7],creationDate),
 
     };
 
@@ -283,8 +178,8 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testCreate() {
-
-        Review newReview = new Review(4,"Muy bueno!","Execelnte servicio",USER2,JOB_POSTS[0],JOB_CONTRACTS_PACKAGE1[11],LocalDateTime.now());
+        //TODO MOCKEAR
+        Review newReview = new Review(4,"Muy bueno!","Execelnte servicio",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[11],LocalDateTime.now());
 
         Review maybeReview =reviewDaoJDBC.create(18,newReview.getRate(),newReview.getTitle(),newReview.getDescription());
 
@@ -300,7 +195,7 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindReviewsByPostId() {
-        List<Review> maybePostReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POSTS[0].getId(), HirenetUtils.ALL_PAGES);
+        List<Review> maybePostReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(8, maybePostReviews.size());
 
@@ -317,23 +212,23 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindReviewsByPostIdSize() {
-        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POSTS[0].getId(), HirenetUtils.ALL_PAGES);
+        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
-        int maybeReviewsByPostIdSize = reviewDaoJDBC.findJobPostReviewsSize(JOB_POSTS[0].getId());
+        int maybeReviewsByPostIdSize = reviewDaoJDBC.findJobPostReviewsSize(JOB_POST.getId());
         Assert.assertEquals(reviews.size(), maybeReviewsByPostIdSize);
     }
 
     @Test
     public void testFindJobPostAvgRate() {
-        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POSTS[0].getId(), HirenetUtils.ALL_PAGES);
+        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
-        double maybeAvg = reviewDaoJDBC.findJobPostAvgRate(JOB_POSTS[0].getId());
+        double maybeAvg = reviewDaoJDBC.findJobPostAvgRate(JOB_POST.getId());
         Assert.assertEquals(reviews.stream().mapToDouble(Review::getRate).average().orElse(0), maybeAvg, 0.0000001);
     }
 
     @Test
     public void findProfessionalReviews() {
-        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), HirenetUtils.ALL_PAGES);
+        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(8, maybeUserReviews.size());
         for (int i = 0; i < maybeUserReviews.size(); i++) {
@@ -343,9 +238,9 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindProfessionalAvgRate() {
-        List<Review> reviews = reviewDaoJDBC.findProfessionalReviews(USER1.getId(), HirenetUtils.ALL_PAGES);
+        List<Review> reviews = reviewDaoJDBC.findProfessionalReviews(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
 
-        double maybeAvg = reviewDaoJDBC.findProfessionalAvgRate(JOB_POSTS[0].getId());
+        double maybeAvg = reviewDaoJDBC.findProfessionalAvgRate(JOB_POST.getId());
         Assert.assertEquals(reviews.stream().mapToDouble(Review::getRate).average().orElse(0), maybeAvg, 0.0000001);
     }
 
