@@ -715,7 +715,8 @@
         // Iterar por la lista y esconder los elementos que no matcheen
         for (let i = 0; i < listElems.length; i++) {
             let a = listElems[i].getElementsByTagName("span")[0];
-            let txtValue = a.textContent || a.innerText;
+            let txtValue = a.textContent.trim() || a.innerText.trim();
+            console.log(txtValue);
             if (txtValue.toUpperCase().startsWith(filter.trim())) {
                 listElems[i].style.display = "";
                 isNotEmpty = true;
