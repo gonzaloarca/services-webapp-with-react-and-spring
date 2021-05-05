@@ -44,15 +44,15 @@
 <body>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <%@include file="components/customNavBar.jsp" %>
-<div class="content-container d-flex">
+<div class="content-container p-4 d-flex">
     <div class="custom-card filter-card">
-        <h3>
+        <span class="filters-header">
             <spring:message code="search.filters"/>
-        </h3>
+        </span>
         <hr class="hr1"/>
-        <h4>
+        <p class="categories-header">
             <spring:message code="search.categories"/>
-        </h4>
+        </p>
         <c:forEach items="${categories}" var="categorie" varStatus="status">
             <span class="mb-1 custom-row align-items-center" onclick="updateCategorySelected(${categorie.value})">
                 <p class="capitalize-first-letter">
@@ -82,14 +82,16 @@
                 </div>
                 <hr class="hr1"/>
                 <c:if test="${param.category != -1}">
-                    <a class="unselect-category"
-                       href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
-                        <spring:message code="search.filteringBy"/>
-                        <div class="chip">
-                            <spring:message code="${categories[param.category].stringCode}"/>
-                            <i class="fa fa-times-circle ml-1" aria-hidden="true"></i>
-                        </div>
-                    </a>
+                    <div class="unselect-category">
+                        <span class="mr-2"><spring:message code="search.filteringBy"/></span>
+                        <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
+                            <div class="filter-chip">
+                                <spring:message code="${categories[param.category].stringCode}"/>
+                                <i class="fa fa-times-circle ml-1" aria-hidden="true"></i>
+                            </div>
+                        </a>
+                    </div>
+
                 </c:if>
                 <div class="job-display-container">
                     <c:choose>
@@ -137,15 +139,5 @@
     </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
-<script>
-    //Actualizo la categoria seleccionada en las cookies
-    function updateCategorySelected(category) {
-        let categoryIndex = sessionStorage.getItem("pickedCategoryId");
-        if (category && parseInt(categoryIndex) !== parseInt(category))
-            sessionStorage.setItem("pickedCategoryId", category);
-        else
-            sessionStorage.removeItem("pickedCategoryId");
-    }
-</script>
 </body>
 </html>

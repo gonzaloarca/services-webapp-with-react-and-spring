@@ -9,7 +9,7 @@ body {
 }
 
 .content-container {
-    width: 80vw;
+    width: 90vw;
     min-height: 80vh;
     max-width: 1184px;
     margin: 0 auto;
@@ -19,7 +19,7 @@ body {
 }
 
 .content-container-transparent {
-    width: 80vw;
+    width: 90vw;
     min-height: 80vh;
     max-width: 1184px;
     margin: 0 auto;
@@ -226,7 +226,6 @@ h3 {
     font-size: 16px;
 }
 
-/* chip */
 .chip {
     background-color: #485696;
     border-radius: 12px;
