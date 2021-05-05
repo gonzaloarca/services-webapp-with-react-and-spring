@@ -57,9 +57,6 @@ public class SimpleJobContractServiceTest {
         Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail())))
                 .thenReturn(Optional.of(CLIENT));
 
-        Mockito.when(simpleJobPackageService.findById(Mockito.eq(JOB_PACKAGE.getId())))
-                .thenReturn(JOB_PACKAGE);
-
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription())))
                 .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, PROFESSIONAL,
@@ -78,9 +75,6 @@ public class SimpleJobContractServiceTest {
 
     @Test
     public void testCreateExistingClient() {
-        Mockito.when(simpleJobPackageService.findById(Mockito.eq(JOB_PACKAGE.getId())))
-                .thenReturn(JOB_PACKAGE);
-
         Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
