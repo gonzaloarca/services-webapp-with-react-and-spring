@@ -1,12 +1,12 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <div class="home-banner-container">
     <%--@elvariable id="searchForm" type=""--%>
-    <div class="landing-content-container">
+    <div class="landing-content-container" id="top-index">
         <div class="title-and-form">
             <h1 class="landing-title"><spring:message code="index.searchBar.title"/></h1>
             <form:form action="${pageContext.request.contextPath}/search" method="get"
-                       modelAttribute="searchForm"
-                       class="home-search-form"
+                       modelAttribute="searchForm" id="search-form"
+                       class="home-search-form" novalidate="true"
                        acceptCharset="utf-8">
                 <div class="search-inputs">
                     <div class="home-search-location">
@@ -19,16 +19,22 @@
                                 </form:option>
                             </c:forEach>
                         </form:select>
-                        <form:errors path="zone" cssClass="search-form-error" element="p"/>
+                        <p class="search-form-error" id="zoneError" style="display: none">
+                            <spring:message code="search.zones.invalid"/>
+                        </p>
                     </div>
 
                     <div class="home-search-bar-container home-search-bar-row">
                         <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
-                        <form:input path="query" type="search" class="home-search-bar w-100 h-100"
-                                    placeholder="${typePlaceholder}" maxlength="100"/>
+                        <form:input path="query" type="search" class="home-search-bar w-100 h-100" id="queryInput"
+                                    placeholder="${typePlaceholder}" maxlength="100" required="true" onkeyup="hideErrorMsg()"/>
+                        <p class="search-form-error" id="queryError" style="display: none">
+                            <spring:message code="search.query.invalid"/>
+                        </p>
                         <form:errors path="query" cssClass="search-form-error" element="p"/>
                     </div>
-                    <button class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row" id="homeSearchButton">
+                    <button type="submit" class="btn btn-warning btn-circle btn-l home-search-button home-search-bar-row"
+                            id="submitBtn">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -67,21 +73,49 @@
          src='<c:url value="/resources/images/landingbg1.svg" />'/>
 </div>
 <script>
-    // Cuando se hace el submit guardo las cookies
-    var homeSelect = $('#homeSelect');
-    $('#homeSearchButton').on('click', function () {
-        sessionStorage.setItem("pickedZoneId", homeSelect[0].value);
-        sessionStorage.setItem("pickedZoneString", homeSelect[0].selectedOptions[0].label);
+
+    let homeSelect = $('#homeSelect')[0];
+    // Para levantar la ubicacion en las cookies, en caso de existir
+    const auxZoneId = sessionStorage.getItem("pickedZoneId");
+    if (auxZoneId) {
+        homeSelect.selectedIndex = parseInt(auxZoneId) + 1;
+    }
+    // Cuando se hace el submit chequeo que se haya seleccionado una zona y de ser asi guardo las cookies
+    let form = document.querySelector('#search-form');
+    form.addEventListener('submit', function (event) {
+        if(homeSelect.value === "")  {
+            $('#zoneError')[0].style.display = 'inherit';
+            homeSelect.setCustomValidity("error");
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        else {
+            $('#zoneError')[0].style.display = 'none';
+            homeSelect.setCustomValidity("");
+            sessionStorage.setItem("pickedZoneId", homeSelect.value);
+            sessionStorage.setItem("pickedZoneString", homeSelect.selectedOptions[0].label);
+        }
+
+        let querySearch = $('#queryInput');
+        if(querySearch[0].value === "") {
+            $('#queryError')[0].style.display = 'inherit';
+            querySearch[0].setCustomValidity("error");
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            $('#queryError')[0].style.display = 'none';
+            querySearch[0].setCustomValidity("");
+        }
+
+        $("#submitBtn").attr("disabled", is_valid);
     })
 
-    // Para levantar la ubicacion en las cookies, en caso de existir
-    var auxZoneId = sessionStorage.getItem("pickedZoneId");
-    if (auxZoneId) {
-        homeSelect[0].selectedIndex = parseInt(auxZoneId)+1;
-    }
-    // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
-    var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
-    if (auxCategoryId) {
-        $('#categoryForm')[0].value = auxCategoryId;
+    // Saco el mensaje de error si es que existia
+    $('.home-search-location').on('click', function () {
+        $('#zoneError')[0].style.display = 'none';
+    })
+
+    function hideErrorMsg() {
+        $('#queryError')[0].style.display = 'none';
     }
 </script>

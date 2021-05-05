@@ -26,6 +26,8 @@ public interface JobContractDao {
 
     int findContractsQuantityByPostId(long id);
 
-    int findMaxPageContractsByUserId(long id);
+    int findMaxPageContractsByClientId(long id);
+
+    int findMaxPageContractsByProId(long id);
 
 }

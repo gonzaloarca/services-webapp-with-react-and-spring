@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS user_role
     PRIMARY KEY (user_id, role_id)
 );
 
-DROP VIEW IF EXISTS full_post;
+DROP VIEW IF EXISTS full_post CASCADE;
 CREATE OR REPLACE VIEW full_post AS
 SELECT job_post.post_id,
        post_title,
@@ -18,12 +18,15 @@ SELECT job_post.post_id,
        user_name,
        user_phone,
        user_is_active,
+       user_is_verified,
        user_image,
        users.image_type 					as user_image_type,
        coalesce(avg(review_rate), 0)        AS rating,
        array_agg(DISTINCT zone_id)          as zones,
        count(distinct contract.contract_id) as contracts,
-       count(DISTINCT review.contract_id)   as reviews
+       count(DISTINCT review.contract_id)   as reviews,
+       post_creation_date,
+       user_creation_date
 FROM job_post
          NATURAL JOIN users
          NATURAL JOIN post_zone
@@ -31,9 +34,10 @@ FROM job_post
          LEFT JOIN contract ON contract.package_id = job_package.package_id
          LEFT JOIN review ON review.contract_id = contract.contract_id
 GROUP BY job_post.post_id, post_title, post_available_hours, post_job_type, post_is_active, user_id, user_email,
-         user_name, user_phone, user_is_active, user_image, users.image_type;
+         user_name, user_phone, user_is_active, user_is_verified, user_image, users.image_type,post_creation_date,
+         user_creation_date;
 
-DROP VIEW IF EXISTS full_contract;
+DROP VIEW IF EXISTS full_contract CASCADE;
 CREATE OR REPLACE VIEW full_contract AS
 SELECT *
 FROM contract
@@ -43,8 +47,10 @@ FROM contract
                               post_job_type,
                               post_available_hours,
                               post_is_active,
+                              post_creation_date,
                               array_agg(DISTINCT zone_id) as zones,
                               user_id                     AS professional_id
+
                        FROM job_post
                                 NATURAL JOIN post_zone
                        GROUP BY job_post.post_id, post_title, post_available_hours, post_job_type, post_is_active,
@@ -55,7 +61,8 @@ FROM contract
                               user_phone     AS client_phone,
                               user_is_active as client_is_active,
                               user_image	 as client_image,
-                              image_type	 as client_image_type
+                              image_type	 as client_image_type,
+                              user_creation_date as client_creation_date
                        FROM users) as clients
          NATURAL JOIN (SELECT user_id        AS professional_id,
                               user_email     AS professional_email,
@@ -63,7 +70,9 @@ FROM contract
                               user_phone     AS professional_phone,
                               user_is_active as professional_is_active,
          					  user_image     as professional_image,
-							  image_type	 as professional_image_type
+							  image_type	 as professional_image_type,
+                              user_creation_date as professional_creation_date
+
                        FROM users) as professionals;
 
 CREATE TABLE IF NOT EXISTS verification_token

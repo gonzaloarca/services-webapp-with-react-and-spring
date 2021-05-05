@@ -38,7 +38,7 @@
 <div class="content-container-transparent mt-3">
     <h3>
         <i class="mr-2 fas fa-cube"></i>
-        Administrar paquetes
+        <spring:message code="jobPost.packages.title"/>
     </h3>
 
     <div class="packages-frame">
@@ -48,22 +48,29 @@
             <img style="height: 85px; position: absolute; top: 0; right: 10px"
                  src="<c:url value="/resources/images/package1.svg"/>" alt="">
             <div class="packages-container">
-                <h4 class="font-weight-bold">Paquetes del servicio</h4>
+                <h4 class="font-weight-bold">
+                    <spring:message code="packages.view.title"/>
+                </h4>
 
                 <a class="mt-4 ml-4" href="<c:url value="/job/${jobPost.id}"/>">
                     <i class="mr-2 fas fa-external-link-alt"></i>
-                    <spring:message code="jobPost.packages.manage.postTitle" arguments="${jobPost.title}"/>
+                    <spring:message htmlEscape="true" code="jobPost.packages.manage.postTitle"
+                                    arguments="${jobPost.title}"/>
                 </a>
                 <br>
 
                 <a href="<c:url value="/job/${jobPost.id}/packages/add"/>"
-                   class="mt-4 btn btn-block btn-light add-package-btn text-uppercase">
+                   style="margin-top: 40px"
+                   class="btn btn-block btn-light add-package-btn text-uppercase">
                     <i style="font-size: 1.5rem" class="fas fa-plus-square text-primary mr-1"></i>
-                    <span>Añadir nuevo paquete</span>
+                    <span>
+                        <spring:message code="packages.view.add"/>
+                    </span>
                 </a>
 
-                <div class="accordion mt-4" id="accordionPackages">
+                <div style="margin-top: 40px" class="accordion" id="accordionPackages">
                     <c:forEach items="${packages}" var="pack" varStatus="status">
+                        <hr style="border-top: 2px solid rgba(0,0,0,0.1)">
                         <div class="editable-package-container">
                             <div class="card custom-card flex-grow-1 mb-3 border-radius-package">
                                 <div class="card custom-card border-radius-package"
@@ -86,7 +93,7 @@
                                                         <spring:message code="jobPost.jobs.price"/>
                                                     </p>
                                                     <div class="chip">
-                                                        <spring:message code="${pack.rateType.stringCode}"
+                                                        <spring:message htmlEscape="true" code="${pack.rateType.stringCode}"
                                                                         arguments="${pack.price}"/>
                                                     </div>
                                                 </div>
@@ -111,19 +118,20 @@
                                 <a href="<c:url value="/job/${jobPost.id}/packages/${pack.id}/edit"/>"
                                    class="btn package-control-edit btn-link text-uppercase">
                                     <i class="fas fa-edit"></i>
-                                    Editar
+                                    <spring:message code="edit"/>
                                 </a>
+                                <c:if test="${packages.size() > 1}">
+                                    <c:url value="/job/${jobPost.id}/packages" var="postPath"/>
+                                    <form:form modelAttribute="deletePackageForm" action="${postPath}" method="post"
+                                               cssStyle="margin-bottom: 0">
+                                        <button type="submit" class="btn package-control-delete text-uppercase">
+                                            <i class="fas fa-trash-alt"></i>
+                                            <spring:message code="delete"/>
+                                        </button>
 
-                                <c:url value="/job/${jobPost.id}/packages" var="postPath"/>
-                                <form:form modelAttribute="deletePackageForm" action="${postPath}" method="post"
-                                           cssStyle="margin-bottom: 0">
-                                    <button type="submit" class="btn package-control-delete text-uppercase">
-                                        <i class="fas fa-trash-alt"></i>
-                                        Eliminar
-                                    </button>
-
-                                    <form:hidden path="id" value="${pack.id}"/>
-                                </form:form>
+                                        <form:hidden path="id" value="${pack.id}"/>
+                                    </form:form>
+                                </c:if>
                             </div>
                         </div>
                     </c:forEach>
@@ -131,6 +139,8 @@
             </div>
         </div>
     </div>
+
+    <jsp:include page="components/footer.jsp"/>
 </div>
 </body>
 </html>

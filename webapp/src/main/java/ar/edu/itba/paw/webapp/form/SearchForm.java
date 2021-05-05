@@ -4,6 +4,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
+import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
+
 public class SearchForm {
 
     //  @Pattern(regexp = "^[0-9][0-9]*$")
@@ -14,7 +16,7 @@ public class SearchForm {
     @Size(max = 100)
     private String query;
 
-    private int category = -1;
+    private int category = SEARCH_WITHOUT_CATEGORIES;
 
     public String getZone() {
         return zone;

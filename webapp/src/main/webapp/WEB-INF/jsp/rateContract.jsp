@@ -47,7 +47,7 @@
     <div class="qualify-service">
         <h2>
             <i class="bi bi-star-fill"></i>
-            <spring:message code="ratecontract.review.qualifyprofessional"
+            <spring:message htmlEscape="true" code="ratecontract.review.qualifyprofessional"
                             arguments="${jobCard.jobPost.user.username}"/>
         </h2>
 
@@ -59,9 +59,9 @@
         </div>
     </div>
     <div class="qualify-form">
-        <form:form modelAttribute="reviewForm" class="needs-validation" novalidate="true" onsubmit="disableBtn()"
+        <form:form modelAttribute="reviewForm" class="needs-validation" novalidate="true"
                    action="${pageContext.request.contextPath}/rate-contract/${contractId}" method="post"
-                   enctype="multipart/form-data">
+                   enctype="multipart/form-data" id="rating-form">
             <h3 class="m-0">
                 <spring:message code="ratecontract.review.pickrate"/></h3>
             <div class="qualify-rate">
@@ -80,8 +80,13 @@
                 <spring:message code="ratecontract.review.description"/>
             </form:label>
             <spring:message code="ratecontract.review.description.placeholder" var="descriptionPlaceholder"/>
-            <form:textarea class="form-control text-input" rows="6" path="description" maxlength="100"
-                           placeholder="${descriptionPlaceholder}"/>
+            <span class="input-group has-validation">
+                <form:textarea class="form-control text-input" rows="6" path="description" maxlength="100" required="true"
+                               placeholder="${descriptionPlaceholder}"/>
+                <div class="invalid-feedback">
+                    <spring:message code="field.string.notEmpty"/>
+                </div>
+            </span>
             <form:errors path="description" cssClass="form-error" element="p"/>
 
             <form:label path="title" class="custom-label">
@@ -102,18 +107,17 @@
 </div>
 <jsp:include page="components/footer.jsp"/>
 <script>
-    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
-    function disableBtn() {
-        var forms = document.querySelectorAll('.needs-validation');
-        var is_valid = true;
-        Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    if (!form.checkValidity()) {
-                        is_valid = false;
-                    }
-                })
+    let form = document.querySelector('#rating-form');
+    form.addEventListener('submit', function (event) {
+        let is_valid = form.checkValidity();
+        if (!is_valid) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        form.classList.add('was-validated');
         $("#submitBtn").attr("disabled", is_valid);
-    }
+    });
 </script>
 </body>
 </html>

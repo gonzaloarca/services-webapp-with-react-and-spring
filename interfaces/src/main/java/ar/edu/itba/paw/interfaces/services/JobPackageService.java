@@ -16,4 +16,7 @@ public interface JobPackageService {
 
     List<JobPackage> findByPostId(long id, int page);
 
+    boolean updateJobPackage(long id, String title, String description, String price, int rateType);
+
+    boolean deleteJobPackage(long id);
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -8,23 +9,13 @@ public class JobContract {
     private final User client;
     private final JobPackage jobPackage;
     private final User professional;
-    private final Date creationDate;           //TODO: ver tipo de variable
+    private final LocalDateTime creationDate;
     private final String description;
     private final ByteImage image;
+    private final EncodedImage encodedImage;
 
-    //TODO: ver si este constructor está de mas, se usa en los tests
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description) {
-        this.id = id;
-        this.client = client;
-        this.jobPackage = jobPackage;
-        this.professional = professional;
-        this.creationDate = creationDate;
-        this.description = description;
-        image = null;
-    }
-
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, Date creationDate, String description,
-                       ByteImage image) {
+    public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description,
+                       ByteImage image, EncodedImage encodedImage) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
@@ -32,6 +23,7 @@ public class JobContract {
         this.creationDate = creationDate;
         this.description = description;
         this.image = image;
+        this.encodedImage = encodedImage;
     }
 
     public JobPackage getJobPackage() {
@@ -46,7 +38,7 @@ public class JobContract {
         return client;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
@@ -60,6 +52,10 @@ public class JobContract {
 
     public ByteImage getImage() {
         return image;
+    }
+
+    public EncodedImage getEncodedImage() {
+        return encodedImage;
     }
 
     @Override

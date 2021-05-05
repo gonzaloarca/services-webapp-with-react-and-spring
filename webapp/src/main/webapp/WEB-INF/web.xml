@@ -16,7 +16,8 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             ar.edu.itba.paw.webapp.config.WebConfig,
-            ar.edu.itba.paw.webapp.config.AuthConfig
+            ar.edu.itba.paw.webapp.config.AuthConfig,
+            ar.edu.itba.paw.webapp.config.MailConfig
         </param-value>
     </context-param>
 
@@ -77,5 +78,13 @@
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/jsp/error/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/jsp/error/403.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/WEB-INF/jsp/error/default.jsp</location>
     </error-page>
 </web-app>

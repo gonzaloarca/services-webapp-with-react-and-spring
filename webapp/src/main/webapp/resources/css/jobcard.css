@@ -1,9 +1,13 @@
+.price-container {
+    margin-top: 15px;
+}
 
 .job-card-img {
     height: 150px;
     width: 100%;
     object-fit: cover;
 }
+
 
 .job-card-title {
     font-weight: bold;
@@ -15,8 +19,25 @@
     text-overflow: ellipsis;
 }
 
+.job-card-no-reviews {
+    background-color: #7e7e7e;
+    display: flex;
+    align-items: center;
+}
+
+.job-card-no-reviews p {
+    margin: 0;
+}
+
+.job-card-no-reviews i {
+    color: white;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
 .job-card-type {
     color: gray;
+    margin-bottom: 10px;
 }
 
 .job-card-detail {

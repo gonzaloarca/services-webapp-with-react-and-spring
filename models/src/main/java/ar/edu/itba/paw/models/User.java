@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class User {
@@ -10,8 +11,9 @@ public class User {
     private final boolean isActive;
     private final boolean isVerified;
     private final EncodedImage image;
+    private final LocalDateTime creationDate;
 
-    public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified, EncodedImage image) {
+    public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified, EncodedImage image, LocalDateTime creationDate) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -19,15 +21,17 @@ public class User {
         this.isActive = isActive;
         this.isVerified = isVerified;
         this.image = image;
+        this.creationDate = creationDate;
     }
 
-    public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified) {
+    public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified, LocalDateTime creationDate) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.phone = phone;
         this.isActive = isActive;
         this.isVerified = isVerified;
+        this.creationDate = creationDate;
         this.image = null;
     }
 
@@ -58,6 +62,10 @@ public class User {
 
     public EncodedImage getImage() {
         return image;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
     @Override

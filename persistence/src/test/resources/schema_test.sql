@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS users
     image_type VARCHAR(100),
     user_image BYTEA,
     user_is_verified BOOLEAN NOT NULL DEFAULT false,
-    user_password VARCHAR(100) NOT NULL
+    user_password VARCHAR(100) NOT NULL,
+    user_creation_date TIMESTAMP DEFAULT current_timestamp
 );
 
 CREATE TABLE IF NOT EXISTS job_post
@@ -18,7 +19,8 @@ CREATE TABLE IF NOT EXISTS job_post
     post_title           VARCHAR(100) NOT NULL,
     post_available_hours VARCHAR(100) NOT NULL,
     post_job_type        INTEGER      NOT NULL,
-    post_is_active       BOOLEAN      NOT NULL,
+    post_is_active       BOOLEAN      DEFAULT TRUE,
+    post_creation_date TIMESTAMP DEFAULT current_timestamp,
     FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
 );
 
@@ -47,12 +49,12 @@ CREATE TABLE IF NOT EXISTS contract
     contract_id          SERIAL PRIMARY KEY,
     client_id            INTEGER,
     package_id           INTEGER,
-    creation_date        DATE NOT NULL,
     contract_description TEXT NOT NULL,
-    FOREIGN KEY (client_id) REFERENCES users ON DELETE SET NULL,
-    FOREIGN KEY (package_id) REFERENCES job_package ON DELETE SET NULL,
     contract_image_type VARCHAR(100),
-    image_data BYTEA
+    image_data BYTEA,
+    contract_creation_date TIMESTAMP DEFAULT current_timestamp,
+    FOREIGN KEY (client_id) REFERENCES users ON DELETE SET NULL,
+    FOREIGN KEY (package_id) REFERENCES job_package ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS review
@@ -61,6 +63,7 @@ CREATE TABLE IF NOT EXISTS review
     review_rate      INTEGER NOT NULL,
     review_title       TEXT,
     review_description TEXT    NOT NULL,
+    review_creation_date TIMESTAMP DEFAULT current_timestamp,
     FOREIGN KEY (contract_id) REFERENCES contract ON DELETE CASCADE,
     PRIMARY KEY (contract_id)
 );

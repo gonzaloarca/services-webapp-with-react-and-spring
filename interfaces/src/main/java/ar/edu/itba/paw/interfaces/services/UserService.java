@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.*;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotVerifiedException;
 
@@ -10,9 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-
-    //TODO eliminar este metodo cambiando los tests
-    User register(String email,String password, String username, String phone);
 
     User register(String email, String password, String username, String phone, ByteImage image)
             throws UserAlreadyExistsException, UserNotVerifiedException;
@@ -37,4 +32,9 @@ public interface UserService {
 
     void changeUserPassword(String email, String password);
 
+    List<JobPost.JobType> findUserJobTypes(long id);
+
+    int findUserRankingInJobType(long id, JobPost.JobType jobType);
+
+    List<AnalyticRanking> findUserAnalyticRankings(long id);
 }

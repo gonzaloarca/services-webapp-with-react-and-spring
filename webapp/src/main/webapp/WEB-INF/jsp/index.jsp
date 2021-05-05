@@ -30,6 +30,9 @@
     <%-- FontAwesome Icons--%>
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
 
+    <!--  Bootstrap icons   -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/index.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
@@ -74,13 +77,13 @@
     <div class="landing-row">
         <h3><spring:message code="index.services.title"/></h3>
         <div class="job-display-container">
-            <c:if test="${jobCards.size() > 0}">
+            <c:if test="${jobCardSize > 0}">
                 <c:forEach items="${jobCards}" var="jobCard">
                     <c:set var="data" value="${jobCard}" scope="request"/>
                     <c:import url="components/jobCard.jsp"/>
                 </c:forEach>
             </c:if>
-            <c:if test="${jobCards.size() == 0}">
+            <c:if test="${jobCardSize == 0}">
                 <div class="result-div">
                     <img
                             src="<c:url value="/resources/images/unavailable-1.svg"/> "
@@ -101,13 +104,14 @@
     </div>
 </div>
 <div class="landing-bottom landing-row-shadow"
-     style="background: url('${pageContext.request.contextPath}/resources/images/publish-landing-bg-1.svg')" >
+     style="background: url('${pageContext.request.contextPath}/resources/images/publish-landing-bg-1.svg')">
     <h3>
         <spring:message code="index.createJobPost.question"/>
         <br>
         <spring:message code="index.createJobPost.proposition"/>
     </h3>
-    <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post"><spring:message code="index.createJobPost.button"/></a>
+    <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post"><spring:message
+            code="index.createJobPost.button"/></a>
     <div class="mt-5">
         <jsp:include page="components/footer.jsp"/>
     </div>
@@ -115,15 +119,17 @@
 
 </div>
 <script>
+
     // Para modificar el href con la ubicacion seleccionada
     function redirectCategory(category) {
-        var auxZoneId = sessionStorage.getItem("pickedZoneId");
-        sessionStorage.setItem("pickedCategoryId", category);
-        if (auxZoneId) {
-            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' + auxZoneId +
-                '&query=&category=' + category;
-        } else {
-            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' +
+        if ($('#homeSelect')[0].value === "") {
+            $('#zoneError')[0].style.display = 'inherit';
+            homeSelect.setCustomValidity("error");
+            $('html,body').animate({
+                scrollTop: $('#top-index').offset().top
+            }, 'slow');
+        }else {
+            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' + $('#homeSelect')[0].value +
                 '&query=&category=' + category;
         }
     }

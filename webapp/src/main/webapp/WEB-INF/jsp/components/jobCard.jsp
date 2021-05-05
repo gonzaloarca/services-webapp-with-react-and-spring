@@ -4,11 +4,10 @@
 <html>
 <body>
 <div class="card job-card">
-    <%-- TODO: Poner alt correcto e imagen de usuario--%>
     <spring:message code="${requestScope.data.jobPost.jobType.stringCode}" var="jobTypeName"/>
 
     <c:choose>
-        <c:when test="${requestScope.data.postImage == null}">
+        <c:when test="${requestScope.data.postImage.image.string == null}">
             <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
         </c:when>
         <c:otherwise>
@@ -24,10 +23,30 @@
         <h6 class="card-text job-card-type capitalize-first-letter">
             <c:out value="${jobTypeName}"/>
         </h6>
+        <c:choose>
+            <c:when test="${requestScope.data.reviewsCount == 0}">
+                <div class="gray-chip job-card-no-reviews">
+                    <i class="bi bi-star-fill star"></i>
+                    <p>
+                        <spring:message code="jobCard.jobs.noReviews"/>
+                    </p>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="custom-row">
+                    <jsp:include page="rateStars.jsp">
+                        <jsp:param name="rate" value="${requestScope.data.jobPost.rating}"/>
+                    </jsp:include>
+                    <p class="ml-3 service-subtitle">
+                        (${requestScope.data.reviewsCount})
+                    </p>
+                </div>
+            </c:otherwise>
+        </c:choose>
         <div>
-            <div class="price-container mt-4 mx-4">
+            <div class="price-container mx-4">
                 <p class="price">
-                    <spring:message code="${requestScope.data.rateType.stringCode}"
+                    <spring:message htmlEscape="true" code="${requestScope.data.rateType.stringCode}"
                                     arguments="${requestScope.data.price}"/>
                 </p>
             </div>
@@ -47,7 +66,15 @@
         <li class="list-group-item job-card-detail">
             <i class="fas fa-check job-card-detail"></i>
             <p class="job-card-detail">
-                <spring:message code="jobCard.jobs.completed" arguments="${requestScope.data.contractsCompleted}"/>
+                <c:choose>
+                    <c:when test="${requestScope.data.contractsCompleted == 1}">
+                        <spring:message code="jobPost.jobs.completed.onlyOne"/>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="jobPost.jobs.completed"
+                                        arguments="${requestScope.data.contractsCompleted}"/>
+                    </c:otherwise>
+                </c:choose>
             </p>
         </li>
 

@@ -1,7 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" buffer="256kb"%>
 <html>
 <head>
     <title>
@@ -30,6 +30,9 @@
     <%-- FontAwesome Icons--%>
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
 
+    <!--  Bootstrap icons   -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/search.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/jobcard.css" rel="stylesheet"/>
@@ -41,26 +44,21 @@
 <body>
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <%@include file="components/customNavBar.jsp" %>
-<div class="content-container d-flex">
+<div class="content-container p-4 d-flex">
     <div class="custom-card filter-card">
-        <h3>
+        <span class="filters-header">
             <spring:message code="search.filters"/>
-        </h3>
+        </span>
         <hr class="hr1"/>
-        <h4>
+        <p class="categories-header">
             <spring:message code="search.categories"/>
-        </h4>
-        <c:forEach items="${categories}" var="categorie" varStatus="status">
-            <span class="mb-1 custom-row align-items-center" onclick="updateCategorySelected(${categorie.value})">
-                <c:if test="${param.category == status.index}">
-                    <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
-                        <i class="fa fa-times unselect-category"></i>
-                    </a>
-                </c:if>
+        </p>
+        <c:forEach items="${categories}" var="category" varStatus="status">
+            <span class="mb-1 custom-row align-items-center" onclick="updateCategorySelected(${category.value})">
                 <p class="capitalize-first-letter">
                     <a class="category ${param.category == status.index? 'pickedCategory':''}"
                        href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=${status.index}">
-                        <spring:message code="${categorie.stringCode}"/>
+                        <spring:message code="${category.stringCode}"/>
                     </a>
                 </p>
             </span>
@@ -76,13 +74,25 @@
                                 <spring:message code="search.noquery.results"/>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="search.results" arguments="${param.query}"/>
+                                <spring:message htmlEscape="true" code="search.results" arguments="${param.query}"/>
                             </c:otherwise>
                         </c:choose>
                         <spring:message code="${pickedZone.stringCode}"/>
                     </h3>
                 </div>
                 <hr class="hr1"/>
+                <c:if test="${param.category != -1}">
+                    <div class="unselect-category">
+                        <span class="mr-2"><spring:message code="search.filteringBy"/></span>
+                        <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
+                            <div class="filter-chip">
+                                <spring:message code="${categories[param.category].stringCode}"/>
+                                <i class="fa fa-times-circle ml-1" aria-hidden="true"></i>
+                            </div>
+                        </a>
+                    </div>
+
+                </c:if>
                 <div class="job-display-container">
                     <c:choose>
                         <c:when test="${jobCards.size() > 0}">
@@ -107,7 +117,7 @@
                 <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
                 <c:set var="maxPage" value="${maxPage}" scope="request"/>
                 <c:set var="currentPages" value="${currentPages}" scope="request"/>
-                <c:set var="parameters" value="&zone=${param.zone}&query=${param.query}&${param.category}"
+                <c:set var="parameters" value="&zone=${param.zone}&query=${param.query}&category=${param.category}"
                        scope="request"/>
                 <%@include file="components/bottomPaginationBar.jsp" %>
             </c:when>
@@ -129,15 +139,5 @@
     </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
-<script>
-    //Actualizo la categoria seleccionada en las cookies
-    function updateCategorySelected(category) {
-        let categoryIndex = sessionStorage.getItem("pickedCategoryId");
-        if (category && parseInt(categoryIndex) !== parseInt(category))
-            sessionStorage.setItem("pickedCategoryId", category);
-        else
-            sessionStorage.removeItem("pickedCategoryId");
-    }
-</script>
 </body>
 </html>

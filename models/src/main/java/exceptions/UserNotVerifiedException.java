@@ -1,5 +1,10 @@
 package exceptions;
 
 public class UserNotVerifiedException extends RuntimeException{
-	//TODO implementar
+
+    private static final String MESSAGE = "User not verified";
+
+    public UserNotVerifiedException() {
+        super(MESSAGE);
+    }
 }

@@ -1,6 +1,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+
+<%--Seteo de variable para verificar si el currentUser es el dueño del jobPost en el contract--%>
+<c:set var="isOwner" value="${contractType == 1}" scope="request"/>
+
 <html>
 <head>
 
@@ -47,86 +51,60 @@
     <jsp:include page="components/siteHeader.jsp">
         <jsp:param name="code" value="mycontracts.title"/>
     </jsp:include>
-    <div class="content-container">
-        <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
-            <c:set var="data" value="${contractCard.jobCard}" scope="request"/>
-            <div class="row">
-                <div class="contract-service mr-4">
-                    <%@include file="components/serviceCard.jsp" %>
-                </div>
-                <div class="contract-buttons-card">
-                    <spring:message code="mycontracts.contact.name"
-                                    arguments="${contractCard.jobCard.jobPost.user.username}" var="name"/>
-                    <spring:message code="mycontracts.contact.email"
-                                    arguments="${contractCard.jobCard.jobPost.user.email}" var="email"/>
-                    <spring:message code="mycontracts.contact.phone"
-                                    arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
-                    <a class="contract-contact-text"
-                       onclick='openContactModal("${name}", "${email}", "${phone}")'>
-                        <h4 class="mb-3">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>
-                            <spring:message code="mycontracts.contact"/>
-                        </h4>
-                    </a>
-                    <c:choose>
-                        <c:when test="${contractCard.review != null}">
-                            <jsp:include page="components/rateStars.jsp">
-                                <jsp:param name="rate" value="${contractCard.review.rate}"/>
-                            </jsp:include>
-                        </c:when>
-                        <c:otherwise>
-                            <a class="contract-review-text"
-                               href="${pageContext.request.contextPath}/rate-contract/${contractCard.jobContract.id}">
-                                <h4 class="mb-0">
-                                    <i class="bi bi-star"></i>
-                                    <spring:message code="mycontracts.qualifycontract"/>
-                                </h4>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-            </div>
-            <c:if test="${status.index != contractCards.size()-1}">
-                <hr class="hr1"/>
-            </c:if>
-        </c:forEach>
-        <c:set var="listSize" value="${contractCards.size()}" scope="request"/>
-        <c:set var="maxPage" value="${maxPage}" scope="request"/>
-        <c:set var="currentPages" value="${currentPages}" scope="request"/>
-        <%@include file="components/bottomPaginationBar.jsp" %>
-    </div>
-</div>
+    <div class="content-container-transparent pt-0">
 
-<jsp:include page="components/footer.jsp"/>
+        <div class="main-body">
+            <div class="contracts-sections content-container">
+                <jsp:include page="components/myContractsOptions.jsp">
+                    <jsp:param name="selected" value="${contractType}"/>
+                    <jsp:param name="isPro" value="${isPro}"/>
+                </jsp:include>
+            </div>
 
-<%--Modal de contacto--%>
-<div class="modal fade" tabindex="-1" id="modal" aria-labelledby="modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">
-                    <spring:message code="mycontracts.contact.title"/></h3>
-            </div>
-            <div class="modal-body">
-                <h5 id="modalProfessionalName"></h5>
-                <h5 id="modalProfessionalEmail"></h5>
-                <h5 id="modalProfessionalPhone"></h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <spring:message code="mycontracts.contact.close"/></button>
+            <div class="contracts-container content-container">
+                <c:choose>
+                    <c:when test="${contractCards.size() > 0}">
+                        <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
+                            <c:set var="data" value="${contractCard.jobCard}" scope="request"/>
+                            <%@include file="components/contractCard.jsp" %>
+                            <c:if test="${status.index != contractCards.size()-1}">
+                                <hr class="hr1"/>
+                            </c:if>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="display: flex; align-items: center; flex-direction: column">
+                            <img style="height: 200px; width: 40%; margin: 30px 0" alt="<spring:message code="mycontracts.shakingHands"/>"
+                                 src='<c:url value="/resources/images/contract1.svg"/>'/>
+                            <h4 class="font-weight-bold">
+                                <spring:message code="mycontracts.noContractsHeader"/>
+                            </h4>
+
+                            <c:choose>
+                                <c:when test="${isOwner}">
+                                    <c:set value="mycontracts.noContractsSubtitlePro" var="noContractsSubtitle"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:set value="mycontracts.noContractsSubtitleClient" var="noContractsSubtitle"/>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <p><spring:message code="${noContractsSubtitle}"/></p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+                <c:set var="listSize" value="${contractCards.size()}" scope="request"/>
+                <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                <%@include file="components/bottomPaginationBar.jsp" %>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    function openContactModal(name, email, phone) {
-        $('#modalProfessionalName').text(name);
-        $('#modalProfessionalEmail').text(email);
-        $('#modalProfessionalPhone').text(phone);
-        $('#modal').modal('show');
-    }
-</script>
+<jsp:include page="components/footer.jsp"/>
+
+
+
 </body>
 </html>

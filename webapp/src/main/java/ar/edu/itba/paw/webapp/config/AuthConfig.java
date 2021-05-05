@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.ConsensusBased;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -62,9 +63,10 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
-                .antMatchers("/contract/**","/my-contracts", "/qualify-contract/**").hasRole("CLIENT")
+                .antMatchers("/analytics", "/my-contracts/professional").hasRole("PROFESSIONAL")
+                .antMatchers("/contract/**","/my-contracts", "/rate-contract/**").hasRole("CLIENT")
                 .antMatchers("/login","/register").anonymous()
-                .antMatchers("/account/**", "/create-job-post").authenticated()
+                .antMatchers("/account/**", "/create-job-post", "/my-contracts/**").authenticated()
                 .antMatchers("/**").permitAll()
             .and().formLogin()
                 .usernameParameter("email")
@@ -82,11 +84,9 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
 //                .invalidSessionUrl("/login")
             .and().rememberMe()
                 .rememberMeParameter("rememberMeCheck")
-                .key("keyString")
+                .key(keyString)
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .userDetailsService(hireNetUserDetails)
-                .and().exceptionHandling()
-                .accessDeniedPage("/403")
             .and().csrf().disable();
     }
 
@@ -97,7 +97,7 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDecisionManager accessDecisionManager(){
-        List<AccessDecisionVoter<?>> decisionVoters = Arrays.asList(
+        List decisionVoters = Arrays.asList(
                 new WebExpressionVoter(),
                 new RoleVoter(),
                 new AuthenticatedVoter(),

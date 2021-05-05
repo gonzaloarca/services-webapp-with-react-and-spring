@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,9 +13,10 @@ public class JobPost {
     private final boolean isActive;
     private final List<Zone> zones;
     private final double rating;
+    private final LocalDateTime creationDate;
 
     //Constructor para crear un post nuevo (esta activo)
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -22,11 +24,12 @@ public class JobPost {
         this.jobType = jobType;
         this.zones = zones;
         this.rating = rating;
+        this.creationDate = creationDate;
         this.isActive = true;
     }
 
     //Constructor para crear un post que puede no estar activo
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, boolean isActive) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, boolean isActive, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -35,6 +38,7 @@ public class JobPost {
         this.zones = zones;
         this.rating = rating;
         this.isActive = isActive;
+        this.creationDate = creationDate;
     }
 
     public long getId() {
@@ -67,6 +71,10 @@ public class JobPost {
 
     public double getRating() {
         return rating;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
     @Override
@@ -141,11 +149,54 @@ public class JobPost {
     }
 
     public enum Zone {
+        AGRONOMIA("JobPost.Zone.AGRONOMIA"),
+        ALMAGRO("JobPost.Zone.ALMAGRO"),
+        BALVANERA("JobPost.Zone.BALVANERA"),
+        BARRACAS("JobPost.Zone.BARRACAS"),
         BELGRANO("JobPost.Zone.BELGRANO"),
-        PALERMO("JobPost.Zone.PALERMO"),
-        RETIRO("JobPost.Zone.RETIRO"),
+        BOEDO("JobPost.Zone.BOEDO"),
+        CABALLITO("JobPost.Zone.CABALLITO"),
+        CHACARITA("JobPost.Zone.CHACARITA"),
+        COGHLAN("JobPost.Zone.COGHLAN"),
+        COLEGIALES("JobPost.Zone.COLEGIALES"),
+        CONSTITUCION("JobPost.Zone.CONSTITUCION"),
+        FLORES("JobPost.Zone.FLORES"),
+        FLORESTA("JobPost.Zone.FLORESTA"),
+        BOCA("JobPost.Zone.BOCA"),
+        PATERNAL("JobPost.Zone.PATERNAL"),
+        LINIERS("JobPost.Zone.LINIERS"),
+        MATADEROS("JobPost.Zone.MATADEROS"),
+        MONTECASTRO("JobPost.Zone.MONTECASTRO"),
+        MONSERRAT("JobPost.Zone.MONSERRAT"),
+        NPOMPEYA("JobPost.Zone.NPOMPEYA"),
         NUNIEZ("JobPost.Zone.NUNIEZ"),
-        COLEGIALES("JobPost.Zone.COLEGIALES");
+        PALERMO("JobPost.Zone.PALERMO"),
+        PAVELLANEDA("JobPost.Zone.PAVELLANEDA"),
+        PCHACABUCO("JobPost.Zone.PCHACABUCO"),
+        PCHAS("JobPost.Zone.PCHAS"),
+        PATRICIOS("JobPost.Zone.PATRICIOS"),
+        MADERO("JobPost.Zone.MADERO"),
+        RECOLETA("JobPost.Zone.RECOLETA"),
+        RETIRO("JobPost.Zone.RETIRO"),
+        SAAVEDRA("JobPost.Zone.SAAVEDRA"),
+        SANCRISTOBAL("JobPost.Zone.SANCRISTOBAL"),
+        SANNICOLAS("JobPost.Zone.SANNICOLAS"),
+        SANTELMO("JobPost.Zone.SANTELMO"),
+        VELEZ("JobPost.Zone.VELEZ"),
+        VERSALLES("JobPost.Zone.VERSALLES"),
+        CRESPO("JobPost.Zone.CRESPO"),
+        VPARQUE("JobPost.Zone.VPARQUE"),
+        DEVOTO("JobPost.Zone.DEVOTO"),
+        MITRE("JobPost.Zone.MITRE"),
+        LUGANO("JobPost.Zone.LUGANO"),
+        LURO("JobPost.Zone.LURO"),
+        ORTUZAR("JobPost.Zone.ORTUZAR"),
+        PUEYRREDON("JobPost.Zone.PUEYRREDON"),
+        VREAL("JobPost.Zone.VREAL"),
+        RIACHUELO("JobPost.Zone.RIACHUELO"),
+        SANTARITA("JobPost.Zone.SANTARITA"),
+        SOLDATI("JobPost.Zone.SOLDATI"),
+        URQUIZA("JobPost.Zone.URQUIZA");
 
         private final String stringCode;
         private final int value;

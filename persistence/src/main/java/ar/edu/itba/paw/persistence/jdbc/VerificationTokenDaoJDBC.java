@@ -31,8 +31,8 @@ public class VerificationTokenDaoJDBC implements VerificationTokenDao {
 					resultSet.getBoolean("user_is_active"),
 					resultSet.getBoolean("user_is_verified"),
 					new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("user_image")),
-							resultSet.getString("image_type"))
-			),
+							resultSet.getString("image_type")),
+                    resultSet.getTimestamp("user_creation_date").toLocalDateTime()),
 			Instant.ofEpochMilli(resultSet.getDate("creation_date").getTime()
 					+ resultSet.getTime("creation_date").getTime())
 	);

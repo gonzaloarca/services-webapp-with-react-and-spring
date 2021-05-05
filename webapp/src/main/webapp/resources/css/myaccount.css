@@ -167,5 +167,17 @@
 
 .file-input-container {
     background-color: #e8e8e8;
+    border-radius: 5px;
+    justify-content: space-between;
 }
 
+.cancel-btn {
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: white;
+}
+
+.account-username {
+    font-weight: bold;
+    word-break: break-word;
+}

@@ -1,5 +1,9 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -7,41 +11,42 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.util.Properties;
 import java.nio.charset.StandardCharsets;
 
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
         "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.auth"})
 @Configuration
+@EnableTransactionManagement
 @EnableAsync
 public class WebConfig {
 
-    //FIXME poner la url correcta
-    @Bean(name = "webpageUrl")
-    public String webpageUrl() {
-        return "http://pawserver.it.itba.edu.ar/paw-2021a-03";
+    private final Logger webConfigLogger = LoggerFactory.getLogger(WebConfig.class);
+
+    @Autowired
+    private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
+
+    @PostConstruct
+    public void init() {
+        requestMappingHandlerAdapter.setIgnoreDefaultModelOnRedirect(true);
     }
 
     @Bean
@@ -58,15 +63,17 @@ public class WebConfig {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
-
+        webConfigLogger.debug("Datasoruce driver set to {}", ds.getDriver());
 //        PARA USO LOCAL
         ds.setUrl("jdbc:postgresql://localhost:5432/paw-2021a-03");
 
 //        PARA DEPLOY
 //        ds.setUrl("jdbc:postgresql://10.16.1.110:5432/paw-2021a-03");
+        webConfigLogger.debug("Datasource URL set to {}", ds.getUrl());
 
         ds.setUsername("paw-2021a-03");
         ds.setPassword("4Jqbf4tiN");
+        webConfigLogger.debug("Datasource username and password set to {} and {}", ds.getUsername(), ds.getPassword());
 
         return ds;
     }
@@ -80,6 +87,9 @@ public class WebConfig {
     @Value("classpath:migration_login.sql")
     private Resource loginMigration;
 
+    @Value("classpath:job_card_view.sql")
+    private Resource jobCardView;
+
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
@@ -87,20 +97,18 @@ public class WebConfig {
         dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
+
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
+        webConfigLogger.debug("Running SQL script: {}", schemaSql.getFilename());
         dbp.addScript(schemaSql);
+        webConfigLogger.debug("Running SQL script: {}", imageSchemaSql.getFilename());
         dbp.addScript(imageSchemaSql);
+        webConfigLogger.debug("Running SQL script: {}", loginMigration.getFilename());
         dbp.addScript(loginMigration);
+        webConfigLogger.debug("Running SQL script: {}", jobCardView.getFilename());
+        dbp.addScript(jobCardView);
         return dbp;
-    }
-
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        long MAX_FILE_SIZE = 2 * 1024 * 1024;       //2MB
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(MAX_FILE_SIZE);
-        return multipartResolver;
     }
 
     @Bean
@@ -113,56 +121,17 @@ public class WebConfig {
     }
 
     @Bean
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
-
-        mailSender.setUsername("paw.hirenet@gmail.com");
-        mailSender.setPassword("paw12345");
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
-
-        return mailSender;
+    public PlatformTransactionManager transactionManager(final DataSource ds) {
+        return new DataSourceTransactionManager(ds);
     }
 
-    @Value("classpath:contractEmail.html")
-    Resource contractTemplate;
-    @Value("classpath:contractEmailWithImage.html")
-    Resource contractImageTemplate;
-    @Value("classpath:tokenEmail.html")
-    Resource tokenEmailTemplate;
-
-    private SimpleMailMessage makeMessage(Resource template) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        String text="";
-        try{
-            Reader reader = new InputStreamReader(template.getInputStream());
-            text = FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-        message.setText(text);
-        return message;
+    @Bean
+    public LevenshteinDistance levenshteinDistance() {
+        return new LevenshteinDistance();       //Se le puede indicar un threshold en el constructor
     }
 
-    @Bean(name = "contractEmail")
-    public SimpleMailMessage contractEmail() {
-        return makeMessage(contractTemplate);
+    @Bean
+    public LocaleResolver localeResolver() {
+        return new AcceptHeaderLocaleResolver();
     }
-
-    @Bean(name = "contractEmailWithImage")
-    public SimpleMailMessage contractEmailWithImage() {
-        return makeMessage(contractImageTemplate);
-    }
-
-    @Bean(name = "tokenEmail")
-    public SimpleMailMessage tokenEmail() {
-        return makeMessage(tokenEmailTemplate);
-    }
-
 }

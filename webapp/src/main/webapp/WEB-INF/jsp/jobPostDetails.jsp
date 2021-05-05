@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -48,11 +49,40 @@
     <%--            </li>--%>
     <%--        </ol>--%>
     <%--    </nav>--%>
-    <%--        TODO: IMPLEMENTAR EDICION DE JOBPOST--%>
-    <%--    <a class="custom-row edit-button text-uppercase" href="/job/${jobPost.id}/edit">--%>
-    <%--        <i class="fas fa-edit"></i>--%>
-    <%--        <p>Editar publicacion</p>--%>
-    <%--    </a>--%>
+    <c:if test="${isOwner && jobPost.active}">
+        <div class="flex custom-row justify-content-end align-items-center">
+            <a class="edit-button text-uppercase align-items-center my-2"
+               href="${pageContext.request.contextPath}/job/${jobPost.id}/edit">
+                <div class="custom-row"><i class="fas fa-edit"></i>
+                    <p class="mb-0 ml-2">
+                        <spring:message code="jobPost.edit"/>
+                    </p>
+                </div>
+            </a>
+            <div class="vl align-items-center my-2 owner-options-vl"></div>
+            <form:form modelAttribute="deleteJobPostForm" action="/job/delete" method="post" cssStyle="margin: 0">
+                <a class="delete-button text-uppercase align-items-center my-2"
+                   onclick="this.closest('form').submit();return false;">
+                    <div class="custom-row"><i class="fas fa-trash-alt"></i>
+                        <p class="mb-0 ml-2">
+                            <spring:message code="jobPost.delete"/>
+                        </p>
+                    </div>
+                </a>
+                <form:hidden path="id" value="${jobPost.id}"/>
+                <form:hidden path="returnURL" value="${pageContext.request.contextPath}/job/${jobPost.id}"/>
+            </form:form>
+
+        </div>
+    </c:if>
+    <c:if test="${!jobPost.active}">
+        <div class="removed-post-disclaimer mx-0 mb-4">
+            <i class="fas fa-exclamation-triangle mx-1"></i>
+            <span class="inactive-text">
+                <spring:message code="jobPost.inactive"/>
+            </span>
+        </div>
+    </c:if>
     <div class="card custom-card mb-4 bg-white rounded">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <c:choose>
@@ -76,11 +106,15 @@
                         </ol>
                         <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
+                            <span class="sr-only">
+                                <spring:message code="jobPost.create.goBack"/>
+                            </span>
                         </a>
                         <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
+                            <span class="sr-only">
+                                <spring:message code="jobPost.create.next"/>
+                            </span>
                         </a>
                     </c:if>
                     <div class="carousel-inner">
@@ -142,7 +176,7 @@
                             </c:if>
                         </div>
                         <div class="summary-item contracts-item">
-                            <p class="mb-0 ml-3"><spring:message code="profile.completed.works"/></p>
+                            <p class="mb-0 ml-3"><spring:message code="highlight.completed.works"/></p>
                             <div class="profile-completed-works-outline">
                                 <div class="profile-completed-works">${totalContractsCompleted}</div>
                             </div>
@@ -188,12 +222,29 @@
 
             <div class="card custom-card mb-4 bg-white rounded">
                 <div class="card-body">
-                        <span class="card-title custom-row">
-                            <i class="bi bi-box-seam"></i>
+                    <div class="card-title custom-row align-items-center justify-content-between">
+                        <div class="custom-row"><i class="bi bi-box-seam"></i>
                             <p>
-                                <spring:message code="jobPost.jobs.packages"/>
+                                <c:choose>
+                                    <c:when test="${packages.size() == 1}">
+                                        <spring:message code="jobPost.jobs.packages.onlyOne"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <spring:message code="jobPost.jobs.packages"/>
+                                    </c:otherwise>
+                                </c:choose>
                             </p>
-                        </span>
+                        </div>
+                        <c:if test="${isOwner && jobPost.active}">
+                            <a class="custom-row edit-button text-uppercase align-items-center"
+                               href="${pageContext.request.contextPath}/job/${jobPost.id}/packages">
+                                <i class="fas fa-cube m-0"></i>
+                                <p class="ml-2 font-weight-normal">
+                                    <spring:message code="jobPost.packages.title"/>
+                                </p>
+                            </a>
+                        </c:if>
+                    </div>
 
                     <div class="accordion mx-5" id="accordionPackages">
                         <c:forEach items="${packages}" var="pack" varStatus="status">
@@ -210,23 +261,26 @@
                                             <p class="package-title">
                                                 <c:out value="${pack.title}"/>
                                             </p>
-                                            <div class="ml-auto custom-row end-items">
+                                            <div class="custom-row end-items">
                                                 <div class="package-price end-items-item">
                                                     <p class="text-center mt-2">
                                                         <spring:message code="jobPost.jobs.price"/>
                                                     </p>
                                                     <div class="chip">
-                                                        <spring:message code="${pack.rateType.stringCode}"
+                                                        <spring:message htmlEscape="true"
+                                                                        code="${pack.rateType.stringCode}"
                                                                         arguments="${pack.price}"/>
                                                     </div>
                                                 </div>
-                                                <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
-                                                    <a class="btn"
-                                                       href="${pageContext.request.contextPath}/contract/package/${pack.id}"
-                                                       role="button" type="submit">
-                                                        <spring:message code="jobPost.jobs.submit"/>
-                                                    </a>
-                                                </div>
+                                                <c:if test="${!isOwner && jobPost.active}">
+                                                    <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
+                                                        <a class="btn"
+                                                           href="${pageContext.request.contextPath}/contract/package/${pack.id}"
+                                                           role="button" type="submit">
+                                                            <spring:message code="jobPost.jobs.submit"/>
+                                                        </a>
+                                                    </div>
+                                                </c:if>
                                             </div>
                                         </div>
                                     </button>
@@ -253,7 +307,7 @@
                     <span class="card-title custom-row">
                         <i class="bi bi-chat-left-fill"></i>
                         <p>
-                            Opiniones
+                            <spring:message code="jobPost.job.opinions"/>
                         </p>
                     </span>
                         <hr class="hr1"/>

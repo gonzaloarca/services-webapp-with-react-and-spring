@@ -9,7 +9,7 @@ body {
 }
 
 .content-container {
-    width: 80vw;
+    width: 90vw;
     min-height: 80vh;
     max-width: 1184px;
     margin: 0 auto;
@@ -19,7 +19,7 @@ body {
 }
 
 .content-container-transparent {
-    width: 80vw;
+    width: 90vw;
     min-height: 80vh;
     max-width: 1184px;
     margin: 0 auto;
@@ -210,18 +210,14 @@ h3 {
 }
 
 .custom-row {
-    display: flex;
+    display: flex !important;
     flex-wrap: wrap;
 }
 
 /* Para ratings */
 .star {
-    color: gold;
+    color: #FCB839;
     font-size: 22px;
-}
-
-.custom-row .rating {
-    margin-left: 3vw;
 }
 
 .rating p {
@@ -230,7 +226,6 @@ h3 {
     font-size: 16px;
 }
 
-/* chip */
 .chip {
     background-color: #485696;
     border-radius: 12px;
@@ -242,16 +237,20 @@ h3 {
 }
 
 .gray-chip {
-    background-color: #efefef;
+    background-color: #f5f5f5;
     border-radius: 18px;
     color: white;
     padding: 6px 12px;
+    margin: 2px;
     text-align: center;
     line-height: 1;
+    width: max-content;
 }
 
 /*Para precio, se utiliza en JobCard y en ServiceCard*/
 .price-container {
+    display: flex;
+    align-items: center;
     padding: 1vh 1vw;
     border-radius: 15px;
     background-color: #485696;
@@ -344,20 +343,25 @@ h3 {
 
 .service-img {
     border-radius: 15px;
-    height: 180px;
-    width: 180px;
+    height: 150px;
+    width: 150px;
     object-fit: cover;
+}
+
+.service-info {
+    min-width: 70%;
 }
 
 .service-title {
     color: #485696;
     line-height: 1.1em;
-    height: 2.2em;
+    font-size: 1.2rem;
+    width: 300px;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-line-clamp: 4;
 }
 
 .service-subtitle {
@@ -369,6 +373,54 @@ h3 {
     color: gray;
     margin-top: 10px;
     align-items: center;
+}
+
+.service-controls-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    padding: 5px;
+    margin-top: 10px;
+    flex: 1;
+    margin-left: 12px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    height: max-content;
+}
+
+.service-controls-container i {
+    margin-left: 0;
+}
+
+.service-control-edit {
+    text-align: left;
+    width: 100%;
+    padding: 2px;
+}
+
+.service-control-edit:hover {
+    text-decoration: none;
+    color: #007bff;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
+}
+
+.service-control-delete {
+    color: red;
+    text-align: left;
+    padding: 2px;
+    width: 100% !important;
+}
+
+.service-control-delete:hover {
+    text-decoration: none;
+    color: red;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
 }
 
 /*INPUTS DE FORMS*/
@@ -412,7 +464,6 @@ h3 {
     background-color: #e8e8e8;
 }
 
-
 /*REVIEW CARD*/
 .reviews-rate {
     font-size: 80px;
@@ -436,7 +487,7 @@ h3 {
     height: 8px;
 }
 
-.review-username {
+.review-header {
     word-break: break-word;
     flex: 1;
     align-self: center;
@@ -462,4 +513,176 @@ h3 {
 .profile-image-container {
     display: flex;
     justify-content: center;
+}
+
+.job-display-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.contract-control-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px;
+    color: #8690FA;
+}
+
+.contract-control-details:hover {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    color: #8690FA;
+    width: 100%;
+}
+
+.contract-control-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px;
+    color: #485696;
+}
+
+.contract-control-contact:hover {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
+}
+
+.contract-control-rate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px;
+    color: #FCB839;
+}
+
+.contract-control-rate:hover {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #e8e8e8;
+    width: 100%;
+    color: #FCB839;
+}
+
+.contract-control-details p {
+    margin-bottom: 0;
+}
+
+.contract-control-contact p {
+    margin-bottom: 0;
+}
+
+.contract-control-rate p {
+    margin-bottom: 0;
+}
+
+.contact-modal-row {
+    padding: 10px;
+    margin: 5px;
+    width: max-content;
+}
+
+.divider-bar-thick {
+    margin: 2px;
+    border: 0;
+    clear:both;
+    display:block;
+    width: 96%;
+    background-color:#c8c8c8;
+    height: 1px;
+}
+
+.removed-post-disclaimer {
+    background-color: #ffedbc;
+    border: 1px solid rgb(182, 132, 35);
+    color: rgb(182, 132, 35);
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px 10px 0 10px;
+    opacity: 0.8;
+}
+
+#details-modal-image {
+    width: 100%;
+    padding: 20px;
+    height: 400px;
+    object-fit: contain;
+    border-radius: 10px;
+    background-color: #485696;
+}
+
+#details-modal-image-header {
+    display: inline-block;
+    width: max-content;
+}
+
+#details-modal-description {
+    border-radius: 10px;
+    background-color: #e8e8e8;
+    padding: 8px;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    word-break: break-word;
+}
+
+#details-image-container {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: 0 10px;
+}
+
+#details-description-container {
+    width: 45%;
+}
+
+.hire-details-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #485696;
+    border-radius: 2rem;
+    width: 98%;
+    margin: 10px auto;
+
+}
+
+.hire-details-container p {
+    margin-bottom: 0;
+}
+
+.hire-user-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 5px;
+    color: white;
+}
+
+.hire-date-container {
+    background-color: white;
+    color: #485696;
+    border-radius: 2rem;
+    padding: 5px 10px;
+    margin: 7px;
+}
+
+.user-avatar {
+    border-radius: 100%;
+    width: 35px;
+    height: 35px;
+    min-width: 30px;
+    min-height: 30px;
+    margin: 0 10px 0 2px;
+    object-fit: cover;
 }

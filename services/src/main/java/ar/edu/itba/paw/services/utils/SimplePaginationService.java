@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.services.utils;
 
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
-import ar.edu.itba.paw.interfaces.services.PaginationService;
-import ar.edu.itba.paw.interfaces.services.ReviewService;
+import ar.edu.itba.paw.interfaces.HirenetUtils;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +14,13 @@ import java.util.List;
 public class SimplePaginationService implements PaginationService {
 
     @Autowired
-    private JobPostService jobPostService;
-
-    @Autowired
     private ReviewService reviewService;
 
     @Autowired
     private JobContractService jobContractService;
+
+    @Autowired
+    private JobCardService jobCardService;
 
     @Override
     public List<Integer> findCurrentPages(int page, int maxPage) {
@@ -47,8 +45,8 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageJobPosts() {
-        return jobPostService.findMaxPage();
+    public int findMaxPageJobCards() {
+        return jobCardService.findMaxPage();
     }
 
     @Override
@@ -58,21 +56,35 @@ public class SimplePaginationService implements PaginationService {
 
     @Override
     public int findMaxPageJobPostsByUserId(long id) {
-        return jobPostService.findMaxPageByUserId(id);
+        return jobCardService.findMaxPageByUserId(id);
     }
 
     @Override
-    public int findMaxPageJobPostsSearch(String query, JobPost.Zone zone, JobPost.JobType jobType) {
-        return jobPostService.findMaxPageSearch(query, zone, jobType);
+    public int findMaxPageJobPostsSearch(String query, int zone, int jobType) {
+        JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
+        if (jobType == HirenetUtils.SEARCH_WITHOUT_CATEGORIES)
+            return jobCardService.findMaxPageSearch(query, parsedZone);
+
+        return jobCardService.findMaxPageSearchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType]);
     }
 
     @Override
-    public int findMaxPageContractsByUserId(long id) {
-        return jobContractService.findMaxPageContractsByUserId(id);
+    public int findMaxPageContractsByClientId(long id) {
+        return jobContractService.findMaxPageContractsByClientId(id);
+    }
+
+    @Override
+    public int findMaxPageContractsByProId(long id) {
+        return jobContractService.findMaxPageContractsByProId(id);
     }
 
     @Override
     public int findMaxPageReviewsByPostId(long id) {
         return reviewService.findMaxPageByPostId(id);
+    }
+
+    @Override
+    public int findMaxPageRelatedJobCards(long professional_id) {
+        return jobCardService.findMaxPageRelatedJobCards(professional_id);
     }
 }

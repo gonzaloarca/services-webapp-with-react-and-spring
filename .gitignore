@@ -54,3 +54,7 @@ Thumbs.db
 
 .gradle/
 
+logs/
+
+logback-test.xml
+

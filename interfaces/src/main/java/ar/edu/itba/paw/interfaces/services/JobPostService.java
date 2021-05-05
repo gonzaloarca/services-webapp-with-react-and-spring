@@ -10,6 +10,8 @@ public interface JobPostService {
 
     JobPost findById(long id);
 
+    JobPost findByIdWithInactive(long id);
+
     List<JobPost> findByUserId(long id);
 
     List<JobPost> findByUserId(long id, int page);
@@ -26,16 +28,9 @@ public interface JobPostService {
 
     List<JobPost> findAll(int page);
 
-    List<JobPost> search(String query, JobPost.Zone zone, JobPost.JobType jobType);
-
-    List<JobPost> search(String query, JobPost.Zone zone, JobPost.JobType jobType, int page);
-
     int findSizeByUserId(long id);
 
-    int findMaxPage();
+    boolean updateJobPost(long id, String title, String availableHours, Integer jobType, int[] zones);
 
-    int findMaxPageByUserId(long id);
-
-    int findMaxPageSearch(String query, JobPost.Zone zone, JobPost.JobType jobType);
-
+    boolean deleteJobPost(long id);
 }

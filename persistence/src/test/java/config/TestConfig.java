@@ -29,6 +29,9 @@ public class TestConfig {
     @Value("classpath:migration_login_test.sql")
     private Resource loginMigration;
 
+    @Value("classpath:job_card_view_test.sql")
+    private Resource jobCardView;
+
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
@@ -53,8 +56,8 @@ public class TestConfig {
         dbp.addScript(schemaSql);
         dbp.addScript(imageSchema);
         dbp.addScript(loginMigration);
+        dbp.addScript(jobCardView);
         return dbp;
     }
-
 
 }
