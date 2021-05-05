@@ -92,7 +92,7 @@ public class CurrentUserController {
         ModelAndView mav = new ModelAndView("analytics");
         mav
             .addObject("user", userService.getUserByRoleAndId(1, id))
-            .addObject("avgRate", reviewService.findProfessionalAvgRate(id))
+            .addObject("avgRate", Math.floor(reviewService.findProfessionalAvgRate(id) * 100) / 100)
             .addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(id))
             .addObject("totalReviewsSize", reviewService.findProfessionalReviewsSize(id));
         currentUserControllerLogger.debug("Finding analytics rankings for user {}",id);
