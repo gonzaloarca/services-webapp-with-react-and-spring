@@ -73,22 +73,27 @@
          src='<c:url value="/resources/images/landingbg1.svg" />'/>
 </div>
 <script>
+
+    let homeSelect = $('#homeSelect')[0];
+    // Para levantar la ubicacion en las cookies, en caso de existir
+    const auxZoneId = sessionStorage.getItem("pickedZoneId");
+    if (auxZoneId) {
+        homeSelect.selectedIndex = parseInt(auxZoneId) + 1;
+    }
     // Cuando se hace el submit chequeo que se haya seleccionado una zona y de ser asi guardo las cookies
     let form = document.querySelector('#search-form');
     form.addEventListener('submit', function (event) {
-
-        let homeSelect = $('#homeSelect');
-        if(homeSelect[0].value === "")  {
+        if(homeSelect.value === "")  {
             $('#zoneError')[0].style.display = 'inherit';
-            homeSelect[0].setCustomValidity("error");
+            homeSelect.setCustomValidity("error");
             event.preventDefault();
             event.stopPropagation();
         }
         else {
             $('#zoneError')[0].style.display = 'none';
-            homeSelect[0].setCustomValidity("");
-            sessionStorage.setItem("pickedZoneId", homeSelect[0].value);
-            sessionStorage.setItem("pickedZoneString", homeSelect[0].selectedOptions[0].label);
+            homeSelect.setCustomValidity("");
+            sessionStorage.setItem("pickedZoneId", homeSelect.value);
+            sessionStorage.setItem("pickedZoneString", homeSelect.selectedOptions[0].label);
         }
 
         let querySearch = $('#queryInput');
@@ -109,15 +114,4 @@
     $('.home-search-location').on('click', function () {
         $('#zoneError')[0].style.display = 'none';
     })
-
-    // Para levantar la ubicacion en las cookies, en caso de existir
-    var auxZoneId = sessionStorage.getItem("pickedZoneId");
-    if (auxZoneId) {
-        homeSelect[0].selectedIndex = parseInt(auxZoneId)+1;
-    }
-    // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
-    var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
-    if (auxCategoryId) {
-        $('#categoryForm')[0].value = auxCategoryId;
-    }
 </script>
