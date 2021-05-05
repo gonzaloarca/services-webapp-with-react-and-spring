@@ -90,6 +90,7 @@
                             <form:label path="name" class="form-text custom-label">
                                 <spring:message code="register.name"/>
                             </form:label>
+                            <spring:message code="register.name" var="namePlaceholder"/>
                             <form:input type="text" class="form-control custom-input" name="name" required="true"
                                         placeholder="${namePlaceholder}" maxlength="100" path="name"/>
                             <div class="invalid-feedback">
@@ -101,6 +102,7 @@
                             <form:label path="phone" class="form-text custom-label">
                                 <spring:message code="register.phone"/>
                             </form:label>
+                            <spring:message code="register.phone" var="phonePlaceholder"/>
                             <form:input type="text" class="form-control custom-input" name="phone" required="true"
                                         placeholder="${phonePlaceholder}" pattern="^\+?[0-9- ]{7,50}" path="phone"/>
                             <div class="invalid-feedback">
