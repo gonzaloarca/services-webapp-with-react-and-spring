@@ -27,7 +27,7 @@ import java.util.List;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:db_data_test.sql")
+@Sql("classpath:job_card_data_test.sql")
 public class JobCardDaoJDBCTest {
 
     private static final User USER1 = new User(
@@ -38,37 +38,52 @@ public class JobCardDaoJDBCTest {
             true,
             true,
             LocalDateTime.now());
-
     private static final User USER2 = new User(
-            2,
-            "manurodriguez@gmail.com",
-            "Manuel Rodriguez",
-            "1109675432",
+            3,
+            "gonzaarca@gmail.com",
+            "Gonzalo Arca",
+            "0549940406521",
+            true,
+            true,
+            LocalDateTime.now());
+    private static final User USER3 = new User(
+            8,
+            "npapa@gmail.com",
+            "Nicolas Papa",
+            "09876654321354",
+            true,
+            true,
+            LocalDateTime.now());
+    private static final User USER4 = new User(
+            11,
+            "tren@gmail.com",
+            "Soledad del Cielo",
+            "87876767",
             true,
             true,
             LocalDateTime.now());
 
-    private static final List<JobPost.Zone> ZONES_USER2 = new ArrayList<>(
+    private static final List<JobPost.Zone> ZONES_USER = new ArrayList<>(
             Arrays.asList(
                     JobPost.Zone.values()[1],
                     JobPost.Zone.values()[2]
             )
     );
     private static final JobPost JOB_POST_USER2 = new JobPost(
-            3,
+            11,
             USER2,
             "Electricista no matriculado", "Lun a Jueves 13hs - 14hs",
             JobPost.JobType.values()[1],
-            ZONES_USER2,
+            ZONES_USER,
             0.0,
             true,
             LocalDateTime.now());
     private static final JobPackage JOB_PACKAGE_USER2 = new JobPackage(
-            4,
+            19,
             JOB_POST_USER2.getId(),
-            "Trabajo barato",
-            "Arreglos varios",
-            500.00, JobPackage.RateType.values()[0],
+            "Trabajo simple",
+            "Arreglos de tomacorrientes",
+            200.00, JobPackage.RateType.values()[0],
             true
     );
     private static final JobCard JOB_CARD_USER2 = new JobCard(
@@ -76,7 +91,57 @@ public class JobCardDaoJDBCTest {
             JOB_PACKAGE_USER2.getRateType(),
             JOB_PACKAGE_USER2.getPrice(),
             null,
-            4,
+            1,
+            0
+    );
+    private static final JobPost JOB_POST_USER3 = new JobPost(
+            12,
+            USER3,
+            "Paseador de gatos", "Sabados de 8hs - 14hs",
+            JobPost.JobType.values()[3],
+            ZONES_USER,
+            0.0,
+            true,
+            LocalDateTime.now());
+    private static final JobPackage JOB_PACKAGE_USER3 = new JobPackage(
+            20,
+            JOB_POST_USER3.getId(),
+            "Trabajo simple",
+            "Paseo tardio",
+            300.00, JobPackage.RateType.values()[0],
+            true
+    );
+    private static final JobCard JOB_CARD_USER3 = new JobCard(
+            JOB_POST_USER3,
+            JOB_PACKAGE_USER3.getRateType(),
+            JOB_PACKAGE_USER3.getPrice(),
+            null,
+            2,
+            0
+    );
+    private static final JobPost JOB_POST_USER4 = new JobPost(
+            13,
+            USER4,
+            "Paseador de urones", "Domingos de 8hs - 14hs",
+            JobPost.JobType.values()[3],
+            ZONES_USER,
+            0.0,
+            true,
+            LocalDateTime.now());
+    private static final JobPackage JOB_PACKAGE_USER4 = new JobPackage(
+            21,
+            JOB_POST_USER4.getId(),
+            "Trabajo simple",
+            "Paseo recreativo",
+            300.00, JobPackage.RateType.values()[0],
+            true
+    );
+    private static final JobCard JOB_CARD_USER4 = new JobCard(
+            JOB_POST_USER4,
+            JOB_PACKAGE_USER4.getRateType(),
+            JOB_PACKAGE_USER4.getPrice(),
+            null,
+            1,
             0
     );
 
@@ -98,8 +163,10 @@ public class JobCardDaoJDBCTest {
         List<JobCard> maybeJobCards = jobCardDaoJDBCTest.findRelatedJobCards(1, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(maybeJobCards.isEmpty());
-        Assert.assertEquals(1, maybeJobCards.size());
-        Assert.assertEquals(JOB_CARD_USER2, maybeJobCards.get(0));
+        Assert.assertEquals(3, maybeJobCards.size());
+        Assert.assertEquals(JOB_CARD_USER3, maybeJobCards.get(0));  //aparece primero pues tiene mas clientes en comun
+        Assert.assertEquals(JOB_CARD_USER2, maybeJobCards.get(1));  //aparece segundo por que a pesar de tener los mismos clientes que 4, tiene mas contratos completados
+        Assert.assertEquals(JOB_CARD_USER4, maybeJobCards.get(2));
     }
 
     @Test
@@ -117,7 +184,7 @@ public class JobCardDaoJDBCTest {
         String title = "";
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-        List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(),HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(4, jobCards.size());
@@ -128,7 +195,7 @@ public class JobCardDaoJDBCTest {
         List<JobCard> jobCards = jobCardDaoJDBCTest.findAll(HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
-        Assert.assertEquals(10, jobCards.size());
+        Assert.assertEquals(11, jobCards.size());
     }
 
     @Test

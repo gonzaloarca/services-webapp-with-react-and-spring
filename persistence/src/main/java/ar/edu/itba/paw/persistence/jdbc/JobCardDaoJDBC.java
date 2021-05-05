@@ -55,7 +55,7 @@ public class JobCardDaoJDBC implements JobCardDao {
                             resultSet.getString("card_image_type"))
             ),
             resultSet.getInt("post_contract_count"),
-            resultSet.getInt("post_reviews_size")
+            resultSet.getInt("reviews")
     );
 
     private static final String RELATED_CARDS_QUERY = new StringBuilder()
@@ -64,7 +64,7 @@ public class JobCardDaoJDBC implements JobCardDao {
             .append("COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common")
             .append("    FROM full_contract pro1_contracts")
             .append("             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id")
-            .append("    WHERE ? <> pro2_contracts.professional_id")
+            .append("    WHERE ? <> pro2_contracts.professional_id AND ? = pro1_contracts.professional_id")
             .append("      AND pro2_contracts.contract_creation_date >= ?")
             .append("    GROUP BY pro2_contracts.post_id) AS recommended_posts ")
             .append("WHERE post_is_active = TRUE")
@@ -74,8 +74,7 @@ public class JobCardDaoJDBC implements JobCardDao {
             .append("    WHERE ? = user_id) ")
             .toString();
     // Obtiene las cards de otros profesionales con el que comparte clientes(los cuales contrataron al otro
-    // profesional en los ultimos 30 dias) y tipo de trabajo,
-    // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
+    // profesional en los ultimos 30 dias) y tipo de trabajo
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -162,13 +161,14 @@ public class JobCardDaoJDBC implements JobCardDao {
 
     @Override
     public List<JobCard> findRelatedJobCards(long professional_id, int page) {
-        List<Object> parameters = new ArrayList<>(Arrays.asList(professional_id,
+        List<Object> parameters = new ArrayList<>(Arrays.asList(professional_id, professional_id,
                 LocalDateTime.now().minusDays(30), professional_id));
 
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT * ")
                 .append(RELATED_CARDS_QUERY)
-                .append("ORDER BY clients_in_common DESC, contracts DESC ");
+                .append("ORDER BY clients_in_common DESC, post_contract_count DESC ");
+        // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
 
         PagingUtil.addPaging(sqlQuery, page);
 
@@ -210,7 +210,7 @@ public class JobCardDaoJDBC implements JobCardDao {
                 .toString();
 
         Integer totalJobsCount = jdbcTemplate.queryForObject(sqlQuery,
-                new Object[]{professional_id, LocalDateTime.now().minusDays(30), professional_id}, Integer.class);
+                new Object[]{professional_id, professional_id, LocalDateTime.now().minusDays(30), professional_id}, Integer.class);
 
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
