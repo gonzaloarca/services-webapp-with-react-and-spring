@@ -22,6 +22,7 @@
                 <spring:message code="contract.options.mine"/>
             </div>
         </a>
+        <c:if test="${param.isPro}">
         <a class="nav-link nav-option ${param.selected == '1' ? 'active' : ''}"
            href="${pageContext.request.contextPath}/my-contracts/professional">
             <c:choose>
@@ -37,6 +38,7 @@
                 <spring:message code="contract.options.myServices"/>
             </div>
         </a>
+        </c:if>
 
     </nav>
 </div>
