@@ -62,13 +62,15 @@
                     <spring:message code="navigation.search" var="queryPlaceholder"/>
 
                     <div style="position: relative; width: 45%">
-                        <form:input class="form-control mr-sm-2 w-100" type="search" path="query"
+                        <form:input maxlength="100" class="form-control mr-sm-2 w-100" type="search" path="query"
                                     placeholder="${queryPlaceholder}" aria-label="Search" id="search-input"/>
                         <button class="" type="submit"
                                 onclick="return submitSearchPost();" id="search-button">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
+
+                    <form:errors path="query" cssClass="search-form-error" cssStyle="top: 50px" element="p"/>
 
                     <a type="button" class="btn btn-link navbar-link-button ml-auto" data-toggle="modal"
                        data-target="#zonesModal">
@@ -249,11 +251,6 @@
         } else {
             $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
             $('#pickLocationButton').attr("disabled", true);
-        }
-        // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
-        var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
-        if (auxCategoryId) {
-            $('#categoryForm')[0].value = auxCategoryId;
         }
     }
 

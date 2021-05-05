@@ -10,16 +10,17 @@
 .filter-card {
     padding: 15px;
     margin-right: 3vw;
-    min-width: 10vw;
+    min-width: 13vw;
 }
 
-h4 {
+.categories-header {
     color: #485696;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
 .category {
-    font-size: 18px;
-    color: #a7a7a7;
+    color: #bdbdbd;
     margin-left: 1vw;
 }
 
@@ -33,7 +34,6 @@ h4 {
 
 .pickedCategory {
     color: #485696;
-    font-weight: bold;
 }
 
 .unselect-category, .unselect-category:hover {
@@ -43,8 +43,30 @@ h4 {
     font-size: 16px;
 }
 
-.unselect-category .chip{
-    color: black;
-    margin-left: 15px;
-    background-color: #dbdbdb;
+.unselect-category .filter-chip {
+    color: white;
+    background-color: #495057;
+}
+
+.filter-chip {
+    font-size: 0.8rem;
+    border-radius: 2rem;
+    padding: 6px;
+    text-align: center;
+    line-height: 1;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.filter-chip:hover {
+    background-color: #E26767;
+    color: white;
+    transition: color, background-color 200ms;
+}
+
+.filters-header {
+    font-weight: bold;
+    font-size: 1.1rem;
 }

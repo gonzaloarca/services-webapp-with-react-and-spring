@@ -57,6 +57,7 @@
             <div class="contracts-sections content-container">
                 <jsp:include page="components/myContractsOptions.jsp">
                     <jsp:param name="selected" value="${contractType}"/>
+                    <jsp:param name="isPro" value="${isPro}"/>
                 </jsp:include>
             </div>
 

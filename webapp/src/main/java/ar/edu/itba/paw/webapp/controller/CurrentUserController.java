@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobContract;
+import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.models.AnalyticRanking;
 import ar.edu.itba.paw.models.JobContractCard;
@@ -55,7 +56,8 @@ public class CurrentUserController {
                 .addObject("contractType", 1)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage)
-                .addObject("contractCards",jobContractCards );
+                .addObject("contractCards",jobContractCards )
+                .addObject("isPro", true);
     }
 
     @RequestMapping(value = "/my-contracts/client")
@@ -67,11 +69,13 @@ public class CurrentUserController {
         int maxPage = paginationService.findMaxPageContractsByClientId(id);
         currentUserControllerLogger.debug("Findign contract cards for client {}",id);
         List<JobContractCard> jobContractCards =  jobContractService.findJobContractCardsByClientId(id, page - 1);
+        UserAuth userAuth = userService.getAuthInfo(principal.getName()).orElseThrow(UserNotFoundException::new);
         return new ModelAndView("myContracts")
                 .addObject("contractType", 0)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage)
-                .addObject("contractCards",jobContractCards);
+                .addObject("contractCards", jobContractCards)
+                .addObject("isPro", userAuth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
     }
 
     @RequestMapping("/analytics")
