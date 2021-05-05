@@ -166,7 +166,7 @@ public class ReviewDaoJDBC implements ReviewDao {
 
     @Override
     public Double findProfessionalAvgRate(long id) {
-        return jdbcTemplate.query("SELECT coalesce(avg(review_rate),0) as rating FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post NATURAL JOIN users WHERE user_id = ? GROUP BY user_id",
+        return jdbcTemplate.query("SELECT coalesce(avg(CAST(REVIEW_RATE AS FLOAT)),0) as rating FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post NATURAL JOIN users WHERE user_id = ? GROUP BY user_id",
                 new Object[]{id}, (resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
     }
 
@@ -193,7 +193,7 @@ public class ReviewDaoJDBC implements ReviewDao {
 
     @Override
     public Double findJobPostAvgRate(long id) {
-        return jdbcTemplate.query("SELECT coalesce(avg(review_rate),0) as rating FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE post_id = ? GROUP BY post_id",
+        return jdbcTemplate.query("SELECT coalesce(avg(CAST(REVIEW_RATE AS FLOAT)),0) as rating FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE post_id = ? GROUP BY post_id",
                 new Object[]{id}, (resultSet, i) -> resultSet.getDouble("rating")).stream().findFirst().orElse(0.0);
     }
 }

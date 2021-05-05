@@ -2,13 +2,22 @@ package jdbc;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.jdbc.JobContractDaoJDBC;
+import ar.edu.itba.paw.persistence.jdbc.JobPostDaoJDBC;
 import ar.edu.itba.paw.persistence.jdbc.ReviewDaoJDBC;
 import config.TestConfig;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.omg.PortableServer.POA;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -17,16 +26,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:db_data_test.sql")
+@Sql("classpath:review_data_test.sql")
 public class ReviewDaoJDBCTest {
-    private static final List<UserAuth.Role> USER1_ROLES = Arrays.asList(UserAuth.Role.CLIENT, UserAuth.Role.PROFESSIONAL);
-    private static final List<UserAuth.Role> USER2_ROLES = Arrays.asList(UserAuth.Role.CLIENT);
     private static final LocalDateTime creationDate = LocalDateTime.now();
     private static final User PROFESSIONAL = new User(
             1,
@@ -159,29 +165,60 @@ public class ReviewDaoJDBCTest {
             new Review(2,"Medio pelo","Resolvio todo de forma ideal",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[5],creationDate),
             new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[6],creationDate),
             new Review(2,"Medio pelo","Resolvio todo de forma ideal",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[7],creationDate),
+            new Review(4,"Muy bueno","Resolvio todo en cuestion de minutos",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[8],creationDate),
+            new Review(5,"Muy bueno","Resolvio todo en cuestion de minutos",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[9],creationDate),
+
 
     };
 
 
+    private static final int MAX_PAGE_FOR_PRO = 2;
 
-    private static final int JOB_CONTRACTS_PRO1_QUANTITY = 12;
+    private static final int TOTAL_REVIEW_COUNT_PRO = 10;
 
-    private static final LocalDateTime date = LocalDateTime.now();
+    private static final int MAX_PAGE_FOR_POST = 2;
+
+    private static final int MAX_REVIEWS_FOR_PACKAGE = 10;
+
+    private static final int REVIEW_POST_COUNT = 10;
+
+    private static final int REVIEW_POST_FIRST_PAGE_COUNT = 8;
+
+    private static final double REVIEW_POST_1_AVG = 3.3;
+
+    private static final long NON_EXISTENT_ID = 999;
 
 
     @Autowired
     private DataSource ds;
 
+    private JdbcTemplate jdbcTemplate;
+
+    @Mock
+    private JobPostDaoJDBC mockPostDao;
+
+    @Mock
+    private JobContractDaoJDBC mockContractDao;
+
     @InjectMocks
     @Autowired
     private ReviewDaoJDBC reviewDaoJDBC;
 
+    @Before
+    public void setUp() {
+        jdbcTemplate = new JdbcTemplate(ds);
+        MockitoAnnotations.initMocks(this);
+    }
+
     @Test
     public void testCreate() {
-        //TODO MOCKEAR
-        Review newReview = new Review(4,"Muy bueno!","Execelnte servicio",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[11],LocalDateTime.now());
 
-        Review maybeReview =reviewDaoJDBC.create(18,newReview.getRate(),newReview.getTitle(),newReview.getDescription());
+       Mockito.when(mockContractDao.findById(Mockito.eq(JOB_CONTRACTS_PACKAGE1[10].getId()))).thenReturn(Optional.of(JOB_CONTRACTS_PACKAGE1[10]));
+       Mockito.when(mockPostDao.findById(Mockito.eq(JOB_CONTRACTS_PACKAGE1[11].getJobPackage().getPostId()))).thenReturn(Optional.of(JOB_POST));
+
+        Review newReview = new Review(4,"Muy bueno!","Execelnte servicio",CLIENT,JOB_POST,JOB_CONTRACTS_PACKAGE1[10],LocalDateTime.now());
+
+        Review maybeReview =reviewDaoJDBC.create(11,newReview.getRate(),newReview.getTitle(),newReview.getDescription());
 
         Assert.assertNotNull(maybeReview);
         Assert.assertEquals(newReview.getTitle(), maybeReview.getTitle());
@@ -194,10 +231,27 @@ public class ReviewDaoJDBCTest {
     }
 
     @Test
-    public void testFindReviewsByPostId() {
+    public void testFindReviewsByPostIdWithoutPagination() {
         List<Review> maybePostReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
-        Assert.assertEquals(8, maybePostReviews.size());
+        Assert.assertEquals(REVIEW_POST_COUNT, maybePostReviews.size());
+
+        for (int i = 0; i < maybePostReviews.size(); i++) {
+            Assert.assertEquals(REVIEWS[i].getTitle(), maybePostReviews.get(i).getTitle());
+            Assert.assertEquals(REVIEWS[i].getDescription(), maybePostReviews.get(i).getDescription());
+            Assert.assertEquals(REVIEWS[i].getRate(), maybePostReviews.get(i).getRate());
+            Assert.assertEquals(REVIEWS[i].getClient(), maybePostReviews.get(i).getClient());
+            Assert.assertEquals(REVIEWS[i].getJobPost(), maybePostReviews.get(i).getJobPost());
+            Assert.assertEquals(REVIEWS[i].getJobContract(), maybePostReviews.get(i).getJobContract());
+            Assert.assertEquals(REVIEWS[i], maybePostReviews.get(i));
+        }
+    }
+
+    @Test
+    public void testFindReviewsByPostIdWithPagination() {
+        List<Review> maybePostReviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), 0);
+
+        Assert.assertEquals(REVIEW_POST_FIRST_PAGE_COUNT, maybePostReviews.size());
 
         for (int i = 0; i < maybePostReviews.size(); i++) {
             Assert.assertEquals(REVIEWS[i].getTitle(), maybePostReviews.get(i).getTitle());
@@ -212,43 +266,63 @@ public class ReviewDaoJDBCTest {
 
     @Test
     public void testFindReviewsByPostIdSize() {
-        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
         int maybeReviewsByPostIdSize = reviewDaoJDBC.findJobPostReviewsSize(JOB_POST.getId());
-        Assert.assertEquals(reviews.size(), maybeReviewsByPostIdSize);
+        Assert.assertEquals(REVIEWS.length, maybeReviewsByPostIdSize);
     }
 
     @Test
     public void testFindJobPostAvgRate() {
-        List<Review> reviews = reviewDaoJDBC.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
-
         double maybeAvg = reviewDaoJDBC.findJobPostAvgRate(JOB_POST.getId());
-        Assert.assertEquals(reviews.stream().mapToDouble(Review::getRate).average().orElse(0), maybeAvg, 0.0000001);
+        Assert.assertEquals(REVIEW_POST_1_AVG, maybeAvg, 0.0001);
     }
 
     @Test
-    public void findProfessionalReviews() {
+    public void findProfessionalReviewsWithoutPagination() {
         List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
 
-        Assert.assertEquals(8, maybeUserReviews.size());
+        Assert.assertEquals(TOTAL_REVIEW_COUNT_PRO, maybeUserReviews.size());
         for (int i = 0; i < maybeUserReviews.size(); i++) {
             Assert.assertEquals(REVIEWS[i], maybeUserReviews.get(i));
         }
     }
 
+
+    @Test
+    public void findProfessionalReviewsWithPagination() {
+        List<Review> maybeUserReviews = reviewDaoJDBC.findProfessionalReviews(PROFESSIONAL.getId(), 0);
+
+        Assert.assertEquals(REVIEW_POST_FIRST_PAGE_COUNT, maybeUserReviews.size());
+        for (int i = 0; i < maybeUserReviews.size(); i++) {
+            Assert.assertEquals(REVIEWS[i], maybeUserReviews.get(i));
+        }
+    }
+
+
+
     @Test
     public void testFindProfessionalAvgRate() {
-        List<Review> reviews = reviewDaoJDBC.findProfessionalReviews(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
 
         double maybeAvg = reviewDaoJDBC.findProfessionalAvgRate(JOB_POST.getId());
-        Assert.assertEquals(reviews.stream().mapToDouble(Review::getRate).average().orElse(0), maybeAvg, 0.0000001);
+        Assert.assertEquals(REVIEW_POST_1_AVG, maybeAvg, 0.0001);
     }
 
     @Test
-    public void testFindReviewsByPackageId() {
+    public void testFindReviewsByPackageIdWithoutPagination() {
         List<Review> maybeReviews = reviewDaoJDBC.findReviewsByPackageId(JOB_PACKAGES[0].getId(), HirenetUtils.ALL_PAGES);
 
-        Assert.assertEquals(8, maybeReviews.size());
+        Assert.assertEquals(MAX_REVIEWS_FOR_PACKAGE, maybeReviews.size());
+        for (int i = 0; i < maybeReviews.size(); i++) {
+            Assert.assertEquals(REVIEWS[i], maybeReviews.get(i));
+        }
+
+    }
+
+    @Test
+    public void testFindReviewsByPackageIdWithPagination() {
+        List<Review> maybeReviews = reviewDaoJDBC.findReviewsByPackageId(JOB_PACKAGES[0].getId(), 0);
+
+        Assert.assertEquals(REVIEW_POST_FIRST_PAGE_COUNT, maybeReviews.size());
         for (int i = 0; i < maybeReviews.size(); i++) {
             Assert.assertEquals(REVIEWS[i], maybeReviews.get(i));
         }
@@ -263,4 +337,26 @@ public class ReviewDaoJDBCTest {
         Assert.assertEquals(REVIEWS[0], maybeReview.get());
     }
 
+    @Test
+    public void testFindMaxPageReviewsByUserId(){
+        int maxPage = reviewDaoJDBC.findMaxPageReviewsByUserId(PROFESSIONAL.getId());
+        Assert.assertEquals(MAX_PAGE_FOR_PRO,maxPage);
+    }
+
+    @Test
+    public void testFindProfessionalReviewsSize() {
+        int size =  reviewDaoJDBC.findProfessionalReviewsSize(PROFESSIONAL.getId());
+        Assert.assertEquals(TOTAL_REVIEW_COUNT_PRO,size);
+    }
+
+    @Test
+    public void testFindMaxPageReviewsByPostId() {
+        int maxPage = reviewDaoJDBC.findMaxPageReviewsByPostId(JOB_POST.getId());
+        Assert.assertEquals(MAX_PAGE_FOR_POST,maxPage);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testCreateWithNonExistentContract(){
+        reviewDaoJDBC.create(NON_EXISTENT_ID,1,"title","description");
+    }
 }
