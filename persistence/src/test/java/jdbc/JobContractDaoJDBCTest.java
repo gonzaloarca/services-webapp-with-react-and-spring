@@ -165,6 +165,10 @@ public class JobContractDaoJDBCTest {
 
     private static final int JOB_CONTRACTS_POST_COUNT = 12;
 
+    private static final int JOB_CARDS_PAGE_1 = 8;
+
+    private static final int NON_EXISTENT_ID = 999;
+
 
     @Autowired
     private DataSource ds;
@@ -250,7 +254,7 @@ public class JobContractDaoJDBCTest {
         List<JobContract> jobContracts = jobContractDaoJDBC.findByClientId(CLIENT.getId(), 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
-        Assert.assertEquals(HirenetUtils.PAGE_SIZE, jobContracts.size());
+        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
         jobContracts.forEach(jobContract -> Assert.assertEquals(CLIENT.getId(), jobContract.getClient().getId()));
     }
 
@@ -266,7 +270,7 @@ public class JobContractDaoJDBCTest {
     public void testFindByProIdWithPagination() {
         List<JobContract> jobContracts = jobContractDaoJDBC.findByProId(PROFESSIONAL.getId(), 0);
 
-        Assert.assertEquals(HirenetUtils.PAGE_SIZE, jobContracts.size());
+        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
         Assert.assertFalse(jobContracts.isEmpty());
         jobContracts.forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
     }
@@ -285,7 +289,7 @@ public class JobContractDaoJDBCTest {
         List<JobContract> jobContracts = jobContractDaoJDBC.findByPackageId(JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
-        Assert.assertEquals(HirenetUtils.PAGE_SIZE, jobContracts.size());
+        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1[0].getId(), jobContracts.get(0).getJobPackage().getId());
     }
 
@@ -326,12 +330,12 @@ public class JobContractDaoJDBCTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void testCreateWithNonExistentClient() {
-        jobContractDaoJDBC.create(999, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), JOB_CONTRACTS_PACKAGE1[0].getDescription());
+        jobContractDaoJDBC.create(NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), JOB_CONTRACTS_PACKAGE1[0].getDescription());
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void testCreateWithNonExistentPackage() {
-        jobContractDaoJDBC.create(CLIENT.getId(), 999, JOB_CONTRACTS_PACKAGE1[0].getDescription());
+        jobContractDaoJDBC.create(CLIENT.getId(), NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getDescription());
     }
 
     @Test
@@ -348,7 +352,7 @@ public class JobContractDaoJDBCTest {
 
     @Test
     public void testFindCMaxPageContractsByClientIdWithNonExistentClient() {
-        int qty = jobContractDaoJDBC.findMaxPageContractsByClientId(999);
+        int qty = jobContractDaoJDBC.findMaxPageContractsByClientId(NON_EXISTENT_ID);
         Assert.assertEquals(0, qty);
     }
 

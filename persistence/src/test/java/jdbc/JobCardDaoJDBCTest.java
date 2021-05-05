@@ -9,10 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -22,6 +20,7 @@ import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Rollback
@@ -144,6 +143,10 @@ public class JobCardDaoJDBCTest {
             1,
             0
     );
+    private static final int RELATED_JOB_CARDS_COUNT = 3;
+    public static final int SEARCH_ELECTRICISTA_COUNT = 4;
+    public static final int CATEGORY_ELECTRICITY_COUNT = 4;
+    public static final int ELECTRICITY_AND_CARPENTRY_POST_COUNT = 8;
 
     @Autowired
     private DataSource ds;
@@ -163,7 +166,7 @@ public class JobCardDaoJDBCTest {
         List<JobCard> maybeJobCards = jobCardDaoJDBCTest.findRelatedJobCards(1, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(maybeJobCards.isEmpty());
-        Assert.assertEquals(3, maybeJobCards.size());
+        Assert.assertEquals(RELATED_JOB_CARDS_COUNT, maybeJobCards.size());
         Assert.assertEquals(JOB_CARD_USER3, maybeJobCards.get(0));  //aparece primero pues tiene mas clientes en comun
         Assert.assertEquals(JOB_CARD_USER2, maybeJobCards.get(1));  //aparece segundo por que a pesar de tener los mismos clientes que 4, tiene mas contratos completados
         Assert.assertEquals(JOB_CARD_USER4, maybeJobCards.get(2));
@@ -176,7 +179,17 @@ public class JobCardDaoJDBCTest {
         List<JobCard> jobCards = jobCardDaoJDBCTest.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
-        Assert.assertEquals(4, jobCards.size());
+        Assert.assertEquals(SEARCH_ELECTRICISTA_COUNT, jobCards.size());
+    }
+
+    @Test
+    public void testSearchWithSimilarTypes() {
+        String title = "electr";
+        JobPost.Zone zone = JobPost.Zone.values()[1];
+        List<JobCard> jobCards = jobCardDaoJDBCTest.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(ELECTRICITY_AND_CARPENTRY_POST_COUNT, jobCards.size());
     }
 
     @Test
@@ -187,7 +200,17 @@ public class JobCardDaoJDBCTest {
         List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
-        Assert.assertEquals(4, jobCards.size());
+        Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
+    }
+    @Test
+    public void testSearchWithSimilarTypesCategory() {
+        String title = "ELECT";
+        JobPost.Zone zone = JobPost.Zone.values()[1];
+        JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
+        List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
     }
 
     @Test
@@ -195,7 +218,7 @@ public class JobCardDaoJDBCTest {
         List<JobCard> jobCards = jobCardDaoJDBCTest.findAll(HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
-        Assert.assertEquals(11, jobCards.size());
+        Assert.assertEquals(12, jobCards.size());
     }
 
     @Test

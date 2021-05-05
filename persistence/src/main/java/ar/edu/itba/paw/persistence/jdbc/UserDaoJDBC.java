@@ -182,7 +182,7 @@ public class UserDaoJDBC implements UserDao {
                 .append("               FROM job_cards")
                 .append("               WHERE post_job_type = ?")
                 .append("               GROUP BY user_id")
-                .append("               ORDER BY SUM(contracts) DESC")
+                .append("               ORDER BY SUM(post_contract_count) DESC")
                 //                         ORDERBY esta en una subquery para que funcione correctamente con HSQLDB
                 .append("              ) AS users_ordered_by_contract")
                 .append("     ) AS rankings")
