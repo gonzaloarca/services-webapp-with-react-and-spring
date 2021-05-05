@@ -5,9 +5,9 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%--Seteo de variable para formateo de fechas--%>
-<c:set var="dateStringAux" value="${contractCard.jobContract.creationDate}"/>
-<fmt:parseDate value="${dateStringAux}" var="theDate"
-               pattern="yyyy-MM-dd'T'HH:mm:ss.S"/>
+<c:set var="dateStringAux" value="${contractCard.jobContract.creationDate.toLocalDate()}"/>
+<fmt:parseDate type="date" value="${dateStringAux}" var="theDate"
+               pattern="yyyy-MM-dd"/>
 <spring:message code="date.format" var="dateFormat"/>
 <fmt:formatDate value="${theDate}" pattern="${dateFormat}" var="dateFormatted"/>
 

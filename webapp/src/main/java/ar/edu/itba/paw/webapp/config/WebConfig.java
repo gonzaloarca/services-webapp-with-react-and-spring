@@ -73,8 +73,7 @@ public class WebConfig {
 
         ds.setUsername("paw-2021a-03");
         ds.setPassword("4Jqbf4tiN");
-        webConfigLogger.debug("Datasoruce username and password set to {} and {}", ds.getUsername(), ds.getPassword());
-
+        webConfigLogger.debug("Datasource username and password set to {} and {}", ds.getUsername(), ds.getPassword());
 
         return ds;
     }
