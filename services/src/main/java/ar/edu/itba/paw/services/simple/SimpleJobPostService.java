@@ -44,7 +44,7 @@ public class SimpleJobPostService implements JobPostService {
 
     @Override
     public JobPost findByIdWithInactive(long id) {
-        return jobPostDao.findByIdWithInactive(id).orElseThrow(UserNotFoundException::new);
+        return jobPostDao.findByIdWithInactive(id).orElseThrow(JobPostNotFoundException::new);
     }
 
     @Override

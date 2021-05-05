@@ -1,6 +1,8 @@
 package exceptions;
 
-public class UserNotFoundException extends RuntimeException {
+import java.util.NoSuchElementException;
+
+public class UserNotFoundException extends NoSuchElementException {
 
     private static final String MESSAGE = "User not found";
 

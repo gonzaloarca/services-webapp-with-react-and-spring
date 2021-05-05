@@ -84,11 +84,9 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
 //                .invalidSessionUrl("/login")
             .and().rememberMe()
                 .rememberMeParameter("rememberMeCheck")
-                .key("keyString")
+                .key(keyString)
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .userDetailsService(hireNetUserDetails)
-                .and().exceptionHandling()
-                .accessDeniedPage("/403")
             .and().csrf().disable();
     }
 
