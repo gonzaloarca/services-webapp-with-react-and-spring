@@ -104,13 +104,14 @@
     </div>
 </div>
 <div class="landing-bottom landing-row-shadow"
-     style="background: url('${pageContext.request.contextPath}/resources/images/publish-landing-bg-1.svg')" >
+     style="background: url('${pageContext.request.contextPath}/resources/images/publish-landing-bg-1.svg')">
     <h3>
         <spring:message code="index.createJobPost.question"/>
         <br>
         <spring:message code="index.createJobPost.proposition"/>
     </h3>
-    <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post"><spring:message code="index.createJobPost.button"/></a>
+    <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post"><spring:message
+            code="index.createJobPost.button"/></a>
     <div class="mt-5">
         <jsp:include page="components/footer.jsp"/>
     </div>
@@ -118,15 +119,17 @@
 
 </div>
 <script>
+
     // Para modificar el href con la ubicacion seleccionada
     function redirectCategory(category) {
-        var auxZoneId = sessionStorage.getItem("pickedZoneId");
-        sessionStorage.setItem("pickedCategoryId", category);
-        if (auxZoneId) {
-            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' + auxZoneId +
-                '&query=&category=' + category;
-        } else {
-            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' +
+        if ($('#homeSelect')[0].value === "") {
+            $('#zoneError')[0].style.display = 'inherit';
+            homeSelect.setCustomValidity("error");
+            $('html,body').animate({
+                scrollTop: $('#top-index').offset().top
+            }, 'slow');
+        }else {
+            window.location.href = "${pageContext.request.contextPath}" + '/search?zone=' + $('#homeSelect')[0].value +
                 '&query=&category=' + category;
         }
     }

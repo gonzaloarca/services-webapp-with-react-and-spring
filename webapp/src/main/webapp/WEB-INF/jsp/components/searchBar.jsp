@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <div class="home-banner-container">
     <%--@elvariable id="searchForm" type=""--%>
-    <div class="landing-content-container">
+    <div class="landing-content-container" id="top-index">
         <div class="title-and-form">
             <h1 class="landing-title"><spring:message code="index.searchBar.title"/></h1>
             <form:form action="${pageContext.request.contextPath}/search" method="get"
