@@ -250,11 +250,6 @@
             $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
             $('#pickLocationButton').attr("disabled", true);
         }
-        // Para levantar, en caso de existir, la categoria seleccionada y meterla al form
-        var auxCategoryId = sessionStorage.getItem("pickedCategoryId");
-        if (auxCategoryId) {
-            $('#categoryForm')[0].value = auxCategoryId;
-        }
     }
 
     function submitSearchPost() {

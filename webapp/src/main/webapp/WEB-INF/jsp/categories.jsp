@@ -87,9 +87,9 @@
     // Para modificar el href con la ubicacion seleccionada
     function redirectCategory(category) {
         var auxZoneId = sessionStorage.getItem("pickedZoneId");
-        sessionStorage.setItem("pickedCategoryId", category);
         if (!auxZoneId) {
             $('#zonesModal').modal('show');
+            $('#categoryForm')[0].value = category;
             return false;
         }
         if (auxZoneId) {
