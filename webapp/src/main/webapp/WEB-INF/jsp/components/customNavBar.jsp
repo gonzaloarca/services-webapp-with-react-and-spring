@@ -249,7 +249,6 @@
     let zonePicked = false;
     // Cuando se hace el submit guardo las cookies
     $('#pickLocationButton').on('click', function () {
-
         const zonesInput = $('.navbar-location-list-group')[0].getElementsByTagName('input');
         const zonesString = $('.navbar-location-list-group')[0].getElementsByTagName('span');
         let found = false;
@@ -259,6 +258,8 @@
                 sessionStorage.setItem("pickedZoneString", zonesString[i].innerText);
                 found = true;
                 zonePicked = true;
+                $('#zoneString')[0].innerText = zonesString[i].innerText;
+                break;
             }
         }
 
