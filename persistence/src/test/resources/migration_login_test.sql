@@ -27,8 +27,6 @@ SELECT job_post.post_id,
        array_agg(DISTINCT zone_id)          as zones,
        count(distinct contract.contract_id) as contracts,
        count(DISTINCT review.contract_id)   as reviews
---        COALESCE(PERCENTILE_CONT('0.25') WITHIN GROUP ( ORDER BY review_rate ASC ),0)
---                                             as bayesian_c
 FROM job_post
          LEFT JOIN users ON job_post.user_id = users.user_id
          LEFT JOIN post_zone ON job_post.post_id = post_zone.post_id
