@@ -7,7 +7,7 @@ TRUNCATE TABLE contract RESTART IDENTITY AND COMMIT NO CHECK;
 TRUNCATE TABLE review RESTART IDENTITY AND COMMIT NO CHECK;
 TRUNCATE TABLE post_image RESTART IDENTITY AND COMMIT NO CHECK;
 --11 usuarios
-INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified) VALUES (DEFAULT, 'Francisco Quesada', 'franquesada@gmail.com', 'password','1147895678', true, true);
+INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified) VALUES (DEFAULT, 'Francisco Quesada', 'franquesada@gmail.com', 'password','1147895678', true, false);
 INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified) VALUES (DEFAULT, 'Manuel Rodriguez', 'manurodriguez@gmail.com','password', '1109675432', true, true);
 INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified) VALUES (DEFAULT, 'Gonzalo Arca', 'gonzaarca@gmail.com','password', '0549940406521', true, true);
 INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified) VALUES (DEFAULT, 'Manuel Parma', 'manuparma@gmail.com','password', '1158586363', true, true);

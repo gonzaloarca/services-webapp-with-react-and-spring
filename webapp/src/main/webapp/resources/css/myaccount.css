@@ -177,3 +177,7 @@
     background-color: white;
 }
 
+.account-username {
+    font-weight: bold;
+    word-break: break-word;
+}

@@ -2,6 +2,7 @@ package jdbc;
 
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.persistence.jdbc.UserDaoJDBC;
 import config.TestConfig;
 import org.junit.Assert;
@@ -34,7 +35,7 @@ public class UserDaoJDBCTest {
             "Francisco Quesada",
             "1147895678",
             true,
-            true,
+            false,
             LocalDateTime.now());
 
     private static final List<JobPost.JobType> USER1_JOBTYPES = Arrays.asList(JobPost.JobType.values()[1],JobPost.JobType.values()[2], JobPost.JobType.values()[3]);
@@ -103,5 +104,34 @@ public class UserDaoJDBCTest {
         int maybeRank = userDaoJDBC.findUserRankingInJobType(USER1.getId(), JobPost.JobType.values()[1]);
 
         Assert.assertEquals(USER1_RANKING_IN_JOBTYPE1, maybeRank);
+    }
+
+    @Test
+    public void changeUserPasswordTest() {
+        final String NEWPASS = "contrasena";
+
+        userDaoJDBC.changeUserPassword(USER1.getId(), NEWPASS);
+        Optional<UserAuth> userAuth = userDaoJDBC.findAuthInfo(USER1.getEmail());
+
+        Assert.assertTrue(userAuth.isPresent());
+        Assert.assertEquals(NEWPASS, userAuth.get().getPassword());
+    }
+
+    @Test
+    public void verifyUserTest() {
+        userDaoJDBC.verifyUser(USER1.getId());
+        Optional<User> verifiedUser = userDaoJDBC.findById(USER1.getId());
+
+        Assert.assertTrue(verifiedUser.isPresent());
+        Assert.assertTrue(verifiedUser.get().isVerified());
+    }
+
+    @Test
+    public void deleteUserTest() {
+        userDaoJDBC.deleteUser(USER1.getId());
+        Optional<User> deletedUser = userDaoJDBC.findById(USER1.getId());
+
+        Assert.assertTrue(deletedUser.isPresent());
+        Assert.assertFalse(deletedUser.get().isActive());
     }
 }

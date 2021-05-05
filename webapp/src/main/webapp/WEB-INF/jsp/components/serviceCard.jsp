@@ -76,9 +76,9 @@
             </a>
 
                 <%--@elvariable id="deleteJobPostForm" type="ar.edu.itba.paw.webapp.form.DeleteItemForm"--%>
-            <form:form modelAttribute="deleteJobPostForm" action="/job/delete" method="post"
+            <form:form modelAttribute="deleteJobPostForm" cssClass="w-100" action="/job/delete" method="post"
                        cssStyle="margin-bottom: 0">
-                <button type="submit" class="btn service-control-delete text-uppercase">
+                <button type="submit" class="btn service-control-delete text-uppercase w-100">
                     <i class="fas fa-trash-alt"></i>
                     <spring:message code="delete"/>
                 </button>

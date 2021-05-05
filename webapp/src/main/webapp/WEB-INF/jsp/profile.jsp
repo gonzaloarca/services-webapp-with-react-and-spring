@@ -103,78 +103,121 @@
                     </div>
 
                     <c:if test="${withServices}">
-                        <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
+                        <c:choose>
+                            <c:when test="${servicesSize > 0}">
+                                <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
                             <c:set var="data" value="${jobCard}" scope="request"/>
-                            <c:set var="returnURL" value="${pageContext.request.contextPath}/profile/${user.id}/services" scope="request"/>
+                            <c:set var="returnURL"
+                                   value="${pageContext.request.contextPath}/profile/${user.id}/services"
+                                   scope="request"/>
                             <%@include file="components/serviceCard.jsp" %>
                             <c:if test="${status.index != jobCards.size()-1}">
                                 <hr class="hr1"/>
                             </c:if>
                         </c:forEach>
-                        <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
-                        <c:set var="maxPage" value="${maxPage}" scope="request"/>
-                        <c:set var="currentPages" value="${currentPages}" scope="request"/>
-                        <%@include file="components/bottomPaginationBar.jsp" %>
+                            <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
+                            <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                            <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                            <%@include file="components/bottomPaginationBar.jsp" %>
+                        </c:when>
+                            <c:otherwise>
+                                <div class="d-flex flex-column justify-content-center align-content-center w-100">
+                                    <spring:message code="profile.noservices.alt" var="noServicesAlt"/>
+                                    <img style="height: 200px; width: 100%" src="<c:url value='/resources/images/job-1.svg'/>" alt="${noServicesAlt}">
+                                    <h4 class="text-center mt-4">
+                                        <c:choose>
+                                            <c:when test="${currentUser.id == user.id}">
+                                                <spring:message code="profile.noservicesowner"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="profile.noservicespublic"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </h4>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                     </c:if>
 
                     <c:if test="${!withServices}">
-                        <div class="row">
-                            <div class="col d-flex flex-column align-items-end">
-                                <p class="reviews-rate">
-                                        ${avgRate}
-                                </p>
-                                <span class="reviews-rate-stars">
+                        <c:choose>
+                            <c:when test="${totalReviewsSize > 0}">
+                                <div class="row">
+                                    <div class="col d-flex flex-column align-items-end">
+                                        <p class="reviews-rate">
+                                                ${avgRate}
+                                        </p>
+                                        <span class="reviews-rate-stars">
                                     <jsp:include page="components/rateStars.jsp">
                                         <jsp:param name="rate" value="${avgRate}"/>
                                     </jsp:include>
                                 </span>
-                                <h5 class="reviews-summary-gray-text mt-3">
-                                    <c:choose>
-                                        <c:when test="${totalReviewsSize == 1}">
-                                            <spring:message code="profile.review.average.fromOne"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <spring:message code="profile.review.average"
-                                                            arguments="${totalReviewsSize}"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </h5>
-                            </div>
-                            <div class="col align-self-center">
-                                <c:if test="${reviews.size() >0}">
-                                    <c:forEach begin="1" end="5" var="i">
-                                        <div class="row mb-1 align-items-center justify-content-center">
-                                            <p class="reviews-summary-gray-text"><spring:message
-                                                    code="profile.review.stars"
-                                                    arguments="${6-i}"/></p>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-warning" role="progressbar"
-                                                     style="width: ${reviewsByPoints[5-i]*100/reviews.size()};"
-                                                     aria-valuenow="${reviewsByPoints.get(5-i)*100/reviews.size()}"
-                                                     aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <p class="reviews-summary-gray-text">${reviewsByPoints.get(5-i)}</p>
-                                        </div>
-                                    </c:forEach>
-                                </c:if>
-                            </div>
-                        </div>
-                        <hr class="hr1"/>
-
-                        <c:forEach var="review" items="${reviews}" varStatus="status">
-                            <c:set var="data" value="${review}" scope="request"/>
-                            <c:set var="withLink" value="${true}" scope="request"/>
-                            <%@include file="components/reviewCard.jsp" %>
-
-                            <c:if test="${status.index != reviews.size()-1}">
+                                        <h5 class="reviews-summary-gray-text mt-3">
+                                            <c:choose>
+                                                <c:when test="${totalReviewsSize == 1}">
+                                                    <spring:message code="profile.review.average.fromOne"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <spring:message code="profile.review.average"
+                                                                    arguments="${totalReviewsSize}"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </h5>
+                                    </div>
+                                    <div class="col align-self-center">
+                                        <c:if test="${reviews.size() >0}">
+                                            <c:forEach begin="1" end="5" var="i">
+                                                <div class="row mb-1 align-items-center justify-content-center">
+                                                    <p class="reviews-summary-gray-text"><spring:message
+                                                            code="profile.review.stars"
+                                                            arguments="${6-i}"/></p>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-warning" role="progressbar"
+                                                             style="width: ${reviewsByPoints[5-i]*100/reviews.size()};"
+                                                             aria-valuenow="${reviewsByPoints.get(5-i)*100/reviews.size()}"
+                                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p class="reviews-summary-gray-text">${reviewsByPoints.get(5-i)}</p>
+                                                </div>
+                                            </c:forEach>
+                                        </c:if>
+                                    </div>
+                                </div>
                                 <hr class="hr1"/>
-                            </c:if>
-                        </c:forEach>
-                        <c:set var="listSize" value="${reviews.size()}" scope="request"/>
-                        <c:set var="maxPage" value="${maxPage}" scope="request"/>
-                        <c:set var="currentPages" value="${currentPages}" scope="request"/>
-                        <%@include file="components/bottomPaginationBar.jsp" %>
+
+                                <c:forEach var="review" items="${reviews}" varStatus="status">
+                                    <c:set var="data" value="${review}" scope="request"/>
+                                    <c:set var="withLink" value="${true}" scope="request"/>
+                                    <%@include file="components/reviewCard.jsp" %>
+
+                                    <c:if test="${status.index != reviews.size()-1}">
+                                        <hr class="hr1"/>
+                                    </c:if>
+                                </c:forEach>
+                                <c:set var="listSize" value="${reviews.size()}" scope="request"/>
+                                <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                                <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                                <%@include file="components/bottomPaginationBar.jsp" %>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="d-flex flex-column justify-content-center align-content-center w-100">
+                                    <spring:message code="profile.noreviews.alt" var="noReviewsAlt"/>
+                                    <img style="height: 200px; width: 100%" src="<c:url value='/resources/images/star-1.svg'/>" alt="${noReviewsAlt}">
+                                    <h4 class="text-center mt-4">
+                                        <c:choose>
+                                            <c:when test="${currentUser.id == user.id}">
+                                                <spring:message code="profile.noreviewsowner"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="profile.noreviewspublic"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </h4>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                     </c:if>
+
                 </div>
             </div>
         </div>

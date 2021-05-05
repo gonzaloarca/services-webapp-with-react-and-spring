@@ -128,7 +128,7 @@
                                                 data-dismiss="modal">
                                             <spring:message code="navigation.modal.close"/></button>
                                         <button class="btn btn-success text-uppercase" id="pickLocationButton"
-                                                type="button">
+                                                type="submit">
                                             <spring:message code="navigation.modal.confirm"/></button>
                                     </div>
                                 </div>
@@ -291,7 +291,7 @@
                 querySearch.setCustomValidity("error");
                 event.preventDefault();
                 event.stopPropagation();
-                return;
+                return false;
             } else {
                 querySearch.setCustomValidity("");
             }
@@ -301,7 +301,7 @@
                 querySearch.setCustomValidity("error");
                 event.preventDefault();
                 event.stopPropagation();
-                return;
+                return false;
             } else {
                 $('#queryNavError')[0].style.display = 'none';
                 querySearch.setCustomValidity("");

@@ -412,6 +412,7 @@ h3 {
     color: red;
     text-align: left;
     padding: 2px;
+    width: 100% !important;
 }
 
 .service-control-delete:hover {
