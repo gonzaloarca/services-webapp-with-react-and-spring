@@ -231,3 +231,12 @@ a.navbar-brand {
 #search-button:active {
     background-color: #00000035;
 }
+
+.search-form-error {
+    position: absolute;
+    background-color: #ef6a6a;
+    color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    margin-top: 5px;
+    padding: 10px;
+}

@@ -52,22 +52,27 @@
                 </li>
             </sec:authorize>
 
+            <script>let search = false;</script>
             <c:if test="${requestScope.path != '/' && requestScope.path != '/login' && requestScope.path != '/register'
             && requestScope.path != '/error'}">
+                <script>search = true;</script>
                 <%--@elvariable id="searchForm" type="ar.edu.itba.paw.webapp.form.SearchForm"--%>
-                <form:form class="form-inline ml-4 my-auto flex-grow-1 justify-content-between" id="searchForm"
-                           action="${pageContext.request.contextPath}/search"
+                <form:form class="form-inline ml-4 my-auto flex-grow-1 justify-content-between" id="searchNavForm"
+                           action="${pageContext.request.contextPath}/search" novalidate="true"
                            method="get" modelAttribute="searchForm" acceptCharset="utf-8">
 
                     <spring:message code="navigation.search" var="queryPlaceholder"/>
 
                     <div style="position: relative; width: 45%">
                         <form:input maxlength="100" class="form-control mr-sm-2 w-100" type="search" path="query"
-                                    placeholder="${queryPlaceholder}" aria-label="Search" id="search-input"/>
-                        <button class="" type="submit"
-                                onclick="return submitSearchPost();" id="search-button">
+                                    placeholder="${queryPlaceholder}" aria-label="Search" id="search-input"
+                                    required="true" onkeyup="hideNavErrorMsg()"/>
+                        <button class="" type="submit" id="search-button">
                             <i class="fas fa-search"></i>
                         </button>
+                        <p class="search-form-error" id="queryNavError" style="display: none">
+                            <spring:message code="search.query.invalid"/>
+                        </p>
                     </div>
 
                     <form:errors path="query" cssClass="search-form-error" cssStyle="top: 50px" element="p"/>
@@ -118,7 +123,7 @@
                                                 data-dismiss="modal">
                                             <spring:message code="navigation.modal.close"/></button>
                                         <button class="btn btn-success text-uppercase" id="pickLocationButton"
-                                                type="submit">
+                                                type="button">
                                             <spring:message code="navigation.modal.confirm"/></button>
                                     </div>
                                 </div>
@@ -235,6 +240,8 @@
                 zonePicked = true;
             }
         }
+
+        $('#zonesModal').modal('hide');
     })
 
     $('.navbar-location-list-group-item').on('click', function () {
@@ -242,8 +249,8 @@
     })
 
     // Para levantar la ubicacion en las cookies, en caso de existir
-    if ($("#searchForm")[0]) {
-        var auxZoneString = sessionStorage.getItem("pickedZoneString");
+    if(search) {
+        let auxZoneString = sessionStorage.getItem("pickedZoneString");
         if (auxZoneString) {
             $('#zoneString')[0].innerText = auxZoneString;
             $('#zone' + (parseInt(sessionStorage.getItem('pickedZoneId')) + 1)).prop("checked", true);
@@ -252,14 +259,40 @@
             $('#zoneString')[0].innerText = '<spring:message code="navigation.picklocation"/>'
             $('#pickLocationButton').attr("disabled", true);
         }
+
+        let searchForm = document.querySelector('#searchNavForm');
+        searchForm.addEventListener('submit', function (event) {
+            let querySearch = $('#search-input')[0];
+
+            if (!zonePicked) {
+                $('#zonesModal').modal('show');
+                querySearch.setCustomValidity("error");
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            } else {
+                querySearch.setCustomValidity("");
+            }
+
+            if(querySearch.value === "") {
+                $('#queryNavError')[0].style.display = 'inherit';
+                querySearch.setCustomValidity("error");
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            } else {
+                $('#queryNavError')[0].style.display = 'none';
+                querySearch.setCustomValidity("");
+            }
+
+            $("#search-button").attr("disabled", true);
+        })
     }
 
-    function submitSearchPost() {
-        if (!zonePicked) {
-            $('#zonesModal').modal('show');
-            return false;
-        } else return true;
+    function hideNavErrorMsg() {
+        $('#queryNavError')[0].style.display = 'none';
     }
+
 </script>
 </body>
 </html>

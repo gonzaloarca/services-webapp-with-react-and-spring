@@ -27,7 +27,7 @@
                     <div class="home-search-bar-container home-search-bar-row">
                         <spring:message code="index.search.jobType.placeholder" var="typePlaceholder"/>
                         <form:input path="query" type="search" class="home-search-bar w-100 h-100" id="queryInput"
-                                    placeholder="${typePlaceholder}" maxlength="100" required="true"/>
+                                    placeholder="${typePlaceholder}" maxlength="100" required="true" onkeyup="hideErrorMsg()"/>
                         <p class="search-form-error" id="queryError" style="display: none">
                             <spring:message code="search.query.invalid"/>
                         </p>
@@ -114,4 +114,8 @@
     $('.home-search-location').on('click', function () {
         $('#zoneError')[0].style.display = 'none';
     })
+
+    function hideErrorMsg() {
+        $('#queryError')[0].style.display = 'none';
+    }
 </script>
