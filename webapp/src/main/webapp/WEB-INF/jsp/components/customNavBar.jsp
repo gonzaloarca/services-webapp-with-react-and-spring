@@ -111,7 +111,6 @@
                                                 <label class="list-group-item navbar-location-list-group-item navbar-modal-zone">
                                                     <form:radiobutton path="zone"
                                                                       value="${zone.value}"/>
-                                                        <%--                                                TODO: CAMBIAR A CHECKBUTTON?--%>
                                                     <span class="location-name ml-2"><spring:message
                                                             code="${zone.stringCode}"/></span>
                                                 </label>

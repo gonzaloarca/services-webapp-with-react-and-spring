@@ -33,16 +33,22 @@ public class ExceptionController {
             {UserNotFoundException.class, JobPostNotFoundException.class, JobPackageNotFoundException.class, NoSuchElementException.class, ReviewNotFoundException.class})
     public ModelAndView notFoundError(RuntimeException e) {
         exceptionLogger.debug("Exception handled: {}",e.getMessage());
-        ModelAndView mav = new ModelAndView("error/404");
-        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
-        return mav;
+        return logUser(new ModelAndView("error/404"));
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
     public ModelAndView defaultErrorHandler(Exception e) {
         exceptionLogger.debug("Exception handled: {}",e.getMessage());
-        ModelAndView mav = new ModelAndView("error/default");
-        userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).ifPresent(value -> mav.addObject("currentUser", value));
+        return logUser(new ModelAndView("error/default"));
+    }
+
+    private ModelAndView logUser(ModelAndView mav) {
+        Optional<User> maybeUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(maybeUser.isPresent()){
+            User currentUser= maybeUser.get();
+            mav.addObject("currentUser", currentUser);
+            exceptionLogger.debug("Current user is: {}", currentUser);
+        }
         return mav;
     }
 

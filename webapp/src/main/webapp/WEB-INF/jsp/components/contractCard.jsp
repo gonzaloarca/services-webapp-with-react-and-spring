@@ -41,8 +41,7 @@
                     <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
                 </c:otherwise>
             </c:choose>
-            <%--            TODO: Poner alt valido--%>
-            <img class="user-avatar" src="${profilePic}">
+            <img class="user-avatar" src="${profilePic}" alt="<spring:message code="user.avatar"/>">
             <p><spring:message htmlEscape="true" code="${hireDataMessageCode}"
                                arguments="${contractCard.jobContract.client.username}"/></p>
         </div>
@@ -210,12 +209,11 @@
                             <spring:message code="mycontracts.details.title"/></h5>
                     </div>
                     <div class="modal-body p-4 d-flex justify-content-around">
-                        <%--                            TODO: Poner alt valido--%>
                         <div id="details-image-container">
                             <p id="details-modal-image-header" class="font-weight-bold">
                                 <spring:message code="mycontracts.modal.image"/>
                             </p>
-                            <img id="details-modal-image" src="">
+                            <img id="details-modal-image" src="" alt="<spring:message code="mycontracts.modal.image.alt"/>">
                         </div>
                         <div id="details-description-container">
                             <p class="font-weight-bold">

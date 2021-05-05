@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO hacer este test
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -42,7 +41,6 @@ public class JobPostImageDaoJDBCTest {
 		jdbcTemplate = new JdbcTemplate(ds);
 	}
 
-//	TODO:FIX TESTS
 	@Test
 	public void addImageTest() {
 		long post_id = 1;

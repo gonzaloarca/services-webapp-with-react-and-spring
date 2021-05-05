@@ -142,4 +142,9 @@ public class CurrentUserController {
         }
         return new ModelAndView("redirect:/my-contracts/client");
     }
+
+    @RequestMapping("/contract/success")
+    public ModelAndView contractSuccess() {
+        return new ModelAndView("contractSubmitted");
+    }
 }

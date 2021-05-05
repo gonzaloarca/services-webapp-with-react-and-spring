@@ -91,7 +91,6 @@ public class ContractController {
                         imageService.create(form.getImage().getBytes(), form.getImage().getContentType()));
             } catch (IOException e) {
                 contractControllerLogger.debug("Error creating contract");
-                //fixme
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -99,13 +98,7 @@ public class ContractController {
         contractControllerLogger.debug("Senfing email to professional for package {}, post {} and contract {}",jobPack.getId(),jobPost.getId(),jobContract.getId());
         mailingService.sendContractEmail(jobContract, jobPack, jobPost, localeResolver.resolveLocale(servletRequest));
 
-        return new ModelAndView("redirect:/contract/package/" + packId + "/success");
-    }
-
-    //TODO: encontrar si se puede realizar sin packId
-    @RequestMapping("/package/{packId}/success")
-    public ModelAndView contractSuccess(@PathVariable String packId) {
-        return new ModelAndView("contractSubmitted");
+        return new ModelAndView("redirect:/contract/success");
     }
 
     @ModelAttribute("jobPack")

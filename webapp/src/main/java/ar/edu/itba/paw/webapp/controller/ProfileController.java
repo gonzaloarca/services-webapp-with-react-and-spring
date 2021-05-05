@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.webapp.form.DeleteItemForm;
+import exceptions.DeleteFailException;
 import exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,10 +71,8 @@ public class ProfileController {
                                             @ModelAttribute("deleteJobPostForm") DeleteItemForm form) {
         if (page < 1) {
             profileControllerLogger.debug("Invalid page: {}",page);
-            //TODO Excepcion
             throw new IllegalArgumentException();
         }
-        final ModelAndView mav = new ModelAndView("profile");
 
         profileControllerLogger.debug("Getting auth info for user: {}",user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
@@ -92,7 +91,6 @@ public class ProfileController {
             profileControllerLogger.debug("Invalid page: {}",page);
             throw new IllegalArgumentException();
         }
-        final ModelAndView mav = new ModelAndView("profile");
 
         profileControllerLogger.debug("Getting auth info for user: {}",user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
@@ -108,11 +106,10 @@ public class ProfileController {
 
     @RequestMapping(value = "/services/delete", method = RequestMethod.POST)
     public ModelAndView deleteJobPostFromProfile(@ModelAttribute DeleteItemForm form, @PathVariable final long id) {
-        // FIXME: Error al eliminar
         profileControllerLogger.debug("Deleting post {}",form.getId());
         if (!jobPostService.deleteJobPost(form.getId())) {
             profileControllerLogger.debug("Error deleting job post: {}",form.getId());
-            throw new RuntimeException();
+            throw new DeleteFailException();
         }
 
         return new ModelAndView("redirect:/profile/" + id + "/services");

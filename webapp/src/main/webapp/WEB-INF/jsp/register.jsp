@@ -137,7 +137,7 @@
                             </form:label>
                             <div class="input-group has-validation" id="show_hide_password_repeat">
                                 <form:input type="password" class="form-control custom-input custom-password"
-                                            name="repeatPassword" id="repeatPassword"
+                                            name="repeatPassword" id="repeatPassword" required="true"
                                             placeholder="${passwordPlaceholder}" path="repeatPassword"/>
                                 <span class="input-group-text password-eye" id="inputGroupPostpend">
                                     <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>

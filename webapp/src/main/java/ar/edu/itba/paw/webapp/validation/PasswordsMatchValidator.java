@@ -14,7 +14,6 @@ public class PasswordsMatchValidator implements ConstraintValidator<PasswordsMat
 
     @Override
     public boolean isValid(RegisterForm form, ConstraintValidatorContext context) {
-        //TODO: Aplicar i18n a mensaje
         if (form == null || form.getPassword() ==null || !form.getPassword().equals(form.getRepeatPassword())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Las contraseñas no coinciden")

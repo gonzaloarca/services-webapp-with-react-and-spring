@@ -71,7 +71,6 @@
         </div>
     </c:if>
     <c:if test="${!jobPost.active}">
-        <!--TODO mejorar el diseño de esto -->
         <div class="removed-post-disclaimer mx-0 mb-4">
             <i class="fas fa-exclamation-triangle mx-1"></i>
             <span class="inactive-text">
