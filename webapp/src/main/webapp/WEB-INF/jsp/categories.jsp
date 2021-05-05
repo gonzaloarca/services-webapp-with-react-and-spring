@@ -51,6 +51,8 @@
         <input class="category-search-bar" id="categoryFilter" placeholder="${searchPlaceholder}"/>
     </div>
     <div class="category-container">
+            <h3 id="no-results-categories" class="text-black-50 mt-4"><spring:message code="navigation.modal.noResults"/></h3>
+
         <c:forEach items="${categories}" var="category">
             <a class="category-href" onclick="redirectCategory(${category.value})" >
                 <p>
@@ -68,20 +70,31 @@
 <jsp:include page="components/footer.jsp"/>
 <script>
     // Para buscar una categoria
+    const noResultsH3 = $('#no-results-categories');
+    noResultsH3.hide();
+
     $('#categoryFilter').on('keyup', function () {
         const filter = $(this)[0].value.toUpperCase();
         const list = $('.category-container');
         const listElems = list[0].getElementsByTagName('a');
+        let isNotEmpty = false;
+
+        noResultsH3.hide();
 
         // Iterar por la lista y esconder los elementos que no matcheen
         for (let i = 0; i < listElems.length; i++) {
             let a = listElems[i].getElementsByTagName("p")[0];
-            let txtValue = a.textContent || a.innerText;
+            let txtValue = a.textContent.trim() || a.innerText.trim();
             if (txtValue.toUpperCase().startsWith(filter.trim())) {
                 listElems[i].style.display = "";
+                isNotEmpty = true;
             } else {
                 listElems[i].style.display = "none";
             }
+        }
+
+        if (!isNotEmpty) {
+            noResultsH3.show();
         }
     });
     // Para modificar el href con la ubicacion seleccionada

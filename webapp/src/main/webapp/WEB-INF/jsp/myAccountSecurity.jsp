@@ -89,7 +89,7 @@
 								</form:label>
 								<div class="input-group has-validation" id="show_hide_password">
 									<form:input type="password" class="form-control custom-input custom-password"
-												name="newPass" required="true"
+												name="newPass" required="true" id="newPass"
 												placeholder="${newPassText}" maxlength="100" path="newPass"/>
 									<span class="input-group-text password-eye" id="inputGroupPostpend">
                                     	<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
@@ -108,13 +108,13 @@
 								</form:label>
 								<div class="input-group has-validation" id="show_hide_password_repeat">
 									<form:input type="password" class="form-control custom-input custom-password"
-												name="repeatNewPass" required="true"
+												name="repeatNewPass" id="newPassRepeat" required="true"
 												placeholder="${repeatPassText}" maxlength="100" path="repeatNewPass"/>
 									<span class="input-group-text password-eye" id="inputGroupPostpend">
                                     	<a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
                                 	</span>
 									<div class="invalid-feedback">
-										<spring:message code="account.settings.security.empty"/>
+										<spring:message code="password.change.noMatch"/>
 									</div>
 								</div>
 								<form:errors path="repeatNewPass" cssClass="form-error" element="p"/>
@@ -136,8 +136,6 @@
 						</div>
 
 					</form:form>
-
-					<!-- TODO cambio de email probablemente en otra vista-->
 				</div>
 			</div>
 
@@ -201,20 +199,28 @@
         'use strict'
 
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
+        let form = document.querySelector('.needs-validation')
 
         // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
+		form.addEventListener('submit', function (event) {
+			if (!form.checkValidity()) {
+				event.preventDefault()
+				event.stopPropagation()
+			}
 
-                    form.classList.add('was-validated')
-                }, false)
-            })
+			form.classList.add('was-validated')
+		}, false)
+
+		form.addEventListener('input', function () {
+			let passInput = document.querySelector('#newPass');
+			let passRepeatInput = document.querySelector('#newPassRepeat');
+			let message = '';
+
+			if (passInput.value !== passRepeatInput.value)
+				message = 'Passwords do not match';     //Mensaje Default
+
+			passRepeatInput.setCustomValidity(message);
+		})
     })()
 
     //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
@@ -229,7 +235,6 @@
             })
         $("#submitBtn").attr("disabled", is_valid);
     }
-    //TODO client side validation?
 </script>
 </body>
 </html>

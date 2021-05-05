@@ -68,11 +68,6 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public User register(String email, String password, String username, String phone) {
-        return register(email, password, username, phone, null);
-    }
-
-    @Override
     public User findById(long id) {
         return userDao.findById(id).orElseThrow(NoSuchElementException::new);
     }

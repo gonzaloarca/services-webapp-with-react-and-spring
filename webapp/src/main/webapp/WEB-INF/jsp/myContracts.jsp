@@ -73,9 +73,8 @@
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <%--                TODO: Poner alt valido--%>
                         <div style="display: flex; align-items: center; flex-direction: column">
-                            <img style="height: 200px; width: 40%; margin: 30px 0"
+                            <img style="height: 200px; width: 40%; margin: 30px 0" alt="<spring:message code="mycontracts.shakingHands"/>"
                                  src='<c:url value="/resources/images/contract1.svg"/>'/>
                             <h4 class="font-weight-bold">
                                 <spring:message code="mycontracts.noContractsHeader"/>

@@ -60,18 +60,22 @@
                 </div>
             </a>
             <div class="vl align-items-center my-2 owner-options-vl"></div>
-            <a class="delete-button text-uppercase align-items-center my-2"
-               href="${pageContext.request.contextPath}/job/${jobPost.id}/delete">
-                <div class="custom-row"><i class="fas fa-trash-alt"></i>
-                    <p class="mb-0 ml-2">
-                        <spring:message code="jobPost.delete"/>
-                    </p>
-                </div>
-            </a>
+            <form:form modelAttribute="deleteJobPostForm" action="/job/delete" method="post" cssStyle="margin: 0">
+                <a class="delete-button text-uppercase align-items-center my-2"
+                   onclick="this.closest('form').submit();return false;">
+                    <div class="custom-row"><i class="fas fa-trash-alt"></i>
+                        <p class="mb-0 ml-2">
+                            <spring:message code="jobPost.delete"/>
+                        </p>
+                    </div>
+                </a>
+                <form:hidden path="id" value="${jobPost.id}"/>
+                <form:hidden path="returnURL" value="${pageContext.request.contextPath}/job/${jobPost.id}"/>
+            </form:form>
+
         </div>
     </c:if>
     <c:if test="${!jobPost.active}">
-        <!--TODO mejorar el diseño de esto -->
         <div class="removed-post-disclaimer mx-0 mb-4">
             <i class="fas fa-exclamation-triangle mx-1"></i>
             <span class="inactive-text">

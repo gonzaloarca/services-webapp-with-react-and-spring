@@ -71,7 +71,7 @@ public class SimpleUserServiceTest {
         Mockito.when(passwordEncoder.encode(Mockito.eq(""))).thenReturn("");
         Mockito.when(verificationTokenService.create(Mockito.eq(NEW_USER))).thenReturn(TOKEN);
 
-        User createdUser = userService.register(NEW_USER.getEmail(), "", NEW_USER.getUsername(), NEW_USER.getPhone());
+        User createdUser = userService.register(NEW_USER.getEmail(), "", NEW_USER.getUsername(), NEW_USER.getPhone(), null);
         Assert.assertNotNull(createdUser);
         Assert.assertEquals(NEW_USER, createdUser);
     }

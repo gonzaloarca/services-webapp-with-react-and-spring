@@ -75,9 +75,8 @@
                 <spring:message code="edit"/>
             </a>
 
-            <c:url value="/profile/${currentUser.id}/services/delete" var="postPath"/>
                 <%--@elvariable id="deleteJobPostForm" type="ar.edu.itba.paw.webapp.form.DeleteItemForm"--%>
-            <form:form modelAttribute="deleteJobPostForm" action="${postPath}" method="post"
+            <form:form modelAttribute="deleteJobPostForm" action="/job/delete" method="post"
                        cssStyle="margin-bottom: 0">
                 <button type="submit" class="btn service-control-delete text-uppercase">
                     <i class="fas fa-trash-alt"></i>
@@ -85,6 +84,7 @@
                 </button>
 
                 <form:hidden path="id" value="${requestScope.data.jobPost.id}"/>
+                <form:hidden path="returnURL" value="${requestScope.returnURL}"/>
             </form:form>
         </div>
     </sec:authorize>

@@ -1,6 +1,8 @@
 package exceptions;
 
-public class JobPostNotFoundException extends RuntimeException {
+import java.util.NoSuchElementException;
+
+public class JobPostNotFoundException extends NoSuchElementException {
 
     private static final String MESSAGE = "Job Post Not Found";
 

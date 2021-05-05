@@ -453,6 +453,12 @@
                             </div>
 
                             <div class="list-group location-list">
+                                <div id="no-results-location-create-job"
+                                     class="p-4" >
+                                    <p class="text-center text-black-50">
+                                        <spring:message code="navigation.modal.noResults"/>
+                                    </p>
+                                </div>
                                 <c:forEach items="${zoneValues}" var="zone">
                                     <label class="list-group-item">
                                         <form:checkbox path="zones" class="form-check-input zone-checkbox"
@@ -693,19 +699,34 @@
     });
 
     // Script para habilitar filtro por nombre de ubicaciones
+    const noResultDivChildCreate= $('#no-results-location-create-job *');
+    const noResultDivCreate= $('#no-results-location-create-job');
+    noResultDivCreate.hide();
+    noResultDivChildCreate.hide();
+
     function filterZones(input) {
         const filter = $(input)[0].value.toUpperCase();
         const list = $('.location-list');
         const listElems = list[0].getElementsByTagName('label');
+        let isNotEmpty = false;
+
+        noResultDivCreate.hide();
+        noResultDivChildCreate.hide();
         // Iterar por la lista y esconder los elementos que no matcheen
         for (let i = 0; i < listElems.length; i++) {
             let a = listElems[i].getElementsByTagName("span")[0];
             let txtValue = a.textContent || a.innerText;
             if (txtValue.toUpperCase().startsWith(filter.trim())) {
                 listElems[i].style.display = "";
+                isNotEmpty = true;
             } else {
                 listElems[i].style.display = "none";
             }
+        }
+
+        if (!isNotEmpty) {
+            noResultDivCreate.show();
+            noResultDivChildCreate.show();
         }
     }
 

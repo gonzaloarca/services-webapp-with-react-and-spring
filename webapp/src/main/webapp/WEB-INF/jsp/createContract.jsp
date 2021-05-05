@@ -33,23 +33,6 @@
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
 
-    <!-- Navigation -->
-    <!-- TODO: implementar breadcrumb correctamente -->
-<%--    <div class="row">--%>
-<%--        <nav aria-label="breadcrumb" style="width: 100%">--%>
-<%--            <ol class="breadcrumb bg-white">--%>
-<%--                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
-<%--                    <spring:message code="navigation.index"/>--%>
-<%--                </a></li>--%>
-<%--                <li class="breadcrumb-item active" aria-current="page">--%>
-<%--                    <p class="capitalize-first-letter">--%>
-<%--                        <spring:message code="${jobPost.jobType.stringCode}"/>--%>
-<%--                    </p>--%>
-<%--                </li>--%>
-<%--            </ol>--%>
-<%--        </nav>--%>
-<%--    </div>--%>
-
     <!-- Title Header -->
     <div class="row top-row">
         <div class="header-container">

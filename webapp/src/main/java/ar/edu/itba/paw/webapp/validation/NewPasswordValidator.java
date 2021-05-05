@@ -13,10 +13,9 @@ public class NewPasswordValidator implements ConstraintValidator<ValidNewPasswor
 
 	@Override
 	public boolean isValid(PasswordChangeForm form, ConstraintValidatorContext context) {
-		//TODO: Aplicar i18n a mensajes
 		if (!form.getNewPass().isEmpty() && form.getNewPass().equals(form.getCurrentPass())) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate("La nueva contraseña y la actual no pueden coincidir")
+			context.buildConstraintViolationWithTemplate("Passwords can not match")
 					.addNode("currentPass")
 					.addConstraintViolation();
 			return false;
@@ -24,7 +23,7 @@ public class NewPasswordValidator implements ConstraintValidator<ValidNewPasswor
 
 		if (!form.getNewPass().equals(form.getRepeatNewPass())) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate("Las contraseñas no coinciden")
+			context.buildConstraintViolationWithTemplate("Passwords must match")
 					.addNode("repeatNewPass")
 					.addConstraintViolation();
 			return false;

@@ -1,6 +1,8 @@
 package exceptions;
 
-public class ReviewNotFoundException extends RuntimeException {
+import java.util.NoSuchElementException;
+
+public class ReviewNotFoundException extends NoSuchElementException {
 
     private static final String MESSAGE = "Review not found";
 

@@ -59,8 +59,8 @@
         <div class="add-package-reminder">
             <div class="d-flex justify-content-center align-items-center">
                 <div>
-<%--                    TODO: Agregar alt valido--%>
-                    <img src="<c:url value="/resources/images/package1.svg"/>"/>
+                    <img src="<c:url value="/resources/images/package1.svg"/>"
+                         alt="<spring:message code="post.create.image"/>"/>
                 </div>
                 <div class="ml-3 d-flex flex-column align-items-center">
                     <p>

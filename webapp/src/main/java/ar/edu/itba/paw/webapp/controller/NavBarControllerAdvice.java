@@ -15,8 +15,6 @@ import java.security.Principal;
 @ControllerAdvice
 public class NavBarControllerAdvice {
 
-    private final Logger userControllerAdviceLogger = LoggerFactory.getLogger(NavBarControllerAdvice.class);
-
     @Autowired
     UserService userService;
 
@@ -25,7 +23,6 @@ public class NavBarControllerAdvice {
         User currentUser = null;
         if (principal != null) {
             currentUser = userService.findByEmail(principal.getName()).orElse(null);
-            userControllerAdviceLogger.debug("Current user is: {}",currentUser);
         }
         return currentUser;
     }

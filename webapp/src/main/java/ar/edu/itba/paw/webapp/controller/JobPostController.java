@@ -9,6 +9,8 @@ import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import ar.edu.itba.paw.webapp.form.EditJobPostForm;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
 import ar.edu.itba.paw.webapp.form.PackageForm;
+import exceptions.DeleteFailException;
+import exceptions.UpdateFailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,9 @@ public class JobPostController {
     private ImageService imageService;
 
     @RequestMapping("/job/{postId}")
-    public ModelAndView jobPostDetails(@PathVariable("postId") final long id, @RequestParam(value = "page", required = false, defaultValue = "1") final int page, Principal principal) {
+    public ModelAndView jobPostDetails(@PathVariable("postId") final long id,
+                                       @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
+                                       Principal principal, @ModelAttribute("deleteJobPostForm") DeleteItemForm form) {
         if (page < 1) {
             jobPostControllerLogger.debug("Invalid page: {}",page);
             throw new IllegalArgumentException();
@@ -63,10 +67,7 @@ public class JobPostController {
         jobPostControllerLogger.debug("Finding images for post: {}",jobPost.getId());
         List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
 
-        //TODO: BUSCAR SI HAY UNA MEJOR MANERA
-
         int maxPage = paginationService.findMaxPageReviewsByPostId(id);
-
 
         mav.addObject("isOwner", isOwner).addObject("jobPost", jobPost)
                 .addObject("imageList", imageList)
@@ -186,9 +187,8 @@ public class JobPostController {
 
         jobPostControllerLogger.debug("Updating post {} with data: title: {}, available hours: {}, job type: {}, zones: {}",id,title,availableHours,jobType,zones);
         if (!jobPostService.updateJobPost(id, title, availableHours, jobType, zones)) {
-            //FIXME: ERROR AL UPDATEAR
             jobPostControllerLogger.debug("Error updating job post {}",id);
-            throw new RuntimeException();
+            throw new UpdateFailException();
         }
 
         return new ModelAndView("redirect:/job/" + id);
@@ -251,10 +251,9 @@ public class JobPostController {
         int rateType = form.getRateType();
 
         jobPostControllerLogger.debug("Updating package {} with data: title: {}, description: {}, price: {}, rate type: {}",packageId,title,description,price,rateType);
-        //FIXME: Error al updatear
         if (!jobPackageService.updateJobPackage(packageId, title, description, price, rateType)) {
             jobPostControllerLogger.debug("Error updating package {}",packageId);
-            throw new RuntimeException();
+            throw new UpdateFailException();
         }
 
         return new ModelAndView("redirect:/job/" + postId + "/packages");
@@ -263,11 +262,10 @@ public class JobPostController {
     @RequestMapping(path = "/job/{postId}/packages", method = RequestMethod.POST)
     public ModelAndView deletePackage(@ModelAttribute("deletePackageForm") DeleteItemForm form,
                                       @PathVariable final long postId) {
-        //FIXME: Error al eliminar
         jobPostControllerLogger.debug("Deleting package {}",form.getId());
         if (!jobPackageService.deleteJobPackage(form.getId())) {
             jobPostControllerLogger.debug("Error deleting package {}",form.getId());
-            throw new RuntimeException();
+            throw new DeleteFailException();
         }
         return viewPackages(form, postId);
     }
@@ -304,18 +302,15 @@ public class JobPostController {
         return new ModelAndView("addPackageSuccess").addObject("postId", postId);
     }
 
-
-    //TODO: Este comporatmiento se repite en profile delete job post, tal vez sea mejor mergearlos
-    @RequestMapping(path = "/job/{postId}/delete")
-    public ModelAndView deleteJobPost(@PathVariable("postId") int postId) {
-        //FIXME: Excepcion correcta
-        jobPostControllerLogger.debug("Deleting post {}",postId);
-        if(!jobPostService.deleteJobPost(postId)){
-            jobPostControllerLogger.debug("Error deleting post {}" ,postId);
-            throw new RuntimeException();
+    @RequestMapping(path = "/job/delete", method = RequestMethod.POST)
+    public ModelAndView deleteJobPost(@ModelAttribute DeleteItemForm form) {
+        jobPostControllerLogger.debug("Deleting post {}",form.getId());
+        if (!jobPostService.deleteJobPost(form.getId())) {
+            jobPostControllerLogger.debug("Error deleting job post: {}",form.getId());
+            throw new DeleteFailException();
         }
-        //TODO: Redireccionar a un success de delete?
-        return new ModelAndView("redirect:/");
+
+        return new ModelAndView("redirect:" + form.getReturnURL());
     }
 
 
