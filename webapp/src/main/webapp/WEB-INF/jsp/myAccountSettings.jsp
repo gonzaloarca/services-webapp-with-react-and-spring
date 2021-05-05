@@ -62,7 +62,7 @@
                          src='${profilePic}'
                          alt="<spring:message code="profile.image"/>">
                     <div class="centered-div">
-                        <h4 style="font-weight: bold">
+                        <h4 class="account-username">
                             <c:out value="${user.username}"/>
                         </h4>
                         <c:choose>
@@ -120,7 +120,7 @@
                                 <spring:message code="account.settings.info.changeimage"/>
                             </form:label>
                         </div>
-                        <div class="row my-4" style="justify-content: center; align-items: center">
+                        <div class="row my-4 justify-content-center align-items-center">
                             <div class="col-3 img-preview-container">
                                 <img id="img-preview" class="profile-img"
                                      alt="<spring:message code="account.settings.info.previewalt"/>"

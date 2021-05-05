@@ -157,7 +157,7 @@
                             </div>
                             <spring:message code="jobPost.create.package.price" var="pricePlaceholder"/>
                             <form:input path="price" id="package-price-input" type="number" step="any"
-                                        class="form-control" min="0" max="99999999999"
+                                        class="form-control" min="0" maxlength="15"
                                         placeholder="${pricePlaceholder}" onkeyup="checkRadio()"/>
                             <div class="invalid-feedback">
                                 <spring:message code="jobPost.create.price.invalid"/>
