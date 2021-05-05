@@ -104,15 +104,4 @@ public class ProfileController {
                 .addObject("reviewsByPoints", reviewService.findProfessionalReviewsByPoints(id));
     }
 
-    @RequestMapping(value = "/services/delete", method = RequestMethod.POST)
-    public ModelAndView deleteJobPostFromProfile(@ModelAttribute DeleteItemForm form, @PathVariable final long id) {
-        profileControllerLogger.debug("Deleting post {}",form.getId());
-        if (!jobPostService.deleteJobPost(form.getId())) {
-            profileControllerLogger.debug("Error deleting job post: {}",form.getId());
-            throw new DeleteFailException();
-        }
-
-        return new ModelAndView("redirect:/profile/" + id + "/services");
-    }
-
 }

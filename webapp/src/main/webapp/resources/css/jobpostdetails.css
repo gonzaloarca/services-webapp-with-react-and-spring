@@ -368,6 +368,7 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     border-radius: 10px;
     padding: 5px 10px;
     transition: background-color 300ms;
+    cursor: pointer;
 }
 
 .delete-button p {

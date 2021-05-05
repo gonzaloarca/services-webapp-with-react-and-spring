@@ -73,12 +73,11 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         return ACCESS_ABSTAIN;
                     }
                     try{
-                        isOwner = jobPostService.findById(id).getUser().getEmail().equals(authentication.getName());
+                        isOwner = jobPostService.findByIdWithInactive(id).getUser().getEmail().equals(authentication.getName());
                     }catch (NoSuchElementException e){
                         isOwner= false;
                     }
                     if(paths.length > 2){
-
                         if(paths[2].equals("edit") || paths[2].equals("packages") || paths[2].equals("delete") ){
                             if (isOwner)
                                 return ACCESS_GRANTED;

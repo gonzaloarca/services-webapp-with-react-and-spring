@@ -105,6 +105,7 @@
                     <c:if test="${withServices}">
                         <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
                             <c:set var="data" value="${jobCard}" scope="request"/>
+                            <c:set var="returnURL" value="${pageContext.request.contextPath}/profile/${user.id}/services" scope="request"/>
                             <%@include file="components/serviceCard.jsp" %>
                             <c:if test="${status.index != jobCards.size()-1}">
                                 <hr class="hr1"/>
