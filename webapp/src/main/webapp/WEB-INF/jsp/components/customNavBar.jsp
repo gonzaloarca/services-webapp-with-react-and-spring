@@ -107,6 +107,12 @@
                                                    placeholder="<spring:message code="jobPost.create.zones.placeholder"/>"/>
                                         </div>
                                         <div class="list-group navbar-location-list-group">
+                                            <div id="no-results-location-modal"
+                                                 class="p-4" >
+                                                <p class="text-black-50">
+                                                    <spring:message code="navigation.modal.noResults"/>
+                                                </p>
+                                            </div>
                                             <c:forEach items="${requestScope.zoneValues}" var="zone">
                                                 <label class="list-group-item navbar-location-list-group-item navbar-modal-zone">
                                                     <form:radiobutton path="zone"
@@ -206,11 +212,21 @@
     </div>
 </nav>
 <script>
-    // Para buscar una locacion
+    // Para buscar una ubicación
+    const noResultDivChild= $('#no-results-location-modal *');
+    const noResultDiv= $('#no-results-location-modal');
+    noResultDiv.hide();
+    noResultDivChild.hide();
+
+
     $('#locationFilter').on('keyup', function () {
         const filter = $(this)[0].value.toUpperCase();
         const list = $('.navbar-location-list-group');
         const listElems = list[0].getElementsByTagName('label');
+        let isNotEmpty = false;
+
+        noResultDiv.hide();
+        noResultDivChild.hide();
 
         // Iterar por la lista y esconder los elementos que no matcheen
         for (let i = 0; i < listElems.length; i++) {
@@ -218,9 +234,15 @@
             let txtValue = a.textContent || a.innerText;
             if (txtValue.toUpperCase().startsWith(filter.trim())) {
                 listElems[i].style.display = "";
+                isNotEmpty = true;
             } else {
                 listElems[i].style.display = "none";
             }
+        }
+
+        if (!isNotEmpty) {
+            noResultDiv.show();
+            noResultDivChild.show();
         }
     });
 
@@ -248,7 +270,7 @@
     })
 
     // Para levantar la ubicacion en las cookies, en caso de existir
-    if(search) {
+    if (search) {
         let auxZoneString = sessionStorage.getItem("pickedZoneString");
         if (auxZoneString) {
             $('#zoneString')[0].innerText = auxZoneString;
@@ -273,7 +295,7 @@
                 querySearch.setCustomValidity("");
             }
 
-            if(querySearch.value === "") {
+            if (querySearch.value === "") {
                 $('#queryNavError')[0].style.display = 'inherit';
                 querySearch.setCustomValidity("error");
                 event.preventDefault();
