@@ -37,17 +37,11 @@ public class SimpleJobPackageServiceTest {
     @Mock
     JobPackageDao jobPackageDao;
 
-    @Mock
-    SimpleJobPostService simpleJobPostService;
-
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
     public void createSuccess() {
-        Mockito.when(simpleJobPostService.findById(Mockito.eq(JOB_PACKAGE.getPostId())))
-                .thenReturn(JOB_POST);
-
         Mockito.when(jobPackageDao.create(JOB_PACKAGE.getPostId(), JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
                 JOB_PACKAGE.getPrice(), JOB_PACKAGE.getRateType())).thenReturn(JOB_PACKAGE);
 
