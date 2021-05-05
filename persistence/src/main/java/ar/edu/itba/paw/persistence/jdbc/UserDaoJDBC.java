@@ -18,8 +18,10 @@ public class UserDaoJDBC implements UserDao {
 
     private static List<UserAuth.Role> mapArrRoleToList(Object[] roles) {
         List<UserAuth.Role> list = new ArrayList<>();
-        Arrays.stream(roles)
-                .forEach(obj -> list.add(UserAuth.Role.values()[(int) obj]));
+        for(Object role: roles) {
+            if (role != null)
+                list.add(UserAuth.Role.values()[(int) role]);
+        }
         return list;
     }
 
@@ -118,7 +120,7 @@ public class UserDaoJDBC implements UserDao {
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
         String sqlQuery = new StringBuilder()
-                .append("SELECT user_email,user_password,array_remove(array_agg(role_id),null) as roles, user_is_verified ")
+                .append("SELECT user_email,user_password,array_agg(role_id) as roles, user_is_verified ")
                 .append("FROM users LEFT JOIN user_role ur on users.user_id = ur.user_id ")
                 .append("WHERE user_email = ? AND user_is_active = TRUE GROUP BY user_email,user_password, user_is_verified")
                 .toString();
