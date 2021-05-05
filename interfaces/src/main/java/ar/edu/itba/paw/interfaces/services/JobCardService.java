@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface JobCardService {
 
@@ -15,7 +16,7 @@ public interface JobCardService {
 
     List<JobCard> findByUserId(long id, int page);
 
-    List<JobCard> search(String title, int zone, int jobType, int page);
+    List<JobCard> search(String title, int zone, int jobType, int page, Locale locale);
 
     JobCard findByPostId(long id);
 
@@ -35,5 +36,5 @@ public interface JobCardService {
 
     int findMaxPageRelatedJobCards(long professional_id);
 
-    public List<JobPost.JobType> getSimilarTypes(String query);
+    public List<JobPost.JobType> getSimilarTypes(String query, Locale locale);
 }

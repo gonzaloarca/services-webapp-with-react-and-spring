@@ -53,8 +53,8 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobCard> search(String title, int zone, int jobType, int page) {
-        List<JobPost.JobType> similarTypes = getSimilarTypes(title);
+    public List<JobCard> search(String title, int zone, int jobType, int page, Locale locale) {
+        List<JobPost.JobType> similarTypes = getSimilarTypes(title, locale);
         JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
         if (jobType == SEARCH_WITHOUT_CATEGORIES)
             return jobCardDao.search(title, parsedZone, similarTypes, page);
@@ -103,12 +103,12 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobPost.JobType> getSimilarTypes(String query) {
+    public List<JobPost.JobType> getSimilarTypes(String query, Locale locale) {
         final double THRESHOLD = 0.5;
         List<JobPost.JobType> types = new ArrayList<>();
 
         Arrays.stream(JobPost.JobType.values()).forEach(jobType -> {
-            String typeName = messageSource.getMessage(jobType.getStringCode(), null, LocaleContextHolder.getLocale());
+            String typeName = messageSource.getMessage(jobType.getStringCode(), null, locale);
             int distance = levenshteinDistance.apply(query.toLowerCase(), typeName.toLowerCase());
             double similarity = 1.0 - ((double) distance / Math.max(query.length(), typeName.length()));
 

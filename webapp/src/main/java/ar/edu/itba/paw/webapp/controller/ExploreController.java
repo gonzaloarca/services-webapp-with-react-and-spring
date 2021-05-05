@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Arrays;
 
@@ -28,6 +30,9 @@ public class ExploreController {
 
     @Autowired
     private PaginationService paginationService;
+
+    @Autowired
+    private LocaleResolver localeResolver;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home(@ModelAttribute("searchForm") SearchForm form, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
@@ -45,7 +50,8 @@ public class ExploreController {
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ModelAndView search(@Valid @ModelAttribute("searchForm") SearchForm form, final BindingResult errors,
-                               final ModelAndView mav, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+                               final ModelAndView mav, @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
+                               HttpServletRequest request) {
         if (page < 1) {
             mainLogger.error("Invalid search page");
             throw new IllegalArgumentException();
@@ -78,8 +84,8 @@ public class ExploreController {
 
         mainLogger.debug("Searching job cards with query: {}, zone: {}, category: {} and page: {}", query, zone, category, page);
 
-        searchMav.addObject("jobCards", jobCardService.search(query, zone, category, page - 1)
-        );
+        searchMav.addObject("jobCards", jobCardService.search(query, zone, category, page - 1,
+                localeResolver.resolveLocale(request)));
         return searchMav;
     }
 

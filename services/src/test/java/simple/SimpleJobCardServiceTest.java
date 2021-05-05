@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleJobCardServiceTest {
@@ -28,9 +29,9 @@ public class SimpleJobCardServiceTest {
     @Test
     public void testSearchWithoutCategory() {
         SimpleJobCardService spy = Mockito.spy(simpleJobCardService);
-        Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY);
+        Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, HirenetUtils.ALL_PAGES);
+        spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).search(Mockito.eq(QUERY), Mockito.eq(ZONE),
                 Mockito.eq(new ArrayList<>()), Mockito.eq(HirenetUtils.ALL_PAGES));
@@ -39,9 +40,9 @@ public class SimpleJobCardServiceTest {
     @Test
     public void testSearchWithCategory() {
         SimpleJobCardService spy = Mockito.spy(simpleJobCardService);
-        Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY);
+        Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        spy.search(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), HirenetUtils.ALL_PAGES);
+        spy.search(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).searchWithCategory(Mockito.eq(QUERY), Mockito.eq(ZONE),
                 Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(HirenetUtils.ALL_PAGES));
