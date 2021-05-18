@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
-
+/*
 @Repository
 public class UserDaoJDBC implements UserDao {
 
@@ -194,3 +194,4 @@ public class UserDaoJDBC implements UserDao {
         return jdbcTemplate.queryForObject(sqlQuery, new Object[]{jobType.ordinal(), id}, Integer.class);
     }
 }
+ */

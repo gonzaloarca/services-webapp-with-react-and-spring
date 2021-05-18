@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.Embeddable;
 import java.util.Arrays;
 import java.util.Objects;
 
 //Esta clase es un wrapper para las imagenes guardadas en forma de array de bytes y su content type
+@Embeddable
 public class ByteImage {
 	private final byte[] data;
 	private final String type;
