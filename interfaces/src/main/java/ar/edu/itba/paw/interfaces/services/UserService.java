@@ -5,11 +5,12 @@ import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotVerifiedException;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public interface UserService {
 
-    User register(String email, String password, String username, String phone, ByteImage image)
+    User register(String email, String password, String username, String phone, ByteImage image, Locale locale)
             throws UserAlreadyExistsException, UserNotVerifiedException;
 
     User findById(long id);
@@ -37,4 +38,6 @@ public interface UserService {
     int findUserRankingInJobType(long id, JobPost.JobType jobType);
 
     List<AnalyticRanking> findUserAnalyticRankings(long id);
+
+    void recoverUserPassword(String email, Locale locale);
 }

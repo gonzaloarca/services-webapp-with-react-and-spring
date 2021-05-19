@@ -12,9 +12,11 @@ public interface MailingService {
 
     void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost, Locale locale);
 
-    void sendVerificationTokenEmail(User user, VerificationToken token);
+    void sendVerificationTokenEmail(User user, VerificationToken token, Locale locale);
 
     void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,
                                            String templateName, DataSource attachment, Locale locale);
+
+    void sendRecoverPasswordEmail(String email, String password, Locale locale);
 
 }
