@@ -106,24 +106,25 @@
                         <c:choose>
                             <c:when test="${servicesSize > 0}">
                                 <c:forEach var="jobCard" items="${jobCards}" varStatus="status">
-                            <c:set var="data" value="${jobCard}" scope="request"/>
-                            <c:set var="returnURL"
-                                   value="${pageContext.request.contextPath}/profile/${user.id}/services"
-                                   scope="request"/>
-                            <%@include file="components/serviceCard.jsp" %>
-                            <c:if test="${status.index != jobCards.size()-1}">
-                                <hr class="hr1"/>
-                            </c:if>
-                        </c:forEach>
-                            <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
-                            <c:set var="maxPage" value="${maxPage}" scope="request"/>
-                            <c:set var="currentPages" value="${currentPages}" scope="request"/>
-                            <%@include file="components/bottomPaginationBar.jsp" %>
-                        </c:when>
+                                    <c:set var="data" value="${jobCard}" scope="request"/>
+                                    <c:set var="returnURL"
+                                           value="${pageContext.request.contextPath}/profile/${user.id}/services"
+                                           scope="request"/>
+                                    <%@include file="components/serviceCard.jsp" %>
+                                    <c:if test="${status.index != jobCards.size()-1}">
+                                        <hr class="hr1"/>
+                                    </c:if>
+                                </c:forEach>
+                                <c:set var="listSize" value="${jobCards.size()}" scope="request"/>
+                                <c:set var="maxPage" value="${maxPage}" scope="request"/>
+                                <c:set var="currentPages" value="${currentPages}" scope="request"/>
+                                <%@include file="components/bottomPaginationBar.jsp" %>
+                            </c:when>
                             <c:otherwise>
                                 <div class="d-flex flex-column justify-content-center align-content-center w-100">
                                     <spring:message code="profile.noservices.alt" var="noServicesAlt"/>
-                                    <img style="height: 200px; width: 100%" src="<c:url value='/resources/images/job-1.svg'/>" alt="${noServicesAlt}">
+                                    <img style="height: 200px; width: 100%"
+                                         src="<c:url value='/resources/images/job-1.svg'/>" alt="${noServicesAlt}">
                                     <h4 class="text-center mt-4">
                                         <c:choose>
                                             <c:when test="${currentUser.id == user.id}">
@@ -202,7 +203,8 @@
                             <c:otherwise>
                                 <div class="d-flex flex-column justify-content-center align-content-center w-100">
                                     <spring:message code="profile.noreviews.alt" var="noReviewsAlt"/>
-                                    <img style="height: 200px; width: 100%" src="<c:url value='/resources/images/star-1.svg'/>" alt="${noReviewsAlt}">
+                                    <img style="height: 200px; width: 100%"
+                                         src="<c:url value='/resources/images/star-1.svg'/>" alt="${noReviewsAlt}">
                                     <h4 class="text-center mt-4">
                                         <c:choose>
                                             <c:when test="${currentUser.id == user.id}">

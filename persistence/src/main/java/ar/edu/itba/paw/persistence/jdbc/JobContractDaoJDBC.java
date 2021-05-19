@@ -113,7 +113,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     @Override
     public Optional<JobContract> findById(long id) {
         return jdbcTemplate.query(
-                "SELECT * FROM full_contract WHERE contract_id = ?",
+                "SELECT * FROM full_contract WHERE contract_id = ? ORDER BY contract_creation_date DESC",
                 new Object[]{id}, JOB_CONTRACT_ROW_MAPPER).stream().findFirst();
     }
 
@@ -121,7 +121,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByClientId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
 
-        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE client_id = ?");
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE client_id = ? ORDER BY contract_creation_date DESC");
 
         PagingUtil.addPaging(sqlQuery, page);
 
@@ -132,7 +132,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByProId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
 
-        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE professional_id = ? ");
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE professional_id = ? ORDER BY contract_creation_date DESC");
 
         PagingUtil.addPaging(sqlQuery, page);
 
@@ -143,7 +143,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByPostId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
 
-        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE post_id = ? AND post_is_active = TRUE");
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE post_id = ? AND post_is_active = TRUE ORDER BY contract_creation_date DESC");
 
         PagingUtil.addPaging(sqlQuery, page);
 
@@ -154,7 +154,7 @@ public class JobContractDaoJDBC implements JobContractDao {
     public List<JobContract> findByPackageId(long id, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(id));
 
-        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE package_id = ? AND package_is_active = TRUE ");
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_contract WHERE package_id = ? AND package_is_active = TRUE ORDER BY contract_creation_date DESC ");
 
         PagingUtil.addPaging(sqlQuery, page);
 

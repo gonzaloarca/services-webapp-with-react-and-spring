@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.*;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
 import exceptions.UserNotVerifiedException;
+import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User register(String email, String password, String username, String phone,
-                         ByteImage image) throws UserAlreadyExistsException, UserNotVerifiedException {
+                         ByteImage image, Locale locale) throws UserAlreadyExistsException, UserNotVerifiedException {
         Optional<User> maybeUser = userDao.findByEmail(email);
 
         if (maybeUser.isPresent()) {
@@ -50,7 +51,7 @@ public class SimpleUserService implements UserService {
             userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
 
             VerificationToken token = verificationTokenService.create(user);
-            mailingService.sendVerificationTokenEmail(user, token);
+            mailingService.sendVerificationTokenEmail(user, token, locale);
 
             throw new UserNotVerifiedException();
         }
@@ -62,7 +63,7 @@ public class SimpleUserService implements UserService {
             registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone, image);
 
         VerificationToken token = verificationTokenService.create(registeredUser);
-        mailingService.sendVerificationTokenEmail(registeredUser, token);
+        mailingService.sendVerificationTokenEmail(registeredUser, token, locale);
 
         return registeredUser;
     }
@@ -139,4 +140,41 @@ public class SimpleUserService implements UserService {
 
         return analyticRankings;
     }
+
+    @Override
+    public void recoverUserPassword(String email, Locale locale){
+        String pass = generateNewPassword();
+        try {
+            changeUserPassword(email, pass);
+            mailingService.sendRecoverPasswordEmail(email, pass, locale);
+        } catch (UserNotFoundException e) {
+            //Si el usuario no existe, no hago nada
+        }
+    }
+
+    private String generateNewPassword() {
+        final int PASSWORD_LENGTH = 10;
+
+        ArrayList<Character> charList = new ArrayList<>();
+
+        for(char c = 'a'; c <= 'z'; c++) {
+            charList.add(c);
+        }
+        for(char c = 'A'; c <= 'Z'; c++) {
+            charList.add(c);
+        }
+        for(char c = '0'; c <= '9'; c++) {
+            charList.add(c);
+        }
+
+        char[] chars = new char[charList.size()];
+        for(int i = 0; i < charList.size(); i++)
+            chars[i] = charList.get(i);
+
+        RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder()
+                .selectFrom(chars)
+                .build();
+        return pwdGenerator.generate(PASSWORD_LENGTH);
+    }
+
 }

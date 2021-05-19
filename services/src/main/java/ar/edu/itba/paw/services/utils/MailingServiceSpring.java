@@ -115,7 +115,7 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendVerificationTokenEmail(User user, VerificationToken token) {
+    public void sendVerificationTokenEmail(User user, VerificationToken token, Locale locale) {
         Map<String, Object> data = new HashMap<>();
         data.put("username", user.getUsername());
         data.put("email", user.getEmail());
@@ -124,8 +124,19 @@ public class MailingServiceSpring implements MailingService {
 
         sendMessageUsingThymeleafTemplate(user.getEmail(),
                 messageSource.getMessage("mail.token.subject",
-                        new Object[]{user.getUsername()}, Locale.getDefault()),
-                data, "token", null, Locale.getDefault());
+                        new Object[]{user.getUsername()}, locale),
+                data, "token", null, locale);
     }
 
+    @Async
+    @Override
+    public void sendRecoverPasswordEmail(String email, String password, Locale locale) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+        data.put("pass", password);
+
+        sendMessageUsingThymeleafTemplate(email,
+                messageSource.getMessage("mail.recover.subject", new Object[]{}, locale),
+                data, "recoverPassword", null, locale);
+    }
 }

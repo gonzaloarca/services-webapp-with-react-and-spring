@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>
-        <spring:message code="login.title" var="text"/>
+        <spring:message code="recover.title" var="text"/>
         <spring:message code="title.name" arguments="${text}"/>
     </title>
 
@@ -51,17 +51,18 @@
             <h3 class="login-title">
                 <img class="login-icon" src="${pageContext.request.contextPath}/resources/images/log-in.svg"
                      alt="<spring:message code="login.symbol" />">
-                <spring:message code="login.into.hirenet"/>
+                <spring:message code="recover.title"/>
             </h3>
         </div>
         <div class="card p-5">
 
-            <form action="${pageContext.request.contextPath}/login" method="post" id="form" onsubmit="disableBtn()"
-                  enctype="application/x-www-form-urlencoded" class="needs-validation" novalidate>
+            <form:form action="${pageContext.request.contextPath}/recover" method="post" id="form" onsubmit="disableBtn()"
+                  enctype="application/x-www-form-urlencoded" class="needs-validation" novalidate="true"
+                  modelAttribute="recoverForm">
 
                 <div class="input-container">
                     <label for="email" class="form-text custom-label">
-                        <spring:message code="login.email"/>
+                        <spring:message code="recover.instructions"/>
                     </label>
                     <spring:message code="login.email.placeholder" var="emailPlaceholder"/>
                     <div class="input-group has-validation">
@@ -72,79 +73,29 @@
                         </div>
                     </div>
                 </div>
+                <c:choose>
+                    <c:when test="${confirmed}">
+                        <div style="color: green">
+                            <spring:message code="recover.confirmed"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div>
+                            <spring:message code="recover.explained"/>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
 
-                <label for="password" class="form-text custom-label">
-                    <spring:message code="login.password"/>
-                </label>
-                <spring:message code="login.password.placeholder" var="passwordPlaceholder"/>
-                <div class="input-group has-validation" id="show_hide_password">
-                    <input type="password" class="form-control custom-input custom-password" name="password"
-                           placeholder="${passwordPlaceholder}" maxlength="100" id="password" required/>
-                    <span class="input-group-text password-eye" id="inputGroupPostpend">
-                        <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                    </span>
-                    <div class="invalid-feedback">
-                        <spring:message code="login.input.pass"/>
-                    </div>
-                </div>
-                <div class="login-error">
-                    <c:if test="${param.error != null}">
-                        <p class="form-error">
-                                ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION}
-                        </p>
-                    </c:if>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rememberMeCheck" id="rememberMeCheck">
-                    <label class="form-check-label" for="rememberMeCheck">
-                        <spring:message code="login.rememberme"/>
-                    </label>
-                </div>
                 <div class="submit-button-container">
                     <button class="btn btn-primary hirenet-blue-btn" type="submit" id="submitBtn">
-                        <spring:message code="login.submit"/>
+                        <spring:message code="recover.btn"/>
                     </button>
                 </div>
-            </form>
-            <div style="display: flex; justify-content: space-around">
-                <span style="display: flex; justify-content: center; align-items: center; flex-direction: column">
-                    <p class="bottom-link-label">
-                        <spring:message code="login.hasaccount.question"/>
-                    </p>
-                    <a class="bottom-link" href="${pageContext.request.contextPath}/register">
-                        <spring:message code="login.getaccount"/>
-                    </a>
-                </span>
-                <div style="border-left: 1px solid #c8c8c8; margin-top: 10px"></div>
-                <span style="display: flex; justify-content: center; align-items: center; flex-direction: column">
-                    <p class="bottom-link-label">
-                        <spring:message code="login.recover.question"/>
-                    </p>
-                    <a class="bottom-link" href="${pageContext.request.contextPath}/recover">
-                        <spring:message code="login.recover"/>
-                    </a>
-                </span>
-            </div>
+            </form:form>
         </div>
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        $("#show_hide_password a").on('click', function (event) {
-            event.preventDefault();
-            let input = $('#show_hide_password input');
-            let icon = $('#show_hide_password i')
-            if (input.attr("type") === "text") {
-                input.attr('type', 'password');
-                icon.addClass("fa-eye");
-                icon.removeClass("fa-eye-slash");
-            } else if (input.attr("type") === "password") {
-                input.attr('type', 'text');
-                icon.removeClass("fa-eye");
-                icon.addClass("fa-eye-slash");
-            }
-        });
-    });
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function () {
         'use strict'
@@ -154,16 +105,16 @@
 
         // Loop over them and prevent submission
         Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
 
-                        form.classList.add('was-validated')
-                    }, false)
-                })
+                    form.classList.add('was-validated')
+                }, false)
+            })
     })()
 
     //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
@@ -171,11 +122,11 @@
         var forms = document.querySelectorAll('.needs-validation');
         var is_valid = true;
         Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    if (!form.checkValidity()) {
-                        is_valid = false;
-                    }
-                })
+            .forEach(function (form) {
+                if (!form.checkValidity()) {
+                    is_valid = false;
+                }
+            })
         $("#submitBtn").attr("disabled", is_valid);
     }
 </script>

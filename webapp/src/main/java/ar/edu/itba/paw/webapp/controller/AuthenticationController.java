@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.LoginForm;
+import ar.edu.itba.paw.webapp.form.RecoverForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotVerifiedException;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -37,13 +40,17 @@ public class AuthenticationController {
     @Autowired
     private VerificationTokenService verificationTokenService;
 
+    @Autowired
+    private LocaleResolver localeResolver;
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView register(@ModelAttribute("registerForm") RegisterForm registerForm) {
         return new ModelAndView("register");
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView registerForm(@Valid @ModelAttribute("registerForm") RegisterForm registerForm, BindingResult errors) {
+    public ModelAndView registerForm(@Valid @ModelAttribute("registerForm") RegisterForm registerForm, BindingResult errors,
+                                     HttpServletRequest servletRequest) {
         if (errors.hasErrors()) {
             authenticationLogger.error("Register form has errors: {}",errors.getAllErrors().toString());
             return register(registerForm);
@@ -65,7 +72,7 @@ public class AuthenticationController {
 
         try {
             authenticationLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}, has image:{}",email,password,name,phone,byteImage != null);
-            userService.register(email, password, name, phone, byteImage);
+            userService.register(email, password, name, phone, byteImage, localeResolver.resolveLocale(servletRequest));
         } catch (UserAlreadyExistsException e) {
             authenticationLogger.error("Register error: email already exists");
             errors.rejectValue("email", "register.existingemail");
@@ -110,5 +117,24 @@ public class AuthenticationController {
         }
 
         return mav.addObject("success", true);
+    }
+
+    @RequestMapping(value = "/recover", method = RequestMethod.GET)
+    public ModelAndView recoverPassword(@ModelAttribute("recoverForm") RecoverForm form) {
+        return new ModelAndView("recover");
+    }
+
+    @RequestMapping(value = "/recover", method = RequestMethod.POST)
+    public ModelAndView recoverPasswordPost(@ModelAttribute("recoverForm") RecoverForm form, BindingResult errors,
+                                            HttpServletRequest servletRequest) {
+        if (errors.hasErrors()) {
+            authenticationLogger.error("Recover form has errors: {}",errors.getAllErrors().toString());
+            return recoverPassword(form);
+        }
+
+        authenticationLogger.debug("Recovering password for email: {}", form.getEmail());
+        userService.recoverUserPassword(form.getEmail(), localeResolver.resolveLocale(servletRequest));
+
+        return new ModelAndView("recover").addObject("confirmed", true);
     }
 }
