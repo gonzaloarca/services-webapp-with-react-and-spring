@@ -1,11 +1,3 @@
-CREATE TABLE IF NOT EXISTS user_role
-(
-    user_id SERIAL NOT NULL,
-    role_id INT    NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users,
-    PRIMARY KEY (user_id, role_id)
-);
-
 DROP VIEW IF EXISTS full_post;
 CREATE VIEW full_post AS
 SELECT job_post.post_id,

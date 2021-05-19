@@ -9,61 +9,70 @@ CREATE TABLE IF NOT EXISTS users
     user_image BYTEA,
     user_is_verified BOOLEAN NOT NULL DEFAULT false,
     user_password VARCHAR(100) NOT NULL,
-    user_creation_date TIMESTAMP DEFAULT current_timestamp
+    user_creation_date TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
-CREATE TABLE IF NOT EXISTS job_post
+CREATE TABLE IF NOT EXISTS user_role
 (
-    post_id              SERIAL PRIMARY KEY,
-    user_id              INTEGER      NOT NULL,
-    post_title           VARCHAR(100) NOT NULL,
-    post_available_hours VARCHAR(100) NOT NULL,
-    post_job_type        INTEGER      NOT NULL,
-    post_is_active       BOOLEAN      DEFAULT TRUE,
-    post_creation_date TIMESTAMP DEFAULT current_timestamp,
-    FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
+    user_id SERIAL NOT NULL,
+    role_id INT    NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users,
+    PRIMARY KEY (user_id, role_id)
 );
 
-CREATE TABLE IF NOT EXISTS job_package
-(
-    package_id          SERIAL PRIMARY KEY,
-    post_id             INTEGER          NOT NULL,
-    package_title       VARCHAR(100)     NOT NULL,
-    package_description TEXT             NOT NULL,
-    package_price       DOUBLE PRECISION,
-    package_rate_type   INTEGER          NOT NULL,
-    package_is_active   BOOLEAN          NOT NULL,
-    FOREIGN KEY (post_id) REFERENCES job_post ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS post_zone
-(
-    post_id INTEGER NOT NULL,
-    zone_id int NOT NULL,
-    PRIMARY KEY (post_id, zone_id),
-    FOREIGN KEY (post_id) REFERENCES job_post ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS contract
-(
-    contract_id          SERIAL PRIMARY KEY,
-    client_id            INTEGER,
-    package_id           INTEGER,
-    contract_description TEXT NOT NULL,
-    contract_image_type VARCHAR(100),
-    image_data BYTEA,
-    contract_creation_date TIMESTAMP DEFAULT current_timestamp,
-    FOREIGN KEY (client_id) REFERENCES users ON DELETE SET NULL,
-    FOREIGN KEY (package_id) REFERENCES job_package ON DELETE SET NULL
-);
-
-CREATE TABLE IF NOT EXISTS review
-(
-    contract_id      INTEGER,
-    review_rate      INTEGER NOT NULL,
-    review_title       TEXT,
-    review_description TEXT    NOT NULL,
-    review_creation_date TIMESTAMP DEFAULT current_timestamp,
-    FOREIGN KEY (contract_id) REFERENCES contract ON DELETE CASCADE,
-    PRIMARY KEY (contract_id)
-);
+--
+-- CREATE TABLE IF NOT EXISTS job_post
+-- (
+--     post_id              SERIAL PRIMARY KEY,
+--     user_id              INTEGER      NOT NULL,
+--     post_title           VARCHAR(100) NOT NULL,
+--     post_available_hours VARCHAR(100) NOT NULL,
+--     post_job_type        INTEGER      NOT NULL,
+--     post_is_active       BOOLEAN      DEFAULT TRUE,
+--     post_creation_date TIMESTAMP DEFAULT current_timestamp,
+--     FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS job_package
+-- (
+--     package_id          SERIAL PRIMARY KEY,
+--     post_id             INTEGER          NOT NULL,
+--     package_title       VARCHAR(100)     NOT NULL,
+--     package_description TEXT             NOT NULL,
+--     package_price       DOUBLE PRECISION,
+--     package_rate_type   INTEGER          NOT NULL,
+--     package_is_active   BOOLEAN          NOT NULL,
+--     FOREIGN KEY (post_id) REFERENCES job_post ON DELETE CASCADE
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS post_zone
+-- (
+--     post_id INTEGER NOT NULL,
+--     zone_id int NOT NULL,
+--     PRIMARY KEY (post_id, zone_id),
+--     FOREIGN KEY (post_id) REFERENCES job_post ON DELETE CASCADE
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS contract
+-- (
+--     contract_id          SERIAL PRIMARY KEY,
+--     client_id            INTEGER,
+--     package_id           INTEGER,
+--     contract_description TEXT NOT NULL,
+--     contract_image_type VARCHAR(100),
+--     image_data BYTEA,
+--     contract_creation_date TIMESTAMP DEFAULT current_timestamp,
+--     FOREIGN KEY (client_id) REFERENCES users ON DELETE SET NULL,
+--     FOREIGN KEY (package_id) REFERENCES job_package ON DELETE SET NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS review
+-- (
+--     contract_id      INTEGER,
+--     review_rate      INTEGER NOT NULL,
+--     review_title       TEXT,
+--     review_description TEXT    NOT NULL,
+--     review_creation_date TIMESTAMP DEFAULT current_timestamp,
+--     FOREIGN KEY (contract_id) REFERENCES contract ON DELETE CASCADE,
+--     PRIMARY KEY (contract_id)
+-- );
