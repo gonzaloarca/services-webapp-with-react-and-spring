@@ -28,19 +28,19 @@ public class UserAuth {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private List<Role> roles;
+    private List<UserRole> roles;
 
     /*default*/ UserAuth() {
     }
 
-    public UserAuth(long user_id, String email, boolean isVerified, List<Role> roles) {
+    public UserAuth(long user_id, String email, boolean isVerified, List<UserRole> roles) {
         this.user_id = user_id;
         this.email = email;
         this.isVerified = isVerified;
         this.roles = roles;
     }
 
-    public List<Role> getRoles() {
+    public List<UserRole> getRoles() {
         return roles;
     }
 
@@ -67,39 +67,6 @@ public class UserAuth {
     @Override
     public int hashCode() {
         return Objects.hash(user_id, email);
-    }
-
-    @Entity
-    @Table(name = "user_role")
-    public enum Role {
-        CLIENT("ROLE_CLIENT"),
-        PROFESSIONAL("ROLE_PROFESSIONAL");
-
-        @Transient
-        private String name;
-
-        @Id
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_role_user_id_fkey"))
-        private UserAuth userAuth;
-
-        @Id
-        private long role_id;
-
-        /* default */ Role() {
-        }
-
-        Role(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public long getRole_id() {
-            return role_id;
-        }
     }
 
 }

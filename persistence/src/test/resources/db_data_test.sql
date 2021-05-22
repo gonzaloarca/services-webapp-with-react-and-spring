@@ -13,6 +13,8 @@ INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user
 INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified, user_creation_date) VALUES (NEXT VALUE FOR users_user_id_seq, 'Pedrito paco', 'paco@gmail.com','password', '555555555', true, true, NOW());
 INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified, user_creation_date) VALUES (NEXT VALUE FOR users_user_id_seq, 'Soledad del Cielo', 'tren@gmail.com','password', '87876767', true, true, NOW());
 
+INSERT INTO USER_ROLE(USER_ID, ROLE_ID) VALUES (1, 0);
+
 --10 posts activos y 1 inactivo = TOTAL 11
 --9 activos y 1 inactivo del usuario 1, y 1 activo del usuario 2
 --4 de tipo 1, 5 de tipo 2, 2 de tipo 3

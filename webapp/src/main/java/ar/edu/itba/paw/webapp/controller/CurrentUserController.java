@@ -1,11 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
-import ar.edu.itba.paw.models.AnalyticRanking;
-import ar.edu.itba.paw.models.JobContractCard;
 import exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -75,7 +71,7 @@ public class CurrentUserController {
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage)
                 .addObject("contractCards", jobContractCards)
-                .addObject("isPro", userAuth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
+                .addObject("isPro", userAuth.getRoles().contains(UserRole.Role.PROFESSIONAL));
     }
 
     @RequestMapping("/analytics")

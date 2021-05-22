@@ -6,8 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -39,15 +37,14 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        final TypedQuery<User> query = em.createQuery("FROM User AS u WHERE u.email = :email", User.class);
-        query.setParameter("email", email);
-        return query.getResultList().stream().findFirst();
+        return em.createQuery("FROM User AS u WHERE u.email = :email", User.class)
+                .setParameter("email", email).getResultList().stream().findFirst();
     }
 
     @Override
     public Optional<User> updateUserByEmail(String email, String phone, String name) {
         Optional<User> aux = findByEmail(email);
-        if(aux.isPresent()) {
+        if (aux.isPresent()) {
             aux.get().setUsername(name);
             aux.get().setPhone(phone);
             em.persist(aux);
@@ -57,8 +54,8 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> updateUserById(long id, String name, String phone) {
-        User aux = em.find(User.class,id);
-        if(aux != null) {
+        User aux = em.find(User.class, id);
+        if (aux != null) {
             aux.setUsername(name);
             aux.setPhone(phone);
             em.persist(aux);
@@ -69,7 +66,7 @@ public class UserDaoJpa implements UserDao {
     @Override
     public Optional<User> updateUserById(long id, String name, String phone, ByteImage image) {
         Optional<User> aux = findById(id);
-        if(aux.isPresent()) {
+        if (aux.isPresent()) {
             aux.get().setUsername(name);
             aux.get().setPhone(phone);
             aux.get().setByteImage(image);
@@ -80,48 +77,76 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
-        final TypedQuery<UserAuth> query = em.createQuery("FROM UserAuth AS u WHERE u.email = :email", UserAuth.class);
-        query.setParameter("email", email);
-        return query.getResultList().stream().findFirst();
+        return em.createQuery("FROM UserAuth AS u WHERE u.email = :email", UserAuth.class)
+                .setParameter("email", email).getResultList().stream().findFirst();
     }
 
     @Override
-    public void assignRole(long id, int role) {
-
+    public Optional<UserAuth> assignRole(long id, int role) {
+        UserAuth userAuth = em.find(UserAuth.class, id);
+        UserRole aux_role = new UserRole(UserRole.Role.values()[role]);
+        if (userAuth != null && !userAuth.getRoles().contains(aux_role)) {
+            userAuth.getRoles().add(aux_role);
+            em.persist(userAuth);
+        }
+        return Optional.ofNullable(userAuth);
     }
 
     @Override
-    public List<UserAuth.Role> findRoles(long id) {
-        return null;
+    public List<UserRole.Role> findRoles(long id) {
+        return em.createQuery("FROM UserAuth AS u WHERE u.id = :id", UserRole.Role.class)
+                .setParameter("id", id).getResultList();
     }
 
     @Override
-    public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
-        return Optional.empty();
+    public Optional<User> findUserByRoleAndId(UserRole.Role role, long id) {
+        return em.createQuery("FROM User AS u WHERE u.id = :user_id AND u.role_id = :role_id", User.class)
+                .setParameter("user_id", id).setParameter("role_id", role.ordinal()).
+                        getResultList().stream().findFirst();
     }
 
     @Override
-    public void changeUserPassword(long id, String password) {
-
+    public boolean changeUserPassword(long id, String password) {
+        User aux = em.find(User.class, id);
+        if (aux != null) {
+            aux.setPassword(password);
+            em.persist(aux);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void verifyUser(long id) {
-
+    public boolean verifyUser(long id) {
+        User aux = em.find(User.class, id);
+        if (aux != null) {
+            aux.setVerified(true);
+            em.persist(aux);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean deleteUser(long id) {
+        User user = em.find(User.class, id);
+        if (user != null) {
+            user.setActive(false);
+            em.persist(user);
+            return true;
+        }
         return false;
     }
 
     @Override
     public List<JobPost.JobType> findUserJobTypes(long id) {
+        //TODO: CUANDO JOBPOST ESTE HIBERNADO
         return null;
     }
 
     @Override
     public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
+        //TODO: CUANDO JOBPOST ESTE HIBERNADO
         return 0;
     }
 }

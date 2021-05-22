@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.dao.VerificationTokenDao;
 import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.UserRole;
 import ar.edu.itba.paw.models.VerificationToken;
 import exceptions.MismatchedTokensException;
 import exceptions.VerificationTokenExpiredException;
@@ -54,7 +54,7 @@ public class SimpleVerificationTokenService implements VerificationTokenService 
 				}
 				verificationTokenDao.deleteToken(user.getId());
 				userDao.verifyUser(user.getId());
-				userDao.assignRole(user.getId(), UserAuth.Role.CLIENT.ordinal());
+				userDao.assignRole(user.getId(), UserRole.Role.CLIENT.ordinal());
 				return;
 			}
 

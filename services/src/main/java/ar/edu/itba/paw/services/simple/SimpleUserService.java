@@ -94,7 +94,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User getUserByRoleAndId(int role, long id) {
-        return userDao.findUserByRoleAndId(UserAuth.Role.values()[role], id).orElseThrow(UserNotFoundException::new);
+        return userDao.findUserByRoleAndId(UserRole.Role.values()[role], id).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -104,8 +104,8 @@ public class SimpleUserService implements UserService {
 
     @Override
     public void assignRole(long id, int role) {
-        List<UserAuth.Role> roles = userDao.findRoles(id);
-        if (!roles.contains(UserAuth.Role.values()[role]))
+        List<UserRole.Role> roles = userDao.findRoles(id);
+        if (!roles.contains(UserRole.Role.values()[role]))
             userDao.assignRole(id, role);
     }
 

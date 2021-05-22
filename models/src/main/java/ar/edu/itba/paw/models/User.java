@@ -40,7 +40,7 @@ public class User {
     @Transient
     private EncodedImage image;
 
-    @Column(name = "user_creation_date", columnDefinition = "TIMESTAMP NOT NULL DEFAULT current_timestamp")
+    @Column(name = "user_creation_date")
     private LocalDateTime creationDate;
 
     @Column(length = 100, nullable = false, name = "user_password")
@@ -181,6 +181,10 @@ public class User {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

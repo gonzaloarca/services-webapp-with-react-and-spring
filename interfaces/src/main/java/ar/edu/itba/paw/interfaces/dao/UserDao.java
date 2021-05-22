@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    User register(String email,String password, String username, String phone);
+    User register(String email, String password, String username, String phone);
 
     User register(String email, String password, String username, String phone, ByteImage image);
 
@@ -15,7 +15,7 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> updateUserByEmail(String email,String phone, String name);
+    Optional<User> updateUserByEmail(String email, String phone, String name);
 
     Optional<User> updateUserById(long id, String name, String phone);
 
@@ -23,15 +23,15 @@ public interface UserDao {
 
     Optional<UserAuth> findAuthInfo(String email);
 
-    void assignRole(long id, int role);
+    Optional<UserAuth> assignRole(long id, int role);
 
-    List<UserAuth.Role> findRoles(long id);
+    List<UserRole.Role> findRoles(long id);
 
-    Optional<User> findUserByRoleAndId(UserAuth.Role role, long id);
+    Optional<User> findUserByRoleAndId(UserRole.Role role, long id);
 
-    void changeUserPassword(long id, String password);
+    boolean changeUserPassword(long id, String password);
 
-    void verifyUser(long id);
+    boolean verifyUser(long id);
 
     boolean deleteUser(long id);
 

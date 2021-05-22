@@ -3,6 +3,7 @@ package jdbc;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.UserRole;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJpa;
 import config.TestConfig;
 import org.junit.Assert;
@@ -10,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,6 +26,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +50,8 @@ public class UserDaoJDBCTest {
 
     private static final int USER1_RANKING_IN_JOBTYPE1 = 1;
 
+    private static final List<UserRole.Role> USER1_ROLES = Collections.singletonList(UserRole.Role.CLIENT);
+
     @Autowired
     DataSource ds;
 
@@ -57,10 +59,7 @@ public class UserDaoJDBCTest {
     @InjectMocks
     private UserDaoJpa userDaoJpa;
 
-
-
     private JdbcTemplate jdbcTemplate;
-
 
     @PersistenceContext
     private EntityManager em;
@@ -73,8 +72,6 @@ public class UserDaoJDBCTest {
 
     @Test
     public void testRegister() {
-
-
         User userTest = new User(
                 12,
                 "manurodriguez@mail.com",
@@ -124,19 +121,55 @@ public class UserDaoJDBCTest {
     public void testUpdateById() {
         String name = "pepe";
         String phone = "123123123";
-        UserDaoJpa userDaoJpaSpy = Mockito.spy(userDaoJpa);
 
-        Mockito.doReturn(Optional.of(USER1)).when(userDaoJpaSpy).findById(USER1.getId());
-        Optional<User> maybeUser = userDaoJpaSpy.updateUserById(USER1.getId(), name, phone);
-        //FIXME: PORQUE FUNCIONA SIN FLUSHEAR?? ESTA BIEN MOCKEADO?
+        //TODO: VER SI HAY UNA FORMA DE SAFAR DEL em.find Y PODER USAR EL FINDBYID
+//        UserDaoJpa userDaoJpaSpy = Mockito.spy(userDaoJpa);
+//        Mockito.doReturn(Optional.of(USER1)).when(userDaoJpaSpy).findById(USER1.getId());
+//
+//        Optional<User> maybeUser = userDaoJpaSpy.updateUserById(USER1.getId(), name, phone);
+
+        Optional<User> maybeUser = userDaoJpa.updateUserById(USER1.getId(), name, phone);
+
         Assert.assertTrue(maybeUser.isPresent());
         Assert.assertEquals(name, maybeUser.get().getUsername());
         Assert.assertEquals(phone, maybeUser.get().getPhone());
+    }
 
-        Optional<User> aux = userDaoJpa.findById(USER1.getId());
-        Assert.assertTrue(aux.isPresent());
-        Assert.assertEquals(name, aux.get().getUsername());
-        Assert.assertEquals(phone, aux.get().getPhone());
+    @Test
+    public void testAssignRole() {
+        List<UserRole.Role> roles = new java.util.ArrayList<>(USER1_ROLES);
+        roles.add(UserRole.Role.PROFESSIONAL);
+
+        Optional<UserAuth> userAuth = userDaoJpa.assignRole(USER1.getId(), UserRole.Role.PROFESSIONAL.ordinal());
+
+        Assert.assertTrue(userAuth.isPresent());
+        userAuth.get().getRoles().forEach((userRole) ->
+                Assert.assertTrue(roles.contains(userRole.getRole())));
+    }
+
+    @Test
+    public void changeUserPasswordTest() {
+        final String NEWPASS = "contrasenia";
+
+        boolean changedUserPassword = userDaoJpa.changeUserPassword(USER1.getId(), NEWPASS);
+
+        Assert.assertTrue(changedUserPassword);
+    }
+
+    @Test
+    public void verifyUserTest() {
+
+        boolean verified = userDaoJpa.verifyUser(USER1.getId());
+
+        Assert.assertTrue(verified);
+    }
+
+    @Test
+    public void deleteUserTest() {
+
+        boolean deleted = userDaoJpa.deleteUser(USER1.getId());
+
+        Assert.assertTrue(deleted);
     }
 
 //    @Test
@@ -152,34 +185,5 @@ public class UserDaoJDBCTest {
 //        int maybeRank = userDaoJDBC.findUserRankingInJobType(USER1.getId(), JobPost.JobType.values()[1]);
 //
 //        Assert.assertEquals(USER1_RANKING_IN_JOBTYPE1, maybeRank);
-//    }
-//
-//    @Test
-//    public void changeUserPasswordTest() {
-//        final String NEWPASS = "contrasena";
-//
-//        userDaoJDBC.changeUserPassword(USER1.getId(), NEWPASS);
-//        Optional<UserAuth> userAuth = userDaoJDBC.findAuthInfo(USER1.getEmail());
-//
-//        Assert.assertTrue(userAuth.isPresent());
-//        Assert.assertEquals(NEWPASS, userAuth.get().getPassword());
-//    }
-//
-//    @Test
-//    public void verifyUserTest() {
-//        userDaoJDBC.verifyUser(USER1.getId());
-//        Optional<User> verifiedUser = userDaoJDBC.findById(USER1.getId());
-//
-//        Assert.assertTrue(verifiedUser.isPresent());
-//        Assert.assertTrue(verifiedUser.get().isVerified());
-//    }
-//
-//    @Test
-//    public void deleteUserTest() {
-//        userDaoJDBC.deleteUser(USER1.getId());
-//        Optional<User> deletedUser = userDaoJDBC.findById(USER1.getId());
-//
-//        Assert.assertTrue(deletedUser.isPresent());
-//        Assert.assertFalse(deletedUser.get().isActive());
 //    }
 }
