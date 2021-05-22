@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})})
+@Table(name = "user_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"}, name = "user_role_pkey")})
 public class UserRole implements Serializable {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

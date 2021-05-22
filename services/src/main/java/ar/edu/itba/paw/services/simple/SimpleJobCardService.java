@@ -5,10 +5,10 @@ import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostZone;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +55,7 @@ public class SimpleJobCardService implements JobCardService {
     @Override
     public List<JobCard> search(String title, int zone, int jobType, int page, Locale locale) {
         List<JobPost.JobType> similarTypes = getSimilarTypes(title, locale);
-        JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
+        JobPostZone.Zone parsedZone = JobPostZone.Zone.values()[zone];
         if (jobType == SEARCH_WITHOUT_CATEGORIES)
             return jobCardDao.search(title, parsedZone, similarTypes, page);
         else
@@ -93,12 +93,12 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPost.Zone value) {
+    public int findMaxPageSearch(String query, JobPostZone.Zone value) {
         return jobCardDao.findMaxPageSearch(query, value);
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPost.Zone value, JobPost.JobType jobType) {
+    public int findMaxPageSearchWithCategory(String query, JobPostZone.Zone value, JobPost.JobType jobType) {
         return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType);
     }
 

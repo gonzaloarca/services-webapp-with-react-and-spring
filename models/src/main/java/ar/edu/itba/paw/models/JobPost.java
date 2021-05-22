@@ -1,42 +1,68 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "job_post")
 public class JobPost {
-    private final long id;
-    private final User user;
-    private final String title;
-    private final String availableHours;
-    private final JobType jobType;
-    private final boolean isActive;
-    private final List<Zone> zones;
-    private final double rating;
-    private final LocalDateTime creationDate;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "job_post_post_id_seq")
+    @SequenceGenerator(sequenceName = "job_post_post_id_seq", name = "job_post_post_id_seq", allocationSize = 1)
+    @Column(name = "post_id", nullable = false)
+    private long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "job_post_user_id_fkey"))
+    private User user;
+
+    @Column(length = 100, nullable = false, name = "post_title")
+    private String title;
+
+    @Column(length = 100, nullable = false, name = "post_available_hours")
+    private String availableHours;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "post_job_type", nullable = false)
+    private JobType jobType;
+
+    @Column(name = "post_is_active", nullable = false)
+    private boolean isActive;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id")
+    private List<JobPostZone.Zone> zones;
+
+    @Column(name = "post_creatio_date", nullable = false)
+    private LocalDateTime creationDate;
+    
+    /*default*/ JobPost(){
+        
+    }
 
     //Constructor para crear un post nuevo (esta activo)
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, LocalDateTime creationDate) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<JobPostZone.Zone> zones, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
         this.zones = zones;
-        this.rating = rating;
         this.creationDate = creationDate;
         this.isActive = true;
     }
 
     //Constructor para crear un post que puede no estar activo
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, boolean isActive, LocalDateTime creationDate) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<JobPostZone.Zone> zones, boolean isActive, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
         this.zones = zones;
-        this.rating = rating;
         this.isActive = isActive;
         this.creationDate = creationDate;
     }
@@ -65,16 +91,44 @@ public class JobPost {
         return isActive;
     }
 
-    public List<Zone> getZones() {
+    public List<JobPostZone.Zone> getZones() {
         return zones;
-    }
-
-    public double getRating() {
-        return rating;
     }
 
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAvailableHours(String availableHours) {
+        this.availableHours = availableHours;
+    }
+
+    public void setJobType(JobType jobType) {
+        this.jobType = jobType;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public void setZones(List<JobPostZone.Zone> zones) {
+        this.zones = zones;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override
@@ -148,70 +202,4 @@ public class JobPost {
         }
     }
 
-    public enum Zone {
-        AGRONOMIA("JobPost.Zone.AGRONOMIA"),
-        ALMAGRO("JobPost.Zone.ALMAGRO"),
-        BALVANERA("JobPost.Zone.BALVANERA"),
-        BARRACAS("JobPost.Zone.BARRACAS"),
-        BELGRANO("JobPost.Zone.BELGRANO"),
-        BOEDO("JobPost.Zone.BOEDO"),
-        CABALLITO("JobPost.Zone.CABALLITO"),
-        CHACARITA("JobPost.Zone.CHACARITA"),
-        COGHLAN("JobPost.Zone.COGHLAN"),
-        COLEGIALES("JobPost.Zone.COLEGIALES"),
-        CONSTITUCION("JobPost.Zone.CONSTITUCION"),
-        FLORES("JobPost.Zone.FLORES"),
-        FLORESTA("JobPost.Zone.FLORESTA"),
-        BOCA("JobPost.Zone.BOCA"),
-        PATERNAL("JobPost.Zone.PATERNAL"),
-        LINIERS("JobPost.Zone.LINIERS"),
-        MATADEROS("JobPost.Zone.MATADEROS"),
-        MONTECASTRO("JobPost.Zone.MONTECASTRO"),
-        MONSERRAT("JobPost.Zone.MONSERRAT"),
-        NPOMPEYA("JobPost.Zone.NPOMPEYA"),
-        NUNIEZ("JobPost.Zone.NUNIEZ"),
-        PALERMO("JobPost.Zone.PALERMO"),
-        PAVELLANEDA("JobPost.Zone.PAVELLANEDA"),
-        PCHACABUCO("JobPost.Zone.PCHACABUCO"),
-        PCHAS("JobPost.Zone.PCHAS"),
-        PATRICIOS("JobPost.Zone.PATRICIOS"),
-        MADERO("JobPost.Zone.MADERO"),
-        RECOLETA("JobPost.Zone.RECOLETA"),
-        RETIRO("JobPost.Zone.RETIRO"),
-        SAAVEDRA("JobPost.Zone.SAAVEDRA"),
-        SANCRISTOBAL("JobPost.Zone.SANCRISTOBAL"),
-        SANNICOLAS("JobPost.Zone.SANNICOLAS"),
-        SANTELMO("JobPost.Zone.SANTELMO"),
-        VELEZ("JobPost.Zone.VELEZ"),
-        VERSALLES("JobPost.Zone.VERSALLES"),
-        CRESPO("JobPost.Zone.CRESPO"),
-        VPARQUE("JobPost.Zone.VPARQUE"),
-        DEVOTO("JobPost.Zone.DEVOTO"),
-        MITRE("JobPost.Zone.MITRE"),
-        LUGANO("JobPost.Zone.LUGANO"),
-        LURO("JobPost.Zone.LURO"),
-        ORTUZAR("JobPost.Zone.ORTUZAR"),
-        PUEYRREDON("JobPost.Zone.PUEYRREDON"),
-        VREAL("JobPost.Zone.VREAL"),
-        RIACHUELO("JobPost.Zone.RIACHUELO"),
-        SANTARITA("JobPost.Zone.SANTARITA"),
-        SOLDATI("JobPost.Zone.SOLDATI"),
-        URQUIZA("JobPost.Zone.URQUIZA");
-
-        private final String stringCode;
-        private final int value;
-
-        Zone(final String stringCode) {
-            this.stringCode = stringCode;
-            this.value = ordinal();
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public String getStringCode() {
-            return stringCode;
-        }
-    }
 }

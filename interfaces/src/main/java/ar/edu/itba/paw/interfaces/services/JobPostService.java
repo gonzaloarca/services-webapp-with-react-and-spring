@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostZone;
 
 import java.util.List;
 
@@ -20,9 +21,9 @@ public interface JobPostService {
 
     List<JobPost> findByJobType(JobPost.JobType jobType, int page);
 
-    List<JobPost> findByZone(JobPost.Zone zone);
+    List<JobPost> findByZone(JobPostZone.Zone zone);
 
-    List<JobPost> findByZone(JobPost.Zone zone, int page);
+    List<JobPost> findByZone(JobPostZone.Zone zone, int page);
 
     List<JobPost> findAll();
 

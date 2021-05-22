@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostImage;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import ar.edu.itba.paw.webapp.form.EditJobPostForm;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
@@ -103,7 +100,7 @@ public class JobPostController {
             jobPostForm.setJobType(jobPost.getJobType().ordinal());
             jobPostForm.setAvailableHours(jobPost.getAvailableHours());
             int[] zoneInts = new int[jobPost.getZones().size()];
-            List<JobPost.Zone> zonesList = jobPost.getZones();
+            List<JobPostZone.Zone> zonesList = jobPost.getZones();
             for (int i = 0; i < zonesList.size(); i++) {
                 zoneInts[i] = zonesList.get(i).ordinal();
             }
@@ -114,7 +111,7 @@ public class JobPostController {
         }
 
         return new ModelAndView("editJobPost").addObject("jobTypes", JobPost.JobType.values())
-                .addObject("zoneValues", JobPost.Zone.values())
+                .addObject("zoneValues", JobPostZone.Zone.values())
                 .addObject("editJobPostForm", jobPostForm).addObject("id", id);
     }
 
@@ -123,7 +120,7 @@ public class JobPostController {
 
         return new ModelAndView("createJobPostSteps")
                 .addObject("jobTypes", JobPost.JobType.values())
-                .addObject("zoneValues", JobPost.Zone.values());
+                .addObject("zoneValues", JobPostZone.Zone.values());
     }
 
     @RequestMapping(path = "/create-job-post", method = RequestMethod.POST)

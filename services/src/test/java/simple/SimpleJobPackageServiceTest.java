@@ -3,11 +3,9 @@ package simple;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.simple.SimpleJobPackageService;
-import ar.edu.itba.paw.services.simple.SimpleJobPostService;
-import exceptions.JobPackageNotFoundException;
-import exceptions.JobPostNotFoundException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +27,7 @@ public class SimpleJobPackageServiceTest {
             8, "franquesada@gmail.com", "Francisco Quesada",  "0800111333", true, true, LocalDateTime.now());
     private static final JobPost JOB_POST = new JobPost(
             JOB_PACKAGE.getPostId(), PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
-            Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO), 0.0,true, LocalDateTime.now());
+            Arrays.asList(JobPostZone.Zone.BELGRANO, JobPostZone.Zone.PALERMO), true, LocalDateTime.now());
 
     @InjectMocks
     SimpleJobPackageService simpleJobPackageService = new SimpleJobPackageService();

@@ -2,7 +2,6 @@ package simple;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.simple.SimpleJobPostImageService;
 import org.junit.Assert;
@@ -30,7 +29,7 @@ public class SimpleJobPostImageServiceTest {
 			8, "franquesada@gmail.com", "Francisco Quesada", "0800111333", true, true, LocalDateTime.now());
 	private final JobPost JOB_POST = new JobPost(
 			POST_ID, PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
-			Arrays.asList(JobPost.Zone.BELGRANO, JobPost.Zone.PALERMO),0 ,true, LocalDateTime.now());
+			Arrays.asList(JobPostZone.Zone.BELGRANO, JobPostZone.Zone.PALERMO), true, LocalDateTime.now());
 
 	private final byte[] image1Bytes = {1,2,3,4,5};
 	private final String image1Type = "image/png";

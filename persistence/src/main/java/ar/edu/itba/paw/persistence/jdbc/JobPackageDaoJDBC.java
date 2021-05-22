@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
-@Repository
+/*@Repository
 public class JobPackageDaoJDBC implements JobPackageDao {
 
     private final static RowMapper<JobPackage> JOB_PACKAGE_ROW_MAPPER = (resultSet, rowNum) -> new JobPackage(
@@ -77,3 +77,4 @@ public class JobPackageDaoJDBC implements JobPackageDao {
     }
 
 }
+*/

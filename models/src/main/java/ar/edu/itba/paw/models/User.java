@@ -13,7 +13,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_user_id_seq")
     @SequenceGenerator(sequenceName = "users_user_id_seq", name = "users_user_id_seq", allocationSize = 1)
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private long id;
 
     @Column(length = 100, nullable = false, unique = true, name = "user_email")
@@ -40,7 +40,7 @@ public class User {
     @Transient
     private EncodedImage image;
 
-    @Column(name = "user_creation_date")
+    @Column(name = "user_creation_date", nullable = false)
     private LocalDateTime creationDate;
 
     @Column(length = 100, nullable = false, name = "user_password")

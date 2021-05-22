@@ -14,14 +14,14 @@ import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
+/*
 @Repository
 public class JobCardDaoJDBC implements JobCardDao {
 
-    private static List<JobPost.Zone> auxiGetZones(Object[] objs) {
-        List<JobPost.Zone> zones = new ArrayList<>();
+    private static List<JobPostZone.Zone> auxiGetZones(Object[] objs) {
+        List<JobPostZone.Zone> zones = new ArrayList<>();
         Arrays.stream(objs)
-                .forEach(obj -> zones.add(JobPost.Zone.values()[(int) obj]));
+                .forEach(obj -> zones.add(JobPostZone.Zone.values()[(int) obj]));
         return zones;
     }
 
@@ -104,7 +104,7 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
     @Override
-    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, int page) {
+    public List<JobCard> search(String query, JobPostZone.Zone zone, List<JobPost.JobType> similarTypes, int page) {
         List<Object> parameters = new ArrayList<>(Arrays.asList("%" + query + "%", zone.ordinal()));
 
         StringBuilder sqlQuery = new StringBuilder().append("SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?)");
@@ -125,7 +125,7 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
     @Override
-    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
+    public List<JobCard> searchWithCategory(String query, JobPostZone.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
         List<Object> parameters = new ArrayList<>(Arrays.asList("%" + query + "%", zone.ordinal(), jobType.ordinal()));
 
         StringBuilder sqlQuery = new StringBuilder().append("SELECT * FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(?)");
@@ -189,14 +189,14 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPost.Zone zone) {
+    public int findMaxPageSearch(String query, JobPostZone.Zone zone) {
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM job_cards WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_is_active = TRUE",
                 new Object[]{"%" + query + "%", zone.ordinal()}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType) {
+    public int findMaxPageSearchWithCategory(String query, JobPostZone.Zone zone, JobPost.JobType jobType) {
         Integer totalJobsCount = jdbcTemplate.queryForObject("SELECT COUNT(post_id) FROM job_cards WHERE UPPER(post_title) LIKE UPPER(?) AND ? IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_is_active = TRUE AND ? = post_job_type",
                 new Object[]{"%" + query + "%", zone.ordinal(), jobType.ordinal()}, Integer.class);
         return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
@@ -216,3 +216,5 @@ public class JobCardDaoJDBC implements JobCardDao {
     }
 
 }
+
+ */

@@ -3,9 +3,9 @@ package simple;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.simple.SimpleJobPostService;
-import ar.edu.itba.paw.services.simple.SimpleUserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,10 +47,10 @@ public class SimpleJobPostServiceTest {
             true,
             true,
             LocalDateTime.now());
-    private static final List<JobPost.Zone> ZONES = new ArrayList<>(
+    private static final List<JobPostZone.Zone> ZONES = new ArrayList<>(
             Arrays.asList(
-                    JobPost.Zone.PALERMO,
-                    JobPost.Zone.BELGRANO
+                    JobPostZone.Zone.PALERMO,
+                    JobPostZone.Zone.BELGRANO
             )
     );
     private static final JobPost JOB_POST_NEW_USER = new JobPost(
@@ -60,7 +60,7 @@ public class SimpleJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            0.0, true,
+            true,
             LocalDateTime.now());
     private static final JobPost JOB_POST_EXISTING_USER = new JobPost(
             1,
@@ -69,7 +69,7 @@ public class SimpleJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            0.0, true,
+            true,
             LocalDateTime.now());
 
     @InjectMocks

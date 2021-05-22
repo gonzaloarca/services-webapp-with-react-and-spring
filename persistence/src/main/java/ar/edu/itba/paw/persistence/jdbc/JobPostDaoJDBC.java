@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
-import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.EncodedImage;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPost.Zone;
+import ar.edu.itba.paw.models.JobPostZone.Zone;
+import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
-
+/*
 @Repository
 public class JobPostDaoJDBC implements JobPostDao {
 
@@ -29,7 +29,7 @@ public class JobPostDaoJDBC implements JobPostDao {
     private static List<Zone> auxiGetZones(Object[] objs) {
         List<Zone> zones = new ArrayList<>();
         Arrays.stream(objs)
-                .forEach(obj -> zones.add(Zone.values()[(int) obj]));
+                .forEach(obj -> zones.add(JobPostZone.Zone.values()[(int) obj]));
         return zones;
     }
 
@@ -125,7 +125,7 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
     @Override
-    public List<JobPost> findByZone(JobPost.Zone zone, int page) {
+    public List<JobPost> findByZone(Zone zone, int page) {
         List<Object> parameters = new ArrayList<>(Collections.singletonList(zone.ordinal()));
 
         StringBuilder sqlQuery = new StringBuilder("SELECT * FROM full_post WHERE ? IN(UNNEST(zones)) AND post_is_active = TRUE");
@@ -174,3 +174,4 @@ public class JobPostDaoJDBC implements JobPostDao {
     }
 
 }
+ */

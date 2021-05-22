@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostZone;
 
 import java.util.List;
 import java.util.Locale;
@@ -30,9 +31,9 @@ public interface JobCardService {
 
     int findMaxPageByUserId(long id);
 
-    int findMaxPageSearch(String query, JobPost.Zone zone);
+    int findMaxPageSearch(String query, JobPostZone.Zone zone);
 
-    int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType);
+    int findMaxPageSearchWithCategory(String query, JobPostZone.Zone zone, JobPost.JobType jobType);
 
     int findMaxPageRelatedJobCards(long professional_id);
 

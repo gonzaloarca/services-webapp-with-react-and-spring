@@ -31,10 +31,10 @@ public class ReviewDaoJDBC implements ReviewDao {
     @Autowired
     private JobPostDao jobPostDao;
 
-    private static List<JobPost.Zone> auxiGetZones(Object[] objs) {
-        List<JobPost.Zone> zones = new ArrayList<>();
+    private static List<JobPostZone.Zone> auxiGetZones(Object[] objs) {
+        List<JobPostZone.Zone> zones = new ArrayList<>();
         Arrays.stream(objs)
-                .forEach(obj -> zones.add(JobPost.Zone.values()[(int) obj]));
+                .forEach(obj -> zones.add(JobPostZone.Zone.values()[(int) obj]));
         return zones;
     }
 
@@ -66,7 +66,6 @@ public class ReviewDaoJDBC implements ReviewDao {
                 resultSet.getString("post_available_hours"),
                 JobPost.JobType.values()[resultSet.getInt("post_job_type")],
                 ReviewDaoJDBC.auxiGetZones((Object[]) resultSet.getArray("zones").getArray()),
-                -1,
                 resultSet.getBoolean("post_is_active"),
                 resultSet.getTimestamp("post_creation_date").toLocalDateTime());
         return new Review(resultSet.getInt("review_rate"), resultSet.getString("review_title"),

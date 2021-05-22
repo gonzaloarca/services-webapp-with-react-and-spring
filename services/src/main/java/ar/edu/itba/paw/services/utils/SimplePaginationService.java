@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services.utils;
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +62,7 @@ public class SimplePaginationService implements PaginationService {
 
     @Override
     public int findMaxPageJobPostsSearch(String query, int zone, int jobType) {
-        JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
+        JobPostZone.Zone parsedZone = JobPostZone.Zone.values()[zone];
         if (jobType == HirenetUtils.SEARCH_WITHOUT_CATEGORIES)
             return jobCardService.findMaxPageSearch(query, parsedZone);
 
