@@ -31,8 +31,8 @@ public class SimpleJobPostService implements JobPostService {
     public JobPost create(String email, String title, String availableHours, int jobType, int[] zones) {
         User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
         userService.assignRole(user.getId(), UserRole.Role.PROFESSIONAL.ordinal());
-        List<JobPostZone.Zone> parsedZones =
-                Arrays.stream(zones).mapToObj(zone -> JobPostZone.Zone.values()[zone]).collect(Collectors.toList());
+        List<JobPostZone> parsedZones = Arrays.stream(zones).mapToObj(zone -> new JobPostZone(JobPostZone.Zone.values()[zone]))
+                .collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
         return jobPostDao.create(user.getId(), title, availableHours, parsedJobType, parsedZones);
     }
@@ -95,13 +95,14 @@ public class SimpleJobPostService implements JobPostService {
 
     @Override
     public boolean updateJobPost(long id, String title, String availableHours, Integer jobType, int[] zones) {
-        List<JobPostZone.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPostZone.Zone.values()[zone]).collect(Collectors.toList());
+        List<JobPostZone> parsedZones = Arrays.stream(zones).mapToObj(zone -> new JobPostZone(JobPostZone.Zone.values()[zone]))
+                .collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
-        return jobPostDao.updateById(id,title,availableHours,parsedJobType,parsedZones);
+        return jobPostDao.updateById(id, title, availableHours, parsedJobType, parsedZones);
     }
 
     @Override
-    public boolean deleteJobPost(long id){
+    public boolean deleteJobPost(long id) {
         return jobPostDao.deleteJobPost(id);
     }
 

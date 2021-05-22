@@ -100,9 +100,9 @@ public class JobPostController {
             jobPostForm.setJobType(jobPost.getJobType().ordinal());
             jobPostForm.setAvailableHours(jobPost.getAvailableHours());
             int[] zoneInts = new int[jobPost.getZones().size()];
-            List<JobPostZone.Zone> zonesList = jobPost.getZones();
+            List<JobPostZone> zonesList = jobPost.getZones();
             for (int i = 0; i < zonesList.size(); i++) {
-                zoneInts[i] = zonesList.get(i).ordinal();
+                zoneInts[i] = zonesList.get(i).getZone().getValue();
             }
             jobPostForm.setZones(zoneInts);
             jobPostForm.setTitle(jobPost.getTitle());

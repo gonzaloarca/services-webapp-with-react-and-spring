@@ -13,7 +13,7 @@ public class JobPackage {
     @Column(name = "package_id", nullable = false)
     private long id;
 
-    @Column(name = "post_id", nullable = false)
+    @Column(name = "post_id", nullable = false, insertable = false, updatable = false)
     private long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)

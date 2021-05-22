@@ -34,17 +34,25 @@ public class JobPost {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
-    private List<JobPostZone.Zone> zones;
+    private List<JobPostZone> zones;
 
-    @Column(name = "post_creatio_date", nullable = false)
+    @Column(name = "post_creation_date", nullable = false)
     private LocalDateTime creationDate;
     
-    /*default*/ JobPost(){
-        
+    /*default*/ JobPost(){}
+
+    public JobPost(User user, String title, String availableHours, JobType jobType, List<JobPostZone> zones, LocalDateTime creationDate) {
+        this.user = user;
+        this.title = title;
+        this.availableHours = availableHours;
+        this.jobType = jobType;
+        this.zones = zones;
+        this.creationDate = creationDate;
+        this.isActive = true;
     }
 
     //Constructor para crear un post nuevo (esta activo)
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<JobPostZone.Zone> zones, LocalDateTime creationDate) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<JobPostZone> zones, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -56,7 +64,7 @@ public class JobPost {
     }
 
     //Constructor para crear un post que puede no estar activo
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<JobPostZone.Zone> zones, boolean isActive, LocalDateTime creationDate) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<JobPostZone> zones, boolean isActive, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -91,7 +99,7 @@ public class JobPost {
         return isActive;
     }
 
-    public List<JobPostZone.Zone> getZones() {
+    public List<JobPostZone> getZones() {
         return zones;
     }
 
@@ -123,7 +131,7 @@ public class JobPost {
         isActive = active;
     }
 
-    public void setZones(List<JobPostZone.Zone> zones) {
+    public void setZones(List<JobPostZone> zones) {
         this.zones = zones;
     }
 

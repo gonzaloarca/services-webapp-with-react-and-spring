@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "post_zone", uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "zone_id"}, name = "job_zone_pkey")})
-public class JobPostZone {
+public class JobPostZone implements Serializable {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
@@ -15,6 +17,33 @@ public class JobPostZone {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "zone_id")
     private Zone zone;
+
+    /*default*/ JobPostZone() {}
+
+    public JobPostZone(Zone zone) {
+        this.zone = zone;
+    }
+
+    public JobPost getPost() {
+        return post;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JobPostZone that = (JobPostZone) o;
+        return zone == that.zone;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(zone);
+    }
 
     public enum Zone {
         AGRONOMIA("JobPost.Zone.AGRONOMIA"),
