@@ -45,11 +45,11 @@ public class TestConfig {
 
     @Bean
     public DataSource dataSource() {
-//        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        final SingleConnectionDataSource ds = new SingleConnectionDataSource();
-//        ds.setDriverClass(JDBCDriver.class);
-        ds.setDriverClassName("org.hsqldb.jdbcDriver");
-        ds.setSuppressClose(true);
+        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+//        final SingleConnectionDataSource ds = new SingleConnectionDataSource();
+        ds.setDriverClass(JDBCDriver.class);
+//        ds.setDriverClassName("org.hsqldb.jdbcDriver");
+//        ds.setSuppressClose(false);
         ds.setUrl("jdbc:hsqldb:mem:paw-2021a-03");
         ds.setUsername("ha");
         ds.setPassword("");

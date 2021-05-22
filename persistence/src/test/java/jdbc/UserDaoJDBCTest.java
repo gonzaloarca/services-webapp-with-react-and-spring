@@ -51,19 +51,16 @@ public class UserDaoJDBCTest {
     private static final int USER1_RANKING_IN_JOBTYPE1 = 1;
 
     @Autowired
-    UserDaoJpa userDaoJDBC;
-
-    @Autowired
     DataSource ds;
 
-    @InjectMocks
     @Autowired
+    @InjectMocks
     private UserDaoJpa userDaoJpa;
+
+
 
     private JdbcTemplate jdbcTemplate;
 
-    @Mock
-    private UserDaoJpa mockUserDao;
 
     @PersistenceContext
     private EntityManager em;
@@ -76,6 +73,7 @@ public class UserDaoJDBCTest {
 
     @Test
     public void testRegister() {
+
 
         User userTest = new User(
                 12,
@@ -126,8 +124,10 @@ public class UserDaoJDBCTest {
     public void testUpdateById() {
         String name = "pepe";
         String phone = "123123123";
+        UserDaoJpa userDaoJpaSpy = Mockito.spy(userDaoJpa);
 
-        Optional<User> maybeUser = userDaoJpa.updateUserById(USER1.getId(), name, phone);
+        Mockito.doReturn(Optional.of(USER1)).when(userDaoJpaSpy).findById(USER1.getId());
+        Optional<User> maybeUser = userDaoJpaSpy.updateUserById(USER1.getId(), name, phone);
         //FIXME: PORQUE FUNCIONA SIN FLUSHEAR?? ESTA BIEN MOCKEADO?
         Assert.assertTrue(maybeUser.isPresent());
         Assert.assertEquals(name, maybeUser.get().getUsername());

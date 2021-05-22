@@ -57,13 +57,13 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> updateUserById(long id, String name, String phone) {
-        Optional<User> aux = findById(id);
-        if(aux.isPresent()) {
-            aux.get().setUsername(name);
-            aux.get().setPhone(phone);
-            em.persist(aux.get());
+        User aux = em.find(User.class,id);
+        if(aux != null) {
+            aux.setUsername(name);
+            aux.setPhone(phone);
+            em.persist(aux);
         }
-        return aux;
+        return Optional.ofNullable(aux);
     }
 
     @Override
