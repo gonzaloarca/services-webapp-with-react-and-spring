@@ -22,10 +22,10 @@ public class JobContract {
     @JoinColumn(name = "package_id", foreignKey = @ForeignKey(name = "contract_package_id_fkey"))
     private JobPackage jobPackage;
 
-    @Column(name = "contract_creation_date", nullable = false)
+    @Column(length = 100, name = "contract_creation_date", nullable = false)
     private LocalDateTime creationDate;
 
-    @Column(name = "contract_description", nullable = false)
+    @Column(length = 100, name = "contract_description", nullable = false)
     private String description;
 
     @AttributeOverrides({
