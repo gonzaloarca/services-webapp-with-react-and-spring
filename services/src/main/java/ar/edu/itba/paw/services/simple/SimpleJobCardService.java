@@ -93,13 +93,13 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPostZone.Zone value) {
-        return jobCardDao.findMaxPageSearch(query, value);
+    public int findMaxPageSearch(String query, JobPostZone.Zone value, Locale locale) {
+        return jobCardDao.findMaxPageSearch(query, value, getSimilarTypes(query,locale));
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPostZone.Zone value, JobPost.JobType jobType) {
-        return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType);
+    public int findMaxPageSearchWithCategory(String query, JobPostZone.Zone value, JobPost.JobType jobType, Locale locale) {
+        return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType, getSimilarTypes(query,locale));
     }
 
     @Override

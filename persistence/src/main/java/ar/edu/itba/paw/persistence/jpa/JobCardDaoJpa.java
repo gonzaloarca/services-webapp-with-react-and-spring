@@ -10,95 +10,182 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
 public class JobCardDaoJpa implements JobCardDao {
+
+    private static final String RELATED_CARDS_QUERY = new StringBuilder()
+            .append("FROM job_cards NATURAL JOIN (")
+            .append("    SELECT DISTINCT pro2_contracts.post_id, ")
+            .append("COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common")
+            .append("    FROM full_contract pro1_contracts")
+            .append("             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id")
+            .append("    WHERE :proId <> pro2_contracts.professional_id AND :proId = pro1_contracts.professional_id")
+            .append("      AND pro2_contracts.contract_creation_date >= :dateLimit")
+            .append("    GROUP BY pro2_contracts.post_id) AS recommended_posts ")
+            .append("WHERE post_is_active = TRUE ")
+            .append("  AND post_job_type IN (")
+            .append("    SELECT DISTINCT post_job_type")
+            .append("    FROM job_post")
+            .append("    WHERE :proId = user_id) ")
+            .toString();
+    // Obtiene las cards de otros profesionales con el que comparte clientes(los cuales contrataron al otro
+    // profesional en los ultimos 30 dias) y tipo de trabajo
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
     public List<JobCard> findAll(int page) {
-//        Query nativeQuery = em.createNativeQuery(
-//                "SELECT post_id FROM job_post WHERE post_is_active = TRUE"
-//        );
-//        return executePageQuery(page,nativeQuery);
-        return new ArrayList<>();
+        Query nativeQuery = em.createNativeQuery(
+                "SELECT post_id FROM job_post WHERE post_is_active = TRUE"
+        );
+        return executePageQuery(page,nativeQuery);
     }
 
     @Override
     public List<JobCard> findByUserId(long id, int page) {
-        return null;
+        Query nativeQuery = em.createNativeQuery(
+                "SELECT post_id FROM job_post WHERE post_is_active = TRUE AND user_id = :id")
+                .setParameter("id", id);
+        return executePageQuery(page,nativeQuery);
     }
 
     @Override
     public List<JobCard> search(String query, JobPostZone.Zone zone, List<JobPost.JobType> similarTypes, int page) {
-        return null;
+        return searchWithCategory(query, zone, null, similarTypes, page);
     }
 
     @Override
     public List<JobCard> searchWithCategory(String query, JobPostZone.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
-        return null;
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(:query)");
+
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
+
+        return executePageQuery(page,nativeQuery);
     }
 
     @Override
     public Optional<JobCard> findByPostId(long id) {
-        return Optional.empty();
+        return em.createQuery("FROM JobCard AS card WHERE card.jobPost.isActive = TRUE", JobCard.class)
+                .getResultList().stream().findFirst();
     }
 
     @Override
     public Optional<JobCard> findByPostIdWithInactive(long id) {
-        return Optional.empty();
+        return Optional.ofNullable(em.find(JobCard.class, id));
     }
 
     @Override
     public List<JobCard> findRelatedJobCards(long professional_id, int page) {
-        return null;
+        StringBuilder sqlQuery = new StringBuilder()
+                .append("SELECT post_id ")
+                .append(RELATED_CARDS_QUERY)
+                .append("ORDER BY clients_in_common DESC, post_contract_count DESC ");
+        // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
+
+        Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
+                .setParameter("proId", professional_id)
+                .setParameter("dateLimit", LocalDateTime.now().minusDays(30));
+
+        return executePageQuery(page, nativeQuery);
     }
 
     @Override
     public int findAllMaxPage() {
-        return 0;
+        int totalJobsCount = em.createNativeQuery(
+                "SELECT post_id FROM job_post WHERE post_is_active = TRUE"
+        ).getResultList().size();
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
     public int findMaxPageByUserId(long id) {
-        return 0;
+        int totalJobsCount = em.createNativeQuery(
+                "SELECT post_id FROM job_post WHERE post_is_active = TRUE AND user_id = :id"
+        ).setParameter("id", id).getResultList().size();
+        return (int) Math.ceil((double) totalJobsCount / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPostZone.Zone zone) {
-        return 0;
+    public int findMaxPageSearch(String query, JobPostZone.Zone zone, List<JobPost.JobType> similarTypes) {
+        return findMaxPageSearchWithCategory(query, zone, null, similarTypes);
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPostZone.Zone zone, JobPost.JobType jobType) {
-        return 0;
+    public int findMaxPageSearchWithCategory(String query, JobPostZone.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(:query)");
+
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
+
+        @SuppressWarnings("unchecked")
+        BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(0);
+        return result.intValue();
     }
 
     @Override
     public int findMaxPageRelatedJobCards(long professional_id) {
-        return 0;
+        StringBuilder sqlQuery = new StringBuilder()
+                .append("SELECT count(*) ")
+                .append(RELATED_CARDS_QUERY)
+                .append("ORDER BY clients_in_common DESC, post_contract_count DESC ");
+        // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
+
+        Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
+                .setParameter("proId", professional_id)
+                .setParameter("dateLimit", LocalDateTime.now().minusDays(30));
+
+        @SuppressWarnings("unchecked")
+        BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(0);
+        return result.intValue();
     }
 
-//    private List<JobCard> executePageQuery(int page, Query nativeQuery) {
-//        if (page != HirenetUtils.ALL_PAGES) {
-//            nativeQuery.setFirstResult((page) * HirenetUtils.PAGE_SIZE);
-//            nativeQuery.setMaxResults(HirenetUtils.PAGE_SIZE);
-//        }
-//
-//        @SuppressWarnings("unchecked")
-//        List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
-//                .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
-//
-//        if (filteredIds.isEmpty())
-//            return new ArrayList<>();
-//
-//        return em.createQuery("SELECT new ar.edu.itba.paw.models.JobCard(post,package.rateType,package.price,postImage,0,0) FROM JobPost post LEFT JOIN JobPackage package ON post = package.jobPost LEFT JOIN User user ON post.user = user LEFT JOIN JobPostImage postImage ON postImage.jobPost = post WHERE post.id in :filteredIds", JobCard.class)
-//                .setParameter("filteredIds", filteredIds).getResultList();
-//    }
+    private List<JobCard> executePageQuery(int page, Query nativeQuery) {
+        if (page != HirenetUtils.ALL_PAGES) {
+            nativeQuery.setFirstResult((page) * HirenetUtils.PAGE_SIZE);
+            nativeQuery.setMaxResults(HirenetUtils.PAGE_SIZE);
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
+                .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
+
+        if (filteredIds.isEmpty())
+            return new ArrayList<>();
+
+        return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id IN :filteredIds", JobCard.class)
+                .setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
+                        //Ordenamos los elementos segun el orden de filteredIds
+                        Comparator.comparingInt(o -> filteredIds.indexOf(o.getJobPost().getId()))
+                ).collect(Collectors.toList());
+    }
+
+    private Query buildSearchQuery(String query, JobPostZone.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery) {
+        if (!similarTypes.isEmpty()) {
+            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
+            sqlQuery.append(" OR post_job_type in (")
+                    .append(types)
+                    .append(")");
+        }
+
+        sqlQuery.append(") AND :zone IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_is_active = TRUE");
+
+        if(jobType != null)
+            sqlQuery.append(" AND post_job_type = :type");
+
+        sqlQuery.append(" ORDER BY rating DESC");
+
+        Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
+                .setParameter("query", "%" + query + "%")
+                .setParameter("zone", zone.getValue());
+
+        if(jobType != null)
+            nativeQuery.setParameter("type", jobType.getValue());
+
+        return nativeQuery;
+    }
 }

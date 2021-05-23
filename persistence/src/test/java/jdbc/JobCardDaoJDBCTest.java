@@ -20,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 //
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -159,60 +157,61 @@ public class JobCardDaoJDBCTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
-//
-//
-//    @Test
-//    public void testFindRelatedJobCards() {
-//        List<JobCard> maybeJobCards = jobCardDaoJDBCTest.findRelatedJobCards(1, HirenetUtils.ALL_PAGES);
-//
-//        Assert.assertFalse(maybeJobCards.isEmpty());
-//        Assert.assertEquals(RELATED_JOB_CARDS_COUNT, maybeJobCards.size());
-//        Assert.assertEquals(JOB_CARD_USER3, maybeJobCards.get(0));  //aparece primero pues tiene mas clientes en comun
-//        Assert.assertEquals(JOB_CARD_USER2, maybeJobCards.get(1));  //aparece segundo por que a pesar de tener los mismos clientes que 4, tiene mas contratos completados
-//        Assert.assertEquals(JOB_CARD_USER4, maybeJobCards.get(2));
-//    }
-//
-//    @Test
-//    public void testSearch() {
-//        String title = "Electricista";
-//        JobPost.Zone zone = JobPost.Zone.values()[1];
-//        List<JobCard> jobCards = jobCardDaoJDBCTest.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
-//
-//        Assert.assertFalse(jobCards.isEmpty());
-//        Assert.assertEquals(SEARCH_ELECTRICISTA_COUNT, jobCards.size());
-//    }
-//
-//    @Test
-//    public void testSearchWithSimilarTypes() {
-//        String title = "electr";
-//        JobPost.Zone zone = JobPost.Zone.values()[1];
-//        List<JobCard> jobCards = jobCardDaoJDBCTest.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), HirenetUtils.ALL_PAGES);
-//
-//        Assert.assertFalse(jobCards.isEmpty());
-//        Assert.assertEquals(ELECTRICITY_AND_CARPENTRY_POST_COUNT, jobCards.size());
-//    }
-//
-//    @Test
-//    public void testSearchWithCategory() {
-//        String title = "";
-//        JobPost.Zone zone = JobPost.Zone.values()[1];
-//        JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-//        List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(), HirenetUtils.ALL_PAGES);
-//
-//        Assert.assertFalse(jobCards.isEmpty());
-//        Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
-//    }
-//    @Test
-//    public void testSearchWithSimilarTypesCategory() {
-//        String title = "ELECT";
-//        JobPost.Zone zone = JobPost.Zone.values()[1];
-//        JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-//        List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), HirenetUtils.ALL_PAGES);
-//
-//        Assert.assertFalse(jobCards.isEmpty());
-//        Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
-//    }
-//
+
+
+    @Test
+    public void testFindRelatedJobCards() {
+        List<JobCard> maybeJobCards = jobCardDaoJpa.findRelatedJobCards(1, HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(maybeJobCards.isEmpty());
+        Assert.assertEquals(RELATED_JOB_CARDS_COUNT, maybeJobCards.size());
+        Assert.assertEquals(JOB_CARD_USER3, maybeJobCards.get(0));  //aparece primero pues tiene mas clientes en comun
+        Assert.assertEquals(JOB_CARD_USER2, maybeJobCards.get(1));  //aparece segundo por que a pesar de tener los mismos clientes que 4, tiene mas contratos completados
+        Assert.assertEquals(JOB_CARD_USER4, maybeJobCards.get(2));
+    }
+
+    @Test
+    public void testSearch() {
+        String title = "Electricista";
+        JobPostZone.Zone zone = JobPostZone.Zone.values()[1];
+        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(SEARCH_ELECTRICISTA_COUNT, jobCards.size());
+    }
+
+    @Test
+    public void testSearchWithSimilarTypes() {
+        String title = "electr";
+        JobPostZone.Zone zone = JobPostZone.Zone.values()[1];
+        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(ELECTRICITY_AND_CARPENTRY_POST_COUNT, jobCards.size());
+    }
+
+    @Test
+    public void testSearchWithCategory() {
+        String title = "";
+        JobPostZone.Zone zone = JobPostZone.Zone.values()[1];
+        JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
+        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(), HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
+    }
+
+    @Test
+    public void testSearchWithSimilarTypesCategory() {
+        String title = "ELECT";
+        JobPostZone.Zone zone = JobPostZone.Zone.values()[1];
+        JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
+        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
+    }
+
     @Test
     public void findAllTest() {
         List<JobCard> jobCards = jobCardDaoJpa.findAll(HirenetUtils.ALL_PAGES);
@@ -220,17 +219,19 @@ public class JobCardDaoJDBCTest {
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(12, jobCards.size());
     }
-//
-//    @Test
-//    public void findByUserIdTest() {
-//        List<JobCard> jobCards = jobCardDaoJDBCTest.findByUserId(USER1.getId(), HirenetUtils.ALL_PAGES);
-//
-//        Assert.assertFalse(jobCards.isEmpty());
-//        Assert.assertEquals(9, jobCards.size());
-//    }
-//
-//    @Test
-//    public void findByPostIdTest() {
-//        Assert.assertTrue(jobCardDaoJDBCTest.findByPostId(1).isPresent());
-//    }
+
+    @Test
+    public void findByUserIdTest() {
+        List<JobCard> jobCards = jobCardDaoJpa.findByUserId(USER1.getId(), HirenetUtils.ALL_PAGES);
+
+        Assert.assertFalse(jobCards.isEmpty());
+        Assert.assertEquals(9, jobCards.size());
+    }
+
+    @Test
+    public void findByPostIdTest() {
+        Optional<JobCard> jobCard = jobCardDaoJpa.findByPostId(1);
+        Assert.assertTrue(jobCard.isPresent());
+        Assert.assertEquals(jobCard.get().getJobPost().getId(), 1);
+    }
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface PaginationService {
 
@@ -12,7 +13,7 @@ public interface PaginationService {
 
     int findMaxPageJobPostsByUserId(long id);
 
-    int findMaxPageJobPostsSearch(String query, int zone, int jobType);
+    int findMaxPageJobPostsSearch(String query, int zone, int jobType, Locale locale);
 
     int findMaxPageContractsByClientId(long id);
 

@@ -29,6 +29,7 @@ GROUP BY job_post.post_id, post_title, post_available_hours, post_job_type, post
          user_name, user_phone, user_is_active, user_is_verified, user_image, users.image_type,post_creation_date,
          user_creation_date;
 
+DROP VIEW IF EXISTS full_contract;
 CREATE VIEW full_contract AS
 SELECT *
 FROM contract

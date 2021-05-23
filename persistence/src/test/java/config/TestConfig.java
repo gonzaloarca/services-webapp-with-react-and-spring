@@ -68,9 +68,9 @@ public class TestConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
-//        dbp.addScript(imageSchema);
-//        dbp.addScript(loginMigration);
-//        dbp.addScript(jobCardView);
+        dbp.addScript(imageSchema);
+        dbp.addScript(loginMigration);
+        dbp.addScript(jobCardView);
         return dbp;
     }
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class SimplePaginationService implements PaginationService {
@@ -61,12 +62,12 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageJobPostsSearch(String query, int zone, int jobType) {
+    public int findMaxPageJobPostsSearch(String query, int zone, int jobType, Locale locale) {
         JobPostZone.Zone parsedZone = JobPostZone.Zone.values()[zone];
         if (jobType == HirenetUtils.SEARCH_WITHOUT_CATEGORIES)
-            return jobCardService.findMaxPageSearch(query, parsedZone);
+            return jobCardService.findMaxPageSearch(query, parsedZone, locale);
 
-        return jobCardService.findMaxPageSearchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType]);
+        return jobCardService.findMaxPageSearchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType], locale);
     }
 
     @Override

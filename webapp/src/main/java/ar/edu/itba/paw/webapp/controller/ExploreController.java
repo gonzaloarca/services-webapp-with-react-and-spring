@@ -78,7 +78,7 @@ public class ExploreController {
         searchMav
                 .addObject("categories", JobPost.JobType.values())
                 .addObject("pickedZone", JobPostZone.Zone.values()[zone]);
-        int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(), zone, category);
+        int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(), zone, category, localeResolver.resolveLocale(request));
         searchMav
                 .addObject("maxPage", maxPage)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
