@@ -47,12 +47,9 @@ public class SimpleJobPostServiceTest {
             true,
             true,
             LocalDateTime.now());
-    private static final List<JobPostZone.Zone> ZONES = new ArrayList<>(
-            Arrays.asList(
-                    JobPostZone.Zone.PALERMO,
-                    JobPostZone.Zone.BELGRANO
-            )
-    );
+    private static final List<JobPostZone> ZONES =
+            new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
+                    new JobPostZone(JobPostZone.Zone.values()[2])));
     private static final JobPost JOB_POST_NEW_USER = new JobPost(
             1,
             NEW_PROFESSIONAL,
@@ -89,7 +86,7 @@ public class SimpleJobPostServiceTest {
                 .thenReturn(JOB_POST_NEW_USER);
         int[] zonesInt = new int[ZONES.size()];
         for (int i = 0; i < ZONES.size(); i++) {
-            zonesInt[i] = ZONES.get(i).ordinal();
+            zonesInt[i] = ZONES.get(i).getZone().getValue();
         }
         JobPost jobPost = jobPostService.create(NEW_PROFESSIONAL.getEmail(), JOB_POST_NEW_USER.getTitle(),
                 JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType().ordinal(), zonesInt);
@@ -106,7 +103,7 @@ public class SimpleJobPostServiceTest {
                 .thenReturn(JOB_POST_EXISTING_USER);
         int[] zonesInt = new int[ZONES.size()];
         for (int i = 0; i < ZONES.size(); i++) {
-            zonesInt[i] = ZONES.get(i).ordinal();
+            zonesInt[i] = ZONES.get(i).getZone().getValue();
         }
         JobPost jobPost = jobPostService.create(EXISTING_USER.getEmail(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(), zonesInt);
 

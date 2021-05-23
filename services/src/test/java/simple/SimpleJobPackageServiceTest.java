@@ -17,17 +17,22 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleJobPackageServiceTest {
+    private static final List<JobPostZone> ZONES =
+            new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
+                    new JobPostZone(JobPostZone.Zone.values()[2])));
     private static final JobPackage JOB_PACKAGE = new JobPackage(
             7, 2, "Arreglos menores", "Canerias rotas", 200.00, JobPackage.RateType.ONE_TIME, true);
     private static final User PROFESSIONAL = new User(
             8, "franquesada@gmail.com", "Francisco Quesada",  "0800111333", true, true, LocalDateTime.now());
     private static final JobPost JOB_POST = new JobPost(
             JOB_PACKAGE.getPostId(), PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
-            Arrays.asList(JobPostZone.Zone.BELGRANO, JobPostZone.Zone.PALERMO), true, LocalDateTime.now());
+            ZONES, true, LocalDateTime.now());
 
     @InjectMocks
     SimpleJobPackageService simpleJobPackageService = new SimpleJobPackageService();

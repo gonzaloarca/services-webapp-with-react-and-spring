@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -125,6 +126,9 @@ public class JobPostDaoJpa implements JobPostDao {
         @SuppressWarnings("unchecked")
         List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
                 .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
+
+        if(filteredIds.isEmpty())
+            return new ArrayList<>();
 
         return em.createQuery("FROM JobPost AS jp WHERE jp.id IN :filteredIds", JobPost.class)
                 .setParameter("filteredIds", filteredIds).getResultList();

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
-
+/*
 @Repository
 public class JobContractDaoJDBC implements JobContractDao {
 
@@ -192,3 +192,4 @@ public class JobContractDaoJDBC implements JobContractDao {
     }
 
 }
+*/

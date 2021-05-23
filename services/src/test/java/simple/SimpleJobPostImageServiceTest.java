@@ -25,11 +25,14 @@ public class SimpleJobPostImageServiceTest {
 	private static final long POST_ID = 20;
 	private static final long FAKE_ID = 50;
 
+	private static final List<JobPostZone> ZONES =
+			new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
+					new JobPostZone(JobPostZone.Zone.values()[2])));
 	private final User PROFESSIONAL = new User(
 			8, "franquesada@gmail.com", "Francisco Quesada", "0800111333", true, true, LocalDateTime.now());
 	private final JobPost JOB_POST = new JobPost(
 			POST_ID, PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
-			Arrays.asList(JobPostZone.Zone.BELGRANO, JobPostZone.Zone.PALERMO), true, LocalDateTime.now());
+			ZONES, true, LocalDateTime.now());
 
 	private final byte[] image1Bytes = {1,2,3,4,5};
 	private final String image1Type = "image/png";

@@ -13,10 +13,10 @@ public class JobPackage {
     @Column(name = "package_id", nullable = false)
     private long id;
 
-    @Column(name = "post_id", nullable = false, insertable = false, updatable = false)
-    private long postId;
+//    @Column(name = "post_id", nullable = false, insertable = false, updatable = false)
+//    private long postId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "job_package_post_id_fkey"))
     private JobPost jobPost;
 
@@ -40,8 +40,8 @@ public class JobPackage {
 
     }
 
-    public JobPackage(long postId, String title, String description, Double price, RateType rateType) {
-        this.postId = postId;
+    public JobPackage(JobPost jobPost, String title, String description, Double price, RateType rateType) {
+        this.jobPost = jobPost;
         this.title = title;
         this.description = description;
         this.price = price;
@@ -49,9 +49,9 @@ public class JobPackage {
         this.isActive = true;
     }
 
-    public JobPackage(long id, long postId, String title, String description, Double price, RateType rateType, boolean is_active) {
+    public JobPackage(long id, JobPost jobPost, String title, String description, Double price, RateType rateType, boolean is_active) {
         this.id = id;
-        this.postId = postId;
+        this.jobPost = jobPost;
         this.title = title;
         this.description = description;
         this.price = price;
@@ -64,7 +64,7 @@ public class JobPackage {
     }
 
     public long getPostId() {
-        return postId;
+        return jobPost.getId();
     }
 
     public String getTitle() {
@@ -95,10 +95,6 @@ public class JobPackage {
         this.id = id;
     }
 
-    public void setPostId(long postId) {
-        this.postId = postId;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -121,19 +117,6 @@ public class JobPackage {
 
     public void setJobPost(JobPost jobPost) {
         this.jobPost = jobPost;
-    }
-
-    @Override
-    public String toString() {
-        return "JobPackage{" +
-                "id=" + id +
-                ", postId=" + postId +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", rateType=" + rateType +
-                ", is_active=" + isActive +
-                '}';
     }
 
     @Override

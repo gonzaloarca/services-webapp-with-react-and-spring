@@ -31,6 +31,7 @@ import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
 
+//TODO: renombrar a JPA
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
