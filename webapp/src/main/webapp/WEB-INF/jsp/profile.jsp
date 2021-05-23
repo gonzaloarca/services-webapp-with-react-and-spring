@@ -121,11 +121,12 @@
                                 <%@include file="components/bottomPaginationBar.jsp" %>
                             </c:when>
                             <c:otherwise>
-                                <div class="d-flex flex-column justify-content-center align-content-center w-100">
+                                <div class="d-flex flex-column justify-content-center align-content-center w-100"
+                                style="height: 300px">
                                     <spring:message code="profile.noservices.alt" var="noServicesAlt"/>
-                                    <img style="height: 200px; width: 100%"
+                                    <img style="height: 120px; width: 100%"
                                          src="<c:url value='/resources/images/job-1.svg'/>" alt="${noServicesAlt}">
-                                    <h4 class="text-center mt-4">
+                                    <h4 class="text-center mt-4 text-black-50 font-weight-bold">
                                         <c:choose>
                                             <c:when test="${currentUser.id == user.id}">
                                                 <spring:message code="profile.noservicesowner"/>
@@ -201,11 +202,12 @@
                                 <%@include file="components/bottomPaginationBar.jsp" %>
                             </c:when>
                             <c:otherwise>
-                                <div class="d-flex flex-column justify-content-center align-content-center w-100">
+                                <div class="d-flex flex-column justify-content-center align-content-center w-100"
+                                     style="height: 300px">
                                     <spring:message code="profile.noreviews.alt" var="noReviewsAlt"/>
-                                    <img style="height: 200px; width: 100%"
+                                    <img style="height: 120px; width: 100%"
                                          src="<c:url value='/resources/images/star-1.svg'/>" alt="${noReviewsAlt}">
-                                    <h4 class="text-center mt-4">
+                                    <h4 class="text-center mt-4 text-black-50 font-weight-bold">
                                         <c:choose>
                                             <c:when test="${currentUser.id == user.id}">
                                                 <spring:message code="profile.noreviewsowner"/>
