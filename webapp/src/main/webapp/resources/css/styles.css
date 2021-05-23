@@ -686,3 +686,14 @@ h3 {
     margin: 0 10px 0 2px;
     object-fit: cover;
 }
+
+.hired-package-title {
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    size: 1.1rem;
+}

@@ -270,10 +270,10 @@
         </script>
 
     </div>
-    <div style="color: #485696; margin: 0 50px" class="d-flex justify-content-start">
-        <p style=" margin: 0 20px;"><i class="fas fa-cube mr-2"></i>
+    <div style="color: #485696; margin: 0 30px; padding: 10px 0" class="d-flex justify-content-start">
+        <p style=" margin: 0 10px;"><i class="fas fa-cube mr-2"></i>
             <spring:message code="mycontracts.card.hired"/>
         </p>
-        <p style="font-weight: bold; size: 1.1rem;"><c:out value="${contractCard.jobContract.jobPackage.title}"/></p>
+        <p class="hired-package-title"><c:out value="${contractCard.jobContract.jobPackage.title}"/></p>
     </div>
 </div>
