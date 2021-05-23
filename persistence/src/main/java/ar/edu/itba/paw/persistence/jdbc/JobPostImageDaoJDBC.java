@@ -14,62 +14,62 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
-@Repository
-public class JobPostImageDaoJDBC implements JobPostImageDao {
-
-	private final JdbcTemplate jdbcTemplate;
-	private final SimpleJdbcInsert jdbcInsertImage;
-
-	private final static RowMapper<JobPostImage> JOB_POST_IMAGE_ROW_MAPPER = ((resultSet, i) -> new JobPostImage(
-			resultSet.getLong("image_id"),
-			resultSet.getLong("post_id"),
-			new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("image_data")),
-					resultSet.getString("image_type"))
-	));
-
-	@Autowired
-	public JobPostImageDaoJDBC(DataSource ds) {
-		jdbcTemplate = new JdbcTemplate(ds);
-		jdbcInsertImage = new SimpleJdbcInsert(ds).withTableName("post_image").usingGeneratedKeyColumns("image_id");
-	}
-
-	@Override
-	public JobPostImage addImage(long postId, ByteImage image) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("post_id", postId);
-		map.put("image_data", image.getData());
-		map.put("image_type", image.getType());
-
-		Number imageId = jdbcInsertImage.executeAndReturnKey(map);
-
-		return new JobPostImage(imageId.longValue(), postId,
-				new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType()));
-	}
-
-	@Override
-	public List<JobPostImage> findImages(long postId) {
-		return jdbcTemplate.query(
-			"SELECT image_id, post_id, image_data, image_type FROM post_image WHERE post_id = ? GROUP BY image_id;",
-				new Object[]{postId},
-				JOB_POST_IMAGE_ROW_MAPPER
-		);
-	}
-
-	@Override
-	public JobPostImage findPostImage(long postId) {
-		return jdbcTemplate.query(
-				"SELECT image_id, post_id, image_data, image_type FROM post_image WHERE post_id = ? GROUP BY image_id LIMIT 1;",
-				new Object[]{postId},
-				JOB_POST_IMAGE_ROW_MAPPER
-		).stream().findFirst().orElse(null);
-	}
-
-	@Override
-	public int getImageCount(long postId) {
-		return jdbcTemplate.queryForObject(
-				"SELECT count(*) FROM post_image WHERE post_id = ?;",
-				new Object[]{postId},
-				Integer.class
-		);
-	}
-}
+//@Repository
+//public class JobPostImageDaoJDBC implements JobPostImageDao {
+//
+//	private final JdbcTemplate jdbcTemplate;
+//	private final SimpleJdbcInsert jdbcInsertImage;
+//
+//	private final static RowMapper<JobPostImage> JOB_POST_IMAGE_ROW_MAPPER = ((resultSet, i) -> new JobPostImage(
+//			resultSet.getLong("image_id"),
+//			resultSet.getLong("post_id"),
+//			new EncodedImage(ImageDataConverter.getEncodedString(resultSet.getBytes("image_data")),
+//					resultSet.getString("image_type"))
+//	));
+//
+//	@Autowired
+//	public JobPostImageDaoJDBC(DataSource ds) {
+//		jdbcTemplate = new JdbcTemplate(ds);
+//		jdbcInsertImage = new SimpleJdbcInsert(ds).withTableName("post_image").usingGeneratedKeyColumns("image_id");
+//	}
+//
+//	@Override
+//	public JobPostImage addImage(long postId, ByteImage image) {
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("post_id", postId);
+//		map.put("image_data", image.getData());
+//		map.put("image_type", image.getType());
+//
+//		Number imageId = jdbcInsertImage.executeAndReturnKey(map);
+//
+//		return new JobPostImage(imageId.longValue(), postId,
+//				new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType()));
+//	}
+//
+//	@Override
+//	public List<JobPostImage> findImages(long postId) {
+//		return jdbcTemplate.query(
+//			"SELECT image_id, post_id, image_data, image_type FROM post_image WHERE post_id = ? GROUP BY image_id;",
+//				new Object[]{postId},
+//				JOB_POST_IMAGE_ROW_MAPPER
+//		);
+//	}
+//
+//	@Override
+//	public JobPostImage findPostImage(long postId) {
+//		return jdbcTemplate.query(
+//				"SELECT image_id, post_id, image_data, image_type FROM post_image WHERE post_id = ? GROUP BY image_id LIMIT 1;",
+//				new Object[]{postId},
+//				JOB_POST_IMAGE_ROW_MAPPER
+//		).stream().findFirst().orElse(null);
+//	}
+//
+//	@Override
+//	public int getImageCount(long postId) {
+//		return jdbcTemplate.queryForObject(
+//				"SELECT count(*) FROM post_image WHERE post_id = ?;",
+//				new Object[]{postId},
+//				Integer.class
+//		);
+//	}
+//}
