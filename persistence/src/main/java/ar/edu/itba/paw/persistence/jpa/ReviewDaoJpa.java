@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -125,6 +126,9 @@ public class ReviewDaoJpa implements ReviewDao {
             return new ArrayList<>();
 
         return em.createQuery("FROM Review AS r WHERE r.jobContract.id IN :filteredIds", Review.class)
-                .setParameter("filteredIds", filteredIds).getResultList();
+                .setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
+                        //Ordenamos los elementos segun el orden de filteredIds
+                        Comparator.comparingInt(o -> filteredIds.indexOf(o.getJobContract().getId()))
+                ).collect(Collectors.toList());
     }
 }

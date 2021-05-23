@@ -16,6 +16,7 @@ import javax.persistence.Query;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -143,6 +144,9 @@ public class JobContractDaoJpa implements JobContractDao {
             return new ArrayList<>();
 
         return em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
-                JobContract.class).setParameter("filteredIds", filteredIds).getResultList();
+                JobContract.class).setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
+                //Ordenamos los elementos segun el orden de filteredIds
+                Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
+        ).collect(Collectors.toList());
     }
 }
