@@ -1,9 +1,6 @@
 package jdbc;
 
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserAuth;
-import ar.edu.itba.paw.models.UserRole;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJpa;
 import config.TestConfig;
 import org.junit.Assert;
@@ -24,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,6 +50,10 @@ public class UserDaoJDBCTest {
     private static final int USER1_RANKING_IN_JOBTYPE1 = 1;
 
     private static final List<UserRole.Role> USER1_ROLES = Collections.singletonList(UserRole.Role.CLIENT);
+
+    private static final byte[] IMAGE_DATA = "image_data_for_testing".getBytes(StandardCharsets.UTF_8);
+
+    private static final String IMAGE_TYPE = "image/jpg";
 
     @Autowired
     DataSource ds;
@@ -84,6 +86,28 @@ public class UserDaoJDBCTest {
         String userTestPassword = "password";
 
         User user = userDaoJpa.register(userTest.getEmail(), userTestPassword, userTest.getUsername(), userTest.getPhone());
+        em.flush();
+
+        Assert.assertNotNull(user);
+        Assert.assertEquals(userTest, user);
+        Assert.assertEquals(userTest.getUsername(), user.getUsername());
+        Assert.assertEquals(userTest.getPhone(), user.getPhone());
+        Assert.assertEquals(12, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
+    }
+    @Test
+    public void testRegisterWithImage() {
+        User userTest = new User(
+                12,
+                "manurodriguez@mail.com",
+                "Manuel Rodriguez",
+                "11-4536-5656",
+                true,
+                true,
+                LocalDateTime.now());
+        String userTestPassword = "password";
+
+        User user = userDaoJpa.register(userTest.getEmail(), userTestPassword, userTest.getUsername(),
+                userTest.getPhone(), new ByteImage(IMAGE_DATA, IMAGE_TYPE));
         em.flush();
 
         Assert.assertNotNull(user);

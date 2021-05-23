@@ -119,6 +119,19 @@ public class JobPackage {
     }
 
     @Override
+    public String toString() {
+        return "JobPackage{" +
+                "id=" + id +
+                ", jobPost=" + jobPost +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", rateType=" + rateType +
+                ", isActive=" + isActive +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

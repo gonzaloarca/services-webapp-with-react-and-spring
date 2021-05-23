@@ -1,25 +1,58 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
+@Entity
+@Table(name = "contract")
 public class JobContract {
-    private final long id;
-    private final User client;
-    private final JobPackage jobPackage;
-    private final User professional;
-    private final LocalDateTime creationDate;
-    private final String description;
-    private final ByteImage image;
-    private final EncodedImage encodedImage;
 
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description,
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contract_contract_id_seq")
+    @SequenceGenerator(sequenceName = "contract_contract_id_seq", name = "contract_contract_id_seq", allocationSize = 1)
+    @Column(name = "contract_id", nullable = false)
+    private long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_id", foreignKey = @ForeignKey(name = "contract_client_id_fkey"))
+    private User client;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "package_id", foreignKey = @ForeignKey(name = "contract_package_id_fkey"))
+    private JobPackage jobPackage;
+
+    @Column(name = "contract_creation_date", nullable = false)
+    private LocalDateTime creationDate;
+
+    @Column(name = "contract_description", nullable = false)
+    private String description;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "data", column = @Column(name = "image_data")),
+            @AttributeOverride(name = "type", column = @Column(name = "contract_image_type", length = 100))
+    })
+    private ByteImage image;
+
+    @Transient
+    private EncodedImage encodedImage;    //TODO: SETEAR?
+
+    /*Default*/ JobContract() {}
+
+    public JobContract(long id, User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
                        ByteImage image, EncodedImage encodedImage) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
-        this.professional = professional;
+        this.creationDate = creationDate;
+        this.description = description;
+        this.image = image;
+        this.encodedImage = encodedImage;
+    }
+
+    public JobContract(User client, JobPackage jobPackage, LocalDateTime creationDate, String description, ByteImage image, EncodedImage encodedImage) {
+        this.client = client;
+        this.jobPackage = jobPackage;
         this.creationDate = creationDate;
         this.description = description;
         this.image = image;
@@ -47,7 +80,7 @@ public class JobContract {
     }
 
     public User getProfessional() {
-        return professional;
+        return jobPackage.getJobPost().getUser();
     }
 
     public ByteImage getImage() {
@@ -58,13 +91,41 @@ public class JobContract {
         return encodedImage;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setClient(User client) {
+        this.client = client;
+    }
+
+    public void setJobPackage(JobPackage jobPackage) {
+        this.jobPackage = jobPackage;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setImage(ByteImage image) {
+        this.image = image;
+    }
+
+    public void setEncodedImage(EncodedImage encodedImage) {
+        this.encodedImage = encodedImage;
+    }
+
     @Override
     public String toString() {
         return "JobContract{" +
                 "id=" + id +
                 ", client=" + client +
                 ", jobPackage=" + jobPackage +
-                ", professional=" + professional +
+                ", professional=" + getProfessional() +
                 ", creationDate=" + creationDate +
                 ", description='" + description + '\'' +
                 '}';

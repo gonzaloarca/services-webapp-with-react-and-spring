@@ -38,7 +38,7 @@ public class User {
     private ByteImage byteImage;
 
     @Transient
-    private EncodedImage image;
+    private EncodedImage image; //TODO: SETEAR?
 
     @Column(name = "user_creation_date", nullable = false)
     private LocalDateTime creationDate;
