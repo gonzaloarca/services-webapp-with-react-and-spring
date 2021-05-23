@@ -31,6 +31,7 @@ public class JobPostDaoJpa implements JobPostDao {
             throw new UserNotFoundException();
 
         JobPost jobPost = new JobPost(user, title, availableHours, jobType, zones, LocalDateTime.now());
+        zones.forEach(jobPostZone -> jobPostZone.setPost(jobPost));
         em.persist(jobPost);
         return jobPost;
     }
@@ -127,7 +128,7 @@ public class JobPostDaoJpa implements JobPostDao {
         List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
                 .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
 
-        if(filteredIds.isEmpty())
+        if (filteredIds.isEmpty())
             return new ArrayList<>();
 
         return em.createQuery("FROM JobPost AS jp WHERE jp.id IN :filteredIds", JobPost.class)

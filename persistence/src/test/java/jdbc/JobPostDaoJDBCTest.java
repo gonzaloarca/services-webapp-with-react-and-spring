@@ -23,6 +23,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -205,14 +206,15 @@ public class JobPostDaoJDBCTest {
         List<JobPostZone> zones = Arrays.asList(new JobPostZone(JobPostZone.Zone.ALMAGRO), new JobPostZone(JobPostZone.Zone.AGRONOMIA));
         JobPost testCreateJobPost = new JobPost(JOB_POST_COUNT + 1, PROFESSIONAL_USER, title, availableHours,
                 jobType, zones, LocalDateTime.now());
-        Mockito.when(mockUserDao.findById(Mockito.eq(PROFESSIONAL_USER.getId())))
-                .thenReturn(Optional.of(PROFESSIONAL_USER));
 
 
-        JobPost jobPost = jobPostDaoJpa.create(PROFESSIONAL_USER.getId(), testCreateJobPost.getTitle(), testCreateJobPost.getAvailableHours(),
+        JobPost jobPost = jobPostDaoJpa.create(PROFESSIONAL_USER.getId(), testCreateJobPost.getTitle(),
+                testCreateJobPost.getAvailableHours(),
                 testCreateJobPost.getJobType(), testCreateJobPost.getZones());
         em.flush();
+
         //TODO: BUSCARLO EN LA BASE DE DATOS Y VERIFICAR LA CREACION?
+
         Assert.assertNotNull(jobPost);
         List<JobPostZone> zonesList = jobPost.getZones();
         Assert.assertEquals(testCreateJobPost.getUser(), jobPost.getUser());
@@ -224,6 +226,7 @@ public class JobPostDaoJDBCTest {
         for (JobPostZone zone : testCreateJobPost.getZones()) {
             Assert.assertEquals(zone, zonesList.get(i++));
         }
+        Assert.assertEquals(JOB_POST_COUNT + 1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "job_post"));
     }
 
     @Test

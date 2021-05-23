@@ -124,7 +124,7 @@ public class JobPackageDaoJDBCTest {
             JobPackage.RateType.values()[0],
             true
     ), new JobPackage(
-            9 ,
+            9,
             JOB_POSTS,
             "Trabajo Experto 2",
             "Presupuesto y desarrollo de proyectos",
@@ -197,6 +197,7 @@ public class JobPackageDaoJDBCTest {
 
     @Test
     public void testFindById() {
+
         Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(JOB_PACKAGES[0].getId());
 
         Assert.assertTrue(jobPackage.isPresent());
@@ -205,7 +206,9 @@ public class JobPackageDaoJDBCTest {
 
     @Test
     public void testFindByPostIdWithoutPagination() {
+
         List<JobPackage> jobPackages = jobPackageDaoJpa.findByPostId(JOB_POSTS.getId(), HirenetUtils.ALL_PAGES);
+
         Assert.assertEquals(JOB_PACKAGES.length, jobPackages.size());
         jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
     }
@@ -213,7 +216,9 @@ public class JobPackageDaoJDBCTest {
     @Test
     public void testFindByPostIdWithPaginationFirstPage() {
         int page = 0;
+
         List<JobPackage> jobPackages = jobPackageDaoJpa.findByPostId(JOB_POSTS.getId(), page);
+
         Assert.assertEquals(HirenetUtils.PAGE_SIZE, jobPackages.size());
         jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage)], jobPackage));
     }
@@ -221,7 +226,9 @@ public class JobPackageDaoJDBCTest {
     @Test
     public void testFindByPostIdWithPaginationLastPage() {
         int page = 1;
+
         List<JobPackage> jobPackages = jobPackageDaoJpa.findByPostId(JOB_POSTS.getId(), page);
+
         Assert.assertEquals(1, jobPackages.size());
         jobPackages.forEach((jobPackage) -> Assert.assertEquals(JOB_PACKAGES[jobPackages.indexOf(jobPackage) + HirenetUtils.PAGE_SIZE * page], jobPackage));
     }
@@ -231,13 +238,16 @@ public class JobPackageDaoJDBCTest {
         JobPackage jobPackage = JOB_PACKAGES[0];
 
         boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(), jobPackage.getRateType());
+
         Assert.assertTrue(ret);
     }
 
     @Test
     public void testDeletePackage() {
         JobPackage jobPackage = JOB_PACKAGES[0];
+
         boolean ret = jobPackageDaoJpa.deletePackage(jobPackage.getId());
+
         Assert.assertTrue(ret);
     }
 
@@ -245,29 +255,34 @@ public class JobPackageDaoJDBCTest {
     public void testCreatePackageWithNonExistingPost() {
         JobPackage jobPackage = JOB_PACKAGES[0];
         int postID = 999;
+
         jobPackageDaoJpa.create(postID, jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(), jobPackage.getRateType());
     }
 
     @Test
     public void testFindByIdNotFound() {
         int packageId = 999;
+
         Optional<JobPackage> maybePackage = jobPackageDaoJpa.findById(packageId);
+
         Assert.assertFalse(maybePackage.isPresent());
     }
 
     @Test
     public void testFindByPostIdNotExistsWithoutPagination() {
         int postId = 999;
+
         List<JobPackage> packages = jobPackageDaoJpa.findByPostId(postId, HirenetUtils.ALL_PAGES);
+
         Assert.assertTrue(packages.isEmpty());
     }
 
     @Test
     public void testFindByPostIdNotExistsWithPagination() {
         int postId = 999;
+
         List<JobPackage> packages = jobPackageDaoJpa.findByPostId(postId, 0);
+
         Assert.assertTrue(packages.isEmpty());
     }
-
-
 }

@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "post_zone", uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "zone_id"}, name = "job_zone_pkey")})
+@Table(name = "post_zone",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "zone_id"}, name = "job_zone_pkey")})
 public class JobPostZone implements Serializable {
 
     @Id
@@ -18,7 +19,8 @@ public class JobPostZone implements Serializable {
     @Column(name = "zone_id")
     private Zone zone;
 
-    /*default*/ JobPostZone() {}
+    /*default*/ JobPostZone() {
+    }
 
     public JobPostZone(Zone zone) {
         this.zone = zone;
@@ -30,6 +32,14 @@ public class JobPostZone implements Serializable {
 
     public Zone getZone() {
         return zone;
+    }
+
+    public void setPost(JobPost post) {
+        this.post = post;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 
     @Override

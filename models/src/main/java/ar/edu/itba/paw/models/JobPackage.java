@@ -36,8 +36,7 @@ public class JobPackage {
     @Column(name = "package_is_active", nullable = false)
     private boolean isActive;
 
-    /* default */JobPackage(){
-
+    /* default */JobPackage() {
     }
 
     public JobPackage(JobPost jobPost, String title, String description, Double price, RateType rateType) {

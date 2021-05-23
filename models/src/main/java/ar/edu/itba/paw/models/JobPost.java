@@ -32,14 +32,14 @@ public class JobPost {
     @Column(name = "post_is_active", nullable = false)
     private boolean isActive;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "post_id")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "post")
     private List<JobPostZone> zones;
 
     @Column(name = "post_creation_date", nullable = false)
     private LocalDateTime creationDate;
-    
-    /*default*/ JobPost(){}
+
+    /*default*/ JobPost() {
+    }
 
     public JobPost(User user, String title, String availableHours, JobType jobType, List<JobPostZone> zones, LocalDateTime creationDate) {
         this.user = user;
