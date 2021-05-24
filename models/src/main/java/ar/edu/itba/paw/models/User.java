@@ -35,10 +35,10 @@ public class User {
             @AttributeOverride(name = "data", column = @Column(name = "user_image")),
             @AttributeOverride(name = "type", column = @Column(name = "image_type", length = 100))
     })
-    private ByteImage byteImage;
+    private ByteImage byteImage = new ByteImage(null, null);
 
     @Transient
-    private EncodedImage image; //TODO: SETEAR?
+    private EncodedImage image; //Se setea en el DAO
 
     @Column(name = "user_creation_date", nullable = false)
     private LocalDateTime creationDate;
@@ -49,35 +49,6 @@ public class User {
     /* default */ User() {
     }
 
-    public User(String email, String username, String phone, boolean isActive, boolean isVerified, ByteImage byteImage) {
-        this.email = email;
-        this.username = username;
-        this.phone = phone;
-        this.isActive = isActive;
-        this.isVerified = isVerified;
-        this.byteImage = byteImage;
-    }
-
-    public User(String email, String username, String phone, boolean isActive, boolean isVerified, LocalDateTime creationDate) {
-        this.email = email;
-        this.username = username;
-        this.phone = phone;
-        this.isActive = isActive;
-        this.isVerified = isVerified;
-        this.creationDate = creationDate;
-    }
-
-    public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified, EncodedImage image, LocalDateTime creationDate) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.phone = phone;
-        this.isActive = isActive;
-        this.isVerified = isVerified;
-        this.image = image;
-        this.creationDate = creationDate;
-    }
-
     public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified, LocalDateTime creationDate) {
         this.id = id;
         this.email = email;
@@ -86,21 +57,12 @@ public class User {
         this.isActive = isActive;
         this.isVerified = isVerified;
         this.creationDate = creationDate;
-        this.image = null;
+        this.image = new EncodedImage(null, null);
+        this.byteImage = new ByteImage(null, null);
     }
 
-    public User(String email, String username, String phone, boolean isActive, boolean isVerified, LocalDateTime creationDate, String password) {
-        this.email = email;
-        this.username = username;
-        this.phone = phone;
-        this.isActive = isActive;
-        this.isVerified = isVerified;
-        this.creationDate = creationDate;
-        this.password = password;
-    }
-
-
-    public User(String email, String username, String phone, boolean isActive, boolean isVerified, ByteImage byteImage, LocalDateTime creationDate, String password) {
+    public User(String email, String username, String phone, boolean isActive, boolean isVerified, ByteImage byteImage,
+                EncodedImage encodedImage, LocalDateTime creationDate, String password) {
         this.email = email;
         this.username = username;
         this.phone = phone;
@@ -109,6 +71,7 @@ public class User {
         this.byteImage = byteImage;
         this.creationDate = creationDate;
         this.password = password;
+        this.image = encodedImage;
     }
 
     public long getId() {

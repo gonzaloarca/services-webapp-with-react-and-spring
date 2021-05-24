@@ -2,10 +2,8 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import exceptions.JobPackageNotFoundException;
 import exceptions.UserNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -42,14 +40,19 @@ public class JobContractDaoJpa implements JobContractDao {
         if (jobPackage == null)
             throw new JobPackageNotFoundException();
 
-        JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image, null);
+        EncodedImage encodedImage = new EncodedImage(null, null);
+        if(image != null)
+            encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
+
+        JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image, encodedImage);
         em.persist(jobContract);
+
         return jobContract;
     }
 
     @Override
     public Optional<JobContract> findById(long id) {
-        return Optional.ofNullable(em.find(JobContract.class, id));
+        return addEncodedImage(Optional.ofNullable(em.find(JobContract.class, id)));
     }
 
     @Override
@@ -130,10 +133,32 @@ public class JobContractDaoJpa implements JobContractDao {
         if (filteredIds.isEmpty())
             return new ArrayList<>();
 
-        return em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
+        return addEncodedImage(em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
                 JobContract.class).setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
                 //Ordenamos los elementos segun el orden de filteredIds
                 Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
-        ).collect(Collectors.toList());
+        ).collect(Collectors.toList()));
+    }
+
+    private Optional<JobContract> addEncodedImage(Optional<JobContract> maybeContract) {
+        if(maybeContract.isPresent()) {
+            ByteImage byteImage = maybeContract.get().getImage();
+            EncodedImage encodedImage = new EncodedImage(null, null);
+            if(byteImage != null)
+                encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
+            maybeContract.get().setEncodedImage(encodedImage);
+        }
+        return maybeContract;
+    }
+
+    private List<JobContract> addEncodedImage(List<JobContract> jobContractList) {
+        for(JobContract jobContract : jobContractList) {
+            ByteImage byteImage = jobContract.getImage();
+            EncodedImage encodedImage = new EncodedImage(null, null);
+            if(byteImage != null)
+                encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
+            jobContract.setEncodedImage(encodedImage);
+        }
+        return jobContractList;
     }
 }

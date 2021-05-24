@@ -35,22 +35,23 @@ public class JobContract {
     private ByteImage image;
 
     @Transient
-    private EncodedImage encodedImage;    //TODO: SETEAR?
+    private EncodedImage encodedImage;    //Se setea en el Dao
 
     /*Default*/ JobContract() {}
 
     public JobContract(long id, User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
-                       ByteImage image, EncodedImage encodedImage) {
+                       ByteImage image) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;
         this.description = description;
         this.image = image;
-        this.encodedImage = encodedImage;
+        this.encodedImage = new EncodedImage(null, null);
     }
 
-    public JobContract(User client, JobPackage jobPackage, LocalDateTime creationDate, String description, ByteImage image, EncodedImage encodedImage) {
+    public JobContract(User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
+                       ByteImage image, EncodedImage encodedImage) {
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;

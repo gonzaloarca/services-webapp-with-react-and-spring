@@ -2,7 +2,6 @@ package jdbc;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.persistence.jdbc.*;
 import ar.edu.itba.paw.persistence.jpa.JobCardDaoJpa;
 import config.TestConfig;
 import org.junit.Assert;

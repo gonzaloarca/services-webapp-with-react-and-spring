@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,27 +21,30 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public User register(String email, String password, String username, String phone) {
-        final User user = new User(email, username, phone, true, false, LocalDateTime.now(), password);
-        em.persist(user);
-        return user;
+        return register(email, password, username, phone, null);
     }
 
     @Override
     public User register(String email, String password, String username, String phone, ByteImage image) {
-        final User user = new User(email, username, phone, true, false, image, LocalDateTime.now(), password);
+        EncodedImage encodedImage = new EncodedImage(null, null);
+        if(image != null)
+            encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
+
+        final User user = new User(email, username, phone, true, false, image,  encodedImage,
+                LocalDateTime.now(), password);
         em.persist(user);
         return user;
     }
 
     @Override
     public Optional<User> findById(long id) {
-        return Optional.ofNullable(em.find(User.class, id));
+        return addEncodedImage(Optional.ofNullable(em.find(User.class, id)));
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return em.createQuery("FROM User AS u WHERE u.email = :email", User.class)
-                .setParameter("email", email).getResultList().stream().findFirst();
+        return addEncodedImage(em.createQuery("FROM User AS u WHERE u.email = :email", User.class)
+                .setParameter("email", email).getResultList().stream().findFirst());
     }
 
     @Override
@@ -51,7 +55,7 @@ public class UserDaoJpa implements UserDao {
             aux.get().setPhone(phone);
             em.persist(aux);
         }
-        return aux;
+        return addEncodedImage(aux);
     }
 
     @Override
@@ -62,7 +66,7 @@ public class UserDaoJpa implements UserDao {
             aux.setPhone(phone);
             em.persist(aux);
         }
-        return Optional.ofNullable(aux);
+        return addEncodedImage(Optional.ofNullable(aux));
     }
 
     @Override
@@ -74,7 +78,7 @@ public class UserDaoJpa implements UserDao {
             aux.get().setByteImage(image);
             em.persist(aux.get());
         }
-        return aux;
+        return addEncodedImage(aux);
     }
 
     @Override
@@ -102,9 +106,9 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> findUserByRoleAndId(UserRole.Role role, long id) {
-        return em.createQuery("FROM User AS u WHERE u.id = :user_id AND u.role_id = :role_id", User.class)
+        return addEncodedImage(em.createQuery("FROM User AS u WHERE u.id = :user_id AND u.role_id = :role_id", User.class)
                 .setParameter("user_id", id).setParameter("role_id", role.ordinal()).
-                        getResultList().stream().findFirst();
+                        getResultList().stream().findFirst());
     }
 
     @Override
@@ -172,5 +176,16 @@ public class UserDaoJpa implements UserDao {
         Integer result = (Integer) query.setParameter("jobType", jobType.getValue())
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0);
         return result;
+    }
+
+    private Optional<User> addEncodedImage(Optional<User> maybeUser) {
+        if(maybeUser.isPresent()) {
+            ByteImage byteImage = maybeUser.get().getByteImage();
+            EncodedImage encodedImage = new EncodedImage(null, null);
+            if(byteImage != null)
+                encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
+            maybeUser.get().setImage(encodedImage);
+        }
+        return maybeUser;
     }
 }

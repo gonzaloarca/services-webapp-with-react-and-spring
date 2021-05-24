@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
+/*
 @Repository
 public class VerificationTokenDaoJDBC implements VerificationTokenDao {
 
@@ -70,3 +70,4 @@ public class VerificationTokenDaoJDBC implements VerificationTokenDao {
 		jdbcTemplate.update("DELETE FROM verification_token WHERE user_id = ?;", user_id);
 	}
 }
+*/
