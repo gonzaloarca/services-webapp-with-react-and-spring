@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Table(name = "verification_token")
@@ -38,5 +39,30 @@ public class VerificationToken implements Serializable {
 
 	public Instant getCreationDate() {
 		return creationDate;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setCreationDate(Instant creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		VerificationToken that = (VerificationToken) o;
+		return token.equals(that.token);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(token);
 	}
 }
