@@ -39,7 +39,7 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new UserNotFoundException();
 
         JobPackage jobPackage = em.find(JobPackage.class, packageId);
-        if(jobPackage == null)
+        if (jobPackage == null)
             throw new JobPackageNotFoundException();
 
         JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image, null);
@@ -92,41 +92,28 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public int findContractsQuantityByProId(long id) {
-        @SuppressWarnings("unchecked")
-        BigInteger size = (BigInteger) em
-                .createNativeQuery("SELECT COUNT(*) FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "WHERE user_id = :id")
-                .setParameter("id", id).getResultList().stream().findFirst().orElse(-1);
-        return size.intValue();
+        return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id", Long.class)
+                .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
     @Override
     public int findContractsQuantityByPostId(long id) {
-        @SuppressWarnings("unchecked")
-        BigInteger size = (BigInteger) em
-                .createNativeQuery("SELECT COUNT(*) FROM contract NATURAL JOIN job_package " +
-                        "WHERE post_id = :id")
-                .setParameter("id", id).getResultList().stream().findFirst().orElse(-1);
-        return size.intValue();
+        return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.id = :id", Long.class)
+                .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
     @Override
     public int findMaxPageContractsByClientId(long id) {
-        @SuppressWarnings("unchecked")
-        BigInteger size = (BigInteger) em
-                .createNativeQuery("SELECT COUNT(*) FROM contract " +
-                        "WHERE client_id = :id")
-                .setParameter("id", id).getResultList().stream().findFirst().orElse(-1);
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.client.id = :id", Long.class)
+                .setParameter("id", id).getSingleResult();
+
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
     public int findMaxPageContractsByProId(long id) {
-        @SuppressWarnings("unchecked")
-        BigInteger size = (BigInteger) em
-                .createNativeQuery("SELECT COUNT(*) FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "WHERE user_id = :id")
-                .setParameter("id", id).getResultList().stream().findFirst().orElse(-1);
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id", Long.class)
+                .setParameter("id", id).getSingleResult();
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
@@ -140,7 +127,7 @@ public class JobContractDaoJpa implements JobContractDao {
         List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
                 .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
 
-        if(filteredIds.isEmpty())
+        if (filteredIds.isEmpty())
             return new ArrayList<>();
 
         return em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",

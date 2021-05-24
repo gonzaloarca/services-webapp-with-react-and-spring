@@ -58,11 +58,8 @@ public class JobPostDaoJpa implements JobPostDao {
 
     @Override
     public int findSizeByUserId(long id) {
-        @SuppressWarnings("unchecked")
-        BigInteger size = (BigInteger) em
-                .createNativeQuery("SELECT COUNT(*) FROM job_post WHERE user_id = :id AND post_is_active = TRUE")
-                .setParameter("id", id).getResultList().stream().findFirst().orElse(-1);
-        return size.intValue();
+        return em.createQuery("SELECT COUNT(*) FROM JobPost jpost WHERE jpost.user.id = :id AND jpost.isActive = TRUE", Long.class)
+                .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
     @Override

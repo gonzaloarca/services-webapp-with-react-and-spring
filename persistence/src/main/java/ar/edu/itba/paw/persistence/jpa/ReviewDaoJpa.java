@@ -44,20 +44,14 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public int findJobPostReviewsSize(long id) {
-        @SuppressWarnings("unchecked")
-        BigInteger size = (BigInteger) em
-                .createNativeQuery("SELECT COUNT(*) FROM review NATURAL JOIN contract NATURAL JOIN job_package WHERE post_id = :id")
-                .setParameter("id", id).getResultList().stream().findFirst().orElse(-1);
-        return size.intValue();
+        return em.createQuery("SELECT COUNT(*) FROM Review r WHERE r.jobContract.jobPackage.jobPost.id = :id", Long.class)
+                .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
     @Override
     public Double findJobPostAvgRate(long id) {
-        @SuppressWarnings("unchecked")
-        Double avg = (Double) em.createNativeQuery("SELECT coalesce(avg(CAST(REVIEW_RATE AS FLOAT)),0) as rating " +
-                "FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE post_id = :id GROUP BY post_id")
+        return em.createQuery("SELECT coalesce(avg(r.rate),0) FROM Review r WHERE r.jobContract.jobPackage.jobPost.id = :id", Double.class)
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0.0);
-        return avg;
     }
 
     @Override
@@ -69,12 +63,8 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public Double findProfessionalAvgRate(long id) {
-        @SuppressWarnings("unchecked")
-        Double avg = (Double) em.createNativeQuery("SELECT coalesce(avg(CAST(REVIEW_RATE AS FLOAT)),0) as rating FROM review " +
-                "NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post NATURAL JOIN users WHERE user_id = :id GROUP BY user_id")
+        return em.createQuery("SELECT coalesce(avg(r.rate),0) FROM Review r WHERE r.jobContract.jobPackage.jobPost.user.id = :id", Double.class)
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0.0);
-
-        return avg;
     }
 
     @Override
