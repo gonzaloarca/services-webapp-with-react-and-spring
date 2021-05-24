@@ -3,7 +3,6 @@ package jdbc;
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jpa.JobPackageDaoJpa;
 import config.TestConfig;
@@ -36,9 +35,9 @@ import java.util.Optional;
 @Transactional
 public class JobPackageDaoJDBCTest {
 
-    private static final List<JobPostZone> ZONES =
-            new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
-                    new JobPostZone(JobPostZone.Zone.values()[2])));
+    private static final List<JobPost.Zone> ZONES =
+            new ArrayList<JobPost.Zone>(Arrays.asList(JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]));
 
     private static final User PROFESSIONAL = new User(
             1,

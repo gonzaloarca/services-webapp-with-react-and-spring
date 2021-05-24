@@ -3,7 +3,6 @@ package simple;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.simple.SimpleJobPostService;
 import org.junit.Assert;
@@ -47,9 +46,9 @@ public class SimpleJobPostServiceTest {
             true,
             true,
             LocalDateTime.now());
-    private static final List<JobPostZone> ZONES =
-            new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
-                    new JobPostZone(JobPostZone.Zone.values()[2])));
+    private static final List<JobPost.Zone> ZONES =
+            new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]));
     private static final JobPost JOB_POST_NEW_USER = new JobPost(
             1,
             NEW_PROFESSIONAL,
@@ -86,7 +85,7 @@ public class SimpleJobPostServiceTest {
                 .thenReturn(JOB_POST_NEW_USER);
         int[] zonesInt = new int[ZONES.size()];
         for (int i = 0; i < ZONES.size(); i++) {
-            zonesInt[i] = ZONES.get(i).getZone().getValue();
+            zonesInt[i] = ZONES.get(i).getValue();
         }
         JobPost jobPost = jobPostService.create(NEW_PROFESSIONAL.getEmail(), JOB_POST_NEW_USER.getTitle(),
                 JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType().ordinal(), zonesInt);
@@ -103,7 +102,7 @@ public class SimpleJobPostServiceTest {
                 .thenReturn(JOB_POST_EXISTING_USER);
         int[] zonesInt = new int[ZONES.size()];
         for (int i = 0; i < ZONES.size(); i++) {
-            zonesInt[i] = ZONES.get(i).getZone().getValue();
+            zonesInt[i] = ZONES.get(i).getValue();
         }
         JobPost jobPost = jobPostService.create(EXISTING_USER.getEmail(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(), zonesInt);
 

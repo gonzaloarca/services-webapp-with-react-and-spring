@@ -50,9 +50,9 @@ public class ReviewDaoJDBCTest {
             true,
             true,
             LocalDateTime.now());
-    private static final List<JobPostZone> ZONES =
-            new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
-                    new JobPostZone(JobPostZone.Zone.values()[2])));
+    private static final List<JobPost.Zone> ZONES =
+            new ArrayList<JobPost.Zone>(Arrays.asList(JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]));
     private static final JobPost JOB_POST = new JobPost(
             1,
             PROFESSIONAL,

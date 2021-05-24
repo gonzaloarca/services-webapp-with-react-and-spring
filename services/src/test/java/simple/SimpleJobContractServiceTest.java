@@ -24,9 +24,9 @@ import java.util.Optional;
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleJobContractServiceTest {
 
-    private static final List<JobPostZone> ZONES =
-            new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
-                    new JobPostZone(JobPostZone.Zone.values()[2])));
+    private static final List<JobPost.Zone> ZONES =
+            new ArrayList<JobPost.Zone>(Arrays.asList(JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]));
     private static final User CLIENT = new User(
             3, "manurodriguez@gmail.com", "Manuel Rodriguez", "0303456", true, true,
             LocalDateTime.now());

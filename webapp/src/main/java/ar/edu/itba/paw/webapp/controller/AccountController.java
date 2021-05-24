@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
-import ar.edu.itba.paw.models.UserRole;
 import ar.edu.itba.paw.webapp.form.AccountChangeForm;
 import ar.edu.itba.paw.webapp.form.PasswordChangeForm;
 import exceptions.UserNotFoundException;
@@ -49,7 +48,7 @@ public class AccountController {
 		form.setName(currentUser.getUsername());
 		form.setPhone(currentUser.getPhone());
 		mav.addObject("user", currentUser)
-		.addObject("isPro", auth.getRoles().contains(UserRole.Role.PROFESSIONAL));
+		.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
 
 		return	mav;
 	}
@@ -64,7 +63,7 @@ public class AccountController {
 		accountControllerLogger.debug("Finding auth info for user with email {}",principal.getName());
 		UserAuth auth = userService.getAuthInfo(principal.getName()).orElseThrow(UserNotFoundException::new);
 		ModelAndView mav = new ModelAndView("myAccountSettings");
-		mav.addObject("isPro", auth.getRoles().contains(UserRole.Role.PROFESSIONAL));
+		mav.addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
 
 		if(errors.hasErrors()) {
 			accountControllerLogger.debug("Account change form has errors: {}",errors.getAllErrors().toString());

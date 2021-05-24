@@ -4,7 +4,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
-import ar.edu.itba.paw.models.UserRole;
 import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import exceptions.UserNotFoundException;
 import org.slf4j.Logger;
@@ -77,7 +76,7 @@ public class ProfileController {
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
         int maxPage = paginationService.findMaxPageJobPostsByUserId(id);
         return new ModelAndView("profile")
-                .addObject("isPro", auth.getRoles().contains(UserRole.Role.PROFESSIONAL))
+                .addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
                 .addObject("withServices", true)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage)
@@ -95,7 +94,7 @@ public class ProfileController {
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
         int maxPage = paginationService.findMaxPageReviewsByUserId(id);
         return new ModelAndView("profile")
-                .addObject("isPro", auth.getRoles().contains(UserRole.Role.PROFESSIONAL))
+                .addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
                 .addObject("withServices", false)
                 .addObject("reviews", reviewService.findProfessionalReviews(id, page - 1))
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))

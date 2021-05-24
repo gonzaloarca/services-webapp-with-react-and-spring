@@ -71,7 +71,7 @@ public class CurrentUserController {
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage)
                 .addObject("contractCards", jobContractCards)
-                .addObject("isPro", userAuth.getRoles().contains(UserRole.Role.PROFESSIONAL));
+                .addObject("isPro", userAuth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
     }
 
     @RequestMapping("/analytics")

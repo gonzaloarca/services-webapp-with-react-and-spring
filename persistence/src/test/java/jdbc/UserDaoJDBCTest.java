@@ -49,14 +49,14 @@ public class UserDaoJDBCTest {
 
     private static final int USER1_RANKING_IN_JOBTYPE1 = 1;
 
-    private static final List<UserRole.Role> USER1_ROLES = Collections.singletonList(UserRole.Role.CLIENT);
+    private static final List<UserAuth.Role> USER1_ROLES = Collections.singletonList(UserAuth.Role.CLIENT);
 
     private static final byte[] IMAGE_DATA = "image_data_for_testing".getBytes(StandardCharsets.UTF_8);
 
     private static final String IMAGE_TYPE = "image/jpg";
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
     @Autowired
     @InjectMocks
@@ -162,14 +162,14 @@ public class UserDaoJDBCTest {
 
     @Test
     public void testAssignRole() {
-        List<UserRole.Role> roles = new java.util.ArrayList<>(USER1_ROLES);
-        roles.add(UserRole.Role.PROFESSIONAL);
+        List<UserAuth.Role> roles = new java.util.ArrayList<>(USER1_ROLES);
+        roles.add(UserAuth.Role.PROFESSIONAL);
 
-        Optional<UserAuth> userAuth = userDaoJpa.assignRole(USER1.getId(), UserRole.Role.PROFESSIONAL.ordinal());
+        Optional<UserAuth> userAuth = userDaoJpa.assignRole(USER1.getId(), UserAuth.Role.PROFESSIONAL.ordinal());
 
         Assert.assertTrue(userAuth.isPresent());
         userAuth.get().getRoles().forEach((userRole) ->
-                Assert.assertTrue(roles.contains(userRole.getRole())));
+                Assert.assertTrue(roles.contains(userRole)));
     }
 
     @Test

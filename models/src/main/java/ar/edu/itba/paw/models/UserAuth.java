@@ -26,21 +26,24 @@ public class UserAuth {
     @Column(nullable = false, name = "user_is_verified")
     private boolean isVerified;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private List<UserRole> roles;
+
+    @ElementCollection(targetClass = Role.class)
+    @Enumerated(EnumType.ORDINAL)
+    @CollectionTable(name = "user_role",joinColumns = {@JoinColumn(name = "user_id")},uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id","user_id"},name = "user_role_pkey")})
+    @Column(name="role_id")
+    private List<Role> roles;
 
     /*default*/ UserAuth() {
     }
 
-    public UserAuth(long user_id, String email, boolean isVerified, List<UserRole> roles) {
+    public UserAuth(long user_id, String email, boolean isVerified, List<Role> roles) {
         this.user_id = user_id;
         this.email = email;
         this.isVerified = isVerified;
         this.roles = roles;
     }
 
-    public List<UserRole> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
@@ -69,4 +72,18 @@ public class UserAuth {
         return Objects.hash(user_id, email);
     }
 
+    public enum Role {
+        CLIENT("ROLE_CLIENT"),
+        PROFESSIONAL("ROLE_PROFESSIONAL");
+
+        private final String name;
+
+        Role(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }

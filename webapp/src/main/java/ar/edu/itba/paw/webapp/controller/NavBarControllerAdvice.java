@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.JobPostZone;
+import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class NavBarControllerAdvice {
     }
 
     @ModelAttribute("zoneValues")
-    public JobPostZone.Zone[] zoneValues(){
-        return JobPostZone.Zone.values();
+    public JobPost.Zone[] zoneValues(){
+        return JobPost.Zone.values();
     }
 
 }

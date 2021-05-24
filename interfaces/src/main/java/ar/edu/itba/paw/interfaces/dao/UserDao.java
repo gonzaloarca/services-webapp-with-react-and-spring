@@ -25,9 +25,9 @@ public interface UserDao {
 
     Optional<UserAuth> assignRole(long id, int role);
 
-    List<UserRole.Role> findRoles(long id);
+    List<UserAuth.Role> findRoles(long id);
 
-    Optional<User> findUserByRoleAndId(UserRole.Role role, long id);
+    Optional<User> findUserByRoleAndId(UserAuth.Role role, long id);
 
     boolean changeUserPassword(long id, String password);
 

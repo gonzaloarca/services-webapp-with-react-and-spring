@@ -3,7 +3,6 @@ package simple;
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.services.simple.SimpleJobCardService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,7 @@ import java.util.Locale;
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleJobCardServiceTest {
 
-    private static final JobPostZone.Zone ZONE = JobPostZone.Zone.BELGRANO;
+    private static final JobPost.Zone ZONE = JobPost.Zone.BELGRANO;
     private static final String QUERY = "queryqueryquery";
 
     @InjectMocks

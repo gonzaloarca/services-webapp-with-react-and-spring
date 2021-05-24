@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.JobCardService;
 import ar.edu.itba.paw.interfaces.services.PaginationService;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +68,7 @@ public class ExploreController {
 
         if (errors.hasErrors()) {
             mainLogger.debug("Search form has errors: {}", errors.getAllErrors().toString());
-            return new ModelAndView(mav.getViewName()).addObject("pickedZone", JobPostZone.Zone.values()[zone])
+            return new ModelAndView(mav.getViewName()).addObject("pickedZone", JobPost.Zone.values()[zone])
                     .addObject("categories", JobPost.JobType.values());
         }
         String query = form.getQuery();
@@ -77,7 +76,7 @@ public class ExploreController {
         final ModelAndView searchMav = new ModelAndView("search");
         searchMav
                 .addObject("categories", JobPost.JobType.values())
-                .addObject("pickedZone", JobPostZone.Zone.values()[zone]);
+                .addObject("pickedZone", JobPost.Zone.values()[zone]);
         int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(), zone, category, localeResolver.resolveLocale(request));
         searchMav
                 .addObject("maxPage", maxPage)

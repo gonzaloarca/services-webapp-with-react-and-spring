@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.models.User;
 import exceptions.UserNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,13 +24,12 @@ public class JobPostDaoJpa implements JobPostDao {
     private EntityManager em;
 
     @Override
-    public JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<JobPostZone> zones) {
+    public JobPost create(long userId, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
         User user = em.find(User.class, userId);
         if (user == null)
             throw new UserNotFoundException();
 
         JobPost jobPost = new JobPost(user, title, availableHours, jobType, zones, LocalDateTime.now());
-        zones.forEach(jobPostZone -> jobPostZone.setPost(jobPost));
         em.persist(jobPost);
         return jobPost;
     }
@@ -72,7 +69,7 @@ public class JobPostDaoJpa implements JobPostDao {
     }
 
     @Override
-    public List<JobPost> findByZone(JobPostZone.Zone zone, int page) {
+    public List<JobPost> findByZone(JobPost.Zone zone, int page) {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT post_id FROM job_post NATURAL JOIN post_zone" +
                         " WHERE zone_id = :zone AND post_is_active = TRUE"
@@ -92,7 +89,7 @@ public class JobPostDaoJpa implements JobPostDao {
     }
 
     @Override
-    public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPostZone> zones) {
+    public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
         JobPost jobPost = em.find(JobPost.class, id);
         if (jobPost != null) {
             jobPost.setTitle(title);

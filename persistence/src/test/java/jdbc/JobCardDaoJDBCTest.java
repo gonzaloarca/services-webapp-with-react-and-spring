@@ -62,10 +62,10 @@ public class JobCardDaoJDBCTest {
             true,
             LocalDateTime.now());
 
-    private static final List<JobPostZone> ZONES_USER = new ArrayList<>(
+    private static final List<JobPost.Zone> ZONES_USER = new ArrayList<JobPost.Zone>(
             Arrays.asList(
-                    new JobPostZone(JobPostZone.Zone.values()[1]),
-                    new JobPostZone(JobPostZone.Zone.values()[2])
+                    JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]
             )
     );
     private static final JobPost JOB_POST_USER2 = new JobPost(
@@ -172,7 +172,7 @@ public class JobCardDaoJDBCTest {
     @Test
     public void testSearch() {
         String title = "Electricista";
-        JobPostZone.Zone zone = JobPostZone.Zone.values()[1];
+        JobPost.Zone zone = JobPost.Zone.values()[1];
         List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
@@ -182,7 +182,7 @@ public class JobCardDaoJDBCTest {
     @Test
     public void testSearchWithSimilarTypes() {
         String title = "electr";
-        JobPostZone.Zone zone = JobPostZone.Zone.values()[1];
+        JobPost.Zone zone = JobPost.Zone.values()[1];
         List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
@@ -192,7 +192,7 @@ public class JobCardDaoJDBCTest {
     @Test
     public void testSearchWithCategory() {
         String title = "";
-        JobPostZone.Zone zone = JobPostZone.Zone.values()[1];
+        JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
         List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
@@ -203,7 +203,7 @@ public class JobCardDaoJDBCTest {
     @Test
     public void testSearchWithSimilarTypesCategory() {
         String title = "ELECT";
-        JobPostZone.Zone zone = JobPostZone.Zone.values()[1];
+        JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
         List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), HirenetUtils.ALL_PAGES);
 

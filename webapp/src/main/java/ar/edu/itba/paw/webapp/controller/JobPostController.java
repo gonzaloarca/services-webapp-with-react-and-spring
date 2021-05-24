@@ -100,9 +100,9 @@ public class JobPostController {
             jobPostForm.setJobType(jobPost.getJobType().ordinal());
             jobPostForm.setAvailableHours(jobPost.getAvailableHours());
             int[] zoneInts = new int[jobPost.getZones().size()];
-            List<JobPostZone> zonesList = jobPost.getZones();
+            List<JobPost.Zone> zonesList = jobPost.getZones();
             for (int i = 0; i < zonesList.size(); i++) {
-                zoneInts[i] = zonesList.get(i).getZone().getValue();
+                zoneInts[i] = zonesList.get(i).getValue();
             }
             jobPostForm.setZones(zoneInts);
             jobPostForm.setTitle(jobPost.getTitle());
@@ -111,7 +111,7 @@ public class JobPostController {
         }
 
         return new ModelAndView("editJobPost").addObject("jobTypes", JobPost.JobType.values())
-                .addObject("zoneValues", JobPostZone.Zone.values())
+                .addObject("zoneValues", JobPost.Zone.values())
                 .addObject("editJobPostForm", jobPostForm).addObject("id", id);
     }
 
@@ -120,7 +120,7 @@ public class JobPostController {
 
         return new ModelAndView("createJobPostSteps")
                 .addObject("jobTypes", JobPost.JobType.values())
-                .addObject("zoneValues", JobPostZone.Zone.values());
+                .addObject("zoneValues", JobPost.Zone.values());
     }
 
     @RequestMapping(path = "/create-job-post", method = RequestMethod.POST)

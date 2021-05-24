@@ -3,7 +3,6 @@ package simple;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.simple.SimpleJobPackageService;
 import org.junit.Assert;
@@ -23,16 +22,17 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleJobPackageServiceTest {
-    private static final List<JobPostZone> ZONES =
-            new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
-                    new JobPostZone(JobPostZone.Zone.values()[2])));
-    private static final JobPackage JOB_PACKAGE = new JobPackage(
-            7, 2, "Arreglos menores", "Canerias rotas", 200.00, JobPackage.RateType.ONE_TIME, true);
+    private static final List<JobPost.Zone> ZONES =
+            new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]));
     private static final User PROFESSIONAL = new User(
             8, "franquesada@gmail.com", "Francisco Quesada",  "0800111333", true, true, LocalDateTime.now());
     private static final JobPost JOB_POST = new JobPost(
-            JOB_PACKAGE.getPostId(), PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
+            2, PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
             ZONES, true, LocalDateTime.now());
+    private static final JobPackage JOB_PACKAGE = new JobPackage(
+            7, JOB_POST, "Arreglos menores", "Canerias rotas", 200.00, JobPackage.RateType.ONE_TIME, true);
+
 
     @InjectMocks
     SimpleJobPackageService simpleJobPackageService = new SimpleJobPackageService();

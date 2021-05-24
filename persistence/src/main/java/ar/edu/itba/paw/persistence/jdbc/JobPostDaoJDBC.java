@@ -1,24 +1,5 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
-import ar.edu.itba.paw.interfaces.dao.JobPostDao;
-import ar.edu.itba.paw.interfaces.dao.UserDao;
-import ar.edu.itba.paw.models.EncodedImage;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone.Zone;
-import ar.edu.itba.paw.models.JobPostZone;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
-import ar.edu.itba.paw.persistence.utils.PagingUtil;
-import exceptions.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.time.LocalDateTime;
-import java.util.*;
 /*
 @Repository
 public class JobPostDaoJDBC implements JobPostDao {

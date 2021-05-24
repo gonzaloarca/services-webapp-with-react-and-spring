@@ -25,9 +25,9 @@ public class SimpleJobPostImageServiceTest {
 	private static final long POST_ID = 20;
 	private static final long FAKE_ID = 50;
 
-	private static final List<JobPostZone> ZONES =
-			new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
-					new JobPostZone(JobPostZone.Zone.values()[2])));
+	private static final List<JobPost.Zone> ZONES =
+			new ArrayList<JobPost.Zone>(Arrays.asList(JobPost.Zone.values()[1],
+					JobPost.Zone.values()[2]));
 	private final User PROFESSIONAL = new User(
 			8, "franquesada@gmail.com", "Francisco Quesada", "0800111333", true, true, LocalDateTime.now());
 	private final JobPost JOB_POST = new JobPost(
@@ -64,10 +64,10 @@ public class SimpleJobPostImageServiceTest {
 				.thenReturn(true);
 
 		Mockito.when(jobPostImageDao.addImage(POST_ID, byteImage1))
-				.thenReturn(new JobPostImage(1, POST_ID, encodedImage1));
+				.thenReturn(new JobPostImage(1, JOB_POST, encodedImage1));
 
 		Mockito.when(jobPostImageDao.addImage(POST_ID, byteImage2))
-				.thenReturn(new JobPostImage(2, POST_ID, encodedImage2));
+				.thenReturn(new JobPostImage(2, JOB_POST, encodedImage2));
 
 		List<ByteImage> images = new ArrayList<>();
 		images.add(byteImage1);
@@ -90,8 +90,8 @@ public class SimpleJobPostImageServiceTest {
 
 	@Test
 	public void findByPostIdSuccess() {
-		jobPostImages.add(new JobPostImage(1, POST_ID, encodedImage1));
-		jobPostImages.add(new JobPostImage(2, POST_ID, encodedImage2));
+		jobPostImages.add(new JobPostImage(1, JOB_POST, encodedImage1));
+		jobPostImages.add(new JobPostImage(2, JOB_POST, encodedImage2));
 
 		Mockito.when(jobPostImageDao.findImages(Mockito.eq(POST_ID)))
 				.thenReturn(jobPostImages);

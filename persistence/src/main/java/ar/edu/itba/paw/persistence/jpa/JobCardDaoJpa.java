@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -56,12 +55,12 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     @Override
-    public List<JobCard> search(String query, JobPostZone.Zone zone, List<JobPost.JobType> similarTypes, int page) {
+    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, int page) {
         return searchWithCategory(query, zone, null, similarTypes, page);
     }
 
     @Override
-    public List<JobCard> searchWithCategory(String query, JobPostZone.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
+    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(:query)");
 
         Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
@@ -110,12 +109,12 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPostZone.Zone zone, List<JobPost.JobType> similarTypes) {
+    public int findMaxPageSearch(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes) {
         return findMaxPageSearchWithCategory(query, zone, null, similarTypes);
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPostZone.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
+    public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(:query)");
 
         Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
@@ -162,7 +161,7 @@ public class JobCardDaoJpa implements JobCardDao {
                 ).collect(Collectors.toList());
     }
 
-    private Query buildSearchQuery(String query, JobPostZone.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery) {
+    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery) {
         if (!similarTypes.isEmpty()) {
             String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
             sqlQuery.append(" OR post_job_type in (")

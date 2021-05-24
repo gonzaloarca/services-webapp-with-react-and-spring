@@ -11,7 +11,6 @@ import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class UserDaoJpa implements UserDao {
@@ -90,7 +89,7 @@ public class UserDaoJpa implements UserDao {
     @Override
     public Optional<UserAuth> assignRole(long id, int role) {
         UserAuth userAuth = em.find(UserAuth.class, id);
-        UserRole aux_role = new UserRole(UserRole.Role.values()[role]);
+        UserAuth.Role aux_role = UserAuth.Role.values()[role];
         if (userAuth != null && !userAuth.getRoles().contains(aux_role)) {
             userAuth.getRoles().add(aux_role);
             em.persist(userAuth);
@@ -99,13 +98,13 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public List<UserRole.Role> findRoles(long id) {
-        return em.createQuery("FROM UserAuth AS u WHERE u.id = :id", UserRole.Role.class)
+    public List<UserAuth.Role> findRoles(long id) {
+        return em.createQuery("FROM UserAuth AS u WHERE u.id = :id", UserAuth.Role.class)
                 .setParameter("id", id).getResultList();
     }
 
     @Override
-    public Optional<User> findUserByRoleAndId(UserRole.Role role, long id) {
+    public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
         return addEncodedImage(em.createQuery("FROM User AS u WHERE u.id = :user_id AND u.role_id = :role_id", User.class)
                 .setParameter("user_id", id).setParameter("role_id", role.ordinal()).
                         getResultList().stream().findFirst());

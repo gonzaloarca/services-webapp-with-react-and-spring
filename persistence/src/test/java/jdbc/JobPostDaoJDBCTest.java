@@ -2,7 +2,6 @@ package jdbc;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostZone;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jpa.JobPostDaoJpa;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJpa;
@@ -14,10 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -62,9 +60,9 @@ public class JobPostDaoJDBCTest {
                     true,
                     LocalDateTime.now()
             );
-    private static final List<JobPostZone> ZONES =
-            new ArrayList<>(Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[1]),
-                    new JobPostZone(JobPostZone.Zone.values()[2])));
+    private static final List<JobPost.Zone> ZONES =
+            new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]));
     private static final JobPost[] JOB_POSTS = new JobPost[]{
             new JobPost(
                     1,
@@ -204,7 +202,7 @@ public class JobPostDaoJDBCTest {
         String title = "Mi posteo";
         String availableHours = "Todos los dias";
         JobPost.JobType jobType = JobPost.JobType.PAINTING;
-        List<JobPostZone> zones = Arrays.asList(new JobPostZone(JobPostZone.Zone.ALMAGRO), new JobPostZone(JobPostZone.Zone.AGRONOMIA));
+        List<JobPost.Zone> zones = Arrays.asList(JobPost.Zone.ALMAGRO,JobPost.Zone.AGRONOMIA);
         JobPost testCreateJobPost = new JobPost(JOB_POST_COUNT + 1, PROFESSIONAL_USER, title, availableHours,
                 jobType, zones, LocalDateTime.now());
 
@@ -217,29 +215,30 @@ public class JobPostDaoJDBCTest {
         //TODO: BUSCARLO EN LA BASE DE DATOS Y VERIFICAR LA CREACION?
 
         Assert.assertNotNull(jobPost);
-        List<JobPostZone> zonesList = jobPost.getZones();
+        List<JobPost.Zone> zonesList = jobPost.getZones();
         Assert.assertEquals(testCreateJobPost.getUser(), jobPost.getUser());
         Assert.assertEquals(testCreateJobPost.getTitle(), jobPost.getTitle());
         Assert.assertEquals(testCreateJobPost.getAvailableHours(), jobPost.getAvailableHours());
         Assert.assertEquals(testCreateJobPost.getJobType(), jobPost.getJobType());
         Assert.assertEquals(testCreateJobPost.getZones().size(), zonesList.size());
         int i = 0;
-        for (JobPostZone zone : testCreateJobPost.getZones()) {
+        for (JobPost.Zone zone : testCreateJobPost.getZones()) {
             Assert.assertEquals(zone, zonesList.get(i++));
         }
         Assert.assertEquals(JOB_POST_COUNT + 1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "job_post"));
     }
 
-    @Test(expected = EntityExistsException.class)
+    @Test(expected = PersistenceException.class)
     public void testCreateDuplicatedZone() {
         String title = "Mi posteo";
         String availableHours = "Todos los dias";
         JobPost.JobType jobType = JobPost.JobType.PAINTING;
-        List<JobPostZone> zones = Arrays.asList(
-                new JobPostZone(JobPostZone.Zone.ALMAGRO),
-                new JobPostZone(JobPostZone.Zone.ALMAGRO));
+        List<JobPost.Zone> zones = Arrays.asList(
+                JobPost.Zone.ALMAGRO,
+                JobPost.Zone.ALMAGRO);
 
         jobPostDaoJpa.create(PROFESSIONAL_USER.getId(), title, availableHours, jobType, zones);
+        em.flush();
     }
 
     @Test
@@ -308,8 +307,8 @@ public class JobPostDaoJDBCTest {
     @Test
     public void testFindByZoneWithoutPagination() {
 
-        JobPostZone zone = new JobPostZone(JobPostZone.Zone.values()[1]);
-        List<JobPost> jobPosts = jobPostDaoJpa.findByZone(zone.getZone(), HirenetUtils.ALL_PAGES);
+        JobPost.Zone zone = JobPost.Zone.values()[1];
+        List<JobPost> jobPosts = jobPostDaoJpa.findByZone(zone, HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(ACTIVE_ZONE1_COUNT, jobPosts.size());
         jobPosts.forEach(jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone)));
@@ -318,8 +317,8 @@ public class JobPostDaoJDBCTest {
     @Test
     public void testFindByZoneWithPagination() {
 
-        JobPostZone zone = new JobPostZone(JobPostZone.Zone.values()[1]);
-        List<JobPost> jobPosts = jobPostDaoJpa.findByZone(zone.getZone(), 0);
+        JobPost.Zone zone = JobPost.Zone.values()[1];
+        List<JobPost> jobPosts = jobPostDaoJpa.findByZone(zone, 0);
 
         Assert.assertEquals(ACTIVE_ZONE1_PAGE1_COUNT, jobPosts.size());
         jobPosts.forEach(jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone)));
@@ -383,7 +382,7 @@ public class JobPostDaoJDBCTest {
     public void testUpdateNonexistentPost() {
 
         boolean status = jobPostDaoJpa.updateById(NONEXISTENT_ID, "", "", JobPost.JobType.BABYSITTING,
-                Arrays.asList(new JobPostZone(JobPostZone.Zone.values()[0]), new JobPostZone(JobPostZone.Zone.values()[1])));
+                Arrays.asList(JobPost.Zone.values()[0], JobPost.Zone.values()[1]));
 
         Assert.assertFalse(status);
     }
