@@ -35,6 +35,12 @@ public class JobPostImage {
 		this.image = image;
 	}
 
+	public JobPostImage(JobPost jobPost, ByteImage byteImage, EncodedImage image) {
+		this.jobPost = jobPost;
+		this.image = image;
+		this.byteImage = byteImage;
+	}
+
 	public long getImageId() {
 		return imageId;
 	}
