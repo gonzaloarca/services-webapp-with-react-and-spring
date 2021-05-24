@@ -56,11 +56,6 @@ public class SimpleJobPostImageService implements JobPostImageService {
 	}
 
 	@Override
-	public JobPostImage findPostImage(long postId) {
-		return jobPostImageDao.findPostImage(postId);
-	}
-
-	@Override
 	public boolean maxImagesUploaded(long postId) {
 		return jobPostImageDao.getImageCount(postId) >= MAX_IMAGES_NUMBER;
 	}

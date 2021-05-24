@@ -13,7 +13,5 @@ public interface JobPostImageService {
 
 	List<JobPostImage> findImages(long postId);
 
-	JobPostImage findPostImage(long postId);
-
 	boolean maxImagesUploaded(long postId);
 }
