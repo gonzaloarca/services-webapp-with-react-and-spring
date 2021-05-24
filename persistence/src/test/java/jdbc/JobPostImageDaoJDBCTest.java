@@ -24,7 +24,7 @@
 //@Rollback
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(classes = TestConfig.class)
-//@Sql("classpath:db_data_test.sql")
+//@Sql("classpath:user_data_test.sql")
 //public class JobPostImageDaoJDBCTest {
 //
 //	@InjectMocks

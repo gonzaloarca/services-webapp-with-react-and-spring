@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:db_data_test.sql")
+@Sql("classpath:user_data_test.sql")
 @Transactional
 public class VerificationTokenDaoTest {
     // TODO: Implementar tests

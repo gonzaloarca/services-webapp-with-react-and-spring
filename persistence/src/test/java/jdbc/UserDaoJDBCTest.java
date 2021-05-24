@@ -32,7 +32,7 @@ import java.util.Optional;
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Sql("classpath:db_data_test.sql")
+@Sql("classpath:user_data_test.sql")
 @Transactional
 public class UserDaoJDBCTest {
 
@@ -197,18 +197,18 @@ public class UserDaoJDBCTest {
         Assert.assertTrue(deleted);
     }
 
-//    @Test
-//    public void testFindUserJobTypes() {
-//        List<JobPost.JobType> maybeJobTypes = userDaoJDBC.findUserJobTypes(USER1.getId());
-//
-//        Assert.assertEquals(USER1_JOBTYPES.size(), maybeJobTypes.size());
-//        USER1_JOBTYPES.forEach((jobType -> Assert.assertTrue(maybeJobTypes.contains(jobType))));
-//    }
-//
-//    @Test
-//    public void testFindUserRankingInJobType() {
-//        int maybeRank = userDaoJDBC.findUserRankingInJobType(USER1.getId(), JobPost.JobType.values()[1]);
-//
-//        Assert.assertEquals(USER1_RANKING_IN_JOBTYPE1, maybeRank);
-//    }
+    @Test
+    public void testFindUserJobTypes() {
+        List<JobPost.JobType> maybeJobTypes = userDaoJpa.findUserJobTypes(USER1.getId());
+
+        Assert.assertEquals(USER1_JOBTYPES.size(), maybeJobTypes.size());
+        USER1_JOBTYPES.forEach((jobType -> Assert.assertTrue(maybeJobTypes.contains(jobType))));
+    }
+
+    @Test
+    public void testFindUserRankingInJobType() {
+        int maybeRank = userDaoJpa.findUserRankingInJobType(USER1.getId(), JobPost.JobType.values()[1]);
+
+        Assert.assertEquals(USER1_RANKING_IN_JOBTYPE1, maybeRank);
+    }
 }

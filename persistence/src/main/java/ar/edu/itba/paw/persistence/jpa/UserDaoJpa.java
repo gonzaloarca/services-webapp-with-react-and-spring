@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserDaoJpa implements UserDao {
@@ -140,13 +142,35 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public List<JobPost.JobType> findUserJobTypes(long id) {
-        //TODO: CUANDO JOBPOST ESTE HIBERNADO
-        return null;
+        @SuppressWarnings("unchecked")
+        List<JobPost.JobType> resultList = em.createQuery(
+                "SELECT DISTINCT jp.jobType FROM JobPost jp WHERE jp.user.id = :id"
+        ).setParameter("id", id).getResultList();
+        return resultList;
     }
 
     @Override
     public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
-        //TODO: CUANDO JOBPOST ESTE HIBERNADO
-        return 0;
+
+        //TODO: SE PUEDE PASAR A HSQLDB? O ES MUY COMPLICADA?
+        String sqlQuery = new StringBuilder()
+                .append("SELECT rank FROM (")
+                .append("         SELECT user_id, ROW_NUMBER() OVER () AS rank")
+                .append("         FROM (SELECT user_id")
+                .append("               FROM job_cards")
+                .append("               WHERE post_job_type = :jobType")
+                .append("               GROUP BY user_id")
+                .append("               ORDER BY SUM(post_contract_count) DESC")
+                //    ORDERBY esta en una subquery para que funcione correctamente con HSQLDB
+                .append("              ) AS users_ordered_by_contract")
+                .append("     ) AS rankings")
+                .append(" WHERE user_id = :id")
+                .toString();
+
+        final Query query = em.createNativeQuery(sqlQuery);
+        @SuppressWarnings("unchecked")
+        Integer result = (Integer) query.setParameter("jobType", jobType.getValue())
+                .setParameter("id", id).getResultList().stream().findFirst().orElse(0);
+        return result;
     }
 }

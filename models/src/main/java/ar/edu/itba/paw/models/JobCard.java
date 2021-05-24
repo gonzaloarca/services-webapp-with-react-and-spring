@@ -35,7 +35,7 @@ public class JobCard implements Serializable {
 
     /*default*/JobCard(){}
 
-    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, JobPostImage postImage ,int contractsCompleted, int reviewsCount) {
+    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, JobPostImage postImage, int contractsCompleted, int reviewsCount) {
         this.jobPost = jobPost;
         this.rateType = rateType;
         this.price = price;

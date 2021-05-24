@@ -26,6 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
@@ -227,6 +228,18 @@ public class JobPostDaoJDBCTest {
             Assert.assertEquals(zone, zonesList.get(i++));
         }
         Assert.assertEquals(JOB_POST_COUNT + 1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "job_post"));
+    }
+
+    @Test(expected = EntityExistsException.class)
+    public void testCreateDuplicatedZone() {
+        String title = "Mi posteo";
+        String availableHours = "Todos los dias";
+        JobPost.JobType jobType = JobPost.JobType.PAINTING;
+        List<JobPostZone> zones = Arrays.asList(
+                new JobPostZone(JobPostZone.Zone.ALMAGRO),
+                new JobPostZone(JobPostZone.Zone.ALMAGRO));
+
+        jobPostDaoJpa.create(PROFESSIONAL_USER.getId(), title, availableHours, jobType, zones);
     }
 
     @Test
