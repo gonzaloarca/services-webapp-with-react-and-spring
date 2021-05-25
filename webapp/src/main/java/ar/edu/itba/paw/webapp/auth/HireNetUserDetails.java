@@ -24,8 +24,11 @@ public class HireNetUserDetails implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserAuth user = userService.getAuthInfo(email).orElseThrow(() -> new UsernameNotFoundException("No user found for email " + email));
-        Collection<? extends GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        UserAuth user = userService.getAuthInfo(email).orElseThrow(() ->
+                new UsernameNotFoundException("No user found for email " + email));
+        Collection<? extends GrantedAuthority> authorities = user.getRoles().stream().map(
+                role -> new SimpleGrantedAuthority(role.getName())
+        ).collect(Collectors.toList());
         return new User(user.getEmail(),user.getPassword(),user.isVerified(),true,true,true, authorities);
     }
 }

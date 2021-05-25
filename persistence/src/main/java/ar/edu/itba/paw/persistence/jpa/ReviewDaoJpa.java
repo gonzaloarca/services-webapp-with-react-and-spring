@@ -83,21 +83,21 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public int findMaxPageReviewsByUserId(long id) {
-        Long reviewCount = (Long) em.createQuery("SELECT count(*) from Review as r where r.jobContract.jobPackage.jobPost.user.id = :id")
+        Long reviewCount = em.createQuery("SELECT count(*) from Review as r where r.jobContract.jobPackage.jobPost.user.id = :id", Long.class)
                 .setParameter("id", id).getSingleResult();
         return (int) Math.ceil(((double) reviewCount) / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
     public int findProfessionalReviewsSize(long id) {
-        Long res = (Long) em.createQuery("SELECT count(*) from Review as r where r.jobContract.jobPackage.jobPost.user.id = :id")
+        Long res = em.createQuery("SELECT count(*) from Review as r where r.jobContract.jobPackage.jobPost.user.id = :id", Long.class)
                 .setParameter("id", id).getSingleResult();
         return res.intValue();
     }
 
     @Override
     public int findMaxPageReviewsByPostId(long id) {
-        Long aux = (Long) em.createQuery("SELECT count(*) from Review as r where r.jobContract.jobPackage.jobPost.id = :id")
+        Long aux = em.createQuery("SELECT count(*) from Review as r where r.jobContract.jobPackage.jobPost.id = :id", Long.class)
                 .setParameter("id", id).getSingleResult();
         return (int) Math.ceil(((double) aux.intValue())/ HirenetUtils.PAGE_SIZE);
     }
