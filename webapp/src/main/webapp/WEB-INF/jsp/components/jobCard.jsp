@@ -35,7 +35,7 @@
             <c:otherwise>
                 <div class="custom-row">
                     <jsp:include page="rateStars.jsp">
-                        <jsp:param name="rate" value="${requestScope.data.jobPost.rating}"/>
+                        <jsp:param name="rate" value="${requestScope.data.rating}"/>
                     </jsp:include>
                     <p class="ml-3 service-subtitle">
                         (${requestScope.data.reviewsCount})

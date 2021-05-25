@@ -86,7 +86,7 @@
                             code="${requestScope.data.jobPost.jobType.stringCode}"/></p>
                     <div class="custom-row">
                         <jsp:include page="components/rateStars.jsp">
-                            <jsp:param name="rate" value="${requestScope.data.jobPost.rating}"/>
+                            <jsp:param name="rate" value="${requestScope.data.rating}"/>
                         </jsp:include>
                         <p class="ml-1 service-subtitle">
                             (${requestScope.data.reviewsCount})

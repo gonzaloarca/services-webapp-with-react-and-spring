@@ -31,7 +31,7 @@ public class SimplePaginationServiceTest {
 
         spy.findMaxPageJobPostsSearch(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, Locale.getDefault());
 
-        Mockito.verify(jobCardService).findMaxPageSearch(Mockito.eq(QUERY), Mockito.eq(ZONE), Locale.getDefault());
+        Mockito.verify(jobCardService).findMaxPageSearch(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(Locale.getDefault()));
     }
 
     @Test
@@ -41,6 +41,6 @@ public class SimplePaginationServiceTest {
         spy.findMaxPageJobPostsSearch(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), Locale.getDefault());
 
         Mockito.verify(jobCardService).findMaxPageSearchWithCategory(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(JobPost.JobType.BABYSITTING), Locale.getDefault());
+                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(Locale.getDefault()));
     }
 }

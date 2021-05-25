@@ -88,9 +88,10 @@ public class JobCardDaoJDBCTest {
             JOB_POST_USER2,
             JOB_PACKAGE_USER2.getRateType(),
             JOB_PACKAGE_USER2.getPrice(),
-            null,
-            1,
-            0
+            0,
+            2,
+            0.0,
+            null
     );
     private static final JobPost JOB_POST_USER3 = new JobPost(
             12,
@@ -112,9 +113,10 @@ public class JobCardDaoJDBCTest {
             JOB_POST_USER3,
             JOB_PACKAGE_USER3.getRateType(),
             JOB_PACKAGE_USER3.getPrice(),
-            null,
+            0,
             2,
-            0
+            0.0,
+            null
     );
     private static final JobPost JOB_POST_USER4 = new JobPost(
             13,
@@ -136,9 +138,10 @@ public class JobCardDaoJDBCTest {
             JOB_POST_USER4,
             JOB_PACKAGE_USER4.getRateType(),
             JOB_PACKAGE_USER4.getPrice(),
-            null,
-            1,
-            0
+            0,
+            2,
+            0.0,
+            null
     );
     private static final int RELATED_JOB_CARDS_COUNT = 3;
     public static final int SEARCH_ELECTRICISTA_COUNT = 4;

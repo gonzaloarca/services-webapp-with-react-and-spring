@@ -29,18 +29,24 @@ public class JobCard implements Serializable {
     @Column(name = "reviews")
     private int reviewsCount;
 
+    @Column(name = "rating")
+    private Double rating;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "card_image_id")
     private JobPostImage postImage;
 
-    /*default*/JobCard(){}
+    /*default*/JobCard() {
+    }
 
-    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, JobPostImage postImage, int contractsCompleted, int reviewsCount) {
+    public JobCard(JobPost jobPost, JobPackage.RateType rateType, Double price, int contractsCompleted,
+                   int reviewsCount, Double rating, JobPostImage postImage) {
         this.jobPost = jobPost;
         this.rateType = rateType;
         this.price = price;
         this.contractsCompleted = contractsCompleted;
         this.reviewsCount = reviewsCount;
+        this.rating = rating;
         this.postImage = postImage;
     }
 
@@ -68,6 +74,10 @@ public class JobCard implements Serializable {
         return postImage;
     }
 
+    public Double getRating() {
+        return rating;
+    }
+
     public void setJobPost(JobPost jobPost) {
         this.jobPost = jobPost;
     }
@@ -90,6 +100,10 @@ public class JobCard implements Serializable {
 
     public void setPostImage(JobPostImage postImage) {
         this.postImage = postImage;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
     @Override
