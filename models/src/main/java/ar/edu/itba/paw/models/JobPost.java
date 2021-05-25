@@ -33,7 +33,7 @@ public class JobPost {
     @Column(name = "post_is_active", nullable = false)
     private boolean isActive;
 
-//    @Id
+
     @ElementCollection(targetClass = JobPost.Zone.class)
     @Enumerated(EnumType.ORDINAL)
     @CollectionTable(name = "post_zone",joinColumns = {@JoinColumn(name = "post_id", nullable = false)},uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "zone_id"}, name = "job_zone_pkey")})

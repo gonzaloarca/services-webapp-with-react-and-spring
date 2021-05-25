@@ -221,7 +221,7 @@ public class ReviewDaoJDBCTest {
         Assert.assertEquals(newReview.getDescription(), maybeReview.getDescription());
         Assert.assertEquals(newReview.getRate(), maybeReview.getRate());
         Assert.assertEquals(newReview.getClient(), maybeReview.getClient());
-        Assert.assertEquals(newReview.getJobPost(), maybeReview.getJobPost());
+        Assert.assertEquals(newReview.getJobPost().getId(), maybeReview.getJobPost().getId());
         Assert.assertEquals(newReview.getJobContract(), maybeReview.getJobContract());
         Assert.assertEquals(newReview, maybeReview);
     }
@@ -237,7 +237,7 @@ public class ReviewDaoJDBCTest {
             Assert.assertEquals(REVIEWS[i].getDescription(), maybePostReviews.get(i).getDescription());
             Assert.assertEquals(REVIEWS[i].getRate(), maybePostReviews.get(i).getRate());
             Assert.assertEquals(REVIEWS[i].getClient(), maybePostReviews.get(i).getClient());
-            Assert.assertEquals(REVIEWS[i].getJobPost(), maybePostReviews.get(i).getJobPost());
+            Assert.assertEquals(REVIEWS[i].getJobPost().getId(), maybePostReviews.get(i).getJobPost().getId());
             Assert.assertEquals(REVIEWS[i].getJobContract(), maybePostReviews.get(i).getJobContract());
             Assert.assertEquals(REVIEWS[i], maybePostReviews.get(i));
         }
@@ -254,7 +254,7 @@ public class ReviewDaoJDBCTest {
             Assert.assertEquals(REVIEWS[i].getDescription(), maybePostReviews.get(i).getDescription());
             Assert.assertEquals(REVIEWS[i].getRate(), maybePostReviews.get(i).getRate());
             Assert.assertEquals(REVIEWS[i].getClient(), maybePostReviews.get(i).getClient());
-            Assert.assertEquals(REVIEWS[i].getJobPost(), maybePostReviews.get(i).getJobPost());
+            Assert.assertEquals(REVIEWS[i].getJobPost().getId(), maybePostReviews.get(i).getJobPost().getId());
             Assert.assertEquals(REVIEWS[i].getJobContract(), maybePostReviews.get(i).getJobContract());
             Assert.assertEquals(REVIEWS[i], maybePostReviews.get(i));
         }

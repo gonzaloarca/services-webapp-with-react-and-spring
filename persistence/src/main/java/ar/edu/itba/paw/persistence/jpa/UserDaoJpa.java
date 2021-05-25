@@ -82,7 +82,7 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<UserAuth> findAuthInfo(String email) {
-        return em.createQuery("FROM UserAuth AS u WHERE u.email = :email", UserAuth.class)
+        return em.createQuery("FROM UserAuth AS u JOIN FETCH u.roles WHERE u.email = :email", UserAuth.class)
                 .setParameter("email", email).getResultList().stream().findFirst();
     }
 

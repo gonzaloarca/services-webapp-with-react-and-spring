@@ -6,6 +6,7 @@ import ar.edu.itba.paw.persistence.jpa.JobContractDaoJpa;
 import config.TestConfig;
 import exceptions.JobPackageNotFoundException;
 import exceptions.UserNotFoundException;
+import org.hibernate.Hibernate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +19,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -168,6 +172,9 @@ public class JobContractDaoJDBCTest {
 
     private static final int NON_EXISTENT_ID = 999;
 
+    @PersistenceContext
+    private EntityManager em;
+
 
     @Autowired
     private DataSource ds;
@@ -187,18 +194,9 @@ public class JobContractDaoJDBCTest {
     @Test
     public void testCreate() {
 
-//        Mockito.when(mockPostDao.findById(Mockito.eq(JOB_POST)))
-//                .thenReturn(Optional.of(JOB_POST));
-//        Mockito.when(mockUserDao.findById(Mockito.eq(CLIENT.getId())))
-//                .thenReturn(Optional.of(CLIENT));
-//        Mockito.when(mockUserDao.findById(Mockito.eq(PROFESSIONAL.getId())))
-//                .thenReturn(Optional.of(PROFESSIONAL));
-//        Mockito.when(mockJobPackageDao.findById(JOB_PACKAGES[0].getId()))
-//                .thenReturn(Optional.of(JOB_PACKAGES[0]));
-
         JobContract jobContract = jobContractDaoJpa.create(CLIENT.getId(), JOB_PACKAGES[0].getId(),
                 JOB_CONTRACTS_PACKAGE1[0].getDescription(), new ByteImage(IMAGE_DATA, IMAGE_TYPE));
-
+        em.flush();
         Assert.assertNotNull(jobContract);
 
         Assert.assertEquals(CLIENT, jobContract.getClient());
@@ -213,7 +211,8 @@ public class JobContractDaoJDBCTest {
         Assert.assertEquals(PROFESSIONAL.isActive(), jobContract.getProfessional().isActive());
 
         Assert.assertEquals(JOB_PACKAGES[0], jobContract.getJobPackage());
-        Assert.assertEquals(JOB_PACKAGES[0].getPostId(), jobContract.getJobPackage().getPostId());
+        Assert.assertEquals(JOB_PACKAGES[0].getJobPost().getId(), jobContract.getJobPackage().getJobPost().getId());
+
         Assert.assertEquals(JOB_PACKAGES[0].getDescription(), jobContract.getJobPackage().getDescription());
         Assert.assertEquals(JOB_PACKAGES[0].getTitle(), jobContract.getJobPackage().getTitle());
         Assert.assertEquals(JOB_PACKAGES[0].getPrice(), jobContract.getJobPackage().getPrice(), 0.001);
@@ -223,6 +222,8 @@ public class JobContractDaoJDBCTest {
         Assert.assertNotNull(jobContract.getCreationDate());
         Assert.assertEquals(JOB_CONTRACTS_COUNT + 1, jobContract.getId());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1[0].getDescription(), jobContract.getDescription());
+
+        Assert.assertEquals(JdbcTestUtils.countRowsInTable(jdbcTemplate,"contract"),19);
     }
 
     @Test
@@ -295,7 +296,7 @@ public class JobContractDaoJDBCTest {
     @Test
     public void testFindByPostIdWithoutPagination() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByPostId(JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getPostId(), HirenetUtils.ALL_PAGES);
+        List<JobContract> jobContracts = jobContractDaoJpa.findByPostId(JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getJobPost().getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_POST_COUNT, jobContracts.size()); //3 del package1 y 1 del package2

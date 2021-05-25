@@ -16,7 +16,7 @@ public class JobPackage {
 //    @Column(name = "post_id", nullable = false, insertable = false, updatable = false)
 //    private long postId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "job_package_post_id_fkey"))
     private JobPost jobPost;
 
@@ -136,7 +136,7 @@ public class JobPackage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobPackage that = (JobPackage) o;
-        return id == that.id;
+        return getId() == that.getId();
     }
 
     @Override
