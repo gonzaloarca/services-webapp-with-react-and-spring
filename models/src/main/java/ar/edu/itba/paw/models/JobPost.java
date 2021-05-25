@@ -33,11 +33,13 @@ public class JobPost {
     @Column(name = "post_is_active", nullable = false)
     private boolean isActive;
 
-//    @Id
+    //    @Id
     @ElementCollection(targetClass = JobPost.Zone.class)
     @Enumerated(EnumType.ORDINAL)
-    @CollectionTable(name = "post_zone",joinColumns = {@JoinColumn(name = "post_id", nullable = false)},uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "zone_id"}, name = "job_zone_pkey")})
-    @Column(name="zone_id",nullable = false)
+    @CollectionTable(name = "post_zone", joinColumns = {@JoinColumn(name = "post_id", nullable = false)},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "zone_id"}, name = "post_zone_pkey")},
+            foreignKey = @ForeignKey(name = "post_zone_post_id_fkey"))
+    @Column(name = "zone_id", nullable = false)
     private List<Zone> zones;
 
     @Column(name = "post_creation_date", nullable = false)

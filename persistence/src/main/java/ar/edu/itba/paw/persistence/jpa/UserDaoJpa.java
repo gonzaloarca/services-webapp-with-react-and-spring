@@ -105,8 +105,12 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
-        return addEncodedImage(em.createQuery("FROM User AS u WHERE u.id = :user_id AND u.role_id = :role_id", User.class)
-                .setParameter("user_id", id).setParameter("role_id", role.ordinal()).
+        UserAuth pepe = em.createQuery("FROM UserAuth ua WHERE ua.id = :id", UserAuth.class).setParameter("id", id).getSingleResult();
+        return addEncodedImage(em.createQuery(
+//                "FROM User u WHERE u.id = :user_id AND EXISTS(FROM UserAuth ua WHERE ua.id = u.id AND :role_id IN ua.roles)"
+                "SELECT u FROM UserAuth ua JOIN User u ON ua.user_id = u.id WHERE u.id = :user_id AND :role_id IN(ua.roles)"
+                , User.class)
+                .setParameter("user_id", id).setParameter("role_id", role).
                         getResultList().stream().findFirst());
     }
 

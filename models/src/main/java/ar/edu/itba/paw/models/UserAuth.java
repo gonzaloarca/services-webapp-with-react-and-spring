@@ -26,11 +26,13 @@ public class UserAuth {
     @Column(nullable = false, name = "user_is_verified")
     private boolean isVerified;
 
-
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.ORDINAL)
-    @CollectionTable(name = "user_role",joinColumns = {@JoinColumn(name = "user_id")},uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id","user_id"},name = "user_role_pkey")})
-    @Column(name="role_id")
+    @CollectionTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "user_id"}, name = "user_role_pkey")},
+            foreignKey = @ForeignKey(name = "user_role_user_id_fkey"))
+    @Column(name = "role_id")
     private List<Role> roles;
 
     /*default*/ UserAuth() {
