@@ -225,7 +225,8 @@ public class JobPostController {
             editPackageForm.setTitle(jobPackage.getTitle());
             editPackageForm.setDescription(jobPackage.getDescription());
             editPackageForm.setRateType(jobPackage.getRateType().ordinal());
-            editPackageForm.setPrice(jobPackage.getPrice().toString());
+            Double price = jobPackage.getPrice();
+            editPackageForm.setPrice(price != null ? price.toString() : "");
         } else
             editPackageForm = form;
 

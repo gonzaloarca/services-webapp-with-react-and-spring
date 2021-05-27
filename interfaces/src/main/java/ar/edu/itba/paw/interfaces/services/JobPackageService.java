@@ -19,4 +19,6 @@ public interface JobPackageService {
     boolean updateJobPackage(long id, String title, String description, String price, int rateType);
 
     boolean deleteJobPackage(long id);
+
+    JobPackage findByIdWithJobPost(int id);
 }

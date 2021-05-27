@@ -120,7 +120,7 @@ public class JobCardDaoJpa implements JobCardDao {
         Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
 
         @SuppressWarnings("unchecked")
-        BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(0);
+        BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
         return result.intValue();
     }
 
@@ -129,7 +129,8 @@ public class JobCardDaoJpa implements JobCardDao {
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT count(*) ")
                 .append(RELATED_CARDS_QUERY)
-                .append("ORDER BY clients_in_common DESC, post_contract_count DESC ");
+                .append("GROUP BY clients_in_common,post_contract_count")
+                .append(" ORDER BY clients_in_common DESC, post_contract_count DESC ");
         // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
 
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
@@ -137,7 +138,7 @@ public class JobCardDaoJpa implements JobCardDao {
                 .setParameter("dateLimit", LocalDateTime.now().minusDays(30));
 
         @SuppressWarnings("unchecked")
-        BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(0);
+        BigInteger result    = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
         return result.intValue();
     }
 
@@ -174,7 +175,10 @@ public class JobCardDaoJpa implements JobCardDao {
         if(jobType != null)
             sqlQuery.append(" AND post_job_type = :type");
 
+        sqlQuery.append(" GROUP BY job_cards.rating,job_cards.post_id");
         sqlQuery.append(" ORDER BY rating DESC");
+
+
 
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
                 .setParameter("query", "%" + query + "%")

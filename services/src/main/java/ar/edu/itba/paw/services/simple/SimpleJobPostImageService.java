@@ -8,11 +8,13 @@ import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPostImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class SimpleJobPostImageService implements JobPostImageService {
 
 	private final int MAX_IMAGES_NUMBER = 5;

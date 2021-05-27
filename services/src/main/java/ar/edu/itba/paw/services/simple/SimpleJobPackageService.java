@@ -57,6 +57,13 @@ public class SimpleJobPackageService implements JobPackageService {
         return jobPackageDao.deletePackage(id);
     }
 
+    @Override
+    public JobPackage findByIdWithJobPost(int id) {
+        JobPackage jobPackage = jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
+        jobPackage.getJobPost().getId();
+        return jobPackage;
+    }
+
     private Double parsePrice(JobPackage.RateType rateType, String price){
         if(!rateType.equals(JobPackage.RateType.TBD)) {
             if (price != null && !price.isEmpty()) {

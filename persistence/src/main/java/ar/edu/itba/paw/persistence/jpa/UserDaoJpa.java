@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -174,9 +175,9 @@ public class UserDaoJpa implements UserDao {
 
         final Query query = em.createNativeQuery(sqlQuery);
         @SuppressWarnings("unchecked")
-        Integer result = (Integer) query.setParameter("jobType", jobType.getValue())
-                .setParameter("id", id).getResultList().stream().findFirst().orElse(0);
-        return result;
+        BigInteger result = (BigInteger) query.setParameter("jobType", jobType.getValue())
+                .setParameter("id", id).getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
+        return result.intValue();
     }
 
     private Optional<User> addEncodedImage(Optional<User> maybeUser) {

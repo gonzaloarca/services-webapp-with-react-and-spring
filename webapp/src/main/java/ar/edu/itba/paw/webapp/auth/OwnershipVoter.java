@@ -136,7 +136,7 @@ public class OwnershipVoter implements AccessDecisionVoter {
                             return ACCESS_ABSTAIN;
                         }
                         try {
-                            long postId = jobPackageService.findById(id).getPostId();
+                            long postId = jobPackageService.findByIdWithJobPost(id).getJobPost().getId();
                             isOwner = jobPostService.findById(postId).getUser().getEmail().equals(authentication.getName());
                         } catch (NoSuchElementException e) {
                             return ACCESS_ABSTAIN;
