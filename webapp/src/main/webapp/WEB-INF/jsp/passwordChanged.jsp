@@ -27,7 +27,9 @@
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/resources/images/apple-touch-icon.png">
 </head>
 <body>
-<jsp:include page="components/customNavBar.jsp"/>
+<c:set var="path" value="/create-job-post" scope="request"/>
+<c:set var="zoneValues" value="${zoneValues}" scope="request"/>
+<%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent page">
     <div class="message">
         <img src='<c:url value="/resources/images/thumbs.svg" />'

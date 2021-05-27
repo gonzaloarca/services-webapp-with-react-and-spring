@@ -57,7 +57,7 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public List<JobContract> findByClientId(long id, int page) {
-        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id")
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id ORDER BY contract_creation_date DESC")
                 .setParameter("id", id);
 
         return executePageQuery(page, nativeQuery);
@@ -67,7 +67,7 @@ public class JobContractDaoJpa implements JobContractDao {
     public List<JobContract> findByProId(long id, int page) {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "WHERE user_id = :id")
+                        "WHERE user_id = :id ORDER BY contract_creation_date DESC")
                 .setParameter("id", id);
 
         return executePageQuery(page, nativeQuery);
@@ -77,7 +77,7 @@ public class JobContractDaoJpa implements JobContractDao {
     public List<JobContract> findByPostId(long id, int page) {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT contract_id FROM contract NATURAL JOIN job_package " +
-                        "WHERE post_id = :id")
+                        "WHERE post_id = :id ORDER BY contract_creation_date DESC")
                 .setParameter("id", id);
 
         return executePageQuery(page, nativeQuery);
@@ -87,7 +87,7 @@ public class JobContractDaoJpa implements JobContractDao {
     public List<JobContract> findByPackageId(long id, int page) {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT contract_id FROM contract " +
-                        "WHERE package_id = :id")
+                        "WHERE package_id = :id ORDER BY contract_creation_date DESC")
                 .setParameter("id", id);
 
         return executePageQuery(page, nativeQuery);

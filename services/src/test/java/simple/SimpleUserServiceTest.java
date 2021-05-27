@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleUserServiceTest {
@@ -69,7 +70,7 @@ public class SimpleUserServiceTest {
         Mockito.when(passwordEncoder.encode(Mockito.eq(""))).thenReturn("");
         Mockito.when(verificationTokenService.create(Mockito.eq(NEW_USER))).thenReturn(TOKEN);
 
-        User createdUser = userService.register(NEW_USER.getEmail(), "", NEW_USER.getUsername(), NEW_USER.getPhone(), null);
+        User createdUser = userService.register(NEW_USER.getEmail(), "", NEW_USER.getUsername(), NEW_USER.getPhone(), null, Locale.getDefault());
         Assert.assertNotNull(createdUser);
         Assert.assertEquals(NEW_USER, createdUser);
     }
@@ -94,7 +95,7 @@ public class SimpleUserServiceTest {
     public void testRegisterUserWithoutImage() {
         Mockito.when(passwordEncoder.encode(Mockito.eq(""))).thenReturn("");
 
-        userService.register(NEW_USER.getEmail(), "", NEW_USER.getUsername(), EXISTING_USER.getPhone(), null);
+        userService.register(NEW_USER.getEmail(), "", NEW_USER.getUsername(), EXISTING_USER.getPhone(), null, Locale.getDefault());
 
         Mockito.verify(userDaoJpa).register(NEW_USER.getEmail(), "", NEW_USER.getUsername(),
                 EXISTING_USER.getPhone());
@@ -105,7 +106,7 @@ public class SimpleUserServiceTest {
         Mockito.when(passwordEncoder.encode(Mockito.eq(""))).thenReturn("");
 
         userService.register(NEW_USER.getEmail(), "", NEW_USER.getUsername(), EXISTING_USER.getPhone(),
-                new ByteImage(image1Bytes, image1Type));
+                new ByteImage(image1Bytes, image1Type), Locale.getDefault());
 
         Mockito.verify(userDaoJpa).register(NEW_USER.getEmail(), "", NEW_USER.getUsername(),
                 EXISTING_USER.getPhone(), new ByteImage(image1Bytes, image1Type));

@@ -20,11 +20,13 @@
         <c:set value="${contractCard.jobContract.client.image}" var="userImage"/>
         <c:set value="mycontracts.hiredBy" var="hireDataMessageCode"/>
         <c:set value="mycontracts.reviewed" var="reviewCaption"/>
+        <c:set value="${contractCard.jobContract.client.username}" var="cardUser"/>
     </c:when>
     <c:otherwise>
         <c:set value="${contractCard.jobCard.jobPost.user.image}" var="userImage"/>
         <c:set value="mycontracts.hiredPro" var="hireDataMessageCode"/>
         <c:set value="mycontracts.yourReview" var="reviewCaption"/>
+        <c:set value="${contractCard.jobContract.professional.username}" var="cardUser"/>
     </c:otherwise>
 </c:choose>
 
@@ -43,7 +45,7 @@
             </c:choose>
             <img class="user-avatar" src="${profilePic}" alt="<spring:message code="user.avatar"/>">
             <p><spring:message htmlEscape="true" code="${hireDataMessageCode}"
-                               arguments="${contractCard.jobContract.client.username}"/></p>
+                               arguments="${cardUser}"/></p>
         </div>
 
         <div class="hire-date-container">
@@ -268,10 +270,10 @@
         </script>
 
     </div>
-    <div style="color: #485696; margin: 0 50px" class="d-flex justify-content-start">
-        <p style=" margin: 0 20px;"><i class="fas fa-cube mr-2"></i>
+    <div style="color: #485696; margin: 0 30px; padding: 10px 0" class="d-flex justify-content-start">
+        <p style=" margin: 0 10px;"><i class="fas fa-cube mr-2"></i>
             <spring:message code="mycontracts.card.hired"/>
         </p>
-        <p style="font-weight: bold; size: 1.1rem;"><c:out value="${contractCard.jobContract.jobPackage.title}"/></p>
+        <p class="hired-package-title"><c:out value="${contractCard.jobContract.jobPackage.title}"/></p>
     </div>
 </div>

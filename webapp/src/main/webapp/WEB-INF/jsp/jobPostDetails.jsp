@@ -211,7 +211,7 @@
                             </span>
                         <div class="custom-row zones">
                             <c:forEach items="${jobPost.zones}" var="zone">
-                                <p class="capitalize-first-letter m-1">
+                                <p class="m-1">
                                     <spring:message code="${zone.stringCode}"/>
                                 </p>
                             </c:forEach>
