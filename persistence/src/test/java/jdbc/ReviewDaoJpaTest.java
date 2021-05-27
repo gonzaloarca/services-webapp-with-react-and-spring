@@ -32,7 +32,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:review_data_test.sql")
 @Transactional
-public class ReviewDaoJDBCTest {
+public class ReviewDaoJpaTest {
     private static final LocalDateTime creationDate = LocalDateTime.now();
     private static final User PROFESSIONAL = new User(
             1,

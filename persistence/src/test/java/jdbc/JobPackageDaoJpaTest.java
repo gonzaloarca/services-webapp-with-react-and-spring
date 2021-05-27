@@ -33,7 +33,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:job_package_data_test.sql")
 @Transactional
-public class JobPackageDaoJDBCTest {
+public class JobPackageDaoJpaTest {
 
     private static final List<JobPost.Zone> ZONES =
             new ArrayList<JobPost.Zone>(Arrays.asList(JobPost.Zone.values()[1],

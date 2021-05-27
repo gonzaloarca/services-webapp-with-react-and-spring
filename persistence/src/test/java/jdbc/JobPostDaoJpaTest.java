@@ -37,7 +37,7 @@ import java.util.*;
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
 @Sql("classpath:job_post_data_test.sql")
-public class JobPostDaoJDBCTest {
+public class JobPostDaoJpaTest {
 
     private static final long JOB_POST_COUNT = 10;
     private static final long ACTIVE_JOB_POST_COUNT = 9;

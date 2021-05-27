@@ -27,7 +27,7 @@ import java.util.List;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:user_data_test.sql")
 @Transactional
-public class JobPostImageDaoJDBCTest {
+public class JobPostImageDaoJpaTest {
 
 	@InjectMocks
 	@Autowired

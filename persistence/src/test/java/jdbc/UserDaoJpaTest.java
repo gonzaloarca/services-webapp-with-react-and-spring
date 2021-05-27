@@ -34,7 +34,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:user_data_test.sql")
 @Transactional
-public class UserDaoJDBCTest {
+public class UserDaoJpaTest {
 
     private static final User USER1 = new User(
             1,

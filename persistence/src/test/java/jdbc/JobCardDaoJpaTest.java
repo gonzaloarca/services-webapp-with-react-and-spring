@@ -27,7 +27,7 @@ import java.util.*;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:job_card_data_test.sql")
 @Transactional
-public class JobCardDaoJDBCTest {
+public class JobCardDaoJpaTest {
 
     private static final User USER1 = new User(
             1,

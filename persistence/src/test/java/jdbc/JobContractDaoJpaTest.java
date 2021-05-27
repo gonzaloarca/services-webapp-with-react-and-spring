@@ -37,7 +37,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:job_contract_data_test.sql")
 @Transactional
-public class JobContractDaoJDBCTest {
+public class JobContractDaoJpaTest {
     private static final User PROFESSIONAL = new User(
             1,
             "franquesada@gmail.com",

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:user_data_test.sql")
 @Transactional
-public class VerificationTokenDaoTest {
+public class VerificationTokenDaoJpaTest {
     // TODO: Implementar tests
 
     @Test
