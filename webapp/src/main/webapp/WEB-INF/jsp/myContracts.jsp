@@ -59,7 +59,8 @@
                 <a class="nav-link nav-horizontal-option ${contractType == 'client'
                 ? 'active active-yellow font-weight-bold' : ''}"
                    href="${pageContext.request.contextPath}/my-contracts/client/active">
-                    <div class="contracts-option">
+                    <div class="contracts-option ${contractType == 'client'
+                    ? 'font-weight-bold' : ''}">
                         <i class="fas fa-users fa-sm option-icon client-icon ml-0 mr-2"></i>
                         <spring:message code="contract.options.mine"/>
                     </div>
@@ -68,7 +69,8 @@
                     <a class="nav-link nav-horizontal-option ${contractType == 'professional'
                     ? 'active active-blue font-weight-bold' : ''}"
                        href="${pageContext.request.contextPath}/my-contracts/professional/active">
-                        <div class="contracts-option">
+                        <div class="contracts-option ${contractType == 'professional'
+                    ? 'font-weight-bold' : ''}">
                             <i class="fas fa-user fa-sm option-icon pro-icon ml-0 mr-2"></i>
                             <spring:message code="contract.options.myServices"/>
                         </div>
