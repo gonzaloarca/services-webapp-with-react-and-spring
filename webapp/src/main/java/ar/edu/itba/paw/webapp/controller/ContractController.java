@@ -9,14 +9,11 @@ import ar.edu.itba.paw.webapp.form.ContractForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -98,7 +95,12 @@ public class ContractController {
         contractControllerLogger.debug("Senfing email to professional for package {}, post {} and contract {}",jobPack.getId(),jobPost.getId(),jobContract.getId());
         mailingService.sendContractEmail(jobContract, jobPack, jobPost, localeResolver.resolveLocale(servletRequest));
 
-        return new ModelAndView("redirect:/contract/success");
+        return new ModelAndView("redirect:/contract/" + packId + "/success");
+    }
+
+    @RequestMapping("/{packId}/success")
+    public ModelAndView contractSuccess(@PathVariable final long packId) {
+        return new ModelAndView("contractSubmitted");
     }
 
     @ModelAttribute("jobPack")

@@ -2,7 +2,10 @@ package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
-import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.interfaces.services.JobCardService;
+import ar.edu.itba.paw.interfaces.services.JobContractService;
+import ar.edu.itba.paw.interfaces.services.ReviewService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobContractCard;
@@ -15,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Transactional
 @Service
@@ -114,43 +116,52 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id) {
-        return jobContractDao.findMaxPageContractsByClientId(id);
+    public int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states) {
+        return jobContractDao.findMaxPageContractsByClientIdAndStates(id, states);
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id) {
-        return jobContractDao.findMaxPageContractsByProId(id);
+    public int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states) {
+        return jobContractDao.findMaxPageContractsByProIdAndStates(id, states);
     }
 
     @Override
-    public List<JobContractCard> findJobContractCardsByClientId(long id, int page) {
+    public List<JobContractCard> findJobContractCardsByProIdAndStates(long id, List<JobContract.ContractState> states, int page) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
-        findByClientId(id, page).
-                forEach(jobContract ->
-                                jobContractCards.add(
-                                        new JobContractCard(jobContract, jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null)))
-                        //puede no tener una review
-                );
+        List<JobContract> jobContracts = findByProId(id, page);
+
+        for (JobContract contract : jobContracts) {
+            if (states.contains(contract.getState()))
+                jobContractCards.add(
+                        new JobContractCard(contract, jobCardService
+                                .findByPostIdWithInactive(contract.getJobPackage().getPostId()),
+                                reviewService.findContractReview(contract.getId()).orElse(null)));
+            //puede no tener una review
+        }
+
         return jobContractCards;
     }
 
     @Override
-    public List<JobContractCard> findJobContractCardsByProId(long id, int page) {
+    public List<JobContractCard> findJobContractCardsByClientIdAndStates(long id, List<JobContract.ContractState> states, int page) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
-        findByProId(id, page)
-                .forEach(jobContract ->
-                                jobContractCards.add(
-                                        new JobContractCard(jobContract, jobCardService
-                                                .findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null)))
-                        //puede no tener una review
-                );
+        List<JobContract> jobContracts = findByClientId(id, page);
+
+        for (JobContract contract : jobContracts) {
+            if (states.contains(contract.getState()))
+                jobContractCards.add(
+                        new JobContractCard(contract, jobCardService
+                                .findByPostIdWithInactive(contract.getJobPackage().getPostId()),
+                                reviewService.findContractReview(contract.getId()).orElse(null)));
+            //puede no tener una review
+        }
+
         return jobContractCards;
     }
+
+
 
     @Override
     public void changeContractState(long id, JobContract.ContractState state) {

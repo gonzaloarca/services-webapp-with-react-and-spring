@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -121,17 +120,25 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id) {
-        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.client.id = :id", Long.class)
-                .setParameter("id", id).getSingleResult();
+    public int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.client.id = :id AND jc.state IN :states", Long.class)
+                .setParameter("id", id).setParameter("states", states.isEmpty() ? null : states).getSingleResult();
 
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id) {
-        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id", Long.class)
-                .setParameter("id", id).getSingleResult();
+    public int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id AND " +
+                "jc.state IN :states", Long.class)
+                .setParameter("id", id).setParameter("states", states.isEmpty() ? null : states).getSingleResult();
+
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 

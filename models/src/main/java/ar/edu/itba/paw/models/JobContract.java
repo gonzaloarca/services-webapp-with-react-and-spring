@@ -29,7 +29,7 @@ public class JobContract {
     private String description;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "contract_state", nullable = false)
+    @Column(name = "contract_state", nullable = false, columnDefinition = "INT default 6")
     private ContractState state;
 
     @AttributeOverrides({
@@ -161,6 +161,25 @@ public class JobContract {
         return Objects.hash(id);
     }
 
-    public enum ContractState {PENDING_APPROVAL, APPROVED, REJECTED, CANCELLED, COMPLETED, CLIENT_MODIFIED, PRO_MODIFIED}
+    public enum ContractState {
+        PENDING_APPROVAL(1),
+        APPROVED(0),
+        CLIENT_REJECTED(2),
+        PRO_REJECTED(2),
+        CLIENT_CANCELLED(2),
+        PRO_CANCELLED(2),
+        COMPLETED(2),
+        CLIENT_MODIFIED(1),
+        PRO_MODIFIED(1);
 
+        final int category;
+
+        ContractState(int category) {
+            this.category = category;
+        }
+
+        public int getCategory() {
+            return category;
+        }
+    }
 }

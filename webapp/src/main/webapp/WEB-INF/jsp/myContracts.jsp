@@ -3,7 +3,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 
 <%--Seteo de variable para verificar si el currentUser es el dueño del jobPost en el contract--%>
-<c:set var="isOwner" value="${contractType == 1}" scope="request"/>
+<c:set var="isOwner" value="${contractType == 'professional'}" scope="request"/>
 
 <html>
 <head>
@@ -56,17 +56,19 @@
         <div class="contracts-horizontal-tabs content-container">
             <hr class="divider-bar"/>
             <nav class="nav flex-row">
-                <a class="nav-link nav-horizontal-option ${contractType == '0' ? 'active active-yellow' : ''}"
-                   href="${pageContext.request.contextPath}/my-contracts/client">
-                    <div class="contracts-option ${contractType == '0' ? 'font-weight-bold' : ''}">
+                <a class="nav-link nav-horizontal-option ${contractType == 'client'
+                ? 'active active-yellow font-weight-bold' : ''}"
+                   href="${pageContext.request.contextPath}/my-contracts/client/active">
+                    <div class="contracts-option">
                         <i class="fas fa-users fa-sm option-icon client-icon ml-0 mr-2"></i>
                         <spring:message code="contract.options.mine"/>
                     </div>
                 </a>
                 <c:if test="${isPro}">
-                    <a class="nav-link nav-horizontal-option ${contractType == '1' ? 'active active-blue' : ''}"
-                       href="${pageContext.request.contextPath}/my-contracts/professional">
-                        <div class="contracts-option ${contractType == '1' ? 'font-weight-bold' : ''}">
+                    <a class="nav-link nav-horizontal-option ${contractType == 'professional'
+                    ? 'active active-blue font-weight-bold' : ''}"
+                       href="${pageContext.request.contextPath}/my-contracts/professional/active">
+                        <div class="contracts-option">
                             <i class="fas fa-user fa-sm option-icon pro-icon ml-0 mr-2"></i>
                             <spring:message code="contract.options.myServices"/>
                         </div>
@@ -79,8 +81,8 @@
         <div class="main-body">
             <div class="contracts-sections content-container">
                 <jsp:include page="components/myContractsOptions.jsp">
-                    <jsp:param name="selected" value="${contractType}"/>
-                    <jsp:param name="isPro" value="${isPro}"/>
+                    <jsp:param name="contractState" value="${contractState}"/>
+                    <jsp:param name="contractType" value="${contractType}"/>
                 </jsp:include>
             </div>
 
@@ -92,7 +94,8 @@
                     <c:choose>
                         <c:when test="${contractCards.size() > 0}">
                             <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
-                                <c:set var="data" value="${contractCard.jobCard}" scope="request"/>
+                                <c:set var="jobCard" value="${contractCard.jobCard}" scope="request"/>
+                                <c:set var="contractState" value="${contractCard.jobContract.state}"/>
                                 <%@include file="components/contractCard.jsp" %>
                                 <c:if test="${status.index != contractCards.size()-1}">
                                     <hr class="hr1"/>

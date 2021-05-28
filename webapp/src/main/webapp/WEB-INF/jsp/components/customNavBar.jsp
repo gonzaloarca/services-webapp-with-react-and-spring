@@ -38,7 +38,7 @@
             <sec:authorize access="isAuthenticated()">
                 <li class="nav-item ${requestScope.path == "/my-contracts/client" || "/my-contracts/professional" ? 'active': ''}">
                     <a class="nav-link"
-                       href="${pageContext.request.contextPath}/my-contracts/client">
+                       href="${pageContext.request.contextPath}/my-contracts/client/active">
                         <spring:message code="navigation.mycontracts"/>
                     </a>
                 </li>
