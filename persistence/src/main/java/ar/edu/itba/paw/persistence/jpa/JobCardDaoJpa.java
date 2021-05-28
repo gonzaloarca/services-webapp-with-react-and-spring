@@ -129,19 +129,15 @@ public class JobCardDaoJpa implements JobCardDao {
     public int findMaxPageRelatedJobCards(long professional_id) {
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT count(*) ")
-                .append(RELATED_CARDS_QUERY)
-                .append("GROUP BY clients_in_common,post_contract_count")
-                .append(" ORDER BY clients_in_common DESC, post_contract_count DESC ");
-        // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
-        // FIXME: NO ES INNECESARIO POR SER UN FINDMAXPAGE?
+                .append(RELATED_CARDS_QUERY);
 
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
                 .setParameter("proId", professional_id)
                 .setParameter("dateLimit", LocalDateTime.now().minusDays(30));
 
         @SuppressWarnings("unchecked")
-        BigInteger result    = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
-        return result.intValue();
+        BigInteger size = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
+        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     private List<JobCard> executePageQuery(int page, Query nativeQuery) {
