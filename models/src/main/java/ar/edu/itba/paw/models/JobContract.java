@@ -57,7 +57,7 @@ public class JobContract {
     }
 
     public JobContract(User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
-                       ByteImage image, EncodedImage encodedImage, ContractState state) {
+                       ByteImage image, EncodedImage encodedImage) {
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;

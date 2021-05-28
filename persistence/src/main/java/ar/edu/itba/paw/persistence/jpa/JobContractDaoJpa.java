@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
+import exceptions.JobContractNotFoundException;
 import exceptions.JobPackageNotFoundException;
 import exceptions.UserNotFoundException;
 import org.springframework.stereotype.Repository;
