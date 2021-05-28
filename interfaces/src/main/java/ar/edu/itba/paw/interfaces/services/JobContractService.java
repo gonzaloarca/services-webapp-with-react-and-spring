@@ -33,17 +33,18 @@ public interface JobContractService {
 
     User findClientByContractId(long id);
 
-    User findProByContractId(long id);
-
     int findContractsQuantityByProId(long id);
 
     int findContractsQuantityByPostId(long id);
 
-    int findMaxPageContractsByClientId(long id);
+    int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states);
 
-    int findMaxPageContractsByProId(long id);
+    int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states);
 
-    List<JobContractCard> findJobContractCardsByClientId(long id, int page);
+    List<JobContractCard> findJobContractCardsByClientIdAndStates(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContractCard> findJobContractCardsByProId(long id, int page);
+    List<JobContractCard> findJobContractCardsByProIdAndStates(long id, List<JobContract.ContractState> states, int page);
+
+    void changeContractState(long id, JobContract.ContractState state);
+
 }

@@ -56,14 +56,14 @@
         <div style="display: flex; justify-content: start; flex-grow: 5">
             <div>
                 <c:choose>
-                    <c:when test="${requestScope.data.postImageId == null}">
-                        <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
+                    <c:when test="${requestScope.jobCard.postImageId == null}">
+                        <c:url value="/resources/images/${requestScope.jobCard.jobPost.jobType.imagePath}" var="imageSrc"/>
                     </c:when>
                     <c:otherwise>
-                        <c:url value="/image/post/${requestScope.data.postImageId}" var="imageSrc"/>
+                        <c:url value="/image/post/${requestScope.jobCard.postImageId}" var="imageSrc"/>
                     </c:otherwise>
                 </c:choose>
-                <a href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
+                <a href="${pageContext.request.contextPath}/job/${requestScope.jobCard.jobPost.id}">
                     <img class="card-image-top service-img"
                          src='${imageSrc}'
                          alt="<spring:message code="profile.service.image"/>">
@@ -71,18 +71,18 @@
             </div>
             <div class="service-info px-3">
                 <a class="service-title service-link mb-2"
-                   href="${pageContext.request.contextPath}/job/${requestScope.data.jobPost.id}">
-                    <c:out value="${requestScope.data.jobPost.title}"/>
+                   href="${pageContext.request.contextPath}/job/${requestScope.jobCard.jobPost.id}">
+                    <c:out value="${requestScope.jobCard.jobPost.title}"/>
                 </a>
                 <div class="justify-content-between custom-row">
                     <p class="service-subtitle"><spring:message
-                            code="${requestScope.data.jobPost.jobType.stringCode}"/></p>
+                            code="${requestScope.jobCard.jobPost.jobType.stringCode}"/></p>
                     <div class="custom-row">
                         <jsp:include page="components/rateStars.jsp">
-                            <jsp:param name="rate" value="${requestScope.data.rating}"/>
+                            <jsp:param name="rate" value="${requestScope.jobCard.rating}"/>
                         </jsp:include>
                         <p class="ml-1 service-subtitle">
-                            (${requestScope.data.reviewsCount})
+                            (${requestScope.jobCard.reviewsCount})
                         </p>
                     </div>
                 </div>
@@ -91,8 +91,8 @@
                     <div class="price-container">
                         <i class="fas fa-tag mr-2 text-white"></i>
                         <p class="price">
-                            <spring:message htmlEscape="true" code="${requestScope.data.rateType.stringCode}"
-                                            arguments="${requestScope.data.price}"/>
+                            <spring:message htmlEscape="true" code="${requestScope.jobCard.rateType.stringCode}"
+                                            arguments="${requestScope.jobCard.price}"/>
                         </p>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                         <i class="fas fa-check mr-2"></i>
                         <p class="m-0">
                             <spring:message code="profile.service.contract.quantity"
-                                            arguments="${requestScope.data.contractsCompleted}"/>
+                                            arguments="${requestScope.jobCard.contractsCompleted}"/>
                         </p>
                     </div>
                 </div>

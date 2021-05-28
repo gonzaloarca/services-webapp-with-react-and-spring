@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.services.utils;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
-import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.interfaces.services.JobCardService;
+import ar.edu.itba.paw.interfaces.services.JobContractService;
+import ar.edu.itba.paw.interfaces.services.PaginationService;
+import ar.edu.itba.paw.interfaces.services.ReviewService;
+import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,13 +74,13 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id) {
-        return jobContractService.findMaxPageContractsByClientId(id);
+    public int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states) {
+        return jobContractService.findMaxPageContractsByClientIdAndStates(id, states);
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id) {
-        return jobContractService.findMaxPageContractsByProId(id);
+    public int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states) {
+        return jobContractService.findMaxPageContractsByProIdAndStates(id, states);
     }
 
     @Override
