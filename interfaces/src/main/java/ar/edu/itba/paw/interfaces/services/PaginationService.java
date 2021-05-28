@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.JobContract;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -15,9 +17,9 @@ public interface PaginationService {
 
     int findMaxPageJobPostsSearch(String query, int zone, int jobType, Locale locale);
 
-    int findMaxPageContractsByClientId(long id);
+    int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states);
 
-    int findMaxPageContractsByProId(long id);
+    int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states);
 
     int findMaxPageReviewsByPostId(long id);
 

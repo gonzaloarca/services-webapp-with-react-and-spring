@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
+import exceptions.JobContractNotFoundException;
 import exceptions.JobPackageNotFoundException;
 import exceptions.UserNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new JobPackageNotFoundException();
 
         EncodedImage encodedImage = new EncodedImage(null, null);
-        if(image != null)
+        if (image != null)
             encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
 
         JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image, encodedImage);
@@ -113,17 +113,25 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id) {
-        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.client.id = :id", Long.class)
-                .setParameter("id", id).getSingleResult();
+    public int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.client.id = :id AND jc.state IN :states", Long.class)
+                .setParameter("id", id).setParameter("states", states.isEmpty() ? null : states).getSingleResult();
 
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id) {
-        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id", Long.class)
-                .setParameter("id", id).getSingleResult();
+    public int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id AND " +
+                "jc.state IN :states", Long.class)
+                .setParameter("id", id).setParameter("states", states.isEmpty() ? null : states).getSingleResult();
+
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
@@ -138,10 +146,10 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     private Optional<JobContract> addEncodedImage(Optional<JobContract> maybeContract) {
-        if(maybeContract.isPresent()) {
+        if (maybeContract.isPresent()) {
             ByteImage byteImage = maybeContract.get().getImage();
             EncodedImage encodedImage = new EncodedImage(null, null);
-            if(byteImage != null)
+            if (byteImage != null)
                 encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
             maybeContract.get().setEncodedImage(encodedImage);
         }
@@ -149,13 +157,25 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     private List<JobContract> addEncodedImage(List<JobContract> jobContractList) {
-        for(JobContract jobContract : jobContractList) {
+        for (JobContract jobContract : jobContractList) {
             ByteImage byteImage = jobContract.getImage();
             EncodedImage encodedImage = new EncodedImage(null, null);
-            if(byteImage != null)
+            if (byteImage != null)
                 encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
             jobContract.setEncodedImage(encodedImage);
         }
         return jobContractList;
+    }
+
+    @Override
+    public void changeContractState(long id, JobContract.ContractState state) {
+        JobContract contract = em.find(JobContract.class, id);
+
+        if (contract == null)
+            throw new JobContractNotFoundException();
+
+        contract.setState(state);
+
+        em.persist(contract);
     }
 }

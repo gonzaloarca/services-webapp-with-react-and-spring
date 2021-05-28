@@ -28,6 +28,10 @@ public class JobContract {
     @Column(length = 100, name = "contract_description", nullable = false)
     private String description;
 
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "contract_state", nullable = false, columnDefinition = "INT default 6")
+    private ContractState state;
+
     @AttributeOverrides({
             @AttributeOverride(name = "data", column = @Column(name = "image_data")),
             @AttributeOverride(name = "type", column = @Column(name = "contract_image_type", length = 100))
@@ -37,7 +41,8 @@ public class JobContract {
     @Transient
     private EncodedImage encodedImage;    //Se setea en el Dao
 
-    /*Default*/ JobContract() {}
+    /*Default*/ JobContract() {
+    }
 
     public JobContract(long id, User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
                        ByteImage image) {
@@ -48,6 +53,7 @@ public class JobContract {
         this.description = description;
         this.image = image;
         this.encodedImage = new EncodedImage(null, null);
+        this.state = ContractState.PENDING_APPROVAL;
     }
 
     public JobContract(User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
@@ -58,26 +64,47 @@ public class JobContract {
         this.description = description;
         this.image = image;
         this.encodedImage = encodedImage;
+        this.state = ContractState.PENDING_APPROVAL;
     }
 
     public JobPackage getJobPackage() {
         return jobPackage;
     }
 
+    public void setJobPackage(JobPackage jobPackage) {
+        this.jobPackage = jobPackage;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public User getClient() {
         return client;
     }
 
+    public void setClient(User client) {
+        this.client = client;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public User getProfessional() {
@@ -88,36 +115,24 @@ public class JobContract {
         return image;
     }
 
-    public EncodedImage getEncodedImage() {
-        return encodedImage;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setClient(User client) {
-        this.client = client;
-    }
-
-    public void setJobPackage(JobPackage jobPackage) {
-        this.jobPackage = jobPackage;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void setImage(ByteImage image) {
         this.image = image;
     }
 
+    public EncodedImage getEncodedImage() {
+        return encodedImage;
+    }
+
     public void setEncodedImage(EncodedImage encodedImage) {
         this.encodedImage = encodedImage;
+    }
+
+    public ContractState getState() {
+        return state;
+    }
+
+    public void setState(ContractState state) {
+        this.state = state;
     }
 
     @Override
@@ -129,6 +144,7 @@ public class JobContract {
                 ", professional=" + getProfessional() +
                 ", creationDate=" + creationDate +
                 ", description='" + description + '\'' +
+                ", state='" + state + '\'' +
                 '}';
     }
 
@@ -143,5 +159,27 @@ public class JobContract {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public enum ContractState {
+        PENDING_APPROVAL(1),
+        APPROVED(0),
+        CLIENT_REJECTED(2),
+        PRO_REJECTED(2),
+        CLIENT_CANCELLED(2),
+        PRO_CANCELLED(2),
+        COMPLETED(2),
+        CLIENT_MODIFIED(1),
+        PRO_MODIFIED(1);
+
+        final int category;
+
+        ContractState(int category) {
+            this.category = category;
+        }
+
+        public int getCategory() {
+            return category;
+        }
     }
 }
