@@ -57,7 +57,7 @@ public class JobPackageDaoJpa implements JobPackageDao {
     @Override
     public Optional<JobPost> findPostByPackageId(long id) {
         return em.createQuery(
-                "SELECT jpack.jobPost FROM JobPackage jpack JOIN FETCH jpack.jobPost WHERE jpack.id = :id"
+                "SELECT post FROM JobPackage package JOIN package.jobPost post WHERE post.id = :id"
                 , JobPost.class).setParameter("id", id).getResultList().stream().findFirst();
     }
 
