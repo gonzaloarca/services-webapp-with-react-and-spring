@@ -46,4 +46,7 @@ public interface JobContractService {
     List<JobContractCard> findJobContractCardsByClientId(long id, int page);
 
     List<JobContractCard> findJobContractCardsByProId(long id, int page);
+
+    void changeContractState(long id, JobContract.ContractState state);
+
 }

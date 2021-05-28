@@ -35,4 +35,6 @@ public interface JobContractDao {
 
     int findMaxPageContractsByProId(long id);
 
+    void changeContractState(long id, JobContract.ContractState state);
+
 }

@@ -41,7 +41,7 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new JobPackageNotFoundException();
 
         EncodedImage encodedImage = new EncodedImage(null, null);
-        if(image != null)
+        if (image != null)
             encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
 
         JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image, encodedImage);
@@ -145,10 +145,10 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     private Optional<JobContract> addEncodedImage(Optional<JobContract> maybeContract) {
-        if(maybeContract.isPresent()) {
+        if (maybeContract.isPresent()) {
             ByteImage byteImage = maybeContract.get().getImage();
             EncodedImage encodedImage = new EncodedImage(null, null);
-            if(byteImage != null)
+            if (byteImage != null)
                 encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
             maybeContract.get().setEncodedImage(encodedImage);
         }
@@ -156,13 +156,25 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     private List<JobContract> addEncodedImage(List<JobContract> jobContractList) {
-        for(JobContract jobContract : jobContractList) {
+        for (JobContract jobContract : jobContractList) {
             ByteImage byteImage = jobContract.getImage();
             EncodedImage encodedImage = new EncodedImage(null, null);
-            if(byteImage != null)
+            if (byteImage != null)
                 encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
             jobContract.setEncodedImage(encodedImage);
         }
         return jobContractList;
+    }
+
+    @Override
+    public void changeContractState(long id, JobContract.ContractState state) {
+        JobContract contract = em.find(JobContract.class, id);
+
+        if (contract == null)
+            throw new JobContractNotFoundException();
+
+        contract.setState(state);
+
+        em.persist(contract);
     }
 }

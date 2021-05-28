@@ -151,4 +151,9 @@ public class SimpleJobContractService implements JobContractService {
                 );
         return jobContractCards;
     }
+
+    @Override
+    public void changeContractState(long id, JobContract.ContractState state) {
+        jobContractDao.changeContractState(id, state);
+    }
 }
