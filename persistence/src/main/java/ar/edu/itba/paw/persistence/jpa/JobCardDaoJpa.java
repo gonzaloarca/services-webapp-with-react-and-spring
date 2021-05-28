@@ -144,7 +144,8 @@ public class JobCardDaoJpa implements JobCardDao {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id IN :filteredIds", JobCard.class)
-                .setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
+                .setParameter("filteredIds", (filteredIds.isEmpty())? null : filteredIds)
+                .getResultList().stream().sorted(
                         //Ordenamos los elementos segun el orden de filteredIds
                         Comparator.comparingInt(o -> filteredIds.indexOf(o.getJobPost().getId()))
                 ).collect(Collectors.toList());

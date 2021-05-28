@@ -47,7 +47,8 @@ public class JobPackageDaoJpa implements JobPackageDao {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM JobPackage AS jpack WHERE jpack.id IN :filteredIds", JobPackage.class)
-                .setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
+                .setParameter("filteredIds", (filteredIds.isEmpty())? null : filteredIds)
+                .getResultList().stream().sorted(
                         //Ordenamos los elementos segun el orden de filteredIds
                         Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
                 ).collect(Collectors.toList());
@@ -56,7 +57,7 @@ public class JobPackageDaoJpa implements JobPackageDao {
     @Override
     public Optional<JobPost> findPostByPackageId(long id) {
         return em.createQuery(
-                "SELECT jpack.jobPost FROM JobPackage jpack JOIN FETCH jpack.jobPost WHERE jpack.id = :id"
+                "SELECT post FROM JobPackage package JOIN package.jobPost post WHERE post.id = :id"
                 , JobPost.class).setParameter("id", id).getResultList().stream().findFirst();
     }
 

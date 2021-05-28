@@ -25,8 +25,6 @@ public interface JobContractDao {
 
     Optional<User> findClientByContractId(long id);
 
-    Optional<User> findProByContractId(long id);
-
     int findContractsQuantityByProId(long id);
 
     int findContractsQuantityByPostId(long id);
