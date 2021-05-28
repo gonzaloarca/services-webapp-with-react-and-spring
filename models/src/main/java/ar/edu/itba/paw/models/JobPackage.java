@@ -13,9 +13,6 @@ public class JobPackage {
     @Column(name = "package_id", nullable = false)
     private long id;
 
-//    @Column(name = "post_id", nullable = false, insertable = false, updatable = false)
-//    private long postId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "job_package_post_id_fkey"))
     private JobPost jobPost;

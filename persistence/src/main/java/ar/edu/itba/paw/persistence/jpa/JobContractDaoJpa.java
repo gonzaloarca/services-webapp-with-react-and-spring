@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import exceptions.JobPackageNotFoundException;
 import exceptions.UserNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -134,17 +135,7 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     private List<JobContract> executePageQuery(int page, Query nativeQuery) {
-        if (page != HirenetUtils.ALL_PAGES) {
-            nativeQuery.setFirstResult((page) * HirenetUtils.PAGE_SIZE);
-            nativeQuery.setMaxResults(HirenetUtils.PAGE_SIZE);
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
-                .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
-
-        if (filteredIds.isEmpty())
-            return new ArrayList<>();
+        List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return addEncodedImage(em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
                 JobContract.class).setParameter("filteredIds", filteredIds).getResultList().stream().sorted(

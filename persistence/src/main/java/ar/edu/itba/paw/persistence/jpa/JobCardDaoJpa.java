@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -144,17 +145,7 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     private List<JobCard> executePageQuery(int page, Query nativeQuery) {
-        if (page != HirenetUtils.ALL_PAGES) {
-            nativeQuery.setFirstResult((page) * HirenetUtils.PAGE_SIZE);
-            nativeQuery.setMaxResults(HirenetUtils.PAGE_SIZE);
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
-                .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
-
-        if (filteredIds.isEmpty())
-            return new ArrayList<>();
+        List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id IN :filteredIds", JobCard.class)
                 .setParameter("filteredIds", filteredIds).getResultList().stream().sorted(

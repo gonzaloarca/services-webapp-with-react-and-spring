@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.Review;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import exceptions.JobContractNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -101,17 +102,7 @@ public class ReviewDaoJpa implements ReviewDao {
     }
 
     private List<Review> executePageQuery(int page, Query nativeQuery) {
-        if (page != HirenetUtils.ALL_PAGES) {
-            nativeQuery.setFirstResult((page) * HirenetUtils.PAGE_SIZE);
-            nativeQuery.setMaxResults(HirenetUtils.PAGE_SIZE);
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
-                .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
-
-        if (filteredIds.isEmpty())
-            return new ArrayList<>();
+        List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM Review AS r WHERE r.jobContract.id IN :filteredIds", Review.class)
                 .setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
