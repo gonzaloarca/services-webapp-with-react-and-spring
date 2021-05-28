@@ -16,7 +16,7 @@ public class JobPost {
     @Column(name = "post_id", nullable = false)
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "job_post_user_id_fkey"))
     private User user;
 
