@@ -180,14 +180,8 @@
                     <!-- Professional -->
                     <div class="row info-row">
                         <div class="info-left-col">
-                            <c:choose>
-                                <c:when test="${jobPost.user.image.string == null}">
-                                    <img class="avatar-pic" src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
-                                </c:when>
-                                <c:otherwise>
-                                    <img class="avatar-pic" src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
-                                </c:otherwise>
-                            </c:choose>
+                            <img class="avatar-pic" src="<c:url value="/image/user/${jobPost.user.id}"/>"
+                                 alt="avatar" loading="lazy">
                         </div>
                         <p class="info-right-col">
                             <c:out value="${jobPost.user.username}"/>

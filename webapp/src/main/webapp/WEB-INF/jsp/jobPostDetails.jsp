@@ -143,16 +143,8 @@
                     <div class="summary custom-row">
                         <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services"
                            class="summary-item profile-item align-items-center">
-                            <c:choose>
-                                <c:when test="${jobPost.user.image.string == null}">
-                                    <img src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
-                                         alt="avatar">
-                                </c:when>
-                                <c:otherwise>
-                                    <img src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}"
-                                         alt="avatar">
-                                </c:otherwise>
-                            </c:choose>
+                            <img class="avatar-pic" src="<c:url value="/image/user/${jobPost.user.id}"/>"
+                                 alt="avatar" loading="lazy">
                             <p><c:out value="${jobPost.user.username}"/></p>
                             <i class="bi bi-chevron-compact-right"></i>
                         </a>

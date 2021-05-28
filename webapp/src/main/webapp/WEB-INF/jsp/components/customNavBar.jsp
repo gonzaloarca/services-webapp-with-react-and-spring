@@ -157,33 +157,15 @@
                 <button type="button" class="btn dropdown-toggle navbar-dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false" id="navbarDropdown">
-                    <c:choose>
-                        <c:when test="${currentUser.image.string == null}">
-                            <img class="navbar-user-img"
-                                 src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
-                                 alt="avatar" id="navbar-avatar">
-                        </c:when>
-                        <c:otherwise>
-                            <img class="navbar-user-img"
-                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar"
-                                 id="navbar-avatar">
-                        </c:otherwise>
-                    </c:choose>
+                    <img class="navbar-user-img" loading="lazy"
+                         src="<c:url value="/image/user/${currentUser.id}"/>"
+                         alt="avatar" id="navbar-avatar">
                 </button>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="navbarDropdown">
                     <div class="navbar-dropdown-details">
-                        <c:choose>
-                            <c:when test="${currentUser.image.string == null}">
-                                <img class="navbar-user-img"
-                                     src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
-                                     alt="avatar">
-                            </c:when>
-                            <c:otherwise>
-                                <img class="navbar-user-img"
-                                     src="data:${currentUser.image.type};base64,${currentUser.image.string}"
-                                     alt="avatar">
-                            </c:otherwise>
-                        </c:choose>
+                        <img class="navbar-user-img" loading="lazy"
+                             src="<c:url value="/image/user/${currentUser.id}"/>"
+                             alt="avatar">
                         <div>
                             <p class="navbar-dropdown-name">
                                 <c:out value="${currentUser.username}"/>

@@ -17,13 +17,13 @@
 <%--Seteo de variable para la imagen y texto a mostrar en el usuario que contrato/el dueño del servicio dependiendo del caso --%>
 <c:choose>
     <c:when test="${requestScope.isOwner}">
-        <c:set value="${contractCard.jobContract.client.image}" var="userImage"/>
+        <c:set value="${contractCard.jobContract.client}" var="user"/>
         <c:set value="mycontracts.hiredBy" var="hireDataMessageCode"/>
         <c:set value="mycontracts.reviewed" var="reviewCaption"/>
         <c:set value="${contractCard.jobContract.client.username}" var="cardUser"/>
     </c:when>
     <c:otherwise>
-        <c:set value="${contractCard.jobCard.jobPost.user.image}" var="userImage"/>
+        <c:set value="${contractCard.jobCard.jobPost.user}" var="user"/>
         <c:set value="mycontracts.hiredPro" var="hireDataMessageCode"/>
         <c:set value="mycontracts.yourReview" var="reviewCaption"/>
         <c:set value="${contractCard.jobContract.professional.username}" var="cardUser"/>
@@ -34,16 +34,8 @@
 
     <div class="hire-details-container">
         <div class="hire-user-container">
-
-            <c:choose>
-                <c:when test="${userImage.string != null}">
-                    <c:set var="profilePic" value="data:${userImage.type};base64,${userImage.string}"/>
-                </c:when>
-                <c:otherwise>
-                    <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
-                </c:otherwise>
-            </c:choose>
-            <img class="user-avatar" src="${profilePic}" alt="<spring:message code="user.avatar"/>">
+            <img class="user-avatar" src="<c:url value="/image/user/${user.id}"/>" loading="lazy"
+                 alt="<spring:message code="user.avatar"/>">
             <p><spring:message htmlEscape="true" code="${hireDataMessageCode}"
                                arguments="${cardUser}"/></p>
         </div>
