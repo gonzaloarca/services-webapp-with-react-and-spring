@@ -94,6 +94,16 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
+    public User findClientByContractId(long id) {
+        return jobContractDao.findClientByContractId(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public User findProByContractId(long id) {
+        return jobContractDao.findProByContractId(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
     public int findContractsQuantityByProId(long id) {
         return jobContractDao.findContractsQuantityByProId(id);
     }

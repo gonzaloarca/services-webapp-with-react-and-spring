@@ -63,6 +63,13 @@ public class JobPackageDaoJpa implements JobPackageDao {
     }
 
     @Override
+    public Optional<JobPost> findPostByPackageId(long id) {
+        return em.createQuery(
+                "SELECT jpack.jobPost FROM JobPackage jpack JOIN FETCH jpack.jobPost WHERE jpack.id = :id"
+                , JobPost.class).setParameter("id", id).getResultList().stream().findFirst();
+    }
+
+    @Override
     public boolean deletePackage(long id) {
         JobPackage jobPack = em.find(JobPackage.class, id);
         if (jobPack != null) {

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobContractCard;
+import ar.edu.itba.paw.models.User;
 
 import java.util.List;
 
@@ -29,6 +30,10 @@ public interface JobContractService {
     List<JobContract> findByPackageId(long id);
 
     List<JobContract> findByPackageId(long id, int page);
+
+    User findClientByContractId(long id);
+
+    User findProByContractId(long id);
 
     int findContractsQuantityByProId(long id);
 

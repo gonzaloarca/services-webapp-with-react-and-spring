@@ -89,6 +89,13 @@ public class JobPostDaoJpa implements JobPostDao {
     }
 
     @Override
+    public Optional<User> findUserByPostId(long id) {
+        return em.createQuery(
+                "SELECT jp.user FROM JobPost jp WHERE jp.id = :id", User.class
+        ).setParameter("id", id).getResultList().stream().findFirst();
+    }
+
+    @Override
     public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
         JobPost jobPost = em.find(JobPost.class, id);
         if (jobPost != null) {

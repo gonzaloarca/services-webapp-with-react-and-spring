@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.Review;
+import ar.edu.itba.paw.models.JobPost;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +13,8 @@ public interface JobPackageDao {
     Optional<JobPackage> findById(long id);
 
     List<JobPackage> findByPostId(long id, int page);
+
+    Optional<JobPost> findPostByPackageId(long id);
 
     boolean deletePackage(long id);
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -91,6 +90,20 @@ public class JobContractDaoJpa implements JobContractDao {
                 .setParameter("id", id);
 
         return executePageQuery(page, nativeQuery);
+    }
+
+    @Override
+    public Optional<User> findClientByContractId(long id) {
+        return em.createQuery(
+                "SELECT jc.client FROM JobContract jc WHERE jc.id = :id", User.class
+        ).setParameter("id", id).getResultList().stream().findFirst();
+    }
+
+    @Override
+    public Optional<User> findProByContractId(long id) {
+        return em.createQuery(
+                "SELECT jc.jobPackage.jobPost.user FROM JobContract jc JOIN FETCH jc.jobPackage.jobPost.user WHERE jc.id = :id", User.class
+        ).setParameter("id", id).getResultList().stream().findFirst();
     }
 
     @Override

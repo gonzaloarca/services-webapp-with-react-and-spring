@@ -132,6 +132,7 @@ public class JobCardDaoJpa implements JobCardDao {
                 .append("GROUP BY clients_in_common,post_contract_count")
                 .append(" ORDER BY clients_in_common DESC, post_contract_count DESC ");
         // ordenados descendientemente por clientes en comun y luego por cantidad de contratos.
+        // FIXME: NO ES INNECESARIO POR SER UN FINDMAXPAGE?
 
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
                 .setParameter("proId", professional_id)

@@ -3,10 +3,10 @@ package ar.edu.itba.paw.services.simple;
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import exceptions.JobPackageNotFoundException;
+import exceptions.JobPostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +42,11 @@ public class SimpleJobPackageService implements JobPackageService {
     @Override
     public List<JobPackage> findByPostId(long id,int page) {
         return jobPackageDao.findByPostId(id,page);
+    }
+
+    @Override
+    public JobPost findPostByPackageId(long id) {
+        return jobPackageDao.findPostByPackageId(id).orElseThrow(JobPostNotFoundException::new);
     }
 
     @Override

@@ -86,6 +86,11 @@ public class SimpleJobPostService implements JobPostService {
     }
 
     @Override
+    public User findUserByPostId(long id) {
+        return jobPostDao.findUserByPostId(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
     public int findSizeByUserId(long id) {
         return jobPostDao.findSizeByUserId(id);
     }
