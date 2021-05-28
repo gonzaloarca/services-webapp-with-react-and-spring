@@ -50,8 +50,7 @@
                 <c:url value="/resources/images/${jobPost.jobType.imagePath}" var="imageSrc"/>
             </c:when>
             <c:otherwise>
-                <c:set value="data:${imageList[0].image.type};base64,${imageList[0].image.string}"
-                       var="imageSrc"/>
+                <c:url value="/image/post/${imageList[0]}" var="imageSrc"/>
             </c:otherwise>
         </c:choose>
         <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>

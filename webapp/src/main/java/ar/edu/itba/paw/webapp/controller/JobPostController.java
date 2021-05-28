@@ -62,7 +62,7 @@ public class JobPostController {
         jobPostControllerLogger.debug("Is owner: {}",isOwner);
 
         jobPostControllerLogger.debug("Finding images for post: {}",jobPost.getId());
-        List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
+        List<Long> imageList = jobPostImageService.getImagesIdsByPostId(jobPost.getId());
 
         int maxPage = paginationService.findMaxPageReviewsByPostId(id);
 

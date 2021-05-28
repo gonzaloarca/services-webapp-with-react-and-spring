@@ -1,20 +1,18 @@
 package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.EncodedImage;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostImage;
-import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
+import ar.edu.itba.paw.models.*;
 import exceptions.JobPostNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JobPostImageDaoJpa implements JobPostImageDao {
+
     @PersistenceContext
     private EntityManager em;
 
@@ -24,25 +22,20 @@ public class JobPostImageDaoJpa implements JobPostImageDao {
         if(jobPost == null)
             throw new JobPostNotFoundException();
 
-        EncodedImage encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
-        JobPostImage jobPostImage = new JobPostImage(jobPost, image, encodedImage);
+        JobPostImage jobPostImage = new JobPostImage(jobPost, image);
         em.persist(jobPostImage);
         return jobPostImage;
     }
 
     @Override
-    public List<JobPostImage> findImages(long postId) {
-        List<JobPostImage> results = em.createQuery("FROM JobPostImage AS image WHERE image.jobPost.id = :id", JobPostImage.class)
+    public Optional<JobPostImage> findById(long imageId) {
+        return Optional.ofNullable(em.find(JobPostImage.class, imageId));
+    }
+
+    @Override
+    public List<Long> getImagesIdsByPostId(long postId) {
+        return em.createQuery("SELECT image.imageId FROM JobPostImage AS image WHERE image.jobPost.id = :id", Long.class)
                 .setParameter("id", postId).getResultList();
-
-        results.forEach(jobPostImage ->
-                jobPostImage.setImage(new EncodedImage(
-                        ImageDataConverter.getEncodedString(jobPostImage.getByteImage().getData()),
-                        jobPostImage.getByteImage().getType()
-                ))
-        );
-
-        return results;
     }
 
     @Override

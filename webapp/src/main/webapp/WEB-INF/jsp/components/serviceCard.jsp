@@ -10,12 +10,11 @@
 
         <div>
             <c:choose>
-                <c:when test="${requestScope.data.postImage.image.string == null}">
+                <c:when test="${requestScope.data.postImageId == null}">
                     <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
                 </c:when>
                 <c:otherwise>
-                    <c:set value="data:${requestScope.data.postImage.image.type};base64,${requestScope.data.postImage.image.string}"
-                           var="imageSrc"/>
+                    <c:url value="/image/post/${requestScope.data.postImageId}" var="imageSrc"/>
                 </c:otherwise>
             </c:choose>
             <img class="card-image-top service-img"

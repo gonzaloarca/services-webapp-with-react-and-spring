@@ -118,11 +118,11 @@
                         </a>
                     </c:if>
                     <div class="carousel-inner">
-                        <c:forEach items="${imageList}" varStatus="status" var="postImage">
+                        <c:forEach items="${imageList}" varStatus="status" var="postImageId">
                             <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
                                 <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                                <img class="d-block w-100 h-100"
-                                     src='data:${postImage.image.type};base64,${postImage.image.string}'
+                                <img class="d-block w-100 h-100" loading="lazy"
+                                     src='<c:url value="/image/post/${postImageId}"/>'
                                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                             </div>
                         </c:forEach>
