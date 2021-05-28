@@ -99,11 +99,6 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public User findProByContractId(long id) {
-        return jobContractDao.findProByContractId(id).orElseThrow(UserNotFoundException::new);
-    }
-
-    @Override
     public int findContractsQuantityByProId(long id) {
         return jobContractDao.findContractsQuantityByProId(id);
     }

@@ -33,8 +33,6 @@ public interface JobContractService {
 
     User findClientByContractId(long id);
 
-    User findProByContractId(long id);
-
     int findContractsQuantityByProId(long id);
 
     int findContractsQuantityByPostId(long id);

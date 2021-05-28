@@ -47,7 +47,8 @@ public class JobPackageDaoJpa implements JobPackageDao {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM JobPackage AS jpack WHERE jpack.id IN :filteredIds", JobPackage.class)
-                .setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
+                .setParameter("filteredIds", (filteredIds.isEmpty())? null : filteredIds)
+                .getResultList().stream().sorted(
                         //Ordenamos los elementos segun el orden de filteredIds
                         Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
                 ).collect(Collectors.toList());
