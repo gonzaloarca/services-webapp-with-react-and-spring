@@ -63,7 +63,7 @@ public class CurrentUserController {
 
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
         int maxPage = paginationService.findMaxPageContractsByClientId(id);
-        currentUserControllerLogger.debug("Findign contract cards for client {}",id);
+        currentUserControllerLogger.debug("Finding contract cards for client {}",id);
         List<JobContractCard> jobContractCards =  jobContractService.findJobContractCardsByClientId(id, page - 1);
         UserAuth userAuth = userService.getAuthInfo(principal.getName()).orElseThrow(UserNotFoundException::new);
         return new ModelAndView("myContracts")
@@ -72,6 +72,36 @@ public class CurrentUserController {
                 .addObject("maxPage", maxPage)
                 .addObject("contractCards", jobContractCards)
                 .addObject("isPro", userAuth.getRoles().contains(UserAuth.Role.PROFESSIONAL));
+    }
+
+    @RequestMapping(value = "/my-contracts/professional/active")
+    public ModelAndView myProActiveContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        return new ModelAndView();
+    }
+
+    @RequestMapping(value = "/my-contracts/professional/pending")
+    public ModelAndView myProPendingContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        return new ModelAndView();
+    }
+
+    @RequestMapping(value = "/my-contracts/professional/completed")
+    public ModelAndView myProCompletedContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        return new ModelAndView();
+    }
+
+    @RequestMapping(value = "/my-contracts/client/active")
+    public ModelAndView myClientActiveContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        return new ModelAndView();
+    }
+
+    @RequestMapping(value = "/my-contracts/client/pending")
+    public ModelAndView myClientPendingContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        return new ModelAndView();
+    }
+
+    @RequestMapping(value = "/my-contracts/client/completed")
+    public ModelAndView myClientCompletedContracts(Principal principal, @RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
+        return new ModelAndView();
     }
 
     @RequestMapping("/analytics")

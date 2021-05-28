@@ -8,37 +8,52 @@
     <hr class="divider-bar"/>
     <nav class="nav flex-column">
         <a class="nav-link nav-option ${param.selected == '0' ? 'active' : ''}"
-           href="${pageContext.request.contextPath}/my-contracts/client">
+           href="">
             <c:choose>
                 <c:when test="${param.selected == '0'}">
-                    <span class="yellow-line"></span>
+                    <span class="green-line"></span>
                 </c:when>
                 <c:otherwise>
                     <span class="empty-line"></span>
                 </c:otherwise>
             </c:choose>
             <div class="contracts-option ${param.selected == '0' ? 'font-weight-bold' : ''}">
-                <i class="fas fa-users fa-sm option-icon client-icon"></i>
-                <spring:message code="contract.options.mine"/>
+                <i class="fas fa-briefcase option-icon active-contracts-icon"></i>
+                <spring:message code="contract.options.active"/>
             </div>
         </a>
-        <c:if test="${param.isPro}">
+
         <a class="nav-link nav-option ${param.selected == '1' ? 'active' : ''}"
            href="${pageContext.request.contextPath}/my-contracts/professional">
             <c:choose>
                 <c:when test="${param.selected == '1'}">
-                    <span class="blue-line"></span>
+                    <span class="orange-line"></span>
                 </c:when>
                 <c:otherwise>
                     <span class="empty-line"></span>
                 </c:otherwise>
             </c:choose>
             <div class="contracts-option ${param.selected == '1' ? 'font-weight-bold' : ''}">
-                <i class="fas fa-user fa-sm option-icon pro-icon"></i>
-                <spring:message code="contract.options.myServices"/>
+                <i class="far fa-clock option-icon pending-contracts-icon"></i>
+                <spring:message code="contract.options.pending"/>
             </div>
         </a>
-        </c:if>
+
+        <a class="nav-link nav-option ${param.selected == '2' ? 'active' : ''}"
+           href="${pageContext.request.contextPath}/my-contracts/professional">
+            <c:choose>
+                <c:when test="${param.selected == '2'}">
+                    <span class="blue-line"></span>
+                </c:when>
+                <c:otherwise>
+                    <span class="empty-line"></span>
+                </c:otherwise>
+            </c:choose>
+            <div class="contracts-option ${param.selected == '2' ? 'font-weight-bold' : ''}">
+                <i class="fas fa-check option-icon finalized-contracts-icon"></i>
+                <spring:message code="contract.options.completed"/>
+            </div>
+        </a>
 
     </nav>
 </div>

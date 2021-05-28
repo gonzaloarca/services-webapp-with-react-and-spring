@@ -53,6 +53,29 @@
     </jsp:include>
     <div class="content-container-transparent pt-0">
 
+        <div class="contracts-horizontal-tabs content-container">
+            <hr class="divider-bar"/>
+            <nav class="nav flex-row">
+                <a class="nav-link nav-horizontal-option ${contractType == '0' ? 'active active-yellow' : ''}"
+                   href="${pageContext.request.contextPath}/my-contracts/client">
+                    <div class="contracts-option ${contractType == '0' ? 'font-weight-bold' : ''}">
+                        <i class="fas fa-users fa-sm option-icon client-icon ml-0 mr-2"></i>
+                        <spring:message code="contract.options.mine"/>
+                    </div>
+                </a>
+                <c:if test="${isPro}">
+                    <a class="nav-link nav-horizontal-option ${contractType == '1' ? 'active active-blue' : ''}"
+                       href="${pageContext.request.contextPath}/my-contracts/professional">
+                        <div class="contracts-option ${contractType == '1' ? 'font-weight-bold' : ''}">
+                            <i class="fas fa-user fa-sm option-icon pro-icon ml-0 mr-2"></i>
+                            <spring:message code="contract.options.myServices"/>
+                        </div>
+                    </a>
+                </c:if>
+
+            </nav>
+        </div>
+
         <div class="main-body">
             <div class="contracts-sections content-container">
                 <jsp:include page="components/myContractsOptions.jsp">
@@ -62,37 +85,43 @@
             </div>
 
             <div class="contracts-container content-container">
-                <c:choose>
-                    <c:when test="${contractCards.size() > 0}">
-                        <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
-                            <c:set var="data" value="${contractCard.jobCard}" scope="request"/>
-                            <%@include file="components/contractCard.jsp" %>
-                            <c:if test="${status.index != contractCards.size()-1}">
-                                <hr class="hr1"/>
-                            </c:if>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <div style="display: flex; align-items: center; flex-direction: column">
-                            <img style="height: 200px; width: 40%; margin: 30px 0" alt="<spring:message code="mycontracts.shakingHands"/>"
-                                 src='<c:url value="/resources/images/contract1.svg"/>'/>
-                            <h4 class="font-weight-bold">
-                                <spring:message code="mycontracts.noContractsHeader"/>
-                            </h4>
+                <h4 class="my-4 ml-4 font-weight-bold">
+                    <spring:message code="contract.options.activeContracts"/>
+                </h4>
+                <div class="mx-3">
+                    <c:choose>
+                        <c:when test="${contractCards.size() > 0}">
+                            <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
+                                <c:set var="data" value="${contractCard.jobCard}" scope="request"/>
+                                <%@include file="components/contractCard.jsp" %>
+                                <c:if test="${status.index != contractCards.size()-1}">
+                                    <hr class="hr1"/>
+                                </c:if>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div style="display: flex; align-items: center; flex-direction: column">
+                                <img style="height: 200px; width: 40%; margin: 30px 0"
+                                     alt="<spring:message code="mycontracts.shakingHands"/>"
+                                     src='<c:url value="/resources/images/contract1.svg"/>'/>
+                                <h4 class="font-weight-bold">
+                                    <spring:message code="mycontracts.noContractsHeader"/>
+                                </h4>
 
-                            <c:choose>
-                                <c:when test="${isOwner}">
-                                    <c:set value="mycontracts.noContractsSubtitlePro" var="noContractsSubtitle"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:set value="mycontracts.noContractsSubtitleClient" var="noContractsSubtitle"/>
-                                </c:otherwise>
-                            </c:choose>
+                                <c:choose>
+                                    <c:when test="${isOwner}">
+                                        <c:set value="mycontracts.noContractsSubtitlePro" var="noContractsSubtitle"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set value="mycontracts.noContractsSubtitleClient" var="noContractsSubtitle"/>
+                                    </c:otherwise>
+                                </c:choose>
 
-                            <p><spring:message code="${noContractsSubtitle}"/></p>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
+                                <p><spring:message code="${noContractsSubtitle}"/></p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
                 <c:set var="listSize" value="${contractCards.size()}" scope="request"/>
                 <c:set var="maxPage" value="${maxPage}" scope="request"/>
                 <c:set var="currentPages" value="${currentPages}" scope="request"/>
@@ -103,7 +132,6 @@
 </div>
 
 <jsp:include page="components/footer.jsp"/>
-
 
 
 </body>
