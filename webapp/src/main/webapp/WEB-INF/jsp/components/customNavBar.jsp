@@ -10,7 +10,7 @@
 <!-- Sacado de https://getbootstrap.com/docs/4.6/components/navbar/ -->
 <nav class="navbar navbar-expand-lg navbar-dark ${requestScope.withoutColor? 'transparent-navbar':'navbar-color'}">
     <a class="navbar-brand" href="${pageContext.request.contextPath}/">
-        <img src="${pageContext.request.contextPath}/resources/images/hirenet-logo-nav-1.svg"
+        <img style="height: 90%" src="${pageContext.request.contextPath}/resources/images/hirenet-logo-nav-1.svg"
              alt="<spring:message code="navigation.logo"/>"/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -38,7 +38,7 @@
             <sec:authorize access="isAuthenticated()">
                 <li class="nav-item ${requestScope.path == "/my-contracts/client" || "/my-contracts/professional" ? 'active': ''}">
                     <a class="nav-link"
-                       href="${pageContext.request.contextPath}/my-contracts/client">
+                       href="${pageContext.request.contextPath}/my-contracts/client/active">
                         <spring:message code="navigation.mycontracts"/>
                     </a>
                 </li>

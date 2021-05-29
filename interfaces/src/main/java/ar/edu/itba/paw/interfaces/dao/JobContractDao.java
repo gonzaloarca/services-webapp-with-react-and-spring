@@ -29,8 +29,10 @@ public interface JobContractDao {
 
     int findContractsQuantityByPostId(long id);
 
-    int findMaxPageContractsByClientId(long id);
+    int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states);
 
-    int findMaxPageContractsByProId(long id);
+    int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states);
+
+    void changeContractState(long id, JobContract.ContractState state);
 
 }
