@@ -11,8 +11,6 @@
 <spring:message code="date.format" var="dateFormat"/>
 <fmt:formatDate value="${theDate}" pattern="${dateFormat}" var="dateFormatted"/>
 
-<%--Seteo de variable para la imagen de los detalles del contrato--%>
-<c:set value="${contractCard.jobContract.encodedImage}" var="encodedImage"/>
 
 <%--Seteo de variable para la imagen y texto a mostrar en el usuario que contrato/el dueño del servicio dependiendo del caso --%>
 <c:choose>
@@ -117,9 +115,12 @@
             <spring:message htmlEscape="true" code="mycontracts.contact.phone"
                             arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
 
+            <c:set value="" var="imageSrc"/>
+            <c:if test="${contractCard.jobContract.image != null}">
+                <c:url value="/image/contract/${contractCard.jobContract.id}" var="imageSrc"/>
+            </c:if>
             <a class="btn contract-control-details btn-link text-uppercase"
-               onclick='openDetailsModal("${contractCard.jobContract.description}", "${encodedImage.type}",
-                       "${encodedImage.string}")'>
+               onclick='openDetailsModal("${contractCard.jobContract.description}", "${imageSrc}")'>
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
                 <p>
                     <spring:message code="mycontract.details"/>
@@ -232,7 +233,7 @@
                 $('#contact-modal').modal('show');
             }
 
-            function openDetailsModal(description, imageType, image) {
+            function openDetailsModal(description, image) {
                 const imageElem = $('#details-modal-image');
                 const imageHeader = $('#details-modal-image-header');
                 const imageContainer = $('#details-image-container');
@@ -246,7 +247,7 @@
                     descriptionContainer.css('width', '100%');
                     modalDialog.removeClass('modal-lg');
                 } else {
-                    imageElem.attr('src', 'data:' + imageType + ';base64,' + image);
+                    imageElem.attr('src', image);
                     imageContainer.show();
                     imageElem.show();
                     imageHeader.show();

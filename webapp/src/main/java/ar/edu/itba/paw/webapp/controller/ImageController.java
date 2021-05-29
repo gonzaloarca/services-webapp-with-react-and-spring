@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPostImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPostImage;
+import exceptions.JobPackageNotFoundException;
 import exceptions.JobPostImageNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -32,6 +34,9 @@ public class ImageController {
 
     @Autowired
     JobPostImageService jobPostImageService;
+
+    @Autowired
+    JobContractService jobContractService;
 
     @RequestMapping("/user/{id}")
     public void getProfileImage(@PathVariable("id") final long id, HttpServletRequest request, HttpServletResponse response) {
@@ -75,6 +80,28 @@ public class ImageController {
 
             buildResponse(jobPostImage.getByteImage(), response);
 
+        } catch (IOException e) {
+            //TODO: qué hago si hay excepción?
+        }
+    }
+
+    @RequestMapping("/contract/{id}")
+    public void getContractImage(@PathVariable("id") final long id, HttpServletRequest request, HttpServletResponse response) {
+        ByteImage contractImage;
+
+        try {
+            contractImage = jobContractService.findById(id).getImage();
+        } catch (JobPackageNotFoundException e) {
+            contractImage = null;
+        }
+
+        try {
+            if (contractImage == null || contractImage.getData() == null) {
+                response.sendRedirect(request.getContextPath() + "/resources/images/service-default.svg");
+                return;
+            }
+
+            buildResponse(contractImage, response);
         } catch (IOException e) {
             //TODO: qué hago si hay excepción?
         }
