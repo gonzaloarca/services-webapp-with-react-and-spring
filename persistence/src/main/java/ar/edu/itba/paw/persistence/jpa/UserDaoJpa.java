@@ -26,25 +26,20 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public User register(String email, String password, String username, String phone, ByteImage image) {
-        EncodedImage encodedImage = new EncodedImage(null, null);
-        if(image != null)
-            encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
-
-        final User user = new User(email, username, phone, true, false, image,  encodedImage,
-                LocalDateTime.now(), password);
+        final User user = new User(email, username, phone, true, false, image, LocalDateTime.now(), password);
         em.persist(user);
         return user;
     }
 
     @Override
     public Optional<User> findById(long id) {
-        return addEncodedImage(Optional.ofNullable(em.find(User.class, id)));
+        return Optional.ofNullable(em.find(User.class, id));
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return addEncodedImage(em.createQuery("FROM User AS u WHERE u.email = :email", User.class)
-                .setParameter("email", email).getResultList().stream().findFirst());
+        return em.createQuery("FROM User AS u WHERE u.email = :email", User.class)
+                .setParameter("email", email).getResultList().stream().findFirst();
     }
 
     @Override
@@ -55,7 +50,7 @@ public class UserDaoJpa implements UserDao {
             aux.get().setPhone(phone);
             em.persist(aux);
         }
-        return addEncodedImage(aux);
+        return aux;
     }
 
     @Override
@@ -66,7 +61,7 @@ public class UserDaoJpa implements UserDao {
             aux.setPhone(phone);
             em.persist(aux);
         }
-        return addEncodedImage(Optional.ofNullable(aux));
+        return Optional.ofNullable(aux);
     }
 
     @Override
@@ -78,7 +73,7 @@ public class UserDaoJpa implements UserDao {
             aux.get().setByteImage(image);
             em.persist(aux.get());
         }
-        return addEncodedImage(aux);
+        return aux;
     }
 
     @Override
@@ -106,11 +101,11 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> findUserByRoleAndId(UserAuth.Role role, long id) {
-        return addEncodedImage(em.createQuery(
+        return em.createQuery(
                 "FROM User u WHERE u.id = :user_id AND EXISTS(FROM UserAuth ua WHERE ua.id = u.id AND :role_id IN elements(ua.roles))"
                 , User.class)
                 .setParameter("user_id", id).setParameter("role_id", role).
-                        getResultList().stream().findFirst());
+                        getResultList().stream().findFirst();
     }
 
     @Override
@@ -180,14 +175,4 @@ public class UserDaoJpa implements UserDao {
         return result.intValue();
     }
 
-    private Optional<User> addEncodedImage(Optional<User> maybeUser) {
-        if(maybeUser.isPresent()) {
-            ByteImage byteImage = maybeUser.get().getByteImage();
-            EncodedImage encodedImage = new EncodedImage(null, null);
-            if(byteImage != null)
-                encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
-            maybeUser.get().setImage(encodedImage);
-        }
-        return maybeUser;
-    }
 }

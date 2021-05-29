@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequestMapping("/my-contracts")
 @Controller
@@ -49,16 +50,18 @@ public class MyContractsController {
         List<JobContractCard> jobContractCards;
 
         if (contractType.equals("professional")) {
-            maxPage = paginationService.findMaxPageContractsByProIdAndStates(id, states);
+            maxPage = paginationService.findMaxPageContractsByProId(id, states);
             jobContractCards = jobContractService
-                    .findJobContractCardsByProIdAndStates(id, states, page - 1);
+                    .findJobContractCardsByProId(id, states, page - 1);
         } else if (contractType.equals("client")) {
-            maxPage = paginationService.findMaxPageContractsByClientIdAndStates(id, states);
+            maxPage = paginationService.findMaxPageContractsByClientId(id, states);
             jobContractCards = jobContractService
-                    .findJobContractCardsByClientIdAndStates(id, states, page - 1);
+                    .findJobContractCardsByClientId(id, states, page - 1);
         } else
             throw new IllegalArgumentException();
 
+        if (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized"))
+            throw new IllegalArgumentException();
 
         UserAuth userAuth = userService.getAuthInfo(principal.getName()).orElseThrow(UserNotFoundException::new);
 

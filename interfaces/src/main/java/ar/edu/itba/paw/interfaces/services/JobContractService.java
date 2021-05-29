@@ -19,9 +19,13 @@ public interface JobContractService {
 
     List<JobContract> findByClientId(long id, int page);
 
+    List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page);
+
     List<JobContract> findByProId(long id);
 
     List<JobContract> findByProId(long id, int page);
+
+    List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page);
 
     List<JobContract> findByPostId(long id);
 
@@ -37,13 +41,13 @@ public interface JobContractService {
 
     int findContractsQuantityByPostId(long id);
 
-    int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states);
+    int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states);
 
-    int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states);
+    int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states);
 
-    List<JobContractCard> findJobContractCardsByClientIdAndStates(long id, List<JobContract.ContractState> states, int page);
+    List<JobContractCard> findJobContractCardsByClientId(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContractCard> findJobContractCardsByProIdAndStates(long id, List<JobContract.ContractState> states, int page);
+    List<JobContractCard> findJobContractCardsByProId(long id, List<JobContract.ContractState> states, int page);
 
     void changeContractState(long id, JobContract.ContractState state);
 

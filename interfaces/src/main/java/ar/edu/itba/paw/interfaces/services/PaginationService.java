@@ -17,9 +17,9 @@ public interface PaginationService {
 
     int findMaxPageJobPostsSearch(String query, int zone, int jobType, Locale locale);
 
-    int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states);
+    int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states);
 
-    int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states);
+    int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states);
 
     int findMaxPageReviewsByPostId(long id);
 

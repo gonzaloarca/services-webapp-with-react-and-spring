@@ -56,7 +56,7 @@ public class ContractController {
 
         final ModelAndView mav = new ModelAndView("createContract");
         contractControllerLogger.debug("Finding images for post {}",jobPost.getId());
-        List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
+        List<Long> imageList = jobPostImageService.getImagesIdsByPostId(jobPost.getId());
 
         mav.addObject("imageList", imageList);
 

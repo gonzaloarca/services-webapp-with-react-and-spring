@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.models;
 
-
 import javax.persistence.*;
 
 @Entity
@@ -13,32 +12,28 @@ public class JobPostImage {
     @Column(name = "image_id", nullable = false)
     private long imageId;
 
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "post_image_post_id_fkey"))
     private JobPost jobPost;
 
-    @Transient
-    private EncodedImage image;
-
     @AttributeOverrides({
-            @AttributeOverride(name = "data", column = @Column(name = "image_data")),
-            @AttributeOverride(name = "type", column = @Column(name = "image_type", length = 100))
+            @AttributeOverride(name = "data", column = @Column(name = "image_data", nullable = false)),
+            @AttributeOverride(name = "type", column = @Column(name = "image_type", length = 100, nullable = false))
     })
     private ByteImage byteImage;
 
-    /* default */ JobPostImage() {
+    /*deafult*/JobPostImage() {
+
     }
 
-    public JobPostImage(long imageId, JobPost jobPost, EncodedImage image) {
+    public JobPostImage(long imageId, JobPost jobPost, ByteImage byteImage) {
         this.imageId = imageId;
         this.jobPost = jobPost;
-        this.image = image;
+        this.byteImage = byteImage;
     }
 
-    public JobPostImage(JobPost jobPost, ByteImage byteImage, EncodedImage image) {
+    public JobPostImage(JobPost jobPost, ByteImage byteImage) {
         this.jobPost = jobPost;
-        this.image = image;
         this.byteImage = byteImage;
     }
 
@@ -56,14 +51,6 @@ public class JobPostImage {
 
     public void setJobPost(JobPost jobPost) {
         this.jobPost = jobPost;
-    }
-
-    public EncodedImage getImage() {
-        return image;
-    }
-
-    public void setImage(EncodedImage image) {
-        this.image = image;
     }
 
     public ByteImage getByteImage() {
