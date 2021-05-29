@@ -40,11 +40,7 @@ public class JobContractDaoJpa implements JobContractDao {
         if (jobPackage == null)
             throw new JobPackageNotFoundException();
 
-        EncodedImage encodedImage = new EncodedImage(null, null);
-        if (image != null)
-            encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
-
-        JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image, encodedImage);
+        JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image);
         em.persist(jobContract);
 
         return jobContract;
@@ -52,7 +48,7 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public Optional<JobContract> findById(long id) {
-        return addEncodedImage(Optional.ofNullable(em.find(JobContract.class, id)));
+        return Optional.ofNullable(em.find(JobContract.class, id));
     }
 
     @Override
@@ -138,33 +134,11 @@ public class JobContractDaoJpa implements JobContractDao {
     private List<JobContract> executePageQuery(int page, Query nativeQuery) {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
-        return addEncodedImage(em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
+        return em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
                 JobContract.class).setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
                 //Ordenamos los elementos segun el orden de filteredIds
                 Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
-        ).collect(Collectors.toList()));
-    }
-
-    private Optional<JobContract> addEncodedImage(Optional<JobContract> maybeContract) {
-        if (maybeContract.isPresent()) {
-            ByteImage byteImage = maybeContract.get().getImage();
-            EncodedImage encodedImage = new EncodedImage(null, null);
-            if (byteImage != null)
-                encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
-            maybeContract.get().setEncodedImage(encodedImage);
-        }
-        return maybeContract;
-    }
-
-    private List<JobContract> addEncodedImage(List<JobContract> jobContractList) {
-        for (JobContract jobContract : jobContractList) {
-            ByteImage byteImage = jobContract.getImage();
-            EncodedImage encodedImage = new EncodedImage(null, null);
-            if (byteImage != null)
-                encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
-            jobContract.setEncodedImage(encodedImage);
-        }
-        return jobContractList;
+        ).collect(Collectors.toList());
     }
 
     @Override

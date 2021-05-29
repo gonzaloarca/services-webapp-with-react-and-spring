@@ -11,19 +11,17 @@
 <spring:message code="date.format" var="dateFormat"/>
 <fmt:formatDate value="${theDate}" pattern="${dateFormat}" var="dateFormatted"/>
 
-<%--Seteo de variable para la imagen de los detalles del contrato--%>
-<c:set value="${contractCard.jobContract.encodedImage}" var="encodedImage"/>
 
 <%--Seteo de variable para la imagen y texto a mostrar en el usuario que contrato/el dueño del servicio dependiendo del caso --%>
 <c:choose>
     <c:when test="${requestScope.isOwner}">
-        <c:set value="${contractCard.jobContract.client.image}" var="userImage"/>
+        <c:set value="${contractCard.jobContract.client}" var="user"/>
         <c:set value="mycontracts.hiredBy" var="hireDataMessageCode"/>
         <c:set value="mycontracts.reviewed" var="reviewCaption"/>
         <c:set value="${contractCard.jobContract.client.username}" var="cardUser"/>
     </c:when>
     <c:otherwise>
-        <c:set value="${contractCard.jobCard.jobPost.user.image}" var="userImage"/>
+        <c:set value="${contractCard.jobCard.jobPost.user}" var="user"/>
         <c:set value="mycontracts.hiredPro" var="hireDataMessageCode"/>
         <c:set value="mycontracts.yourReview" var="reviewCaption"/>
         <c:set value="${contractCard.jobContract.professional.username}" var="cardUser"/>
@@ -34,16 +32,8 @@
 
     <div class="hire-details-container">
         <div class="hire-user-container">
-
-            <c:choose>
-                <c:when test="${userImage.string != null}">
-                    <c:set var="profilePic" value="data:${userImage.type};base64,${userImage.string}"/>
-                </c:when>
-                <c:otherwise>
-                    <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
-                </c:otherwise>
-            </c:choose>
-            <img class="user-avatar" src="${profilePic}" alt="<spring:message code="user.avatar"/>">
+            <img class="user-avatar" src="<c:url value="/image/user/${user.id}"/>" loading="lazy"
+                 alt="<spring:message code="user.avatar"/>">
             <p><spring:message htmlEscape="true" code="${hireDataMessageCode}"
                                arguments="${cardUser}"/></p>
         </div>
@@ -64,12 +54,11 @@
         <div style="display: flex; justify-content: start; flex-grow: 5">
             <div>
                 <c:choose>
-                    <c:when test="${requestScope.jobCard.postImage.image.string == null}">
+                    <c:when test="${requestScope.jobCard.postImageId == null}">
                         <c:url value="/resources/images/${requestScope.jobCard.jobPost.jobType.imagePath}" var="imageSrc"/>
                     </c:when>
                     <c:otherwise>
-                        <c:set value="data:${requestScope.jobCard.postImage.image.type};base64,${requestScope.jobCard.postImage.image.string}"
-                               var="imageSrc"/>
+                        <c:url value="/image/post/${requestScope.jobCard.postImageId}" var="imageSrc"/>
                     </c:otherwise>
                 </c:choose>
                 <a href="${pageContext.request.contextPath}/job/${requestScope.jobCard.jobPost.id}">
@@ -126,9 +115,12 @@
             <spring:message htmlEscape="true" code="mycontracts.contact.phone"
                             arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
 
+            <c:set value="" var="imageSrc"/>
+            <c:if test="${contractCard.jobContract.image != null}">
+                <c:url value="/image/contract/${contractCard.jobContract.id}" var="imageSrc"/>
+            </c:if>
             <a class="btn contract-control-details btn-link text-uppercase"
-               onclick='openDetailsModal("${contractCard.jobContract.description}", "${encodedImage.type}",
-                       "${encodedImage.string}")'>
+               onclick='openDetailsModal("${contractCard.jobContract.description}", "${imageSrc}")'>
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
                 <p>
                     <spring:message code="mycontract.details"/>
@@ -241,7 +233,7 @@
                 $('#contact-modal').modal('show');
             }
 
-            function openDetailsModal(description, imageType, image) {
+            function openDetailsModal(description, image) {
                 const imageElem = $('#details-modal-image');
                 const imageHeader = $('#details-modal-image-header');
                 const imageContainer = $('#details-image-container');
@@ -255,7 +247,7 @@
                     descriptionContainer.css('width', '100%');
                     modalDialog.removeClass('modal-lg');
                 } else {
-                    imageElem.attr('src', 'data:' + imageType + ';base64,' + image);
+                    imageElem.attr('src', image);
                     imageContainer.show();
                     imageElem.show();
                     imageHeader.show();

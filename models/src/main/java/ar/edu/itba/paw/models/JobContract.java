@@ -38,9 +38,6 @@ public class JobContract {
     })
     private ByteImage image;
 
-    @Transient
-    private EncodedImage encodedImage;    //Se setea en el Dao
-
     /*Default*/ JobContract() {
     }
 
@@ -52,18 +49,16 @@ public class JobContract {
         this.creationDate = creationDate;
         this.description = description;
         this.image = image;
-        this.encodedImage = new EncodedImage(null, null);
         this.state = ContractState.PENDING_APPROVAL;
     }
 
     public JobContract(User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
-                       ByteImage image, EncodedImage encodedImage) {
+                       ByteImage image) {
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;
         this.description = description;
         this.image = image;
-        this.encodedImage = encodedImage;
         this.state = ContractState.PENDING_APPROVAL;
     }
 
@@ -117,14 +112,6 @@ public class JobContract {
 
     public void setImage(ByteImage image) {
         this.image = image;
-    }
-
-    public EncodedImage getEncodedImage() {
-        return encodedImage;
-    }
-
-    public void setEncodedImage(EncodedImage encodedImage) {
-        this.encodedImage = encodedImage;
     }
 
     public ContractState getState() {

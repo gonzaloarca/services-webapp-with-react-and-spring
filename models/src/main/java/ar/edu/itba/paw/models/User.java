@@ -35,10 +35,7 @@ public class User {
             @AttributeOverride(name = "data", column = @Column(name = "user_image")),
             @AttributeOverride(name = "type", column = @Column(name = "image_type", length = 100))
     })
-    private ByteImage byteImage = new ByteImage(null, null);
-
-    @Transient
-    private EncodedImage image; //Se setea en el DAO
+    private ByteImage byteImage;
 
     @Column(name = "user_creation_date", nullable = false)
     private LocalDateTime creationDate;
@@ -57,12 +54,11 @@ public class User {
         this.isActive = isActive;
         this.isVerified = isVerified;
         this.creationDate = creationDate;
-        this.image = new EncodedImage(null, null);
         this.byteImage = new ByteImage(null, null);
     }
 
     public User(String email, String username, String phone, boolean isActive, boolean isVerified, ByteImage byteImage,
-                EncodedImage encodedImage, LocalDateTime creationDate, String password) {
+                LocalDateTime creationDate, String password) {
         this.email = email;
         this.username = username;
         this.phone = phone;
@@ -71,7 +67,6 @@ public class User {
         this.byteImage = byteImage;
         this.creationDate = creationDate;
         this.password = password;
-        this.image = encodedImage;
     }
 
     public long getId() {
@@ -96,10 +91,6 @@ public class User {
 
     public boolean isVerified() {
         return isVerified;
-    }
-
-    public EncodedImage getImage() {
-        return image;
     }
 
     public LocalDateTime getCreationDate() {
@@ -136,10 +127,6 @@ public class User {
 
     public void setByteImage(ByteImage byteImage) {
         this.byteImage = byteImage;
-    }
-
-    public void setImage(EncodedImage image) {
-        this.image = image;
     }
 
     public void setCreationDate(LocalDateTime creationDate) {

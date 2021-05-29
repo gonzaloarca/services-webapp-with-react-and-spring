@@ -118,11 +118,11 @@
                         </a>
                     </c:if>
                     <div class="carousel-inner">
-                        <c:forEach items="${imageList}" varStatus="status" var="postImage">
+                        <c:forEach items="${imageList}" varStatus="status" var="postImageId">
                             <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
                                 <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                                <img class="d-block w-100 h-100"
-                                     src='data:${postImage.image.type};base64,${postImage.image.string}'
+                                <img class="d-block w-100 h-100" loading="lazy"
+                                     src='<c:url value="/image/post/${postImageId}"/>'
                                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                             </div>
                         </c:forEach>
@@ -143,16 +143,8 @@
                     <div class="summary custom-row">
                         <a href="${pageContext.request.contextPath}/profile/${jobPost.user.id}/services"
                            class="summary-item profile-item align-items-center">
-                            <c:choose>
-                                <c:when test="${jobPost.user.image.string == null}">
-                                    <img src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
-                                         alt="avatar">
-                                </c:when>
-                                <c:otherwise>
-                                    <img src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}"
-                                         alt="avatar">
-                                </c:otherwise>
-                            </c:choose>
+                            <img class="avatar-pic" src="<c:url value="/image/user/${jobPost.user.id}"/>"
+                                 alt="avatar" loading="lazy">
                             <p><c:out value="${jobPost.user.username}"/></p>
                             <i class="bi bi-chevron-compact-right"></i>
                         </a>
