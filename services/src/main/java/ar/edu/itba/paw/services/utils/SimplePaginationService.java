@@ -74,13 +74,13 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states) {
-        return jobContractService.findMaxPageContractsByClientIdAndStates(id, states);
+    public int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states) {
+        return jobContractService.findMaxPageContractsByClientId(id, states);
     }
 
     @Override
-    public int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states) {
-        return jobContractService.findMaxPageContractsByProIdAndStates(id, states);
+    public int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states) {
+        return jobContractService.findMaxPageContractsByProId(id, states);
     }
 
     @Override

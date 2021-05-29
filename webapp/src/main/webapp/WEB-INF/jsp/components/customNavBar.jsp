@@ -36,7 +36,12 @@
             </li>
 
             <sec:authorize access="isAuthenticated()">
-                <li class="nav-item ${requestScope.path == "/my-contracts/client" || "/my-contracts/professional" ? 'active': ''}">
+                <li class="nav-item ${(requestScope.path == "/my-contracts/client/active"
+                || requestScope.path == "/my-contracts/client/pending"
+                || requestScope.path == "/my-contracts/client/finalized"
+                || requestScope.path == "/my-contracts/professional/active"
+                || requestScope.path == "/my-contracts/professional/pending"
+                || requestScope.path == "/my-contracts/professional/finalized") ? 'active': ''}">
                     <a class="nav-link"
                        href="${pageContext.request.contextPath}/my-contracts/client/active">
                         <spring:message code="navigation.mycontracts"/>
@@ -108,7 +113,7 @@
                                         </div>
                                         <div class="list-group navbar-location-list-group">
                                             <div id="no-results-location-modal"
-                                                 class="p-4" >
+                                                 class="p-4">
                                                 <p class="text-black-50">
                                                     <spring:message code="navigation.modal.noResults"/>
                                                 </p>
@@ -195,8 +200,8 @@
 </nav>
 <script>
     // Para buscar una ubicación
-    const noResultDivChild= $('#no-results-location-modal *');
-    const noResultDiv= $('#no-results-location-modal');
+    const noResultDivChild = $('#no-results-location-modal *');
+    const noResultDiv = $('#no-results-location-modal');
     noResultDiv.hide();
     noResultDivChild.hide();
 

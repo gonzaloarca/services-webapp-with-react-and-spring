@@ -235,43 +235,43 @@ public class JobContractDaoJpaTest {
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1[0].getId(), jobContract.get().getId());
     }
 
-    @Test
-    public void testFindByClientIdWithoutPagination() {
+//    @Test
+//    public void testFindByClientIdWithoutPagination() {
+//
+//        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), HirenetUtils.ALL_PAGES);
+//
+//        Assert.assertFalse(jobContracts.isEmpty());
+//        jobContracts.forEach(jobContract -> Assert.assertEquals(CLIENT.getId(), jobContract.getClient().getId()));
+//    }
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), HirenetUtils.ALL_PAGES);
+//    @Test
+//    public void testFindByClientIdWithPagination() {
+//
+//        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), 0);
+//
+//        Assert.assertFalse(jobContracts.isEmpty());
+//        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
+//        jobContracts.forEach(jobContract -> Assert.assertEquals(CLIENT.getId(), jobContract.getClient().getId()));
+//    }
 
-        Assert.assertFalse(jobContracts.isEmpty());
-        jobContracts.forEach(jobContract -> Assert.assertEquals(CLIENT.getId(), jobContract.getClient().getId()));
-    }
+//    @Test
+//    public void testFindByProIdWithoutPagination() {
+//
+//        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
+//
+//        Assert.assertFalse(jobContracts.isEmpty());
+//        jobContracts.forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
+//    }
 
-    @Test
-    public void testFindByClientIdWithPagination() {
-
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), 0);
-
-        Assert.assertFalse(jobContracts.isEmpty());
-        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
-        jobContracts.forEach(jobContract -> Assert.assertEquals(CLIENT.getId(), jobContract.getClient().getId()));
-    }
-
-    @Test
-    public void testFindByProIdWithoutPagination() {
-
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
-
-        Assert.assertFalse(jobContracts.isEmpty());
-        jobContracts.forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
-    }
-
-    @Test
-    public void testFindByProIdWithPagination() {
-
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), 0);
-
-        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
-        Assert.assertFalse(jobContracts.isEmpty());
-        jobContracts.forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
-    }
+//    @Test
+//    public void testFindByProIdWithPagination() {
+//
+//        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), 0);
+//
+//        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
+//        Assert.assertFalse(jobContracts.isEmpty());
+//        jobContracts.forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
+//    }
 
     @Test
     public void testFindByPackageIdWithoutPagination() {
