@@ -220,7 +220,7 @@ public class ReviewDaoJpaTest {
         Assert.assertEquals(newReview.getTitle(), maybeReview.getTitle());
         Assert.assertEquals(newReview.getDescription(), maybeReview.getDescription());
         Assert.assertEquals(newReview.getRate(), maybeReview.getRate());
-        Assert.assertEquals(newReview.getClient(), maybeReview.getClient());
+        Assert.assertEquals(newReview.getClient().getId(), maybeReview.getClient().getId());
         Assert.assertEquals(newReview.getJobPost().getId(), maybeReview.getJobPost().getId());
         Assert.assertEquals(newReview.getJobContract(), maybeReview.getJobContract());
         Assert.assertEquals(newReview, maybeReview);
@@ -236,10 +236,9 @@ public class ReviewDaoJpaTest {
             Assert.assertEquals(REVIEWS[i].getTitle(), maybePostReviews.get(i).getTitle());
             Assert.assertEquals(REVIEWS[i].getDescription(), maybePostReviews.get(i).getDescription());
             Assert.assertEquals(REVIEWS[i].getRate(), maybePostReviews.get(i).getRate());
-            Assert.assertEquals(REVIEWS[i].getClient(), maybePostReviews.get(i).getClient());
+            Assert.assertEquals(REVIEWS[i].getClient().getId(), maybePostReviews.get(i).getClient().getId());
             Assert.assertEquals(REVIEWS[i].getJobPost().getId(), maybePostReviews.get(i).getJobPost().getId());
-            Assert.assertEquals(REVIEWS[i].getJobContract(), maybePostReviews.get(i).getJobContract());
-            Assert.assertEquals(REVIEWS[i], maybePostReviews.get(i));
+            Assert.assertEquals(REVIEWS[i].getJobContract().getId(), maybePostReviews.get(i).getJobContract().getId());
         }
     }
 
@@ -253,10 +252,9 @@ public class ReviewDaoJpaTest {
             Assert.assertEquals(REVIEWS[i].getTitle(), maybePostReviews.get(i).getTitle());
             Assert.assertEquals(REVIEWS[i].getDescription(), maybePostReviews.get(i).getDescription());
             Assert.assertEquals(REVIEWS[i].getRate(), maybePostReviews.get(i).getRate());
-            Assert.assertEquals(REVIEWS[i].getClient(), maybePostReviews.get(i).getClient());
+            Assert.assertEquals(REVIEWS[i].getClient().getId(), maybePostReviews.get(i).getClient().getId());
             Assert.assertEquals(REVIEWS[i].getJobPost().getId(), maybePostReviews.get(i).getJobPost().getId());
-            Assert.assertEquals(REVIEWS[i].getJobContract(), maybePostReviews.get(i).getJobContract());
-            Assert.assertEquals(REVIEWS[i], maybePostReviews.get(i));
+            Assert.assertEquals(REVIEWS[i].getJobContract().getId(), maybePostReviews.get(i).getJobContract().getId());
         }
     }
 
@@ -279,7 +277,7 @@ public class ReviewDaoJpaTest {
 
         Assert.assertEquals(TOTAL_REVIEW_COUNT_PRO, maybeUserReviews.size());
         for (int i = 0; i < maybeUserReviews.size(); i++) {
-            Assert.assertEquals(REVIEWS[i], maybeUserReviews.get(i));
+            Assert.assertEquals(REVIEWS[i].getJobContract().getId(), maybeUserReviews.get(i).getJobContract().getId());
         }
     }
 
@@ -290,7 +288,7 @@ public class ReviewDaoJpaTest {
 
         Assert.assertEquals(REVIEW_POST_FIRST_PAGE_COUNT, maybeUserReviews.size());
         for (int i = 0; i < maybeUserReviews.size(); i++) {
-            Assert.assertEquals(REVIEWS[i], maybeUserReviews.get(i));
+            Assert.assertEquals(REVIEWS[i].getJobContract().getId(), maybeUserReviews.get(i).getJobContract().getId());
         }
     }
 
@@ -308,7 +306,7 @@ public class ReviewDaoJpaTest {
 
         Assert.assertEquals(MAX_REVIEWS_FOR_PACKAGE, maybeReviews.size());
         for (int i = 0; i < maybeReviews.size(); i++) {
-            Assert.assertEquals(REVIEWS[i], maybeReviews.get(i));
+            Assert.assertEquals(REVIEWS[i].getJobContract().getId(), maybeReviews.get(i).getJobContract().getId());
         }
 
     }
@@ -319,7 +317,7 @@ public class ReviewDaoJpaTest {
 
         Assert.assertEquals(REVIEW_POST_FIRST_PAGE_COUNT, maybeReviews.size());
         for (int i = 0; i < maybeReviews.size(); i++) {
-            Assert.assertEquals(REVIEWS[i], maybeReviews.get(i));
+            Assert.assertEquals(REVIEWS[i].getJobContract().getId(), maybeReviews.get(i).getJobContract().getId());
         }
 
     }
@@ -329,7 +327,7 @@ public class ReviewDaoJpaTest {
         Optional<Review> maybeReview = reviewDaoJpa.findReviewByContractId(JOB_CONTRACTS_PACKAGE1[0].getId());
 
         Assert.assertTrue(maybeReview.isPresent());
-        Assert.assertEquals(REVIEWS[0], maybeReview.get());
+        Assert.assertEquals(REVIEWS[0].getJobContract().getId(), maybeReview.get().getJobContract().getId());
     }
 
     @Test

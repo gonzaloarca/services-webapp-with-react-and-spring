@@ -131,7 +131,7 @@ public class JobContractDaoJpa implements JobContractDao {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return addEncodedImage(em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
-                JobContract.class).setParameter("filteredIds", filteredIds).getResultList().stream().sorted(
+                JobContract.class).setParameter("filteredIds", filteredIds.isEmpty() ? null: filteredIds).getResultList().stream().sorted(
                 //Ordenamos los elementos segun el orden de filteredIds
                 Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
         ).collect(Collectors.toList()));

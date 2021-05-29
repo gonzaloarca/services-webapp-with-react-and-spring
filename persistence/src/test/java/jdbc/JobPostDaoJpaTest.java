@@ -257,7 +257,7 @@ public class JobPostDaoJpaTest {
         List<JobPost> jobPosts = jobPostDaoJpa.findByUserId(PROFESSIONAL_USER.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(ACTIVE_JOB_POSTS_COUNT_FOR_USER1, jobPosts.size());
-        jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
+        jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser().getId(), jobPost.getUser().getId())));
     }
 
     @Test
@@ -266,7 +266,7 @@ public class JobPostDaoJpaTest {
         List<JobPost> jobPosts = jobPostDaoJpa.findByUserId(PROFESSIONAL_USER.getId(), 0);
 
         Assert.assertEquals(FIRST_PAGE_JOB_POST_USER1_COUNT, jobPosts.size());
-        jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
+        jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser().getId(), jobPost.getUser().getId())));
     }
 
     @Test
@@ -275,7 +275,7 @@ public class JobPostDaoJpaTest {
         List<JobPost> jobPosts = jobPostDaoJpa.findByUserId(JOB_POST.getUser().getId(), 1);
 
         Assert.assertEquals(LAST_PAGE_JOB_POST_USER1_COUNT, jobPosts.size());
-        jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser(), jobPost.getUser())));
+        jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser().getId(), jobPost.getUser().getId())));
     }
 
     @Test

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -204,7 +205,7 @@ public class JobContractDaoJpaTest {
         Assert.assertEquals(CLIENT.getPhone(), jobContract.getClient().getPhone());
         Assert.assertEquals(CLIENT.isActive(), jobContract.getClient().isActive());
 
-        Assert.assertEquals(PROFESSIONAL, jobContract.getProfessional());
+        Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId());
         Assert.assertEquals(PROFESSIONAL.getEmail(), jobContract.getProfessional().getEmail());
         Assert.assertEquals(PROFESSIONAL.getUsername(), jobContract.getProfessional().getUsername());
         Assert.assertEquals(PROFESSIONAL.getPhone(), jobContract.getProfessional().getPhone());
@@ -226,6 +227,26 @@ public class JobContractDaoJpaTest {
         Assert.assertEquals(JdbcTestUtils.countRowsInTable(jdbcTemplate,"contract"),19);
     }
 
+
+    @Test(expected = PersistenceException.class )
+    public void testCreateWithInvalidDescription(){
+        jobContractDaoJpa.create(CLIENT.getId(),JOB_PACKAGES[0].getId(),null);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void testCreateWithNonExistentClient() {
+
+        jobContractDaoJpa.create(NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), JOB_CONTRACTS_PACKAGE1[0].getDescription());
+
+    }
+
+    @Test(expected = JobPackageNotFoundException.class)
+    public void testCreateWithNonExistentPackage() {
+
+        jobContractDaoJpa.create(CLIENT.getId(), NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getDescription());
+
+    }
+
     @Test
     public void testFindById() {
 
@@ -233,6 +254,14 @@ public class JobContractDaoJpaTest {
 
         Assert.assertTrue(jobContract.isPresent());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1[0].getId(), jobContract.get().getId());
+    }
+
+    @Test
+    public void testFindByIdNotExists() {
+
+        Optional<JobContract> jobContract = jobContractDaoJpa.findById(999);
+
+        Assert.assertFalse(jobContract.isPresent());
     }
 
     @Test
@@ -254,12 +283,22 @@ public class JobContractDaoJpaTest {
         jobContracts.forEach(jobContract -> Assert.assertEquals(CLIENT.getId(), jobContract.getClient().getId()));
     }
 
+
+    @Test
+    public void testFindByClientIdWithInvalidId() {
+
+        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(999, 0);
+
+        Assert.assertTrue(jobContracts.isEmpty());
+    }
+
     @Test
     public void testFindByProIdWithoutPagination() {
 
         List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(JOB_CONTRACTS_COUNT, jobContracts.size());
         jobContracts.forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
     }
 
@@ -268,9 +307,17 @@ public class JobContractDaoJpaTest {
 
         List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), 0);
 
-        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
         Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
         jobContracts.forEach(jobContract -> Assert.assertEquals(PROFESSIONAL.getId(), jobContract.getProfessional().getId()));
+    }
+
+    @Test
+    public void testFindByProIdWitInvalidId() {
+
+        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(999, 0);
+
+        Assert.assertTrue(jobContracts.isEmpty());
     }
 
     @Test
@@ -294,12 +341,21 @@ public class JobContractDaoJpaTest {
     }
 
     @Test
+    public void testFindByPackageIdWithInvalidId() {
+
+        List<JobContract> jobContracts = jobContractDaoJpa.findByPackageId(999, 0);
+
+        Assert.assertTrue(jobContracts.isEmpty());
+
+    }
+
+    @Test
     public void testFindByPostIdWithoutPagination() {
 
         List<JobContract> jobContracts = jobContractDaoJpa.findByPostId(JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getJobPost().getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
-        Assert.assertEquals(JOB_CONTRACTS_POST_COUNT, jobContracts.size()); //3 del package1 y 1 del package2
+        Assert.assertEquals(JOB_CONTRACTS_PRO1_COUNT, jobContracts.size());
         jobContracts.forEach(jobContract ->
                 Assert.assertEquals(JOB_POST.getId(), jobContract.getJobPackage().getPostId()));
     }
@@ -313,6 +369,14 @@ public class JobContractDaoJpaTest {
         Assert.assertEquals(HirenetUtils.PAGE_SIZE, jobContracts.size()); //3 del package1 y 1 del package2
         jobContracts.forEach(jobContract ->
                 Assert.assertEquals(JOB_POST.getId(), jobContract.getJobPackage().getPostId()));
+    }
+
+    @Test
+    public void testFindByPostIdWithInvalidId() {
+
+        List<JobContract> jobContracts = jobContractDaoJpa.findByPostId(999, 0);
+
+        Assert.assertTrue(jobContracts.isEmpty());
     }
 
 
@@ -330,20 +394,6 @@ public class JobContractDaoJpaTest {
         int ans = jobContractDaoJpa.findContractsQuantityByProId(PROFESSIONAL.getId() + 100);
 
         Assert.assertEquals(0, ans);
-    }
-
-    @Test(expected = UserNotFoundException.class)
-    public void testCreateWithNonExistentClient() {
-
-        jobContractDaoJpa.create(NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), JOB_CONTRACTS_PACKAGE1[0].getDescription());
-
-    }
-
-    @Test(expected = JobPackageNotFoundException.class)
-    public void testCreateWithNonExistentPackage() {
-
-        jobContractDaoJpa.create(CLIENT.getId(), NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getDescription());
-
     }
 
     @Test
