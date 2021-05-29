@@ -51,7 +51,7 @@
             </c:choose>
             <div class="contracts-option ${param.contractState == 'finalized' ? 'font-weight-bold' : ''}">
                 <i class="fas fa-check option-icon finalized-contracts-icon"></i>
-                <spring:message code="contract.options.completed"/>
+                <spring:message code="contract.options.finalized"/>
             </div>
         </a>
 

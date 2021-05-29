@@ -63,7 +63,7 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page) {
-        return jobContractDao.findByClientId(id, Arrays.asList(JobContract.ContractState.values()), page);
+        return jobContractDao.findByClientId(id, states, page);
     }
 
     @Override

@@ -1,6 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -36,12 +37,7 @@
             </li>
 
             <sec:authorize access="isAuthenticated()">
-                <li class="nav-item ${(requestScope.path == "/my-contracts/client/active"
-                || requestScope.path == "/my-contracts/client/pending"
-                || requestScope.path == "/my-contracts/client/finalized"
-                || requestScope.path == "/my-contracts/professional/active"
-                || requestScope.path == "/my-contracts/professional/pending"
-                || requestScope.path == "/my-contracts/professional/finalized") ? 'active': ''}">
+                <li class="nav-item ${requestScope.path == "/my-contracts" ? 'active' : ''}">
                     <a class="nav-link"
                        href="${pageContext.request.contextPath}/my-contracts/client/active">
                         <spring:message code="navigation.mycontracts"/>
