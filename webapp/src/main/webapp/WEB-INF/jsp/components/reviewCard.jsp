@@ -8,16 +8,9 @@
 <fmt:formatDate value="${theDate}" pattern="${dateFormat}" var="dateFormatted"/>
 
 <div class="custom-row justify-content-between">
-    <c:choose>
-        <c:when test="${requestScope.data.client.image.string != null}">
-            <c:set var="profilePic"
-                   value="data:${requestScope.data.client.image.type};base64,${requestScope.data.client.image.string}"/>
-        </c:when>
-        <c:otherwise>
-            <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
-        </c:otherwise>
-    </c:choose>
-    <img class="review-img" src='${profilePic}'
+
+    <img class="review-img" src='<c:url value="/image/user/${requestScope.data.client.id}"/>'
+         loading="lazy"
          alt="<spring:message code="profile.image"/>">
     <div class="review-header">
         <p class="mb-0 font-weight-bold"><c:out value="${requestScope.data.client.username}"/></p>
