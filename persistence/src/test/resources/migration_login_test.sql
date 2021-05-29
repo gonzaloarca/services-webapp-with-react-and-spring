@@ -1,11 +1,3 @@
-CREATE TABLE IF NOT EXISTS user_role
-(
-    user_id SERIAL NOT NULL,
-    role_id INT    NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users,
-    PRIMARY KEY (user_id, role_id)
-);
-
 DROP VIEW IF EXISTS full_post;
 CREATE VIEW full_post AS
 SELECT job_post.post_id,
@@ -37,6 +29,7 @@ GROUP BY job_post.post_id, post_title, post_available_hours, post_job_type, post
          user_name, user_phone, user_is_active, user_is_verified, user_image, users.image_type,post_creation_date,
          user_creation_date;
 
+DROP VIEW IF EXISTS full_contract;
 CREATE VIEW full_contract AS
 SELECT *
 FROM contract

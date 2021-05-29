@@ -1,4 +1,4 @@
-CREATE TABLE post_image
+CREATE TABLE IF NOT EXISTS post_image
 (
     image_id		SERIAL 	PRIMARY KEY,
     post_id			INTEGER NOT NULL,

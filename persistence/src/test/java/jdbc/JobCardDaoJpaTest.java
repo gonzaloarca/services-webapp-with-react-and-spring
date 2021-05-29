@@ -2,7 +2,7 @@ package jdbc;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.persistence.jdbc.*;
+import ar.edu.itba.paw.persistence.jpa.JobCardDaoJpa;
 import config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,19 +15,19 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+//
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:job_card_data_test.sql")
-public class JobCardDaoJDBCTest {
+@Transactional
+public class JobCardDaoJpaTest {
 
     private static final User USER1 = new User(
             1,
@@ -62,7 +62,7 @@ public class JobCardDaoJDBCTest {
             true,
             LocalDateTime.now());
 
-    private static final List<JobPost.Zone> ZONES_USER = new ArrayList<>(
+    private static final List<JobPost.Zone> ZONES_USER = new ArrayList<JobPost.Zone>(
             Arrays.asList(
                     JobPost.Zone.values()[1],
                     JobPost.Zone.values()[2]
@@ -74,12 +74,11 @@ public class JobCardDaoJDBCTest {
             "Electricista no matriculado", "Lun a Jueves 13hs - 14hs",
             JobPost.JobType.values()[1],
             ZONES_USER,
-            0.0,
             true,
             LocalDateTime.now());
     private static final JobPackage JOB_PACKAGE_USER2 = new JobPackage(
             19,
-            JOB_POST_USER2.getId(),
+            JOB_POST_USER2,
             "Trabajo simple",
             "Arreglos de tomacorrientes",
             200.00, JobPackage.RateType.values()[0],
@@ -89,9 +88,10 @@ public class JobCardDaoJDBCTest {
             JOB_POST_USER2,
             JOB_PACKAGE_USER2.getRateType(),
             JOB_PACKAGE_USER2.getPrice(),
-            null,
-            1,
-            0
+            0,
+            2,
+            0.0,
+            null
     );
     private static final JobPost JOB_POST_USER3 = new JobPost(
             12,
@@ -99,12 +99,11 @@ public class JobCardDaoJDBCTest {
             "Paseador de gatos", "Sabados de 8hs - 14hs",
             JobPost.JobType.values()[3],
             ZONES_USER,
-            0.0,
             true,
             LocalDateTime.now());
     private static final JobPackage JOB_PACKAGE_USER3 = new JobPackage(
             20,
-            JOB_POST_USER3.getId(),
+            JOB_POST_USER3,
             "Trabajo simple",
             "Paseo tardio",
             300.00, JobPackage.RateType.values()[0],
@@ -114,9 +113,10 @@ public class JobCardDaoJDBCTest {
             JOB_POST_USER3,
             JOB_PACKAGE_USER3.getRateType(),
             JOB_PACKAGE_USER3.getPrice(),
-            null,
+            0,
             2,
-            0
+            0.0,
+            null
     );
     private static final JobPost JOB_POST_USER4 = new JobPost(
             13,
@@ -124,12 +124,11 @@ public class JobCardDaoJDBCTest {
             "Paseador de urones", "Domingos de 8hs - 14hs",
             JobPost.JobType.values()[3],
             ZONES_USER,
-            0.0,
             true,
             LocalDateTime.now());
     private static final JobPackage JOB_PACKAGE_USER4 = new JobPackage(
             21,
-            JOB_POST_USER4.getId(),
+            JOB_POST_USER4,
             "Trabajo simple",
             "Paseo recreativo",
             300.00, JobPackage.RateType.values()[0],
@@ -139,9 +138,10 @@ public class JobCardDaoJDBCTest {
             JOB_POST_USER4,
             JOB_PACKAGE_USER4.getRateType(),
             JOB_PACKAGE_USER4.getPrice(),
-            null,
-            1,
-            0
+            0,
+            2,
+            0.0,
+            null
     );
     private static final int RELATED_JOB_CARDS_COUNT = 3;
     public static final int SEARCH_ELECTRICISTA_COUNT = 4;
@@ -153,7 +153,7 @@ public class JobCardDaoJDBCTest {
 
     @InjectMocks
     @Autowired
-    private JobCardDaoJDBC jobCardDaoJDBCTest;
+    private JobCardDaoJpa jobCardDaoJpa;
 
     @Before
     public void setUp() {
@@ -163,7 +163,7 @@ public class JobCardDaoJDBCTest {
 
     @Test
     public void testFindRelatedJobCards() {
-        List<JobCard> maybeJobCards = jobCardDaoJDBCTest.findRelatedJobCards(1, HirenetUtils.ALL_PAGES);
+        List<JobCard> maybeJobCards = jobCardDaoJpa.findRelatedJobCards(1, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(maybeJobCards.isEmpty());
         Assert.assertEquals(RELATED_JOB_CARDS_COUNT, maybeJobCards.size());
@@ -176,7 +176,7 @@ public class JobCardDaoJDBCTest {
     public void testSearch() {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.values()[1];
-        List<JobCard> jobCards = jobCardDaoJDBCTest.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(SEARCH_ELECTRICISTA_COUNT, jobCards.size());
@@ -186,7 +186,7 @@ public class JobCardDaoJDBCTest {
     public void testSearchWithSimilarTypes() {
         String title = "electr";
         JobPost.Zone zone = JobPost.Zone.values()[1];
-        List<JobCard> jobCards = jobCardDaoJDBCTest.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(ELECTRICITY_AND_CARPENTRY_POST_COUNT, jobCards.size());
@@ -197,17 +197,18 @@ public class JobCardDaoJDBCTest {
         String title = "";
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-        List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
     }
+
     @Test
     public void testSearchWithSimilarTypesCategory() {
         String title = "ELECT";
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
-        List<JobCard> jobCards = jobCardDaoJDBCTest.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
@@ -215,7 +216,7 @@ public class JobCardDaoJDBCTest {
 
     @Test
     public void findAllTest() {
-        List<JobCard> jobCards = jobCardDaoJDBCTest.findAll(HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.findAll(HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(12, jobCards.size());
@@ -223,7 +224,7 @@ public class JobCardDaoJDBCTest {
 
     @Test
     public void findByUserIdTest() {
-        List<JobCard> jobCards = jobCardDaoJDBCTest.findByUserId(USER1.getId(), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.findByUserId(USER1.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(9, jobCards.size());
@@ -231,6 +232,8 @@ public class JobCardDaoJDBCTest {
 
     @Test
     public void findByPostIdTest() {
-        Assert.assertTrue(jobCardDaoJDBCTest.findByPostId(1).isPresent());
+        Optional<JobCard> jobCard = jobCardDaoJpa.findByPostId(1);
+        Assert.assertTrue(jobCard.isPresent());
+        Assert.assertEquals(jobCard.get().getJobPost().getId(), 1);
     }
 }

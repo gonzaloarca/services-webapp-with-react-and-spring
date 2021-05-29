@@ -1,61 +1,125 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
+@Entity
+@Table(name = "contract")
 public class JobContract {
-    private final long id;
-    private final User client;
-    private final JobPackage jobPackage;
-    private final User professional;
-    private final LocalDateTime creationDate;
-    private final String description;
-    private final ByteImage image;
-    private final EncodedImage encodedImage;
 
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description,
-                       ByteImage image, EncodedImage encodedImage) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contract_contract_id_seq")
+    @SequenceGenerator(sequenceName = "contract_contract_id_seq", name = "contract_contract_id_seq", allocationSize = 1)
+    @Column(name = "contract_id", nullable = false)
+    private long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", foreignKey = @ForeignKey(name = "contract_client_id_fkey"))
+    private User client;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "package_id", foreignKey = @ForeignKey(name = "contract_package_id_fkey"))
+    private JobPackage jobPackage;
+
+    @Column(length = 100, name = "contract_creation_date", nullable = false)
+    private LocalDateTime creationDate;
+
+    @Column(length = 100, name = "contract_description", nullable = false)
+    private String description;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "contract_state", nullable = false, columnDefinition = "INT default 6")
+    private ContractState state;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "data", column = @Column(name = "image_data")),
+            @AttributeOverride(name = "type", column = @Column(name = "contract_image_type", length = 100))
+    })
+    private ByteImage image;
+
+    /*Default*/ JobContract() {
+    }
+
+    public JobContract(long id, User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
+                       ByteImage image) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
-        this.professional = professional;
         this.creationDate = creationDate;
         this.description = description;
         this.image = image;
-        this.encodedImage = encodedImage;
+        this.state = ContractState.PENDING_APPROVAL;
+    }
+
+    public JobContract(User client, JobPackage jobPackage, LocalDateTime creationDate, String description,
+                       ByteImage image) {
+        this.client = client;
+        this.jobPackage = jobPackage;
+        this.creationDate = creationDate;
+        this.description = description;
+        this.image = image;
+        this.state = ContractState.PENDING_APPROVAL;
     }
 
     public JobPackage getJobPackage() {
         return jobPackage;
     }
 
+    public void setJobPackage(JobPackage jobPackage) {
+        this.jobPackage = jobPackage;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public User getClient() {
         return client;
     }
 
+    public void setClient(User client) {
+        this.client = client;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public User getProfessional() {
-        return professional;
+        return jobPackage.getJobPost().getUser();
     }
 
     public ByteImage getImage() {
         return image;
     }
 
-    public EncodedImage getEncodedImage() {
-        return encodedImage;
+    public void setImage(ByteImage image) {
+        this.image = image;
+    }
+
+    public ContractState getState() {
+        return state;
+    }
+
+    public void setState(ContractState state) {
+        this.state = state;
     }
 
     @Override
@@ -64,9 +128,10 @@ public class JobContract {
                 "id=" + id +
                 ", client=" + client +
                 ", jobPackage=" + jobPackage +
-                ", professional=" + professional +
+                ", professional=" + getProfessional() +
                 ", creationDate=" + creationDate +
                 ", description='" + description + '\'' +
+                ", state='" + state + '\'' +
                 '}';
     }
 
@@ -81,5 +146,27 @@ public class JobContract {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public enum ContractState {
+        PENDING_APPROVAL(1),
+        APPROVED(0),
+        CLIENT_REJECTED(2),
+        PRO_REJECTED(2),
+        CLIENT_CANCELLED(2),
+        PRO_CANCELLED(2),
+        COMPLETED(2),
+        CLIENT_MODIFIED(1),
+        PRO_MODIFIED(1);
+
+        final int category;
+
+        ContractState(int category) {
+            this.category = category;
+        }
+
+        public int getCategory() {
+            return category;
+        }
     }
 }

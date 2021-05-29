@@ -11,11 +11,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -28,8 +31,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
@@ -121,8 +126,8 @@ public class WebConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(final DataSource ds) {
-        return new DataSourceTransactionManager(ds);
+    public PlatformTransactionManager transactionManager(final EntityManagerFactory enf) {
+        return new JpaTransactionManager(enf);
     }
 
     @Bean
@@ -133,5 +138,30 @@ public class WebConfig {
     @Bean
     public LocaleResolver localeResolver() {
         return new AcceptHeaderLocaleResolver();
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
+        final LocalContainerEntityManagerFactoryBean entityFactory = new LocalContainerEntityManagerFactoryBean();
+        entityFactory.setPackagesToScan("ar.edu.itba.paw.models");
+        entityFactory.setDataSource(dataSource());
+
+        final JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        entityFactory.setJpaVendorAdapter(jpaVendorAdapter);
+
+        final Properties jpaProperties = new Properties();
+        jpaProperties.setProperty("hibernate.hbm2ddl.auto","update");
+        jpaProperties.setProperty("hibernate.dialect","org.hibernate.dialect.PostgreSQL92Dialect");
+
+        //FIXME
+        //TODO NO PONER ESTO EN PRODUCCION!!!
+        jpaProperties.setProperty("hibernate.show_sql", "true");
+        jpaProperties.setProperty("format_sql", "true");
+
+
+
+        entityFactory.setJpaProperties(jpaProperties);
+
+        return entityFactory;
     }
 }

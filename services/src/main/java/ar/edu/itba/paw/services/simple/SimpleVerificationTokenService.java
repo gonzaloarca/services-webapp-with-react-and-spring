@@ -10,12 +10,14 @@ import exceptions.MismatchedTokensException;
 import exceptions.VerificationTokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class SimpleVerificationTokenService implements VerificationTokenService {
 
 	private final static int AVAILABLE_TIME = 24 * 60 * 60;

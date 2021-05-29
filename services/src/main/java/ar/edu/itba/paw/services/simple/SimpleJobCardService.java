@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.JobPost;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,13 +92,13 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPost.Zone value) {
-        return jobCardDao.findMaxPageSearch(query, value);
+    public int findMaxPageSearch(String query, JobPost.Zone value, Locale locale) {
+        return jobCardDao.findMaxPageSearch(query, value, getSimilarTypes(query,locale));
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPost.Zone value, JobPost.JobType jobType) {
-        return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType);
+    public int findMaxPageSearchWithCategory(String query, JobPost.Zone value, JobPost.JobType jobType, Locale locale) {
+        return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType, getSimilarTypes(query,locale));
     }
 
     @Override

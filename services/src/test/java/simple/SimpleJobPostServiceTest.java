@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.simple.SimpleJobPostService;
-import ar.edu.itba.paw.services.simple.SimpleUserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,12 +46,9 @@ public class SimpleJobPostServiceTest {
             true,
             true,
             LocalDateTime.now());
-    private static final List<JobPost.Zone> ZONES = new ArrayList<>(
-            Arrays.asList(
-                    JobPost.Zone.PALERMO,
-                    JobPost.Zone.BELGRANO
-            )
-    );
+    private static final List<JobPost.Zone> ZONES =
+            new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]));
     private static final JobPost JOB_POST_NEW_USER = new JobPost(
             1,
             NEW_PROFESSIONAL,
@@ -60,7 +56,7 @@ public class SimpleJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            0.0, true,
+            true,
             LocalDateTime.now());
     private static final JobPost JOB_POST_EXISTING_USER = new JobPost(
             1,
@@ -69,7 +65,7 @@ public class SimpleJobPostServiceTest {
             "Luna a viernes 10 a 14",
             JobPost.JobType.ELECTRICITY,
             ZONES,
-            0.0, true,
+            true,
             LocalDateTime.now());
 
     @InjectMocks
@@ -89,7 +85,7 @@ public class SimpleJobPostServiceTest {
                 .thenReturn(JOB_POST_NEW_USER);
         int[] zonesInt = new int[ZONES.size()];
         for (int i = 0; i < ZONES.size(); i++) {
-            zonesInt[i] = ZONES.get(i).ordinal();
+            zonesInt[i] = ZONES.get(i).getValue();
         }
         JobPost jobPost = jobPostService.create(NEW_PROFESSIONAL.getEmail(), JOB_POST_NEW_USER.getTitle(),
                 JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType().ordinal(), zonesInt);
@@ -106,7 +102,7 @@ public class SimpleJobPostServiceTest {
                 .thenReturn(JOB_POST_EXISTING_USER);
         int[] zonesInt = new int[ZONES.size()];
         for (int i = 0; i < ZONES.size(); i++) {
-            zonesInt[i] = ZONES.get(i).ordinal();
+            zonesInt[i] = ZONES.get(i).getValue();
         }
         JobPost jobPost = jobPostService.create(EXISTING_USER.getEmail(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(), zonesInt);
 

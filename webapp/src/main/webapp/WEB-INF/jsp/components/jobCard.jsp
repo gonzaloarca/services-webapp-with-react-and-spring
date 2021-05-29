@@ -7,16 +7,15 @@
     <spring:message code="${requestScope.data.jobPost.jobType.stringCode}" var="jobTypeName"/>
 
     <c:choose>
-        <c:when test="${requestScope.data.postImage.image.string == null}">
+        <c:when test="${requestScope.data.postImageId == null}">
             <c:url value="/resources/images/${requestScope.data.jobPost.jobType.imagePath}" var="imageSrc"/>
         </c:when>
         <c:otherwise>
-            <c:set value="data:${requestScope.data.postImage.image.type};base64,${requestScope.data.postImage.image.string}"
-                   var="imageSrc"/>
+            <c:url value="/image/post/${requestScope.data.postImageId}" var="imageSrc"/>
         </c:otherwise>
     </c:choose>
 
-    <img class="card-img-top job-card-img" src="${imageSrc}"
+    <img class="card-img-top job-card-img" src="${imageSrc}" loading="lazy"
          alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
     <div class="card-body">
         <h5 class="card-title job-card-title"><c:out value="${requestScope.data.jobPost.title}"/></h5>
@@ -35,7 +34,7 @@
             <c:otherwise>
                 <div class="custom-row">
                     <jsp:include page="rateStars.jsp">
-                        <jsp:param name="rate" value="${requestScope.data.jobPost.rating}"/>
+                        <jsp:param name="rate" value="${requestScope.data.rating}"/>
                     </jsp:include>
                     <p class="ml-3 service-subtitle">
                         (${requestScope.data.reviewsCount})

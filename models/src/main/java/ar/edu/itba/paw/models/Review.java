@@ -1,24 +1,38 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Review {
-    private final int rate;
-    private final String title;
-    private final String description;
-    private final User client;
-    private final JobPost jobPost;
-    private final JobContract jobContract;
-    private final LocalDateTime creationDate;
+@Entity
+@Table(name = "review")
+public class Review implements Serializable {
+    @Column(length = 100, nullable = false, name = "review_rate")
+    private int rate;
 
+    @Column(length = 100, name = "review_title")
+    private String title;
 
-    public Review(int rate, String title, String description, User client, JobPost jobPost, JobContract contract, LocalDateTime creationDate) {
+    @Column(length = 100, nullable = false, name = "review_description")
+    private String description;
+
+    // TODO: Si se borra JobContract que se borre la review
+    @Id
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "review_contract_id_fkey"), nullable = false)
+    private JobContract jobContract;
+
+    @Column(name = "review_creation_date")
+    private LocalDateTime creationDate;
+
+    /* default */ Review() {
+    }
+
+    public Review(int rate, String title, String description, JobContract contract, LocalDateTime creationDate) {
         this.rate = rate;
         this.title = title;
         this.description = description;
-        this.client = client;
-        this.jobPost = jobPost;
         this.creationDate = creationDate;
         this.jobContract = contract;
     }
@@ -36,11 +50,11 @@ public class Review {
     }
 
     public User getClient() {
-        return client;
+        return jobContract.getClient();
     }
 
     public JobPost getJobPost() {
-        return jobPost;
+        return jobContract.getJobPackage().getJobPost();
     }
 
     public LocalDateTime getCreationDate() {
@@ -56,16 +70,11 @@ public class Review {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review = (Review) o;
-        return rate == review.rate &&
-                Objects.equals(title, review.title) &&
-                Objects.equals(description, review.description) &&
-                Objects.equals(client, review.client) &&
-                Objects.equals(jobPost, review.jobPost) &&
-                Objects.equals(jobContract, review.jobContract);
+        return Objects.equals(jobContract, review.jobContract);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rate, title, description, client, jobPost, jobContract, creationDate);
+        return Objects.hash(jobContract);
     }
 }

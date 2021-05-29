@@ -30,7 +30,7 @@ public class ExceptionController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @org.springframework.web.bind.annotation.ExceptionHandler({UserNotFoundException.class,
             JobPostNotFoundException.class, JobPackageNotFoundException.class,
-            ReviewNotFoundException.class, JobContractNotFoundException.class})
+            ReviewNotFoundException.class, JobContractNotFoundException.class, NoSuchElementException.class})
     public ModelAndView notFoundError(RuntimeException e) {
         exceptionLogger.debug("Exception handled: {}", e.getMessage());
         return logUser(new ModelAndView("error/404"));
