@@ -90,7 +90,7 @@ public class ImageController {
         ByteImage contractImage;
 
         try {
-            contractImage = jobContractService.findById(id).getImage();
+            contractImage = jobContractService.findJobContractWithImage(id).getImage();
         } catch (JobPackageNotFoundException e) {
             contractImage = null;
         }

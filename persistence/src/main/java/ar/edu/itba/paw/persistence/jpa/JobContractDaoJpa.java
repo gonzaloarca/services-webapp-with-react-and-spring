@@ -2,10 +2,7 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import exceptions.JobContractNotFoundException;
 import exceptions.JobPackageNotFoundException;
@@ -28,12 +25,12 @@ public class JobContractDaoJpa implements JobContractDao {
     private EntityManager em;
 
     @Override
-    public JobContract create(long clientId, long packageId, String description) {
+    public JobContractWithImage create(long clientId, long packageId, String description) {
         return create(clientId, packageId, description, null);
     }
 
     @Override
-    public JobContract create(long clientId, long packageId, String description, ByteImage image) {
+    public JobContractWithImage create(long clientId, long packageId, String description, ByteImage image) {
         User client = em.find(User.class, clientId);
         if (client == null)
             throw new UserNotFoundException();
@@ -42,10 +39,10 @@ public class JobContractDaoJpa implements JobContractDao {
         if (jobPackage == null)
             throw new JobPackageNotFoundException();
 
-        JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image);
-        em.persist(jobContract);
+        JobContractWithImage jobContractWithImage = new JobContractWithImage(client, jobPackage, LocalDateTime.now(), description, image);
+        em.persist(jobContractWithImage);
 
-        return jobContract;
+        return jobContractWithImage;
     }
 
     @Override
@@ -164,5 +161,10 @@ public class JobContractDaoJpa implements JobContractDao {
         contract.setState(state);
 
         em.persist(contract);
+    }
+
+    @Override
+    public Optional<JobContractWithImage> findJobContractWithImage(long id) {
+        return Optional.ofNullable(em.find(JobContractWithImage.class, id));
     }
 }

@@ -116,7 +116,7 @@
                             arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
 
             <c:set value="" var="imageSrc"/>
-            <c:if test="${contractCard.jobContract.image != null}">
+            <c:if test="${contractCard.jobContract.imageType != null}">
                 <c:url value="/image/contract/${contractCard.jobContract.id}" var="imageSrc"/>
             </c:if>
             <a class="btn contract-control-details btn-link text-uppercase"

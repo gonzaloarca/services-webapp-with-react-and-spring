@@ -1,17 +1,15 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractCard;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface JobContractService {
 
-    JobContract create(String client_email, long packageId, String description);
+    JobContractWithImage create(String client_email, long packageId, String description, Locale locale);
 
-    JobContract create(String client_email, long packageId, String description, ByteImage image);
+    JobContractWithImage create(String client_email, long packageId, String description, ByteImage image, Locale locale);
 
     JobContract findById(long id);
 
@@ -51,4 +49,5 @@ public interface JobContractService {
 
     void changeContractState(long id, JobContract.ContractState state);
 
+    JobContractWithImage findJobContractWithImage(long id);
 }

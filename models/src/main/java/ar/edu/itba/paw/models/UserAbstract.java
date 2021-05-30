@@ -110,7 +110,7 @@ public class UserAbstract {
     public boolean equals(Object o) {
         //fixme está bien este equals?
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !getClass().isAssignableFrom(o.getClass())) return false;
         UserAbstract user = (UserAbstract) o;
         return id == user.id && email.equals(user.email);
     }

@@ -38,9 +38,6 @@ public class ContractController {
     private JobContractService jobContractService;
 
     @Autowired
-    private MailingService mailingService;
-
-    @Autowired
     private JobPostImageService jobPostImageService;
 
     @Autowired
@@ -76,24 +73,21 @@ public class ContractController {
         }
 
         String email = principal.getName();
-        JobContract jobContract;
+        Locale locale = localeResolver.resolveLocale(servletRequest);
 
         if (form.getImage().getSize() == 0) {
             contractControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{}",packId,email,form.getDescription());
-            jobContract = jobContractService.create(email, packId, form.getDescription());
+            jobContractService.create(email, packId, form.getDescription(), locale);
         }else {
             try {
                 contractControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{} with image",packId,email,form.getDescription());
-                jobContract = jobContractService.create(email, packId, form.getDescription(),
-                        imageService.create(form.getImage().getBytes(), form.getImage().getContentType()));
+                jobContractService.create(email, packId, form.getDescription(),
+                        imageService.create(form.getImage().getBytes(), form.getImage().getContentType()), locale);
             } catch (IOException e) {
                 contractControllerLogger.debug("Error creating contract");
                 throw new RuntimeException(e.getMessage());
             }
         }
-
-        contractControllerLogger.debug("Senfing email to professional for package {}, post {} and contract {}",jobPack.getId(),jobPost.getId(),jobContract.getId());
-        mailingService.sendContractEmail(jobContract, jobPack, jobPost, localeResolver.resolveLocale(servletRequest));
 
         return new ModelAndView("redirect:/contract/" + packId + "/success");
     }

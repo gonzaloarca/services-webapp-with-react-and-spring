@@ -80,9 +80,11 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost, Locale locale) {
+    public void sendContractEmail(JobContractWithImage jobContract, Locale locale) {
         DataSource attachment = null;
         ByteImage image = jobContract.getImage();
+        JobPackage jobPack = jobContract.getJobPackage();
+        JobPost jobPost = jobPack.getJobPost();
 
         if (imageService.isValidImage(image)) {
             attachment = new ByteArrayDataSource(image.getData(), image.getType());
