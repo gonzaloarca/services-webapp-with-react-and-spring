@@ -586,7 +586,7 @@ h3 {
 .contact-modal-row {
     padding: 10px;
     margin: 5px;
-    width: max-content;
+    word-break: break-word;
 }
 
 .divider-bar-thick {
@@ -654,7 +654,6 @@ h3 {
     border-radius: 2rem;
     width: 98%;
     margin: 10px auto;
-
 }
 
 .hire-details-container p {
@@ -662,11 +661,17 @@ h3 {
 }
 
 .hire-user-container {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: start;
     padding: 5px;
     color: white;
+}
+
+.hire-user-container p{
+    word-break: break-word;
+    flex: 1;
 }
 
 .hire-date-container {
@@ -675,6 +680,7 @@ h3 {
     border-radius: 2rem;
     padding: 5px 10px;
     margin: 7px;
+    align-self: center;
 }
 
 .user-avatar {

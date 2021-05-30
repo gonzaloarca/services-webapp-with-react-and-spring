@@ -279,17 +279,6 @@
                 querySearch.setCustomValidity("");
             }
 
-            // if (querySearch.value === "") {
-            //     $('#queryNavError')[0].style.display = 'inherit';
-            //     querySearch.setCustomValidity("error");
-            //     event.preventDefault();
-            //     event.stopPropagation();
-            //     return false;
-            // } else {
-            //     $('#queryNavError')[0].style.display = 'none';
-            //     querySearch.setCustomValidity("");
-            // }
-
             $("#search-button").attr("disabled", true);
         })
     }

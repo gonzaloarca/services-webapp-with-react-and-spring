@@ -96,23 +96,13 @@
             sessionStorage.setItem("pickedZoneString", homeSelect.selectedOptions[0].label);
         }
 
-        // let querySearch = $('#queryInput');
-        // if(querySearch[0].value === "") {
-        //     $('#queryError')[0].style.display = 'inherit';
-        //     querySearch[0].setCustomValidity("error");
-        //     event.preventDefault();
-        //     event.stopPropagation();
-        // } else {
-        //     $('#queryError')[0].style.display = 'none';
-        //     querySearch[0].setCustomValidity("");
-        // }
-
         $("#submitBtn").attr("disabled", true);
     })
 
     // Saco el mensaje de error si es que existia
     $('.home-search-location').on('click', function () {
         $('#zoneError')[0].style.display = 'none';
+        $("#submitBtn").attr("disabled", false);
     })
 
     function hideErrorMsg() {

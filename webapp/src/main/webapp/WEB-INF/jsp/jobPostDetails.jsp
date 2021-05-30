@@ -37,18 +37,6 @@
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
-    <%--    <nav aria-label="breadcrumb">--%>
-    <%--        <ol class="breadcrumb bg-white">--%>
-    <%--            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
-    <%--                <spring:message code="navigation.index"/>--%>
-    <%--            </a></li>--%>
-    <%--            <li class="breadcrumb-item active" aria-current="page">--%>
-    <%--                <p class="capitalize-first-letter">--%>
-    <%--                    <spring:message code="${jobPost.jobType.stringCode}"/>--%>
-    <%--                </p>--%>
-    <%--            </li>--%>
-    <%--        </ol>--%>
-    <%--    </nav>--%>
     <c:if test="${isOwner && jobPost.active}">
         <div class="flex custom-row justify-content-end align-items-center">
             <a class="edit-button text-uppercase align-items-center my-2"

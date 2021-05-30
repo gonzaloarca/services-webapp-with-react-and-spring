@@ -213,7 +213,7 @@
 
 .available-hours {
     margin: 20px;
-    height: 60%;
+    height: 72%;
     background-color: #EAEAEA;
     padding: 12px;
     border-radius: 8px;
@@ -230,8 +230,10 @@
 }
 
 .zones {
-    margin: 5vh 3vw;
-    justify-content: center;
+    margin: 2vh 2vw;
+    justify-content: start;
+    max-height: 180px;
+    overflow-y: auto;
 }
 
 .zones p {
