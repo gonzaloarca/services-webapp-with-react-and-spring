@@ -64,7 +64,7 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
                 .antMatchers("/analytics", "/my-contracts/professional").hasRole("PROFESSIONAL")
-                .antMatchers("/contract/**","/my-contracts", "/rate-contract/**").hasRole("CLIENT")
+                .antMatchers("/hire/**","/my-contracts", "/rate-contract/**").hasRole("CLIENT")
                 .antMatchers("/login","/register").anonymous()
                 .antMatchers("/account/**", "/create-job-post", "/my-contracts/**").authenticated()
                 .antMatchers("/**").permitAll()

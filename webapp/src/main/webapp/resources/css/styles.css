@@ -521,6 +521,38 @@ h3 {
     justify-content: flex-start;
 }
 
+.contract-control-accept {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px;
+    border-radius: 5px;
+    background-color: #7BC778;
+    color: white;
+}
+
+.contract-control-accept:hover {
+    background-color: #5b9a57;
+    color: white;
+}
+
+.contract-control-reject {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px;
+    border-radius: 5px;
+    background-color: #E26767;
+    color: white;
+}
+
+.contract-control-reject:hover {
+    background-color: #bf5151;
+    color: white;
+}
+
 .contract-control-details {
     display: flex;
     align-items: center;
@@ -592,10 +624,10 @@ h3 {
 .divider-bar-thick {
     margin: 2px;
     border: 0;
-    clear:both;
-    display:block;
+    clear: both;
+    display: block;
     width: 96%;
-    background-color:#c8c8c8;
+    background-color: #c8c8c8;
     height: 1px;
 }
 

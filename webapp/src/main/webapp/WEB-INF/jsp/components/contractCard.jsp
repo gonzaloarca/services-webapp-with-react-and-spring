@@ -1,3 +1,4 @@
+<%@ page import="ar.edu.itba.paw.models.JobContract" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -11,10 +12,25 @@
 <spring:message code="date.format" var="dateFormat"/>
 <fmt:formatDate value="${theDate}" pattern="${dateFormat}" var="dateFormatted"/>
 
+<%--Seteo de variables para enum de States--%>
+<c:set var="APPROVED" value="<%=JobContract.ContractState.APPROVED%>"/>
+<c:set var="PENDING_APPROVAL" value="<%=JobContract.ContractState.PENDING_APPROVAL%>"/>
+<c:set var="PRO_MODIFIED" value="<%=JobContract.ContractState.PRO_MODIFIED%>"/>
+<c:set var="CLIENT_MODIFIED" value="<%=JobContract.ContractState.CLIENT_MODIFIED%>"/>
+<c:set var="COMPLETED" value="<%=JobContract.ContractState.COMPLETED%>"/>
+<c:set var="CLIENT_REJECTED" value="<%=JobContract.ContractState.CLIENT_REJECTED%>"/>
+<c:set var="PRO_REJECTED" value="<%=JobContract.ContractState.PRO_REJECTED%>"/>
+<c:set var="CLIENT_CANCELLED" value="<%=JobContract.ContractState.CLIENT_CANCELLED%>"/>
+<c:set var="PRO_CANCELLED" value="<%=JobContract.ContractState.PRO_CANCELLED%>"/>
+
+<%--Macro para identificar si el contrato debería tener controles para aceptar/rechazar--%>
+<c:set var="isApprovable" value="${((contractCard.jobContract.state == PENDING_APPROVAL || contractCard.jobContract.state == CLIENT_MODIFIED) && isOwner)
+|| (contractCard.jobContract.state == PRO_MODIFIED && !isOwner)}"/>
+
 
 <%--Seteo de variable para la imagen y texto a mostrar en el usuario que contrato/el dueño del servicio dependiendo del caso --%>
 <c:choose>
-    <c:when test="${requestScope.isOwner}">
+    <c:when test="${isOwner}">
         <c:set value="${contractCard.jobContract.client}" var="user"/>
         <c:set value="mycontracts.hiredBy" var="hireDataMessageCode"/>
         <c:set value="mycontracts.reviewed" var="reviewCaption"/>
@@ -55,7 +71,8 @@
             <div>
                 <c:choose>
                     <c:when test="${requestScope.jobCard.postImageId == null}">
-                        <c:url value="/resources/images/${requestScope.jobCard.jobPost.jobType.imagePath}" var="imageSrc"/>
+                        <c:url value="/resources/images/${requestScope.jobCard.jobPost.jobType.imagePath}"
+                               var="imageSrc"/>
                     </c:when>
                     <c:otherwise>
                         <c:url value="/image/post/${requestScope.jobCard.postImageId}" var="imageSrc"/>
@@ -119,6 +136,49 @@
             <c:if test="${contractCard.jobContract.image != null}">
                 <c:url value="/image/contract/${contractCard.jobContract.id}" var="imageSrc"/>
             </c:if>
+
+            <%--@elvariable id="changeContractStateForm" type="ar.edu.itba.paw.webapp.form.ChangeContractStateForm"--%>
+            <form:form cssClass="w-100 mb-1" action="/contract/state/update" method="post"
+                       modelAttribute="changeContractStateForm">
+                <c:if test="${isApprovable}">
+
+                    <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
+                            onclick="changeContractState(${APPROVED.ordinal()}, 'active')">
+                        <i class="fas fa-check mr-1"></i>
+                        <spring:message code="mycontracts.accept"/>
+                    </button>
+
+                    <button class="btn contract-control-reject text-uppercase" type="submit"
+                            onclick="changeContractState(${contractType == 'professional' ? PRO_REJECTED.ordinal()
+                                    : CLIENT_REJECTED.ordinal()}, 'finalized')">
+                        <i class="fas fa-times mr-1"></i>
+                        <spring:message code="mycontracts.reject"/>
+                    </button>
+                    <hr class="divider-bar-thick">
+                </c:if>
+                <c:if test="${contractState == APPROVED}">
+                    <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
+                            onclick="changeContractState(${COMPLETED.ordinal()}, 'finalized')">
+                        <i class="fas fa-check mr-1"></i>
+                        <spring:message code="mycontracts.finalize"/>
+                    </button>
+
+                    <button class="btn contract-control-reject text-uppercase" type="submit"
+                            onclick="changeContractState(${contractType == 'professional' ? PRO_CANCELLED.ordinal()
+                                    : CLIENT_CANCELLED.ordinal()}, 'finalized')">
+                        <i class="fas fa-times mr-1"></i>
+                        <spring:message code="mycontracts.cancel"/>
+                    </button>
+                    <hr class="divider-bar-thick">
+                </c:if>
+                <form:hidden path="id" value="${contractCard.jobContract.id}"/>
+                <form:hidden id="new-state" path="newState"/>
+                <form:hidden id="return-url" path="returnURL"
+                             value="${pageContext.request.contextPath}/my-contracts/${contractType}/"/>
+
+            </form:form>
+
+
             <a class="btn contract-control-details btn-link text-uppercase"
                onclick='openDetailsModal("${contractCard.jobContract.description}", "${imageSrc}")'>
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
@@ -147,14 +207,14 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <c:if test="${contractCard.jobCard.jobPost.active && !requestScope.isOwner}">
+                    <c:if test="${contractCard.jobCard.jobPost.active && !isOwner}">
                         <a class="contract-control-rate text-uppercase"
                            href="${pageContext.request.contextPath}/rate-contract/${contractCard.jobContract.id}">
                             <i class="bi bi-star mr-1"></i>
                             <p><spring:message code="mycontracts.ratecontract"/></p>
                         </a>
                     </c:if>
-                    <c:if test="${requestScope.isOwner}">
+                    <c:if test="${isOwner}">
                         <hr class="divider-bar-thick">
                         <p class="text-black-50" style="margin: 0 auto"><spring:message code="mycontracts.unrated"/></p>
                     </c:if>
@@ -207,7 +267,8 @@
                             <p id="details-modal-image-header" class="font-weight-bold">
                                 <spring:message code="mycontracts.modal.image"/>
                             </p>
-                            <img id="details-modal-image" src="" alt="<spring:message code="mycontracts.modal.image.alt"/>">
+                            <img id="details-modal-image" src=""
+                                 alt="<spring:message code="mycontracts.modal.image.alt"/>">
                         </div>
                         <div id="details-description-container">
                             <p class="font-weight-bold">
@@ -269,3 +330,13 @@
         <p class="hired-package-title"><c:out value="${contractCard.jobContract.jobPackage.title}"/></p>
     </div>
 </div>
+
+<script>
+    function changeContractState(state, urlAppend) {
+        let returnUrl = $('#return-url');
+        let newState = $('#new-state');
+        newState.val(state);
+        returnUrl.val(returnUrl.val() + urlAppend);
+    }
+
+</script>
