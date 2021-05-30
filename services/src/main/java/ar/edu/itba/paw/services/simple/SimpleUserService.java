@@ -177,4 +177,8 @@ public class SimpleUserService implements UserService {
         return pwdGenerator.generate(PASSWORD_LENGTH);
     }
 
+    @Override
+    public UserWithImage findUserWithImage(long id) {
+        return userDao.findUserWithImage(id).orElseThrow(UserNotFoundException::new);
+    }
 }

@@ -43,7 +43,7 @@ public class ImageController {
         ByteImage profilePic;
 
         try {
-            profilePic = userService.findById(id).getByteImage();
+            profilePic = userService.findUserWithImage(id).getByteImage();
         } catch (NoSuchElementException e) {
             profilePic = null;
         }

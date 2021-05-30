@@ -20,8 +20,7 @@ public class VerificationTokenDaoJpa implements VerificationTokenDao {
 
 
     @Override
-    public VerificationToken create(long userId) {
-        User user = em.find(User.class, userId);
+    public VerificationToken create(User user) {
         if (user == null)
             throw new UserNotFoundException();
 

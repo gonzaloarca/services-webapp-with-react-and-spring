@@ -26,9 +26,9 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public User register(String email, String password, String username, String phone, ByteImage image) {
-        final User user = new User(email, username, phone, true, false, image, LocalDateTime.now(), password);
-        em.persist(user);
-        return user;
+        final UserWithImage userWithImage = new UserWithImage(email, username, phone, true, false, image, LocalDateTime.now(), password);
+        em.persist(userWithImage);
+        return new User(userWithImage);
     }
 
     @Override
@@ -66,14 +66,18 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> updateUserById(long id, String name, String phone, ByteImage image) {
-        Optional<User> aux = findById(id);
-        if (aux.isPresent()) {
-            aux.get().setUsername(name);
-            aux.get().setPhone(phone);
-            aux.get().setByteImage(image);
-            em.persist(aux.get());
-        }
-        return aux;
+        UserWithImage userWithImage = em.find(UserWithImage.class, id);
+
+        if(userWithImage == null)
+            return Optional.empty();
+
+        userWithImage.setUsername(name);
+        userWithImage.setPhone(phone);
+        userWithImage.setByteImage(image);
+
+        em.persist(userWithImage);
+
+        return Optional.of(new User(userWithImage));
     }
 
     @Override
@@ -175,4 +179,8 @@ public class UserDaoJpa implements UserDao {
         return result.intValue();
     }
 
+    @Override
+    public Optional<UserWithImage> findUserWithImage(long id) {
+        return Optional.ofNullable(em.find(UserWithImage.class, id));
+    }
 }
