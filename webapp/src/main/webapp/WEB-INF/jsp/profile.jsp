@@ -48,7 +48,7 @@
             <div class="card custom-card">
                 <div class="card-body p-0">
                     <div class="profile-image-container">
-                        <img class="profile-img" loading="lazy"
+                        <img loading="lazy" class="profile-img"
                              src='<c:url value="/image/user/${user.id}"/>'
                              alt="<spring:message code="profile.image"/>">
                     </div>
@@ -116,7 +116,7 @@
                                 <div class="d-flex flex-column justify-content-center align-content-center w-100"
                                 style="height: 300px">
                                     <spring:message code="profile.noservices.alt" var="noServicesAlt"/>
-                                    <img style="height: 120px; width: 100%"
+                                    <img loading="lazy" style="height: 120px; width: 100%"
                                          src="<c:url value='/resources/images/job-1.svg'/>" alt="${noServicesAlt}">
                                     <h4 class="text-center mt-4 text-black-50 font-weight-bold">
                                         <c:choose>
@@ -197,7 +197,7 @@
                                 <div class="d-flex flex-column justify-content-center align-content-center w-100"
                                      style="height: 300px">
                                     <spring:message code="profile.noreviews.alt" var="noReviewsAlt"/>
-                                    <img style="height: 120px; width: 100%"
+                                    <img loading="lazy" style="height: 120px; width: 100%"
                                          src="<c:url value='/resources/images/star-1.svg'/>" alt="${noReviewsAlt}">
                                     <h4 class="text-center mt-4 text-black-50 font-weight-bold">
                                         <c:choose>

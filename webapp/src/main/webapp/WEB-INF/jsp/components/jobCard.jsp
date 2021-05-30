@@ -15,7 +15,7 @@
         </c:otherwise>
     </c:choose>
 
-    <img class="card-img-top job-card-img" src="${imageSrc}" loading="lazy"
+    <img loading="lazy" class="card-img-top job-card-img" src="${imageSrc}"
          alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
     <div class="card-body">
         <h5 class="card-title job-card-title"><c:out value="${requestScope.data.jobPost.title}"/></h5>

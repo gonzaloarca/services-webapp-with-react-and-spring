@@ -33,7 +33,7 @@
     <div class="message">
         <c:choose>
             <c:when test="${success}">
-                <img src='<c:url value="/resources/images/emailconfirmed.svg" />'
+                <img loading="lazy" src='<c:url value="/resources/images/emailconfirmed.svg" />'
                      alt="<spring:message code="token.view.email.alt"/>"
                      class="image"/>
                 <h1 class="title">
@@ -47,7 +47,7 @@
                         code="navigation.login"/></a>
             </c:when>
             <c:when test="${send}">
-                <img src='<c:url value="/resources/images/emailnotification.svg" />'
+                <img loading="lazy" src='<c:url value="/resources/images/emailnotification.svg" />'
                      alt="<spring:message code="token.view.email.alt2"/>"
                      class="image"/>
                 <h1 class="title">
@@ -58,7 +58,7 @@
                 </p>
             </c:when>
             <c:when test="${resend}">
-                <img src='<c:url value="/resources/images/emailnotification.svg" />'
+                <img loading="lazy" src='<c:url value="/resources/images/emailnotification.svg" />'
                      alt="<spring:message code="token.view.email.alt2"/>"
                      class="image"/>
                 <h1 class="title">
@@ -70,7 +70,7 @@
                 </p>
             </c:when>
             <c:when test="${expired}">
-                <img src='<c:url value="/resources/images/warning-sign.svg" />'
+                <img loading="lazy" src='<c:url value="/resources/images/warning-sign.svg" />'
                      alt="<spring:message code="token.view.code.warning"/>"
                      class="image"/>
                 <h1 class="title">

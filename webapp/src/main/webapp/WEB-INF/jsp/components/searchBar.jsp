@@ -46,7 +46,7 @@
             <div class="landing-instruction-outer-border">
                 <div class="landing-instruction-inner">
                     <h3>1</h3>
-                    <img src="<c:url value="/resources/images/location-1.svg"/>"
+                    <img loading="lazy" src="<c:url value="/resources/images/location-1.svg"/>"
                          alt="<spring:message code="index.search.location.icon"/>">
                     <p><spring:message code="index.search.location"/></p>
                 </div>
@@ -54,7 +54,7 @@
             <div class="landing-instruction-outer-border">
                 <div class="landing-instruction-inner">
                     <h3>2</h3>
-                    <img src="<c:url value="/resources/images/search1.svg"/>"
+                    <img loading="lazy" src="<c:url value="/resources/images/search1.svg"/>"
                          alt="<spring:message code="index.search.service.icon"/>">
                     <p><spring:message code="index.search.service"/></p>
                 </div>
@@ -62,14 +62,14 @@
             <div class="landing-instruction-outer-border">
                 <div class="landing-instruction-inner">
                     <h3>3</h3>
-                    <img src="<c:url value="/resources/images/hire-1.svg"/>"
+                    <img loading="lazy" src="<c:url value="/resources/images/hire-1.svg"/>"
                          alt="<spring:message code="index.search.contract.icon"/>">
                     <p><spring:message code="index.search.contract"/></p>
                 </div>
             </div>
         </div>
     </div>
-    <img class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
+    <img loading="lazy" class="home-banner-img" alt="<spring:message code="index.home.banner"/>"
          src='<c:url value="/resources/images/landingbg1.svg" />'/>
 </div>
 <script>

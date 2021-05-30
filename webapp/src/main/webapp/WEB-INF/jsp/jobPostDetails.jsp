@@ -78,7 +78,7 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                            <img class="d-block w-100 h-100"
+                            <img loading="lazy" class="d-block w-100 h-100"
                                  src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
                                  alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                         </div>
@@ -109,7 +109,7 @@
                         <c:forEach items="${imageList}" varStatus="status" var="postImageId">
                             <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
                                 <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                                <img class="d-block w-100 h-100" loading="lazy"
+                                <img loading="lazy" class="d-block w-100 h-100"
                                      src='<c:url value="/image/post/${postImageId}"/>'
                                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                             </div>

@@ -32,7 +32,7 @@
 
     <div class="hire-details-container">
         <div class="hire-user-container">
-            <img class="user-avatar" src="<c:url value="/image/user/${user.id}"/>" loading="lazy"
+            <img loading="lazy" class="user-avatar" src="<c:url value="/image/user/${user.id}"/>"
                  alt="<spring:message code="user.avatar"/>">
             <p><spring:message htmlEscape="true" code="${hireDataMessageCode}"
                                arguments="${cardUser}"/></p>
@@ -62,7 +62,7 @@
                     </c:otherwise>
                 </c:choose>
                 <a href="${pageContext.request.contextPath}/job/${requestScope.jobCard.jobPost.id}">
-                    <img class="card-image-top service-img"
+                    <img loading="lazy" class="card-image-top service-img"
                          src='${imageSrc}'
                          alt="<spring:message code="profile.service.image"/>">
                 </a>
@@ -207,7 +207,7 @@
                             <p id="details-modal-image-header" class="font-weight-bold">
                                 <spring:message code="mycontracts.modal.image"/>
                             </p>
-                            <img id="details-modal-image" src="" alt="<spring:message code="mycontracts.modal.image.alt"/>">
+                            <img loading="lazy" id="details-modal-image" src="" alt="<spring:message code="mycontracts.modal.image.alt"/>">
                         </div>
                         <div id="details-description-container">
                             <p class="font-weight-bold">

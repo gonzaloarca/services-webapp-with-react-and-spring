@@ -106,7 +106,7 @@
                         </c:when>
                         <c:otherwise>
                             <div style="display: flex; align-items: center; flex-direction: column">
-                                <img style="height: 200px; width: 40%; margin: 30px 0"
+                                <img loading="lazy" style="height: 200px; width: 40%; margin: 30px 0"
                                      alt="<spring:message code="mycontracts.shakingHands"/>"
                                      src='<c:url value="/resources/images/contract1.svg"/>'/>
                                 <h4 class="font-weight-bold">

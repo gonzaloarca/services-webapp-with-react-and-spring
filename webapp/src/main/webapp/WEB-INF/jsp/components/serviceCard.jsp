@@ -17,7 +17,7 @@
                     <c:url value="/image/post/${requestScope.data.postImageId}" var="imageSrc"/>
                 </c:otherwise>
             </c:choose>
-            <img class="card-image-top service-img"
+            <img loading="lazy" class="card-image-top service-img"
                  src='${imageSrc}'
                  alt="<spring:message code="profile.service.image"/>">
         </div>

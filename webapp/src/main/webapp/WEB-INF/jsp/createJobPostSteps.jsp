@@ -49,7 +49,7 @@
 
 <div class="content-container-transparent mt-3">
     <h3>
-        <img style="height: 30px; padding-bottom: 5px" src="<c:url value="/resources/images/add-1.svg"/>" alt="">
+        <img loading="lazy" style="height: 30px; padding-bottom: 5px" src="<c:url value="/resources/images/add-1.svg"/>" alt="">
         <spring:message code="jobPost.create.tileExtended"/>
     </h3>
 
@@ -71,9 +71,9 @@
         <div class="step-frame">
             <div class="step-container-wrapper" id="step-wrapper1">
                 <fieldset class="fieldset-step" id="fieldset-step-1">
-                    <img class="step-circle-svg"
+                    <img loading="lazy" class="step-circle-svg"
                          src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
-                    <img style="height: 55px; position: absolute; top: 10px; right: 20px"
+                    <img loading="lazy" style="height: 55px; position: absolute; top: 10px; right: 20px"
                          src="<c:url value="/resources/images/job-1.svg"/>" alt="">
 
                     <div class="step-container">
@@ -121,9 +121,9 @@
 
             <div class="step-container-wrapper" id="step-wrapper2">
                 <fieldset class="fieldset-step" id="fieldset-step-2" disabled>
-                    <img class="step-circle-svg"
+                    <img loading="lazy" class="step-circle-svg"
                          src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
-                    <img style="height: 75px; position: absolute; top: 5px; right: 10px"
+                    <img loading="lazy" style="height: 75px; position: absolute; top: 5px; right: 10px"
                          src="<c:url value="/resources/images/title1.svg"/>" alt="">
 
                     <div class="step-container">
@@ -167,9 +167,9 @@
 
             <div class="step-container-wrapper" id="step-wrapper3">
                 <fieldset class="fieldset-step" id="fieldset-step-3" disabled>
-                    <img class="step-circle-svg"
+                    <img loading="lazy" class="step-circle-svg"
                          src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
-                    <img style="height: 85px; position: absolute; top: 0; right: 10px"
+                    <img loading="lazy" style="height: 85px; position: absolute; top: 0; right: 10px"
                          src="<c:url value="/resources/images/package1.svg"/>" alt="">
 
                     <div class="step-container">
@@ -324,9 +324,9 @@
 
             <div class="step-container-wrapper" id="step-wrapper4">
                 <fieldset class="fieldset-step" id="fieldset-step-4" disabled>
-                    <img class="step-circle-svg"
+                    <img loading="lazy" class="step-circle-svg"
                          src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
-                    <img style="height: 55px; position: absolute; top: 10px; right: 20px"
+                    <img loading="lazy" style="height: 55px; position: absolute; top: 10px; right: 20px"
                          src="<c:url value="/resources/images/images1.svg"/>" alt="">
 
                     <div class="step-container">
@@ -379,9 +379,9 @@
 
             <div class="step-container-wrapper" id="step-wrapper5">
                 <fieldset class="fieldset-step" id="fieldset-step-5" disabled>
-                    <img class="step-circle-svg"
+                    <img loading="lazy" class="step-circle-svg"
                          src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
-                    <img style="height: 80px; position: absolute; top: 5px; right: 20px"
+                    <img loading="lazy" style="height: 80px; position: absolute; top: 5px; right: 20px"
                          src="<c:url value="/resources/images/clock1.svg"/>" alt="">
 
                     <div class="step-container">
@@ -425,9 +425,9 @@
 
             <div class="step-container-wrapper" id="step-wrapper6">
                 <fieldset class="fieldset-step" id="fieldset-step-6" disabled>
-                    <img class="step-circle-svg"
+                    <img loading="lazy" class="step-circle-svg"
                          src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
-                    <img style="height: 80px; position: absolute; top: 10px; right: 20px"
+                    <img loading="lazy" style="height: 80px; position: absolute; top: 10px; right: 20px"
                          src="<c:url value="/resources/images/location2.svg"/>" alt="">
 
                     <div class="step-container">
@@ -491,7 +491,7 @@
 
             <div class="step-container-wrapper" id="overview-wrapper">
 
-                <img class="step-circle-svg"
+                <img loading="lazy" class="step-circle-svg"
                      src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
 
                 <div class="overview-container">
@@ -502,7 +502,7 @@
                         <div class="row">
 
                             <div class="col-7">
-                                <img style="height: 45px; position: absolute; right: 8px; top: -10px"
+                                <img loading="lazy" style="height: 45px; position: absolute; right: 8px; top: -10px"
                                      src="<c:url value="/resources/images/title1.svg"/>" alt=""/>
 
                                 <div class="overview-field-container">
@@ -517,7 +517,7 @@
                             </div>
 
                             <div class="col-5">
-                                <img style="height: 40px; position: absolute; right: 5px; top: -15px"
+                                <img loading="lazy" style="height: 40px; position: absolute; right: 5px; top: -15px"
                                      src="<c:url value="/resources/images/job-1.svg"/>" alt=""/>
 
                                 <div class="overview-field-container">
@@ -534,7 +534,7 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <img style="height: 55px; position: absolute; right: 5px; top: -15px"
+                                <img loading="lazy" style="height: 55px; position: absolute; right: 5px; top: -15px"
                                      src="<c:url value="/resources/images/package1.svg"/>" alt=""/>
 
                                 <div class="overview-field-container">
@@ -601,7 +601,7 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <img class="overview-svg-1"
+                                <img loading="lazy" class="overview-svg-1"
                                      src="<c:url value="/resources/images/images1.svg"/>" alt=""/>
 
                                 <div class="overview-field-container">
@@ -618,7 +618,7 @@
                         <div class="row align-items-center">
 
                             <div class="col-7">
-                                <img class="overview-svg-1"
+                                <img loading="lazy" class="overview-svg-1"
                                      src="<c:url value="/resources/images/clock1.svg"/>" alt=""/>
 
                                 <div class="overview-field-container">
@@ -633,7 +633,7 @@
                             </div>
 
                             <div class="col-5">
-                                <img class="overview-svg-1"
+                                <img loading="lazy" class="overview-svg-1"
                                      src="<c:url value="/resources/images/location3.svg"/>" alt=""/>
 
                                 <div class="overview-field-container">
