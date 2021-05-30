@@ -1,6 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -36,7 +37,7 @@
             </li>
 
             <sec:authorize access="isAuthenticated()">
-                <li class="nav-item ${requestScope.path == "/my-contracts/client" || "/my-contracts/professional" ? 'active': ''}">
+                <li class="nav-item ${requestScope.path == "/my-contracts" ? 'active' : ''}">
                     <a class="nav-link"
                        href="${pageContext.request.contextPath}/my-contracts/client/active">
                         <spring:message code="navigation.mycontracts"/>
@@ -108,7 +109,7 @@
                                         </div>
                                         <div class="list-group navbar-location-list-group">
                                             <div id="no-results-location-modal"
-                                                 class="p-4" >
+                                                 class="p-4">
                                                 <p class="text-black-50">
                                                     <spring:message code="navigation.modal.noResults"/>
                                                 </p>
@@ -157,33 +158,15 @@
                 <button type="button" class="btn dropdown-toggle navbar-dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false" id="navbarDropdown">
-                    <c:choose>
-                        <c:when test="${currentUser.image.string == null}">
-                            <img class="navbar-user-img"
-                                 src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
-                                 alt="avatar" id="navbar-avatar">
-                        </c:when>
-                        <c:otherwise>
-                            <img class="navbar-user-img"
-                                 src="data:${currentUser.image.type};base64,${currentUser.image.string}" alt="avatar"
-                                 id="navbar-avatar">
-                        </c:otherwise>
-                    </c:choose>
+                    <img class="navbar-user-img" loading="lazy"
+                         src="<c:url value="/image/user/${currentUser.id}"/>"
+                         alt="avatar" id="navbar-avatar">
                 </button>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="navbarDropdown">
                     <div class="navbar-dropdown-details">
-                        <c:choose>
-                            <c:when test="${currentUser.image.string == null}">
-                                <img class="navbar-user-img"
-                                     src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
-                                     alt="avatar">
-                            </c:when>
-                            <c:otherwise>
-                                <img class="navbar-user-img"
-                                     src="data:${currentUser.image.type};base64,${currentUser.image.string}"
-                                     alt="avatar">
-                            </c:otherwise>
-                        </c:choose>
+                        <img class="navbar-user-img" loading="lazy"
+                             src="<c:url value="/image/user/${currentUser.id}"/>"
+                             alt="avatar">
                         <div>
                             <p class="navbar-dropdown-name">
                                 <c:out value="${currentUser.username}"/>
@@ -213,8 +196,8 @@
 </nav>
 <script>
     // Para buscar una ubicación
-    const noResultDivChild= $('#no-results-location-modal *');
-    const noResultDiv= $('#no-results-location-modal');
+    const noResultDivChild = $('#no-results-location-modal *');
+    const noResultDiv = $('#no-results-location-modal');
     noResultDiv.hide();
     noResultDivChild.hide();
 

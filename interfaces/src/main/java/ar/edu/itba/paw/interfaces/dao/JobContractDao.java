@@ -15,9 +15,9 @@ public interface JobContractDao {
 
     Optional<JobContract> findById(long id);
 
-    List<JobContract> findByClientId(long id, int page);
+    List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContract> findByProId(long id, int page);
+    List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page);
 
     List<JobContract> findByPostId(long id, int page);
 
@@ -29,9 +29,9 @@ public interface JobContractDao {
 
     int findContractsQuantityByPostId(long id);
 
-    int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states);
+    int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states);
 
-    int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states);
+    int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states);
 
     void changeContractState(long id, JobContract.ContractState state);
 

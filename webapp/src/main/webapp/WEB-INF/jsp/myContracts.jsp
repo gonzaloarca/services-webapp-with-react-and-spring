@@ -1,6 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" buffer="64kb" %>
 
 <%--Seteo de variable para verificar si el currentUser es el dueño del jobPost en el contract--%>
 <c:set var="isOwner" value="${contractType == 'professional'}" scope="request"/>
@@ -90,7 +90,7 @@
 
             <div class="contracts-container content-container">
                 <h4 class="my-4 ml-4 font-weight-bold">
-                    <spring:message code="contract.options.activeContracts"/>
+                    <spring:message code="contract.options.${contractState}Contracts"/>
                 </h4>
                 <div class="mx-3">
                     <c:choose>

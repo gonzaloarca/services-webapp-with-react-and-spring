@@ -2,8 +2,10 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
+import ar.edu.itba.paw.models.ByteImage;
+import ar.edu.itba.paw.models.JobContract;
+import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import exceptions.JobContractNotFoundException;
 import exceptions.JobPackageNotFoundException;
@@ -40,11 +42,7 @@ public class JobContractDaoJpa implements JobContractDao {
         if (jobPackage == null)
             throw new JobPackageNotFoundException();
 
-        EncodedImage encodedImage = new EncodedImage(null, null);
-        if (image != null)
-            encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(image.getData()), image.getType());
-
-        JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image, encodedImage);
+        JobContract jobContract = new JobContract(client, jobPackage, LocalDateTime.now(), description, image);
         em.persist(jobContract);
 
         return jobContract;
@@ -52,23 +50,34 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public Optional<JobContract> findById(long id) {
-        return addEncodedImage(Optional.ofNullable(em.find(JobContract.class, id)));
+        return Optional.ofNullable(em.find(JobContract.class, id));
     }
 
     @Override
-    public List<JobContract> findByClientId(long id, int page) {
-        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id ORDER BY contract_creation_date DESC")
-                .setParameter("id", id);
+    public List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id " +
+                "AND contract_state IN :states ORDER BY contract_creation_date DESC")
+                .setParameter("id", id)
+                .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
+                        .collect(Collectors.toList()));
 
         return executePageQuery(page, nativeQuery);
     }
 
     @Override
-    public List<JobContract> findByProId(long id, int page) {
+    public List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
         Query nativeQuery = em.createNativeQuery(
                 "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "WHERE user_id = :id ORDER BY contract_creation_date DESC")
-                .setParameter("id", id);
+                        "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_creation_date DESC")
+                .setParameter("id", id)
+                .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
+                        .collect(Collectors.toList()));
 
         return executePageQuery(page, nativeQuery);
     }
@@ -113,7 +122,7 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public int findMaxPageContractsByClientIdAndStates(long id, List<JobContract.ContractState> states) {
+    public int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states) {
         if (states == null)
             throw new IllegalArgumentException();
 
@@ -124,7 +133,7 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public int findMaxPageContractsByProIdAndStates(long id, List<JobContract.ContractState> states) {
+    public int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states) {
         if (states == null)
             throw new IllegalArgumentException();
 
@@ -138,33 +147,11 @@ public class JobContractDaoJpa implements JobContractDao {
     private List<JobContract> executePageQuery(int page, Query nativeQuery) {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
-        return addEncodedImage(em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
-                JobContract.class).setParameter("filteredIds", filteredIds.isEmpty() ? null: filteredIds).getResultList().stream().sorted(
+        return em.createQuery("FROM JobContract AS jc WHERE jc.id IN :filteredIds",
+                JobContract.class).setParameter("filteredIds", filteredIds.isEmpty() ? null : filteredIds).getResultList().stream().sorted(
                 //Ordenamos los elementos segun el orden de filteredIds
                 Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
-        ).collect(Collectors.toList()));
-    }
-
-    private Optional<JobContract> addEncodedImage(Optional<JobContract> maybeContract) {
-        if (maybeContract.isPresent()) {
-            ByteImage byteImage = maybeContract.get().getImage();
-            EncodedImage encodedImage = new EncodedImage(null, null);
-            if (byteImage != null)
-                encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
-            maybeContract.get().setEncodedImage(encodedImage);
-        }
-        return maybeContract;
-    }
-
-    private List<JobContract> addEncodedImage(List<JobContract> jobContractList) {
-        for (JobContract jobContract : jobContractList) {
-            ByteImage byteImage = jobContract.getImage();
-            EncodedImage encodedImage = new EncodedImage(null, null);
-            if (byteImage != null)
-                encodedImage = new EncodedImage(ImageDataConverter.getEncodedString(byteImage.getData()), byteImage.getType());
-            jobContract.setEncodedImage(encodedImage);
-        }
-        return jobContractList;
+        ).collect(Collectors.toList());
     }
 
     @Override

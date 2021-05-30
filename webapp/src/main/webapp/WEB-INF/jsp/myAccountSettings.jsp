@@ -50,16 +50,8 @@
             <div class="spaced-div" style="margin: 30px 50px 30px 60px">
                 <!-- informacion actual -->
                 <div class="spaced-div">
-                    <c:choose>
-                        <c:when test="${user.image.string != null}">
-                            <c:set var="profilePic" value="data:${user.image.type};base64,${user.image.string}"/>
-                        </c:when>
-                        <c:otherwise>
-                            <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
-                        </c:otherwise>
-                    </c:choose>
-                    <img class="profile-img"
-                         src='${profilePic}'
+                    <img class="profile-img" loading="lazy"
+                         src='<c:url value="/image/user/${user.id}"/>'
                          alt="<spring:message code="profile.image"/>">
                     <div class="centered-div">
                         <h4 class="account-username">
