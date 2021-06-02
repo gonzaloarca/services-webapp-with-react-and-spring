@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.JobPackage;
+import ar.edu.itba.paw.models.JobPost;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public interface JobPackageService {
 
@@ -16,7 +15,11 @@ public interface JobPackageService {
 
     List<JobPackage> findByPostId(long id, int page);
 
+    JobPost findPostByPackageId(long id);
+
     boolean updateJobPackage(long id, String title, String description, String price, int rateType);
 
     boolean deleteJobPackage(long id);
+
+    JobPackage findByIdWithJobPost(int id);
 }

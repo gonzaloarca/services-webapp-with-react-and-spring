@@ -40,4 +40,8 @@ public interface UserService {
     List<AnalyticRanking> findUserAnalyticRankings(long id);
 
     void recoverUserPassword(String email, Locale locale);
+
+    UserWithImage findUserWithImage(long id);
+
+    ByteImage findImageByUserId(long id);
 }

@@ -4,8 +4,6 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.SearchForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,7 +31,7 @@ public class NavBarControllerAdvice {
     }
 
     @ModelAttribute("zoneValues")
-    public JobPost.Zone[] zoneValues(){
+    public JobPost.Zone[] zoneValues() {
         return JobPost.Zone.values();
     }
 

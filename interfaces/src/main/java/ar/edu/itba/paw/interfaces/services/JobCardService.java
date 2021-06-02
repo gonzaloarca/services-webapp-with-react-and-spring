@@ -30,9 +30,9 @@ public interface JobCardService {
 
     int findMaxPageByUserId(long id);
 
-    int findMaxPageSearch(String query, JobPost.Zone zone);
+    int findMaxPageSearch(String query, JobPost.Zone zone, Locale locale);
 
-    int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType);
+    int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, Locale locale);
 
     int findMaxPageRelatedJobCards(long professional_id);
 

@@ -2,13 +2,28 @@ package ar.edu.itba.paw.persistence.utils;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 
+import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class PagingUtil {
-    public static void addPaging(StringBuilder sqlQuery, int page) {
+    public static List<Long> getFilteredIds(int page, Query nativeQuery) {
         if (page != HirenetUtils.ALL_PAGES) {
-            sqlQuery.append(" LIMIT ")
-                    .append(HirenetUtils.PAGE_SIZE)
-                    .append(" OFFSET ")
-                    .append(HirenetUtils.PAGE_SIZE * page);
+            nativeQuery.setFirstResult((page) * HirenetUtils.PAGE_SIZE);
+            nativeQuery.setMaxResults(HirenetUtils.PAGE_SIZE);
         }
+
+        @SuppressWarnings("unchecked")
+        List<Long> filteredIds = (List<Long>) nativeQuery.getResultList().stream()
+                .map(e -> Long.valueOf(e.toString())).collect(Collectors.toList());
+
+        if (filteredIds.isEmpty())
+            return new ArrayList<>();
+        else return filteredIds;
+    }
+
+    private PagingUtil() {
+        throw new UnsupportedOperationException();
     }
 }

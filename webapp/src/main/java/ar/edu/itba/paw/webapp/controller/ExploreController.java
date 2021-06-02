@@ -77,7 +77,7 @@ public class ExploreController {
         searchMav
                 .addObject("categories", JobPost.JobType.values())
                 .addObject("pickedZone", JobPost.Zone.values()[zone]);
-        int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(), zone, category);
+        int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(), zone, category, localeResolver.resolveLocale(request));
         searchMav
                 .addObject("maxPage", maxPage)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
@@ -94,5 +94,11 @@ public class ExploreController {
         return new ModelAndView("categories")
                 .addObject("categories", JobPost.JobType.values());
     }
+
+    @RequestMapping(path ="/**")
+    public ModelAndView notFound404(){
+        return new ModelAndView("error/404");
+    }
+
 
 }

@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.JobPostImage;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import ar.edu.itba.paw.webapp.form.EditJobPostForm;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
@@ -65,7 +62,7 @@ public class JobPostController {
         jobPostControllerLogger.debug("Is owner: {}",isOwner);
 
         jobPostControllerLogger.debug("Finding images for post: {}",jobPost.getId());
-        List<JobPostImage> imageList = jobPostImageService.findImages(jobPost.getId());
+        List<Long> imageList = jobPostImageService.getImagesIdsByPostId(jobPost.getId());
 
         int maxPage = paginationService.findMaxPageReviewsByPostId(id);
 
@@ -105,7 +102,7 @@ public class JobPostController {
             int[] zoneInts = new int[jobPost.getZones().size()];
             List<JobPost.Zone> zonesList = jobPost.getZones();
             for (int i = 0; i < zonesList.size(); i++) {
-                zoneInts[i] = zonesList.get(i).ordinal();
+                zoneInts[i] = zonesList.get(i).getValue();
             }
             jobPostForm.setZones(zoneInts);
             jobPostForm.setTitle(jobPost.getTitle());
@@ -228,7 +225,8 @@ public class JobPostController {
             editPackageForm.setTitle(jobPackage.getTitle());
             editPackageForm.setDescription(jobPackage.getDescription());
             editPackageForm.setRateType(jobPackage.getRateType().ordinal());
-            editPackageForm.setPrice(jobPackage.getPrice().toString());
+            Double price = jobPackage.getPrice();
+            editPackageForm.setPrice(price != null ? price.toString() : "");
         } else
             editPackageForm = form;
 

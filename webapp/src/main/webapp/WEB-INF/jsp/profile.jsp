@@ -48,16 +48,8 @@
             <div class="card custom-card">
                 <div class="card-body p-0">
                     <div class="profile-image-container">
-                        <c:choose>
-                            <c:when test="${user.image.string != null}">
-                                <c:set var="profilePic" value="data:${user.image.type};base64,${user.image.string}"/>
-                            </c:when>
-                            <c:otherwise>
-                                <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
-                            </c:otherwise>
-                        </c:choose>
-                        <img class="profile-img"
-                             src='${profilePic}'
+                        <img loading="lazy" class="profile-img"
+                             src='<c:url value="/image/user/${user.id}"/>'
                              alt="<spring:message code="profile.image"/>">
                     </div>
                     <h4 class="card-title profile-title"><c:out value="${user.username}"/></h4>
@@ -121,11 +113,12 @@
                                 <%@include file="components/bottomPaginationBar.jsp" %>
                             </c:when>
                             <c:otherwise>
-                                <div class="d-flex flex-column justify-content-center align-content-center w-100">
+                                <div class="d-flex flex-column justify-content-center align-content-center w-100"
+                                style="height: 300px">
                                     <spring:message code="profile.noservices.alt" var="noServicesAlt"/>
-                                    <img style="height: 200px; width: 100%"
+                                    <img loading="lazy" style="height: 120px; width: 100%"
                                          src="<c:url value='/resources/images/job-1.svg'/>" alt="${noServicesAlt}">
-                                    <h4 class="text-center mt-4">
+                                    <h4 class="text-center mt-4 text-black-50 font-weight-bold">
                                         <c:choose>
                                             <c:when test="${currentUser.id == user.id}">
                                                 <spring:message code="profile.noservicesowner"/>
@@ -201,11 +194,12 @@
                                 <%@include file="components/bottomPaginationBar.jsp" %>
                             </c:when>
                             <c:otherwise>
-                                <div class="d-flex flex-column justify-content-center align-content-center w-100">
+                                <div class="d-flex flex-column justify-content-center align-content-center w-100"
+                                     style="height: 300px">
                                     <spring:message code="profile.noreviews.alt" var="noReviewsAlt"/>
-                                    <img style="height: 200px; width: 100%"
+                                    <img loading="lazy" style="height: 120px; width: 100%"
                                          src="<c:url value='/resources/images/star-1.svg'/>" alt="${noReviewsAlt}">
-                                    <h4 class="text-center mt-4">
+                                    <h4 class="text-center mt-4 text-black-50 font-weight-bold">
                                         <c:choose>
                                             <c:when test="${currentUser.id == user.id}">
                                                 <spring:message code="profile.noreviewsowner"/>

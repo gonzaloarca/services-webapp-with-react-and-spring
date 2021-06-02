@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.xml.ws.http.HTTPException;
 import java.security.Principal;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -30,17 +31,13 @@ public class ExceptionController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @org.springframework.web.bind.annotation.ExceptionHandler({UserNotFoundException.class,
             JobPostNotFoundException.class, JobPackageNotFoundException.class,
-            ReviewNotFoundException.class, JobContractNotFoundException.class})
-    public ModelAndView notFoundError(RuntimeException e) {
-        exceptionLogger.debug("Exception handled: {}", e.getMessage());
-        return logUser(new ModelAndView("error/404"));
-    }
+            ReviewNotFoundException.class, JobContractNotFoundException.class, NoSuchElementException.class,
+            AccessDeniedException.class,
 
-    @ResponseStatus(code = HttpStatus.FORBIDDEN)
-    @org.springframework.web.bind.annotation.ExceptionHandler({AccessDeniedException.class})
-    public ModelAndView forbiddenError(RuntimeException e) {
-        exceptionLogger.debug("Exception handled: {}", e.getMessage());
-        return logUser(new ModelAndView("error/403"));
+    })
+    public ModelAndView notFoundError(RuntimeException e) {
+        exceptionLogger.debug("Not found exception handled: {}", e.getMessage());
+        return logUser(new ModelAndView("error/404"));
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)

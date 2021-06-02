@@ -2,12 +2,9 @@ package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
-import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.*;
 import exceptions.JobPostNotFoundException;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +28,8 @@ public class SimpleJobPostService implements JobPostService {
     public JobPost create(String email, String title, String availableHours, int jobType, int[] zones) {
         User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
         userService.assignRole(user.getId(), UserAuth.Role.PROFESSIONAL.ordinal());
-        List<JobPost.Zone> parsedZones =
-                Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
+        List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone])
+                .collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
         return jobPostDao.create(user.getId(), title, availableHours, parsedJobType, parsedZones);
     }
@@ -89,19 +86,25 @@ public class SimpleJobPostService implements JobPostService {
     }
 
     @Override
+    public User findUserByPostId(long id) {
+        return jobPostDao.findUserByPostId(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
     public int findSizeByUserId(long id) {
         return jobPostDao.findSizeByUserId(id);
     }
 
     @Override
     public boolean updateJobPost(long id, String title, String availableHours, Integer jobType, int[] zones) {
-        List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
+        List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone])
+                .collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
-        return jobPostDao.updateById(id,title,availableHours,parsedJobType,parsedZones);
+        return jobPostDao.updateById(id, title, availableHours, parsedJobType, parsedZones);
     }
 
     @Override
-    public boolean deleteJobPost(long id){
+    public boolean deleteJobPost(long id) {
         return jobPostDao.deleteJobPost(id);
     }
 

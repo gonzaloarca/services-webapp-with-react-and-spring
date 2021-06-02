@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPostImage;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface JobPostImageService {
 
@@ -11,9 +12,9 @@ public interface JobPostImageService {
 
 	List<JobPostImage> addImages(long postId, List<ByteImage> byteImages);
 
-	List<JobPostImage> findImages(long postId);
+	JobPostImage findById(long imageId);
 
-	JobPostImage findPostImage(long postId);
+	List<Long> getImagesIdsByPostId(long postId);
 
 	boolean maxImagesUploaded(long postId);
 }

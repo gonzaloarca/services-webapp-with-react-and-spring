@@ -20,7 +20,7 @@ public class PackageForm {
     private Integer rateType;
 
     // Si fuera double y dejamos el campo vacío, tira una excepcion en el lugar del mensaje de error en la pagina
-    @Size(max = 100)
+    @Size(max = 9)
     private String price;
 
     public String getTitle() {

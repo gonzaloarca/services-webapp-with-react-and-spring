@@ -1,85 +1,65 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
-public class JobContract {
-    private final long id;
-    private final User client;
-    private final JobPackage jobPackage;
-    private final User professional;
-    private final LocalDateTime creationDate;
-    private final String description;
-    private final ByteImage image;
-    private final EncodedImage encodedImage;
+@Entity
+@Table(name = "contract")
+public class JobContract extends JobContractAbstract{
 
-    public JobContract(long id, User client, JobPackage jobPackage, User professional, LocalDateTime creationDate, String description,
-                       ByteImage image, EncodedImage encodedImage) {
+    @Column(name = "contract_image_type", length = 100)
+    private String imageType;
+
+    /*Default*/ JobContract() {
+    }
+
+    public JobContract(long id, User client, JobPackage jobPackage, LocalDateTime creationDate, String description) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
-        this.professional = professional;
         this.creationDate = creationDate;
         this.description = description;
-        this.image = image;
-        this.encodedImage = encodedImage;
+        this.state = ContractState.PENDING_APPROVAL;
     }
 
-    public JobPackage getJobPackage() {
-        return jobPackage;
+    public JobContract(JobContractWithImage jobContractWithImage) {
+        this.id = jobContractWithImage.id;
+        this.client = jobContractWithImage.client;
+        this.jobPackage = jobContractWithImage.jobPackage;
+        this.creationDate = jobContractWithImage.creationDate;
+        this.description = jobContractWithImage.description;
+        this.state = ContractState.PENDING_APPROVAL;
     }
 
-    public long getId() {
-        return id;
+    public String getImageType() {
+        return imageType;
     }
 
-    public User getClient() {
-        return client;
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
+    //TODO Refactor: mover esto a JobContractAbstract?
+    public enum ContractState {
+        PENDING_APPROVAL("JobContract.ContractState.PendingApproval"),
+        APPROVED("JobContract.ContractState.Approved"),
+        CLIENT_REJECTED("JobContract.ContractState.ClientRejected"),
+        PRO_REJECTED("JobContract.ContractState.ProRejected"),
+        CLIENT_CANCELLED("JobContract.ContractState.ClientCancelled"),
+        PRO_CANCELLED("JobContract.ContractState.ProCancelled"),
+        COMPLETED("JobContract.ContractState.Completed"),
+        CLIENT_MODIFIED("JobContract.ContractState.ClientModified"),
+        PRO_MODIFIED("JobContract.ContractState.ProModified");
 
-    public String getDescription() {
-        return description;
-    }
+        final String stringCode;
 
-    public User getProfessional() {
-        return professional;
-    }
+        ContractState(String stringCode) {
+            this.stringCode = stringCode;
+        }
 
-    public ByteImage getImage() {
-        return image;
-    }
-
-    public EncodedImage getEncodedImage() {
-        return encodedImage;
-    }
-
-    @Override
-    public String toString() {
-        return "JobContract{" +
-                "id=" + id +
-                ", client=" + client +
-                ", jobPackage=" + jobPackage +
-                ", professional=" + professional +
-                ", creationDate=" + creationDate +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        JobContract that = (JobContract) o;
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+        public String getStringCode() {
+            return stringCode;
+        }
     }
 }

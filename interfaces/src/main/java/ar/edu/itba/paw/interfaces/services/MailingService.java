@@ -10,7 +10,7 @@ public interface MailingService {
 
     void sendHtmlMessageWithAttachment(String to, String subject, String html, DataSource attachment);
 
-    void sendContractEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost, Locale locale);
+    void sendContractEmail(JobContractWithImage jobContract, Locale locale);
 
     void sendVerificationTokenEmail(User user, VerificationToken token, Locale locale);
 
@@ -19,4 +19,5 @@ public interface MailingService {
 
     void sendRecoverPasswordEmail(String email, String password, Locale locale);
 
+    void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale);
 }

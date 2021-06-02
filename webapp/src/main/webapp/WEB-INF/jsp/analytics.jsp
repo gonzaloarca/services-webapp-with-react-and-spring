@@ -51,16 +51,9 @@
     <div class="highlights-container">
         <div class="highlight card custom-card">
             <div class="card-body">
-                <c:choose>
-                    <c:when test="${user.image.string != null}">
-                        <c:set var="profilePic" value="data:${user.image.type};base64,${user.image.string}"/>
-                    </c:when>
-                    <c:otherwise>
-                        <c:url var="profilePic" value="/resources/images/defaultavatar.svg"/>
-                    </c:otherwise>
-                </c:choose>
-                <img class="analytics-profile-img"
-                     src='${profilePic}'
+                <img loading="lazy" class="analytics-profile-img"
+
+                     src='<c:url value="/image/user/${user.id}"/>'
                      alt="<spring:message code="profile.image"/>">
                 <p class="mb-0 analytics-profile-title"><c:out value="${user.username}"/></p>
             </div>

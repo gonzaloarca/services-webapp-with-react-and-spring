@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.services.utils;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
-import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.interfaces.services.JobCardService;
+import ar.edu.itba.paw.interfaces.services.JobContractService;
+import ar.edu.itba.paw.interfaces.services.PaginationService;
+import ar.edu.itba.paw.interfaces.services.ReviewService;
+import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class SimplePaginationService implements PaginationService {
@@ -60,22 +65,22 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageJobPostsSearch(String query, int zone, int jobType) {
+    public int findMaxPageJobPostsSearch(String query, int zone, int jobType, Locale locale) {
         JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
         if (jobType == HirenetUtils.SEARCH_WITHOUT_CATEGORIES)
-            return jobCardService.findMaxPageSearch(query, parsedZone);
+            return jobCardService.findMaxPageSearch(query, parsedZone, locale);
 
-        return jobCardService.findMaxPageSearchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType]);
+        return jobCardService.findMaxPageSearchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType], locale);
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id) {
-        return jobContractService.findMaxPageContractsByClientId(id);
+    public int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states) {
+        return jobContractService.findMaxPageContractsByClientId(id, states);
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id) {
-        return jobContractService.findMaxPageContractsByProId(id);
+    public int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states) {
+        return jobContractService.findMaxPageContractsByProId(id, states);
     }
 
     @Override

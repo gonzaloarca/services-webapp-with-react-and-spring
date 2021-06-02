@@ -61,7 +61,7 @@
                 <div class="category-overlay">
                 </div>
                 <spring:message code="${category.stringCode}" var="jobTypeName"/>
-                <img src='<c:url value="/resources/images/${category.imagePath}" />'
+                <img loading="lazy" src='<c:url value="/resources/images/${category.imagePath}" />'
                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${category}"/>">
             </a>
         </c:forEach>

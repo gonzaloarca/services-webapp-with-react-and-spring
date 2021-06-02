@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface JobPostService {
 
@@ -27,6 +29,8 @@ public interface JobPostService {
     List<JobPost> findAll();
 
     List<JobPost> findAll(int page);
+
+    User findUserByPostId(long id);
 
     int findSizeByUserId(long id);
 

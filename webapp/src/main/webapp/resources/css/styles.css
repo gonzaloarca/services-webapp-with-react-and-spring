@@ -521,6 +521,38 @@ h3 {
     justify-content: flex-start;
 }
 
+.contract-control-accept {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px;
+    border-radius: 5px;
+    background-color: #7BC778;
+    color: white;
+}
+
+.contract-control-accept:hover {
+    background-color: #5b9a57;
+    color: white;
+}
+
+.contract-control-reject {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px;
+    border-radius: 5px;
+    background-color: #E26767;
+    color: white;
+}
+
+.contract-control-reject:hover {
+    background-color: #bf5151;
+    color: white;
+}
+
 .contract-control-details {
     display: flex;
     align-items: center;
@@ -586,16 +618,16 @@ h3 {
 .contact-modal-row {
     padding: 10px;
     margin: 5px;
-    width: max-content;
+    word-break: break-word;
 }
 
 .divider-bar-thick {
     margin: 2px;
     border: 0;
-    clear:both;
-    display:block;
+    clear: both;
+    display: block;
     width: 96%;
-    background-color:#c8c8c8;
+    background-color: #c8c8c8;
     height: 1px;
 }
 
@@ -654,7 +686,6 @@ h3 {
     border-radius: 2rem;
     width: 98%;
     margin: 10px auto;
-
 }
 
 .hire-details-container p {
@@ -662,11 +693,17 @@ h3 {
 }
 
 .hire-user-container {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: start;
     padding: 5px;
     color: white;
+}
+
+.hire-user-container p{
+    word-break: break-word;
+    flex: 1;
 }
 
 .hire-date-container {
@@ -675,6 +712,7 @@ h3 {
     border-radius: 2rem;
     padding: 5px 10px;
     margin: 7px;
+    align-self: center;
 }
 
 .user-avatar {
@@ -685,4 +723,35 @@ h3 {
     min-height: 30px;
     margin: 0 10px 0 2px;
     object-fit: cover;
+}
+
+.hired-package-title {
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    size: 1.1rem;
+}
+
+.cancelled-contract {
+    background-color: #FDCDCD;
+    border: 2px solid #E26767;
+    color: #E26767;
+    border-radius: 2rem;
+    width: 98%;
+    margin: 10px auto;
+    padding: 5px 10px;
+}
+
+.finalized-contract {
+    background-color: #EEFFED;
+    border: 2px solid #54AA51;
+    color: #54AA51;
+    border-radius: 2rem;
+    width: 98%;
+    margin: 10px auto;
+    padding: 5px 10px;
 }

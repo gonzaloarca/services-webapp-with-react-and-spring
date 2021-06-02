@@ -1,27 +1,16 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class User {
-    private final long id;
-    private final String email;
-    private final String username;
-    private final String phone;
-    private final boolean isActive;
-    private final boolean isVerified;
-    private final EncodedImage image;
-    private final LocalDateTime creationDate;
+@Entity
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(name = "users_user_email_key", columnNames = {"user_email"})
+})
+public class User extends UserAbstract {
 
-    public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified, EncodedImage image, LocalDateTime creationDate) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.phone = phone;
-        this.isActive = isActive;
-        this.isVerified = isVerified;
-        this.image = image;
-        this.creationDate = creationDate;
+    /* default */ User() {
     }
 
     public User(long id, String email, String username, String phone, boolean isActive, boolean isVerified, LocalDateTime creationDate) {
@@ -32,65 +21,15 @@ public class User {
         this.isActive = isActive;
         this.isVerified = isVerified;
         this.creationDate = creationDate;
-        this.image = null;
     }
 
-    public long getId() {
-        return id;
+    public User(UserWithImage userWithImage) {
+        this.id = userWithImage.id;
+        this.email = userWithImage.email;
+        this.username = userWithImage.username;
+        this.phone = userWithImage.phone;
+        this.isActive = userWithImage.isActive;
+        this.isVerified = userWithImage.isVerified;
+        this.creationDate = userWithImage.creationDate;
     }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public EncodedImage getImage() {
-        return image;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                ", phone='" + phone + '\'' +
-                ", isActive=" + isActive +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && email.equals(user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email);
-    }
-
-
 }

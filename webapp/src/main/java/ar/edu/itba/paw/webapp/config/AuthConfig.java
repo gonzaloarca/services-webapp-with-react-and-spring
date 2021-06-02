@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.HireNetAccessDeniedHandler;
 import ar.edu.itba.paw.webapp.auth.HireNetAuthenticationFailureHandler;
 import ar.edu.itba.paw.webapp.auth.HireNetUserDetails;
 import ar.edu.itba.paw.webapp.auth.OwnershipVoter;
@@ -23,6 +24,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.util.StreamUtils;
@@ -52,7 +54,7 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/resources/**","/css/**","/images/**");
     }
 
@@ -63,10 +65,10 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
-                .antMatchers("/analytics", "/my-contracts/professional").hasRole("PROFESSIONAL")
-                .antMatchers("/contract/**","/my-contracts", "/rate-contract/**").hasRole("CLIENT")
+                .antMatchers("/analytics", "/my-contracts/professional/**","/create-job-post/**","/job/*/packages").hasRole("PROFESSIONAL")
+                .antMatchers("/contract/**","/my-contracts/client/**", "/rate-contract/**","/account/**", "/create-job-post/**", "/my-contracts/**", "/hire/**").hasRole("CLIENT")
                 .antMatchers("/login","/register").anonymous()
-                .antMatchers("/account/**", "/create-job-post", "/my-contracts/**").authenticated()
+//                .antMatchers("/account/**", "/create-job-post", "/my-contracts/**").authenticated()
                 .antMatchers("/**").permitAll()
             .and().formLogin()
                 .usernameParameter("email")
@@ -87,6 +89,7 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
                 .key(keyString)
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .userDetailsService(hireNetUserDetails)
+            .and().exceptionHandling().accessDeniedPage("/error/404.jsp").accessDeniedHandler(accessDeniedHandler())
             .and().csrf().disable();
     }
 
@@ -108,6 +111,11 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new HireNetAuthenticationFailureHandler();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new HireNetAccessDeniedHandler();
     }
 
 }

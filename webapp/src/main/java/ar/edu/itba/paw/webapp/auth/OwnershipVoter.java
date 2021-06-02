@@ -4,15 +4,9 @@ import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import exceptions.JobContractNotFoundException;
-import exceptions.JobPackageNotFoundException;
-import exceptions.JobPostNotFoundException;
-import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
@@ -65,7 +59,7 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         return ACCESS_ABSTAIN;
                     }
                     try {
-                        isOwner = jobContractService.findById(id).getClient().getEmail().equals(authentication.getName());
+                        isOwner = jobContractService.findClientByContractId(id).getEmail().equals(authentication.getName());
                     } catch (NoSuchElementException e) {
                         return ACCESS_ABSTAIN;
                     }
@@ -82,7 +76,7 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         return ACCESS_ABSTAIN;
                     }
                     try {
-                        isOwner = jobPostService.findByIdWithInactive(id).getUser().getEmail().equals(authentication.getName());
+                        isOwner = jobPostService.findUserByPostId(id).getEmail().equals(authentication.getName());
                     } catch (NoSuchElementException e) {
                         return ACCESS_ABSTAIN;
                     }
@@ -114,7 +108,7 @@ public class OwnershipVoter implements AccessDecisionVoter {
                                     return ACCESS_ABSTAIN;
                                 }
                                 try {
-                                    isOwner = jobPostService.findById(id).getUser().getEmail().equals(authentication.getName());
+                                    isOwner = jobPostService.findUserByPostId(id).getEmail().equals(authentication.getName());
                                 } catch (NoSuchElementException e) {
                                     return ACCESS_ABSTAIN;
                                 }
@@ -136,8 +130,8 @@ public class OwnershipVoter implements AccessDecisionVoter {
                             return ACCESS_ABSTAIN;
                         }
                         try {
-                            long postId = jobPackageService.findById(id).getPostId();
-                            isOwner = jobPostService.findById(postId).getUser().getEmail().equals(authentication.getName());
+                            long postId = jobPackageService.findPostByPackageId(id).getId();
+                            isOwner = jobPostService.findUserByPostId(postId).getEmail().equals(authentication.getName());
                         } catch (NoSuchElementException e) {
                             return ACCESS_ABSTAIN;
                         }

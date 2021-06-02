@@ -57,14 +57,14 @@
                 <c:forEach items="${categories}" var="category">
                     <a class="index-category-href" onclick="redirectCategory(${category.value})">
                         <spring:message code="${category.stringCode}" var="jobTypeName"/>
-                        <img src='<c:url value="/resources/images/${category.imagePath}" />'
+                        <img loading="lazy" src='<c:url value="/resources/images/${category.imagePath}" />'
                              alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${category}"/>">
                         <p>${jobTypeName}</p>
                     </a>
                 </c:forEach>
                 <div class="index-category-href">
                     <a href="${pageContext.request.contextPath}/categories">
-                        <img src="<c:url value="/resources/images/morecategories1.svg"/>"
+                        <img loading="lazy" src="<c:url value="/resources/images/morecategories1.svg"/>"
                              alt="<spring:message code="index.jobs.extraTypes"/>">
                         <p><spring:message code="index.jobs.seeMore"/><i class="fas fa-chevron-right"></i></p>
                     </a>
@@ -85,8 +85,7 @@
             </c:if>
             <c:if test="${jobCardSize == 0}">
                 <div class="result-div">
-                    <img
-                            src="<c:url value="/resources/images/unavailable-1.svg"/> "
+                    <img loading="lazy"                             src="<c:url value="/resources/images/unavailable-1.svg"/> "
                             alt="<spring:message code="index.jobs.noResults"/> ">
                     <p class="result-text">
                         <spring:message code="index.jobs.noResults"/>
@@ -110,14 +109,13 @@
         <br>
         <spring:message code="index.createJobPost.proposition"/>
     </h3>
-    <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post"><spring:message
-            code="index.createJobPost.button"/></a>
-    <div class="mt-5">
+    <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post">
+        <spring:message code="index.createJobPost.button"/></a>
+    <div class="mt-1">
         <jsp:include page="components/footer.jsp"/>
     </div>
 </div>
 
-</div>
 <script>
 
     // Para modificar el href con la ubicacion seleccionada

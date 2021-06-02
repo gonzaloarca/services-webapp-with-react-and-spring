@@ -50,12 +50,11 @@
                 <c:url value="/resources/images/${jobPost.jobType.imagePath}" var="imageSrc"/>
             </c:when>
             <c:otherwise>
-                <c:set value="data:${imageList[0].image.type};base64,${imageList[0].image.string}"
-                       var="imageSrc"/>
+                <c:url value="/image/post/${imageList[0]}" var="imageSrc"/>
             </c:otherwise>
         </c:choose>
         <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-        <img class="header-img"
+        <img loading="lazy" class="header-img"
              src='${imageSrc}'
              alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
     </div>
@@ -74,7 +73,7 @@
                 </p>
                 <hr class="divider-bar"/>
                 <!-- Form Entries -->
-                <c:url value="/contract/package/${packId}" var="postUrl"/>
+                <c:url value="/hire/package/${packId}" var="postUrl"/>
                 <form:form class="contract-input needs-validation" modelAttribute="contractForm" novalidate="true"
                            action="${postUrl}" method="post" id="contract-form" onsubmit="disableBtn()"
                            enctype="multipart/form-data">
@@ -140,7 +139,7 @@
                 <h5 class="info-title">
                     <spring:message code="contract.create.detail.title"/>
                 </h5>
-                <img class="info-img"
+                <img loading="lazy" class="info-img"
                      src='${imageSrc}'
                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                 <div class="container">
@@ -180,14 +179,8 @@
                     <!-- Professional -->
                     <div class="row info-row">
                         <div class="info-left-col">
-                            <c:choose>
-                                <c:when test="${jobPost.user.image.string == null}">
-                                    <img class="avatar-pic" src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg" alt="avatar">
-                                </c:when>
-                                <c:otherwise>
-                                    <img class="avatar-pic" src="data:${jobPost.user.image.type};base64,${jobPost.user.image.string}" alt="avatar">
-                                </c:otherwise>
-                            </c:choose>
+                            <img loading="lazy" class="avatar-pic" src="<c:url value="/image/user/${jobPost.user.id}"/>"
+                                 alt="avatar" >
                         </div>
                         <p class="info-right-col">
                             <c:out value="${jobPost.user.username}"/>

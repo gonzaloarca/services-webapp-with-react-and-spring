@@ -1,14 +1,15 @@
 package ar.edu.itba.paw.interfaces.dao;
 
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.VerificationToken;
 
 import java.util.Optional;
 
 public interface VerificationTokenDao {
 
-	VerificationToken create(long user_id);
+	VerificationToken create(User user);
 
-	Optional<VerificationToken> findByUserId(long user_id);
+	Optional<VerificationToken> findByUserId(long userId);
 
-	void deleteToken(long user_id);
+	void deleteToken(long userId);
 }

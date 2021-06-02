@@ -1,42 +1,82 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "job_post")
 public class JobPost {
-    private final long id;
-    private final User user;
-    private final String title;
-    private final String availableHours;
-    private final JobType jobType;
-    private final boolean isActive;
-    private final List<Zone> zones;
-    private final double rating;
-    private final LocalDateTime creationDate;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "job_post_post_id_seq")
+    @SequenceGenerator(sequenceName = "job_post_post_id_seq", name = "job_post_post_id_seq", allocationSize = 1)
+    @Column(name = "post_id", nullable = false)
+    private long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "job_post_user_id_fkey"))
+    private User user;
+
+    @Column(length = 100, nullable = false, name = "post_title")
+    private String title;
+
+    @Column(length = 100, nullable = false, name = "post_available_hours")
+    private String availableHours;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "post_job_type", nullable = false)
+    private JobType jobType;
+
+    @Column(name = "post_is_active", nullable = false)
+    private boolean isActive;
+
+
+    @ElementCollection(targetClass = JobPost.Zone.class)
+    @Enumerated(EnumType.ORDINAL)
+    @CollectionTable(name = "post_zone", joinColumns = {@JoinColumn(name = "post_id", nullable = false)},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "zone_id"}, name = "post_zone_pkey")},
+            foreignKey = @ForeignKey(name = "post_zone_post_id_fkey"))
+    @Column(name = "zone_id", nullable = false)
+    private List<Zone> zones;
+
+    @Column(name = "post_creation_date", nullable = false)
+    private LocalDateTime creationDate;
+
+    /*default*/ JobPost() {
+    }
+
+    public JobPost(User user, String title, String availableHours, JobType jobType, List<Zone> zones, LocalDateTime creationDate) {
+        this.user = user;
+        this.title = title;
+        this.availableHours = availableHours;
+        this.jobType = jobType;
+        this.zones = zones;
+        this.creationDate = creationDate;
+        this.isActive = true;
+    }
 
     //Constructor para crear un post nuevo (esta activo)
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, LocalDateTime creationDate) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
         this.zones = zones;
-        this.rating = rating;
         this.creationDate = creationDate;
         this.isActive = true;
     }
 
     //Constructor para crear un post que puede no estar activo
-    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, double rating, boolean isActive, LocalDateTime creationDate) {
+    public JobPost(long id, User user, String title, String availableHours, JobType jobType, List<Zone> zones, boolean isActive, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
         this.availableHours = availableHours;
         this.jobType = jobType;
         this.zones = zones;
-        this.rating = rating;
         this.isActive = isActive;
         this.creationDate = creationDate;
     }
@@ -69,12 +109,40 @@ public class JobPost {
         return zones;
     }
 
-    public double getRating() {
-        return rating;
-    }
-
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAvailableHours(String availableHours) {
+        this.availableHours = availableHours;
+    }
+
+    public void setJobType(JobType jobType) {
+        this.jobType = jobType;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public void setZones(List<Zone> zones) {
+        this.zones = zones;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override

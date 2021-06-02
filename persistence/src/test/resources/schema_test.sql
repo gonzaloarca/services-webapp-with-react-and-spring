@@ -9,8 +9,17 @@ CREATE TABLE IF NOT EXISTS users
     user_image BYTEA,
     user_is_verified BOOLEAN NOT NULL DEFAULT false,
     user_password VARCHAR(100) NOT NULL,
-    user_creation_date TIMESTAMP DEFAULT current_timestamp
+    user_creation_date TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+
+CREATE TABLE IF NOT EXISTS user_role
+(
+    user_id SERIAL NOT NULL,
+    role_id INT    NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users,
+    PRIMARY KEY (user_id, role_id)
+);
+
 
 CREATE TABLE IF NOT EXISTS job_post
 (
