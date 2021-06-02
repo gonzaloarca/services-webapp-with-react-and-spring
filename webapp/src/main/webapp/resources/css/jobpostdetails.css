@@ -271,6 +271,7 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
 }
 
 .package-title {
+    flex: 1;
     font-size: 1.1rem;
     font-weight: bold;
     min-width: 300px;
@@ -352,7 +353,7 @@ button[aria-expanded=false] .package-info .fa-chevron-up {
     margin-right: 5px;
 }
 
-.owner-options-vl{
+.owner-options-vl {
     border-color: #485696 !important;
 }
 
