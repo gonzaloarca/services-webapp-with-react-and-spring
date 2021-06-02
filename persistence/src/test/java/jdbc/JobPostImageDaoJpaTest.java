@@ -3,7 +3,6 @@ package jdbc;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPostImage;
 import ar.edu.itba.paw.persistence.jpa.JobPostImageDaoJpa;
-import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,8 +18,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
 
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
