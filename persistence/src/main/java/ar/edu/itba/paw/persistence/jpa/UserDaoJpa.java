@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

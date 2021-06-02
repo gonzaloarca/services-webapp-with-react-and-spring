@@ -111,12 +111,11 @@
     </h3>
     <a class="btn hirenet-blue-btn" href="${pageContext.request.contextPath}/create-job-post">
         <spring:message code="index.createJobPost.button"/></a>
-    <div class="mt-5">
+    <div class="mt-1">
         <jsp:include page="components/footer.jsp"/>
     </div>
 </div>
 
-</div>
 <script>
 
     // Para modificar el href con la ubicacion seleccionada

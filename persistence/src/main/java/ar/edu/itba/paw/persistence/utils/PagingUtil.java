@@ -22,4 +22,8 @@ public class PagingUtil {
             return new ArrayList<>();
         else return filteredIds;
     }
+
+    private PagingUtil() {
+        throw new UnsupportedOperationException();
+    }
 }
