@@ -40,8 +40,9 @@
         <p class="text">
             <spring:message code="contract.success.text"/>
         </p>
-        <a class="btn btn-primary" href="${pageContext.request.contextPath}/" role="button" type="submit">
-            <spring:message code="button.return"/>
+        <a class="btn btn-primary" href="${pageContext.request.contextPath}/my-contracts/client/pending" role="button"
+           type="submit">
+            <spring:message code="button.return.contractSubmitted"/>
         </a>
     </div>
 </div>
