@@ -54,6 +54,7 @@
         <c:set var="data" value="${jobCard}" scope="request"/>
         <div class="card custom-card">
             <div class="card-body">
+                <c:set var="isEditable" value="${false}" scope="request"/>
                 <%@include file="components/serviceCard.jsp"%>
             </div>
         </div>
