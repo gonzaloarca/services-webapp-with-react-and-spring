@@ -40,7 +40,7 @@
     white-space: nowrap;
     cursor: pointer;
     font-size: 50px;
-    color: #ccc;
+    color: #CCC;
 }
 
 .qualify-rate:not(:checked) > label:before {
@@ -48,12 +48,12 @@
 }
 
 .qualify-rate > input:checked ~ label {
-    color: gold;
+    color: #FCB839;
 }
 
 .qualify-rate:not(:checked) > label:hover,
 .qualify-rate:not(:checked) > label:hover ~ label {
-    color: #deb217;
+    color: #dea12a;
 }
 
 .qualify-rate > input:checked + label:hover,
@@ -61,5 +61,5 @@
 .qualify-rate > input:checked ~ label:hover,
 .qualify-rate > input:checked ~ label:hover ~ label,
 .qualify-rate > label:hover ~ input:checked ~ label {
-    color: #c59b08;
+    color: #dea12a;
 }

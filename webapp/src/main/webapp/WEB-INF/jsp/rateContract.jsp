@@ -67,15 +67,15 @@
                 <spring:message code="ratecontract.review.pickrate"/></h3>
             <div class="qualify-rate">
                 <form:radiobutton path="rateValue" id="star5" name="rateValue" value="5"/>
-                <form:label path="rateValue" for="star5" title="text">5 stars</form:label>
+                <form:label path="rateValue" for="star5" title="text"/>
                 <form:radiobutton path="rateValue" id="star4" name="rateValue" value="4"/>
-                <form:label path="rateValue" for="star4" title="text">4 stars</form:label>
+                <form:label path="rateValue" for="star4" title="text"/>
                 <form:radiobutton path="rateValue" id="star3" name="rateValue" value="3"/>
-                <form:label path="rateValue" for="star3" title="text">3 stars</form:label>
+                <form:label path="rateValue" for="star3" title="text"/>
                 <form:radiobutton path="rateValue" id="star2" name="rateValue" value="2"/>
-                <form:label path="rateValue" for="star2" title="text">2 stars</form:label>
+                <form:label path="rateValue" for="star2" title="text"/>
                 <form:radiobutton path="rateValue" id="star1" name="rateValue" value="1" checked="checked"/>
-                <form:label path="rateValue" for="star1" title="text">1 star</form:label>
+                <form:label path="rateValue" for="star1" title="text"/>
             </div>
             <form:label path="description" class="custom-label">
                 <spring:message code="ratecontract.review.description"/>
