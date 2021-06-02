@@ -102,6 +102,7 @@
                                     <c:set var="returnURL"
                                            value="${pageContext.request.contextPath}/profile/${user.id}/services"
                                            scope="request"/>
+                                    <c:set var="isEditable" value="${false}" scope="request"/>
                                     <%@include file="components/serviceCard.jsp" %>
                                     <c:if test="${status.index != jobCards.size()-1}">
                                         <hr class="hr1"/>

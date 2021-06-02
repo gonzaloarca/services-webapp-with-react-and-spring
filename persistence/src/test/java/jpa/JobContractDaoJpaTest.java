@@ -1,4 +1,4 @@
-package jdbc;
+package jpa;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
@@ -6,7 +6,6 @@ import ar.edu.itba.paw.persistence.jpa.JobContractDaoJpa;
 import config.TestConfig;
 import exceptions.JobPackageNotFoundException;
 import exceptions.UserNotFoundException;
-import org.hibernate.Hibernate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
