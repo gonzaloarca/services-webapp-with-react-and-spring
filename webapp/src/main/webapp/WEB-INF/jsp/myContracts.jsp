@@ -57,7 +57,7 @@
             <hr class="divider-bar"/>
             <nav class="nav flex-row">
                 <a class="nav-link nav-horizontal-option ${contractType == 'client'
-                ? 'active active-yellow font-weight-bold' : ''}"
+                ? 'active active-yellow font-weight-bold' : ''} ${!isPro ? 'w-100' : ''}"
                    href="${pageContext.request.contextPath}/my-contracts/client/active">
                     <div class="contracts-option ${contractType == 'client'
                     ? 'font-weight-bold' : ''}">
@@ -106,22 +106,37 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
+                            <c:choose>
+                                <c:when test="${contractStateEndpoint == 'active' && !isOwner}">
+                                    <c:set value="mycontracts.noActiveContractsHeader" var="noContractsHeader"/>
+                                    <c:set value="mycontracts.noActiveContractsSubtitle" var="noContractsSubtitle"/>
+                                </c:when>
+                                <c:when test="${contractStateEndpoint == 'active' && isOwner}">
+                                    <c:set value="mycontracts.noActiveContractsHeader" var="noContractsHeader"/>
+                                    <c:set value="mycontracts.noActiveContractsSubtitlePro" var="noContractsSubtitle"/>
+                                </c:when>
+                                <c:when test="${contractStateEndpoint == 'pending' && !isOwner}">
+                                    <c:set value="mycontracts.noPendingContractsHeader" var="noContractsHeader"/>
+                                    <c:set value="mycontracts.noPendingContractsSubtitle" var="noContractsSubtitle"/>
+                                </c:when>
+                                <c:when test="${contractStateEndpoint == 'pending' && isOwner}">
+                                    <c:set value="mycontracts.noPendingContractsHeader" var="noContractsHeader"/>
+                                    <c:set value="mycontracts.noPendingContractsSubtitlePro" var="noContractsSubtitle"/>
+                                </c:when>
+                                <c:when test="${contractStateEndpoint == 'finalized'}">
+                                    <c:set value="mycontracts.noFinalizedContractsHeader" var="noContractsHeader"/>
+                                    <c:set value="mycontracts.noFinalizedContractsSubtitle" var="noContractsSubtitle"/>
+                                </c:when>
+
+                            </c:choose>
                             <div style="display: flex; align-items: center; flex-direction: column">
                                 <img loading="lazy" style="height: 200px; width: 40%; margin: 30px 0"
                                      alt="<spring:message code="mycontracts.shakingHands"/>"
                                      src='<c:url value="/resources/images/contract1.svg"/>'/>
                                 <h4 class="font-weight-bold">
-                                    <spring:message code="mycontracts.noContractsHeader"/>
-                                </h4>
 
-                                <c:choose>
-                                    <c:when test="${isOwner}">
-                                        <c:set value="mycontracts.noContractsSubtitlePro" var="noContractsSubtitle"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:set value="mycontracts.noContractsSubtitleClient" var="noContractsSubtitle"/>
-                                    </c:otherwise>
-                                </c:choose>
+                                    <spring:message code="${noContractsHeader}"/>
+                                </h4>
 
                                 <p><spring:message code="${noContractsSubtitle}"/></p>
                             </div>

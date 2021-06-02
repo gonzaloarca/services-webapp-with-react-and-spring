@@ -46,6 +46,43 @@
 
 <div>
 
+    <c:choose>
+        <c:when test="${contractState == CLIENT_CANCELLED && !isOwner}">
+            <c:set value="cancelled-contract" var="stateBar"/>
+            <c:set value="mycontracts.youCancelled" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == CLIENT_CANCELLED && isOwner}">
+            <c:set value="cancelled-contract" var="stateBar"/>
+            <c:set value="mycontracts.clientCancelled" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == PRO_CANCELLED && isOwner}">
+            <c:set value="cancelled-contract" var="stateBar"/>
+            <c:set value="mycontracts.youCancelled" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == PRO_CANCELLED && !isOwner}">
+            <c:set value="cancelled-contract" var="stateBar"/>
+            <c:set value="mycontracts.proCancelled" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == PRO_REJECTED && !isOwner}">
+            <c:set value="cancelled-contract" var="stateBar"/>
+            <c:set value="mycontracts.proRejected" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == PRO_REJECTED && isOwner}">
+            <c:set value="cancelled-contract" var="stateBar"/>
+            <c:set value="mycontracts.youRejected" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == COMPLETED}">
+            <c:set value="finalized-contract" var="stateBar"/>
+            <c:set value="mycontracts.finalized" var="stateMessage"/>
+        </c:when>
+    </c:choose>
+
+    <c:if test="${contractState == CLIENT_CANCELLED || contractState == PRO_CANCELLED
+    || contractState == PRO_REJECTED || contractState == COMPLETED}">
+        <div class="${stateBar}">
+            <spring:message code="${stateMessage}"/>
+        </div>
+    </c:if>
     <div class="hire-details-container">
         <div class="hire-user-container">
             <img loading="lazy" class="user-avatar" src="<c:url value="/image/user/${user.id}"/>"

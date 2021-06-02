@@ -735,3 +735,23 @@ h3 {
     font-weight: bold;
     size: 1.1rem;
 }
+
+.cancelled-contract {
+    background-color: #FDCDCD;
+    border: 2px solid #E26767;
+    color: #E26767;
+    border-radius: 2rem;
+    width: 98%;
+    margin: 10px auto;
+    padding: 5px 10px;
+}
+
+.finalized-contract {
+    background-color: #EEFFED;
+    border: 2px solid #54AA51;
+    color: #54AA51;
+    border-radius: 2rem;
+    width: 98%;
+    margin: 10px auto;
+    padding: 5px 10px;
+}

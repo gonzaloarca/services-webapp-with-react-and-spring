@@ -42,26 +42,20 @@ public class JobContract extends JobContractAbstract{
 
     //TODO Refactor: mover esto a JobContractAbstract?
     public enum ContractState {
-        PENDING_APPROVAL(1, "JobContract.ContractState.PendingApproval"),
-        APPROVED(0, "JobContract.ContractState.Approved"),
-        CLIENT_REJECTED(2, "JobContract.ContractState.ClientRejected"),
-        PRO_REJECTED(2, "JobContract.ContractState.ProRejected"),
-        CLIENT_CANCELLED(2, "JobContract.ContractState.ClientCancelled"),
-        PRO_CANCELLED(2, "JobContract.ContractState.ProCancelled"),
-        COMPLETED(2, "JobContract.ContractState.Completed"),
-        CLIENT_MODIFIED(1, "JobContract.ContractState.ClientModified"),
-        PRO_MODIFIED(1, "JobContract.ContractState.ProModified");
+        PENDING_APPROVAL("JobContract.ContractState.PendingApproval"),
+        APPROVED("JobContract.ContractState.Approved"),
+        CLIENT_REJECTED("JobContract.ContractState.ClientRejected"),
+        PRO_REJECTED("JobContract.ContractState.ProRejected"),
+        CLIENT_CANCELLED("JobContract.ContractState.ClientCancelled"),
+        PRO_CANCELLED("JobContract.ContractState.ProCancelled"),
+        COMPLETED("JobContract.ContractState.Completed"),
+        CLIENT_MODIFIED("JobContract.ContractState.ClientModified"),
+        PRO_MODIFIED("JobContract.ContractState.ProModified");
 
-        final int category;
         final String stringCode;
 
-        ContractState(int category, String stringCode) {
-            this.category = category;
+        ContractState(String stringCode) {
             this.stringCode = stringCode;
-        }
-
-        public int getCategory() {
-            return category;
         }
 
         public String getStringCode() {
