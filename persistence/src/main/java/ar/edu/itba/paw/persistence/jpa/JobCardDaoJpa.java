@@ -62,7 +62,7 @@ public class JobCardDaoJpa implements JobCardDao {
 
     @Override
     public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
-        StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(:query)");
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards");
 
         Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
 
@@ -116,7 +116,7 @@ public class JobCardDaoJpa implements JobCardDao {
 
     @Override
     public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
-        StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards WHERE (UPPER(post_title) LIKE UPPER(:query)");
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards");
 
         Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
 
@@ -152,6 +152,8 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery) {
+        sqlQuery.append(" WHERE (UPPER(post_title) LIKE UPPER('%'|| :query ||'%')");
+
         if (!similarTypes.isEmpty()) {
             String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
             sqlQuery.append(" OR post_job_type in (")
@@ -167,10 +169,8 @@ public class JobCardDaoJpa implements JobCardDao {
         sqlQuery.append(" GROUP BY job_cards.rating,job_cards.post_id");
         sqlQuery.append(" ORDER BY rating DESC");
 
-
-
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
-                .setParameter("query", "%" + query + "%")
+                .setParameter("query", query)
                 .setParameter("zone", zone.getValue());
 
         if(jobType != null)

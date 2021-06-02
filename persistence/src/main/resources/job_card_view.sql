@@ -1,6 +1,9 @@
 DROP VIEW IF EXISTS job_cards CASCADE;
 CREATE VIEW job_cards AS
 SELECT job_post.post_id,
+       post_title,
+       post_is_active,
+       post_job_type,
        coalesce(avg(review_rate), 0)        AS rating,
        count(distinct contract.contract_id) AS post_contract_count,
        count(DISTINCT review.contract_id)   as reviews,
