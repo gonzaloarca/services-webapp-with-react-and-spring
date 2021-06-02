@@ -70,7 +70,8 @@ public class MyContractsController {
                 .addObject("maxPage", maxPage)
                 .addObject("contractCards", jobContractCards)
                 .addObject("isPro", userAuth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
-                .addObject("contractType", contractType);
+                .addObject("contractType", contractType)
+                .addObject("contractStateEndpoint", contractState);
     }
 
 
