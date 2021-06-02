@@ -37,4 +37,6 @@ public interface JobContractDao {
     void changeContractState(long id, JobContract.ContractState state);
 
     Optional<JobContractWithImage> findJobContractWithImage(long id);
+
+    Optional<ByteImage> findImageByContractId(long id);
 }

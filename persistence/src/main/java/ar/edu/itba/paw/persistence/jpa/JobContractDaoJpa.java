@@ -167,4 +167,9 @@ public class JobContractDaoJpa implements JobContractDao {
     public Optional<JobContractWithImage> findJobContractWithImage(long id) {
         return Optional.ofNullable(em.find(JobContractWithImage.class, id));
     }
+
+    @Override
+    public Optional<ByteImage> findImageByContractId(long id) {
+        return Optional.ofNullable(em.createQuery("SELECT contract.byteImage FROM JobContract contract WHERE contract.id = :id",ByteImage.class).setParameter("id",id).getSingleResult());
+    }
 }

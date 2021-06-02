@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
 import ar.edu.itba.paw.models.*;
+import exceptions.ImageNotFoundException;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
 import exceptions.UserNotVerifiedException;
@@ -180,5 +181,10 @@ public class SimpleUserService implements UserService {
     @Override
     public UserWithImage findUserWithImage(long id) {
         return userDao.findUserWithImage(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public ByteImage findImageByUserId(long id) {
+        return userDao.findImageByUserId(id).orElseThrow(ImageNotFoundException::new);
     }
 }

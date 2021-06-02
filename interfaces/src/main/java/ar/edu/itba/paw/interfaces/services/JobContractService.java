@@ -50,4 +50,6 @@ public interface JobContractService {
     void changeContractState(long id, JobContract.ContractState state);
 
     JobContractWithImage findJobContractWithImage(long id);
+
+    ByteImage findImageByContractId(long id);
 }

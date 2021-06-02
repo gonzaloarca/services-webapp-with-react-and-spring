@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.JobPostImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPostImage;
+import exceptions.ImageNotFoundException;
 import exceptions.JobPackageNotFoundException;
 import exceptions.JobPostImageNotFoundException;
 import org.apache.commons.io.IOUtils;
@@ -43,8 +44,8 @@ public class ImageController {
         ByteImage profilePic;
 
         try {
-            profilePic = userService.findUserWithImage(id).getByteImage();
-        } catch (NoSuchElementException e) {
+            profilePic = userService.findImageByUserId(id);
+        } catch (ImageNotFoundException e) {
             profilePic = null;
         }
 
@@ -90,8 +91,8 @@ public class ImageController {
         ByteImage contractImage;
 
         try {
-            contractImage = jobContractService.findJobContractWithImage(id).getImage();
-        } catch (JobPackageNotFoundException e) {
+            contractImage = jobContractService.findImageByContractId(id);
+        } catch (ImageNotFoundException e) {
             contractImage = null;
         }
 

@@ -183,4 +183,9 @@ public class UserDaoJpa implements UserDao {
     public Optional<UserWithImage> findUserWithImage(long id) {
         return Optional.ofNullable(em.find(UserWithImage.class, id));
     }
+
+    @Override
+    public Optional<ByteImage> findImageByUserId(long id){
+        return Optional.ofNullable(em.createQuery("SELECT u.byteImage FROM UserWithImage u WHERE u.id = :id",ByteImage.class).setParameter("id",id).getSingleResult());
+    }
 }

@@ -42,4 +42,6 @@ public interface UserService {
     void recoverUserPassword(String email, Locale locale);
 
     UserWithImage findUserWithImage(long id);
+
+    ByteImage findImageByUserId(long id);
 }

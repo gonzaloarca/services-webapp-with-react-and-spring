@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import exceptions.ImageNotFoundException;
 import exceptions.JobContractNotFoundException;
 import exceptions.JobPackageNotFoundException;
 import exceptions.UserNotFoundException;
@@ -175,5 +176,10 @@ public class SimpleJobContractService implements JobContractService {
     @Override
     public JobContractWithImage findJobContractWithImage(long id) {
         return jobContractDao.findJobContractWithImage(id).orElseThrow(JobContractNotFoundException::new);
+    }
+
+    @Override
+    public ByteImage findImageByContractId(long id) {
+        return jobContractDao.findImageByContractId(id).orElseThrow(ImageNotFoundException::new);
     }
 }
