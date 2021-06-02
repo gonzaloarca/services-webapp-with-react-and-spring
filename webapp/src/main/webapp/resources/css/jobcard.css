@@ -17,6 +17,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    height: 50px;
 }
 
 .job-card-no-reviews {
@@ -72,3 +73,6 @@ i.job-card-detail {
     justify-content: center;
     align-items: center;
 }
+
+}
+

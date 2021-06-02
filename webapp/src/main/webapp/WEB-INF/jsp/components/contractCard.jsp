@@ -210,6 +210,7 @@
                 </c:if>
                 <c:url value="/my-contracts/${contractType}/" var="returnUrl" />
                 <form:hidden path="id" value="${contractCard.jobContract.id}"/>
+                <form:hidden path="id" value="${contractCard.jobContract.id}"/>
                 <form:hidden id="new-state" path="newState"/>
                 <form:hidden id="return-url" path="returnURL"
                              value="${returnUrl}"/>
@@ -218,7 +219,7 @@
 
 
             <a class="btn contract-control-details btn-link text-uppercase"
-               onclick='openDetailsModal("${contractCard.jobContract.description}", "${imageSrc}")'>
+               onclick='openDetailsModal("<c:out value="${contractCard.jobContract.description}"/>", "<c:out value="${imageSrc}"/>")'>
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
                 <p>
                     <spring:message code="mycontract.details"/>
@@ -227,7 +228,7 @@
             <hr class="divider-bar-thick">
 
             <a class="btn contract-control-contact btn-link text-uppercase"
-               onclick='openContactModal("${name}", "${email}", "${phone}")'>
+               onclick='openContactModal("<c:out value="${name}"/>", "<c:out value="${email}" />", "<c:out value="${phone}"/>")'>
                 <i class="fa fa-info-circle mr-1" aria-hidden="true"></i>
                 <p><spring:message code="mycontracts.contact"/></p>
             </a>
