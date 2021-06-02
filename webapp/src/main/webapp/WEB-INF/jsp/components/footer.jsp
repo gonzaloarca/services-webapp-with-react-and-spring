@@ -1,6 +1,6 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <style>
-    p {
+    .footer-css p {
         margin-bottom: 4px;
         text-align: left;
     }
@@ -18,7 +18,7 @@
 </style>
 
 <footer class="d-flex justify-content-center" style="margin-top: 5vh">
-    <div>
+    <div class="footer-css">
         <div class="row mb-3">
             <div class="col-9">
                 <p class="title">Creadores del sitio</p>
