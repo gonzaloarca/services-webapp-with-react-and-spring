@@ -1,4 +1,4 @@
-package jdbc;
+package jpa;
 
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPostImage;

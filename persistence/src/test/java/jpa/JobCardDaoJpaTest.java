@@ -1,4 +1,4 @@
-package jdbc;
+package jpa;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;

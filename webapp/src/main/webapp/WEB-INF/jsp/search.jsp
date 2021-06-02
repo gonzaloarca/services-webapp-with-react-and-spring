@@ -54,7 +54,7 @@
             <spring:message code="search.categories"/>
         </p>
         <c:forEach items="${categories}" var="category" varStatus="status">
-            <span class="mb-1 custom-row align-items-center" onclick="updateCategorySelected(${category.value})">
+            <span class="mb-1 custom-row align-items-center">
                 <p class="capitalize-first-letter">
                     <a class="category ${param.category == status.index? 'pickedCategory':''}"
                        href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=${status.index}">
