@@ -44,6 +44,9 @@ import java.util.Properties;
 @EnableAsync
 public class WebConfig {
 
+    // FIXME Cambiar para produccion
+    private final boolean PRODUCTION = false;
+
     private final Logger webConfigLogger = LoggerFactory.getLogger(WebConfig.class);
 
     @Autowired
@@ -69,11 +72,15 @@ public class WebConfig {
 
         ds.setDriverClass(org.postgresql.Driver.class);
         webConfigLogger.debug("Datasoruce driver set to {}", ds.getDriver());
-//        PARA USO LOCAL
-        ds.setUrl("jdbc:postgresql://localhost:5432/paw-2021a-03");
 
-//        PARA DEPLOY
-//        ds.setUrl("jdbc:postgresql://10.16.1.110:5432/paw-2021a-03");
+        if(PRODUCTION) {
+            //        PARA DEPLOY
+            ds.setUrl("jdbc:postgresql://10.16.1.110:5432/paw-2021a-03");
+        } else {
+            //        PARA USO LOCAL
+            ds.setUrl("jdbc:postgresql://localhost:5432/paw-2021a-03");
+        }
+
         webConfigLogger.debug("Datasource URL set to {}", ds.getUrl());
 
         ds.setUsername("paw-2021a-03");
@@ -153,12 +160,11 @@ public class WebConfig {
         jpaProperties.setProperty("hibernate.hbm2ddl.auto","update");
         jpaProperties.setProperty("hibernate.dialect","org.hibernate.dialect.PostgreSQL92Dialect");
 
-        //FIXME
-        //TODO NO PONER ESTO EN PRODUCCION!!!
-        jpaProperties.setProperty("hibernate.show_sql", "true");
-        jpaProperties.setProperty("format_sql", "true");
-
-
+        if(!PRODUCTION){
+            //  Esto no va en produccion
+            jpaProperties.setProperty("hibernate.show_sql", "true");
+            jpaProperties.setProperty("format_sql", "true");
+        }
 
         entityFactory.setJpaProperties(jpaProperties);
 
