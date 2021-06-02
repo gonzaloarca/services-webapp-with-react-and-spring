@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services.utils;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.interfaces.services.JobContractService;
+import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.models.*;
 import exceptions.MailCreationException;
@@ -18,9 +20,8 @@ import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class MailingServiceSpring implements MailingService {
@@ -33,6 +34,12 @@ public class MailingServiceSpring implements MailingService {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private JobPostService jobPostService;
+
+    @Autowired
+    private JobContractService jobContractService;
 
     @Autowired
     private SpringTemplateEngine thymeleafTemplateEngine;
@@ -88,15 +95,22 @@ public class MailingServiceSpring implements MailingService {
             attachment = new ByteArrayDataSource(image.getData(), image.getType());
         }
 
+        User professional = jobPostService.findUserByPostId(jobPost.getId());
+        User client = jobContractService.findClientByContractId(jobContract.getId());
+
         Map<String, Object> data = new HashMap<>();
-        data.put("professional", jobPost.getUser().getUsername());
+        data.put("professional", professional.getUsername());
         data.put("jobPackageTitle", jobPack.getTitle());
-        data.put("jobPackagePrice", String.valueOf(Math.round(jobPack.getPrice() * 100 / 100)));
+        Double price = jobPack.getPrice();
+        if (price == null)
+            price = (double) 0;
+
+        data.put("jobPackagePrice", String.valueOf(Math.round(price * 100 / 100)));
         data.put("jobPackageRateType", jobPack.getRateType().getStringCode());
         data.put("jobPostTitle", jobPost.getTitle());
-        data.put("client", jobContract.getClient().getUsername());
-        data.put("clientEmail", jobContract.getClient().getEmail());
-        data.put("clientPhone", jobContract.getClient().getPhone());
+        data.put("client", client.getUsername());
+        data.put("clientEmail", client.getEmail());
+        data.put("clientPhone", client.getPhone());
         data.put("professionalEmail", jobContract.getProfessional().getEmail());
         data.put("professionalPhone", jobContract.getProfessional().getPhone());
         data.put("contractDescription", jobContract.getDescription());
@@ -138,5 +152,52 @@ public class MailingServiceSpring implements MailingService {
         sendMessageUsingThymeleafTemplate(email,
                 messageSource.getMessage("mail.recover.subject", new Object[]{}, locale),
                 data, "recoverPassword", null, locale);
+    }
+
+    @Async
+    @Override
+    public void sendUpdateContractStatusEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost, Locale locale) {
+        DataSource attachment = null;
+        ByteImage image = jobContract.getImage();
+
+        if (imageService.isValidImage(image)) {
+            attachment = new ByteArrayDataSource(image.getData(), image.getType());
+        }
+
+        User professional = jobPostService.findUserByPostId(jobPost.getId());
+        User client = jobContractService.findClientByContractId(jobContract.getId());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("jobPackageTitle", jobPack.getTitle());
+        Double price = jobPack.getPrice();
+        if (price == null)
+            price = (double) 0;
+
+        data.put("jobPackagePrice", String.valueOf(Math.round(price * 100 / 100)));
+        data.put("jobPackageRateType", jobPack.getRateType().getStringCode());
+        data.put("jobPostTitle", jobPost.getTitle());
+        data.put("client", client.getUsername());
+        data.put("clientEmail", client.getEmail());
+        data.put("clientPhone", client.getPhone());
+        data.put("contractDescription", jobContract.getDescription());
+        data.put("contractDate", jobContract.getCreationDate().format(DateTimeFormatter.ofPattern(messageSource.getMessage("date.format", new Object[]{}, locale))));
+        data.put("status", jobContract.getState().getStringCode());
+        data.put("professional", professional.getUsername());
+        data.put("professionalEmail", professional.getEmail());
+        data.put("professionalPhone", professional.getPhone());
+        data.put("hasAttachment", attachment != null);
+
+        List<JobContract.ContractState> clientStates = Arrays.asList(
+                JobContract.ContractState.CLIENT_CANCELLED, JobContract.ContractState.CLIENT_MODIFIED, JobContract.ContractState.CLIENT_REJECTED);
+
+        boolean updatedByClient = clientStates.contains(jobContract.getState());
+        data.put("updatedByClient", updatedByClient);
+
+        sendMessageUsingThymeleafTemplate(updatedByClient ? professional.getEmail() : client.getEmail(),
+                messageSource.getMessage("mail.updateContract.subject",
+                        new Object[]{
+                                messageSource.getMessage(jobContract.getState().getStringCode(), new Object[]{}, locale)
+                        }, locale),
+                data, "updateContractStatus", attachment, locale);
     }
 }

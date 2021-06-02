@@ -153,7 +153,6 @@ public class UserDaoJpa implements UserDao {
     @Override
     public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
 
-        //TODO: SE PUEDE PASAR A HSQLDB? O ES MUY COMPLICADA?
         String sqlQuery = new StringBuilder()
                 .append("SELECT rank FROM (")
                 .append("         SELECT user_id, ROW_NUMBER() OVER () AS rank")

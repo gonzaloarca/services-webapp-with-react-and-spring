@@ -55,7 +55,7 @@ public class HireController {
                                        @ModelAttribute("contractForm") final ContractForm form) {
 
         final ModelAndView mav = new ModelAndView("createContract");
-        hireControllerLogger.debug("Finding images for post {}",jobPost.getId());
+        hireControllerLogger.debug("Finding images for post {}", jobPost.getId());
         List<Long> imageList = jobPostImageService.getImagesIdsByPostId(jobPost.getId());
 
         mav.addObject("imageList", imageList);
@@ -71,7 +71,7 @@ public class HireController {
                                        @Valid @ModelAttribute("contractForm") final ContractForm form, final BindingResult errors,
                                        Principal principal, HttpServletRequest servletRequest) {
         if (errors.hasErrors()) {
-            hireControllerLogger.debug("Contract form has errors: {}",errors.getAllErrors().toString());
+            hireControllerLogger.debug("Contract form has errors: {}", errors.getAllErrors().toString());
             return createContract(packId, jobPost, form);
         }
 
@@ -79,11 +79,11 @@ public class HireController {
         JobContract jobContract;
 
         if (form.getImage().getSize() == 0) {
-            hireControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{}",packId,email,form.getDescription());
+            hireControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{}", packId, email, form.getDescription());
             jobContract = jobContractService.create(email, packId, form.getDescription());
-        }else {
+        } else {
             try {
-                hireControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{} with image",packId,email,form.getDescription());
+                hireControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{} with image", packId, email, form.getDescription());
                 jobContract = jobContractService.create(email, packId, form.getDescription(),
                         imageService.create(form.getImage().getBytes(), form.getImage().getContentType()));
             } catch (IOException e) {
@@ -92,7 +92,7 @@ public class HireController {
             }
         }
 
-        hireControllerLogger.debug("Sending email to professional for package {}, post {} and contract {}",jobPack.getId(),jobPost.getId(),jobContract.getId());
+        hireControllerLogger.debug("Sending email to professional for package {}, post {} and contract {}", jobPack.getId(), jobPost.getId(), jobContract.getId());
         mailingService.sendContractEmail(jobContract, jobPack, jobPost, localeResolver.resolveLocale(servletRequest));
 
         return new ModelAndView("redirect:/hire/" + packId + "/success");

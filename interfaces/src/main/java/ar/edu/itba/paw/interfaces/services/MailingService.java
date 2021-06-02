@@ -19,4 +19,5 @@ public interface MailingService {
 
     void sendRecoverPasswordEmail(String email, String password, Locale locale);
 
+    void sendUpdateContractStatusEmail(JobContract jobContract, JobPackage jobPack, JobPost jobPost, Locale locale);
 }

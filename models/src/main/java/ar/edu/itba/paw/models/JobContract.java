@@ -149,24 +149,30 @@ public class JobContract {
     }
 
     public enum ContractState {
-        PENDING_APPROVAL(1),
-        APPROVED(0),
-        CLIENT_REJECTED(2),
-        PRO_REJECTED(2),
-        CLIENT_CANCELLED(2),
-        PRO_CANCELLED(2),
-        COMPLETED(2),
-        CLIENT_MODIFIED(1),
-        PRO_MODIFIED(1);
+        PENDING_APPROVAL(1, "JobContract.ContractState.PendingApproval"),
+        APPROVED(0, "JobContract.ContractState.Approved"),
+        CLIENT_REJECTED(2, "JobContract.ContractState.ClientRejected"),
+        PRO_REJECTED(2, "JobContract.ContractState.ProRejected"),
+        CLIENT_CANCELLED(2, "JobContract.ContractState.ClientCancelled"),
+        PRO_CANCELLED(2, "JobContract.ContractState.ProCancelled"),
+        COMPLETED(2, "JobContract.ContractState.Completed"),
+        CLIENT_MODIFIED(1, "JobContract.ContractState.ClientModified"),
+        PRO_MODIFIED(1, "JobContract.ContractState.ProModified");
 
         final int category;
+        final String stringCode;
 
-        ContractState(int category) {
+        ContractState(int category, String stringCode) {
             this.category = category;
+            this.stringCode = stringCode;
         }
 
         public int getCategory() {
             return category;
+        }
+
+        public String getStringCode() {
+            return stringCode;
         }
     }
 }
