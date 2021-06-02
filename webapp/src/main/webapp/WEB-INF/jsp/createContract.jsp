@@ -73,7 +73,7 @@
                 </p>
                 <hr class="divider-bar"/>
                 <!-- Form Entries -->
-                <c:url value="/contract/package/${packId}" var="postUrl"/>
+                <c:url value="/hire/package/${packId}" var="postUrl"/>
                 <form:form class="contract-input needs-validation" modelAttribute="contractForm" novalidate="true"
                            action="${postUrl}" method="post" id="contract-form" onsubmit="disableBtn()"
                            enctype="multipart/form-data">

@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" buffer="64kb" %>
 <html>
 <head>
     <title>
@@ -255,7 +255,7 @@
                                                 <c:if test="${!isOwner && jobPost.active}">
                                                     <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
                                                         <a class="btn"
-                                                           href="${pageContext.request.contextPath}/contract/package/${pack.id}"
+                                                           href="${pageContext.request.contextPath}/hire/package/${pack.id}"
                                                            role="button" type="submit">
                                                             <spring:message code="jobPost.jobs.submit"/>
                                                         </a>

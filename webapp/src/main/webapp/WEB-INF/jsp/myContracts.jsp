@@ -98,6 +98,7 @@
                             <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
                                 <c:set var="jobCard" value="${contractCard.jobCard}" scope="request"/>
                                 <c:set var="contractState" value="${contractCard.jobContract.state}"/>
+                                <c:set var="contractType" value="${contractType}"/>
                                 <%@include file="components/contractCard.jsp" %>
                                 <c:if test="${status.index != contractCards.size()-1}">
                                     <hr class="hr1"/>
