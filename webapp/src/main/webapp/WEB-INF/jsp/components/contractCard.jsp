@@ -245,14 +245,14 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <c:if test="${contractCard.jobCard.jobPost.active && !isOwner}">
+                    <c:if test="${contractCard.jobCard.jobPost.active && !isOwner && contractState == COMPLETED}">
                         <a class="contract-control-rate text-uppercase"
                            href="${pageContext.request.contextPath}/rate-contract/${contractCard.jobContract.id}">
                             <i class="bi bi-star mr-1"></i>
                             <p><spring:message code="mycontracts.ratecontract"/></p>
                         </a>
                     </c:if>
-                    <c:if test="${isOwner}">
+                    <c:if test="${isOwner && contractState == COMPLETED}">
                         <hr class="divider-bar-thick">
                         <p class="text-black-50" style="margin: 0 auto"><spring:message code="mycontracts.unrated"/></p>
                     </c:if>
