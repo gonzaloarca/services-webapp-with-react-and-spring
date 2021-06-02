@@ -208,10 +208,11 @@
                     </button>
                     <hr class="divider-bar-thick">
                 </c:if>
+                <c:url value="/my-contracts/${contractType}/" var="returnUrl" />
                 <form:hidden path="id" value="${contractCard.jobContract.id}"/>
                 <form:hidden id="new-state" path="newState"/>
                 <form:hidden id="return-url" path="returnURL"
-                             value="${pageContext.request.contextPath}/my-contracts/${contractType}/"/>
+                             value="${returnUrl}"/>
 
             </form:form>
 

@@ -11,7 +11,7 @@
     }
 
     .hirenet-copyright {
-        text-align: center;
+        text-align: center !important;
         color: #7e7e7e;
         margin-bottom: 3vh;
     }
