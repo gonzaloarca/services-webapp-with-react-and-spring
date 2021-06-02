@@ -47,7 +47,7 @@
                         code="navigation.login"/></a>
             </c:when>
             <c:when test="${send}">
-                <img loading="lazy" src='<c:url value="/resources/images/emailnotification.svg" />'
+                <img loading="lazy" src='<c:url value="/resources/images/hirenet-mail.png" />'
                      alt="<spring:message code="token.view.email.alt2"/>"
                      class="image"/>
                 <h1 class="title">
@@ -58,7 +58,7 @@
                 </p>
             </c:when>
             <c:when test="${resend}">
-                <img loading="lazy" src='<c:url value="/resources/images/emailnotification.svg" />'
+                <img loading="lazy" src='<c:url value="/resources/images/hirenet-mail.png" />'
                      alt="<spring:message code="token.view.email.alt2"/>"
                      class="image"/>
                 <h1 class="title">

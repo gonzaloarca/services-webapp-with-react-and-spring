@@ -32,7 +32,7 @@
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent page">
     <div class="message">
-        <img loading="lazy" src='<c:url value="/resources/images/thumbs.svg" />'
+        <img loading="lazy" src='<c:url value="/resources/images/hirenet-success.png" />'
              alt="<spring:message code="contract.success.image"/>"
              class="image"/>
         <h1 class="title">
