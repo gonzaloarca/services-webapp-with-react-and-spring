@@ -18,6 +18,8 @@ public interface JobCardDao {
 
     Optional<JobCard> findByPostId(long id);
 
+    Optional<JobCard> findByPackageIdWithPackageInfoWithInactive(long id);
+
     Optional<JobCard> findByPostIdWithInactive(long id);
 
     List<JobCard> findRelatedJobCards(long professional_id, int page);

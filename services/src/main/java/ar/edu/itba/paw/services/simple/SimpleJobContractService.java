@@ -36,6 +36,9 @@ public class SimpleJobContractService implements JobContractService {
     @Autowired
     private MailingService mailingService;
 
+    @Autowired
+    private JobPostService jobPostService;
+
     @Override
     public JobContractWithImage create(String clientEmail, long packageId, String description, Locale locale) {
         return create(clientEmail, packageId, description, null, locale);
@@ -159,7 +162,8 @@ public class SimpleJobContractService implements JobContractService {
         findByClientId(id, states, page).
                 forEach(jobContract ->
                                 jobContractCards.add(
-                                        new JobContractCard(jobContract, jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
+                                        new JobContractCard(jobContract,
+                                                jobCardService.findByPackageIdWithPackageInfoWithInactive(jobContract.getJobPackage().getId()),
                                                 reviewService.findContractReview(jobContract.getId()).orElse(null)))
                         //puede no tener una review
                 );
