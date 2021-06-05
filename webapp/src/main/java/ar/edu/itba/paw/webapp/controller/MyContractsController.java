@@ -7,7 +7,7 @@ import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobContractCard;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.webapp.form.ChangeContractStateForm;
-import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

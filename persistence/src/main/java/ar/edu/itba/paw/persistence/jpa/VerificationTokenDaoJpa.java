@@ -3,8 +3,8 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.dao.VerificationTokenDao;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.VerificationToken;
-import exceptions.TokenNotFoundException;
-import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.TokenNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

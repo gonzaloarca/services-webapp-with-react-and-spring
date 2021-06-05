@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
 import ar.edu.itba.paw.models.*;
-import exceptions.JobPostNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobPostNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

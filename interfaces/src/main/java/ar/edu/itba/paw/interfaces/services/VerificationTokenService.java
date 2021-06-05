@@ -2,7 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.VerificationToken;
-import exceptions.VerificationTokenExpiredException;
+import ar.edu.itba.paw.models.exceptions.VerificationTokenExpiredException;
 
 public interface VerificationTokenService {
 
