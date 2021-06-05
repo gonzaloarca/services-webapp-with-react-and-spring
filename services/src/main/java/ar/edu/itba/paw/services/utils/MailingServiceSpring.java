@@ -90,7 +90,7 @@ public class MailingServiceSpring implements MailingService {
     @Override
     public void sendContractEmail(JobContractWithImage jobContract, Locale locale) {
         DataSource attachment = null;
-        ByteImage image = jobContract.getImage();
+        ByteImage image = jobContract.getByteImage();
         JobPackage jobPack = jobContract.getJobPackage();
         JobPost jobPost = jobPack.getJobPost();
 
@@ -161,7 +161,7 @@ public class MailingServiceSpring implements MailingService {
     @Override
     public void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale) {
         DataSource attachment = null;
-        ByteImage image = jobContract.getImage();
+        ByteImage image = jobContract.getByteImage();
 
         if (imageService.isValidImage(image)) {
             attachment = new ByteArrayDataSource(image.getData(), image.getType());
