@@ -44,7 +44,7 @@
     <div class="step-frame">
         <div style="padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center"
              class="step-container">
-            <img class="mb-4" style="height: 150px" src="<c:url value="/resources/images/package-success1.svg"/>"
+            <img loading="lazy" class="mb-4" style="height: 150px" src="<c:url value="/resources/images/package-success1.svg"/>"
                  alt="<spring:message code="jobPost.packages.add.success.title"/>"/>
             <h4 class="mb-4">
                 <spring:message code="package.add.success"/>

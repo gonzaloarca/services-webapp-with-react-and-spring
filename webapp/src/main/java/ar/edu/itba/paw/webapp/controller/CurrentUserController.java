@@ -82,7 +82,7 @@ public class CurrentUserController {
             return mav;
         } else {
             currentUserControllerLogger.debug("Review found, returning to my contracts");
-            return new ModelAndView("redirect:/my-contracts/client");
+            return new ModelAndView("redirect:/my-contracts/client/finalized");
         }
     }
 
@@ -102,6 +102,6 @@ public class CurrentUserController {
             currentUserControllerLogger.debug("Creating review for contract {} with data: rate value: {}, title: {}, description: {}", id, rateValue, title, description);
             reviewService.create(id, rateValue, title, description);
         }
-        return new ModelAndView("redirect:/my-contracts/client");
+        return new ModelAndView("redirect:/my-contracts/client/finalized");
     }
 }

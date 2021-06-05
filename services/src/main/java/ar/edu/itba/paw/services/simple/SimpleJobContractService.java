@@ -2,14 +2,10 @@ package ar.edu.itba.paw.services.simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
-import ar.edu.itba.paw.interfaces.services.JobCardService;
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.ReviewService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractCard;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.*;
+import exceptions.ImageNotFoundException;
+import exceptions.JobContractNotFoundException;
 import exceptions.JobPackageNotFoundException;
 import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @Transactional
 @Service
@@ -36,19 +33,30 @@ public class SimpleJobContractService implements JobContractService {
     @Autowired
     private ReviewService reviewService;
 
+    @Autowired
+    private MailingService mailingService;
+
+    @Autowired
+    private JobPostService jobPostService;
+
     @Override
-    public JobContract create(String clientEmail, long packageId, String description) {
-        return create(clientEmail, packageId, description, null);
+    public JobContractWithImage create(String clientEmail, long packageId, String description, Locale locale) {
+        return create(clientEmail, packageId, description, null, locale);
     }
 
     @Override
-    public JobContract create(String clientEmail, long packageId, String description, ByteImage image) {
+    public JobContractWithImage create(String clientEmail, long packageId, String description, ByteImage image, Locale locale) {
         User user = userService.findByEmail(clientEmail).orElseThrow(UserNotFoundException::new);
+        JobContractWithImage jobContract;
 
         if (image == null)
-            return jobContractDao.create(user.getId(), packageId, description);
+            jobContract = jobContractDao.create(user.getId(), packageId, description);
+        else
+            jobContract = jobContractDao.create(user.getId(), packageId, description, image);
 
-        return jobContractDao.create(user.getId(), packageId, description, image);
+        mailingService.sendContractEmail(jobContract, locale);
+
+        return jobContract;
     }
 
     @Override
@@ -154,7 +162,8 @@ public class SimpleJobContractService implements JobContractService {
         findByClientId(id, states, page).
                 forEach(jobContract ->
                                 jobContractCards.add(
-                                        new JobContractCard(jobContract, jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
+                                        new JobContractCard(jobContract,
+                                                jobCardService.findByPackageIdWithPackageInfoWithInactive(jobContract.getJobPackage().getId()),
                                                 reviewService.findContractReview(jobContract.getId()).orElse(null)))
                         //puede no tener una review
                 );
@@ -166,5 +175,15 @@ public class SimpleJobContractService implements JobContractService {
     @Override
     public void changeContractState(long id, JobContract.ContractState state) {
         jobContractDao.changeContractState(id, state);
+    }
+
+    @Override
+    public JobContractWithImage findJobContractWithImage(long id) {
+        return jobContractDao.findJobContractWithImage(id).orElseThrow(JobContractNotFoundException::new);
+    }
+
+    @Override
+    public ByteImage findImageByContractId(long id) {
+        return jobContractDao.findImageByContractId(id).orElseThrow(ImageNotFoundException::new);
     }
 }

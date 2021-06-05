@@ -95,4 +95,10 @@ public class ExploreController {
                 .addObject("categories", JobPost.JobType.values());
     }
 
+    @RequestMapping(path ="/**")
+    public ModelAndView notFound404(){
+        return new ModelAndView("error/404");
+    }
+
+
 }

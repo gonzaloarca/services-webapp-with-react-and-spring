@@ -51,8 +51,8 @@
     <div class="highlights-container">
         <div class="highlight card custom-card">
             <div class="card-body">
-                <img class="analytics-profile-img"
-                     loading="lazy"
+                <img loading="lazy" class="analytics-profile-img"
+
                      src='<c:url value="/image/user/${user.id}"/>'
                      alt="<spring:message code="profile.image"/>">
                 <p class="mb-0 analytics-profile-title"><c:out value="${user.username}"/></p>

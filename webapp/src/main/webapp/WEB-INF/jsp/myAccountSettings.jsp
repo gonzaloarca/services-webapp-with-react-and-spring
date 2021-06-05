@@ -50,7 +50,7 @@
             <div class="spaced-div" style="margin: 30px 50px 30px 60px">
                 <!-- informacion actual -->
                 <div class="spaced-div">
-                    <img class="profile-img" loading="lazy"
+                    <img loading="lazy" class="profile-img"
                          src='<c:url value="/image/user/${user.id}"/>'
                          alt="<spring:message code="profile.image"/>">
                     <div class="centered-div">
@@ -114,7 +114,7 @@
                         </div>
                         <div class="row my-4 justify-content-center align-items-center">
                             <div class="col-3 img-preview-container">
-                                <img id="img-preview" class="profile-img"
+                                <img loading="lazy" id="img-preview" class="profile-img"
                                      alt="<spring:message code="account.settings.info.previewalt"/>"
                                      src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg">
                                 <div style="color: #7e7e7e" class="text-center mt-2">

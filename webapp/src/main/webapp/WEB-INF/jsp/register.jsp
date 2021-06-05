@@ -53,7 +53,7 @@
 <div class="register-card">
     <div class="register-title-container">
         <h3 class="register-title">
-            <img class="login-icon mb-2" src="${pageContext.request.contextPath}/resources/images/adduser.svg"
+            <img loading="lazy" class="login-icon mb-2" src="${pageContext.request.contextPath}/resources/images/adduser.svg"
                  alt="<spring:message code="add.user"/>">
             <spring:message code="register.into.hirenet"/>
         </h3>
@@ -172,7 +172,7 @@
                     </h5>
 
                     <div class="img-preview-container">
-                        <img id="img-preview"
+                        <img loading="lazy" id="img-preview"
                              src="${pageContext.request.contextPath}/resources/images/defaultavatar.svg"
                              alt="<spring:message code="user.avatar"/>">
                         <p class="font-weight-bold">

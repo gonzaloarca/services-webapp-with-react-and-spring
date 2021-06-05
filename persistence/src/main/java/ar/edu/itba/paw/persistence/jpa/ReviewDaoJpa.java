@@ -37,7 +37,7 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> findReviewsByPostId(long id, int page) {
-        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract NATURAL JOIN job_package WHERE job_package.post_id = :id").setParameter("id", id);
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract NATURAL JOIN job_package WHERE job_package.post_id = :id ORDER BY review_creation_date DESC").setParameter("id", id);
         return executePageQuery(page, nativeQuery);
     }
 
@@ -55,7 +55,7 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> findReviewsByPackageId(long id, int page) {
-        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract WHERE package_id = :id")
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract WHERE package_id = :id ORDER BY review_creation_date DESC")
                 .setParameter("id", id);
         return executePageQuery(page, nativeQuery);
     }
@@ -68,7 +68,7 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> findProfessionalReviews(long id, int page) {
-        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE user_id = :id")
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE user_id = :id ORDER BY review_creation_date DESC")
                 .setParameter("id", id);
 
         return executePageQuery(page, nativeQuery);

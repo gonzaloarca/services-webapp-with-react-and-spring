@@ -1,6 +1,7 @@
 package simple;
 
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
+import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.simple.SimpleJobContractService;
 import ar.edu.itba.paw.services.simple.SimpleJobPackageService;
@@ -16,10 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleJobContractServiceTest {
@@ -71,6 +69,9 @@ public class SimpleJobContractServiceTest {
     private SimpleJobPackageService simpleJobPackageService;
 
     @Mock
+    private MailingService mailingService;
+
+    @Mock
     private JobContractDao jobContractDao;
 
     @Rule
@@ -83,11 +84,11 @@ public class SimpleJobContractServiceTest {
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE,
+                .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE,
                         CREATION_DATE, CONTRACT_DESCRIPTION, null));
 
-        JobContract maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(),
-                JOB_PACKAGE.getDescription());
+        JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(),
+                JOB_PACKAGE.getDescription(), Locale.getDefault());
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -103,10 +104,11 @@ public class SimpleJobContractServiceTest {
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContract(7, CLIENT, JOB_PACKAGE, CREATION_DATE,
+                .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE, CREATION_DATE,
                         CONTRACT_DESCRIPTION, null));
 
-        JobContract maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription());
+        JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(),
+                JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), Locale.getDefault());
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -120,7 +122,7 @@ public class SimpleJobContractServiceTest {
     public void testCreateWithoutImage() {
         Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
 
-        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription());
+        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), Locale.getDefault());
 
         Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription());
     }
@@ -130,7 +132,7 @@ public class SimpleJobContractServiceTest {
         Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
 
         simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),
-                new ByteImage(image1Bytes, image1Type));
+                new ByteImage(image1Bytes, image1Type), Locale.getDefault());
 
         Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),
                 new ByteImage(image1Bytes, image1Type));

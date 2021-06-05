@@ -11,9 +11,9 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="org.springframework.security" level="DEBUG" additivity="false">
-        <appender-ref ref="STDOUT" />
-    </logger>
+<!--    <logger name="org.springframework.security" level="DEBUG" additivity="false">-->
+<!--        <appender-ref ref="STDOUT" />-->
+<!--    </logger>-->
 
     <logger name="org.postgresql" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT" />

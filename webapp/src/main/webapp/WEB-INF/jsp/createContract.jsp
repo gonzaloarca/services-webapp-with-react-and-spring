@@ -54,7 +54,7 @@
             </c:otherwise>
         </c:choose>
         <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-        <img class="header-img"
+        <img loading="lazy" class="header-img"
              src='${imageSrc}'
              alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
     </div>
@@ -73,7 +73,7 @@
                 </p>
                 <hr class="divider-bar"/>
                 <!-- Form Entries -->
-                <c:url value="/contract/package/${packId}" var="postUrl"/>
+                <c:url value="/hire/package/${packId}" var="postUrl"/>
                 <form:form class="contract-input needs-validation" modelAttribute="contractForm" novalidate="true"
                            action="${postUrl}" method="post" id="contract-form" onsubmit="disableBtn()"
                            enctype="multipart/form-data">
@@ -139,7 +139,7 @@
                 <h5 class="info-title">
                     <spring:message code="contract.create.detail.title"/>
                 </h5>
-                <img class="info-img"
+                <img loading="lazy" class="info-img"
                      src='${imageSrc}'
                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                 <div class="container">
@@ -179,8 +179,8 @@
                     <!-- Professional -->
                     <div class="row info-row">
                         <div class="info-left-col">
-                            <img class="avatar-pic" src="<c:url value="/image/user/${jobPost.user.id}"/>"
-                                 alt="avatar" loading="lazy">
+                            <img loading="lazy" class="avatar-pic" src="<c:url value="/image/user/${jobPost.user.id}"/>"
+                                 alt="avatar" >
                         </div>
                         <p class="info-right-col">
                             <c:out value="${jobPost.user.username}"/>

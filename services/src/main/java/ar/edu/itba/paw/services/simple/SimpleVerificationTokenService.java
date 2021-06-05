@@ -36,7 +36,7 @@ public class SimpleVerificationTokenService implements VerificationTokenService 
 			verificationTokenDao.deleteToken(user.getId());
 		}
 
-		return verificationTokenDao.create(user.getId());
+		return verificationTokenDao.create(user);
 	}
 
 	@Override

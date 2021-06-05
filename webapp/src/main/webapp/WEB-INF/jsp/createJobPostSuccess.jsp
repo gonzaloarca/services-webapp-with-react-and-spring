@@ -36,7 +36,7 @@
 
 <div class="content-container-transparent mt-3">
     <h3>
-        <img style="height: 30px; padding-bottom: 5px" src="<c:url value="/resources/images/add-1.svg"/>"
+        <img loading="lazy" style="height: 30px; padding-bottom: 5px" src="<c:url value="/resources/images/add-1.svg"/>"
              alt="<spring:message code="post.create.plus"/>">
         <spring:message code="jobPost.create.tileExtended"/>
     </h3>
@@ -44,7 +44,7 @@
     <div class="step-frame">
         <div style="padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center"
              class="step-container">
-            <img class="mb-4" style="height: 150px" src="<c:url value="/resources/images/success1.svg"/>"
+            <img loading="lazy" class="mb-4" style="height: 150px" src="<c:url value="/resources/images/success1.svg"/>"
                  alt="<spring:message code="post.create.success.alt"/>"/>
             <h4 class="mb-4">
                 <spring:message code="post.create.success"/>
@@ -59,7 +59,7 @@
         <div class="add-package-reminder">
             <div class="d-flex justify-content-center align-items-center">
                 <div>
-                    <img src="<c:url value="/resources/images/package1.svg"/>"
+                    <img loading="lazy" src="<c:url value="/resources/images/package1.svg"/>"
                          alt="<spring:message code="post.create.image"/>"/>
                 </div>
                 <div class="ml-3 d-flex flex-column align-items-center">

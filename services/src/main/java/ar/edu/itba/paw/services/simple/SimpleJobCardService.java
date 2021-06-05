@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
+import exceptions.JobPackageNotFoundException;
+import exceptions.JobPostNotFoundException;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -63,12 +65,17 @@ public class SimpleJobCardService implements JobCardService {
 
     @Override
     public JobCard findByPostId(long id) {
-        return jobCardDao.findByPostId(id).orElseThrow(NoSuchElementException::new);
+        return jobCardDao.findByPostId(id).orElseThrow(JobPostNotFoundException::new);
+    }
+
+    @Override
+    public JobCard findByPackageIdWithPackageInfoWithInactive(long id){
+        return jobCardDao.findByPackageIdWithPackageInfoWithInactive(id).orElseThrow(JobPackageNotFoundException::new);
     }
 
     @Override
     public JobCard findByPostIdWithInactive(long id) {
-        return jobCardDao.findByPostIdWithInactive(id).orElseThrow(NoSuchElementException::new);
+        return jobCardDao.findByPostIdWithInactive(id).orElseThrow(JobPostNotFoundException::new);
     }
 
     @Override

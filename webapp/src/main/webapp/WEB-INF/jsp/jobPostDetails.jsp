@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" buffer="64kb" %>
 <html>
 <head>
     <title>
@@ -37,18 +37,6 @@
 <c:set var="zoneValues" value="${zoneValues}" scope="request"/>
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent">
-    <%--    <nav aria-label="breadcrumb">--%>
-    <%--        <ol class="breadcrumb bg-white">--%>
-    <%--            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">--%>
-    <%--                <spring:message code="navigation.index"/>--%>
-    <%--            </a></li>--%>
-    <%--            <li class="breadcrumb-item active" aria-current="page">--%>
-    <%--                <p class="capitalize-first-letter">--%>
-    <%--                    <spring:message code="${jobPost.jobType.stringCode}"/>--%>
-    <%--                </p>--%>
-    <%--            </li>--%>
-    <%--        </ol>--%>
-    <%--    </nav>--%>
     <c:if test="${isOwner && jobPost.active}">
         <div class="flex custom-row justify-content-end align-items-center">
             <a class="edit-button text-uppercase align-items-center my-2"
@@ -90,7 +78,7 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                            <img class="d-block w-100 h-100"
+                            <img loading="lazy" class="d-block w-100 h-100"
                                  src='<c:url value="/resources/images/${jobPost.jobType.imagePath}" />'
                                  alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                         </div>
@@ -121,7 +109,7 @@
                         <c:forEach items="${imageList}" varStatus="status" var="postImageId">
                             <div class="carousel-item ${status.index == 0 ? 'active' : ''}">
                                 <spring:message code="${jobPost.jobType.stringCode}" var="jobTypeName"/>
-                                <img class="d-block w-100 h-100" loading="lazy"
+                                <img loading="lazy" class="d-block w-100 h-100"
                                      src='<c:url value="/image/post/${postImageId}"/>'
                                      alt="<spring:message code="jobCard.jobs.imageAlt" arguments="${jobTypeName}"/>">
                             </div>
@@ -267,7 +255,7 @@
                                                 <c:if test="${!isOwner && jobPost.active}">
                                                     <div class="align-self-center ml-4 mr-4 requestServiceBtn end-items-item">
                                                         <a class="btn"
-                                                           href="${pageContext.request.contextPath}/contract/package/${pack.id}"
+                                                           href="${pageContext.request.contextPath}/hire/package/${pack.id}"
                                                            role="button" type="submit">
                                                             <spring:message code="jobPost.jobs.submit"/>
                                                         </a>

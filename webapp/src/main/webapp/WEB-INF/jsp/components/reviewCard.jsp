@@ -9,8 +9,8 @@
 
 <div class="custom-row justify-content-between">
 
-    <img class="review-img" src='<c:url value="/image/user/${requestScope.data.client.id}"/>'
-         loading="lazy"
+    <img loading="lazy" class="review-img" src='<c:url value="/image/user/${requestScope.data.client.id}"/>'
+
          alt="<spring:message code="profile.image"/>">
     <div class="review-header">
         <p class="mb-0 font-weight-bold"><c:out value="${requestScope.data.client.username}"/></p>

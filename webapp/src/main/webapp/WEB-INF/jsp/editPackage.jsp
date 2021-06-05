@@ -42,9 +42,9 @@
     <div class="packages-frame">
         <div class="packages-container-wrapper">
             <div class="packages-container">
-                <img style="height: 120px; position: absolute; top: -65px; right: -40px"
+                <img loading="lazy" style="height: 120px; position: absolute; top: -65px; right: -40px"
                      src="<c:url value="/resources/images/circles1-v1.svg"/>" alt="">
-                <img style="height: 85px; position: absolute; top: 0; right: 10px"
+                <img loading="lazy" style="height: 85px; position: absolute; top: 0; right: 10px"
                      src="<c:url value="/resources/images/package1.svg"/>" alt="">
 
                 <h4 class="font-weight-bold">

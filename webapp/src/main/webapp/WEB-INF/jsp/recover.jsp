@@ -49,7 +49,7 @@
     <div class="login-card">
         <div class="login-title-container">
             <h3 class="login-title">
-                <img class="login-icon" src="${pageContext.request.contextPath}/resources/images/log-in.svg"
+                <img loading="lazy" class="login-icon" src="${pageContext.request.contextPath}/resources/images/log-in.svg"
                      alt="<spring:message code="login.symbol" />">
                 <spring:message code="recover.title"/>
             </h3>

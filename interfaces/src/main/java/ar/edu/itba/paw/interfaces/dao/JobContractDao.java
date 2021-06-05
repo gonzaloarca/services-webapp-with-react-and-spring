@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
+import ar.edu.itba.paw.models.JobContractWithImage;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -9,9 +10,9 @@ import java.util.Optional;
 
 public interface JobContractDao {
 
-    JobContract create(long clientId, long packageId, String description);
+    JobContractWithImage create(long clientId, long packageId, String description);
 
-    JobContract create(long clientId, long packageId, String description, ByteImage image);
+    JobContractWithImage create(long clientId, long packageId, String description, ByteImage image);
 
     Optional<JobContract> findById(long id);
 
@@ -35,4 +36,7 @@ public interface JobContractDao {
 
     void changeContractState(long id, JobContract.ContractState state);
 
+    Optional<JobContractWithImage> findJobContractWithImage(long id);
+
+    Optional<ByteImage> findImageByContractId(long id);
 }

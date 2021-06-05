@@ -1,4 +1,4 @@
-package jdbc;
+package jpa;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.*;
@@ -20,7 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -139,23 +138,19 @@ public class ReviewDaoJpaTest {
     )
     };
 
-    private static final byte[] IMAGE_DATA = "image_data_for_testing".getBytes(StandardCharsets.UTF_8);
-
-    private static final String IMAGE_TYPE = "image/jpg";
-
     private static final JobContract[] JOB_CONTRACTS_PACKAGE1 = new JobContract[]{
-            new JobContract(1, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(2, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(3, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(4, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(5, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(6, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(7, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Instalacion de tomacorrientes", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(8, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una tuberia en la cocina", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(9, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompieron las tuberias del baño", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(10, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(11, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContract(12, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE))
+            new JobContract(1, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una zapatilla"),
+            new JobContract(2, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles facil"),
+            new JobContract(3, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles"),
+            new JobContract(4, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una zapatilla"),
+            new JobContract(5, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles facil"),
+            new JobContract(6, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles"),
+            new JobContract(7, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Instalacion de tomacorrientes"),
+            new JobContract(8, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una tuberia en la cocina"),
+            new JobContract(9, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompieron las tuberias del baño"),
+            new JobContract(10, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera"),
+            new JobContract(11, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera denuevo"),
+            new JobContract(12, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera denuevo")
     };
 
     private static final Review[] REVIEWS = new Review[]{

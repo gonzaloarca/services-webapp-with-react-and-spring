@@ -31,7 +31,7 @@ public class NavBarControllerAdvice {
     }
 
     @ModelAttribute("zoneValues")
-    public JobPost.Zone[] zoneValues(){
+    public JobPost.Zone[] zoneValues() {
         return JobPost.Zone.values();
     }
 

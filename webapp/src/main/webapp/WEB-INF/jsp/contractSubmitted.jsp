@@ -31,7 +31,7 @@
 <%@include file="components/customNavBar.jsp" %>
 <div class="content-container-transparent page">
     <div class="message">
-        <img src='<c:url value="/resources/images/thumbs.svg" />'
+        <img loading="lazy" src='<c:url value="/resources/images/hirenet-success.png" />'
              alt="<spring:message code="contract.success.image"/>"
              class="image"/>
         <h1 class="title">
@@ -40,8 +40,9 @@
         <p class="text">
             <spring:message code="contract.success.text"/>
         </p>
-        <a class="btn btn-primary" href="${pageContext.request.contextPath}/" role="button" type="submit">
-            <spring:message code="button.return"/>
+        <a class="btn btn-primary" href="${pageContext.request.contextPath}/my-contracts/client/pending" role="button"
+           type="submit">
+            <spring:message code="button.return.contractSubmitted"/>
         </a>
     </div>
 </div>

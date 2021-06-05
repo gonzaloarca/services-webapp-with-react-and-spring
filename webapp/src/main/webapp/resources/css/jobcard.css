@@ -17,6 +17,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    height: 50px;
 }
 
 .job-card-no-reviews {

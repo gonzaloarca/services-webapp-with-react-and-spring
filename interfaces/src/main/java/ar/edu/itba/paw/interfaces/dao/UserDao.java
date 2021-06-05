@@ -38,4 +38,8 @@ public interface UserDao {
     List<JobPost.JobType> findUserJobTypes(long id);
 
     int findUserRankingInJobType(long id, JobPost.JobType jobType);
+
+    Optional<UserWithImage> findUserWithImage(long id);
+
+    Optional<ByteImage> findImageByUserId(long id);
 }

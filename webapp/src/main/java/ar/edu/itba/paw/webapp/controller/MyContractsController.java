@@ -6,21 +6,18 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobContractCard;
 import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.webapp.form.ChangeContractStateForm;
 import exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RequestMapping("/my-contracts")
 @Controller
@@ -37,11 +34,12 @@ public class MyContractsController {
     @Autowired
     private PaginationService paginationService;
 
-    @RequestMapping(value = "/{contractType}/{contractState}")
+    @RequestMapping(path = "/{contractType}/{contractState}", method = RequestMethod.GET)
     public ModelAndView getMyContracts(Principal principal,
                                        @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
                                        @PathVariable final String contractType, @PathVariable final String contractState,
-                                       @ModelAttribute("contractStates") List<JobContract.ContractState> states) {
+                                       @ModelAttribute("contractStates") List<JobContract.ContractState> states,
+                                       @ModelAttribute("changeContractStateForm") ChangeContractStateForm form) {
         if (page < 1)
             throw new IllegalArgumentException();
 
@@ -72,8 +70,11 @@ public class MyContractsController {
                 .addObject("maxPage", maxPage)
                 .addObject("contractCards", jobContractCards)
                 .addObject("isPro", userAuth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
-                .addObject("contractType", contractType);
+                .addObject("contractType", contractType)
+                .addObject("contractStateEndpoint", contractState);
     }
+
+
 
     @ModelAttribute("contractStates")
     List<JobContract.ContractState> getStates(@PathVariable final String contractState) {

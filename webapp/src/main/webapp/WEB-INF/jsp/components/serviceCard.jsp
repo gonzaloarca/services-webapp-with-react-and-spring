@@ -17,7 +17,7 @@
                     <c:url value="/image/post/${requestScope.data.postImageId}" var="imageSrc"/>
                 </c:otherwise>
             </c:choose>
-            <img class="card-image-top service-img"
+            <img loading="lazy" class="card-image-top service-img"
                  src='${imageSrc}'
                  alt="<spring:message code="profile.service.image"/>">
         </div>
@@ -66,27 +66,30 @@
             </div>
         </div>
     </a>
-    <sec:authorize url="/job/${requestScope.data.jobPost.id}/edit">
-        <div class="service-controls-container">
-            <a href="<c:url value="/job/${requestScope.data.jobPost.id}/edit"/>"
-               class="btn service-control-edit btn-link text-uppercase">
-                <i class="fas fa-edit"></i>
-                <spring:message code="edit"/>
-            </a>
+    <c:if test="${requestScope.isEditable}">
+        <sec:authorize url="/job/${requestScope.data.jobPost.id}/edit">
+            <div class="service-controls-container">
+                <a href="<c:url value="/job/${requestScope.data.jobPost.id}/edit"/>"
+                   class="btn service-control-edit btn-link text-uppercase">
+                    <i class="fas fa-edit"></i>
+                    <spring:message code="edit"/>
+                </a>
 
-                <%--@elvariable id="deleteJobPostForm" type="ar.edu.itba.paw.webapp.form.DeleteItemForm"--%>
-            <form:form modelAttribute="deleteJobPostForm" cssClass="w-100" action="/job/delete" method="post"
-                       cssStyle="margin-bottom: 0">
-                <button type="submit" class="btn service-control-delete text-uppercase w-100">
-                    <i class="fas fa-trash-alt"></i>
-                    <spring:message code="delete"/>
-                </button>
+                    <%--@elvariable id="deleteJobPostForm" type="ar.edu.itba.paw.webapp.form.DeleteItemForm"--%>
+                <form:form modelAttribute="deleteJobPostForm" cssClass="w-100" action="/job/delete" method="post"
+                           cssStyle="margin-bottom: 0">
+                    <button type="submit" class="btn service-control-delete text-uppercase w-100">
+                        <i class="fas fa-trash-alt"></i>
+                        <spring:message code="delete"/>
+                    </button>
 
-                <form:hidden path="id" value="${requestScope.data.jobPost.id}"/>
-                <form:hidden path="returnURL" value="${requestScope.returnURL}"/>
-            </form:form>
-        </div>
-    </sec:authorize>
+                    <form:hidden path="id" value="${requestScope.data.jobPost.id}"/>
+                    <form:hidden path="returnURL" value="${requestScope.returnURL}"/>
+                </form:form>
+            </div>
+        </sec:authorize>
+    </c:if>
+
 
 
 </div>

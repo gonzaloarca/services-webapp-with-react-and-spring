@@ -1,4 +1,4 @@
-package jdbc;
+package jpa;
 
 import config.TestConfig;
 import org.junit.Test;

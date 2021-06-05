@@ -11,7 +11,7 @@
 <!-- Sacado de https://getbootstrap.com/docs/4.6/components/navbar/ -->
 <nav class="navbar navbar-expand-lg navbar-dark ${requestScope.withoutColor? 'transparent-navbar':'navbar-color'}">
     <a class="navbar-brand" href="${pageContext.request.contextPath}/">
-        <img style="height: 90%" src="${pageContext.request.contextPath}/resources/images/hirenet-logo-nav-1.svg"
+        <img loading="lazy" style="height: 90%" src="${pageContext.request.contextPath}/resources/images/hirenet-logo-nav-1.svg"
              alt="<spring:message code="navigation.logo"/>"/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -95,7 +95,7 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                     <div class="navbar-modal-container">
-                                        <img class="navbar-modal-icon"
+                                        <img loading="lazy" class="navbar-modal-icon"
                                              src="${pageContext.request.contextPath}/resources/images/location2.svg"
                                              alt="<spring:message code="navigation.modal.locationicon"/>"/>
                                         <h5 class="my-4 font-weight-bold">
@@ -158,13 +158,13 @@
                 <button type="button" class="btn dropdown-toggle navbar-dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false" id="navbarDropdown">
-                    <img class="navbar-user-img" loading="lazy"
+                    <img loading="lazy" class="navbar-user-img"
                          src="<c:url value="/image/user/${currentUser.id}"/>"
                          alt="avatar" id="navbar-avatar">
                 </button>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="navbarDropdown">
                     <div class="navbar-dropdown-details">
-                        <img class="navbar-user-img" loading="lazy"
+                        <img loading="lazy" class="navbar-user-img"
                              src="<c:url value="/image/user/${currentUser.id}"/>"
                              alt="avatar">
                         <div>
@@ -278,17 +278,6 @@
             } else {
                 querySearch.setCustomValidity("");
             }
-
-            // if (querySearch.value === "") {
-            //     $('#queryNavError')[0].style.display = 'inherit';
-            //     querySearch.setCustomValidity("error");
-            //     event.preventDefault();
-            //     event.stopPropagation();
-            //     return false;
-            // } else {
-            //     $('#queryNavError')[0].style.display = 'none';
-            //     querySearch.setCustomValidity("");
-            // }
 
             $("#search-button").attr("disabled", true);
         })

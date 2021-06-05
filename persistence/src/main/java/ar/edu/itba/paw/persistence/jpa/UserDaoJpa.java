@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.persistence.utils.ImageDataConverter;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -26,9 +25,9 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public User register(String email, String password, String username, String phone, ByteImage image) {
-        final User user = new User(email, username, phone, true, false, image, LocalDateTime.now(), password);
-        em.persist(user);
-        return user;
+        final UserWithImage userWithImage = new UserWithImage(email, username, phone, true, false, image, LocalDateTime.now(), password);
+        em.persist(userWithImage);
+        return new User(userWithImage);
     }
 
     @Override
@@ -66,14 +65,18 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<User> updateUserById(long id, String name, String phone, ByteImage image) {
-        Optional<User> aux = findById(id);
-        if (aux.isPresent()) {
-            aux.get().setUsername(name);
-            aux.get().setPhone(phone);
-            aux.get().setByteImage(image);
-            em.persist(aux.get());
-        }
-        return aux;
+        UserWithImage userWithImage = em.find(UserWithImage.class, id);
+
+        if(userWithImage == null)
+            return Optional.empty();
+
+        userWithImage.setUsername(name);
+        userWithImage.setPhone(phone);
+        userWithImage.setByteImage(image);
+
+        em.persist(userWithImage);
+
+        return Optional.of(new User(userWithImage));
     }
 
     @Override
@@ -153,7 +156,6 @@ public class UserDaoJpa implements UserDao {
     @Override
     public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
 
-        //TODO: SE PUEDE PASAR A HSQLDB? O ES MUY COMPLICADA?
         String sqlQuery = new StringBuilder()
                 .append("SELECT rank FROM (")
                 .append("         SELECT user_id, ROW_NUMBER() OVER () AS rank")
@@ -175,4 +177,13 @@ public class UserDaoJpa implements UserDao {
         return result;
     }
 
+    @Override
+    public Optional<UserWithImage> findUserWithImage(long id) {
+        return Optional.ofNullable(em.find(UserWithImage.class, id));
+    }
+
+    @Override
+    public Optional<ByteImage> findImageByUserId(long id){
+        return Optional.ofNullable(em.createQuery("SELECT u.byteImage FROM UserWithImage u WHERE u.id = :id",ByteImage.class).setParameter("id",id).getSingleResult());
+    }
 }
