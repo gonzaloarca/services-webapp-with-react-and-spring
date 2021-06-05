@@ -4,9 +4,9 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
-import exceptions.JobContractNotFoundException;
-import exceptions.JobPackageNotFoundException;
-import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -170,6 +170,6 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public Optional<ByteImage> findImageByContractId(long id) {
-        return Optional.ofNullable(em.createQuery("SELECT contract.byteImage FROM JobContract contract WHERE contract.id = :id",ByteImage.class).setParameter("id",id).getSingleResult());
+        return Optional.ofNullable(em.createQuery("SELECT contract.byteImage FROM JobContractWithImage contract WHERE contract.id = :id",ByteImage.class).setParameter("id",id).getSingleResult());
     }
 }

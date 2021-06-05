@@ -5,9 +5,8 @@ import ar.edu.itba.paw.interfaces.services.JobPostImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobPostImage;
-import exceptions.ImageNotFoundException;
-import exceptions.JobPackageNotFoundException;
-import exceptions.JobPostImageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobPostImageNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/image")

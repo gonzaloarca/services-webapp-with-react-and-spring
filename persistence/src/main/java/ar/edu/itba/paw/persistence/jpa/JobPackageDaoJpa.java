@@ -1,17 +1,15 @@
 package ar.edu.itba.paw.persistence.jpa;
 
-import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
-import exceptions.JobPostNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobPostNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;

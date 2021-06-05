@@ -3,12 +3,10 @@ package ar.edu.itba.paw.services.utils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.models.*;
-import exceptions.MailCreationException;
-import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.MailCreationException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -92,7 +90,7 @@ public class MailingServiceSpring implements MailingService {
     @Override
     public void sendContractEmail(JobContractWithImage jobContract, Locale locale) {
         DataSource attachment = null;
-        ByteImage image = jobContract.getImage();
+        ByteImage image = jobContract.getByteImage();
         JobPackage jobPack = jobContract.getJobPackage();
         JobPost jobPost = jobPack.getJobPost();
 
@@ -163,7 +161,7 @@ public class MailingServiceSpring implements MailingService {
     @Override
     public void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale) {
         DataSource attachment = null;
-        ByteImage image = jobContract.getImage();
+        ByteImage image = jobContract.getByteImage();
 
         if (imageService.isValidImage(image)) {
             attachment = new ByteArrayDataSource(image.getData(), image.getType());

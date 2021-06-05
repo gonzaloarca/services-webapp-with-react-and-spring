@@ -172,9 +172,9 @@ public class UserDaoJpa implements UserDao {
 
         final Query query = em.createNativeQuery(sqlQuery);
         @SuppressWarnings("unchecked")
-        BigInteger result = (BigInteger) query.setParameter("jobType", jobType.getValue())
-                .setParameter("id", id).getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
-        return result.intValue();
+        int result = (int) query.setParameter("jobType", jobType.getValue())
+                .setParameter("id", id).getResultList().stream().findFirst().orElse(0);
+        return result;
     }
 
     @Override
