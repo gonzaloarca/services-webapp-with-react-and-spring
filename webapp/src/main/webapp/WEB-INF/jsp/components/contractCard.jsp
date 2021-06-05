@@ -216,9 +216,10 @@
 
             </form:form>
 
-
+            <p id="details-description-text-${contractCard.jobContract.id}" style="display: none"><c:out value="${contractCard.jobContract.description}"/></p>
+            <p id="image-source-${contractCard.jobContract.id}" style="display: none"><c:out value="${imageSrc}"/></p>
             <a class="btn contract-control-details btn-link text-uppercase"
-               onclick='openDetailsModal("<c:out value="${contractCard.jobContract.description}"/>", "<c:out value="${imageSrc}"/>")'>
+               onclick='openDetailsModal(${contractCard.jobContract.id})'>
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
                 <p>
                     <spring:message code="mycontract.details"/>
@@ -291,7 +292,8 @@
             </div>
         </div>
         <%--        Modal de detalles de contrato--%>
-
+        <p id="details-description-text" hidden><c:out value="${contractCard.jobContract.description}"/></p>
+        <p id="image-source" hidden><c:out value="${imageSrc}"/></p>
         <div class="modal fade" tabindex="-1" id="details-modal"
              aria-labelledby="modal" aria-hidden="true">
             <div id="details-modal-dialog" class="modal-dialog modal-lg modal-dialog-centered">
@@ -331,12 +333,14 @@
                 $('#contact-modal').modal('show');
             }
 
-            function openDetailsModal(description, image) {
+            function openDetailsModal(contractId) {
                 const imageElem = $('#details-modal-image');
                 const imageHeader = $('#details-modal-image-header');
                 const imageContainer = $('#details-image-container');
                 const descriptionContainer = $('#details-description-container');
                 const modalDialog = $('#details-modal-dialog');
+                const description = $('#details-description-text-' + contractId).text()
+                const image = $('#image-source-' + contractId).text()
 
                 if (image === "") {
                     imageContainer.hide();
