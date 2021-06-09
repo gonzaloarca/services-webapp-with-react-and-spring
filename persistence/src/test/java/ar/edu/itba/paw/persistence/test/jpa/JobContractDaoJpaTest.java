@@ -144,6 +144,8 @@ public class JobContractDaoJpaTest {
 
     private static final String IMAGE_TYPE = "image/jpg";
 
+    private static final ByteImage CONTRACT1_IMAGE = new ByteImage(new byte[]{1, 2, 3, 4, 5, 6},"png");
+
     private static final List<JobContract.ContractState> ALL_STATES = Arrays.asList(JobContract.ContractState.values());
 
     //Se inicializan con state en pending
@@ -626,6 +628,46 @@ public class JobContractDaoJpaTest {
         Assert.assertEquals(rejectedQty,1);
         Assert.assertEquals(dbContract,new JobContract(JOB_CONTRACTS_PACKAGE1[0]));
         Assert.assertEquals(dbContract.getState(), state);
+    }
+
+    @Test
+    public void testFindJobContractWithImage(){
+        Optional<JobContractWithImage> jobContract = jobContractDaoJpa.findJobContractWithImage(JOB_CONTRACTS_PACKAGE1[0].getId());
+        Assert.assertTrue(jobContract.isPresent());
+        Assert.assertEquals(CONTRACT1_IMAGE,jobContract.get().getByteImage());
+
+    }
+
+    @Test
+    public void testFindJobContractWithImageWithNonExistentId(){
+        Optional<JobContractWithImage> jobContract = jobContractDaoJpa.findJobContractWithImage(NON_EXISTENT_ID);
+        Assert.assertFalse(jobContract.isPresent());
+    }
+
+    @Test
+    public void testFindImageByContractId(){
+        Optional<ByteImage> jobContract = jobContractDaoJpa.findImageByContractId(JOB_CONTRACTS_PACKAGE1[0].getId());
+        Assert.assertTrue(jobContract.isPresent());
+        Assert.assertEquals(CONTRACT1_IMAGE,jobContract.get());
+    }
+
+    @Test
+    public void testFindImageByContractIdWithNonExistentId(){
+        Optional<ByteImage> jobContract = jobContractDaoJpa.findImageByContractId(NON_EXISTENT_ID);
+        Assert.assertFalse(jobContract.isPresent());
+    }
+
+    @Test
+    public void testFindClientByContractId() {
+        Optional<User> client = jobContractDaoJpa.findClientByContractId(JOB_CONTRACTS_PACKAGE1[0].getId());
+        Assert.assertTrue(client.isPresent());
+        Assert.assertEquals(CLIENT,client.get());
+    }
+
+    @Test
+    public void testFindClientByContractIdWithNonExistentId() {
+        Optional<User> client = jobContractDaoJpa.findClientByContractId(NON_EXISTENT_ID);
+        Assert.assertFalse(client.isPresent());
     }
 
 }

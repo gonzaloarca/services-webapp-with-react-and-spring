@@ -170,6 +170,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public Optional<ByteImage> findImageByContractId(long id) {
-        return Optional.ofNullable(em.createQuery("SELECT contract.byteImage FROM JobContractWithImage contract WHERE contract.id = :id",ByteImage.class).setParameter("id",id).getSingleResult());
+        List<ByteImage> resultList = em.createQuery("SELECT contract.byteImage FROM JobContractWithImage contract WHERE contract.id = :id", ByteImage.class).setParameter("id", id).getResultList();
+        return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
+
     }
 }
