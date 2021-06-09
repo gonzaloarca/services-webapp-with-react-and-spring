@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.models.exceptions;
 
-public class VerificationTokenExpiredException extends RuntimeException{
+public class ExpiredTokenException extends RuntimeException{
 
     private static final String MESSAGE = "Token has expired";
 
-    public VerificationTokenExpiredException() {
+    public ExpiredTokenException() {
         super(MESSAGE);
     }
 }

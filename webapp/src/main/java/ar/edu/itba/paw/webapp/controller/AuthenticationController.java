@@ -4,11 +4,11 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.LoginForm;
+import ar.edu.itba.paw.webapp.form.PasswordChangeForm;
 import ar.edu.itba.paw.webapp.form.RecoverForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotVerifiedException;
-import ar.edu.itba.paw.models.exceptions.VerificationTokenExpiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class AuthenticationController {
     private ImageService imageService;
 
     @Autowired
-    private VerificationTokenService verificationTokenService;
+    private TokenService tokenService;
 
     @Autowired
     private LocaleResolver localeResolver;
@@ -108,11 +108,11 @@ public class AuthenticationController {
             authenticationLogger.debug("User already verified");
             return new ModelAndView("error/404");
         }
-        try {
-            authenticationLogger.debug("verifying token: {} for user:{}",token,user.getId());
-            verificationTokenService.verifyToken(user, token);
-        } catch (VerificationTokenExpiredException e) {
-            authenticationLogger.debug("Token expired");
+
+        authenticationLogger.debug("verifying verification token: {} for user:{}",token,user.getId());
+
+        if(!tokenService.verifyVerificationToken(user, token)) {
+            authenticationLogger.debug("Verification token expired");
             return mav.addObject("expired", true);
         }
 
@@ -133,8 +133,50 @@ public class AuthenticationController {
         }
 
         authenticationLogger.debug("Recovering password for email: {}", form.getEmail());
-        userService.recoverUserPassword(form.getEmail(), localeResolver.resolveLocale(servletRequest));
+        userService.recoverUserAccount(form.getEmail(), localeResolver.resolveLocale(servletRequest));
 
         return new ModelAndView("recover").addObject("confirmed", true);
     }
+
+    @RequestMapping(value = "/change_password", method = RequestMethod.GET)
+    public ModelAndView changePassword(@RequestParam("user_id") final long user_id, @RequestParam("token") final String token,
+                                       @ModelAttribute("passwordChangeForm") PasswordChangeForm passwordChangeForm) {
+        ModelAndView mav = new ModelAndView("changePassword")
+                .addObject("user_id", user_id)
+                .addObject("token", token);
+
+        authenticationLogger.debug("verifying recovery token: {} for user:{}",token,user_id);
+
+        if(!tokenService.verifyRecoveryToken(user_id, token)) {
+            authenticationLogger.debug("Recovery token expired");
+            return mav.addObject("expired", true);
+        }
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/change_password", method = RequestMethod.POST)
+    public ModelAndView changePasswordPost(@RequestParam("user_id") final long user_id, @RequestParam("token") final String token,
+                                       @Valid @ModelAttribute("passwordChangeForm") PasswordChangeForm passwordChangeForm,
+                                       final BindingResult errors) {
+
+        if (errors.hasErrors()) {
+            authenticationLogger.debug("Password change form has errors: {}", errors.getAllErrors().toString());
+            return changePassword(user_id, token, passwordChangeForm);
+        }
+
+        ModelAndView mav = new ModelAndView("changePassword");
+
+        authenticationLogger.debug("verifying recovery token: {} for user:{}",token,user_id);
+
+        if(!tokenService.verifyRecoveryToken(user_id, token)) {
+            authenticationLogger.debug("Recovery token expired");
+            return mav.addObject("expired", true);
+        }
+
+        userService.recoverUserPassword(user_id, passwordChangeForm.getNewPass());
+
+        return mav.addObject("success", true);
+    }
+
 }

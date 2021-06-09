@@ -39,7 +39,9 @@ public interface UserService {
 
     List<AnalyticRanking> findUserAnalyticRankings(long id);
 
-    void recoverUserPassword(String email, Locale locale);
+    void recoverUserAccount(String email, Locale locale);
+
+    void recoverUserPassword(long user_id, String password);
 
     UserWithImage findUserWithImage(long id);
 
