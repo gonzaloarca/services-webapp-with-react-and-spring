@@ -1,7 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" buffer="256kb"%>
+<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" buffer="256kb" %>
 <html>
 <head>
     <title>
@@ -81,18 +81,32 @@
                     </h3>
                 </div>
                 <hr class="hr1"/>
-                <c:if test="${param.category != -1}">
-                    <div class="unselect-category">
-                        <span class="mr-2"><spring:message code="search.filteringBy"/></span>
-                        <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
-                            <div class="filter-chip">
-                                <spring:message code="${categories[param.category].stringCode}"/>
-                                <i class="fa fa-times-circle ml-1" aria-hidden="true"></i>
+                <div class="custom-row justify-content-between">
+                    <div>
+                        <c:if test="${param.category != -1}">
+                            <div class="unselect-category">
+                                <span class="mr-2"><spring:message code="search.filteringBy"/></span>
+                                <a href="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1">
+                                    <div class="filter-chip">
+                                        <spring:message code="${categories[param.category].stringCode}"/>
+                                        <i class="fa fa-times-circle ml-1" aria-hidden="true"></i>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
-                    </div>
 
-                </c:if>
+                        </c:if>
+                    </div>
+                    <div class="custom-row">
+                        <p class="my-auto mr-3"><spring:message code="jobCard.orderBy"/></p>
+                        <select class="custom-select" style="width: 240px" onchange="if(this.value) window.location.href = this.value">
+                            <c:forEach items="${orderByValues}" var="orderBy">
+                                <option selected="${orderBy.value == param.orderBy}"value="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1&orderBy=${orderBy.value}">
+                                    <spring:message code="${orderBy.stringCode}"/>
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
                 <div class="job-display-container">
                     <c:choose>
                         <c:when test="${jobCards.size() > 0}">
@@ -139,5 +153,8 @@
     </div>
 </div>
 <jsp:include page="components/footer.jsp"/>
+
+<script>
+</script>
 </body>
 </html>

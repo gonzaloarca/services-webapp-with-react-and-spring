@@ -31,10 +31,10 @@ public class SimpleJobCardServiceTest {
         SimpleJobCardService spy = Mockito.spy(simpleJobCardService);
         Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, HirenetUtils.ALL_PAGES, Locale.getDefault());
+        spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, null, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).search(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(new ArrayList<>()), Mockito.eq(HirenetUtils.ALL_PAGES));
+                Mockito.eq(new ArrayList<>()), Mockito.eq(null), Mockito.eq(HirenetUtils.ALL_PAGES));
     }
 
     @Test
@@ -42,9 +42,9 @@ public class SimpleJobCardServiceTest {
         SimpleJobCardService spy = Mockito.spy(simpleJobCardService);
         Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        spy.search(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), HirenetUtils.ALL_PAGES, Locale.getDefault());
+        spy.search(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), null, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).searchWithCategory(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(HirenetUtils.ALL_PAGES));
+                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(null), Mockito.eq(HirenetUtils.ALL_PAGES));
     }
 }

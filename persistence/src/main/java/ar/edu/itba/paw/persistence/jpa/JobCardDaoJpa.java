@@ -56,15 +56,15 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     @Override
-    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, int page) {
-        return searchWithCategory(query, zone, null, similarTypes, page);
+    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page) {
+        return searchWithCategory(query, zone, null, similarTypes, orderBy, page);
     }
 
     @Override
-    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
+    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards");
 
-        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, orderBy);
 
         return executePageQuery(page, nativeQuery);
     }
@@ -124,7 +124,7 @@ public class JobCardDaoJpa implements JobCardDao {
     public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards");
 
-        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, JobCard.OrderBy.BETTER_QUALIFIED); // no importa el orden
 
         @SuppressWarnings("unchecked")
         BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
@@ -157,7 +157,7 @@ public class JobCardDaoJpa implements JobCardDao {
                 ).collect(Collectors.toList());
     }
 
-    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery) {
+    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery, JobCard.OrderBy orderBy) {
         sqlQuery.append(" WHERE (UPPER(post_title) LIKE UPPER('%'|| :query ||'%')");
 
         if (!similarTypes.isEmpty()) {
@@ -172,8 +172,23 @@ public class JobCardDaoJpa implements JobCardDao {
         if (jobType != null)
             sqlQuery.append(" AND post_job_type = :type");
 
-        sqlQuery.append(" GROUP BY job_cards.rating,job_cards.post_id");
-        sqlQuery.append(" ORDER BY rating DESC");
+        sqlQuery.append(" GROUP BY job_cards.rating, job_cards.post_id, job_cards.post_contract_count");
+
+        switch (orderBy) {
+            case BETTER_QUALIFIED:
+                sqlQuery.append(" ORDER BY job_cards.rating DESC");
+                break;
+            case WORST_QUEALIFIED:
+                sqlQuery.append(" ORDER BY job_cards.rating ASC");
+                break;
+            case MOST_HIRED:
+                sqlQuery.append(" ORDER BY job_cards.post_contract_count DESC");
+                break;
+            case LEAST_HIRED:
+                sqlQuery.append(" ORDER BY job_cards.post_contract_count ASC");
+                break;
+            default:
+        }
 
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
                 .setParameter("query", query)

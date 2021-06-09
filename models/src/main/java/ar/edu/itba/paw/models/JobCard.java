@@ -117,4 +117,27 @@ public class JobCard implements Serializable {
     public int hashCode() {
         return Objects.hash(jobPost);
     }
+
+    public enum OrderBy{
+        MOST_HIRED("jobCard.orderBy.MOST_HIRED"),
+        LEAST_HIRED("jobCard.orderBy.LEAST_HIRED"),
+        BETTER_QUALIFIED("jobCard.orderBy.BETTER_QUALIFIED"),
+        WORST_QUEALIFIED("jobCard.orderBy.WORST_QUEALIFIED");
+
+        private final String stringCode;
+        private final int value;
+
+        OrderBy(final String stringCode) {
+            this.stringCode = stringCode;
+            this.value = ordinal();
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public String getStringCode() {
+            return stringCode;
+        }
+    }
 }

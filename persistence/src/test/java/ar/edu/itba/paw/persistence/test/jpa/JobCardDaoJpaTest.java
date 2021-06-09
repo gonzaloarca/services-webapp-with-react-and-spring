@@ -200,7 +200,7 @@ public class JobCardDaoJpaTest {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.values()[1];
 
-        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(SEARCH_ELECTRICISTA_COUNT, jobCards.size());
@@ -210,7 +210,7 @@ public class JobCardDaoJpaTest {
     public void testSearchWithNullZone() {
         String title = "Electricista";
 
-        jobCardDaoJpa.search(title, null, new ArrayList<>(), HirenetUtils.ALL_PAGES);
+        jobCardDaoJpa.search(title, null, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
 
     }
 
@@ -219,7 +219,7 @@ public class JobCardDaoJpaTest {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.values()[1];
 
-        jobCardDaoJpa.search(title, zone, null, HirenetUtils.ALL_PAGES);
+        jobCardDaoJpa.search(title, zone, null, JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
     }
 
     @Test
@@ -227,7 +227,7 @@ public class JobCardDaoJpaTest {
         String title = "electr";
         JobPost.Zone zone = JobPost.Zone.values()[1];
 
-        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(ELECTRICITY_AND_CARPENTRY_POST_COUNT, jobCards.size());
@@ -239,7 +239,7 @@ public class JobCardDaoJpaTest {
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
 
-        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
@@ -251,7 +251,7 @@ public class JobCardDaoJpaTest {
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
 
-        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
@@ -323,7 +323,7 @@ public class JobCardDaoJpaTest {
 
         Assert.assertEquals(Math.ceil((double) TOTAL_JOB_CARDS_USER_ID_3 / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
-    
+
     @Test
     public void testFindMaxPageByNonExistingUserId() {
 

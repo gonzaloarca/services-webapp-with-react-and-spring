@@ -518,7 +518,7 @@ h3 {
 .job-display-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-between;
 }
 
 .contract-control-accept {

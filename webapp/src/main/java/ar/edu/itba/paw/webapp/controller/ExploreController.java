@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.JobCardService;
 import ar.edu.itba.paw.interfaces.services.PaginationService;
+import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
@@ -57,8 +58,8 @@ public class ExploreController {
             throw new IllegalArgumentException();
         }
 
-        int zone;
         int category = form.getCategory();
+        int zone;
         try {
             zone = Integer.parseInt(form.getZone());
         } catch (NumberFormatException e) {
@@ -71,20 +72,20 @@ public class ExploreController {
             return new ModelAndView(mav.getViewName()).addObject("pickedZone", JobPost.Zone.values()[zone])
                     .addObject("categories", JobPost.JobType.values());
         }
-        String query = form.getQuery();
 
         final ModelAndView searchMav = new ModelAndView("search");
         searchMav
                 .addObject("categories", JobPost.JobType.values())
-                .addObject("pickedZone", JobPost.Zone.values()[zone]);
+                .addObject("pickedZone", JobPost.Zone.values()[zone])
+                .addObject("orderByValues", JobCard.OrderBy.values());
         int maxPage = paginationService.findMaxPageJobPostsSearch(form.getQuery(), zone, category, localeResolver.resolveLocale(request));
         searchMav
                 .addObject("maxPage", maxPage)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage));
 
-        mainLogger.debug("Searching job cards with query: {}, zone: {}, category: {} and page: {}", query, zone, category, page);
+        mainLogger.debug("Searching job cards with query: {}, zone: {}, category: {} and page: {}", form.getQuery(), zone, category, page);
 
-        searchMav.addObject("jobCards", jobCardService.search(query, zone, category, page - 1,
+        searchMav.addObject("jobCards", jobCardService.search(form.getQuery(), zone, category, JobCard.OrderBy.values()[form.getOrderBy()], page - 1,
                 localeResolver.resolveLocale(request)));
         return searchMav;
     }
@@ -95,8 +96,8 @@ public class ExploreController {
                 .addObject("categories", JobPost.JobType.values());
     }
 
-    @RequestMapping(path ="/**")
-    public ModelAndView notFound404(){
+    @RequestMapping(path = "/**")
+    public ModelAndView notFound404() {
         return new ModelAndView("error/404");
     }
 
