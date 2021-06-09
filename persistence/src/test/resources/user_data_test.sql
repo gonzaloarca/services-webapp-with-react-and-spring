@@ -115,4 +115,7 @@ INSERT INTO review(contract_id, review_rate, review_title, review_description,re
 INSERT INTO review(contract_id, review_rate, review_title, review_description,review_creation_date) VALUES (6, 2, 'Medio pelo', 'Resolvio todo de forma ideal','2021-05-04 01:09:46.0');
 INSERT INTO review(contract_id, review_rate, review_title, review_description,review_creation_date) VALUES (7, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos','2021-05-04 01:09:46.0');
 INSERT INTO review(contract_id, review_rate, review_title, review_description,review_creation_date) VALUES (8, 2, 'Medio pelo', 'Resolvio todo de forma ideal','2021-05-04 01:09:46.0');
+
+--Verification tokens
+INSERT INTO verification_token(user_id, token, creation_date) VALUES (2, 'ABCDEFGHIJK', NOW());
 COMMIT;

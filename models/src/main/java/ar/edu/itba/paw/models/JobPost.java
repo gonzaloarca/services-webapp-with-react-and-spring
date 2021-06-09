@@ -32,7 +32,6 @@ public class JobPost {
     @Column(name = "post_is_active", nullable = false)
     private boolean isActive;
 
-
     @ElementCollection(targetClass = JobPost.Zone.class)
     @Enumerated(EnumType.ORDINAL)
     @CollectionTable(name = "post_zone", joinColumns = {@JoinColumn(name = "post_id", nullable = false)},
