@@ -52,7 +52,7 @@ public class JobContractDaoJpaTest {
             true,
             LocalDateTime.now());
     private static final List<JobPost.Zone> ZONES =
-            new ArrayList<JobPost.Zone>(Arrays.asList(JobPost.Zone.values()[1],
+            new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1],
                     JobPost.Zone.values()[2]));
     private static final JobPost JOB_POST = new JobPost(
             1,
@@ -620,8 +620,12 @@ public class JobContractDaoJpaTest {
         JobContract.ContractState state = JobContract.ContractState.PRO_REJECTED;
         jobContractDaoJpa.changeContractState(JOB_CONTRACTS_PACKAGE1[0].getId(),state);
         em.flush();
-        int rejectedQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"contract","contract_state = " + JobContract.ContractState.PRO_REJECTED.ordinal() );
+        JobContract dbContract = em.find(JobContract.class,JOB_CONTRACTS_PACKAGE1[0].getId());
+
+        int rejectedQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"contract","contract_state = " +state.ordinal() );
         Assert.assertEquals(rejectedQty,1);
+        Assert.assertEquals(dbContract,new JobContract(JOB_CONTRACTS_PACKAGE1[0]));
+        Assert.assertEquals(dbContract.getState(), state);
     }
 
 }

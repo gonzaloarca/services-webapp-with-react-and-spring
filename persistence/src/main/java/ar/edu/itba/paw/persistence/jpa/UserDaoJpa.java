@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public class UserDaoJpa implements UserDao {
         if (aux.isPresent()) {
             aux.get().setUsername(name);
             aux.get().setPhone(phone);
-            em.persist(aux);
+            em.persist(aux.get());
         }
         return aux;
     }
@@ -98,8 +99,9 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public List<UserAuth.Role> findRoles(long id) {
-        return em.createQuery("FROM UserAuth AS u WHERE u.id = :id", UserAuth.class)
-                .setParameter("id", id).getSingleResult().getRoles();
+        List<UserAuth> resultList = em.createQuery("FROM UserAuth AS u WHERE u.id = :id", UserAuth.class)
+                .setParameter("id", id).getResultList();
+        return resultList.isEmpty() ? Collections.emptyList() : resultList.get(0).getRoles();
     }
 
     @Override
@@ -184,6 +186,7 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public Optional<ByteImage> findImageByUserId(long id){
-        return Optional.ofNullable(em.createQuery("SELECT u.byteImage FROM UserWithImage u WHERE u.id = :id",ByteImage.class).setParameter("id",id).getSingleResult());
+        List<ByteImage> resultList = em.createQuery("SELECT u.byteImage FROM UserWithImage u WHERE u.id = :id", ByteImage.class).setParameter("id", id).getResultList();
+        return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
     }
 }
