@@ -100,12 +100,16 @@ public class SimpleJobPostService implements JobPostService {
         List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone])
                 .collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
-        return jobPostDao.updateById(id, title, availableHours, parsedJobType, parsedZones);
+        if (!jobPostDao.updateById(id, title, availableHours, parsedJobType, parsedZones))
+            throw new JobPostNotFoundException();
+        else return true;
     }
 
     @Override
     public boolean deleteJobPost(long id) {
-        return jobPostDao.deleteJobPost(id);
+        if (!jobPostDao.deleteJobPost(id))
+            throw new JobPostNotFoundException();
+        else return true;
     }
 
 }
