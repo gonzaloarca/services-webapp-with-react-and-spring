@@ -9,16 +9,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -173,6 +173,8 @@ public class ReviewDaoJpaTest {
 
     private static final int TOTAL_REVIEW_COUNT_PRO = 10;
 
+    private static final int TOTAL_REVIEWS = 9;
+
     private static final int MAX_PAGE_FOR_POST = 2;
 
     private static final int MAX_REVIEWS_FOR_PACKAGE = 10;
@@ -191,22 +193,16 @@ public class ReviewDaoJpaTest {
 
     private JdbcTemplate jdbcTemplate;
 
-    @InjectMocks
     @Autowired
     private ReviewDaoJpa reviewDaoJpa;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void testCreate() {
-
-//       Mockito.when(mockContractDao.findById(Mockito.eq(JOB_CONTRACTS_PACKAGE1[10].getId()))).thenReturn(Optional.of(JOB_CONTRACTS_PACKAGE1[10]));
-//       Mockito.when(mockPostDao.findById(Mockito.eq(JOB_CONTRACTS_PACKAGE1[11].getJobPackage().getPostId()))).thenReturn(Optional.of(JOB_POST));
-
         Review newReview = new Review(4, "Muy bueno!", "Execelnte servicio", JOB_CONTRACTS_PACKAGE1[10], LocalDateTime.now());
 
         Review maybeReview = reviewDaoJpa.create(11, newReview.getRate(), newReview.getTitle(), newReview.getDescription());
@@ -219,10 +215,24 @@ public class ReviewDaoJpaTest {
         Assert.assertEquals(newReview.getJobPost().getId(), maybeReview.getJobPost().getId());
         Assert.assertEquals(newReview.getJobContract(), maybeReview.getJobContract());
         Assert.assertEquals(newReview, maybeReview);
+        Assert.assertEquals(TOTAL_REVIEWS + 1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "review"));
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void testCreateWithNullDescription() {
+        Review newReview = new Review(4, "Muy bueno!", null, JOB_CONTRACTS_PACKAGE1[10], LocalDateTime.now());
+
+        reviewDaoJpa.create(11, newReview.getRate(), newReview.getTitle(), newReview.getDescription());
+    }
+
+    @Test(expected = JobContractNotFoundException.class)
+    public void testCreateWithNonExistentContract() {
+        reviewDaoJpa.create(NON_EXISTENT_ID, 1, "title", "description");
     }
 
     @Test
     public void testFindReviewsByPostIdWithoutPagination() {
+
         List<Review> maybePostReviews = reviewDaoJpa.findReviewsByPostId(JOB_POST.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(REVIEW_POST_COUNT, maybePostReviews.size());
@@ -235,6 +245,14 @@ public class ReviewDaoJpaTest {
             Assert.assertEquals(REVIEWS[i].getJobPost().getId(), maybePostReviews.get(i).getJobPost().getId());
             Assert.assertEquals(REVIEWS[i].getJobContract().getId(), maybePostReviews.get(i).getJobContract().getId());
         }
+    }
+
+    @Test
+    public void testFindReviewsByNonExistingPostIdWithoutPagination() {
+
+        List<Review> maybePostReviews = reviewDaoJpa.findReviewsByPostId(NON_EXISTENT_ID, HirenetUtils.ALL_PAGES);
+
+        Assert.assertEquals(0, maybePostReviews.size());
     }
 
     @Test
@@ -254,20 +272,56 @@ public class ReviewDaoJpaTest {
     }
 
     @Test
+    public void testFindReviewsByNonExistingPostIdWithPagination() {
+
+        List<Review> maybePostReviews = reviewDaoJpa.findReviewsByPostId(NON_EXISTENT_ID, 0);
+
+        Assert.assertEquals(0, maybePostReviews.size());
+    }
+
+    @Test
+    public void testFindReviewsByPostIdWithPaginationNonExistingPage() {
+
+        List<Review> maybePostReviews = reviewDaoJpa.findReviewsByPostId(JOB_POST.getId(), 99999);
+
+        Assert.assertEquals(0, maybePostReviews.size());
+    }
+
+    @Test
     public void testFindReviewsByPostIdSize() {
 
         int maybeReviewsByPostIdSize = reviewDaoJpa.findJobPostReviewsSize(JOB_POST.getId());
+
         Assert.assertEquals(REVIEWS.length, maybeReviewsByPostIdSize);
     }
 
     @Test
+    public void testFindReviewsByNonExistingPostIdSize() {
+
+        int maybeReviewsByPostIdSize = reviewDaoJpa.findJobPostReviewsSize(NON_EXISTENT_ID);
+
+        Assert.assertEquals(0, maybeReviewsByPostIdSize);
+    }
+
+    @Test
     public void testFindJobPostAvgRate() {
+
         double maybeAvg = reviewDaoJpa.findJobPostAvgRate(JOB_POST.getId());
+
         Assert.assertEquals(REVIEW_POST_1_AVG, maybeAvg, 0.0001);
     }
 
     @Test
+    public void testFindNonExistingJobPostAvgRate() {
+
+        double maybeAvg = reviewDaoJpa.findJobPostAvgRate(NON_EXISTENT_ID);
+
+        Assert.assertEquals(0, maybeAvg, 0.0001);
+    }
+
+    @Test
     public void findProfessionalReviewsWithoutPagination() {
+
         List<Review> maybeUserReviews = reviewDaoJpa.findProfessionalReviews(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(TOTAL_REVIEW_COUNT_PRO, maybeUserReviews.size());
@@ -276,9 +330,17 @@ public class ReviewDaoJpaTest {
         }
     }
 
+    @Test
+    public void findNonExistingProfessionalReviewsWithoutPagination() {
+
+        List<Review> maybeUserReviews = reviewDaoJpa.findProfessionalReviews(NON_EXISTENT_ID, HirenetUtils.ALL_PAGES);
+
+        Assert.assertEquals(0, maybeUserReviews.size());
+    }
 
     @Test
     public void findProfessionalReviewsWithPagination() {
+
         List<Review> maybeUserReviews = reviewDaoJpa.findProfessionalReviews(PROFESSIONAL.getId(), 0);
 
         Assert.assertEquals(REVIEW_POST_FIRST_PAGE_COUNT, maybeUserReviews.size());
@@ -287,16 +349,33 @@ public class ReviewDaoJpaTest {
         }
     }
 
+    @Test
+    public void findNonExistingProfessionalReviewsWithPagination() {
+
+        List<Review> maybeUserReviews = reviewDaoJpa.findProfessionalReviews(NON_EXISTENT_ID, 0);
+
+        Assert.assertEquals(0, maybeUserReviews.size());
+    }
 
     @Test
     public void testFindProfessionalAvgRate() {
 
         double maybeAvg = reviewDaoJpa.findProfessionalAvgRate(JOB_POST.getId());
+
+        Assert.assertEquals(REVIEW_POST_1_AVG, maybeAvg, 0.0001);
+    }
+
+    @Test
+    public void testFindNonExistingProfessionalAvgRate() {
+
+        double maybeAvg = reviewDaoJpa.findProfessionalAvgRate(JOB_POST.getId());
+
         Assert.assertEquals(REVIEW_POST_1_AVG, maybeAvg, 0.0001);
     }
 
     @Test
     public void testFindReviewsByPackageIdWithoutPagination() {
+
         List<Review> maybeReviews = reviewDaoJpa.findReviewsByPackageId(JOB_PACKAGES[0].getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(MAX_REVIEWS_FOR_PACKAGE, maybeReviews.size());
@@ -307,7 +386,16 @@ public class ReviewDaoJpaTest {
     }
 
     @Test
+    public void testFindReviewsByNonExistingPackageIdWithoutPagination() {
+
+        List<Review> maybeReviews = reviewDaoJpa.findReviewsByPackageId(NON_EXISTENT_ID, HirenetUtils.ALL_PAGES);
+
+        Assert.assertEquals(0, maybeReviews.size());
+    }
+
+    @Test
     public void testFindReviewsByPackageIdWithPagination() {
+
         List<Review> maybeReviews = reviewDaoJpa.findReviewsByPackageId(JOB_PACKAGES[0].getId(), 0);
 
         Assert.assertEquals(REVIEW_POST_FIRST_PAGE_COUNT, maybeReviews.size());
@@ -315,6 +403,22 @@ public class ReviewDaoJpaTest {
             Assert.assertEquals(REVIEWS[i].getJobContract().getId(), maybeReviews.get(i).getJobContract().getId());
         }
 
+    }
+
+    @Test
+    public void testFindReviewsByNonExistingPackageIdWithPagination() {
+
+        List<Review> maybeReviews = reviewDaoJpa.findReviewsByPackageId(NON_EXISTENT_ID, 0);
+
+        Assert.assertEquals(0, maybeReviews.size());
+    }
+
+    @Test
+    public void testFindReviewsByPackageIdWithPaginationNonExistingPage() {
+
+        List<Review> maybeReviews = reviewDaoJpa.findReviewsByPackageId(JOB_PACKAGES[0].getId(), 99999);
+
+        Assert.assertEquals(0, maybeReviews.size());
     }
 
     @Test
@@ -326,25 +430,59 @@ public class ReviewDaoJpaTest {
     }
 
     @Test
+    public void testFindReviewByNonExistingContractId() {
+
+        Optional<Review> maybeReview = reviewDaoJpa.findReviewByContractId(NON_EXISTENT_ID);
+
+        Assert.assertFalse(maybeReview.isPresent());
+    }
+
+    @Test
     public void testFindMaxPageReviewsByUserId() {
+
         int maxPage = reviewDaoJpa.findMaxPageReviewsByUserId(PROFESSIONAL.getId());
+
         Assert.assertEquals(MAX_PAGE_FOR_PRO, maxPage);
     }
 
     @Test
+    public void testFindMaxPageReviewsByNonExistingUserId() {
+
+        int maxPage = reviewDaoJpa.findMaxPageReviewsByUserId(NON_EXISTENT_ID);
+
+        Assert.assertEquals(0, maxPage);
+    }
+
+    @Test
     public void testFindProfessionalReviewsSize() {
+
         int size = reviewDaoJpa.findProfessionalReviewsSize(PROFESSIONAL.getId());
+
         Assert.assertEquals(TOTAL_REVIEW_COUNT_PRO, size);
     }
 
     @Test
+    public void testFindNonExistingProfessionalReviewsSize() {
+
+        int size = reviewDaoJpa.findProfessionalReviewsSize(NON_EXISTENT_ID);
+
+        Assert.assertEquals(0, size);
+    }
+
+    @Test
     public void testFindMaxPageReviewsByPostId() {
+
         int maxPage = reviewDaoJpa.findMaxPageReviewsByPostId(JOB_POST.getId());
+
         Assert.assertEquals(MAX_PAGE_FOR_POST, maxPage);
     }
 
-    @Test(expected = JobContractNotFoundException.class)
-    public void testCreateWithNonExistentContract() {
-        reviewDaoJpa.create(NON_EXISTENT_ID, 1, "title", "description");
+    @Test
+    public void testFindMaxPageReviewsByNonExistingPostId() {
+
+        int maxPage = reviewDaoJpa.findMaxPageReviewsByPostId(NON_EXISTENT_ID);
+
+        Assert.assertEquals(0, maxPage);
     }
+
 }

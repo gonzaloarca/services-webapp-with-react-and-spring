@@ -68,12 +68,11 @@ public class CurrentUserController {
         currentUserControllerLogger.debug("Finding contract review for contract {}", id);
         if (!reviewService.findContractReview(id).isPresent()) {
             currentUserControllerLogger.debug("Review not found, proceeding to display view");
-            final ModelAndView mav = new ModelAndView("rateContract");
-            mav.addObject("jobCard", jobCardService.findByPostId(
+            return new ModelAndView("rateContract")
+            .addObject("jobCard", jobCardService.findByPostId(
                     jobContractService.findById(id)
-                            .getJobPackage().getPostId()));
-            mav.addObject("contractId", id);
-            return mav;
+                            .getJobPackage().getPostId()))
+            .addObject("contractId", id);
         } else {
             currentUserControllerLogger.debug("Review found, returning to my contracts");
             return new ModelAndView("redirect:/my-contracts/client/finalized");

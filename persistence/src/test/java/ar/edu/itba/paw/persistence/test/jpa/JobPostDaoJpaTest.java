@@ -4,16 +4,12 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jpa.JobPostDaoJpa;
-import ar.edu.itba.paw.persistence.jpa.UserDaoJpa;
 import ar.edu.itba.paw.persistence.test.config.TestConfig;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
@@ -30,7 +26,6 @@ import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
 
-//TODO: renombrar a JPA
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -178,14 +173,10 @@ public class JobPostDaoJpaTest {
     @Autowired
     private DataSource ds;
 
-    @InjectMocks
     @Autowired
     private JobPostDaoJpa jobPostDaoJpa;
 
     private JdbcTemplate jdbcTemplate;
-
-    @Mock
-    private UserDaoJpa mockUserDao;
 
     @PersistenceContext
     private EntityManager em;
@@ -193,7 +184,6 @@ public class JobPostDaoJpaTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -201,7 +191,7 @@ public class JobPostDaoJpaTest {
         String title = "Mi posteo";
         String availableHours = "Todos los dias";
         JobPost.JobType jobType = JobPost.JobType.PAINTING;
-        List<JobPost.Zone> zones = Arrays.asList(JobPost.Zone.ALMAGRO,JobPost.Zone.AGRONOMIA);
+        List<JobPost.Zone> zones = Arrays.asList(JobPost.Zone.ALMAGRO, JobPost.Zone.AGRONOMIA);
         JobPost testCreateJobPost = new JobPost(JOB_POST_COUNT + 1, PROFESSIONAL_USER, title, availableHours,
                 jobType, zones, LocalDateTime.now());
 
@@ -210,8 +200,6 @@ public class JobPostDaoJpaTest {
                 testCreateJobPost.getAvailableHours(),
                 testCreateJobPost.getJobType(), testCreateJobPost.getZones());
         em.flush();
-
-        //TODO: BUSCARLO EN LA BASE DE DATOS Y VERIFICAR LA CREACION?
 
         Assert.assertNotNull(jobPost);
         List<JobPost.Zone> zonesList = jobPost.getZones();
@@ -240,6 +228,50 @@ public class JobPostDaoJpaTest {
         em.flush();
     }
 
+    @Test(expected = UserNotFoundException.class)
+    public void testCreateJobPostFromNonexistentUser() {
+
+        jobPostDaoJpa.create(NONEXISTENT_ID, JOB_POST.getTitle(), JOB_POST.getAvailableHours(), JOB_POST.getJobType(),
+                JOB_POST.getZones());
+
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void testCreateWithNullTitle() {
+        String availableHours = "Todos los dias";
+        JobPost.JobType jobType = JobPost.JobType.PAINTING;
+        List<JobPost.Zone> zones = Arrays.asList(
+                JobPost.Zone.ALMAGRO,
+                JobPost.Zone.ALMAGRO);
+
+        jobPostDaoJpa.create(PROFESSIONAL_USER.getId(), null, availableHours, jobType, zones);
+        em.flush();
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void testCreateWithNullAvailableHours() {
+        String title = "Mi posteo";
+        JobPost.JobType jobType = JobPost.JobType.PAINTING;
+        List<JobPost.Zone> zones = Arrays.asList(
+                JobPost.Zone.ALMAGRO,
+                JobPost.Zone.ALMAGRO);
+
+        jobPostDaoJpa.create(PROFESSIONAL_USER.getId(), title, null, jobType, zones);
+        em.flush();
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void testCreateWithNullJobType() {
+        String title = "Mi posteo";
+        String availableHours = "Todos los dias";
+        List<JobPost.Zone> zones = Arrays.asList(
+                JobPost.Zone.ALMAGRO,
+                JobPost.Zone.ALMAGRO);
+
+        jobPostDaoJpa.create(PROFESSIONAL_USER.getId(), title, availableHours, null, zones);
+        em.flush();
+    }
+
     @Test
     public void testFindById() {
 
@@ -251,12 +283,27 @@ public class JobPostDaoJpaTest {
 
 
     @Test
+    public void testFindByNoExistingId() {
+
+        Optional<JobPost> jobPost = jobPostDaoJpa.findById(NONEXISTENT_ID);
+        Assert.assertFalse(jobPost.isPresent());
+    }
+
+    @Test
     public void testFindByUserIdWithoutPagination() {
 
         List<JobPost> jobPosts = jobPostDaoJpa.findByUserId(PROFESSIONAL_USER.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(ACTIVE_JOB_POSTS_COUNT_FOR_USER1, jobPosts.size());
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser().getId(), jobPost.getUser().getId())));
+    }
+
+    @Test
+    public void testFindByUserNoExistingIdWithoutPagination() {
+
+        List<JobPost> jobPosts = jobPostDaoJpa.findByUserId(NONEXISTENT_ID, HirenetUtils.ALL_PAGES);
+
+        Assert.assertTrue(jobPosts.isEmpty());
     }
 
     @Test
@@ -269,12 +316,28 @@ public class JobPostDaoJpaTest {
     }
 
     @Test
+    public void testFindByUserNoExistingIdWithPagination() {
+
+        List<JobPost> jobPosts = jobPostDaoJpa.findByUserId(NONEXISTENT_ID, 1);
+
+        Assert.assertTrue(jobPosts.isEmpty());
+    }
+
+    @Test
     public void testFindByUserIdWithPaginationLastPage() {
 
         List<JobPost> jobPosts = jobPostDaoJpa.findByUserId(JOB_POST.getUser().getId(), 1);
 
         Assert.assertEquals(LAST_PAGE_JOB_POST_USER1_COUNT, jobPosts.size());
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getUser().getId(), jobPost.getUser().getId())));
+    }
+
+    @Test
+    public void testFindByUserIdWithPaginationNoExistingPage() {
+
+        List<JobPost> jobPosts = jobPostDaoJpa.findByUserId(JOB_POST.getUser().getId(), 99999);
+
+        Assert.assertTrue(jobPosts.isEmpty());
     }
 
     @Test
@@ -286,12 +349,27 @@ public class JobPostDaoJpaTest {
     }
 
     @Test
+    public void testFindSizeByUserNoExistingId() {
+
+        int maybeSize = jobPostDaoJpa.findSizeByUserId(NONEXISTENT_ID);
+
+        Assert.assertEquals(0, maybeSize);
+    }
+
+    @Test
     public void testFindByJobTypeWithoutPagination() {
 
         List<JobPost> jobPosts = jobPostDaoJpa.findByJobType(JOB_POST.getJobType(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(JOB_POSTS_OF_TYPE_1_COUNT, jobPosts.size());
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFindByNullJobTypeWithoutPagination() {
+
+        jobPostDaoJpa.findByJobType(null, HirenetUtils.ALL_PAGES);
+
     }
 
     @Test
@@ -301,6 +379,21 @@ public class JobPostDaoJpaTest {
 
         Assert.assertEquals(JOB_POSTS_OF_TYPE_1_COUNT, jobPosts.size());
         jobPosts.forEach((jobPost -> Assert.assertEquals(JOB_POST.getJobType(), jobPost.getJobType())));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFindByNullJobTypeWithPagination() {
+
+        jobPostDaoJpa.findByJobType(null, 0);
+
+    }
+
+    @Test
+    public void testFindByJobTypeWithPaginationNonExistingPage() {
+
+        List<JobPost> jobPosts = jobPostDaoJpa.findByJobType(JOB_POST.getJobType(), 99999);
+
+        Assert.assertEquals(0, jobPosts.size());
     }
 
     @Test
@@ -321,6 +414,15 @@ public class JobPostDaoJpaTest {
 
         Assert.assertEquals(ACTIVE_ZONE1_PAGE1_COUNT, jobPosts.size());
         jobPosts.forEach(jobPost -> Assert.assertTrue(jobPost.getZones().contains(zone)));
+    }
+
+    @Test
+    public void testFindByZoneWithPaginationNonExistingPage() {
+
+        JobPost.Zone zone = JobPost.Zone.values()[1];
+        List<JobPost> jobPosts = jobPostDaoJpa.findByZone(zone, 99999);
+
+        Assert.assertEquals(0, jobPosts.size());
     }
 
     @Test
@@ -361,12 +463,43 @@ public class JobPostDaoJpaTest {
     }
 
     @Test
-    public void testUpdateJobPost() {
+    public void testFindAllWithPaginationNonExistingPage() {
 
-        boolean status = jobPostDaoJpa.updateById(JOB_POST.getId(), "OTRO TITULO",
-                "OTRO AVAILABLE HOURS", JOB_POST.getJobType(), JOB_POST.getZones());
+        List<JobPost> jobPosts = jobPostDaoJpa.findAll(999999);
+
+        Assert.assertEquals(0, jobPosts.size());
+    }
+
+    @Test
+    public void testFindUserByPostId() {
+
+        Optional<User> maybeUser = jobPostDaoJpa.findUserByPostId(JOB_POST.getId());
+
+        Assert.assertTrue(maybeUser.isPresent());
+        Assert.assertEquals(JOB_POST.getUser(), maybeUser.get());
+    }
+
+    @Test
+    public void testFindUserByPostNonExistingId() {
+
+        Optional<User> maybeUser = jobPostDaoJpa.findUserByPostId(NONEXISTENT_ID);
+
+        Assert.assertFalse(maybeUser.isPresent());
+    }
+
+    @Test
+    public void testUpdateJobPost() {
+        String newTitle = "OTRO TITULO";
+        String newAvailableHours = "OTRO AVAILABLE HOURS";
+
+        boolean status = jobPostDaoJpa.updateById(JOB_POST.getId(), newTitle,
+                newAvailableHours, JOB_POST.getJobType(), JOB_POST.getZones());
 
         Assert.assertTrue(status);
+        JobPost maybeJobPost = em.find(JobPost.class, JOB_POST.getId());
+        Assert.assertNotNull(maybeJobPost);
+        Assert.assertEquals(newTitle, maybeJobPost.getTitle());
+        Assert.assertEquals(newAvailableHours, maybeJobPost.getAvailableHours());
     }
 
     @Test
@@ -375,6 +508,8 @@ public class JobPostDaoJpaTest {
         boolean status = jobPostDaoJpa.deleteJobPost(JOB_POST.getId());
 
         Assert.assertTrue(status);
+        JobPost maybeJobPost = em.find(JobPost.class, JOB_POST.getId());
+        Assert.assertFalse(maybeJobPost.isActive());
     }
 
     @Test
@@ -417,13 +552,5 @@ public class JobPostDaoJpaTest {
         Optional<JobPost> jobPost = jobPostDaoJpa.findById(INACTIVE_JOB_POST.getId());
 
         Assert.assertFalse(jobPost.isPresent());
-    }
-
-    @Test(expected = UserNotFoundException.class)
-    public void testCreateJobPostFromNonexistentUser() {
-
-        jobPostDaoJpa.create(NONEXISTENT_ID, JOB_POST.getTitle(), JOB_POST.getAvailableHours(), JOB_POST.getJobType(),
-                JOB_POST.getZones());
-
     }
 }
