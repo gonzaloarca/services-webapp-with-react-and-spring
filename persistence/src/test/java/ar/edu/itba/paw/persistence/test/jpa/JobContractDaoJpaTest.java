@@ -29,6 +29,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -152,18 +154,26 @@ public class JobContractDaoJpaTest {
     //Se inicializan con state en pending
     private static final JobContractWithImage[] JOB_CONTRACTS_PACKAGE1 = new JobContractWithImage[]{
             new JobContractWithImage(1, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompio una zapatilla",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(2, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(3, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(4, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(5, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(6, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(7, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Instalacion de tomacorrientes", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(8, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio una tuberia en la cocina", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(9, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompieron las tuberias del baño", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(10, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio la caldera", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(11, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(12, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(19,CLIENT,JOB_PACKAGES[0],LocalDateTime.now(),LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA,IMAGE_TYPE) )
+            new JobContractWithImage(2, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(1),"Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(3, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(2),"Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(4, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(3),"Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(5, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(4),"Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(6, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(5),"Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(8, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(7),"Se me rompio una tuberia en la cocina", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(9, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(8),"Se me rompieron las tuberias del baño", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(10, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(9),"Se me rompio la caldera", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(11, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(10),"Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(12, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(11),"Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(19,CLIENT,JOB_PACKAGES[0],LocalDateTime.now(),LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(12),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA,IMAGE_TYPE) ),
+            new JobContractWithImage(7, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(6),"Instalacion de tomacorrientes", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(13, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(13),"Se me rompio una tuberia en la cocina", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(14, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(14),"Se me rompieron las tuberias del banio", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(15, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(15),"Se me rompio la caldera", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(16, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(16),"Se me rompio la caldera de nuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(17, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(17),"Se me rompio la caldera de nuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(18, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now().minusDays(18),"Se me rompio la caldera de nuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+
+
     };
 
     private static final int JOB_CONTRACTS_PRO1_COUNT = 19;
@@ -670,4 +680,41 @@ public class JobContractDaoJpaTest {
         Assert.assertFalse(client.isPresent());
     }
 
+    @Test
+    public void testFindByClientIdAndSortedByModificationDate() {
+        List<JobContract> jobContracts = jobContractDaoJpa.findByClientIdAndSortedByModificationDate(CLIENT.getId(),ALL_STATES,HirenetUtils.ALL_PAGES);
+        Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length,jobContracts.size());
+
+        List<JobContract> sortedContracts = Arrays.stream(JOB_CONTRACTS_PACKAGE1).sorted((o1, o2) -> o2.getLastModifiedDate().compareTo(o1.getLastModifiedDate())).map(JobContract::new).collect(Collectors.toList());
+        Assert.assertEquals(sortedContracts,jobContracts);
+    }
+
+    @Test
+    public void testFindByClientIdAndSortedByModificationDateComparingToNonSortedFails() {
+        List<JobContract> jobContracts = jobContractDaoJpa.findByClientIdAndSortedByModificationDate(CLIENT.getId(),ALL_STATES,HirenetUtils.ALL_PAGES);
+        Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length,jobContracts.size());
+
+        Assert.assertNotEquals(Arrays.stream(JOB_CONTRACTS_PACKAGE1).map(JobContract::new).collect(Collectors.toList()), jobContracts);
+    }
+
+    @Test
+    public void testFindByProIdAndSortedByModificationDate() {
+        List<JobContract> jobContracts = jobContractDaoJpa.findByProIdAndSortedByModificationDate(PROFESSIONAL.getId(),ALL_STATES,HirenetUtils.ALL_PAGES);
+        Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length,jobContracts.size());
+
+        List<JobContract> sortedContracts = Arrays.stream(JOB_CONTRACTS_PACKAGE1).sorted((o1, o2) -> o2.getLastModifiedDate().compareTo(o1.getLastModifiedDate())).map(JobContract::new).collect(Collectors.toList());
+        Assert.assertEquals(sortedContracts,jobContracts);
+    }
+
+    @Test
+    public void testFindByProIdAndSortedByModificationDateComparingToNonSortedFails() {
+        List<JobContract> jobContracts = jobContractDaoJpa.findByProIdAndSortedByModificationDate(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
+        Assert.assertFalse(jobContracts.isEmpty());
+        Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
+
+        Assert.assertNotEquals(Arrays.stream(JOB_CONTRACTS_PACKAGE1).map(JobContract::new).collect(Collectors.toList()), jobContracts);
+    }
 }

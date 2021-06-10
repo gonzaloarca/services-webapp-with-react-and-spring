@@ -372,6 +372,15 @@ public class JobPackageDaoJpaTest {
     }
 
     @Test
+    public void testDeletePackageNonExistentId() {
+        JobPackage jobPackage = JOB_PACKAGES[0];
+
+        boolean ret = jobPackageDaoJpa.deletePackage(NON_EXISTENT_ID);
+        em.flush();
+        Assert.assertFalse(ret);
+    }
+
+    @Test
     public void testFindPostByPackageId(){
         JobPackage jobPackage = JOB_PACKAGES[0];
 
