@@ -59,15 +59,18 @@
 
                 <c:choose>
                     <c:when test="${expired}">
-                        <h2>
+                        <h2 style="font-weight: bold">
                             <spring:message code="token.view.code.expired"/>
                         </h2>
                         <p class="text">
                             <spring:message code="token.view.code.invalid"/><br/>
                         </p>
+                        <a type="button" class="btn btn-primary" style="display: block;margin: 10px auto; width: 100px"
+                           href="${pageContext.request.contextPath}/"><spring:message code="navigation.index"/>
+                        </a>
                     </c:when>
                     <c:when test="${success}">
-                        <h2 style="font-size: medium">
+                        <h2 style="font-weight: bold">
                             <spring:message code="recover.success.title"/>
                         </h2>
                         <p class="text">
@@ -129,90 +132,91 @@
 
                         </form:form>
 
+                        <script>
+                            // Example starter JavaScript for disabling form submissions if there are invalid fields
+                            (function () {
+                                'use strict'
+
+                                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                var forms = document.querySelectorAll('.needs-validation')
+
+                                // Loop over them and prevent submission
+                                Array.prototype.slice.call(forms)
+                                    .forEach(function (form) {
+                                        form.addEventListener('submit', function (event) {
+                                            if (!form.checkValidity()) {
+                                                event.preventDefault()
+                                                event.stopPropagation()
+                                            }
+
+                                            form.classList.add('was-validated')
+                                        }, false)
+                                    })
+
+                                form.addEventListener('input', function () {
+                                    let passInput = document.querySelector('#newPass');
+                                    let passRepeatInput = document.querySelector('#newPassRepeat');
+                                    let message = '';
+
+                                    if (passInput.value !== passRepeatInput.value)
+                                        message = 'Passwords do not match';     //Mensaje Default
+
+                                    passRepeatInput.setCustomValidity(message);
+                                })
+                            })()
+
+                            //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
+                            function disableBtn() {
+                                var forms = document.querySelectorAll('.needs-validation');
+                                var is_valid = true;
+                                Array.prototype.slice.call(forms)
+                                    .forEach(function (form) {
+                                        if (!form.checkValidity()) {
+                                            is_valid = false;
+                                        }
+                                    })
+                                $("#submitBtn").attr("disabled", is_valid);
+                            }
+
+                            // Script for hiding/showing password on input
+                            $(document).ready(function () {
+                                $("#show_hide_password a").on('click', function (event) {
+                                    event.preventDefault();
+                                    let passwordInput = $('#show_hide_password input');
+                                    let passwordI = $('#show_hide_password i');
+                                    if (passwordInput.attr("type") === "text") {
+                                        passwordInput.attr('type', 'password');
+                                        passwordI.addClass("fa-eye").removeClass("fa-eye-slash");
+                                    } else if (passwordInput.attr("type") === "password") {
+                                        passwordInput.attr('type', 'text');
+                                        passwordI.removeClass("fa-eye");
+                                        passwordI.addClass("fa-eye-slash");
+                                    }
+                                });
+                            });
+                            $(document).ready(function () {
+                                $("#show_hide_password_repeat a").on('click', function (event) {
+                                    event.preventDefault();
+                                    let repeatInput = $('#show_hide_password_repeat input');
+                                    let repeatI = $('#show_hide_password_repeat i');
+                                    if (repeatInput.attr("type") === "text") {
+                                        repeatInput.attr('type', 'password');
+                                        repeatI.addClass("fa-eye");
+                                        repeatI.removeClass("fa-eye-slash");
+                                    } else if (repeatInput.attr("type") === "password") {
+                                        repeatInput.attr('type', 'text');
+                                        repeatI.removeClass("fa-eye");
+                                        repeatI.addClass("fa-eye-slash");
+                                    }
+                                });
+                            });
+                        </script>
+
                     </c:otherwise>
                 </c:choose>
 
         </div>
     </div>
 </div>
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-
-                    form.classList.add('was-validated')
-                }, false)
-            })
-
-        form.addEventListener('input', function () {
-            let passInput = document.querySelector('#newPass');
-            let passRepeatInput = document.querySelector('#newPassRepeat');
-            let message = '';
-
-            if (passInput.value !== passRepeatInput.value)
-                message = 'Passwords do not match';     //Mensaje Default
-
-            passRepeatInput.setCustomValidity(message);
-        })
-    })()
-
-    //Desabilitiar boton de submit cuando el form es valido (agregarlo a Form onsubmit)
-    function disableBtn() {
-        var forms = document.querySelectorAll('.needs-validation');
-        var is_valid = true;
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                if (!form.checkValidity()) {
-                    is_valid = false;
-                }
-            })
-        $("#submitBtn").attr("disabled", is_valid);
-    }
-
-    // Script for hiding/showing password on input
-    $(document).ready(function () {
-        $("#show_hide_password a").on('click', function (event) {
-            event.preventDefault();
-            let passwordInput = $('#show_hide_password input');
-            let passwordI = $('#show_hide_password i');
-            if (passwordInput.attr("type") === "text") {
-                passwordInput.attr('type', 'password');
-                passwordI.addClass("fa-eye").removeClass("fa-eye-slash");
-            } else if (passwordInput.attr("type") === "password") {
-                passwordInput.attr('type', 'text');
-                passwordI.removeClass("fa-eye");
-                passwordI.addClass("fa-eye-slash");
-            }
-        });
-    });
-    $(document).ready(function () {
-        $("#show_hide_password_repeat a").on('click', function (event) {
-            event.preventDefault();
-            let repeatInput = $('#show_hide_password_repeat input');
-            let repeatI = $('#show_hide_password_repeat i');
-            if (repeatInput.attr("type") === "text") {
-                repeatInput.attr('type', 'password');
-                repeatI.addClass("fa-eye");
-                repeatI.removeClass("fa-eye-slash");
-            } else if (repeatInput.attr("type") === "password") {
-                repeatInput.attr('type', 'text');
-                repeatI.removeClass("fa-eye");
-                repeatI.addClass("fa-eye-slash");
-            }
-        });
-    });
-</script>
 </body>
 </html>
