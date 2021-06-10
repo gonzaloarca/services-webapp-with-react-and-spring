@@ -123,15 +123,18 @@
                             </form:label>
 
                             <spring:message code="contract.create.form.date.placeholder" var="datePlaceholder"/>
-                            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                            <div class="input-group date has-validation" id="datetimepicker1" data-target-input="nearest">
                                 <form:input path="scheduledDate" id="time-input" type="text"
-                                            class="form-control datetimepicker-input"
+                                            class="form-control datetimepicker-input" required="true"
                                             data-target="#datetimepicker1" placeholder="${datePlaceholder}" data-toggle="datetimepicker"/>
                                 <div class="input-group-append" data-target="#datetimepicker1"
                                      data-toggle="datetimepicker">
                                     <div class="input-group-text" style="background-color: #485696; color: white">
                                         <i class="far fa-calendar-alt"></i>
                                     </div>
+                                </div>
+                                <div class="invalid-feedback" style="background-color: white; margin: 0">
+                                    <spring:message code="contract.create.invalid.date"/>
                                 </div>
                             </div>
                             <c:set var="localeCode" value="${pageContext.response.locale}"/>
