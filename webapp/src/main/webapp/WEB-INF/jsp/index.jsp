@@ -73,6 +73,7 @@
         </div>
     </div>
 </div>
+<a id="services" ></a>
 <div style="background-color: white" class="landing-row-shadow">
     <div class="landing-row">
         <h3><spring:message code="index.services.title"/></h3>
@@ -99,6 +100,7 @@
         <c:set var="listSize" value="${jobCardSize}" scope="request"/>
         <c:set var="maxPage" value="${maxPage}" scope="request"/>
         <c:set var="currentPages" value="${currentPages}" scope="request"/>
+        <c:set var="fragment" value="#services" scope="request"/>
         <%@include file="components/bottomPaginationBar.jsp" %>
     </div>
 </div>
