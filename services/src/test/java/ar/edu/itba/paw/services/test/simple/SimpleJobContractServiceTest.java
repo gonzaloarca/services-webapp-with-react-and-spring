@@ -225,7 +225,6 @@ public class SimpleJobContractServiceTest {
     public void testFindJobContractCardsByProIdWithNonExistentId(){
         List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
-        Mockito.doReturn(Collections.emptyList()).when(mockContractService).findByProId(999,allStates,HirenetUtils.ALL_PAGES);
 
 
         List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES);
@@ -255,8 +254,6 @@ public class SimpleJobContractServiceTest {
         List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
         Mockito.doReturn(Collections.emptyList()).when(mockContractService).findByProId(999,allStates,HirenetUtils.ALL_PAGES);
-        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
-        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 
 
         List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(999, allStates, HirenetUtils.ALL_PAGES);
