@@ -172,7 +172,7 @@ public class JobCardDaoJpa implements JobCardDao {
         if (jobType != null)
             sqlQuery.append(" AND post_job_type = :type");
 
-        sqlQuery.append(" GROUP BY job_cards.rating, job_cards.post_id, job_cards.post_contract_count");
+        sqlQuery.append(" GROUP BY job_cards.rating, job_cards.post_id, job_cards.post_contract_count, job_cards.post_creation_date");
 
         switch (orderBy) {
             case BETTER_QUALIFIED:
@@ -186,6 +186,12 @@ public class JobCardDaoJpa implements JobCardDao {
                 break;
             case LEAST_HIRED:
                 sqlQuery.append(" ORDER BY job_cards.post_contract_count ASC");
+                break;
+            case NEWEST:
+                sqlQuery.append(" ORDER BY job_cards.post_creation_date DESC");
+                break;
+            case OLDEST:
+                sqlQuery.append(" ORDER BY job_cards.post_creation_date ASC");
                 break;
             default:
         }

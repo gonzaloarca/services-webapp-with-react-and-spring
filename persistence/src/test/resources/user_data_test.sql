@@ -118,4 +118,7 @@ INSERT INTO review(contract_id, review_rate, review_title, review_description,re
 
 --Verification tokens
 INSERT INTO verification_token(user_id, token, creation_date) VALUES (2, 'ABCDEFGHIJK', NOW());
+
+--Account Recover token
+INSERT INTO recovery_token(user_id, token, creation_date) VALUES (2, 'ABCDEFGHIJK', NOW());
 COMMIT;
