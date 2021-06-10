@@ -795,7 +795,7 @@ h3 {
     color: black;
     height: 50%;
     width: 80%;
-    background-color: rgba(255, 255, 255, 0);
+    background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(3px);
     border-radius: 15px;
     margin-top: 4px;
