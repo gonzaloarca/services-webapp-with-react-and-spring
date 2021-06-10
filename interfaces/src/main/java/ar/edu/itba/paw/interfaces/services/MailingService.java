@@ -17,7 +17,7 @@ public interface MailingService {
     void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,
                                            String templateName, DataSource attachment, Locale locale);
 
-    void sendRecoverPasswordEmail(String email, String password, Locale locale);
+    void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale);
 
     void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale);
 }
