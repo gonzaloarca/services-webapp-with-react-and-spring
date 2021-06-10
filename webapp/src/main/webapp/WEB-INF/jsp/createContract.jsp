@@ -86,7 +86,7 @@
                 <c:url value="/hire/package/${packId}" var="postUrl"/>
                 <form:form class="contract-input needs-validation" modelAttribute="contractForm" novalidate="true"
                            action="${postUrl}" method="post" id="contract-form" onsubmit="disableBtn()"
-                           enctype="multipart/form-data">
+                           enctype="multipart/form-data" autocomplete="off">
 
                     <!-- Description -->
                     <div class="form-row">

@@ -6,11 +6,34 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%--Seteo de variable para formateo de fechas--%>
-<c:set var="dateStringAux" value="${contractCard.jobContract.creationDate.toLocalDate()}"/>
-<fmt:parseDate type="date" value="${dateStringAux}" var="theDate"
-               pattern="yyyy-MM-dd"/>
 <spring:message code="date.format" var="dateFormat"/>
-<fmt:formatDate value="${theDate}" pattern="${dateFormat}" var="dateFormatted"/>
+<spring:message code="time.format" var="timeFormat"/>
+<spring:message code="dateTime.format" var="dateTimeFormat"/>
+
+<c:set var="creationDateStringAux" value="${contractCard.jobContract.creationDate.toLocalDate()}"/>
+<fmt:parseDate type="date" value="${creationDateStringAux}" var="creationDate"
+               pattern="yyyy-MM-dd"/>
+<fmt:formatDate value="${creationDate}" pattern="${dateFormat}" var="creationDateFormatted"/>
+
+<c:set var="scheduledDateStringAux" value="${contractCard.jobContract.scheduledDate.toLocalDate()}"/>
+<fmt:parseDate type="date" value="${scheduledDateStringAux}" var="scheduledDate"
+               pattern="yyyy-MM-dd"/>
+<fmt:formatDate value="${scheduledDate}" pattern="${dateFormat}" var="scheduledDateFormatted"/>
+
+<c:set var="scheduledTimeStringAux" value="${contractCard.jobContract.scheduledDate.toLocalTime()}"/>
+<fmt:parseDate type="time" value="${scheduledTimeStringAux}" var="scheduledTime"
+               pattern="HH:mm"/>
+<fmt:formatDate value="${scheduledTime}" pattern="${timeFormat}" var="scheduledTimeFormatted"/>
+
+<c:set var="lastModifiedDateStringAux" value="${contractCard.jobContract.lastModifiedDate.toLocalDate()}"/>
+<fmt:parseDate type="date" value="${lastModifiedDateStringAux}" var="lastModifiedDate"
+               pattern="yyyy-MM-dd"/>
+<fmt:formatDate value="${lastModifiedDate}" pattern="${dateFormat}" var="lastModifiedDateFormatted"/>
+
+<c:set var="lastModifiedTimeStringAux" value="${contractCard.jobContract.lastModifiedDate.toLocalTime()}"/>
+<fmt:parseDate type="time" value="${lastModifiedTimeStringAux}" var="lastModifiedTime"
+               pattern="HH:mm"/>
+<fmt:formatDate value="${lastModifiedTime}" pattern="${timeFormat}" var="lastModifiedTimeFormatted"/>
 
 <%--Seteo de variables para enum de States--%>
 <c:set var="APPROVED" value="<%=JobContract.ContractState.APPROVED%>"/>
@@ -80,7 +103,7 @@
     <c:if test="${contractState == CLIENT_CANCELLED || contractState == PRO_CANCELLED
     || contractState == PRO_REJECTED || contractState == COMPLETED}">
         <div class="${stateBar}">
-            <spring:message code="${stateMessage}"/>
+            <spring:message code="${stateMessage}"/> - (<spring:message htmlEscape="true" code="dateTime.formatted" arguments="${lastModifiedDateFormatted}, ${lastModifiedTimeFormatted} "/>)
         </div>
     </c:if>
     <div class="hire-details-container">
@@ -92,7 +115,7 @@
         </div>
 
         <div class="hire-date-container">
-            <p><spring:message code="mycontracts.creationDate" arguments="${dateFormatted}"/></p>
+            <p><spring:message code="mycontracts.creationDate" arguments="${creationDateFormatted}"/></p>
         </div>
 
     </div>
@@ -116,26 +139,39 @@
                     </c:otherwise>
                 </c:choose>
                 <a href="${pageContext.request.contextPath}/job/${requestScope.jobCard.jobPost.id}">
-                    <img loading="lazy" class="card-image-top service-img"
-                         src='${imageSrc}'
-                         alt="<spring:message code="profile.service.image"/>">
+                    <div class="service-image-container">
+                        <img loading="lazy" class="card-image-top service-img"
+                             src='${imageSrc}'
+                             alt="<spring:message code="profile.service.image"/>">
+                        <div class="scheduled-container">
+                            <p style="color: black; margin: 0">
+                                <spring:message code="mycontracts.scheduledDate"/>
+                            </p>
+                            <div class="scheduled-date-container">
+                                <p class="m-0"><c:out value="${scheduledDateFormatted}"/></p>
+                                <p class="m-0"><spring:message code="time.formatted" arguments="${scheduledTimeFormatted}"/></p>
+                            </div>
+                        </div>
+                    </div>
                 </a>
             </div>
             <div class="service-info px-3">
-                <a class="service-title service-link mb-2"
-                   href="${pageContext.request.contextPath}/job/${requestScope.jobCard.jobPost.id}">
-                    <c:out value="${requestScope.jobCard.jobPost.title}"/>
-                </a>
-                <div class="justify-content-between custom-row">
-                    <p class="service-subtitle"><spring:message
-                            code="${requestScope.jobCard.jobPost.jobType.stringCode}"/></p>
-                    <div class="custom-row">
-                        <jsp:include page="components/rateStars.jsp">
-                            <jsp:param name="rate" value="${requestScope.jobCard.rating}"/>
-                        </jsp:include>
-                        <p class="ml-1 service-subtitle">
-                            (${requestScope.jobCard.reviewsCount})
-                        </p>
+                <div>
+                    <a class="service-title service-link mb-2"
+                       href="${pageContext.request.contextPath}/job/${requestScope.jobCard.jobPost.id}">
+                        <c:out value="${requestScope.jobCard.jobPost.title}"/>
+                    </a>
+                    <div class="justify-content-between custom-row">
+                        <p class="service-subtitle"><spring:message
+                                code="${requestScope.jobCard.jobPost.jobType.stringCode}"/></p>
+                        <div class="custom-row">
+                            <jsp:include page="components/rateStars.jsp">
+                                <jsp:param name="rate" value="${requestScope.jobCard.rating}"/>
+                            </jsp:include>
+                            <p class="ml-1 service-subtitle">
+                                (${requestScope.jobCard.reviewsCount})
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -175,7 +211,8 @@
             </c:if>
 
             <%--@elvariable id="changeContractStateForm" type="ar.edu.itba.paw.webapp.form.ChangeContractStateForm"--%>
-            <form:form cssClass="w-100 mb-1" action="${pageContext.request.contextPath}/contract/state/update" method="post"
+            <form:form cssClass="w-100 mb-1" action="${pageContext.request.contextPath}/contract/state/update"
+                       method="post"
                        modelAttribute="changeContractStateForm">
                 <c:if test="${isApprovable}">
 
@@ -209,14 +246,14 @@
                     <hr class="divider-bar-thick">
                 </c:if>
                 <form:hidden path="id" value="${contractCard.jobContract.id}"/>
-                <form:hidden path="id" value="${contractCard.jobContract.id}"/>
                 <form:hidden id="new-state" path="newState"/>
                 <form:hidden id="return-url" path="returnURL"
                              value="/my-contracts/${contractType}/"/>
 
             </form:form>
 
-            <p id="details-description-text-${contractCard.jobContract.id}" style="display: none"><c:out value="${contractCard.jobContract.description}"/></p>
+            <p id="details-description-text-${contractCard.jobContract.id}" style="display: none"><c:out
+                    value="${contractCard.jobContract.description}"/></p>
             <p id="image-source-${contractCard.jobContract.id}" style="display: none"><c:out value="${imageSrc}"/></p>
             <a class="btn contract-control-details btn-link text-uppercase"
                onclick='openDetailsModal(${contractCard.jobContract.id})'>
@@ -228,7 +265,8 @@
             <hr class="divider-bar-thick">
 
             <a class="btn contract-control-contact btn-link text-uppercase"
-               onclick='openContactModal("<c:out value="${name}"/>", "<c:out value="${email}" />", "<c:out value="${phone}"/>")'>
+               onclick='openContactModal("<c:out value="${name}"/>", "<c:out value="${email}"/>", "<c:out
+                       value="${phone}"/>")'>
                 <i class="fa fa-info-circle mr-1" aria-hidden="true"></i>
                 <p><spring:message code="mycontracts.contact"/></p>
             </a>
@@ -307,7 +345,8 @@
                             <p id="details-modal-image-header" class="font-weight-bold">
                                 <spring:message code="mycontracts.modal.image"/>
                             </p>
-                            <img loading="lazy" id="details-modal-image" src="" alt="<spring:message code="mycontracts.modal.image.alt"/>">
+                            <img loading="lazy" id="details-modal-image" src=""
+                                 alt="<spring:message code="mycontracts.modal.image.alt"/>">
                         </div>
                         <div id="details-description-container">
                             <p class="font-weight-bold">
