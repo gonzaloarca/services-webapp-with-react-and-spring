@@ -8,14 +8,11 @@ import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import com.sun.xml.internal.ws.encoding.xml.XMLMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -53,6 +50,7 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, ByteImage image, Locale locale) {
+
         User user = userService.findByEmail(clientEmail).orElseThrow(UserNotFoundException::new);
         JobContractWithImage jobContract;
 
