@@ -755,3 +755,9 @@ h3 {
     margin: 10px auto;
     padding: 5px 10px;
 }
+
+.success-title {
+    font-weight: bold;
+    margin-bottom: 3vh;
+    margin-top: 3vh;
+}

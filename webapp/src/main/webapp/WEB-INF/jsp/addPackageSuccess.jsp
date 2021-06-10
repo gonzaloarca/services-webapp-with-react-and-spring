@@ -46,9 +46,9 @@
              class="step-container">
             <img loading="lazy" class="mb-4" style="height: 150px" src="<c:url value="/resources/images/package-success1.svg"/>"
                  alt="<spring:message code="jobPost.packages.add.success.title"/>"/>
-            <h4 class="mb-4">
+            <h2 class="success-title">
                 <spring:message code="package.add.success"/>
-            </h4>
+            </h2>
 
             <a href="<c:url value="/job/${postId}/packages/add"/>"
                style="margin-bottom: 20px"

@@ -7,9 +7,9 @@ import java.util.Locale;
 
 public interface JobContractService {
 
-    JobContractWithImage create(String client_email, long packageId, String description, Locale locale);
+    JobContractWithImage create(String client_email, long packageId, String description, String scheduledDate, Locale locale);
 
-    JobContractWithImage create(String client_email, long packageId, String description, ByteImage image, Locale locale);
+    JobContractWithImage create(String client_email, long packageId, String description, String scheduledDate, ByteImage image, Locale locale);
 
     JobContract findById(long id);
 
@@ -19,11 +19,17 @@ public interface JobContractService {
 
     List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page);
 
+    List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
+                                                                int page);
+
     List<JobContract> findByProId(long id);
 
     List<JobContract> findByProId(long id, int page);
 
     List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page);
+
+    List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
+                                                             int page);
 
     List<JobContract> findByPostId(long id);
 

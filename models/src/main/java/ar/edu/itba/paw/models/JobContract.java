@@ -1,12 +1,13 @@
 package ar.edu.itba.paw.models;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "contract")
-public class JobContract extends JobContractAbstract{
+public class JobContract extends JobContractAbstract {
 
     @Column(name = "contract_image_type", length = 100)
     private String imageType;
@@ -14,11 +15,14 @@ public class JobContract extends JobContractAbstract{
     /*Default*/ JobContract() {
     }
 
-    public JobContract(long id, User client, JobPackage jobPackage, LocalDateTime creationDate, String description) {
+    public JobContract(long id, User client, JobPackage jobPackage, LocalDateTime creationDate,
+                       LocalDateTime scheduledDate, LocalDateTime lastModifiedDate, String description) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;
+        this.scheduledDate = scheduledDate;
+        this.lastModifiedDate = lastModifiedDate;
         this.description = description;
         this.state = ContractState.PENDING_APPROVAL;
     }
@@ -28,6 +32,8 @@ public class JobContract extends JobContractAbstract{
         this.client = jobContractWithImage.client;
         this.jobPackage = jobContractWithImage.jobPackage;
         this.creationDate = jobContractWithImage.creationDate;
+        this.scheduledDate = jobContractWithImage.scheduledDate;
+        this.lastModifiedDate = jobContractWithImage.lastModifiedDate;
         this.description = jobContractWithImage.description;
         this.state = ContractState.PENDING_APPROVAL;
     }

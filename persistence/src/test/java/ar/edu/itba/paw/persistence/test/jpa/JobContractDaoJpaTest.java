@@ -27,6 +27,7 @@ import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Rollback
@@ -150,19 +151,19 @@ public class JobContractDaoJpaTest {
 
     //Se inicializan con state en pending
     private static final JobContractWithImage[] JOB_CONTRACTS_PACKAGE1 = new JobContractWithImage[]{
-            new JobContractWithImage(1, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(2, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(3, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(4, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(5, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(6, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(7, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Instalacion de tomacorrientes", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(8, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una tuberia en la cocina", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(9, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompieron las tuberias del baño", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(10, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(11, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(12, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
-            new JobContractWithImage(19,CLIENT,JOB_PACKAGES[0],LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA,IMAGE_TYPE) )
+            new JobContractWithImage(1, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompio una zapatilla",new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(2, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(3, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(4, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio una zapatilla", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(5, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Arreglo de fusibles facil", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(6, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Arreglo de fusibles", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(7, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Instalacion de tomacorrientes", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(8, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio una tuberia en la cocina", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(9, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompieron las tuberias del baño", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(10, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio la caldera", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(11, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(12, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio la caldera denuevo", new ByteImage(IMAGE_DATA, IMAGE_TYPE)),
+            new JobContractWithImage(19,CLIENT,JOB_PACKAGES[0],LocalDateTime.now(),LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Se me rompio la caldera denuevo",new ByteImage(IMAGE_DATA,IMAGE_TYPE) )
     };
 
     private static final int JOB_CONTRACTS_PRO1_COUNT = 19;
@@ -202,10 +203,9 @@ public class JobContractDaoJpaTest {
     public void testCreate() {
 
         JobContractWithImage jobContract = jobContractDaoJpa.create(CLIENT.getId(), JOB_PACKAGES[0].getId(),
-                JOB_CONTRACTS_PACKAGE1[0].getDescription(), new ByteImage(IMAGE_DATA, IMAGE_TYPE));
+                JOB_CONTRACTS_PACKAGE1[0].getDescription(), LocalDateTime.now().plusDays(5),new ByteImage(IMAGE_DATA, IMAGE_TYPE));
         em.flush();
         Assert.assertNotNull(jobContract);
-
         Assert.assertEquals(CLIENT, jobContract.getClient());
         Assert.assertEquals(CLIENT.getUsername(), jobContract.getClient().getUsername());
         Assert.assertEquals(CLIENT.getPhone(), jobContract.getClient().getPhone());
@@ -236,20 +236,20 @@ public class JobContractDaoJpaTest {
 
     @Test(expected = PersistenceException.class )
     public void testCreateWithInvalidDescription(){
-        jobContractDaoJpa.create(CLIENT.getId(),JOB_PACKAGES[0].getId(),null);
+        jobContractDaoJpa.create(CLIENT.getId(),JOB_PACKAGES[0].getId(),null,LocalDateTime.now());
     }
 
     @Test(expected = UserNotFoundException.class)
     public void testCreateWithNonExistentClient() {
 
-        jobContractDaoJpa.create(NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), JOB_CONTRACTS_PACKAGE1[0].getDescription());
+        jobContractDaoJpa.create(NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), JOB_CONTRACTS_PACKAGE1[0].getDescription(),LocalDateTime.now());
 
     }
 
     @Test(expected = JobPackageNotFoundException.class)
     public void testCreateWithNonExistentPackage() {
 
-        jobContractDaoJpa.create(CLIENT.getId(), NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getDescription());
+        jobContractDaoJpa.create(CLIENT.getId(), NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getDescription(),LocalDateTime.now());
 
     }
 

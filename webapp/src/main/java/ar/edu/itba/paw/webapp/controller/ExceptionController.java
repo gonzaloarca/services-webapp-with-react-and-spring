@@ -19,37 +19,37 @@ import java.util.Optional;
 @ControllerAdvice
 public class ExceptionController {
 
-    private final Logger exceptionLogger = LoggerFactory.getLogger(ExceptionController.class);
-
-    @Autowired
-    private UserService userService;
-
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    @org.springframework.web.bind.annotation.ExceptionHandler({UserNotFoundException.class,
-            JobPostNotFoundException.class, JobPackageNotFoundException.class,
-            ReviewNotFoundException.class, JobContractNotFoundException.class, NoSuchElementException.class,
-            AccessDeniedException.class,
-
-    })
-    public ModelAndView notFoundError(RuntimeException e) {
-        exceptionLogger.debug("Not found exception handled: {}", e.getMessage());
-        return logUser(new ModelAndView("error/404"));
-    }
-
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler(Exception e) {
-        exceptionLogger.debug("Exception handled: {}", e.getMessage());
-        return logUser(new ModelAndView("error/default"));
-    }
-
-    private ModelAndView logUser(ModelAndView mav) {
-        Optional<User> maybeUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (maybeUser.isPresent()) {
-            User currentUser = maybeUser.get();
-            mav.addObject("currentUser", currentUser);
-            exceptionLogger.debug("Current user is: {}", currentUser);
-        }
-        return mav;
-    }
+//    private final Logger exceptionLogger = LoggerFactory.getLogger(ExceptionController.class);
+//
+//    @Autowired
+//    private UserService userService;
+//
+//    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+//    @org.springframework.web.bind.annotation.ExceptionHandler({UserNotFoundException.class,
+//            JobPostNotFoundException.class, JobPackageNotFoundException.class,
+//            ReviewNotFoundException.class, JobContractNotFoundException.class, NoSuchElementException.class,
+//            AccessDeniedException.class,
+//
+//    })
+//    public ModelAndView notFoundError(RuntimeException e) {
+//        exceptionLogger.debug("Not found exception handled: {}", e.getMessage());
+//        return logUser(new ModelAndView("error/404"));
+//    }
+//
+//    @org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
+//    public ModelAndView defaultErrorHandler(Exception e) {
+//        exceptionLogger.debug("Exception handled: {}", e.getMessage());
+//        return logUser(new ModelAndView("error/default"));
+//    }
+//
+//    private ModelAndView logUser(ModelAndView mav) {
+//        Optional<User> maybeUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+//        if (maybeUser.isPresent()) {
+//            User currentUser = maybeUser.get();
+//            mav.addObject("currentUser", currentUser);
+//            exceptionLogger.debug("Current user is: {}", currentUser);
+//        }
+//        return mav;
+//    }
 
 }

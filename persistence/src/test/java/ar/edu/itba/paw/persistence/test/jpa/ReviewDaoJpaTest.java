@@ -139,18 +139,18 @@ public class ReviewDaoJpaTest {
     };
 
     private static final JobContract[] JOB_CONTRACTS_PACKAGE1 = new JobContract[]{
-            new JobContract(1, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una zapatilla"),
-            new JobContract(2, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles facil"),
-            new JobContract(3, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles"),
-            new JobContract(4, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una zapatilla"),
-            new JobContract(5, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles facil"),
-            new JobContract(6, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Arreglo de fusibles"),
-            new JobContract(7, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Instalacion de tomacorrientes"),
-            new JobContract(8, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio una tuberia en la cocina"),
-            new JobContract(9, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompieron las tuberias del baño"),
-            new JobContract(10, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera"),
-            new JobContract(11, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera denuevo"),
-            new JobContract(12, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), "Se me rompio la caldera denuevo")
+            new JobContract(1, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompio una zapatilla"),
+            new JobContract(2, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Arreglo de fusibles facil"),
+            new JobContract(3, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Arreglo de fusibles"),
+            new JobContract(4, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompio una zapatilla"),
+            new JobContract(5, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Arreglo de fusibles facil"),
+            new JobContract(6, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Arreglo de fusibles"),
+            new JobContract(7, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Instalacion de tomacorrientes"),
+            new JobContract(8, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompio una tuberia en la cocina"),
+            new JobContract(9, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompieron las tuberias del baño"),
+            new JobContract(10, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompio la caldera"),
+            new JobContract(11, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompio la caldera denuevo"),
+            new JobContract(12, CLIENT, JOB_PACKAGES[0], LocalDateTime.now(), LocalDateTime.now().plusDays(5),LocalDateTime.now(), "Se me rompio la caldera denuevo")
     };
 
     private static final Review[] REVIEWS = new Review[]{

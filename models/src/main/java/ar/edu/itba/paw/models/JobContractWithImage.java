@@ -18,21 +18,27 @@ public class JobContractWithImage extends JobContractAbstract{
     }
 
     public JobContractWithImage(User client, JobPackage jobPackage, LocalDateTime creationDate,
+                                LocalDateTime scheduledDate, LocalDateTime lastModifiedDate,
                                 String description, ByteImage image) {
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;
+        this.scheduledDate = scheduledDate;
+        this.lastModifiedDate = lastModifiedDate;
         this.description = description;
         this.state = JobContract.ContractState.PENDING_APPROVAL;
         this.byteImage = image;
     }
 
     public JobContractWithImage(long id, User client, JobPackage jobPackage, LocalDateTime creationDate,
+                                LocalDateTime scheduledDate, LocalDateTime lastModifiedDate,
                                 String description, ByteImage image) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;
+        this.scheduledDate = scheduledDate;
+        this.lastModifiedDate = lastModifiedDate;
         this.description = description;
         this.state = JobContract.ContractState.PENDING_APPROVAL;
         this.byteImage = image;

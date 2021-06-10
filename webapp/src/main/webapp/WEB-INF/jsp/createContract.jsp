@@ -20,6 +20,16 @@
             integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
             crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/108cc44da7.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap Datepicker -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/locale/es.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"
+            integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA=="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css"
+          integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg=="
+          crossorigin="anonymous"/>
 
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/createcontract.css" rel="stylesheet"/>
@@ -88,21 +98,62 @@
                                 <spring:message code="contract.create.form.description"/>
                             </form:label>
                             <div class="input-group has-validation">
-                                <spring:message code="contract.create.form.description.placeholder" var="descPlaceholder"/>
-                                <form:textarea class="form-control text-input" rows="6" path="description" maxlength="100"
+                                <spring:message code="contract.create.form.description.placeholder"
+                                                var="descPlaceholder"/>
+                                <form:textarea class="form-control text-input" rows="6" path="description"
+                                               maxlength="100"
                                                placeholder="${descPlaceholder}" required="true"/>
                                 <div class="invalid-feedback">
                                     <spring:message code="contract.create.invalid.description"/>
                                 </div>
                             </div>
-                            <form:errors path="description" cssClass="form-error" element="p"/>
+                            <form:errors path="description" cssClass="invalid-feedback" element="p"/>
+                        </div>
+                    </div>
+
+                    <!-- Scheduled date for service delivery -->
+
+                    <div class="form-row">
+                        <div class="orange-circle">
+                            <p class="circle-text">2</p>
+                        </div>
+                        <div class="col-10 label-and-input">
+                            <form:label path="scheduledDate" class="form-text">
+                                <spring:message code="contract.create.form.date"/>
+                            </form:label>
+
+                            <spring:message code="contract.create.form.date.placeholder" var="datePlaceholder"/>
+                            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                <form:input path="scheduledDate" id="time-input" type="text"
+                                            class="form-control datetimepicker-input"
+                                            data-target="#datetimepicker1" placeholder="${datePlaceholder}" data-toggle="datetimepicker"/>
+                                <div class="input-group-append" data-target="#datetimepicker1"
+                                     data-toggle="datetimepicker">
+                                    <div class="input-group-text" style="background-color: #485696; color: white">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <c:set var="localeCode" value="${pageContext.response.locale}"/>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker1').datetimepicker({
+                                        locale: '${localeCode}',
+                                        minDate: moment(),
+                                    });
+                                });
+                            </script>
+                            <p style="font-size: 0.9rem; color: #6e6e6e">
+                                <spring:message code="contract.create.form.date.disclaimer"/>
+                            </p>
+                            <form:errors path="scheduledDate" cssClass="invalid-feedback" element="p"/>
                         </div>
                     </div>
 
                     <!-- Image -->
                     <div class="form-row">
                         <div class="yellow-circle">
-                            <p class="circle-text">2</p>
+                            <p class="circle-text">3</p>
                         </div>
                         <div class="col-10 label-and-input">
                             <form:label path="image" class="form-text">
@@ -117,8 +168,10 @@
                                     <spring:message code="image.invalid"/>
                                 </div>
                             </div>
+                            <p style="font-size: 0.9rem; color: #6e6e6e">
                             <spring:message code="register.filedisclaimer"/>
-                            <form:errors path="image" cssClass="form-error" element="p"/>
+                            </p>
+                            <form:errors path="image" cssClass="invalid-feedback" element="p"/>
                         </div>
                     </div>
 
@@ -170,8 +223,8 @@
                         </div>
                         <div class="info-right-col" style="display: flex">
                             <c:forEach items="${jobPost.zones}" var="zone" varStatus="status">
-                                    <spring:message code="${zone.stringCode}"/><c:if
-                                        test="${status.index != jobPost.zones.size()-1}">,&nbsp;</c:if>
+                                <spring:message code="${zone.stringCode}"/><c:if
+                                    test="${status.index != jobPost.zones.size()-1}">,&nbsp;</c:if>
                             </c:forEach>
                         </div>
                     </div>
@@ -179,8 +232,9 @@
                     <!-- Professional -->
                     <div class="row info-row">
                         <div class="info-left-col">
-                            <img loading="lazy" class="avatar-pic" src="<c:url value="/image/user/${jobPost.user.id}"/>"
-                                 alt="avatar" >
+                            <img loading="lazy" class="avatar-pic"
+                                 src="<c:url value="/image/user/${jobPost.user.id}"/>"
+                                 alt="avatar">
                         </div>
                         <p class="info-right-col">
                             <c:out value="${jobPost.user.username}"/>
@@ -227,16 +281,16 @@
 
         // Loop over them and prevent submission
         Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
 
-                        form.classList.add('was-validated')
-                    }, false)
-                })
+                    form.classList.add('was-validated')
+                }, false)
+            })
 
         //Limpiar imagen
         let clearBtn = document.querySelector('#clear_image');
@@ -252,11 +306,11 @@
         var forms = document.querySelectorAll('.needs-validation');
         var is_valid = true;
         Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                        if (!form.checkValidity()) {
-                            is_valid = false;
-                        }
-                })
+            .forEach(function (form) {
+                if (!form.checkValidity()) {
+                    is_valid = false;
+                }
+            })
         $("#submitBtn").attr("disabled", is_valid);
     }
 
@@ -265,7 +319,7 @@
         if (input.files && input.files[0]) {
             //Validacion de imagen
             let fileSize = input.files[0].size;
-            if(fileSize > 2 * 1024 * 1024) {
+            if (fileSize > 2 * 1024 * 1024) {
                 input.setCustomValidity('Max File Size Exceeded');
                 return;
             }

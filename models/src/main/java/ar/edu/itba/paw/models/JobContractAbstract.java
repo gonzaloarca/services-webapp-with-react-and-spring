@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @MappedSuperclass
 public class JobContractAbstract {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contract_contract_id_seq")
     @SequenceGenerator(sequenceName = "contract_contract_id_seq", name = "contract_contract_id_seq", allocationSize = 1)
@@ -24,13 +24,19 @@ public class JobContractAbstract {
     @Column(length = 100, name = "contract_creation_date", nullable = false)
     protected LocalDateTime creationDate;
 
+    @Column(length = 100, name = "contract_last_modified_date", nullable = false, columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
+    protected LocalDateTime lastModifiedDate;
+
+    @Column(length = 100, name = "contract_scheduled_date", nullable = false, columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
+    protected LocalDateTime scheduledDate;
+
     @Column(length = 100, name = "contract_description", nullable = false)
     protected String description;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "contract_state", nullable = false, columnDefinition = "INT default 6")
     protected JobContract.ContractState state;
-    
+
     public JobPackage getJobPackage() {
         return jobPackage;
     }
@@ -82,7 +88,23 @@ public class JobContractAbstract {
     public void setState(JobContract.ContractState state) {
         this.state = state;
     }
-    
+
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public LocalDateTime getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public void setScheduledDate(LocalDateTime scheduledDate) {
+        this.scheduledDate = scheduledDate;
+    }
+
     @Override
     public String toString() {
         return "JobContract{" +
@@ -91,6 +113,8 @@ public class JobContractAbstract {
                 ", jobPackage=" + jobPackage +
                 ", professional=" + getProfessional() +
                 ", creationDate=" + creationDate +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", scheduledDate=" + scheduledDate +
                 ", description='" + description + '\'' +
                 ", state='" + state + '\'' +
                 '}';

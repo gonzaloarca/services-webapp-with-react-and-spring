@@ -15,8 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -74,6 +77,9 @@ public class SimpleJobContractServiceTest {
     @Mock
     private JobContractDao jobContractDao;
 
+    @Autowired
+    MessageSource messageSource;
+
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
@@ -82,14 +88,16 @@ public class SimpleJobContractServiceTest {
         Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail())))
                 .thenReturn(Optional.of(CLIENT));
 
+        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, Locale.getDefault());
+        String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
+
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
-                Mockito.eq(JOB_PACKAGE.getDescription())))
+                Mockito.eq(JOB_PACKAGE.getDescription()),Mockito.eq(LocalDateTime.now().plusDays(5))))
                 .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE,
-                        CREATION_DATE, CONTRACT_DESCRIPTION, null));
+                        CREATION_DATE,CREATION_DATE.plusDays(5),CREATION_DATE, CONTRACT_DESCRIPTION, null));
 
         JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(),
-                JOB_PACKAGE.getDescription(), Locale.getDefault());
-
+                JOB_PACKAGE.getDescription(),date, Locale.getDefault());
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
         Assert.assertEquals(CONTRACT_DESCRIPTION, maybeContract.getDescription());
@@ -103,12 +111,15 @@ public class SimpleJobContractServiceTest {
         Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
-                Mockito.eq(JOB_PACKAGE.getDescription())))
-                .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE, CREATION_DATE,
+                Mockito.eq(JOB_PACKAGE.getDescription()),Mockito.eq(LocalDateTime.now().plusDays(5))))
+                .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE, CREATION_DATE,CREATION_DATE.plusDays(5),CREATION_DATE,
                         CONTRACT_DESCRIPTION, null));
 
+        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, Locale.getDefault());
+        String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
+
         JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(),
-                JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), Locale.getDefault());
+                JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),date, Locale.getDefault());
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -122,19 +133,23 @@ public class SimpleJobContractServiceTest {
     public void testCreateWithoutImage() {
         Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
 
-        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), Locale.getDefault());
+        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, Locale.getDefault());
+        String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
 
-        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription());
+        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),date, Locale.getDefault());
+
+        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),CREATION_DATE);
     }
 
     @Test
     public void testCreateUserWithImage() {
         Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
-
-        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),
+        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, Locale.getDefault());
+        String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
+        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),date,
                 new ByteImage(image1Bytes, image1Type), Locale.getDefault());
 
-        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),
+        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),CREATION_DATE.plusDays(5),
                 new ByteImage(image1Bytes, image1Type));
     }
 }

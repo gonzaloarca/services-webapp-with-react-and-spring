@@ -3,10 +3,10 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,12 +25,12 @@ public class JobContractDaoJpa implements JobContractDao {
     private EntityManager em;
 
     @Override
-    public JobContractWithImage create(long clientId, long packageId, String description) {
-        return create(clientId, packageId, description, null);
+    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate) {
+        return create(clientId, packageId, description, scheduledDate, null);
     }
 
     @Override
-    public JobContractWithImage create(long clientId, long packageId, String description, ByteImage image) {
+    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, ByteImage image) {
         User client = em.find(User.class, clientId);
         if (client == null)
             throw new UserNotFoundException();
@@ -39,7 +39,7 @@ public class JobContractDaoJpa implements JobContractDao {
         if (jobPackage == null)
             throw new JobPackageNotFoundException();
 
-        JobContractWithImage jobContractWithImage = new JobContractWithImage(client, jobPackage, LocalDateTime.now(), description, image);
+        JobContractWithImage jobContractWithImage = new JobContractWithImage(client, jobPackage, LocalDateTime.now(), scheduledDate, LocalDateTime.now(), description, image);
         em.persist(jobContractWithImage);
 
         return jobContractWithImage;
@@ -65,6 +65,21 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
+    public List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
+                                                                       int page) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id " +
+                "AND contract_state IN :states ORDER BY contract_last_modified_date DESC")
+                .setParameter("id", id)
+                .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
+                        .collect(Collectors.toList()));
+
+        return executePageQuery(page, nativeQuery);
+    }
+
+    @Override
     public List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page) {
         if (states == null)
             throw new IllegalArgumentException();
@@ -72,6 +87,21 @@ public class JobContractDaoJpa implements JobContractDao {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
                         "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_creation_date DESC")
+                .setParameter("id", id)
+                .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
+                        .collect(Collectors.toList()));
+
+        return executePageQuery(page, nativeQuery);
+    }
+
+    @Override
+    public List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Query nativeQuery = em.createNativeQuery(
+                "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
+                        "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_last_modified_date DESC")
                 .setParameter("id", id)
                 .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
                         .collect(Collectors.toList()));
@@ -159,6 +189,7 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new JobContractNotFoundException();
 
         contract.setState(state);
+        contract.setLastModifiedDate(LocalDateTime.now());
 
         em.persist(contract);
     }

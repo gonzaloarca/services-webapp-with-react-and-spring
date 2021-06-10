@@ -8,10 +8,16 @@ import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import com.sun.xml.internal.ws.encoding.xml.XMLMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,22 +43,27 @@ public class SimpleJobContractService implements JobContractService {
     private MailingService mailingService;
 
     @Autowired
-    private JobPostService jobPostService;
+    private MessageSource messageSource;
+
 
     @Override
-    public JobContractWithImage create(String clientEmail, long packageId, String description, Locale locale) {
-        return create(clientEmail, packageId, description, null, locale);
+    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, Locale locale) {
+        return create(clientEmail, packageId, description, scheduledDate, null, locale);
     }
 
     @Override
-    public JobContractWithImage create(String clientEmail, long packageId, String description, ByteImage image, Locale locale) {
+    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, ByteImage image, Locale locale) {
         User user = userService.findByEmail(clientEmail).orElseThrow(UserNotFoundException::new);
         JobContractWithImage jobContract;
 
+        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
+        LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ofPattern(datePattern));
+
         if (image == null)
-            jobContract = jobContractDao.create(user.getId(), packageId, description);
+            jobContract = jobContractDao.create(user.getId(), packageId, description,
+                    parsedDate);
         else
-            jobContract = jobContractDao.create(user.getId(), packageId, description, image);
+            jobContract = jobContractDao.create(user.getId(), packageId, description, parsedDate, image);
 
         mailingService.sendContractEmail(jobContract, locale);
 
@@ -80,6 +91,12 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
+    public List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
+                                                                       int page) {
+        return jobContractDao.findByClientIdAndSortedByModificationDate(id, states, page);
+    }
+
+    @Override
     public List<JobContract> findByProId(long id) {
         return jobContractDao.findByProId(id, Arrays.asList(JobContract.ContractState.values()), HirenetUtils.ALL_PAGES);
     }
@@ -92,6 +109,12 @@ public class SimpleJobContractService implements JobContractService {
     @Override
     public List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page) {
         return jobContractDao.findByProId(id, states, page);
+    }
+
+    @Override
+    public List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
+                                                                    int page) {
+        return jobContractDao.findByProIdAndSortedByModificationDate(id, states, page);
     }
 
     @Override
