@@ -100,7 +100,7 @@
                         <p class="my-auto mr-3"><spring:message code="jobCard.orderBy"/></p>
                         <select class="custom-select" style="width: 240px" onchange="if(this.value) window.location.href = this.value">
                             <c:forEach items="${orderByValues}" var="orderBy">
-                                <option selected="${orderBy.value == param.orderBy}"value="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=-1&orderBy=${orderBy.value}">
+                                <option ${orderBy.value == param.orderBy? 'selected':''} value="${pageContext.request.contextPath}/search?zone=${param.zone}&query=${param.query}&category=${param.category}&orderBy=${orderBy.value}">
                                     <spring:message code="${orderBy.stringCode}"/>
                                 </option>
                             </c:forEach>

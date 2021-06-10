@@ -122,7 +122,9 @@ public class JobCard implements Serializable {
         MOST_HIRED("jobCard.orderBy.MOST_HIRED"),
         LEAST_HIRED("jobCard.orderBy.LEAST_HIRED"),
         BETTER_QUALIFIED("jobCard.orderBy.BETTER_QUALIFIED"),
-        WORST_QUEALIFIED("jobCard.orderBy.WORST_QUEALIFIED");
+        WORST_QUEALIFIED("jobCard.orderBy.WORST_QUEALIFIED"),
+        NEWEST("jobCard.orderBy.NEWEST"),
+        OLDEST("jobCard.orderBy.OLDEST");
 
         private final String stringCode;
         private final int value;
