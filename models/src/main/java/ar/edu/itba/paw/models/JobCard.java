@@ -1,14 +1,39 @@
 package ar.edu.itba.paw.models;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.Subselect;
 
 @Entity
 @Immutable
-@Table(name = "job_cards")
+@Subselect("SELECT job_post.post_id,\n" +
+        "       post_title,\n" +
+        "       post_is_active,\n" +
+        "       post_job_type,\n" +
+        "       post_creation_date,\n" +
+        "       user_id,\n" +
+        "       coalesce(avg(review_rate), 0)        AS rating,\n" +
+        "       count(distinct contract.contract_id) AS post_contract_count,\n" +
+        "       count(DISTINCT review.contract_id)   as reviews,\n" +
+        "       package_price          AS min_pack_price,\n" +
+        "       min(package_rate_type) AS min_rate_type,\n" +
+        "       pi.image_id            AS card_image_id\n" +
+        "FROM   job_post\n" +
+        "         NATURAL JOIN job_package pack\n" +
+        "         LEFT JOIN post_image pi ON job_post.post_id = pi.post_id\n" +
+        "         LEFT JOIN contract ON contract.package_id = pack.package_id\n" +
+        "         LEFT JOIN review ON review.contract_id = contract.contract_id\n" +
+        "\n" +
+        "WHERE (COALESCE(package_price,0) = (SELECT COALESCE(MIN(package_price),0)\n" +
+        "                                    FROM job_package\n" +
+        "                                    WHERE post_id = job_post.post_id))\n" +
+        "  AND COALESCE((pi.image_id = (SELECT MIN(image_id)\n" +
+        "                               FROM post_image\n" +
+        "                               WHERE post_id = job_post.post_id)), TRUE)\n" +
+        "GROUP BY job_post.post_id, package_price, pi.image_id")
 public class JobCard implements Serializable {
 
     @Id
