@@ -18,12 +18,17 @@ import java.util.stream.Collectors;
 @Repository
 public class JobCardDaoJpa implements JobCardDao {
 
+    private static final String FULL_CONTRACT = "(SELECT * FROM contract NATURAL JOIN job_package NATURAL JOIN (SELECT user_id AS professional_id, post_id FROM job_post) AS post NATURAL JOIN (SELECT user_id AS client_id FROM users) AS client NATURAL JOIN (SELECT user_id AS professional_id FROM users) AS professional)";
+
     private static final String RELATED_CARDS_QUERY = new StringBuilder()
             .append("FROM job_cards NATURAL JOIN (")
             .append("    SELECT DISTINCT pro2_contracts.post_id, ")
             .append("COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common")
-            .append("    FROM full_contract pro1_contracts")
-            .append("             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id")
+            .append("    FROM ")
+            .append(FULL_CONTRACT).append(" pro1_contracts")
+            .append("             JOIN ")
+            .append(FULL_CONTRACT).append(" pro2_contracts")
+            .append(" ON pro1_contracts.client_id = pro2_contracts.client_id")
             .append("    WHERE :proId <> pro2_contracts.professional_id AND :proId = pro1_contracts.professional_id")
             .append("      AND pro2_contracts.contract_creation_date >= :dateLimit")
             .append("    GROUP BY pro2_contracts.post_id) AS recommended_posts ")

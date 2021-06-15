@@ -18,6 +18,7 @@ public class UserDaoJpa implements UserDao {
 
     @PersistenceContext
     private EntityManager em;
+    private Query  query;
 
     @Override
     public User register(String email, String password, String username, String phone) {
@@ -159,7 +160,7 @@ public class UserDaoJpa implements UserDao {
     public int findUserRankingInJobType(long id, JobPost.JobType jobType) {
 
         String sqlQuery = new StringBuilder()
-                .append("SELECT rank FROM (")
+                .append("SELECT CAST(rank AS INT) FROM (")
                 .append("         SELECT user_id, ROW_NUMBER() OVER () AS rank")
                 .append("         FROM (SELECT user_id")
                 .append("               FROM job_cards")
@@ -174,9 +175,11 @@ public class UserDaoJpa implements UserDao {
 
         final Query query = em.createNativeQuery(sqlQuery);
         @SuppressWarnings("unchecked")
-        BigInteger result = (BigInteger) query.setParameter("jobType", jobType.getValue())
+        Integer result = (Integer) query.setParameter("jobType", jobType.getValue())
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0);
-        return result.intValue();
+        // TODO: a veces retorna int?????
+
+        return result;
     }
 
     @Override
