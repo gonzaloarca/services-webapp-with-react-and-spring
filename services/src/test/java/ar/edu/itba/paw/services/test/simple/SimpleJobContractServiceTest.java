@@ -205,21 +205,21 @@ public class SimpleJobContractServiceTest {
 //                new ByteImage(image1Bytes, image1Type));
 //    }
 
-    @Test
-    public void testFindJobContractCardsByProId(){
-        List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
-        SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
-        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(PROFESSIONAL.getId(),allStates,HirenetUtils.ALL_PAGES);
-        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
-        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
-
-
-        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
-
-
-        Assert.assertFalse(jobContractCards.isEmpty());
-        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS),jobContractCards);
-    }
+//    @Test
+//    public void testFindJobContractCardsByProId(){
+//        List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
+//        SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
+//        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(PROFESSIONAL.getId(),allStates,HirenetUtils.ALL_PAGES);
+//        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
+//        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
+//
+//
+//        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
+//
+//
+//        Assert.assertFalse(jobContractCards.isEmpty());
+//        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS),jobContractCards);
+//    }
 
     @Test
     public void testFindJobContractCardsByProIdWithNonExistentId(){
@@ -233,21 +233,20 @@ public class SimpleJobContractServiceTest {
         Assert.assertTrue(jobContractCards.isEmpty());
     }
 
-    @Test
-    public void testFindJobContractCardsByClientId(){
-        List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
-        SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
-        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(CLIENT.getId(),allStates,HirenetUtils.ALL_PAGES);
-        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
-        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
-
-
-        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(CLIENT.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
-
-
-        Assert.assertFalse(jobContractCards.isEmpty());
-        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS),jobContractCards);
-    }
+//    @Test
+//    public void testFindJobContractCardsByClientId(){
+//        List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
+//        SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
+//        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(CLIENT.getId(),allStates,HirenetUtils.ALL_PAGES);
+//        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
+//        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
+//
+//        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(CLIENT.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
+//
+//
+//        Assert.assertFalse(jobContractCards.isEmpty());
+//        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS),jobContractCards);
+//    }
 
     @Test
     public void testFindJobContractCardsByClientIdWithNonExistentId(){
