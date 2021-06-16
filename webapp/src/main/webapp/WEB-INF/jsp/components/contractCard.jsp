@@ -53,6 +53,9 @@
 <c:set var="isReschedulable" value="${contractState != COMPLETED && contractState != CLIENT_REJECTED
 && contractState != PRO_REJECTED && contractState != CLIENT_CANCELLED && contractState != PRO_CANCELLED}"/>
 
+<c:set var="hasStateBar" value="${contractState == CLIENT_CANCELLED || contractState == PRO_CANCELLED
+    || contractState == PRO_REJECTED || contractState == COMPLETED || contractState == PRO_MODIFIED || contractState == CLIENT_MODIFIED}"/>
+
 
 <%--Seteo de variable para la imagen y texto a mostrar en el usuario que contrato/el dueño del servicio dependiendo del caso --%>
 <c:choose>
@@ -101,16 +104,35 @@
             <c:set value="finalized-contract" var="stateBar"/>
             <c:set value="mycontracts.finalized" var="stateMessage"/>
         </c:when>
+        <c:when test="${contractState == PRO_MODIFIED && !isOwner}">
+            <c:set value="rescheduled-contract" var="stateBar"/>
+            <c:set value="mycontracts.proRescheduled" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == PRO_MODIFIED && isOwner}">
+            <c:set value="rescheduled-contract" var="stateBar"/>
+            <c:set value="mycontracts.youRescheduled" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == CLIENT_MODIFIED && !isOwner}">
+            <c:set value="rescheduled-contract" var="stateBar"/>
+            <c:set value="mycontracts.youRescheduled" var="stateMessage"/>
+        </c:when>
+        <c:when test="${contractState == CLIENT_MODIFIED && isOwner}">
+            <c:set value="rescheduled-contract" var="stateBar"/>
+            <c:set value="mycontracts.clientRescheduled" var="stateMessage"/>
+        </c:when>
     </c:choose>
 
-    <c:if test="${contractState == CLIENT_CANCELLED || contractState == PRO_CANCELLED
-    || contractState == PRO_REJECTED || contractState == COMPLETED}">
+    <c:if test="${hasStateBar}">
         <div class="${stateBar}">
-            <spring:message code="${stateMessage}"/> - (<spring:message htmlEscape="true" code="dateTime.formatted"
-                                                                        arguments="${lastModifiedDateFormatted}, ${lastModifiedTimeFormatted} "/>)
+            <spring:message code="${stateMessage}"/>
+            <c:if test="${contractState != PRO_MODIFIED && contractState != CLIENT_MODIFIED}">
+                - (<spring:message htmlEscape="true" code="dateTime.formatted"
+                                   arguments="${lastModifiedDateFormatted}, ${lastModifiedTimeFormatted} "/>)
+            </c:if>
+
         </div>
     </c:if>
-    <div class="hire-details-container">
+    <div class="hire-details-container ${hasStateBar ? 'hire-details-container-with-state' : ''}">
         <div class="hire-user-container">
             <img loading="lazy" class="user-avatar" src="<c:url value="/image/user/${user.id}"/>"
                  alt="<spring:message code="user.avatar"/>">
@@ -220,7 +242,7 @@
                        action="${pageContext.request.contextPath}/my-contracts/${contractType}/${contractStateEndpoint}/${contractCard.jobContract.id}/update"
                        method="post"
                        modelAttribute="updateContractForm"
-            autocomplete="off">
+                       autocomplete="off">
                 <c:if test="${isApprovable}">
 
                     <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
@@ -244,7 +266,7 @@
                 <c:if test="${isReschedulable}">
                     <button class="btn contract-control-reschedule text-uppercase" type="button"
                             onclick="openRescheduleModal()">
-                        <i class="fas fa-times mr-1"></i>
+                        <i class="far fa-calendar-alt mr-1"></i>
                         <spring:message code="mycontracts.reschedule"/>
                     </button>
                     <hr class="divider-bar-thick">
@@ -298,7 +320,7 @@
                                     </button>
                                     <button type="submit"
                                             onclick="changeContractDate(${isOwner ? PRO_MODIFIED.ordinal() : CLIENT_MODIFIED.ordinal()})"
-                                            class="btn btn-secondary">
+                                            class="btn reschedule-submit-btn">
                                         <spring:message code="mycontracts.reschedule.submit"/>
                                     </button>
                                 </div>

@@ -756,22 +756,20 @@ h3 {
 }
 
 .cancelled-contract {
-    background-color: #FDCDCD;
-    border: 2px solid #E26767;
-    color: #E26767;
-    border-radius: 2rem;
+    background-color:  #E26767;
+    color: white;
+    border-radius: 1.5rem 1.5rem 0 0;
     width: 98%;
-    margin: 10px auto;
+    margin: 0 auto;
     padding: 5px 10px;
 }
 
 .finalized-contract {
-    background-color: #EEFFED;
-    border: 2px solid #54AA51;
-    color: #54AA51;
-    border-radius: 2rem;
+    background-color: #54AA51;
+    color: white;
+    border-radius: 1.5rem 1.5rem 0 0;
     width: 98%;
-    margin: 10px auto;
+    margin: 0 auto;
     padding: 5px 10px;
 }
 
@@ -817,3 +815,26 @@ h3 {
     margin-top: 4px;
 }
 
+.reschedule-submit-btn {
+    background-color: #FCB839;
+    color: white;
+}
+
+.reschedule-submit-btn:hover {
+    background-color: #d09727;
+    color: white;
+}
+
+.rescheduled-contract {
+    background-color: #FCB839;
+    color: white;
+    border-radius: 1.5rem 1.5rem 0 0;
+    width: 98%;
+    margin: 0 auto;
+    padding: 5px 10px;
+}
+
+.hire-details-container-with-state {
+    margin-top: 0;
+    border-radius: 0 0 1.5rem 1.5rem;
+}
