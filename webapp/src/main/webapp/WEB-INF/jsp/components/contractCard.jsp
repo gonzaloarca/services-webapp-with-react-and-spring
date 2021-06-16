@@ -169,9 +169,17 @@
                         <img loading="lazy" class="card-image-top service-img"
                              src='${imageSrc}'
                              alt="<spring:message code="profile.service.image"/>">
-                        <div class="scheduled-container">
+                        <div class="scheduled-container ${(contractState == PRO_MODIFIED || contractState == CLIENT_MODIFIED) ? 'rescheduled-container' : ''}">
                             <p style="color: black; margin: 0">
-                                <spring:message code="mycontracts.scheduledDate"/>
+                                <c:choose>
+                                    <c:when test="${contractState == PRO_MODIFIED || contractState == CLIENT_MODIFIED}">
+                                        <spring:message code="mycontracts.rescheduledDate"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <spring:message code="mycontracts.scheduledDate"/>
+                                    </c:otherwise>
+                                </c:choose>
+
                             </p>
                             <div class="scheduled-date-container">
                                 <p class="m-0"><c:out value="${scheduledDateFormatted}"/></p>
@@ -347,7 +355,8 @@
                 <form:hidden id="new-state-${requestScope.contractCard.jobContract.id}" path="newState"/>
                 <form:hidden id="return-url-${requestScope.contractCard.jobContract.id}" path="returnURL"
                              value="/my-contracts/${contractType}/"/>
-                <form:hidden id="hidden-scheduled-date-${requestScope.contractCard.jobContract.id}" path="newScheduledDate"
+                <form:hidden id="hidden-scheduled-date-${requestScope.contractCard.jobContract.id}"
+                             path="newScheduledDate"
                              value="${requestScope.contractCard.scheduledDateStr}"/>
 
             </form:form>

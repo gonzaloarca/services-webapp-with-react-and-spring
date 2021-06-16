@@ -800,6 +800,10 @@ h3 {
     backdrop-filter: blur(7px);
 }
 
+.rescheduled-container {
+    background-color: rgba(252, 184, 57, 0.8);
+}
+
 .scheduled-date-container {
     display: flex;
     flex-direction: column;
