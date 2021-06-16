@@ -9,7 +9,7 @@ import org.hibernate.annotations.Subselect;
 
 @Entity
 @Immutable
-@Subselect("SELECT * job_cards")
+@Subselect("SELECT * FROM job_cards")
 public class JobCard implements Serializable {
 
     @Id
