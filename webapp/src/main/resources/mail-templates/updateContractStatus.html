@@ -42,13 +42,13 @@
 </head>
 <body class="body">
 <div class="card">
-    <h1 class="title" th:if="${!updatedByClient}"
-        th:text="#{mail.updateContract.newStatusByProfessional(${professional}, #{${status}})}"></h1>
-    <h1 class="title" th:if="${updatedByClient}"
-        th:text="#{mail.updateContract.newStatusByClient(${client},#{${status}})}"></h1>
+    <h1 class="title" th:text="#{${title}}"></h1>
 
-    <h3 th:text="#{mail.updateContract.greetings(${client})}"></h3>
-    <p th:text="#{mail.updateContract.contractDescription}"></p>
+    <h3 th:if="${updatedByClient}" th:text="#{mail.updateContract.greetings(${professional})}"></h3>
+    <h3 th:if="${!updatedByClient}" th:text="#{mail.updateContract.greetings(${client})}"></h3>
+
+    <p th:if="${!modifiedState}" th:text="#{mail.updateContract.contractDescription}"></p>
+    <p th:if="${modifiedState}" th:text="#{mail.updateContract.modifiedContractDescription}"></p>
     <br/>
     <div>
         <div class="custom-row">
@@ -66,6 +66,11 @@
         <div class="custom-row">
             <p class="bold" th:text="#{mail.updateContract.contractDate}"></p>&nbsp;
             <p th:text="${contractDate}"></p>
+            <br/>
+        </div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.contractToClient.scheduledDate}"></p>&nbsp;
+            <p th:text="#{dateTime.formatted(${scheduledDate},${scheduledTime})}"></p>
             <br/>
         </div>
         <p th:if="${hasAttachment}" th:text="#{mail.updateContract.attachedImage}"></p>

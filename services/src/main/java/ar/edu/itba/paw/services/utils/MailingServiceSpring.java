@@ -118,6 +118,9 @@ public class MailingServiceSpring implements MailingService {
         data.put("professionalPhone", professional.getPhone());
         data.put("contractDescription", jobContract.getDescription());
         data.put("hasAttachment", attachment != null);
+        data.put("contractDate", jobContract.getCreationDate().format(DateTimeFormatter.ofPattern(messageSource.getMessage("date.format", new Object[]{}, locale))));
+        data.put("scheduledDate", jobContract.getScheduledDate().toLocalDate().toString());
+        data.put("scheduledTime", jobContract.getScheduledDate().toLocalTime().toString());
 
         sendMessageUsingThymeleafTemplate(professional.getEmail(),
                 messageSource.getMessage("mail.contractToPro.subject",
@@ -183,20 +186,29 @@ public class MailingServiceSpring implements MailingService {
         data.put("clientPhone", client.getPhone());
         data.put("contractDescription", jobContract.getDescription());
         data.put("contractDate", jobContract.getCreationDate().format(DateTimeFormatter.ofPattern(messageSource.getMessage("date.format", new Object[]{}, locale))));
+        data.put("scheduledDate", jobContract.getScheduledDate().toLocalDate().toString());
+        data.put("scheduledTime", jobContract.getScheduledDate().toLocalTime().toString());
         data.put("status", jobContract.getState().getStringCode());
         data.put("professional", professional.getUsername());
         data.put("professionalEmail", professional.getEmail());
         data.put("professionalPhone", professional.getPhone());
         data.put("hasAttachment", attachment != null);
+        data.put("modifiedState", jobContract.getState() == JobContract.ContractState.CLIENT_MODIFIED ||
+                jobContract.getState() == JobContract.ContractState.PRO_MODIFIED);
 
         List<JobContract.ContractState> clientStates = Arrays.asList(
                 JobContract.ContractState.CLIENT_CANCELLED, JobContract.ContractState.CLIENT_MODIFIED, JobContract.ContractState.CLIENT_REJECTED);
 
         boolean updatedByClient = clientStates.contains(jobContract.getState());
         data.put("updatedByClient", updatedByClient);
+        if (updatedByClient) {
+            data.put("title", "mail.updateContract.newStatusByClient." + jobContract.getState().toString());
+        } else {
+            data.put("title", "mail.updateContract.newStatusByProfessional." + jobContract.getState().toString());
+        }
 
         sendMessageUsingThymeleafTemplate(updatedByClient ? professional.getEmail() : client.getEmail(),
-                messageSource.getMessage("mail.updateContract.subject",
+                messageSource.getMessage("mail.updateContract.subject." + jobContract.getState().toString(),
                         new Object[]{
                                 messageSource.getMessage(jobContract.getState().getStringCode(), new Object[]{}, locale)
                         }, locale),
