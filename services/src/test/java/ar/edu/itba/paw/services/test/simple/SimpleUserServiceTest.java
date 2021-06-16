@@ -124,11 +124,4 @@ public class SimpleUserServiceTest {
                 EXISTING_USER.getPhone(), new ByteImage(image1Bytes, image1Type));
     }
 
-    @Test(expected = UserNotFoundException.class)
-    public void recoverUserPasswordExceptionTest() {
-        Mockito.when(userDaoJpa.changeUserPassword(EXISTING_USER.getId(), PASSWORD))
-                .thenReturn(false);
-
-        userService.recoverUserPassword(EXISTING_USER.getId(), PASSWORD);
-    }
 }

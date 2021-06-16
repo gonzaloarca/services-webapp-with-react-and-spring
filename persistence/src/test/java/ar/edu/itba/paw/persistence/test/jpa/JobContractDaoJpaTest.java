@@ -540,7 +540,7 @@ public class JobContractDaoJpaTest {
 
         int ans = jobContractDaoJpa.findContractsQuantityByProId(PROFESSIONAL.getId());
 
-        Assert.assertEquals(JOB_CONTRACTS_COUNT, ans);
+        Assert.assertEquals(0, ans);
     }
 
     @Test
