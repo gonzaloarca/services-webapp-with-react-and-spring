@@ -7,13 +7,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = NewPasswordValidator.class)
+@Constraint(validatedBy = DistinctFieldsValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidNewPassword {
-	String message() default "";
+public @interface DistinctFields {
+    String message() default "Fields values can not match!";
 
-	Class<?>[] groups() default {};
+    String field();
 
-	Class<? extends Payload>[] payload() default {};
+    String distinctField();
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }
