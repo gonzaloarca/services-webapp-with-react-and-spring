@@ -174,10 +174,44 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
+    public List<JobContractCard> findJobContractCardsByProIdAndSorted(long id, List<JobContract.ContractState> states, int page, Locale locale) {
+        List<JobContractCard> jobContractCards = new ArrayList<>();
+
+        findByProIdAndSortedByModificationDate(id, states, page)
+                .forEach(jobContract ->
+                                jobContractCards.add(
+                                        new JobContractCard(jobContract, jobCardService
+                                                .findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
+                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale)))
+                        //puede no tener una review
+                );
+
+        return jobContractCards;
+    }
+
+
+    @Override
     public List<JobContractCard> findJobContractCardsByClientId(long id, List<JobContract.ContractState> states, int page, Locale locale) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
         findByClientId(id, states, page).
+                forEach(jobContract ->
+                                jobContractCards.add(
+                                        new JobContractCard(jobContract,
+                                                jobCardService.findByPackageIdWithPackageInfoWithInactive(jobContract.getJobPackage().getId()),
+                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale))
+                                )
+                        //puede no tener una review
+                );
+
+        return jobContractCards;
+    }
+
+    @Override
+    public List<JobContractCard> findJobContractCardsByClientIdAndSorted(long id, List<JobContract.ContractState> states, int page, Locale locale) {
+        List<JobContractCard> jobContractCards = new ArrayList<>();
+
+        findByClientIdAndSortedByModificationDate(id, states, page).
                 forEach(jobContract ->
                                 jobContractCards.add(
                                         new JobContractCard(jobContract,

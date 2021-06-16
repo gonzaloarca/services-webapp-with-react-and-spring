@@ -64,11 +64,11 @@ public class MyContractsController {
         if (contractType.equals("professional")) {
             maxPage = paginationService.findMaxPageContractsByProId(id, states);
             jobContractCards = jobContractService
-                    .findJobContractCardsByProId(id, states, page - 1, locale);
+                    .findJobContractCardsByProIdAndSorted(id, states, page - 1, locale);
         } else if (contractType.equals("client")) {
             maxPage = paginationService.findMaxPageContractsByClientId(id, states);
             jobContractCards = jobContractService
-                    .findJobContractCardsByClientId(id, states, page - 1, locale);
+                    .findJobContractCardsByClientIdAndSorted(id, states, page - 1, locale);
         } else
             throw new IllegalArgumentException();
 
