@@ -61,14 +61,16 @@ public class SimpleJobPostImageServiceTest {
 
 	@Test
     public void addImageSuccessTest() {
+		SimpleJobPostImageService spy = Mockito.spy(jobPostImageService);
+
 	    Mockito.when(imageService.isValidImage(Mockito.any()))
                 .thenReturn(true);
-	    Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
-                .thenReturn(0);
-	    Mockito.when(jobPostImageDao.addImage(Mockito.eq(POST_ID), Mockito.eq(byteImage1)))
-                .thenReturn(postImage1);
+		Mockito.when(jobPostImageDao.addImage(Mockito.eq(POST_ID), Mockito.eq(byteImage1)))
+				.thenReturn(postImage1);
 
-        JobPostImage result = jobPostImageService.addImage(POST_ID, byteImage1);
+		Mockito.doReturn(false).when(spy).maxImagesUploaded(POST_ID);
+
+        JobPostImage result = spy.addImage(POST_ID, byteImage1);
 
         Assert.assertNotNull(result);
         Assert.assertEquals(IMAGE1_ID, result.getImageId());
@@ -86,18 +88,22 @@ public class SimpleJobPostImageServiceTest {
 
     @Test
     public void addImageMaxReachedTest() {
+		SimpleJobPostImageService spy = Mockito.spy(jobPostImageService);
+
         Mockito.when(imageService.isValidImage(Mockito.any()))
                 .thenReturn(true);
-        Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
-                .thenReturn(HirenetUtils.MAX_IMAGES_NUMBER);
 
-        JobPostImage result = jobPostImageService.addImage(POST_ID, byteImage1);
+		Mockito.doReturn(true).when(spy).maxImagesUploaded(POST_ID);
+
+        JobPostImage result = spy.addImage(POST_ID, byteImage1);
 
         Assert.assertNull(result);
     }
 
     @Test
 	public void addImagesSuccessTest() {
+		SimpleJobPostImageService spy = Mockito.spy(jobPostImageService);
+
 		List<ByteImage> byteImageList = new ArrayList<>();
 		byteImageList.add(byteImage1);
 		byteImageList.add(byteImage2);
@@ -108,14 +114,14 @@ public class SimpleJobPostImageServiceTest {
 
 		Mockito.when(imageService.isValidImage(Mockito.any()))
 				.thenReturn(true);
-		Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
-				.thenReturn(0);
+		Mockito.doReturn(false)
+				.when(spy).maxImagesUploaded(POST_ID);
 		Mockito.when(jobPostImageDao.addImage(Mockito.eq(POST_ID), Mockito.eq(byteImage1)))
 				.thenReturn(postImage1);
 		Mockito.when(jobPostImageDao.addImage(Mockito.eq(POST_ID), Mockito.eq(byteImage2)))
 				.thenReturn(postImage2);
 
-		List<JobPostImage> result = jobPostImageService.addImages(POST_ID, byteImageList);
+		List<JobPostImage> result = spy.addImages(POST_ID, byteImageList);
 
 		Assert.assertNotNull(result);
 		Assert.assertFalse(result.isEmpty());
@@ -136,16 +142,18 @@ public class SimpleJobPostImageServiceTest {
 
 	@Test
 	public void addImagesMaxReachedTest() {
+		SimpleJobPostImageService spy = Mockito.spy(jobPostImageService);
+
 		List<ByteImage> byteImageList = new ArrayList<>();
 		byteImageList.add(byteImage1);
 		byteImageList.add(byteImage2);
 
 		Mockito.when(imageService.isValidImage(Mockito.any()))
 				.thenReturn(true);
-		Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
-				.thenReturn(HirenetUtils.MAX_IMAGES_NUMBER);
+		Mockito.doReturn(true)
+				.when(spy).maxImagesUploaded(POST_ID);
 
-		List<JobPostImage> result = jobPostImageService.addImages(POST_ID, byteImageList);
+		List<JobPostImage> result = spy.addImages(POST_ID, byteImageList);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isEmpty());
