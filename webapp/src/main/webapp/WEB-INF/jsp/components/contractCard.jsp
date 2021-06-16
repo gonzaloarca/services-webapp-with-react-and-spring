@@ -10,27 +10,27 @@
 <spring:message code="time.format" var="timeFormat"/>
 <spring:message code="dateTime.format" var="dateTimeFormat"/>
 
-<c:set var="creationDateStringAux" value="${contractCard.jobContract.creationDate.toLocalDate()}"/>
+<c:set var="creationDateStringAux" value="${requestScope.contractCard.jobContract.creationDate.toLocalDate()}"/>
 <fmt:parseDate type="date" value="${creationDateStringAux}" var="creationDate"
                pattern="yyyy-MM-dd"/>
 <fmt:formatDate value="${creationDate}" pattern="${dateFormat}" var="creationDateFormatted"/>
 
-<c:set var="scheduledDateStringAux" value="${contractCard.jobContract.scheduledDate.toLocalDate()}"/>
+<c:set var="scheduledDateStringAux" value="${requestScope.contractCard.jobContract.scheduledDate.toLocalDate()}"/>
 <fmt:parseDate type="date" value="${scheduledDateStringAux}" var="scheduledDate"
                pattern="yyyy-MM-dd"/>
 <fmt:formatDate value="${scheduledDate}" pattern="${dateFormat}" var="scheduledDateFormatted"/>
 
-<c:set var="scheduledTimeStringAux" value="${contractCard.jobContract.scheduledDate.toLocalTime()}"/>
+<c:set var="scheduledTimeStringAux" value="${requestScope.contractCard.jobContract.scheduledDate.toLocalTime()}"/>
 <fmt:parseDate type="time" value="${scheduledTimeStringAux}" var="scheduledTime"
                pattern="HH:mm"/>
 <fmt:formatDate value="${scheduledTime}" pattern="${timeFormat}" var="scheduledTimeFormatted"/>
 
-<c:set var="lastModifiedDateStringAux" value="${contractCard.jobContract.lastModifiedDate.toLocalDate()}"/>
+<c:set var="lastModifiedDateStringAux" value="${requestScope.contractCard.jobContract.lastModifiedDate.toLocalDate()}"/>
 <fmt:parseDate type="date" value="${lastModifiedDateStringAux}" var="lastModifiedDate"
                pattern="yyyy-MM-dd"/>
 <fmt:formatDate value="${lastModifiedDate}" pattern="${dateFormat}" var="lastModifiedDateFormatted"/>
 
-<c:set var="lastModifiedTimeStringAux" value="${contractCard.jobContract.lastModifiedDate.toLocalTime()}"/>
+<c:set var="lastModifiedTimeStringAux" value="${requestScope.contractCard.jobContract.lastModifiedDate.toLocalTime()}"/>
 <fmt:parseDate type="time" value="${lastModifiedTimeStringAux}" var="lastModifiedTime"
                pattern="HH:mm"/>
 <fmt:formatDate value="${lastModifiedTime}" pattern="${timeFormat}" var="lastModifiedTimeFormatted"/>
@@ -60,16 +60,16 @@
 <%--Seteo de variable para la imagen y texto a mostrar en el usuario que contrato/el dueño del servicio dependiendo del caso --%>
 <c:choose>
     <c:when test="${isOwner}">
-        <c:set value="${contractCard.jobContract.client}" var="user"/>
+        <c:set value="${requestScope.contractCard.jobContract.client}" var="user"/>
         <c:set value="mycontracts.hiredBy" var="hireDataMessageCode"/>
         <c:set value="mycontracts.reviewed" var="reviewCaption"/>
-        <c:set value="${contractCard.jobContract.client.username}" var="cardUser"/>
+        <c:set value="${requestScope.contractCard.jobContract.client.username}" var="cardUser"/>
     </c:when>
     <c:otherwise>
-        <c:set value="${contractCard.jobCard.jobPost.user}" var="user"/>
+        <c:set value="${requestScope.contractCard.jobCard.jobPost.user}" var="user"/>
         <c:set value="mycontracts.hiredPro" var="hireDataMessageCode"/>
         <c:set value="mycontracts.yourReview" var="reviewCaption"/>
-        <c:set value="${contractCard.jobContract.professional.username}" var="cardUser"/>
+        <c:set value="${requestScope.contractCard.jobContract.professional.username}" var="cardUser"/>
     </c:otherwise>
 </c:choose>
 
@@ -146,7 +146,7 @@
 
     </div>
 
-    <c:if test="${!contractCard.jobCard.jobPost.active}">
+    <c:if test="${!requestScope.contractCard.jobCard.jobPost.active}">
         <div class="removed-post-disclaimer">
             <i class="fas fa-exclamation-triangle"></i>
             <spring:message code="jobPost.inactive"/>
@@ -226,20 +226,20 @@
         <div class="service-controls-container">
 
             <spring:message htmlEscape="true" code="mycontracts.contact.name"
-                            arguments="${contractCard.jobCard.jobPost.user.username}" var="name"/>
+                            arguments="${requestScope.contractCard.jobCard.jobPost.user.username}" var="name"/>
             <spring:message htmlEscape="true" code="mycontracts.contact.email"
-                            arguments="${contractCard.jobCard.jobPost.user.email}" var="email"/>
+                            arguments="${requestScope.contractCard.jobCard.jobPost.user.email}" var="email"/>
             <spring:message htmlEscape="true" code="mycontracts.contact.phone"
-                            arguments="${contractCard.jobCard.jobPost.user.phone}" var="phone"/>
+                            arguments="${requestScope.contractCard.jobCard.jobPost.user.phone}" var="phone"/>
 
             <c:set value="" var="imageSrc"/>
-            <c:if test="${contractCard.jobContract.imageType != null}">
-                <c:url value="/image/contract/${contractCard.jobContract.id}" var="imageSrc"/>
+            <c:if test="${requestScope.contractCard.jobContract.imageType != null}">
+                <c:url value="/image/contract/${requestScope.contractCard.jobContract.id}" var="imageSrc"/>
             </c:if>
 
             <%--@elvariable id="updateContractForm" type="ar.edu.itba.paw.webapp.form.UpdateContractForm"--%>
             <form:form cssClass="w-100 mb-1"
-                       action="${pageContext.request.contextPath}/my-contracts/${contractType}/${contractStateEndpoint}/${contractCard.jobContract.id}/update"
+                       action="${pageContext.request.contextPath}/my-contracts/${contractType}/${contractStateEndpoint}/${requestScope.contractCard.jobContract.id}/update"
                        method="post"
                        modelAttribute="updateContractForm"
                        autocomplete="off">
@@ -259,13 +259,27 @@
                     </button>
 
                     <hr class="divider-bar-thick">
+                </c:if>
 
+                <c:if test="${contractState == APPROVED}">
+                    <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
+                            onclick="changeContractState(${COMPLETED.ordinal()}, 'finalized')">
+                        <i class="fas fa-check mr-1"></i>
+                        <spring:message code="mycontracts.finalize"/>
+                    </button>
 
+                    <button class="btn contract-control-reject text-uppercase" type="submit"
+                            onclick="changeContractState(${contractType == 'professional' ? PRO_CANCELLED.ordinal()
+                                    : CLIENT_CANCELLED.ordinal()}, 'finalized')">
+                        <i class="fas fa-times mr-1"></i>
+                        <spring:message code="mycontracts.cancel"/>
+                    </button>
+                    <hr class="divider-bar-thick">
                 </c:if>
 
                 <c:if test="${isReschedulable}">
                     <button class="btn contract-control-reschedule text-uppercase" type="button"
-                            onclick="openRescheduleModal()">
+                            onclick="openRescheduleModal('${requestScope.contractCard.scheduledDateStr}')">
                         <i class="far fa-calendar-alt mr-1"></i>
                         <spring:message code="mycontracts.reschedule"/>
                     </button>
@@ -292,7 +306,8 @@
                                                     type="text"
                                                     class="form-control datetimepicker-input" required="true"
                                                     data-target="#datetimepicker1" placeholder="${datePlaceholder}"
-                                                    data-toggle="datetimepicker"/>
+                                                    data-toggle="datetimepicker"
+                                                    value="${requestScope.contractCard.scheduledDateStr}"/>
                                         <div class="input-group-append" data-target="#datetimepicker1"
                                              data-toggle="datetimepicker">
                                             <div class="input-group-text"
@@ -328,33 +343,17 @@
                         </div>
                     </div>
                 </c:if>
-
-                <c:if test="${contractState == APPROVED}">
-                    <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
-                            onclick="changeContractState(${COMPLETED.ordinal()}, 'finalized')">
-                        <i class="fas fa-check mr-1"></i>
-                        <spring:message code="mycontracts.finalize"/>
-                    </button>
-
-                    <button class="btn contract-control-reject text-uppercase" type="submit"
-                            onclick="changeContractState(${contractType == 'professional' ? PRO_CANCELLED.ordinal()
-                                    : CLIENT_CANCELLED.ordinal()}, 'finalized')">
-                        <i class="fas fa-times mr-1"></i>
-                        <spring:message code="mycontracts.cancel"/>
-                    </button>
-                    <hr class="divider-bar-thick">
-                </c:if>
                 <form:hidden id="new-state" path="newState"/>
                 <form:hidden id="return-url" path="returnURL"
                              value="/my-contracts/${contractType}/"/>
 
             </form:form>
 
-            <p id="details-description-text-${contractCard.jobContract.id}" style="display: none"><c:out
-                    value="${contractCard.jobContract.description}"/></p>
-            <p id="image-source-${contractCard.jobContract.id}" style="display: none"><c:out value="${imageSrc}"/></p>
+            <p id="details-description-text-${requestScope.contractCard.jobContract.id}" style="display: none"><c:out
+                    value="${requestScope.contractCard.jobContract.description}"/></p>
+            <p id="image-source-${requestScope.contractCard.jobContract.id}" style="display: none"><c:out value="${imageSrc}"/></p>
             <a class="btn contract-control-details btn-link text-uppercase"
-               onclick='openDetailsModal(${contractCard.jobContract.id})'>
+               onclick='openDetailsModal(${requestScope.contractCard.jobContract.id})'>
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
                 <p>
                     <spring:message code="mycontract.details"/>
@@ -370,21 +369,21 @@
             </a>
 
             <c:choose>
-                <c:when test="${contractCard.review != null}">
+                <c:when test="${requestScope.contractCard.review != null}">
                     <div style="color: #787878; width: 100% ">
                         <hr class="divider-bar-thick">
                         <p class="my-1 mx-auto text-center"><spring:message code="${reviewCaption}"/></p>
                         <div class="gray-chip mx-auto">
                             <jsp:include page="components/rateStars.jsp">
-                                <jsp:param name="rate" value="${contractCard.review.rate}"/>
+                                <jsp:param name="rate" value="${requestScope.contractCard.review.rate}"/>
                             </jsp:include>
                         </div>
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <c:if test="${contractCard.jobCard.jobPost.active && !isOwner && contractState == COMPLETED}">
+                    <c:if test="${requestScope.contractCard.jobCard.jobPost.active && !isOwner && contractState == COMPLETED}">
                         <a class="contract-control-rate text-uppercase"
-                           href="${pageContext.request.contextPath}/rate-contract/${contractCard.jobContract.id}">
+                           href="${pageContext.request.contextPath}/rate-contract/${requestScope.contractCard.jobContract.id}">
                             <i class="bi bi-star mr-1"></i>
                             <p><spring:message code="mycontracts.ratecontract"/></p>
                         </a>
@@ -428,7 +427,7 @@
             </div>
         </div>
         <%--        Modal de detalles de contrato--%>
-        <p id="details-description-text" hidden><c:out value="${contractCard.jobContract.description}"/></p>
+        <p id="details-description-text" hidden><c:out value="${requestScope.contractCard.jobContract.description}"/></p>
         <p id="image-source" hidden><c:out value="${imageSrc}"/></p>
         <div class="modal fade" tabindex="-1" id="details-modal"
              aria-labelledby="modal" aria-hidden="true">
@@ -466,7 +465,7 @@
         <p style=" margin: 0 10px;"><i class="fas fa-cube mr-2"></i>
             <spring:message code="mycontracts.card.hired"/>
         </p>
-        <p class="hired-package-title"><c:out value="${contractCard.jobContract.jobPackage.title}"/></p>
+        <p class="hired-package-title"><c:out value="${requestScope.contractCard.jobContract.jobPackage.title}"/></p>
     </div>
 </div>
 
@@ -507,7 +506,9 @@
         $('#details-modal').modal('show');
     }
 
-    function openRescheduleModal() {
+    function openRescheduleModal(dateString) {
+        const dateInput = $("#date-input");
+        dateInput.val(dateString);
         $('#reschedule-modal').modal('show');
     }
 

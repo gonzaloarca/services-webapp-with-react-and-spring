@@ -106,10 +106,11 @@
                 <div class="mx-3">
                     <c:choose>
                         <c:when test="${contractCards.size() > 0}">
-                            <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
-                                <c:set var="jobCard" value="${contractCard.jobCard}" scope="request"/>
-                                <c:set var="contractState" value="${contractCard.jobContract.state}"/>
+                            <c:forEach var="contractCardVar" items="${contractCards}" varStatus="status">
+                                <c:set var="jobCard" value="${contractCardVar.jobCard}" scope="request"/>
+                                <c:set var="contractState" value="${contractCardVar.jobContract.state}"/>
                                 <c:set var="contractType" value="${contractType}"/>
+                                <c:set var="contractCard" value="${contractCardVar}" scope="request"/>
                                 <%@include file="components/contractCard.jsp" %>
                                 <c:if test="${status.index != contractCards.size()-1}">
                                     <hr class="hr1"/>

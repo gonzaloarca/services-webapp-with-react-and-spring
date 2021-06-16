@@ -75,8 +75,8 @@ public class SimpleJobContractServiceTest {
     private static final JobCard JOB_CARD = new JobCard(JOB_POST2, JobPackage.RateType.ONE_TIME,500.0,0,0,0.0,null);
 
     private static final  JobContractCard[] JOB_CONTRACT_CARDS = new JobContractCard[]{
-            new JobContractCard(JOB_CONTRACTS[0],JOB_CARD,null),
-            new JobContractCard(JOB_CONTRACTS[1], JOB_CARD,null)
+            new JobContractCard(JOB_CONTRACTS[0],JOB_CARD,null, null),
+            new JobContractCard(JOB_CONTRACTS[1], JOB_CARD,null, null)
     };
 
     @InjectMocks
@@ -214,7 +214,7 @@ public class SimpleJobContractServiceTest {
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 
 
-        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES);
+        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
 
         Assert.assertFalse(jobContractCards.isEmpty());
@@ -227,7 +227,7 @@ public class SimpleJobContractServiceTest {
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
 
 
-        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES);
+        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
 
         Assert.assertTrue(jobContractCards.isEmpty());
@@ -242,7 +242,7 @@ public class SimpleJobContractServiceTest {
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 
 
-        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(CLIENT.getId(), allStates, HirenetUtils.ALL_PAGES);
+        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(CLIENT.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
 
         Assert.assertFalse(jobContractCards.isEmpty());
@@ -256,7 +256,7 @@ public class SimpleJobContractServiceTest {
         Mockito.doReturn(Collections.emptyList()).when(mockContractService).findByProId(999,allStates,HirenetUtils.ALL_PAGES);
 
 
-        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(999, allStates, HirenetUtils.ALL_PAGES);
+        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(999, allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
 
         Assert.assertTrue(jobContractCards.isEmpty());

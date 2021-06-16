@@ -161,7 +161,7 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public List<JobContractCard> findJobContractCardsByProId(long id, List<JobContract.ContractState> states, int page) {
+    public List<JobContractCard> findJobContractCardsByProId(long id, List<JobContract.ContractState> states, int page, Locale locale) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
         findByProId(id, states, page)
@@ -169,7 +169,7 @@ public class SimpleJobContractService implements JobContractService {
                                 jobContractCards.add(
                                         new JobContractCard(jobContract, jobCardService
                                                 .findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null)))
+                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale)))
                         //puede no tener una review
                 );
 
@@ -177,7 +177,7 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public List<JobContractCard> findJobContractCardsByClientId(long id, List<JobContract.ContractState> states, int page) {
+    public List<JobContractCard> findJobContractCardsByClientId(long id, List<JobContract.ContractState> states, int page, Locale locale) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
         findByClientId(id, states, page).
@@ -185,7 +185,8 @@ public class SimpleJobContractService implements JobContractService {
                                 jobContractCards.add(
                                         new JobContractCard(jobContract,
                                                 jobCardService.findByPackageIdWithPackageInfoWithInactive(jobContract.getJobPackage().getId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null)))
+                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale))
+                                )
                         //puede no tener una review
                 );
 
@@ -207,6 +208,13 @@ public class SimpleJobContractService implements JobContractService {
 
     }
 
+    private String localDateTimeToString(LocalDateTime dateTime, Locale locale) {
+        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
+
+        return formatter.format(dateTime);
+    }
+
     @Override
     public JobContractWithImage findJobContractWithImage(long id) {
         return jobContractDao.findJobContractWithImage(id).orElseThrow(JobContractNotFoundException::new);
@@ -218,7 +226,7 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public List<JobContract.ContractState> getContractStates(String contractState){
+    public List<JobContract.ContractState> getContractStates(String contractState) {
         List<JobContract.ContractState> states = new ArrayList<>();
 
         switch (contractState) {

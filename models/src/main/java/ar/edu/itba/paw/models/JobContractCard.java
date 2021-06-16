@@ -6,11 +6,13 @@ public class JobContractCard {
     private final JobContract jobContract;
     private final JobCard jobCard;
     private final Review review;
+    private final String scheduledDateStr;
 
-    public JobContractCard(JobContract jobContract, JobCard jobCard, Review review) {
+    public JobContractCard(JobContract jobContract, JobCard jobCard, Review review, String scheduledDateStr) {
         this.jobContract = jobContract;
         this.jobCard = jobCard;
         this.review = review;
+        this.scheduledDateStr = scheduledDateStr;
     }
 
     public JobContract getJobContract() {
@@ -23,6 +25,10 @@ public class JobContractCard {
 
     public Review getReview() {
         return review;
+    }
+
+    public String getScheduledDateStr() {
+        return scheduledDateStr;
     }
 
     @Override

@@ -50,9 +50,9 @@ public interface JobContractService {
 
     int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states);
 
-    List<JobContractCard> findJobContractCardsByClientId(long id, List<JobContract.ContractState> states, int page);
+    List<JobContractCard> findJobContractCardsByClientId(long id, List<JobContract.ContractState> states, int page, Locale locale);
 
-    List<JobContractCard> findJobContractCardsByProId(long id, List<JobContract.ContractState> states, int page);
+    List<JobContractCard> findJobContractCardsByProId(long id, List<JobContract.ContractState> states, int page, Locale locale);
 
     void changeContractState(long id, JobContract.ContractState state);
 
