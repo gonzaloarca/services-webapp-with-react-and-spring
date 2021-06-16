@@ -1,11 +1,21 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.validation.ValidNewPassword;
+import ar.edu.itba.paw.webapp.validation.DistinctFields;
+import ar.edu.itba.paw.webapp.validation.MatchingFields;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
-@ValidNewPassword
+@MatchingFields(
+		field = "newPass",
+		fieldMatch = "repeatNewPass",
+		message = "Passwords do not match"
+)
+@DistinctFields(
+		field = "currentPass",
+		distinctField = "newPass",
+		message = "New password cannot be the same as the old one"
+)
 public class PasswordChangeForm {
 
 	@Size(min = 8, max = 100)
