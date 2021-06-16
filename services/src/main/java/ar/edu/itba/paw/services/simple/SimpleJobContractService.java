@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Transactional
 @Service
@@ -231,5 +228,10 @@ public class SimpleJobContractService implements JobContractService {
         }
 
         return states;
+    }
+
+    @Override
+    public JobContract findByIdWithUser(long id) {
+        return jobContractDao.findByIdWithUser(id).orElseThrow(JobContractNotFoundException::new);
     }
 }

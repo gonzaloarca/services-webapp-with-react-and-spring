@@ -120,7 +120,7 @@ public class AccountController {
 		accountControllerLogger.debug("Changing user {} password",email);
 		userService.changeUserPassword(email, form.getNewPass());
 
-		return new ModelAndView("redirect:/password_changed");
+		return new ModelAndView("redirect:/password-changed");
 	}
 
 }

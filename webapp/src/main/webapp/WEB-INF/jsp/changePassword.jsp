@@ -82,7 +82,7 @@
                     </c:when>
                     <c:otherwise>
 
-                        <c:url var="postUrl" value="/change_password?user_id=${user_id}&token=${token}"/>
+                        <c:url var="postUrl" value="/change-password?user_id=${user_id}&token=${token}"/>
                         <form:form action="${postUrl}" method="post" id="form" onsubmit="disableBtn()"
                                    enctype="multipart/form-data" class="needs-validation" novalidate="true"
                                    modelAttribute="passwordChangeForm">

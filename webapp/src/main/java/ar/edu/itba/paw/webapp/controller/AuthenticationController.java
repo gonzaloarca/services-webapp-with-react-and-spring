@@ -90,7 +90,7 @@ public class AuthenticationController {
         return new ModelAndView("login");
     }
 
-    @RequestMapping("/password_changed")
+    @RequestMapping("/password-changed")
     public ModelAndView passwordChanged() {
         SecurityContextHolder.clearContext();
         return new ModelAndView("passwordChanged");
@@ -138,7 +138,7 @@ public class AuthenticationController {
         return new ModelAndView("recover").addObject("confirmed", true);
     }
 
-    @RequestMapping(value = "/change_password", method = RequestMethod.GET)
+    @RequestMapping(value = "/change-password", method = RequestMethod.GET)
     public ModelAndView changePassword(@RequestParam("user_id") final long user_id, @RequestParam("token") final String token,
                                        @ModelAttribute("passwordChangeForm") PasswordChangeForm passwordChangeForm) {
         ModelAndView mav = new ModelAndView("changePassword")
@@ -155,7 +155,7 @@ public class AuthenticationController {
         return mav;
     }
 
-    @RequestMapping(value = "/change_password", method = RequestMethod.POST)
+    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
     public ModelAndView changePasswordPost(@RequestParam("user_id") final long user_id, @RequestParam("token") final String token,
                                        @Valid @ModelAttribute("passwordChangeForm") PasswordChangeForm passwordChangeForm,
                                        final BindingResult errors) {

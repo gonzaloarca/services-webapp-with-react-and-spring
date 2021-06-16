@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPackageService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.JobContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -11,13 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Component
-public class OwnershipVoter implements AccessDecisionVoter {
+public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
 
     @Autowired
     private JobContractService jobContractService;
@@ -38,9 +36,10 @@ public class OwnershipVoter implements AccessDecisionVoter {
 
 
     @Override
-    public int vote(Authentication authentication, Object o, Collection collection) {
-        if (o instanceof FilterInvocation) {
-            FilterInvocation filterInvocation = (FilterInvocation) o;
+    public int vote(Authentication authentication, FilterInvocation filterInvocation, Collection collection) {
+        if(authentication == null)
+            return ACCESS_ABSTAIN;
+        if (filterInvocation != null) {
             String url = filterInvocation.getRequestUrl();
 
             if (url.equals("/"))
@@ -120,28 +119,26 @@ public class OwnershipVoter implements AccessDecisionVoter {
                         }
                     }
                     break;
-                case "contract":
+                case "my-contracts":
                     if (paths.length <= 2)
                         return ACCESS_ABSTAIN;
-                    if (paths[1].equals("package")) {
-                        try {
-                            id = Integer.parseInt(paths[2]);
-                        } catch (NumberFormatException e) {
-                            return ACCESS_ABSTAIN;
-                        }
-                        try {
-                            long postId = jobPackageService.findPostByPackageId(id).getId();
-                            isOwner = jobPostService.findUserByPostId(postId).getEmail().equals(authentication.getName());
-                        } catch (NoSuchElementException e) {
-                            return ACCESS_ABSTAIN;
-                        }
-                        if (isOwner) {
-                            return ACCESS_DENIED;
-                        } else {
-                            return ACCESS_GRANTED;
-                        }
+                    try {
+                        id = Integer.parseInt(paths[1]);
+                    } catch (NumberFormatException e) {
+                        return ACCESS_ABSTAIN;
                     }
-                    break;
+                    try {
+                        JobContract contract = jobContractService.findByIdWithUser(id);
+                        isOwner = contract.getClient().getEmail().equals(authentication.getName()) || contract.getProfessional().getEmail().equals(authentication.getName());
+
+                    } catch (NoSuchElementException e) {
+                        return ACCESS_ABSTAIN;
+                    }
+                    if (isOwner) {
+                        return ACCESS_GRANTED;
+                    } else {
+                        return ACCESS_DENIED;
+                    }
                 case "profile":
                     if (paths.length <= 3)
                         return ACCESS_ABSTAIN;

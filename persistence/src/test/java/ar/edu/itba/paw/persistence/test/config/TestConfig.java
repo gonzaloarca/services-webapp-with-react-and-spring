@@ -92,8 +92,6 @@ public class TestConfig {
         jpaProperties.setProperty("hibernate.hbm2ddl.auto","update");
         jpaProperties.setProperty("hibernate.dialect","org.hibernate.dialect.HSQLDialect");
 
-        //FIXME
-        //TODO NO PONER ESTO EN PRODUCCION!!!
         jpaProperties.setProperty("hibernate.show_sql", "true");
         jpaProperties.setProperty("format_sql", "true");
 

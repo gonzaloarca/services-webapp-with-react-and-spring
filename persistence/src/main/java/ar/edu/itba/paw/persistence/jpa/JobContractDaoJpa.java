@@ -205,4 +205,13 @@ public class JobContractDaoJpa implements JobContractDao {
         return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
 
     }
+
+    @Override
+    public Optional<JobContract> findByIdWithUser(long id) {
+        List<JobContract> contracts = em.createQuery("FROM JobContract as jc JOIN FETCH jc.client JOIN FETCH jc.jobPackage as jp JOIN FETCH jp.jobPost as post JOIN FETCH post.user WHERE jc.id = :id",JobContract.class).setParameter("id",id).getResultList();
+        if(contracts.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.ofNullable(contracts.get(0));
+    }
 }

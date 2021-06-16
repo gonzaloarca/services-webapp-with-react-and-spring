@@ -46,4 +46,6 @@ public interface JobContractDao {
     Optional<JobContractWithImage> findJobContractWithImage(long id);
 
     Optional<ByteImage> findImageByContractId(long id);
+
+    Optional<JobContract> findByIdWithUser(long id);
 }

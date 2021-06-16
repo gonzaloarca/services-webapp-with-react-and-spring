@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.*;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public interface JobContractService {
 
@@ -60,4 +61,6 @@ public interface JobContractService {
     ByteImage findImageByContractId(long id);
 
     List<JobContract.ContractState> getContractStates(String contractState);
+
+    JobContract findByIdWithUser(long id);
 }
