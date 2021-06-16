@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.services.simple.SimpleJobPostService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -67,9 +68,10 @@ public class SimpleJobPostServiceTest {
             ZONES,
             true,
             LocalDateTime.now());
+    private final long FAKE_ID = 999L;
 
     @InjectMocks
-    private SimpleJobPostService jobPostService = new SimpleJobPostService();
+    private final SimpleJobPostService jobPostService = new SimpleJobPostService();
 
     @Mock
     private UserService userService;
@@ -108,5 +110,24 @@ public class SimpleJobPostServiceTest {
 
         Assert.assertEquals(JOB_POST_EXISTING_USER, jobPost);
         Assert.assertEquals(0, 0);
+    }
+
+    @Test(expected = JobPostNotFoundException.class)
+    public void updateJobPostExceptionTest() {
+        Mockito.when(jobPostDao.updateById(Mockito.eq(JOB_POST_EXISTING_USER.getId()), Mockito.anyString(), Mockito.anyString(),
+                Mockito.any(), Mockito.anyList()))
+                .thenReturn(false);
+
+        jobPostService.updateJobPost(JOB_POST_EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(),
+                JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().getValue(),
+                new int[]{});
+    }
+
+    @Test(expected = JobPostNotFoundException.class)
+    public void deleteJobPostExceptionTest() {
+        Mockito.when(jobPostDao.deleteJobPost(Mockito.eq(FAKE_ID)))
+                .thenReturn(false);
+
+        jobPostService.deleteJobPost(FAKE_ID);
     }
 }
