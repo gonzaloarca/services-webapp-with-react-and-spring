@@ -5,14 +5,13 @@ import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
-import exceptions.JobContractNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;

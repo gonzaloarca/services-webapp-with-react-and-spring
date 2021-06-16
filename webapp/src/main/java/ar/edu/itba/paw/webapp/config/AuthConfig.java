@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @EnableWebSecurity
 @Configuration
 @ComponentScan({"ar.edu.itba.paw.webapp.auth"})
-public class  AuthConfig extends WebSecurityConfigurerAdapter {
+public class AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Value("classpath:key.txt")
     private Resource key;
@@ -55,51 +55,50 @@ public class  AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/resources/**","/css/**","/images/**");
+        web.ignoring().antMatchers("/resources/**", "/css/**", "/images/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        String keyString = StreamUtils.copyToString( key.getInputStream(), Charset.availableCharsets().get("utf-8") );
+        String keyString = StreamUtils.copyToString(key.getInputStream(), Charset.availableCharsets().get("utf-8"));
 
         http.authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
-                .antMatchers("/analytics", "/my-contracts/professional/**","/create-job-post/**","/job/*/packages").hasRole("PROFESSIONAL")
-                .antMatchers("/contract/**","/my-contracts/client/**", "/rate-contract/**","/account/**", "/create-job-post/**", "/my-contracts/**", "/hire/**").hasRole("CLIENT")
-                .antMatchers("/login","/register").anonymous()
-//                .antMatchers("/account/**", "/create-job-post", "/my-contracts/**").authenticated()
+                .antMatchers("/analytics", "/create-job-post/**","/job/delete","/job/*/packages/**", "/my-contracts/professional/**").hasRole("PROFESSIONAL")
+                .antMatchers("/rate-contract/*","/account/*","/hire/**","/my-contracts/**","/password-changed").hasRole("CLIENT")
+                .antMatchers("/login", "/register","/token","/recover","/change-password").anonymous()
                 .antMatchers("/**").permitAll()
-            .and().formLogin()
+                .and().formLogin()
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/",false)
+                .defaultSuccessUrl("/", false)
                 .loginPage("/login")
                 .failureHandler(authenticationFailureHandler())
-            .and().logout()
+                .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .deleteCookies("JSESSIONID")
-            .and()
+                .and()
                 .sessionManagement()
                 .sessionAuthenticationErrorUrl("/login")
 //                .invalidSessionUrl("/login")
-            .and().rememberMe()
+                .and().rememberMe()
                 .rememberMeParameter("rememberMeCheck")
                 .key(keyString)
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .userDetailsService(hireNetUserDetails)
-            .and().exceptionHandling().accessDeniedPage("/error/404.jsp").accessDeniedHandler(accessDeniedHandler())
-            .and().csrf().disable();
+                .and().exceptionHandling().accessDeniedPage("/error/404.jsp").accessDeniedHandler(accessDeniedHandler())
+                .and().csrf().disable();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AccessDecisionManager accessDecisionManager(){
+    public AccessDecisionManager accessDecisionManager() {
         List decisionVoters = Arrays.asList(
                 new WebExpressionVoter(),
                 new RoleVoter(),

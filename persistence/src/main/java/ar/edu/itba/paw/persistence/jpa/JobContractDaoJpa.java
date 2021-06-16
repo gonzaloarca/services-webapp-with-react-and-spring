@@ -3,10 +3,10 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
-import exceptions.JobContractNotFoundException;
-import exceptions.JobPackageNotFoundException;
-import exceptions.UserNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,12 +25,12 @@ public class JobContractDaoJpa implements JobContractDao {
     private EntityManager em;
 
     @Override
-    public JobContractWithImage create(long clientId, long packageId, String description) {
-        return create(clientId, packageId, description, null);
+    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate) {
+        return create(clientId, packageId, description, scheduledDate, null);
     }
 
     @Override
-    public JobContractWithImage create(long clientId, long packageId, String description, ByteImage image) {
+    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, ByteImage image) {
         User client = em.find(User.class, clientId);
         if (client == null)
             throw new UserNotFoundException();
@@ -39,7 +39,7 @@ public class JobContractDaoJpa implements JobContractDao {
         if (jobPackage == null)
             throw new JobPackageNotFoundException();
 
-        JobContractWithImage jobContractWithImage = new JobContractWithImage(client, jobPackage, LocalDateTime.now(), description, image);
+        JobContractWithImage jobContractWithImage = new JobContractWithImage(client, jobPackage, LocalDateTime.now(), scheduledDate, LocalDateTime.now(), description, image);
         em.persist(jobContractWithImage);
 
         return jobContractWithImage;
@@ -65,6 +65,21 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
+    public List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
+                                                                       int page) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id " +
+                "AND contract_state IN :states ORDER BY contract_last_modified_date DESC")
+                .setParameter("id", id)
+                .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
+                        .collect(Collectors.toList()));
+
+        return executePageQuery(page, nativeQuery);
+    }
+
+    @Override
     public List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page) {
         if (states == null)
             throw new IllegalArgumentException();
@@ -72,6 +87,21 @@ public class JobContractDaoJpa implements JobContractDao {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
                         "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_creation_date DESC")
+                .setParameter("id", id)
+                .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
+                        .collect(Collectors.toList()));
+
+        return executePageQuery(page, nativeQuery);
+    }
+
+    @Override
+    public List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page) {
+        if (states == null)
+            throw new IllegalArgumentException();
+
+        Query nativeQuery = em.createNativeQuery(
+                "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
+                        "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_last_modified_date DESC")
                 .setParameter("id", id)
                 .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
                         .collect(Collectors.toList()));
@@ -108,7 +138,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public int findContractsQuantityByProId(long id) {
-        return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id", Long.class)
+        return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id AND jc.state = :completedState", Long.class)
+                .setParameter("completedState", JobContract.ContractState.COMPLETED)
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
@@ -159,6 +190,19 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new JobContractNotFoundException();
 
         contract.setState(state);
+        contract.setLastModifiedDate(LocalDateTime.now());
+
+        em.persist(contract);
+    }
+
+    @Override
+    public void changeContractScheduledDate(long id, LocalDateTime dateTime) {
+        JobContract contract = em.find(JobContract.class, id);
+
+        if (contract == null)
+            throw new JobContractNotFoundException();
+
+        contract.setScheduledDate(dateTime);
 
         em.persist(contract);
     }
@@ -170,6 +214,17 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public Optional<ByteImage> findImageByContractId(long id) {
-        return Optional.ofNullable(em.createQuery("SELECT contract.byteImage FROM JobContract contract WHERE contract.id = :id",ByteImage.class).setParameter("id",id).getSingleResult());
+        List<ByteImage> resultList = em.createQuery("SELECT contract.byteImage FROM JobContractWithImage contract WHERE contract.id = :id", ByteImage.class).setParameter("id", id).getResultList();
+        return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
+
+    }
+
+    @Override
+    public Optional<JobContract> findByIdWithUser(long id) {
+        List<JobContract> contracts = em.createQuery("FROM JobContract as jc JOIN FETCH jc.client JOIN FETCH jc.jobPackage as jp JOIN FETCH jp.jobPost as post JOIN FETCH post.user WHERE jc.id = :id",JobContract.class).setParameter("id",id).getResultList();
+        if(contracts.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.ofNullable(contracts.get(0));
     }
 }

@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
-import exceptions.*;
+import ar.edu.itba.paw.models.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.xml.ws.http.HTTPException;
-import java.security.Principal;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -33,9 +29,15 @@ public class ExceptionController {
             JobPostNotFoundException.class, JobPackageNotFoundException.class,
             ReviewNotFoundException.class, JobContractNotFoundException.class, NoSuchElementException.class,
             AccessDeniedException.class,
-
     })
     public ModelAndView notFoundError(RuntimeException e) {
+        exceptionLogger.debug("Not found exception handled: {}", e.getMessage());
+        return logUser(new ModelAndView("error/404"));
+    }
+
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    @org.springframework.web.bind.annotation.ExceptionHandler({IllegalStateException.class})
+    public ModelAndView conflictError(RuntimeException e) {
         exceptionLogger.debug("Not found exception handled: {}", e.getMessage());
         return logUser(new ModelAndView("error/404"));
     }

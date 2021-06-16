@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.validation.PasswordsMatch;
+import ar.edu.itba.paw.webapp.validation.MatchingFields;
 import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -9,7 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@PasswordsMatch
+@MatchingFields(
+        field = "password",
+        fieldMatch = "repeatPassword",
+        message = "Passwords do not match"
+)
 public class RegisterForm {
 
     @NotBlank

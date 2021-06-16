@@ -1,11 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractCard;
-import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
-import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 public class CurrentUserController {
@@ -74,12 +68,11 @@ public class CurrentUserController {
         currentUserControllerLogger.debug("Finding contract review for contract {}", id);
         if (!reviewService.findContractReview(id).isPresent()) {
             currentUserControllerLogger.debug("Review not found, proceeding to display view");
-            final ModelAndView mav = new ModelAndView("rateContract");
-            mav.addObject("jobCard", jobCardService.findByPostId(
+            return new ModelAndView("rateContract")
+            .addObject("jobCard", jobCardService.findByPostId(
                     jobContractService.findById(id)
-                            .getJobPackage().getPostId()));
-            mav.addObject("contractId", id);
-            return mav;
+                            .getJobPackage().getPostId()))
+            .addObject("contractId", id);
         } else {
             currentUserControllerLogger.debug("Review found, returning to my contracts");
             return new ModelAndView("redirect:/my-contracts/client/finalized");

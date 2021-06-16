@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.webapp.form.AccountChangeForm;
 import ar.edu.itba.paw.webapp.form.PasswordChangeForm;
-import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +120,7 @@ public class AccountController {
 		accountControllerLogger.debug("Changing user {} password",email);
 		userService.changeUserPassword(email, form.getNewPass());
 
-		return new ModelAndView("redirect:/password_changed");
+		return new ModelAndView("redirect:/password-changed");
 	}
 
 }

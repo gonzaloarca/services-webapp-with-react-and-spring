@@ -35,9 +35,9 @@
         <img loading="lazy" src='<c:url value="/resources/images/hirenet-success.png" />'
              alt="<spring:message code="contract.success.image"/>"
              class="image"/>
-        <h1 class="title">
+        <h2 class="success-title">
             <spring:message code="account.settings.security.success"/>
-        </h1>
+        </h2>
         <p class="text">
             <spring:message code="account.settings.security.success.text"/>
         </p>

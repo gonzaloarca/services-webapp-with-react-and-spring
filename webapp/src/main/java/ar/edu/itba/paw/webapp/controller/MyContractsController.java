@@ -1,23 +1,22 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.PaginationService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractCard;
-import ar.edu.itba.paw.models.UserAuth;
-import ar.edu.itba.paw.webapp.form.ChangeContractStateForm;
-import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.form.UpdateContractForm;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @RequestMapping("/my-contracts")
 @Controller
@@ -34,12 +33,24 @@ public class MyContractsController {
     @Autowired
     private PaginationService paginationService;
 
+    @Autowired
+    private JobPackageService jobPackageService;
+
+    @Autowired
+    private JobPostService jobPostService;
+
+    @Autowired
+    private MailingService mailingService;
+
+    @Autowired
+    private LocaleResolver localeResolver;
+
     @RequestMapping(path = "/{contractType}/{contractState}", method = RequestMethod.GET)
     public ModelAndView getMyContracts(Principal principal,
                                        @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
-                                       @PathVariable final String contractType, @PathVariable final String contractState,
-                                       @ModelAttribute("contractStates") List<JobContract.ContractState> states,
-                                       @ModelAttribute("changeContractStateForm") ChangeContractStateForm form) {
+                                       HttpServletRequest servletRequest, @PathVariable final String contractType,
+                                       @PathVariable final String contractState,
+                                       @ModelAttribute("updateContractForm") UpdateContractForm form) {
         if (page < 1)
             throw new IllegalArgumentException();
 
@@ -47,14 +58,17 @@ public class MyContractsController {
         int maxPage;
         List<JobContractCard> jobContractCards;
 
+        List<JobContract.ContractState> states = jobContractService.getContractStates(contractState);
+        Locale locale = localeResolver.resolveLocale(servletRequest);
+
         if (contractType.equals("professional")) {
             maxPage = paginationService.findMaxPageContractsByProId(id, states);
             jobContractCards = jobContractService
-                    .findJobContractCardsByProId(id, states, page - 1);
+                    .findJobContractCardsByProIdAndSorted(id, states, page - 1, locale);
         } else if (contractType.equals("client")) {
             maxPage = paginationService.findMaxPageContractsByClientId(id, states);
             jobContractCards = jobContractService
-                    .findJobContractCardsByClientId(id, states, page - 1);
+                    .findJobContractCardsByClientIdAndSorted(id, states, page - 1, locale);
         } else
             throw new IllegalArgumentException();
 
@@ -74,31 +88,29 @@ public class MyContractsController {
                 .addObject("contractStateEndpoint", contractState);
     }
 
+    @RequestMapping(path = "/{contractType}/{contractState}/{id}/update", method = RequestMethod.POST)
+    public ModelAndView updateContract(@ModelAttribute("updateContractForm") UpdateContractForm form,
+                                       HttpServletRequest servletRequest, @PathVariable("id") long id,
+                                       @PathVariable String contractType, @PathVariable String contractState,
+                                       BindingResult errors, Principal principal) {
+        myContractsControllerLogger.debug("Updating state in contract {} to {}", id, form.getNewState());
 
-
-    @ModelAttribute("contractStates")
-    List<JobContract.ContractState> getStates(@PathVariable final String contractState) {
-
-        List<JobContract.ContractState> states = new ArrayList<>();
-
-        switch (contractState) {
-            case "active":
-                states.add(JobContract.ContractState.APPROVED);
-                break;
-            case "pending":
-                states.add(JobContract.ContractState.PENDING_APPROVAL);
-                states.add(JobContract.ContractState.PRO_MODIFIED);
-                states.add(JobContract.ContractState.CLIENT_MODIFIED);
-                break;
-            case "finalized":
-                states.add(JobContract.ContractState.COMPLETED);
-                states.add(JobContract.ContractState.PRO_CANCELLED);
-                states.add(JobContract.ContractState.PRO_REJECTED);
-                states.add(JobContract.ContractState.CLIENT_CANCELLED);
-                states.add(JobContract.ContractState.CLIENT_REJECTED);
-                break;
+        if (errors.hasErrors()) {
+            return getMyContracts(principal, 1, servletRequest, contractType, contractState, form);
         }
 
-        return states;
+        jobContractService.changeContractScheduledDate(id, form.getNewScheduledDate(), contractType.equals("professional"),
+                localeResolver.resolveLocale(servletRequest));
+        jobContractService.changeContractState(id, JobContract.ContractState.values()[form.getNewState()]);
+
+        JobContractWithImage jobContract = jobContractService.findJobContractWithImage(id);
+        JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId());
+        JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
+
+        myContractsControllerLogger.debug("Sending email updating contract state for package {}, post {} and contract {}", jobPackage.getId(), jobPost.getId(), jobContract.getId());
+        mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, localeResolver.resolveLocale(servletRequest));
+
+        return new ModelAndView("redirect:" + form.getReturnURL());
     }
+
 }

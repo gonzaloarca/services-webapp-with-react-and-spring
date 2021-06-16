@@ -3,13 +3,12 @@ package ar.edu.itba.paw.services.simple;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.interfaces.services.VerificationTokenService;
+import ar.edu.itba.paw.interfaces.services.TokenService;
 import ar.edu.itba.paw.models.*;
-import exceptions.ImageNotFoundException;
-import exceptions.UserAlreadyExistsException;
-import exceptions.UserNotFoundException;
-import exceptions.UserNotVerifiedException;
-import org.apache.commons.text.RandomStringGenerator;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class SimpleUserService implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private VerificationTokenService verificationTokenService;
+    private TokenService tokenService;
 
     @Autowired
     private MailingService mailingService;
@@ -51,7 +50,7 @@ public class SimpleUserService implements UserService {
                 userDao.updateUserById(user.getId(), username, phone, image);
             userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
 
-            VerificationToken token = verificationTokenService.create(user);
+            VerificationToken token = tokenService.createVerificationToken(user);
             mailingService.sendVerificationTokenEmail(user, token, locale);
 
             throw new UserNotVerifiedException();
@@ -63,7 +62,7 @@ public class SimpleUserService implements UserService {
         else
             registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone, image);
 
-        VerificationToken token = verificationTokenService.create(registeredUser);
+        VerificationToken token = tokenService.createVerificationToken(registeredUser);
         mailingService.sendVerificationTokenEmail(registeredUser, token, locale);
 
         return registeredUser;
@@ -143,39 +142,27 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void recoverUserPassword(String email, Locale locale){
-        String pass = generateNewPassword();
+    public void recoverUserAccount(String email, Locale locale){
+        User user;
+        RecoveryToken recoveryToken;
+
         try {
-            changeUserPassword(email, pass);
-            mailingService.sendRecoverPasswordEmail(email, pass, locale);
+            user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
+            recoveryToken = tokenService.createRecoveryToken(user);
+            mailingService.sendRecoverPasswordEmail(user, recoveryToken, locale);
         } catch (UserNotFoundException e) {
             //Si el usuario no existe, no hago nada
         }
     }
 
-    private String generateNewPassword() {
-        final int PASSWORD_LENGTH = 10;
+    @Override
+    public void recoverUserPassword(long user_id, String password) {
+        boolean changed = userDao.changeUserPassword(user_id, passwordEncoder.encode(password));
 
-        ArrayList<Character> charList = new ArrayList<>();
+        if(!changed)
+            throw new UserNotFoundException();
 
-        for(char c = 'a'; c <= 'z'; c++) {
-            charList.add(c);
-        }
-        for(char c = 'A'; c <= 'Z'; c++) {
-            charList.add(c);
-        }
-        for(char c = '0'; c <= '9'; c++) {
-            charList.add(c);
-        }
-
-        char[] chars = new char[charList.size()];
-        for(int i = 0; i < charList.size(); i++)
-            chars[i] = charList.get(i);
-
-        RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder()
-                .selectFrom(chars)
-                .build();
-        return pwdGenerator.generate(PASSWORD_LENGTH);
+        tokenService.deleteRecoveryToken(user_id);
     }
 
     @Override

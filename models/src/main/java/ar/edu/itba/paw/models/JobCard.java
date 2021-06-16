@@ -1,14 +1,15 @@
 package ar.edu.itba.paw.models;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.Subselect;
 
 @Entity
 @Immutable
-@Table(name = "job_cards")
+@Subselect("SELECT * FROM job_cards")
 public class JobCard implements Serializable {
 
     @Id
@@ -116,5 +117,30 @@ public class JobCard implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(jobPost);
+    }
+
+    public enum OrderBy{
+        MOST_HIRED("jobCard.orderBy.MOST_HIRED"),
+        LEAST_HIRED("jobCard.orderBy.LEAST_HIRED"),
+        BETTER_QUALIFIED("jobCard.orderBy.BETTER_QUALIFIED"),
+        WORST_QUEALIFIED("jobCard.orderBy.WORST_QUEALIFIED"),
+        NEWEST("jobCard.orderBy.NEWEST"),
+        OLDEST("jobCard.orderBy.OLDEST");
+
+        private final String stringCode;
+        private final int value;
+
+        OrderBy(final String stringCode) {
+            this.stringCode = stringCode;
+            this.value = ordinal();
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public String getStringCode() {
+            return stringCode;
+        }
     }
 }

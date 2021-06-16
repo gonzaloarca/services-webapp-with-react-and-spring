@@ -18,12 +18,17 @@ import java.util.stream.Collectors;
 @Repository
 public class JobCardDaoJpa implements JobCardDao {
 
+    private static final String FULL_CONTRACT = "(SELECT * FROM contract NATURAL JOIN job_package NATURAL JOIN (SELECT user_id AS professional_id, post_id FROM job_post) AS post NATURAL JOIN (SELECT user_id AS client_id FROM users) AS client NATURAL JOIN (SELECT user_id AS professional_id FROM users) AS professional)";
+
     private static final String RELATED_CARDS_QUERY = new StringBuilder()
             .append("FROM job_cards NATURAL JOIN (")
             .append("    SELECT DISTINCT pro2_contracts.post_id, ")
             .append("COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common")
-            .append("    FROM full_contract pro1_contracts")
-            .append("             JOIN full_contract pro2_contracts ON pro1_contracts.client_id = pro2_contracts.client_id")
+            .append("    FROM ")
+            .append(FULL_CONTRACT).append(" pro1_contracts")
+            .append("             JOIN ")
+            .append(FULL_CONTRACT).append(" pro2_contracts")
+            .append(" ON pro1_contracts.client_id = pro2_contracts.client_id")
             .append("    WHERE :proId <> pro2_contracts.professional_id AND :proId = pro1_contracts.professional_id")
             .append("      AND pro2_contracts.contract_creation_date >= :dateLimit")
             .append("    GROUP BY pro2_contracts.post_id) AS recommended_posts ")
@@ -44,7 +49,7 @@ public class JobCardDaoJpa implements JobCardDao {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT post_id FROM job_post WHERE post_is_active = TRUE"
         );
-        return executePageQuery(page,nativeQuery);
+        return executePageQuery(page, nativeQuery);
     }
 
     @Override
@@ -52,27 +57,33 @@ public class JobCardDaoJpa implements JobCardDao {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT post_id FROM job_post WHERE post_is_active = TRUE AND user_id = :id")
                 .setParameter("id", id);
-        return executePageQuery(page,nativeQuery);
+        return executePageQuery(page, nativeQuery);
     }
 
     @Override
-    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, int page) {
-        return searchWithCategory(query, zone, null, similarTypes, page);
+    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page) {
+        return searchWithCategory(query, zone, null, similarTypes, orderBy, page);
     }
 
     @Override
-    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, int page) {
+    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards");
 
-        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, orderBy);
 
-        return executePageQuery(page,nativeQuery);
+        return executePageQuery(page, nativeQuery);
     }
 
     @Override
     public Optional<JobCard> findByPostId(long id) {
-        return em.createQuery("FROM JobCard AS card WHERE card.jobPost.isActive = TRUE", JobCard.class)
-                .getResultList().stream().findFirst();
+        return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id = :id AND card.jobPost.isActive = TRUE", JobCard.class)
+                .setParameter("id", id).getResultList().stream().findFirst();
+    }
+
+    @Override
+    public Optional<JobCard> findByPackageIdWithPackageInfoWithInactive(long id) {
+        return em.createQuery("SELECT new JobCard (jcard.jobPost, jpack.rateType, CAST(COALESCE(jpack.price,0) AS double),jcard.contractsCompleted, jcard.reviewsCount,jcard.rating, jcard.postImageId) FROM JobCard jcard JOIN JobPackage jpack ON jcard.jobPost.id = jpack.jobPost.id WHERE jpack.id = :id ", JobCard.class)
+                .setParameter("id", id).getResultList().stream().findFirst();
     }
 
     @Override
@@ -118,7 +129,7 @@ public class JobCardDaoJpa implements JobCardDao {
     public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards");
 
-        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery);
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, JobCard.OrderBy.BETTER_QUALIFIED); // no importa el orden
 
         @SuppressWarnings("unchecked")
         BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
@@ -144,14 +155,14 @@ public class JobCardDaoJpa implements JobCardDao {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id IN :filteredIds", JobCard.class)
-                .setParameter("filteredIds", (filteredIds.isEmpty())? null : filteredIds)
+                .setParameter("filteredIds", (filteredIds.isEmpty()) ? null : filteredIds)
                 .getResultList().stream().sorted(
                         //Ordenamos los elementos segun el orden de filteredIds
                         Comparator.comparingInt(o -> filteredIds.indexOf(o.getJobPost().getId()))
                 ).collect(Collectors.toList());
     }
 
-    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery) {
+    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery, JobCard.OrderBy orderBy) {
         sqlQuery.append(" WHERE (UPPER(post_title) LIKE UPPER('%'|| :query ||'%')");
 
         if (!similarTypes.isEmpty()) {
@@ -163,17 +174,38 @@ public class JobCardDaoJpa implements JobCardDao {
 
         sqlQuery.append(") AND :zone IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_is_active = TRUE");
 
-        if(jobType != null)
+        if (jobType != null)
             sqlQuery.append(" AND post_job_type = :type");
 
-        sqlQuery.append(" GROUP BY job_cards.rating,job_cards.post_id");
-        sqlQuery.append(" ORDER BY rating DESC");
+        sqlQuery.append(" GROUP BY job_cards.rating, job_cards.post_id, job_cards.post_contract_count, job_cards.post_creation_date");
+
+        switch (orderBy) {
+            case BETTER_QUALIFIED:
+                sqlQuery.append(" ORDER BY job_cards.rating DESC");
+                break;
+            case WORST_QUEALIFIED:
+                sqlQuery.append(" ORDER BY job_cards.rating ASC");
+                break;
+            case MOST_HIRED:
+                sqlQuery.append(" ORDER BY job_cards.post_contract_count DESC");
+                break;
+            case LEAST_HIRED:
+                sqlQuery.append(" ORDER BY job_cards.post_contract_count ASC");
+                break;
+            case NEWEST:
+                sqlQuery.append(" ORDER BY job_cards.post_creation_date DESC");
+                break;
+            case OLDEST:
+                sqlQuery.append(" ORDER BY job_cards.post_creation_date ASC");
+                break;
+            default:
+        }
 
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
                 .setParameter("query", query)
                 .setParameter("zone", zone.getValue());
 
-        if(jobType != null)
+        if (jobType != null)
             nativeQuery.setParameter("type", jobType.getValue());
 
         return nativeQuery;

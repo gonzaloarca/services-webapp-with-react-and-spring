@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.*;
-import exceptions.UserAlreadyExistsException;
-import exceptions.UserNotVerifiedException;
+import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.models.exceptions.UserNotVerifiedException;
 
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +39,9 @@ public interface UserService {
 
     List<AnalyticRanking> findUserAnalyticRankings(long id);
 
-    void recoverUserPassword(String email, Locale locale);
+    void recoverUserAccount(String email, Locale locale);
+
+    void recoverUserPassword(long user_id, String password);
 
     UserWithImage findUserWithImage(long id);
 

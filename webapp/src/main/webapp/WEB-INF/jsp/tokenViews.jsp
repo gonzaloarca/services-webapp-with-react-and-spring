@@ -36,9 +36,9 @@
                 <img loading="lazy" src='<c:url value="/resources/images/emailconfirmed.svg" />'
                      alt="<spring:message code="token.view.email.alt"/>"
                      class="image"/>
-                <h1 class="title">
+                <h2 class="success-title">
                     <spring:message code="token.view.email.success"/>
-                </h1>
+                </h2>
                 <p class="text">
                     <spring:message code="token.view.email.text"/>
                 </p>
@@ -50,9 +50,9 @@
                 <img loading="lazy" src='<c:url value="/resources/images/hirenet-mail.png" />'
                      alt="<spring:message code="token.view.email.alt2"/>"
                      class="image"/>
-                <h1 class="title">
+                <h2 class="success-title">
                     <spring:message code="token.view.register.success"/>
-                </h1>
+                </h2>
                 <p class="text">
                     <spring:message code="token.view.email.sent"/>
                 </p>
@@ -61,9 +61,9 @@
                 <img loading="lazy" src='<c:url value="/resources/images/hirenet-mail.png" />'
                      alt="<spring:message code="token.view.email.alt2"/>"
                      class="image"/>
-                <h1 class="title">
+                <h2 class="success-title">
                     <spring:message code="token.view.user.notverified"/>
-                </h1>
+                </h2>
                 <p class="text">
                     <spring:message code="token.view.email.registered"/><br/>
                     <spring:message code="token.view.email.sent"/>
@@ -73,9 +73,9 @@
                 <img loading="lazy" src='<c:url value="/resources/images/warning-sign.svg" />'
                      alt="<spring:message code="token.view.code.warning"/>"
                      class="image"/>
-                <h1 class="title">
+                <h2 class="success-title">
                     <spring:message code="token.view.code.expired"/>
-                </h1>
+                </h2>
                 <p class="text">
                     <spring:message code="token.view.code.invalid"/><br/>
                     <spring:message code="token.view.code.again"/>

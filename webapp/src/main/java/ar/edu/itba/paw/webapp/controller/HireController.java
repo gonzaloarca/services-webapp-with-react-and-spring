@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.security.Principal;
 
@@ -75,12 +76,11 @@ public class HireController {
 
         if (form.getImage().getSize() == 0) {
             hireControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{}", packId, email, form.getDescription());
-            jobContractService.create(email, packId, form.getDescription(), localeResolver.resolveLocale(servletRequest));
+            jobContractService.create(email, packId, form.getDescription(), form.getScheduledDate(), localeResolver.resolveLocale(servletRequest));
         } else {
             try {
                 hireControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{} with image", packId, email, form.getDescription());
-                jobContractService.create(email, packId, form.getDescription(),
-                        imageService.create(form.getImage().getBytes(), form.getImage().getContentType()), localeResolver.resolveLocale(servletRequest));
+                jobContractService.create(email, packId, form.getDescription(), form.getScheduledDate(), imageService.create(form.getImage().getBytes(), form.getImage().getContentType()), localeResolver.resolveLocale(servletRequest));
             } catch (IOException e) {
                 hireControllerLogger.debug("Error creating contract");
                 throw new RuntimeException(e.getMessage());

@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.dao.JobCardDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobPostNotFoundException;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -52,23 +54,28 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobCard> search(String title, int zone, int jobType, int page, Locale locale) {
+    public List<JobCard> search(String title, int zone, int jobType, JobCard.OrderBy orderBy, int page, Locale locale) {
         List<JobPost.JobType> similarTypes = getSimilarTypes(title, locale);
         JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
         if (jobType == SEARCH_WITHOUT_CATEGORIES)
-            return jobCardDao.search(title, parsedZone, similarTypes, page);
+            return jobCardDao.search(title, parsedZone, similarTypes, orderBy, page);
         else
-            return jobCardDao.searchWithCategory(title, parsedZone, JobPost.JobType.values()[jobType], similarTypes, page);
+            return jobCardDao.searchWithCategory(title, parsedZone, JobPost.JobType.values()[jobType], similarTypes, orderBy, page);
     }
 
     @Override
     public JobCard findByPostId(long id) {
-        return jobCardDao.findByPostId(id).orElseThrow(NoSuchElementException::new);
+        return jobCardDao.findByPostId(id).orElseThrow(JobPostNotFoundException::new);
+    }
+
+    @Override
+    public JobCard findByPackageIdWithPackageInfoWithInactive(long id) {
+        return jobCardDao.findByPackageIdWithPackageInfoWithInactive(id).orElseThrow(JobPackageNotFoundException::new);
     }
 
     @Override
     public JobCard findByPostIdWithInactive(long id) {
-        return jobCardDao.findByPostIdWithInactive(id).orElseThrow(NoSuchElementException::new);
+        return jobCardDao.findByPostIdWithInactive(id).orElseThrow(JobPostNotFoundException::new);
     }
 
     @Override
@@ -93,12 +100,12 @@ public class SimpleJobCardService implements JobCardService {
 
     @Override
     public int findMaxPageSearch(String query, JobPost.Zone value, Locale locale) {
-        return jobCardDao.findMaxPageSearch(query, value, getSimilarTypes(query,locale));
+        return jobCardDao.findMaxPageSearch(query, value, getSimilarTypes(query, locale));
     }
 
     @Override
     public int findMaxPageSearchWithCategory(String query, JobPost.Zone value, JobPost.JobType jobType, Locale locale) {
-        return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType, getSimilarTypes(query,locale));
+        return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType, getSimilarTypes(query, locale));
     }
 
     @Override

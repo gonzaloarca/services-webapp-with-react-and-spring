@@ -8,27 +8,38 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
-public class PriceNotEmptyValidator implements ConstraintValidator<PriceNotEmpty, PackageForm> {
+public class PriceNotEmptyValidator implements ConstraintValidator<PriceNotEmpty, Object> {
+
+    private String price;
+
+    private String rateType;
+
+    private String message;
 
     @Override
     public void initialize(PriceNotEmpty constraintAnnotation) {
+        this.price = constraintAnnotation.price();
+        this.rateType = constraintAnnotation.rateType();
+        this.message = constraintAnnotation.message();
     }
 
     @Override
-    public boolean isValid(PackageForm form,
+    public boolean isValid(Object value,
                            ConstraintValidatorContext context) {
-        Integer ordinal = form.getRateType();
-        String price = form.getPrice();
+        Object ordinal = new BeanWrapperImpl(value)
+                .getPropertyValue(rateType);
+        Object priceValue = new BeanWrapperImpl(value)
+                .getPropertyValue(price);
 
         if (ordinal == null) {
             return false;
         }
 
-        if (ordinal != JobPackage.RateType.TBD.ordinal() &&
-                (price == null || price.isEmpty() ||
-                        !Pattern.matches("^(?=.+)(?:[1-9]\\d*|0)?(?:\\.\\d+)?$", price))) {
+        if (!ordinal.equals(JobPackage.RateType.TBD.ordinal()) &&
+                (priceValue == null || priceValue.equals("") ||
+                        !Pattern.matches("^(?=.+)(?:[1-9]\\d*|0)?(?:\\.\\d+)?$", priceValue.toString()))) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("Introduzca un precio válido").addNode("price")
+                context.buildConstraintViolationWithTemplate(message).addNode(price)
                         .addConstraintViolation();
                 return false;
         }

@@ -11,38 +11,44 @@ public class JobContractWithImage extends JobContractAbstract{
             @AttributeOverride(name = "data", column = @Column(name = "image_data")),
             @AttributeOverride(name = "type", column = @Column(name = "contract_image_type", length = 100))
     })
-    private ByteImage image;
+    private ByteImage byteImage;
 
     /*default*/JobContractWithImage() {
 
     }
 
     public JobContractWithImage(User client, JobPackage jobPackage, LocalDateTime creationDate,
+                                LocalDateTime scheduledDate, LocalDateTime lastModifiedDate,
                                 String description, ByteImage image) {
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;
+        this.scheduledDate = scheduledDate;
+        this.lastModifiedDate = lastModifiedDate;
         this.description = description;
         this.state = JobContract.ContractState.PENDING_APPROVAL;
-        this.image = image;
+        this.byteImage = image;
     }
 
     public JobContractWithImage(long id, User client, JobPackage jobPackage, LocalDateTime creationDate,
+                                LocalDateTime scheduledDate, LocalDateTime lastModifiedDate,
                                 String description, ByteImage image) {
         this.id = id;
         this.client = client;
         this.jobPackage = jobPackage;
         this.creationDate = creationDate;
+        this.scheduledDate = scheduledDate;
+        this.lastModifiedDate = lastModifiedDate;
         this.description = description;
         this.state = JobContract.ContractState.PENDING_APPROVAL;
-        this.image = image;
+        this.byteImage = image;
     }
 
-    public ByteImage getImage() {
-        return image;
+    public ByteImage getByteImage() {
+        return byteImage;
     }
 
-    public void setImage(ByteImage image) {
-        this.image = image;
+    public void setByteImage(ByteImage byteImage) {
+        this.byteImage = byteImage;
     }
 }

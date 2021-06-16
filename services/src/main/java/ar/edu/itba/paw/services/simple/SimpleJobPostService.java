@@ -5,8 +5,8 @@ import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
-import exceptions.JobPostNotFoundException;
-import exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobPostNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,12 +100,16 @@ public class SimpleJobPostService implements JobPostService {
         List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone])
                 .collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
-        return jobPostDao.updateById(id, title, availableHours, parsedJobType, parsedZones);
+        if (!jobPostDao.updateById(id, title, availableHours, parsedJobType, parsedZones))
+            throw new JobPostNotFoundException();
+        else return true;
     }
 
     @Override
     public boolean deleteJobPost(long id) {
-        return jobPostDao.deleteJobPost(id);
+        if (!jobPostDao.deleteJobPost(id))
+            throw new JobPostNotFoundException();
+        else return true;
     }
 
 }

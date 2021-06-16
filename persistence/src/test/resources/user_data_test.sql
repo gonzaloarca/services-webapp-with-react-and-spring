@@ -1,7 +1,7 @@
 -- ELiminamos informacion en caso de que exista
 TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK;
 --11 usuarios
-INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified, user_creation_date) VALUES (NEXT VALUE FOR users_user_id_seq, 'Francisco Quesada', 'franquesada@gmail.com', 'password','1147895678', true, false, NOW());
+INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified, user_creation_date,user_image,image_type) VALUES (NEXT VALUE FOR users_user_id_seq, 'Francisco Quesada', 'franquesada@gmail.com', 'password','1147895678', true, false, NOW(),hextoraw('010203040506'),'png');
 INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified, user_creation_date) VALUES (NEXT VALUE FOR users_user_id_seq, 'Manuel Rodriguez', 'manurodriguez@gmail.com','password', '1109675432', true, true, NOW());
 INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified, user_creation_date) VALUES (NEXT VALUE FOR users_user_id_seq, 'Gonzalo Arca', 'gonzaarca@gmail.com','password', '0549940406521', true, true, NOW());
 INSERT INTO users(user_id, user_name, user_email,user_password, user_phone, user_is_active, user_is_verified, user_creation_date) VALUES (NEXT VALUE FOR users_user_id_seq, 'Manuel Parma', 'manuparma@gmail.com','password', '1158586363', true, true, NOW());
@@ -29,6 +29,11 @@ INSERT INTO job_post(post_id, user_id, post_title, post_available_hours, post_jo
 INSERT INTO job_post(post_id, user_id, post_title, post_available_hours, post_job_type, post_is_active, post_creation_date) VALUES (NEXT VALUE FOR job_post_post_id_seq, 1, 'Plomero Matriculado 4  ', 'Miercoles a Viernes 10hs - 14hs', 2, true, NOW());
 INSERT INTO job_post(post_id, user_id, post_title, post_available_hours, post_job_type, post_is_active, post_creation_date) VALUES (NEXT VALUE FOR job_post_post_id_seq, 1, 'Plomero Inactivo', 'Miercoles a Viernes 10hs - 14hs', 2, false, NOW());
 INSERT INTO job_post(post_id,user_id,post_title,post_available_hours,post_job_type,post_is_active, post_creation_date) VALUES (NEXT VALUE FOR job_post_post_id_seq,2,'Electricista no matriculado','Lun a Jueves 13hs - 14hs',1,true, NOW());
+
+-- --Imagen de post 1
+INSERT INTO post_image(image_id,post_id,image_data,image_type) VALUES (NEXT VALUE FOR post_image_image_id_seq,1,hextoraw('010203040506'),'png');
+INSERT INTO post_image(image_id,post_id,image_data,image_type) VALUES (NEXT VALUE FOR post_image_image_id_seq,1,hextoraw('0708090A0B0C'),'png');
+
 
 -- --Todos los posts tienen zonas 1 y 2
 INSERT INTO post_zone(post_id, zone_id) VALUES (1, 1);
@@ -110,4 +115,10 @@ INSERT INTO review(contract_id, review_rate, review_title, review_description,re
 INSERT INTO review(contract_id, review_rate, review_title, review_description,review_creation_date) VALUES (6, 2, 'Medio pelo', 'Resolvio todo de forma ideal','2021-05-04 01:09:46.0');
 INSERT INTO review(contract_id, review_rate, review_title, review_description,review_creation_date) VALUES (7, 4, 'Muy bueno', 'Resolvio todo en cuestion de minutos','2021-05-04 01:09:46.0');
 INSERT INTO review(contract_id, review_rate, review_title, review_description,review_creation_date) VALUES (8, 2, 'Medio pelo', 'Resolvio todo de forma ideal','2021-05-04 01:09:46.0');
+
+--Verification tokens
+INSERT INTO verification_token(user_id, token, creation_date) VALUES (2, 'ABCDEFGHIJK', NOW());
+
+--Account Recover token
+INSERT INTO recovery_token(user_id, token, creation_date) VALUES (2, 'ABCDEFGHIJK', NOW());
 COMMIT;

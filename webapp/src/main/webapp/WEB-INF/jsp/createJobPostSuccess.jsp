@@ -46,9 +46,9 @@
              class="step-container">
             <img loading="lazy" class="mb-4" style="height: 150px" src="<c:url value="/resources/images/success1.svg"/>"
                  alt="<spring:message code="post.create.success.alt"/>"/>
-            <h4 class="mb-4">
+            <h2 class="success-title">
                 <spring:message code="post.create.success"/>
-            </h4>
+            </h2>
 
             <c:url value="/job/${postId}" var="getJobPath"/>
             <a href='${getJobPath}' class="btn btn-primary text-uppercase">

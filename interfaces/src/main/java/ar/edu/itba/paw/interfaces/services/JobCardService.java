@@ -16,9 +16,11 @@ public interface JobCardService {
 
     List<JobCard> findByUserId(long id, int page);
 
-    List<JobCard> search(String title, int zone, int jobType, int page, Locale locale);
+    List<JobCard> search(String title, int zone, int jobType, JobCard.OrderBy orderBy, int page, Locale locale);
 
     JobCard findByPostId(long id);
+
+    JobCard findByPackageIdWithPackageInfoWithInactive(long id);
 
     JobCard findByPostIdWithInactive(long id);
 

@@ -60,7 +60,7 @@
         </div>
     </div>
     <div class="qualify-form">
-        <form:form modelAttribute="reviewForm" class="needs-validation" novalidate="true"
+        <form:form modelAttribute="reviewForm" class="needs-validation px-4" novalidate="true"
                    action="${pageContext.request.contextPath}/rate-contract/${contractId}" method="post"
                    enctype="multipart/form-data" id="rating-form">
             <h3 class="m-0">
@@ -77,7 +77,7 @@
                 <form:radiobutton path="rateValue" id="star1" name="rateValue" value="1" checked="checked"/>
                 <form:label path="rateValue" for="star1" title="text"/>
             </div>
-            <form:label path="description" class="custom-label">
+            <form:label path="description" class="custom-label mt-4">
                 <spring:message code="ratecontract.review.description"/>
             </form:label>
             <spring:message code="ratecontract.review.description.placeholder" var="descriptionPlaceholder"/>
@@ -90,7 +90,7 @@
             </span>
             <form:errors path="description" cssClass="form-error" element="p"/>
 
-            <form:label path="title" class="custom-label">
+            <form:label path="title" class="custom-label mt-4">
                 <spring:message code="ratecontract.review.title"/>
             </form:label>
             <spring:message code="ratecontract.review.title.placeholder" var="titlePlaceholder"/>
