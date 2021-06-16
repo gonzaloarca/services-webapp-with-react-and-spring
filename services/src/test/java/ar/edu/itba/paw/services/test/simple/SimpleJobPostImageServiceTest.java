@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.services.test.simple;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.exceptions.JobPostImageNotFoundException;
 import ar.edu.itba.paw.services.simple.SimpleJobPostImageService;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -15,113 +17,200 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
-//TODO arreglar este test
-//@RunWith(MockitoJUnitRunner.class)
-//public class SimpleJobPostImageServiceTest {
-//	private static final long POST_ID = 20;
-//	private static final long FAKE_ID = 50;
-//
-//	private static final List<JobPost.Zone> ZONES =
-//			new ArrayList<JobPost.Zone>(Arrays.asList(JobPost.Zone.values()[1],
-//					JobPost.Zone.values()[2]));
-//	private final User PROFESSIONAL = new User(
-//			8, "franquesada@gmail.com", "Francisco Quesada", "0800111333", true, true, LocalDateTime.now());
-//	private final JobPost JOB_POST = new JobPost(
-//			POST_ID, PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
-//			ZONES, true, LocalDateTime.now());
-//
-//	private final byte[] image1Bytes = {1,2,3,4,5};
-//	private final String image1Type = "image/png";
-//	private final ByteImage byteImage1 = new ByteImage(image1Bytes, image1Type);
-//	private final EncodedImage encodedImage1 = new EncodedImage(Base64.getEncoder().encodeToString(image1Bytes), image1Type);
-//
-//	private final byte[] image2Bytes = {6,7,8,9,0};
-//	private final String image2Type = "image/jpg";
-//	private final ByteImage byteImage2 = new ByteImage(image2Bytes, image2Type);
-//	private final EncodedImage encodedImage2 = new EncodedImage(Base64.getEncoder().encodeToString(image2Bytes), image2Type);
-//
-//	private final List<JobPostImage> jobPostImages = new ArrayList<>();
-//
-//	@InjectMocks
-//	private final SimpleJobPostImageService jobPostImageService = new SimpleJobPostImageService();
-//
-//	@Mock
-//	private JobPostImageDao jobPostImageDao;
-//
-//	@Mock
-//	private ImageService imageService;
-//
-//	@Rule
-//	public ExpectedException exceptionRule = ExpectedException.none();
-//
-//	@Test
-//	public void addImagesSuccess() {
-//		Mockito.when(imageService.isValidImage(Mockito.any()))
-//				.thenReturn(true);
-//
-//		Mockito.when(jobPostImageDao.addImage(POST_ID, byteImage1))
-//				.thenReturn(new JobPostImage(1, JOB_POST, encodedImage1));
-//
-//		Mockito.when(jobPostImageDao.addImage(POST_ID, byteImage2))
-//				.thenReturn(new JobPostImage(2, JOB_POST, encodedImage2));
-//
-//		List<ByteImage> images = new ArrayList<>();
-//		images.add(byteImage1);
-//		images.add(byteImage2);
-//
-//		List<JobPostImage> out = jobPostImageService.addImages(POST_ID, images);
-//
-//		Assert.assertNotNull(out);
-//		Assert.assertFalse(out.isEmpty());
-//		Assert.assertEquals(out.get(0).getImage(), encodedImage1);
-//		Assert.assertEquals(out.get(1).getImage(), encodedImage2);
-//	}
-//
-//	@Test
-//	public void addImageException() {
-//		exceptionRule.expect(RuntimeException.class);
-//
-//		jobPostImageService.addImage(FAKE_ID, byteImage1);
-//	}
-//
-//	@Test
-//	public void findByPostIdSuccess() {
-//		jobPostImages.add(new JobPostImage(1, JOB_POST, encodedImage1));
-//		jobPostImages.add(new JobPostImage(2, JOB_POST, encodedImage2));
-//
-//		Mockito.when(jobPostImageDao.findImages(Mockito.eq(POST_ID)))
-//				.thenReturn(jobPostImages);
-//
-//		List<JobPostImage> out = jobPostImageService.findImages(POST_ID);
-//
-//		Assert.assertNotNull(out);
-//		Assert.assertEquals(jobPostImages, out);
-//	}
-//
-//	@Test
-//	public void findByPostIdEmpty() {
-//		Mockito.when(jobPostImageDao.findImages(Mockito.eq(FAKE_ID)))
-//				.thenReturn(jobPostImages);
-//
-//		List<JobPostImage> out = jobPostImageService.findImages(FAKE_ID);
-//
-//		Assert.assertNotNull(out);
-//		Assert.assertTrue(out.isEmpty());
-//	}
-//
-//	@Test
-//	public void maxImagesReached() {
-//		Mockito.when(imageService.isValidImage(Mockito.any()))
-//				.thenReturn(true);
-//
-//		Mockito.when(jobPostImageDao.getImageCount(POST_ID))
-//				.thenReturn(5);
-//
-//		Assert.assertNull(jobPostImageService.addImage(POST_ID, byteImage1));
-//	}
-//}
+@RunWith(MockitoJUnitRunner.class)
+public class SimpleJobPostImageServiceTest {
+	private static final long POST_ID = 20;
+	private static final long FAKE_ID = 50;
+
+	private static final List<JobPost.Zone> ZONES =
+            new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1],
+                    JobPost.Zone.values()[2]));
+
+	private final User PROFESSIONAL = new User(
+			8, "franquesada@gmail.com", "Francisco Quesada", "0800111333", true, true, LocalDateTime.now());
+
+	private final JobPost JOB_POST = new JobPost(
+			POST_ID, PROFESSIONAL, "Plomero matriculado", "Lunes - Jueves de 09 a 16hrs", JobPost.JobType.PLUMBING,
+			ZONES, true, LocalDateTime.now());
+
+	private final byte[] image1Bytes = {1,2,3,4,5};
+	private final String image1Type = "image/png";
+	private final ByteImage byteImage1 = new ByteImage(image1Bytes, image1Type);
+	private final long IMAGE1_ID = 1;
+	private final JobPostImage postImage1 = new JobPostImage(IMAGE1_ID, JOB_POST, byteImage1);
+
+	private final byte[] image2Bytes = {6,7,8,9,0};
+	private final String image2Type = "image/jpg";
+	private final ByteImage byteImage2 = new ByteImage(image2Bytes, image2Type);
+	private final long IMAGE2_ID = 2;
+	private final JobPostImage postImage2 = new JobPostImage(IMAGE2_ID, JOB_POST, byteImage2);
+
+	@InjectMocks
+	private final SimpleJobPostImageService jobPostImageService = new SimpleJobPostImageService();
+
+	@Mock
+	private JobPostImageDao jobPostImageDao;
+
+	@Mock
+	private ImageService imageService;
+
+	@Rule
+	public ExpectedException exceptionRule = ExpectedException.none();
+
+	@Test
+    public void addImageSuccessTest() {
+	    Mockito.when(imageService.isValidImage(Mockito.any()))
+                .thenReturn(true);
+	    Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
+                .thenReturn(0);
+	    Mockito.when(jobPostImageDao.addImage(Mockito.eq(POST_ID), Mockito.eq(byteImage1)))
+                .thenReturn(postImage1);
+
+        JobPostImage result = jobPostImageService.addImage(POST_ID, byteImage1);
+
+        Assert.assertNotNull(result);
+        Assert.assertEquals(IMAGE1_ID, result.getImageId());
+        Assert.assertEquals(JOB_POST, result.getJobPost());
+        Assert.assertEquals(byteImage1, result.getByteImage());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addImageInvalidTest() {
+        Mockito.when(imageService.isValidImage(Mockito.any()))
+                .thenReturn(false);
+
+        jobPostImageService.addImage(POST_ID, byteImage1);
+    }
+
+    @Test
+    public void addImageMaxReachedTest() {
+        Mockito.when(imageService.isValidImage(Mockito.any()))
+                .thenReturn(true);
+        Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
+                .thenReturn(HirenetUtils.MAX_IMAGES_NUMBER);
+
+        JobPostImage result = jobPostImageService.addImage(POST_ID, byteImage1);
+
+        Assert.assertNull(result);
+    }
+
+    @Test
+	public void addImagesSuccessTest() {
+		List<ByteImage> byteImageList = new ArrayList<>();
+		byteImageList.add(byteImage1);
+		byteImageList.add(byteImage2);
+
+		List<JobPostImage> jobPostImageList = new ArrayList<>();
+		jobPostImageList.add(postImage1);
+		jobPostImageList.add(postImage2);
+
+		Mockito.when(imageService.isValidImage(Mockito.any()))
+				.thenReturn(true);
+		Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
+				.thenReturn(0);
+		Mockito.when(jobPostImageDao.addImage(Mockito.eq(POST_ID), Mockito.eq(byteImage1)))
+				.thenReturn(postImage1);
+		Mockito.when(jobPostImageDao.addImage(Mockito.eq(POST_ID), Mockito.eq(byteImage2)))
+				.thenReturn(postImage2);
+
+		List<JobPostImage> result = jobPostImageService.addImages(POST_ID, byteImageList);
+
+		Assert.assertNotNull(result);
+		Assert.assertFalse(result.isEmpty());
+		Assert.assertTrue(result.containsAll(jobPostImageList));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void addImagesInvalidTest() {
+		List<ByteImage> byteImageList = new ArrayList<>();
+		byteImageList.add(byteImage1);
+		byteImageList.add(byteImage2);
+
+		Mockito.when(imageService.isValidImage(Mockito.any()))
+				.thenReturn(false);
+
+		jobPostImageService.addImages(POST_ID, byteImageList);
+	}
+
+	@Test
+	public void addImagesMaxReachedTest() {
+		List<ByteImage> byteImageList = new ArrayList<>();
+		byteImageList.add(byteImage1);
+		byteImageList.add(byteImage2);
+
+		Mockito.when(imageService.isValidImage(Mockito.any()))
+				.thenReturn(true);
+		Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
+				.thenReturn(HirenetUtils.MAX_IMAGES_NUMBER);
+
+		List<JobPostImage> result = jobPostImageService.addImages(POST_ID, byteImageList);
+
+		Assert.assertNotNull(result);
+		Assert.assertTrue(result.isEmpty());
+	}
+
+	@Test
+	public void maxImagesNotReachedTest() {
+		Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
+				.thenReturn(0);
+
+		Assert.assertFalse(jobPostImageService.maxImagesUploaded(POST_ID));
+	}
+
+	@Test
+	public void maxImagesReachedTest() {
+		Mockito.when(jobPostImageDao.getImageCount(Mockito.eq(POST_ID)))
+				.thenReturn(HirenetUtils.MAX_IMAGES_NUMBER);
+
+		Assert.assertTrue(jobPostImageService.maxImagesUploaded(POST_ID));
+	}
+
+	@Test
+	public void findByIdSuccessTest() {
+		Mockito.when(jobPostImageDao.findById(Mockito.eq(IMAGE1_ID)))
+				.thenReturn(Optional.of(postImage1));
+
+		JobPostImage result = jobPostImageService.findById(IMAGE1_ID);
+
+		Assert.assertNotNull(result);
+		Assert.assertEquals(postImage1, result);
+	}
+
+	@Test(expected = JobPostImageNotFoundException.class)
+	public void findByIdInvalidTest() {
+		Mockito.when(jobPostImageDao.findById(Mockito.eq(FAKE_ID)))
+				.thenReturn(Optional.empty());
+
+		jobPostImageService.findById(FAKE_ID);
+	}
+
+	@Test
+	public void getImagesIdsByPostIdSuccessTest() {
+		List<Long> imageIdList = new ArrayList<>();
+		imageIdList.add(IMAGE1_ID);
+		imageIdList.add(IMAGE2_ID);
+
+		Mockito.when(jobPostImageDao.getImagesIdsByPostId(Mockito.eq(POST_ID)))
+				.thenReturn(imageIdList);
+
+		List<Long> result = jobPostImageService.getImagesIdsByPostId(POST_ID);
+
+		Assert.assertNotNull(result);
+		Assert.assertFalse(result.isEmpty());
+		Assert.assertTrue(result.containsAll(imageIdList));
+	}
+
+	@Test
+	public void getImagesIdsByPostIdInvalidTest() {
+		Mockito.when(jobPostImageDao.getImagesIdsByPostId(Mockito.eq(FAKE_ID)))
+				.thenReturn(new ArrayList<>());
+
+		List<Long> result = jobPostImageService.getImagesIdsByPostId(FAKE_ID);
+
+		Assert.assertNotNull(result);
+		Assert.assertTrue(result.isEmpty());
+	}
+
+}

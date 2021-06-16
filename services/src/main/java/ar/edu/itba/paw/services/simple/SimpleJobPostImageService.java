@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services.simple;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPostImageDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.JobPostImageService;
@@ -16,8 +17,6 @@ import java.util.List;
 @Service
 @Transactional
 public class SimpleJobPostImageService implements JobPostImageService {
-
-	private final int MAX_IMAGES_NUMBER = 5;
 
 	@Autowired
 	private JobPostImageDao jobPostImageDao;
@@ -51,7 +50,7 @@ public class SimpleJobPostImageService implements JobPostImageService {
 
 	@Override
 	public boolean maxImagesUploaded(long postId) {
-		return jobPostImageDao.getImageCount(postId) >= MAX_IMAGES_NUMBER;
+		return jobPostImageDao.getImageCount(postId) >= HirenetUtils.MAX_IMAGES_NUMBER;
 	}
 
 	@Override

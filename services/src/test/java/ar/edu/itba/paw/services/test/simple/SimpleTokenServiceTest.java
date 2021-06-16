@@ -71,7 +71,7 @@ public class SimpleTokenServiceTest {
     );
 
     @InjectMocks
-    SimpleTokenService simpleTokenService;
+    private final SimpleTokenService simpleTokenService = new SimpleTokenService();
 
     @Mock
     private VerificationTokenDao verificationTokenDao;
