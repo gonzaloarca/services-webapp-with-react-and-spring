@@ -58,4 +58,6 @@ public interface JobContractService {
     JobContractWithImage findJobContractWithImage(long id);
 
     ByteImage findImageByContractId(long id);
+
+    List<JobContract.ContractState> getContractStates(String contractState);
 }

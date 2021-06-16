@@ -211,7 +211,7 @@
             </c:if>
 
             <%--@elvariable id="changeContractStateForm" type="ar.edu.itba.paw.webapp.form.ChangeContractStateForm"--%>
-            <form:form cssClass="w-100 mb-1" action="${pageContext.request.contextPath}/contract/state/update"
+            <form:form cssClass="w-100 mb-1" action="${pageContext.request.contextPath}/my-contracts/${contractCard.jobContract.id}/update"
                        method="post"
                        modelAttribute="changeContractStateForm">
                 <c:if test="${isApprovable}">
@@ -245,7 +245,6 @@
                     </button>
                     <hr class="divider-bar-thick">
                 </c:if>
-                <form:hidden path="id" value="${contractCard.jobContract.id}"/>
                 <form:hidden id="new-state" path="newState"/>
                 <form:hidden id="return-url" path="returnURL"
                              value="/my-contracts/${contractType}/"/>

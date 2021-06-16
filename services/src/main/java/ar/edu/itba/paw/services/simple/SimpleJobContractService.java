@@ -207,4 +207,29 @@ public class SimpleJobContractService implements JobContractService {
     public ByteImage findImageByContractId(long id) {
         return jobContractDao.findImageByContractId(id).orElseThrow(ImageNotFoundException::new);
     }
+
+    @Override
+    public List<JobContract.ContractState> getContractStates(String contractState){
+        List<JobContract.ContractState> states = new ArrayList<>();
+
+        switch (contractState) {
+            case "active":
+                states.add(JobContract.ContractState.APPROVED);
+                break;
+            case "pending":
+                states.add(JobContract.ContractState.PENDING_APPROVAL);
+                states.add(JobContract.ContractState.PRO_MODIFIED);
+                states.add(JobContract.ContractState.CLIENT_MODIFIED);
+                break;
+            case "finalized":
+                states.add(JobContract.ContractState.COMPLETED);
+                states.add(JobContract.ContractState.PRO_CANCELLED);
+                states.add(JobContract.ContractState.PRO_REJECTED);
+                states.add(JobContract.ContractState.CLIENT_CANCELLED);
+                states.add(JobContract.ContractState.CLIENT_REJECTED);
+                break;
+        }
+
+        return states;
+    }
 }
