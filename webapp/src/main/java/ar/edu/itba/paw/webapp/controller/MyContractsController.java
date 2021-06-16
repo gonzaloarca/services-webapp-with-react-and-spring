@@ -2,19 +2,19 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.form.ChangeContractStateForm;
+import ar.edu.itba.paw.webapp.form.UpdateContractForm;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/my-contracts")
@@ -48,7 +48,7 @@ public class MyContractsController {
     public ModelAndView getMyContracts(Principal principal,
                                        @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
                                        @PathVariable final String contractType, @PathVariable final String contractState,
-                                       @ModelAttribute("changeContractStateForm") ChangeContractStateForm form) {
+                                       @ModelAttribute("updateContractForm") UpdateContractForm form) {
         if (page < 1)
             throw new IllegalArgumentException();
 
@@ -85,10 +85,19 @@ public class MyContractsController {
                 .addObject("contractStateEndpoint", contractState);
     }
 
-    @RequestMapping(path = "/{id}/update", method = RequestMethod.POST)
-    public ModelAndView updateContractState(@ModelAttribute("changeContractStateForm") ChangeContractStateForm form, HttpServletRequest servletRequest, @PathVariable("id") long id) {
+    @RequestMapping(path = "/{contractType}/{contractState}/{id}/update", method = RequestMethod.POST)
+    public ModelAndView updateContract(@ModelAttribute("updateContractForm") UpdateContractForm form,
+                                       HttpServletRequest servletRequest, @PathVariable("id") long id,
+                                       @PathVariable String contractType, @PathVariable String contractState,
+                                       BindingResult errors, Principal principal) {
         myContractsControllerLogger.debug("Updating state in contract {} to {}", id, form.getNewState());
 
+        if (errors.hasErrors()) {
+            return getMyContracts(principal, 1, contractType, contractState, form);
+        }
+
+        jobContractService.changeContractScheduledDate(id, form.getNewScheduledDate(), contractType.equals("professional"),
+                localeResolver.resolveLocale(servletRequest));
         jobContractService.changeContractState(id, JobContract.ContractState.values()[form.getNewState()]);
 
         JobContractWithImage jobContract = jobContractService.findJobContractWithImage(id);

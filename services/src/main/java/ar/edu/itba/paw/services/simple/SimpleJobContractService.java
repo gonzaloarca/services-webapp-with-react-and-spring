@@ -199,6 +199,15 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
+    public void changeContractScheduledDate(long id, String dateTime, boolean isServiceOwner, Locale locale) {
+        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
+        LocalDateTime parsedDate = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(datePattern));
+
+        jobContractDao.changeContractScheduledDate(id, parsedDate);
+
+    }
+
+    @Override
     public JobContractWithImage findJobContractWithImage(long id) {
         return jobContractDao.findJobContractWithImage(id).orElseThrow(JobContractNotFoundException::new);
     }

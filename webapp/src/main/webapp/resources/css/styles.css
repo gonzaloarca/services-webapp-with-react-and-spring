@@ -556,6 +556,22 @@ h3 {
     color: white;
 }
 
+.contract-control-reschedule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px;
+    border-radius: 5px;
+    background-color: #FCB839;
+    color: white;
+}
+
+.contract-control-reschedule:hover {
+    background-color: #d09727;
+    color: white;
+}
+
 .contract-control-details {
     display: flex;
     align-items: center;

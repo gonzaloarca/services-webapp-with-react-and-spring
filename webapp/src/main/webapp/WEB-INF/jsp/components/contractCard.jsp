@@ -47,8 +47,11 @@
 <c:set var="PRO_CANCELLED" value="<%=JobContract.ContractState.PRO_CANCELLED%>"/>
 
 <%--Macro para identificar si el contrato debería tener controles para aceptar/rechazar--%>
-<c:set var="isApprovable" value="${((contractCard.jobContract.state == PENDING_APPROVAL || contractCard.jobContract.state == CLIENT_MODIFIED) && isOwner)
-|| (contractCard.jobContract.state == PRO_MODIFIED && !isOwner)}"/>
+<c:set var="isApprovable" value="${((contractState == PENDING_APPROVAL || contractState == CLIENT_MODIFIED) && isOwner)
+|| (contractState == PRO_MODIFIED && !isOwner)}"/>
+
+<c:set var="isReschedulable" value="${contractState != COMPLETED && contractState != CLIENT_REJECTED
+&& contractState != PRO_REJECTED && contractState != CLIENT_CANCELLED && contractState != PRO_CANCELLED}"/>
 
 
 <%--Seteo de variable para la imagen y texto a mostrar en el usuario que contrato/el dueño del servicio dependiendo del caso --%>
@@ -103,7 +106,8 @@
     <c:if test="${contractState == CLIENT_CANCELLED || contractState == PRO_CANCELLED
     || contractState == PRO_REJECTED || contractState == COMPLETED}">
         <div class="${stateBar}">
-            <spring:message code="${stateMessage}"/> - (<spring:message htmlEscape="true" code="dateTime.formatted" arguments="${lastModifiedDateFormatted}, ${lastModifiedTimeFormatted} "/>)
+            <spring:message code="${stateMessage}"/> - (<spring:message htmlEscape="true" code="dateTime.formatted"
+                                                                        arguments="${lastModifiedDateFormatted}, ${lastModifiedTimeFormatted} "/>)
         </div>
     </c:if>
     <div class="hire-details-container">
@@ -149,7 +153,8 @@
                             </p>
                             <div class="scheduled-date-container">
                                 <p class="m-0"><c:out value="${scheduledDateFormatted}"/></p>
-                                <p class="m-0"><spring:message code="time.formatted" arguments="${scheduledTimeFormatted}"/></p>
+                                <p class="m-0"><spring:message code="time.formatted"
+                                                               arguments="${scheduledTimeFormatted}"/></p>
                             </div>
                         </div>
                     </div>
@@ -210,10 +215,12 @@
                 <c:url value="/image/contract/${contractCard.jobContract.id}" var="imageSrc"/>
             </c:if>
 
-            <%--@elvariable id="changeContractStateForm" type="ar.edu.itba.paw.webapp.form.ChangeContractStateForm"--%>
-            <form:form cssClass="w-100 mb-1" action="${pageContext.request.contextPath}/my-contracts/${contractCard.jobContract.id}/update"
+            <%--@elvariable id="updateContractForm" type="ar.edu.itba.paw.webapp.form.UpdateContractForm"--%>
+            <form:form cssClass="w-100 mb-1"
+                       action="${pageContext.request.contextPath}/my-contracts/${contractType}/${contractStateEndpoint}/${contractCard.jobContract.id}/update"
                        method="post"
-                       modelAttribute="changeContractStateForm">
+                       modelAttribute="updateContractForm"
+            autocomplete="off">
                 <c:if test="${isApprovable}">
 
                     <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
@@ -228,8 +235,78 @@
                         <i class="fas fa-times mr-1"></i>
                         <spring:message code="mycontracts.reject"/>
                     </button>
+
                     <hr class="divider-bar-thick">
+
+
                 </c:if>
+
+                <c:if test="${isReschedulable}">
+                    <button class="btn contract-control-reschedule text-uppercase" type="button"
+                            onclick="openRescheduleModal()">
+                        <i class="fas fa-times mr-1"></i>
+                        <spring:message code="mycontracts.reschedule"/>
+                    </button>
+                    <hr class="divider-bar-thick">
+
+                    <div class="modal fade" tabindex="-1" id="reschedule-modal"
+                         aria-labelledby="modal" aria-hidden="true">
+                        <div id="reschedule-modal-dialog" class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title font-weight-bold">
+                                        <form:label path="newScheduledDate">
+                                            <spring:message code="mycontracts.reschedule.title"/>
+                                        </form:label>
+                                    </h5>
+
+                                </div>
+                                <div class="modal-body p-4 d-flex justify-content-around">
+
+                                    <spring:message code="contract.create.form.date.placeholder" var="datePlaceholder"/>
+                                    <div class="input-group date has-validation" id="datetimepicker1"
+                                         data-target-input="nearest">
+                                        <form:input id="date-input" path="newScheduledDate"
+                                                    type="text"
+                                                    class="form-control datetimepicker-input" required="true"
+                                                    data-target="#datetimepicker1" placeholder="${datePlaceholder}"
+                                                    data-toggle="datetimepicker"/>
+                                        <div class="input-group-append" data-target="#datetimepicker1"
+                                             data-toggle="datetimepicker">
+                                            <div class="input-group-text"
+                                                 style="background-color: #485696; color: white">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </div>
+                                        </div>
+                                        <div class="invalid-feedback" style="background-color: white; margin: 0">
+                                            <spring:message code="contract.create.invalid.date"/>
+                                        </div>
+                                    </div>
+                                    <c:set var="localeCode" value="${pageContext.response.locale}"/>
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $('#datetimepicker1').datetimepicker({
+                                                locale: '${localeCode}',
+                                                minDate: moment(),
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        <spring:message code="mycontracts.contact.close"/>
+                                    </button>
+                                    <button type="submit"
+                                            onclick="changeContractDate(${isOwner ? PRO_MODIFIED.ordinal() : CLIENT_MODIFIED.ordinal()})"
+                                            class="btn btn-secondary">
+                                        <spring:message code="mycontracts.reschedule.submit"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
+
                 <c:if test="${contractState == APPROVED}">
                     <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
                             onclick="changeContractState(${COMPLETED.ordinal()}, 'finalized')">
@@ -362,45 +439,6 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            function openContactModal(name, email, phone) {
-                $('#modalProfessionalName').text(name);
-                $('#modalProfessionalEmail').text(email);
-                $('#modalProfessionalPhone').text(phone);
-                $('#contact-modal').modal('show');
-            }
-
-            function openDetailsModal(contractId) {
-                const imageElem = $('#details-modal-image');
-                const imageHeader = $('#details-modal-image-header');
-                const imageContainer = $('#details-image-container');
-                const descriptionContainer = $('#details-description-container');
-                const modalDialog = $('#details-modal-dialog');
-                const description = $('#details-description-text-' + contractId).text()
-                const image = $('#image-source-' + contractId).text()
-
-                if (image === "") {
-                    imageContainer.hide();
-                    imageElem.hide();
-                    imageHeader.hide();
-                    descriptionContainer.css('width', '100%');
-                    modalDialog.removeClass('modal-lg');
-                } else {
-                    imageElem.attr('src', image);
-                    imageContainer.show();
-                    imageElem.show();
-                    imageHeader.show();
-                    descriptionContainer.css('width', '45%');
-                    modalDialog.addClass('modal-lg');
-                }
-
-
-                $('#details-modal-description').text(description);
-                $('#details-modal').modal('show');
-            }
-        </script>
-
     </div>
     <div style="color: #485696; margin: 0 30px; padding: 10px 0" class="d-flex justify-content-start">
         <p style=" margin: 0 10px;"><i class="fas fa-cube mr-2"></i>
@@ -411,11 +449,60 @@
 </div>
 
 <script>
+    function openContactModal(name, email, phone) {
+        $('#modalProfessionalName').text(name);
+        $('#modalProfessionalEmail').text(email);
+        $('#modalProfessionalPhone').text(phone);
+        $('#contact-modal').modal('show');
+    }
+
+    function openDetailsModal(contractId) {
+        const imageElem = $('#details-modal-image');
+        const imageHeader = $('#details-modal-image-header');
+        const imageContainer = $('#details-image-container');
+        const descriptionContainer = $('#details-description-container');
+        const modalDialog = $('#details-modal-dialog');
+        const description = $('#details-description-text-' + contractId).text()
+        const image = $('#image-source-' + contractId).text()
+
+        if (image === "") {
+            imageContainer.hide();
+            imageElem.hide();
+            imageHeader.hide();
+            descriptionContainer.css('width', '100%');
+            modalDialog.removeClass('modal-lg');
+        } else {
+            imageElem.attr('src', image);
+            imageContainer.show();
+            imageElem.show();
+            imageHeader.show();
+            descriptionContainer.css('width', '45%');
+            modalDialog.addClass('modal-lg');
+        }
+
+
+        $('#details-modal-description').text(description);
+        $('#details-modal').modal('show');
+    }
+
+    function openRescheduleModal() {
+        $('#reschedule-modal').modal('show');
+    }
+
     function changeContractState(state, urlAppend) {
         let returnUrl = $('#return-url');
         let newState = $('#new-state');
         newState.val(state);
         returnUrl.val(returnUrl.val() + urlAppend);
     }
+
+    function changeContractDate(state) {
+        let returnUrl = $('#return-url');
+        let newState = $('#new-state');
+
+        newState.val(state);
+        returnUrl.val(returnUrl.val() + 'pending');
+    }
+
 
 </script>

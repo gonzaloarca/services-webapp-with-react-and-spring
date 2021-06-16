@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,6 +55,8 @@ public interface JobContractService {
     List<JobContractCard> findJobContractCardsByProId(long id, List<JobContract.ContractState> states, int page);
 
     void changeContractState(long id, JobContract.ContractState state);
+
+    void changeContractScheduledDate(long id, String dateTime, boolean isServiceOwner, Locale locale);
 
     JobContractWithImage findJobContractWithImage(long id);
 

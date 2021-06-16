@@ -195,6 +195,18 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
+    public void changeContractScheduledDate(long id, LocalDateTime dateTime) {
+        JobContract contract = em.find(JobContract.class, id);
+
+        if (contract == null)
+            throw new JobContractNotFoundException();
+
+        contract.setScheduledDate(dateTime);
+
+        em.persist(contract);
+    }
+
+    @Override
     public Optional<JobContractWithImage> findJobContractWithImage(long id) {
         return Optional.ofNullable(em.find(JobContractWithImage.class, id));
     }
