@@ -122,7 +122,6 @@ public class JobContractAbstract {
 
     @Override
     public boolean equals(Object o) {
-        //fixme está bien este equals?
         if (this == o) return true;
         if (o == null || !getClass().isAssignableFrom(o.getClass())) return false;
         JobContractAbstract that = (JobContractAbstract) o;

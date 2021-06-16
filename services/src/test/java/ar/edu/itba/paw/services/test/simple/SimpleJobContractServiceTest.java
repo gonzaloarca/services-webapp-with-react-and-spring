@@ -137,7 +137,6 @@ public class SimpleJobContractServiceTest {
         Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
         Assert.assertEquals(BYTE_IMAGE, maybeContract.getByteImage());
     }
-    //TODO: Que cambia con respecto al de arriba???
 //    @Test
 //    public void testCreateExistingClient() {
 //        Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
@@ -191,7 +190,6 @@ public class SimpleJobContractServiceTest {
         Assert.assertEquals(CLIENT, maybeContract.getClient());
         Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
     }
-    //TODO: Y este??
 //    @Test
 //    public void testCreateUserWithImage() {
 //        Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));

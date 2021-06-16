@@ -107,7 +107,6 @@ public class MyContractsController {
         JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId());
         JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
 
-        //TODO: Indicar a quien se manda? (ojo que depende del estado, ver el metodo de email para entenderlo)
         myContractsControllerLogger.debug("Sending email updating contract state for package {}, post {} and contract {}", jobPackage.getId(), jobPost.getId(), jobContract.getId());
         mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, localeResolver.resolveLocale(servletRequest));
 

@@ -177,7 +177,6 @@ public class UserDaoJpa implements UserDao {
         @SuppressWarnings("unchecked")
         Integer result = (Integer) query.setParameter("jobType", jobType.getValue())
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0);
-        // TODO: a veces retorna int?????
 
         return result;
     }
