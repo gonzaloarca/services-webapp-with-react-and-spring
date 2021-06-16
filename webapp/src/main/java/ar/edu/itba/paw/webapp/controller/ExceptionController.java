@@ -29,9 +29,15 @@ public class ExceptionController {
             JobPostNotFoundException.class, JobPackageNotFoundException.class,
             ReviewNotFoundException.class, JobContractNotFoundException.class, NoSuchElementException.class,
             AccessDeniedException.class,
-
     })
     public ModelAndView notFoundError(RuntimeException e) {
+        exceptionLogger.debug("Not found exception handled: {}", e.getMessage());
+        return logUser(new ModelAndView("error/404"));
+    }
+
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    @org.springframework.web.bind.annotation.ExceptionHandler({IllegalStateException.class})
+    public ModelAndView conflictError(RuntimeException e) {
         exceptionLogger.debug("Not found exception handled: {}", e.getMessage());
         return logUser(new ModelAndView("error/404"));
     }
