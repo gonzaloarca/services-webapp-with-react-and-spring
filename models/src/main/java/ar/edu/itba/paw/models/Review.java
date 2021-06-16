@@ -17,7 +17,6 @@ public class Review implements Serializable {
     @Column(length = 100, nullable = false, name = "review_description")
     private String description;
 
-    // TODO: Si se borra JobContract que se borre la review
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id", foreignKey = @ForeignKey(name = "review_contract_id_fkey"), nullable = false)

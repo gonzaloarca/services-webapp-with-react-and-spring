@@ -25,9 +25,6 @@ import java.io.OutputStream;
 @RequestMapping("/image")
 public class ImageController {
 
-    //TODO: logging en este controller?
-    private final Logger profileControllerLogger = LoggerFactory.getLogger(ProfileController.class);
-
     @Autowired
     UserService userService;
 
@@ -56,7 +53,7 @@ public class ImageController {
             buildResponse(profilePic, response);
 
         } catch (IOException e) {
-            //TODO: qué hago si hay excepción?
+            //No hago nada
         }
     }
 
@@ -80,7 +77,7 @@ public class ImageController {
             buildResponse(jobPostImage.getByteImage(), response);
 
         } catch (IOException e) {
-            //TODO: qué hago si hay excepción?
+            //No hago nada
         }
     }
 
@@ -102,7 +99,7 @@ public class ImageController {
 
             buildResponse(contractImage, response);
         } catch (IOException e) {
-            //TODO: qué hago si hay excepción?
+            //No hago nada
         }
     }
 

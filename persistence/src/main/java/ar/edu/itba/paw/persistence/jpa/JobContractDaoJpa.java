@@ -138,7 +138,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public int findContractsQuantityByProId(long id) {
-        return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id", Long.class)
+        return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id AND jc.state = :completedState", Long.class)
+                .setParameter("completedState", JobContract.ContractState.COMPLETED)
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
@@ -190,6 +191,18 @@ public class JobContractDaoJpa implements JobContractDao {
 
         contract.setState(state);
         contract.setLastModifiedDate(LocalDateTime.now());
+
+        em.persist(contract);
+    }
+
+    @Override
+    public void changeContractScheduledDate(long id, LocalDateTime dateTime) {
+        JobContract contract = em.find(JobContract.class, id);
+
+        if (contract == null)
+            throw new JobContractNotFoundException();
+
+        contract.setScheduledDate(dateTime);
 
         em.persist(contract);
     }

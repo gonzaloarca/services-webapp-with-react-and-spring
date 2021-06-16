@@ -46,7 +46,6 @@ public class JobContract extends JobContractAbstract {
         this.imageType = imageType;
     }
 
-    //TODO Refactor: mover esto a JobContractAbstract?
     public enum ContractState {
         PENDING_APPROVAL("JobContract.ContractState.PendingApproval"),
         APPROVED("JobContract.ContractState.Approved"),

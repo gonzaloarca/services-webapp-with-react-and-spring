@@ -66,6 +66,11 @@
             <p th:text="${contractDescription}"></p>
             <br/>
         </div>
+        <div class="custom-row">
+            <p class="bold" th:text="#{mail.contractToClient.scheduledDate}"></p>&nbsp;
+            <p th:text="#{dateTime.formatted(${scheduledDate},${scheduledTime})}"></p>
+            <br/>
+        </div>
         <p th:if="${hasAttachment}" th:text="#{mail.contractToClient.attachedImage}"></p>
         <h4 th:text="#{mail.contractToClient.contactClient}"></h4>
     </div>

@@ -43,6 +43,8 @@ public interface JobContractDao {
 
     void changeContractState(long id, JobContract.ContractState state);
 
+    void changeContractScheduledDate(long id, LocalDateTime dateTime);
+
     Optional<JobContractWithImage> findJobContractWithImage(long id);
 
     Optional<ByteImage> findImageByContractId(long id);

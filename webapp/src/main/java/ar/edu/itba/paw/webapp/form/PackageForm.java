@@ -6,7 +6,11 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@PriceNotEmpty
+@PriceNotEmpty(
+        price = "price",
+        rateType = "rateType",
+        message = "Introduzca un precio válido"
+)
 public class PackageForm {
     @NotBlank
     @Size(max = 100)

@@ -37,6 +37,17 @@
     <!--  Bootstrap icons   -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 
+    <!-- Bootstrap Datepicker -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/locale/es.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"
+            integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA=="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css"
+          integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg=="
+          crossorigin="anonymous"/>
+
     <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/mycontracts.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
@@ -95,10 +106,11 @@
                 <div class="mx-3">
                     <c:choose>
                         <c:when test="${contractCards.size() > 0}">
-                            <c:forEach var="contractCard" items="${contractCards}" varStatus="status">
-                                <c:set var="jobCard" value="${contractCard.jobCard}" scope="request"/>
-                                <c:set var="contractState" value="${contractCard.jobContract.state}"/>
+                            <c:forEach var="contractCardVar" items="${contractCards}" varStatus="status">
+                                <c:set var="jobCard" value="${contractCardVar.jobCard}" scope="request"/>
+                                <c:set var="contractState" value="${contractCardVar.jobContract.state}"/>
                                 <c:set var="contractType" value="${contractType}"/>
+                                <c:set var="contractCard" value="${contractCardVar}" scope="request"/>
                                 <%@include file="components/contractCard.jsp" %>
                                 <c:if test="${status.index != contractCards.size()-1}">
                                     <hr class="hr1"/>
@@ -153,7 +165,69 @@
 </div>
 
 <jsp:include page="components/footer.jsp"/>
+<script>
 
+    function openContactModal(name, email, phone) {
+        $('#modalProfessionalName').text(name);
+        $('#modalProfessionalEmail').text(email);
+        $('#modalProfessionalPhone').text(phone);
+        $('#contact-modal').modal('show');
+    }
+
+    function openDetailsModal(contractId) {
+        const imageElem = $('#details-modal-image');
+        const imageHeader = $('#details-modal-image-header');
+        const imageContainer = $('#details-image-container');
+        const descriptionContainer = $('#details-description-container');
+        const modalDialog = $('#details-modal-dialog');
+        const description = $('#details-description-text-' + contractId).text()
+        const image = $('#image-source-' + contractId).text()
+
+        if (image === "") {
+            imageContainer.hide();
+            imageElem.hide();
+            imageHeader.hide();
+            descriptionContainer.css('width', '100%');
+            modalDialog.removeClass('modal-lg');
+        } else {
+            imageElem.attr('src', image);
+            imageContainer.show();
+            imageElem.show();
+            imageHeader.show();
+            descriptionContainer.css('width', '45%');
+            modalDialog.addClass('modal-lg');
+        }
+
+
+        $('#details-modal-description').text(description);
+        $('#details-modal').modal('show');
+    }
+
+    function openRescheduleModal(contractId, dateString) {
+        const dateInput = $("#date-input-" + contractId);
+        dateInput.val(dateString);
+        $('#reschedule-modal-' + contractId).modal('show');
+    }
+
+    function changeContractState(contractId, state, urlAppend) {
+        let returnUrl = $('#return-url-' + contractId);
+        let newState = $('#new-state-' + contractId);
+        newState.val(state);
+        returnUrl.val(returnUrl.val() + urlAppend);
+    }
+
+    function changeContractDate(contractId, state) {
+        let returnUrl = $('#return-url-' + contractId);
+        let newState = $('#new-state-' + contractId);
+        let dateInput = $('#date-input-' + contractId);
+        let dateHidden = $('#hidden-scheduled-date-' + contractId);
+
+        dateHidden.val(dateInput.val());
+        dateInput.prop('disabled', true);
+        newState.val(state);
+        returnUrl.val(returnUrl.val() + 'pending');
+    }
+</script>
 
 </body>
 </html>

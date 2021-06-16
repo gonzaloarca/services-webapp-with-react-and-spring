@@ -5,6 +5,9 @@ import ar.edu.itba.paw.interfaces.services.TokenService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.VerificationToken;
+import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotVerifiedException;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJpa;
 import ar.edu.itba.paw.services.simple.SimpleUserService;
 import org.junit.Assert;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Locale;
+import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleUserServiceTest {
@@ -39,11 +43,13 @@ public class SimpleUserServiceTest {
             "Manuel Rodriguez",
             "11-5678-4353",
             true,
-            true,
+            false,
             LocalDateTime.now());
     private static final VerificationToken TOKEN = new VerificationToken("", NEW_USER, Instant.now());
     private final byte[] image1Bytes = {1, 2, 3, 4, 5};
     private final String image1Type = "image/png";
+    private final ByteImage byteImage = new ByteImage(image1Bytes, image1Type);
+    private final String PASSWORD = "password";
 
     @InjectMocks
     private SimpleUserService userService = new SimpleUserService();
@@ -75,20 +81,26 @@ public class SimpleUserServiceTest {
         Assert.assertEquals(NEW_USER, createdUser);
     }
 
-    @Test
+    @Test(expected = UserAlreadyExistsException.class)
     public void testRegisterUserAlreadyCreated() {
-        exceptionRule.expect(RuntimeException.class);
-        Mockito.when(
-                userDaoJpa.register(
-                        Mockito.eq(EXISTING_USER.getEmail()),
-                        "",
-                        Mockito.eq(EXISTING_USER.getUsername()),
-                        Mockito.eq(EXISTING_USER.getPhone())
-                )
-        ).thenThrow(
-                new RuntimeException()
-        );
-        userDaoJpa.register(EXISTING_USER.getEmail(), "", EXISTING_USER.getUsername(), EXISTING_USER.getPhone());
+        Mockito.when(userDaoJpa.findByEmail(Mockito.eq(EXISTING_USER.getEmail())))
+                .thenReturn(Optional.of(EXISTING_USER));
+
+        EXISTING_USER.setVerified(true);
+
+        userService.register(EXISTING_USER.getEmail(), PASSWORD, EXISTING_USER.getUsername(), EXISTING_USER.getPhone(),
+                byteImage, Locale.getDefault());
+    }
+
+    @Test(expected = UserNotVerifiedException.class)
+    public void testRegisterUserNotVerified() {
+        Mockito.when(userDaoJpa.findByEmail(Mockito.eq(EXISTING_USER.getEmail())))
+                .thenReturn(Optional.of(EXISTING_USER));
+
+        EXISTING_USER.setVerified(false);
+
+        userService.register(EXISTING_USER.getEmail(), PASSWORD, EXISTING_USER.getUsername(), EXISTING_USER.getPhone(),
+                byteImage, Locale.getDefault());
     }
 
     @Test
@@ -111,4 +123,5 @@ public class SimpleUserServiceTest {
         Mockito.verify(userDaoJpa).register(NEW_USER.getEmail(), "", NEW_USER.getUsername(),
                 EXISTING_USER.getPhone(), new ByteImage(image1Bytes, image1Type));
     }
+
 }
