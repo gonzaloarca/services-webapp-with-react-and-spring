@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Transactional
 @Service
@@ -196,6 +193,19 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public void changeContractState(long id, JobContract.ContractState state) {
+        Optional<JobContract> maybeContract = jobContractDao.findById(id);
+
+        if (!maybeContract.isPresent())
+            throw new JobContractNotFoundException();
+
+        JobContract.ContractState currentState = maybeContract.get().getState();
+
+        // No debería ser modificado si ya habia finalizado
+        if (currentState == JobContract.ContractState.CLIENT_CANCELLED || currentState == JobContract.ContractState.PRO_CANCELLED
+                || currentState == JobContract.ContractState.CLIENT_REJECTED || currentState == JobContract.ContractState.PRO_REJECTED ||
+                currentState == JobContract.ContractState.COMPLETED)
+            throw new IllegalStateException();
+
         jobContractDao.changeContractState(id, state);
     }
 

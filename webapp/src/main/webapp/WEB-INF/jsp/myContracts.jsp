@@ -165,7 +165,69 @@
 </div>
 
 <jsp:include page="components/footer.jsp"/>
+<script>
 
+    function openContactModal(name, email, phone) {
+        $('#modalProfessionalName').text(name);
+        $('#modalProfessionalEmail').text(email);
+        $('#modalProfessionalPhone').text(phone);
+        $('#contact-modal').modal('show');
+    }
+
+    function openDetailsModal(contractId) {
+        const imageElem = $('#details-modal-image');
+        const imageHeader = $('#details-modal-image-header');
+        const imageContainer = $('#details-image-container');
+        const descriptionContainer = $('#details-description-container');
+        const modalDialog = $('#details-modal-dialog');
+        const description = $('#details-description-text-' + contractId).text()
+        const image = $('#image-source-' + contractId).text()
+
+        if (image === "") {
+            imageContainer.hide();
+            imageElem.hide();
+            imageHeader.hide();
+            descriptionContainer.css('width', '100%');
+            modalDialog.removeClass('modal-lg');
+        } else {
+            imageElem.attr('src', image);
+            imageContainer.show();
+            imageElem.show();
+            imageHeader.show();
+            descriptionContainer.css('width', '45%');
+            modalDialog.addClass('modal-lg');
+        }
+
+
+        $('#details-modal-description').text(description);
+        $('#details-modal').modal('show');
+    }
+
+    function openRescheduleModal(contractId, dateString) {
+        const dateInput = $("#date-input-" + contractId);
+        dateInput.val(dateString);
+        $('#reschedule-modal-' + contractId).modal('show');
+    }
+
+    function changeContractState(contractId, state, urlAppend) {
+        let returnUrl = $('#return-url-' + contractId);
+        let newState = $('#new-state-' + contractId);
+        newState.val(state);
+        returnUrl.val(returnUrl.val() + urlAppend);
+    }
+
+    function changeContractDate(contractId, state) {
+        let returnUrl = $('#return-url-' + contractId);
+        let newState = $('#new-state-' + contractId);
+        let dateInput = $('#date-input-' + contractId);
+        let dateHidden = $('#hidden-scheduled-date-' + contractId);
+
+        dateHidden.val(dateInput.val());
+        dateInput.prop('disabled', true);
+        newState.val(state);
+        returnUrl.val(returnUrl.val() + 'pending');
+    }
+</script>
 
 </body>
 </html>

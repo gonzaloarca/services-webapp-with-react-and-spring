@@ -246,13 +246,13 @@
                 <c:if test="${isApprovable}">
 
                     <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
-                            onclick="changeContractState(${APPROVED.ordinal()}, 'active')">
+                            onclick="changeContractState(${requestScope.contractCard.jobContract.id}, ${APPROVED.ordinal()}, 'active')">
                         <i class="fas fa-check mr-1"></i>
                         <spring:message code="mycontracts.accept"/>
                     </button>
 
                     <button class="btn contract-control-reject text-uppercase" type="submit"
-                            onclick="changeContractState(${contractType == 'professional' ? PRO_REJECTED.ordinal()
+                            onclick="changeContractState(${requestScope.contractCard.jobContract.id}, ${contractType == 'professional' ? PRO_REJECTED.ordinal()
                                     : CLIENT_REJECTED.ordinal()}, 'finalized')">
                         <i class="fas fa-times mr-1"></i>
                         <spring:message code="mycontracts.reject"/>
@@ -263,13 +263,13 @@
 
                 <c:if test="${contractState == APPROVED}">
                     <button class="btn contract-control-accept text-uppercase mb-1" type="submit"
-                            onclick="changeContractState(${COMPLETED.ordinal()}, 'finalized')">
+                            onclick="changeContractState(${requestScope.contractCard.jobContract.id}, ${COMPLETED.ordinal()}, 'finalized')">
                         <i class="fas fa-check mr-1"></i>
                         <spring:message code="mycontracts.finalize"/>
                     </button>
 
                     <button class="btn contract-control-reject text-uppercase" type="submit"
-                            onclick="changeContractState(${contractType == 'professional' ? PRO_CANCELLED.ordinal()
+                            onclick="changeContractState(${requestScope.contractCard.jobContract.id}, ${contractType == 'professional' ? PRO_CANCELLED.ordinal()
                                     : CLIENT_CANCELLED.ordinal()}, 'finalized')">
                         <i class="fas fa-times mr-1"></i>
                         <spring:message code="mycontracts.cancel"/>
@@ -279,13 +279,14 @@
 
                 <c:if test="${isReschedulable}">
                     <button class="btn contract-control-reschedule text-uppercase" type="button"
-                            onclick="openRescheduleModal('${requestScope.contractCard.scheduledDateStr}')">
+                            onclick="openRescheduleModal(${requestScope.contractCard.jobContract.id}, '${requestScope.contractCard.scheduledDateStr}')">
                         <i class="far fa-calendar-alt mr-1"></i>
                         <spring:message code="mycontracts.reschedule"/>
                     </button>
                     <hr class="divider-bar-thick">
 
-                    <div class="modal fade" tabindex="-1" id="reschedule-modal"
+                    <div class="modal fade" tabindex="-1"
+                         id="reschedule-modal-${requestScope.contractCard.jobContract.id}"
                          aria-labelledby="modal" aria-hidden="true">
                         <div id="reschedule-modal-dialog" class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -302,12 +303,12 @@
                                     <spring:message code="contract.create.form.date.placeholder" var="datePlaceholder"/>
                                     <div class="input-group date has-validation" id="datetimepicker1"
                                          data-target-input="nearest">
-                                        <form:input id="date-input" path="newScheduledDate"
-                                                    type="text"
-                                                    class="form-control datetimepicker-input" required="true"
-                                                    data-target="#datetimepicker1" placeholder="${datePlaceholder}"
-                                                    data-toggle="datetimepicker"
-                                                    value="${requestScope.contractCard.scheduledDateStr}"/>
+                                        <input id="date-input-${requestScope.contractCard.jobContract.id}"
+                                               type="text"
+                                               class="form-control datetimepicker-input"
+                                               data-target="#datetimepicker1" placeholder="${datePlaceholder}"
+                                               data-toggle="datetimepicker"
+                                               value="${requestScope.contractCard.scheduledDateStr}"/>
                                         <div class="input-group-append" data-target="#datetimepicker1"
                                              data-toggle="datetimepicker">
                                             <div class="input-group-text"
@@ -334,7 +335,7 @@
                                         <spring:message code="mycontracts.contact.close"/>
                                     </button>
                                     <button type="submit"
-                                            onclick="changeContractDate(${isOwner ? PRO_MODIFIED.ordinal() : CLIENT_MODIFIED.ordinal()})"
+                                            onclick="changeContractDate(${requestScope.contractCard.jobContract.id}, ${isOwner ? PRO_MODIFIED.ordinal() : CLIENT_MODIFIED.ordinal()})"
                                             class="btn reschedule-submit-btn">
                                         <spring:message code="mycontracts.reschedule.submit"/>
                                     </button>
@@ -343,15 +344,18 @@
                         </div>
                     </div>
                 </c:if>
-                <form:hidden id="new-state" path="newState"/>
-                <form:hidden id="return-url" path="returnURL"
+                <form:hidden id="new-state-${requestScope.contractCard.jobContract.id}" path="newState"/>
+                <form:hidden id="return-url-${requestScope.contractCard.jobContract.id}" path="returnURL"
                              value="/my-contracts/${contractType}/"/>
+                <form:hidden id="hidden-scheduled-date-${requestScope.contractCard.jobContract.id}" path="newScheduledDate"
+                             value="${requestScope.contractCard.scheduledDateStr}"/>
 
             </form:form>
 
             <p id="details-description-text-${requestScope.contractCard.jobContract.id}" style="display: none"><c:out
                     value="${requestScope.contractCard.jobContract.description}"/></p>
-            <p id="image-source-${requestScope.contractCard.jobContract.id}" style="display: none"><c:out value="${imageSrc}"/></p>
+            <p id="image-source-${requestScope.contractCard.jobContract.id}" style="display: none"><c:out
+                    value="${imageSrc}"/></p>
             <a class="btn contract-control-details btn-link text-uppercase"
                onclick='openDetailsModal(${requestScope.contractCard.jobContract.id})'>
                 <i class="fa fa-clipboard-list mr-1" aria-hidden="true"></i>
@@ -427,7 +431,8 @@
             </div>
         </div>
         <%--        Modal de detalles de contrato--%>
-        <p id="details-description-text" hidden><c:out value="${requestScope.contractCard.jobContract.description}"/></p>
+        <p id="details-description-text" hidden><c:out
+                value="${requestScope.contractCard.jobContract.description}"/></p>
         <p id="image-source" hidden><c:out value="${imageSrc}"/></p>
         <div class="modal fade" tabindex="-1" id="details-modal"
              aria-labelledby="modal" aria-hidden="true">
@@ -468,64 +473,3 @@
         <p class="hired-package-title"><c:out value="${requestScope.contractCard.jobContract.jobPackage.title}"/></p>
     </div>
 </div>
-
-<script>
-    function openContactModal(name, email, phone) {
-        $('#modalProfessionalName').text(name);
-        $('#modalProfessionalEmail').text(email);
-        $('#modalProfessionalPhone').text(phone);
-        $('#contact-modal').modal('show');
-    }
-
-    function openDetailsModal(contractId) {
-        const imageElem = $('#details-modal-image');
-        const imageHeader = $('#details-modal-image-header');
-        const imageContainer = $('#details-image-container');
-        const descriptionContainer = $('#details-description-container');
-        const modalDialog = $('#details-modal-dialog');
-        const description = $('#details-description-text-' + contractId).text()
-        const image = $('#image-source-' + contractId).text()
-
-        if (image === "") {
-            imageContainer.hide();
-            imageElem.hide();
-            imageHeader.hide();
-            descriptionContainer.css('width', '100%');
-            modalDialog.removeClass('modal-lg');
-        } else {
-            imageElem.attr('src', image);
-            imageContainer.show();
-            imageElem.show();
-            imageHeader.show();
-            descriptionContainer.css('width', '45%');
-            modalDialog.addClass('modal-lg');
-        }
-
-
-        $('#details-modal-description').text(description);
-        $('#details-modal').modal('show');
-    }
-
-    function openRescheduleModal(dateString) {
-        const dateInput = $("#date-input");
-        dateInput.val(dateString);
-        $('#reschedule-modal').modal('show');
-    }
-
-    function changeContractState(state, urlAppend) {
-        let returnUrl = $('#return-url');
-        let newState = $('#new-state');
-        newState.val(state);
-        returnUrl.val(returnUrl.val() + urlAppend);
-    }
-
-    function changeContractDate(state) {
-        let returnUrl = $('#return-url');
-        let newState = $('#new-state');
-
-        newState.val(state);
-        returnUrl.val(returnUrl.val() + 'pending');
-    }
-
-
-</script>
