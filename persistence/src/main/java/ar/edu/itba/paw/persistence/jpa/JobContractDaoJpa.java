@@ -138,7 +138,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public int findContractsQuantityByProId(long id) {
-        return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id", Long.class)
+        return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id AND jc.state = :completedState", Long.class)
+                .setParameter("completedState", JobContract.ContractState.COMPLETED)
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
