@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -108,7 +109,8 @@ public class MyContractsController {
         JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
 
         myContractsControllerLogger.debug("Sending email updating contract state for package {}, post {} and contract {}", jobPackage.getId(), jobPost.getId(), jobContract.getId());
-        mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, localeResolver.resolveLocale(servletRequest));
+        String webpageUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().scheme("http").replacePath(null).build().toUriString();
+        mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, localeResolver.resolveLocale(servletRequest),webpageUrl);
 
         return new ModelAndView("redirect:" + form.getReturnURL());
     }

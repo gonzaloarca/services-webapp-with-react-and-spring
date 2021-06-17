@@ -45,10 +45,6 @@ public class MailingServiceSpring implements MailingService {
     @Autowired
     private SpringTemplateEngine thymeleafTemplateEngine;
 
-    @Autowired
-    @Qualifier("webpageUrl")
-    private String webpageUrl;
-
     private final HashMap<String, String> IMAGE_TYPE_TO_NAME;
 
     public MailingServiceSpring() {
@@ -88,7 +84,7 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendContractEmail(JobContractWithImage jobContract, Locale locale) {
+    public void sendContractEmail(JobContractWithImage jobContract, Locale locale,String webpageUrl) {
         DataSource attachment = null;
         ByteImage image = jobContract.getByteImage();
         JobPackage jobPack = jobContract.getJobPackage();
@@ -135,13 +131,12 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendVerificationTokenEmail(User user, VerificationToken token, Locale locale) {
+    public void sendVerificationTokenEmail(User user, VerificationToken token, Locale locale, String webpageUrl) {
         Map<String, Object> data = new HashMap<>();
         data.put("username", user.getUsername());
         data.put("email", user.getEmail());
         data.put("phone", user.getPhone());
         data.put("url", webpageUrl + "/token?user_id=" + user.getId() + "&token=" + token.getToken());
-
         sendMessageUsingThymeleafTemplate(user.getEmail(),
                 messageSource.getMessage("mail.token.subject",
                         new Object[]{user.getUsername()}, locale),
@@ -150,7 +145,7 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale) {
+    public void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale,String webpageUrl) {
         Map<String, Object> data = new HashMap<>();
         data.put("url", webpageUrl + "/change-password?user_id=" + user.getId() + "&token=" + token.getToken());
 
@@ -161,7 +156,7 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale) {
+    public void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale,String webpageUrl) {
         DataSource attachment = null;
         ByteImage image = jobContract.getByteImage();
 

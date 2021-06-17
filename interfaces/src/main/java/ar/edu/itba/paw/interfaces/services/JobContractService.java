@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface JobContractService {
 
-    JobContractWithImage create(String client_email, long packageId, String description, String scheduledDate, Locale locale);
+    JobContractWithImage create(String client_email, long packageId, String description, String scheduledDate, Locale locale,String webpageUrl);
 
-    JobContractWithImage create(String client_email, long packageId, String description, String scheduledDate, ByteImage image, Locale locale);
+    JobContractWithImage create(String client_email, long packageId, String description, String scheduledDate, ByteImage image, Locale locale,String webpageUrl);
 
     JobContract findById(long id);
 
