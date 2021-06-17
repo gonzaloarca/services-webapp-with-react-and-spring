@@ -68,15 +68,15 @@ public class SimpleJobContractServiceTest {
     private static final ByteImage BYTE_IMAGE = new ByteImage(image1Bytes, image1Type);
 
     private static final JobContract[] JOB_CONTRACTS = new JobContract[]{
-            new JobContract(1,CLIENT,JOB_PACKAGE,LocalDateTime.now(),LocalDateTime.now().plusDays(5),LocalDateTime.now(),"Description"),
-            new JobContract(2,CLIENT,JOB_PACKAGE,LocalDateTime.now(),LocalDateTime.now().plusDays(10),LocalDateTime.now(),"Another description")
+            new JobContract(1, CLIENT, JOB_PACKAGE, LocalDateTime.now(), LocalDateTime.now().plusDays(5), LocalDateTime.now(), "Description"),
+            new JobContract(2, CLIENT, JOB_PACKAGE, LocalDateTime.now(), LocalDateTime.now().plusDays(10), LocalDateTime.now(), "Another description")
     };
 
-    private static final JobCard JOB_CARD = new JobCard(JOB_POST2, JobPackage.RateType.ONE_TIME,500.0,0,0,0.0,null);
+    private static final JobCard JOB_CARD = new JobCard(JOB_POST2, JobPackage.RateType.ONE_TIME, 500.0, 0, 0, 0.0, null);
 
-    private static final  JobContractCard[] JOB_CONTRACT_CARDS = new JobContractCard[]{
-            new JobContractCard(JOB_CONTRACTS[0],JOB_CARD,null, null),
-            new JobContractCard(JOB_CONTRACTS[1], JOB_CARD,null, null)
+    private static final JobContractCard[] JOB_CONTRACT_CARDS = new JobContractCard[]{
+            new JobContractCard(JOB_CONTRACTS[0], JOB_CARD, null, null),
+            new JobContractCard(JOB_CONTRACTS[1], JOB_CARD, null, null)
     };
 
     @InjectMocks
@@ -137,30 +137,6 @@ public class SimpleJobContractServiceTest {
         Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
         Assert.assertEquals(BYTE_IMAGE, maybeContract.getByteImage());
     }
-//    @Test
-//    public void testCreateExistingClient() {
-//        Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
-//
-//        Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
-//                Mockito.eq(JOB_PACKAGE.getDescription()),Mockito.eq(LocalDateTime.now().plusDays(5))))
-//                .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE, CREATION_DATE,CREATION_DATE.plusDays(5),CREATION_DATE,
-//                        CONTRACT_DESCRIPTION, null));
-//
-//        Locale.setDefault(new Locale("es", "ES"));
-//        String datePattern = "dd/MM/yyyy H:mm";
-//
-//        String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
-//
-//        JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(),
-//                JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),date, Locale.getDefault());
-//
-//        Assert.assertNotNull(maybeContract);
-//        Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
-//        Assert.assertEquals(CONTRACT_DESCRIPTION, maybeContract.getDescription());
-//        Assert.assertEquals(JOB_PACKAGE, maybeContract.getJobPackage());
-//        Assert.assertEquals(CLIENT, maybeContract.getClient());
-//        Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
-//    }
 
     @Test
     public void testCreateWithoutImage() {
@@ -190,37 +166,44 @@ public class SimpleJobContractServiceTest {
         Assert.assertEquals(CLIENT, maybeContract.getClient());
         Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
     }
-//    @Test
-//    public void testCreateUserWithImage() {
-//        Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
-//        Locale.setDefault(new Locale("es", "ES"));
-//        String datePattern = "dd/MM/yyyy H:mm";
-//        String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
-//        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),date,
-//                new ByteImage(image1Bytes, image1Type), Locale.getDefault());
-//
-//        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),CREATION_DATE.plusDays(5),
-//                new ByteImage(image1Bytes, image1Type));
-//    }
-
-//    @Test
-//    public void testFindJobContractCardsByProId(){
-//        List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
-//        SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
-//        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(PROFESSIONAL.getId(),allStates,HirenetUtils.ALL_PAGES);
-//        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
-//        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
-//
-//
-//        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
-//
-//
-//        Assert.assertFalse(jobContractCards.isEmpty());
-//        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS),jobContractCards);
-//    }
 
     @Test
-    public void testFindJobContractCardsByProIdWithNonExistentId(){
+    public void testCreateUserWithImage() {
+        Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
+        Locale.setDefault(new Locale("es", "ES"));
+        String datePattern = "dd/MM/yyyy HH:mm:ss.SSS";
+
+        Mockito.when(messageSource.getMessage(Mockito.eq("spring.mvc.format.date-time"),
+                Mockito.eq(null), Mockito.eq(Locale.getDefault()))).thenReturn(datePattern);
+        String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
+        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),date,
+                new ByteImage(image1Bytes, image1Type), Locale.getDefault());
+
+        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),CREATION_DATE.plusDays(5),
+                new ByteImage(image1Bytes, image1Type));
+    }
+
+    @Test
+    public void testFindJobContractCardsByProId() {
+        List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
+        SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
+        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES);
+        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
+        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
+        Locale.setDefault(new Locale("es", "ES"));
+        String datePattern = "dd/MM/yyyy H:mm";
+
+        Mockito.when(messageSource.getMessage(Mockito.eq("spring.mvc.format.date-time"),
+                Mockito.eq(null), Mockito.eq(Locale.getDefault()))).thenReturn(datePattern);
+        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(PROFESSIONAL.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
+
+
+        Assert.assertFalse(jobContractCards.isEmpty());
+        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS), jobContractCards);
+    }
+
+    @Test
+    public void testFindJobContractCardsByProIdWithNonExistentId() {
         List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
 
@@ -231,26 +214,30 @@ public class SimpleJobContractServiceTest {
         Assert.assertTrue(jobContractCards.isEmpty());
     }
 
-//    @Test
-//    public void testFindJobContractCardsByClientId(){
-//        List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
-//        SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
-//        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(CLIENT.getId(),allStates,HirenetUtils.ALL_PAGES);
-//        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
-//        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
-//
-//        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(CLIENT.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
-//
-//
-//        Assert.assertFalse(jobContractCards.isEmpty());
-//        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS),jobContractCards);
-//    }
-
     @Test
-    public void testFindJobContractCardsByClientIdWithNonExistentId(){
+    public void testFindJobContractCardsByClientId(){
         List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
-        Mockito.doReturn(Collections.emptyList()).when(mockContractService).findByProId(999,allStates,HirenetUtils.ALL_PAGES);
+        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(CLIENT.getId(),allStates,HirenetUtils.ALL_PAGES);
+        Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
+        Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
+        Locale.setDefault(new Locale("es", "ES"));
+        String datePattern = "dd/MM/yyyy H:mm";
+
+        Mockito.when(messageSource.getMessage(Mockito.eq("spring.mvc.format.date-time"),
+                Mockito.eq(null), Mockito.eq(Locale.getDefault()))).thenReturn(datePattern);
+        List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(CLIENT.getId(), allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());
+
+
+        Assert.assertFalse(jobContractCards.isEmpty());
+        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS),jobContractCards);
+    }
+
+    @Test
+    public void testFindJobContractCardsByClientIdWithNonExistentId() {
+        List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
+        SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
+        Mockito.doReturn(Collections.emptyList()).when(mockContractService).findByProId(999, allStates, HirenetUtils.ALL_PAGES);
 
 
         List<JobContractCard> jobContractCards = mockContractService.findJobContractCardsByProId(999, allStates, HirenetUtils.ALL_PAGES, Locale.getDefault());

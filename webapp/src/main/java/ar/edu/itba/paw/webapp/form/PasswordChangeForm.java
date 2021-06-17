@@ -12,8 +12,8 @@ import javax.validation.constraints.Size;
 		message = "Passwords do not match"
 )
 @DistinctFields(
-		field = "currentPass",
-		distinctField = "newPass",
+		field = "newPass",
+		distinctField = "currentPass",
 		message = "New password cannot be the same as the old one"
 )
 public class PasswordChangeForm {
