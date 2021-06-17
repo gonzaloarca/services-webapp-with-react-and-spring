@@ -138,8 +138,8 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public int findContractsQuantityByProId(long id) {
-        return jobContractDao.findContractsQuantityByProId(id);
+    public int findCompletedContractsQuantityByProId(long id) {
+        return jobContractDao.findCompletedContractsQuantityByProId(id);
     }
 
     @Override
