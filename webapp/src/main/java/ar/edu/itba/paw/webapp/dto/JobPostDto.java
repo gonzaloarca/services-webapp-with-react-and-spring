@@ -14,6 +14,9 @@ public class JobPostDto {
     private boolean isActive;
     private List<JobPost.Zone> zones;
     private LocalDateTime creationDate;
+    private long ratesQuantity;
+    private Double avgRate;
+    private long contractsCompleted;
 
     public static JobPostDto fromJobPost(JobPost jobPost) {
         final JobPostDto jobPostDto = new JobPostDto();
@@ -25,6 +28,14 @@ public class JobPostDto {
         jobPostDto.isActive = jobPost.isActive();
         jobPostDto.zones = jobPost.getZones();
         jobPostDto.creationDate = jobPost.getCreationDate();
+        return jobPostDto;
+    }
+
+    public static JobPostDto fromJobPostWithExtraData(JobPost jobPost, long ratesQuantity, Double avgRate, long contractsCompleted) {
+        final JobPostDto jobPostDto = fromJobPost(jobPost);
+        jobPostDto.ratesQuantity = ratesQuantity;
+        jobPostDto.avgRate = avgRate;
+        jobPostDto.contractsCompleted = contractsCompleted;
         return jobPostDto;
     }
 
@@ -90,5 +101,29 @@ public class JobPostDto {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public long getRatesQuantity() {
+        return ratesQuantity;
+    }
+
+    public void setRatesQuantity(long ratesQuantity) {
+        this.ratesQuantity = ratesQuantity;
+    }
+
+    public Double getAvgRate() {
+        return avgRate;
+    }
+
+    public void setAvgRate(Double avgRate) {
+        this.avgRate = avgRate;
+    }
+
+    public long getContractsCompleted() {
+        return contractsCompleted;
+    }
+
+    public void setContractsCompleted(long contractsCompleted) {
+        this.contractsCompleted = contractsCompleted;
     }
 }

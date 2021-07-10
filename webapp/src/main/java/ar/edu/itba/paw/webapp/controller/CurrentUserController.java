@@ -50,7 +50,7 @@ public class CurrentUserController {
                 .addObject("user", userService.getUserByRoleAndId(1, id))
                 .addObject("avgRate", Math.floor(reviewService.findProfessionalAvgRate(id) * 100) / 100)
                 .addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(id))
-                .addObject("totalReviewsSize", reviewService.findProfessionalReviewsSize(id));
+                .addObject("totalReviewsSize", reviewService.findReviewsSizeByProId(id));
         currentUserControllerLogger.debug("Finding analytics rankings for user {}", id);
         mav
                 .addObject("analyticRankings", userService.findUserAnalyticRankings(id));
@@ -61,7 +61,7 @@ public class CurrentUserController {
                 .addObject("maxPage", maxPage);
         return mav;
     }
-
+/*
     @RequestMapping(value = "/rate-contract/{contractId}")
     public ModelAndView rateContract(@PathVariable("contractId") final long id,
                                      @ModelAttribute("reviewForm") ReviewForm reviewForm) {
@@ -97,4 +97,6 @@ public class CurrentUserController {
         }
         return new ModelAndView("redirect:/my-contracts/client/finalized");
     }
+    */
+
 }

@@ -48,13 +48,14 @@ public class UserController {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response register(final UserDto userDto) {
         if (isUserDataInvalid(userDto) || isPasswordFormatInvalid(userDto.getPassword())) {
+            //TODO: SE DEBERIA CHEQUEAR EN EL CONTROLLER? O SE DERIVA A SERVICE Y FUE?
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         try {
             accountControllerLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}",
                     userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone());
             userService.register(userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone(),
-                    null, Locale.ENGLISH //FIXME: DE DONDE LO SACO SI NO LO RECIBO POR PARAMETRO?
+                    null, Locale.ENGLISH //FIXME: DE DONDE LO SACO SI NO LO RECIBO POR PARAMETRO? DE @CONTEXT?
             );
         } catch (UserAlreadyExistsException e) {
             accountControllerLogger.error("Register error: email already exists");
@@ -68,8 +69,9 @@ public class UserController {
         accountControllerLogger.debug("Finding user with email {}", userDto.getEmail());
         User currentUser = userService.findByEmail(userDto.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        final URI userUri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(currentUser.getId())).build();
+        final URI userUri = uriInfo.getBaseUriBuilder()
+                .path(String.join("user/id/", String.valueOf(currentUser.getId())))
+                .build(); //FIXME: DEVUELVE MAL LA URI, CHEQUEAR LO QUE SE DIO EN CLASE
         return Response.created(userUri).build();
     }
 

@@ -56,7 +56,7 @@ public class SimplePaginationService implements PaginationService {
 
     @Override
     public int findMaxPageReviewsByUserId(long id) {
-        return reviewService.findMaxPageReviewsByUserId(id);
+        return reviewService.findMaxPageReviewsByProId(id);
     }
 
     @Override

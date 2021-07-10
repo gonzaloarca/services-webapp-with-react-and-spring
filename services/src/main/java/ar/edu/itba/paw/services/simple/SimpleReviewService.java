@@ -35,12 +35,12 @@ public class SimpleReviewService implements ReviewService {
     }
 
     @Override
-    public List<Review> findProfessionalReviews(long id) {
-        return reviewDao.findProfessionalReviews(id, HirenetUtils.ALL_PAGES);
+    public List<Review> findReviewsByProId(long id) {
+        return reviewDao.findReviewsByProId(id, HirenetUtils.ALL_PAGES);
     }
 
-    public List<Review> findProfessionalReviews(long id, int page) {
-        return reviewDao.findProfessionalReviews(id, page);
+    public List<Review> findReviewsByProId(long id, int page) {
+        return reviewDao.findReviewsByProId(id, page);
     }
 
 
@@ -54,8 +54,8 @@ public class SimpleReviewService implements ReviewService {
         List<Integer> answer = new ArrayList<>();
         while (answer.size() < 5)
             answer.add(0);
-        
-        findProfessionalReviews(id).forEach((review) ->
+
+        findReviewsByProId(id).forEach((review) ->
                 answer.set(review.getRate() - 1, answer.get(review.getRate() - 1) + 1));
 
         return answer;
@@ -72,13 +72,13 @@ public class SimpleReviewService implements ReviewService {
     }
 
     @Override
-    public int findMaxPageReviewsByUserId(long id) {
-        return reviewDao.findMaxPageReviewsByUserId(id);
+    public int findMaxPageReviewsByProId(long id) {
+        return reviewDao.findMaxPageReviewsByProId(id);
     }
 
     @Override
-    public int findProfessionalReviewsSize(long id) {
-        return reviewDao.findProfessionalReviewsSize(id);
+    public int findReviewsSizeByProId(long id) {
+        return reviewDao.findReviewsSizeByProId(id);
     }
 
     @Override

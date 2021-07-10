@@ -19,13 +19,13 @@ public interface ReviewDao {
 
     Double findProfessionalAvgRate(long id);
 
-    List<Review> findProfessionalReviews(long id, int page);
+    List<Review> findReviewsByProId(long id, int page);
 
     Optional<Review> findReviewByContractId(long id);
 
-    int findMaxPageReviewsByUserId(long id);
+    int findMaxPageReviewsByProId(long id);
 
-    int findProfessionalReviewsSize(long id);
+    int findReviewsSizeByProId(long id);
 
     int findMaxPageReviewsByPostId(long id);
 

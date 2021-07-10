@@ -66,7 +66,7 @@ public class ReviewDaoJpa implements ReviewDao {
     }
 
     @Override
-    public List<Review> findProfessionalReviews(long id, int page) {
+    public List<Review> findReviewsByProId(long id, int page) {
         Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE user_id = :id ORDER BY review_creation_date DESC")
                 .setParameter("id", id);
 
@@ -80,14 +80,14 @@ public class ReviewDaoJpa implements ReviewDao {
     }
 
     @Override
-    public int findMaxPageReviewsByUserId(long id) {
+    public int findMaxPageReviewsByProId(long id) {
         Long reviewCount = em.createQuery("SELECT count(*) from Review as r where r.jobContract.jobPackage.jobPost.user.id = :id", Long.class)
                 .setParameter("id", id).getSingleResult();
         return (int) Math.ceil(((double) reviewCount) / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
-    public int findProfessionalReviewsSize(long id) {
+    public int findReviewsSizeByProId(long id) {
         Long res = em.createQuery("SELECT count(*) from Review as r where r.jobContract.jobPackage.jobPost.user.id = :id", Long.class)
                 .setParameter("id", id).getSingleResult();
         return res.intValue();

@@ -54,7 +54,7 @@ public class ProfileController {
 
     @ModelAttribute("totalReviewsSize")
     private int getReviews(@PathVariable("id") final long id) {
-        return reviewService.findProfessionalReviewsSize(id);
+        return reviewService.findReviewsSizeByProId(id);
     }
 
     @ModelAttribute("totalContractsCompleted")
@@ -96,7 +96,7 @@ public class ProfileController {
         return new ModelAndView("profile")
                 .addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
                 .addObject("withServices", false)
-                .addObject("reviews", reviewService.findProfessionalReviews(id, page - 1))
+                .addObject("reviews", reviewService.findReviewsByProId(id, page - 1))
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("maxPage", maxPage)
                 .addObject("reviewsByPoints", reviewService.findProfessionalReviewsByPoints(id));
