@@ -26,7 +26,11 @@
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>ar.edu.itba.paw.webapp.controller</param-value>
+            <param-value>ar.edu.itba.paw.webapp.restcontrollers</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.beanValidation.enableOutputValidationErrorEntity.server</param-name>
+            <param-value>true</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -41,11 +45,6 @@
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/resources/*</url-pattern>
-    </servlet-mapping>
 
 <!--    <filter>-->
 <!--        <filter-name>springSecurityFilterChain</filter-name>-->
@@ -84,16 +83,4 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/jsp/error/404.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>403</error-code>
-        <location>/WEB-INF/jsp/error/404.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>400</error-code>
-        <location>/WEB-INF/jsp/error/default.jsp</location>
-    </error-page>
 </web-app>

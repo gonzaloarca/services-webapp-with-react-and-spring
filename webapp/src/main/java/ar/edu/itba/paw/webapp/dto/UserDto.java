@@ -2,15 +2,34 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class UserDto {
+
     private long id;
+
+    @NotBlank
+    @Size(max = 100)
+    @Email
     private String email;
+
+    @NotBlank
+    @Size(max = 100)
     private String username;
+
+    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
     private String phone;
+
+    //TODO FIX NOT NULL
     private String password;
+
+    //TODO FIX NOT NULL
     private List<UserAuth.Role> roles;
 
     public static UserDto fromUser(User user){

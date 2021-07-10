@@ -36,8 +36,7 @@ import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-@EnableWebMvc
-@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
+@ComponentScan({"ar.edu.itba.paw.webapp.restcontrollers", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence",
         "ar.edu.itba.paw.webapp.validation", "ar.edu.itba.paw.webapp.auth"})
 @Configuration
 @EnableTransactionManagement
@@ -48,23 +47,6 @@ public class WebConfig {
     private final boolean PRODUCTION = false;
 
     private final Logger webConfigLogger = LoggerFactory.getLogger(WebConfig.class);
-
-    @Autowired
-    private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
-
-    @PostConstruct
-    public void init() {
-        requestMappingHandlerAdapter.setIgnoreDefaultModelOnRedirect(true);
-    }
-
-    @Bean
-    public ViewResolver viewResolver() {
-        final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/WEB-INF/jsp/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
 
     @Bean
     public DataSource dataSource() {
