@@ -5,58 +5,78 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.form.AccountChangeForm;
-import ar.edu.itba.paw.webapp.form.PasswordChangeForm;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.print.attribute.standard.Media;
-import javax.validation.Valid;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.security.Principal;
 
-@Component
-@Path("/account")
-public class AccountController {
+//@Component
+//@Path("/account")
+//public class AccountController {
 
-	private final Logger accountControllerLogger = LoggerFactory.getLogger(AccountController.class);
-
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private ImageService imageService;
-
-	@Path("/details")
-	@GET
-	@Produces(value = {MediaType.APPLICATION_JSON})
-	public Response personalData() {
-		//TODO: Cambiar a data real
-		String email = "manuelfparma@gmail.com";
-		accountControllerLogger.debug("Finding user with email {}",email);
-		User currentUser = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
-		accountControllerLogger.debug("Finding auth info for user with email {}",email);
-		UserAuth auth = userService.getAuthInfo(email).orElseThrow(UserNotFoundException::new);
-
-		UserDto userDto = UserDto.fromUser(currentUser);
-		userDto.setRoles(auth.getRoles());
-		return Response.ok(userDto).build();
-	}
-
+//    private final Logger accountControllerLogger = LoggerFactory.getLogger(AccountController.class);
+//
+//    @Autowired
+//    private UserService userService;
+//
+//    @Autowired
+//    private ImageService imageService;
+//
+//    //TODO: Cambiar a data real
+//    private String email = "manuelfparma@gmail.com";
+//
+//    @Path("/details")
+//    @GET
+//    @Produces(value = {MediaType.APPLICATION_JSON})
+//    public Response personalData() {
+//        accountControllerLogger.debug("Finding user with email {}", email);
+//        User currentUser = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+//        accountControllerLogger.debug("Finding auth info for user with email {}", email);
+//        UserAuth auth = userService.getAuthInfo(email).orElseThrow(UserNotFoundException::new);
+//
+//        UserDto userAnswer = UserDto.fromUser(currentUser);
+//        userAnswer.setRoles(auth.getRoles());
+//        return Response.ok(userAnswer).build();
+//    }
+//
+//    @Path("/details")
+//    @PUT
+//    @Consumes(value = {MediaType.APPLICATION_JSON})
+//    @Produces(value = {MediaType.APPLICATION_JSON})
+//    public Response changePersonalData(final UserDto user) {
+//        accountControllerLogger.debug("Finding user with email {}", email);
+//        User currentUser = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+//        accountControllerLogger.debug("Finding auth info for user with email {}", email);
+//        UserAuth auth = userService.getAuthInfo(email).orElseThrow(UserNotFoundException::new);
+//
+//        User updatedUser;
+//
+//        if (user.getAvatar().getSize() != 0) {
+//            try {
+//                accountControllerLogger.debug("Updating user {} with data: name: {}, phone: {}, with image", user.getId(),
+//                        user.getUsername(), user.getPhone());
+//                updatedUser = userService.updateUserById(currentUser.getId(), user.getUsername(), user.getPhone(),
+//                        imageService.create(user.getAvatar().getBytes(), user.getAvatar().getContentType()));
+//            } catch (IOException e) {
+//                accountControllerLogger.debug("Error updating user");
+//                throw new RuntimeException(e.getMessage());
+//            }
+//        } else {
+//            accountControllerLogger.debug("Updating user {} with data: name: {}, phone: {}", currentUser.getId(),
+//                    user.getUsername(), user.getPhone());
+//            updatedUser = userService.updateUserById(currentUser.getId(), user.getUsername(), user.getPhone());
+//        }
+//
+//        UserDto userAnswer = UserDto.fromUser(updatedUser);
+//        userAnswer.setRoles(auth.getRoles());
+//        return Response.ok(userAnswer).build();
+//    }
 
 //	@RequestMapping(path = "/details", method = RequestMethod.POST)
 //	public ModelAndView changePersonalData(@Valid @ModelAttribute("accountChangeForm") AccountChangeForm form,
@@ -96,7 +116,7 @@ public class AccountController {
 //
 //		return mav;
 //	}
-//
+
 //	@RequestMapping(path = "/security", method = RequestMethod.GET)
 //	public ModelAndView securityData(@ModelAttribute("passChangeForm") PasswordChangeForm form) {
 //		return new ModelAndView("myAccountSecurity");
@@ -128,4 +148,4 @@ public class AccountController {
 //		return new ModelAndView("redirect:/password-changed");
 //	}
 
-}
+//}
