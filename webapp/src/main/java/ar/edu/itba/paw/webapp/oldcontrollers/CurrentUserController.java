@@ -1,17 +1,14 @@
-package ar.edu.itba.paw.webapp.controller;
+package ar.edu.itba.paw.webapp.oldcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.webapp.form.ReviewForm;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
@@ -50,7 +47,7 @@ public class CurrentUserController {
                 .addObject("user", userService.getUserByRoleAndId(1, id))
                 .addObject("avgRate", Math.floor(reviewService.findProfessionalAvgRate(id) * 100) / 100)
                 .addObject("totalContractsCompleted", jobContractService.findCompletedContractsQuantityByProId(id))
-                .addObject("totalReviewsSize", reviewService.findProfessionalReviewsSize(id));
+                .addObject("totalReviewsSize", reviewService.findReviewsSizeByProId(id));
         currentUserControllerLogger.debug("Finding analytics rankings for user {}", id);
         mav
                 .addObject("analyticRankings", userService.findUserAnalyticRankings(id));

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -52,11 +53,14 @@ public class UserController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         try {
+            String webpageUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().scheme("http").replacePath(null)
+                    .build().toUriString();
+
             accountControllerLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}",
                     userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone());
             userService.register(userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone(),
                     null, Locale.ENGLISH //FIXME: DE DONDE LO SACO SI NO LO RECIBO POR PARAMETRO? DE @CONTEXT?
-            );
+            ,webpageUrl);
         } catch (UserAlreadyExistsException e) {
             accountControllerLogger.error("Register error: email already exists");
             //TODO: Conflict esta bien?
@@ -71,7 +75,9 @@ public class UserController {
 
         final URI userUri = uriInfo.getBaseUriBuilder()
                 .path(String.join("user/id/", String.valueOf(currentUser.getId())))
-                .build(); //FIXME: DEVUELVE MAL LA URI, CHEQUEAR LO QUE SE DIO EN CLASE
+                .build();
+        //FIXME: DEVUELVE MAL LA URI, CHEQUEAR LA QUE SE DIO EN CLASE QUE ESTA EN createReview QUE TAMBIEN FUNCIONA MAL,
+        // EL PROBLEMA ES QUE ESTOY USANDO UN PATH ESPECIFICO PARA LA CREACION
         return Response.created(userUri).build();
     }
 

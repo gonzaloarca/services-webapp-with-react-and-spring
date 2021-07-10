@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.controller;
+package ar.edu.itba.paw.webapp.oldcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.JobPostImageService;
@@ -23,7 +23,7 @@ import java.io.OutputStream;
 
 @Controller
 @RequestMapping("/image")
-public class ImageController {
+public class ImageControllerOLD {
 
     @Autowired
     UserService userService;
