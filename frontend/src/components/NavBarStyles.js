@@ -2,7 +2,18 @@ import { alpha } from '@material-ui/core/styles';
 
 const navBarStyles = (theme) => ({
   root: {
+    // position: 'fixed',
+    // top: 0,
+    // width: '100vw',
     flexGrow: 1,
+  },
+  offset: theme.mixins.toolbar,
+  transparentBar: {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+  },
+  solidBar: {
+    backgroundColor: theme.palette.primary.main,
   },
   menuButton: {
     marginRight: theme.spacing(2),

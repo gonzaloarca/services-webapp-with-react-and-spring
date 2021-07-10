@@ -10,13 +10,11 @@ import appTheme from './theme';
 import './i18n';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router history={history}>
-      <ThemeProvider theme={appTheme}>
-        <App />
-      </ThemeProvider>
-    </Router>
-  </React.StrictMode>,
+  <Router history={history}>
+    <ThemeProvider theme={appTheme}>
+      <App />
+    </ThemeProvider>
+  </Router>,
   document.getElementById('root')
 );
 

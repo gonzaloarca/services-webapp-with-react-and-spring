@@ -8,5 +8,9 @@
       "analytics": "Estadísticas"
     },
     "search": "Buscar..."
+  },
+  "home": {
+    "herotext": "Encuentre y contrate el servicio que necesita",
+    "location": "Ubicación"
   }
 }

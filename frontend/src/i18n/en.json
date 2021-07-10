@@ -8,5 +8,9 @@
       "analytics": "Analytics"
     },
     "search": "Search..."
+  },
+  "home": {
+    "herotext": "Find and hire the service you're looking for",
+    "location": "Location"
   }
 }

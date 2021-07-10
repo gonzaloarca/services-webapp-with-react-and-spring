@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import InputBase from '@material-ui/core/InputBase';
@@ -31,14 +31,40 @@ const sections = [
   { name: 'navigation.sections.analytics', path: '/analytics' },
 ];
 
-const NavBar = ({ currentSection }) => {
+const NavBar = ({ currentSection, isTransparent = false }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [showDrawer, setShowDrawer] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const changeBarBackground = () => {
+    if (window.scrollY >= 80) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isTransparent) {
+      window.addEventListener('scroll', changeBarBackground);
+    }
+
+    return () => window.removeEventListener('scroll', changeBarBackground);
+  });
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar
+        className={
+          !isTransparent
+            ? classes.solidBar
+            : scrolled
+            ? classes.solidBar
+            : classes.transparentBar
+        }
+        position="fixed"
+      >
         <Toolbar>
           <div className={classes.drawerButton}>
             <IconButton
@@ -56,7 +82,7 @@ const NavBar = ({ currentSection }) => {
             >
               <List className={classes.drawerContainer} component="nav">
                 {sections.map((i) => (
-                  <ListItem button component={Link} to={i.path}>
+                  <ListItem key={i.path} button component={Link} to={i.path}>
                     <ListItemText
                       disableTypography
                       primary={
@@ -113,6 +139,7 @@ const NavBar = ({ currentSection }) => {
           </div>
         </Toolbar>
       </AppBar>
+      {isTransparent ? <></> : <div className={classes.offset} />}
     </div>
   );
 };
