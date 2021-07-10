@@ -2,9 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserDto {
@@ -15,15 +13,21 @@ public class UserDto {
     private String password;
     private List<UserAuth.Role> roles;
 
-    public static UserDto fromUserAndRoles(User user, List<UserAuth.Role> roles){
+    public static UserDto fromUser(User user){
         final UserDto dto = new UserDto();
         dto.id = user.getId();
-        dto.email = user.getEmail();                
+        dto.email = user.getEmail();
         dto.username = user.getUsername();
         dto.phone = user.getPhone();
+        return dto;
+    }
+
+    public static UserDto fromUserAndRoles(User user, List<UserAuth.Role> roles){
+        final UserDto dto = fromUser(user);
         dto.roles = roles;
         return dto;
     }
+
     public long getId() {
         return id;
     }
