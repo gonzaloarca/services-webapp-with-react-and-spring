@@ -1,0 +1,12 @@
+{
+  "navigation": {
+    "sections": {
+      "home": "Inicio",
+      "categories": "Categorías",
+      "publish": "Publicar",
+      "mycontracts": "Mis Contratos",
+      "analytics": "Estadísticas"
+    },
+    "search": "Buscar..."
+  }
+}

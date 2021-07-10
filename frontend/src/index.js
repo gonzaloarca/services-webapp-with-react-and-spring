@@ -3,10 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ThemeProvider } from '@material-ui/core';
+import { Router } from 'react-router-dom';
+import history from './history';
+import appTheme from './theme';
+import './i18n';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router history={history}>
+      <ThemeProvider theme={appTheme}>
+        <App />
+      </ThemeProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

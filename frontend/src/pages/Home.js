@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
+import NavBar from '../components/NavBar';
 
 export const Home = () => {
-    return (
-        <div>
-            Home
-        </div>
-    )
-}
+  return (
+    <div>
+      <NavBar currentSection={'/'} />
+    </div>
+  );
+};

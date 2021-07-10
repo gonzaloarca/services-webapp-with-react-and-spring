@@ -1,0 +1,12 @@
+{
+  "navigation": {
+    "sections": {
+      "home": "Home",
+      "categories": "Categories",
+      "publish": "Publish",
+      "mycontracts": "My Contracts",
+      "analytics": "Analytics"
+    },
+    "search": "Search..."
+  }
+}

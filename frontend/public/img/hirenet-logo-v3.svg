@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1199" height="774" viewBox="0 0 1199 774">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fcc01e;
+      }
+
+      .cls-2 {
+        fill: #485696;
+      }
+
+      .cls-3, .cls-4 {
+        font-size: 24px;
+        font-family: "MADE TOMMY";
+        font-weight: 500;
+      }
+
+      .cls-4 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <circle class="cls-1" cx="387.047" cy="387" r="386.797"/>
+  <circle class="cls-2" cx="942.5" cy="386.5" r="256.5"/>
+  <text id="hire" class="cls-3" transform="translate(93.174 486.582) scale(13.901)">hire</text>
+  <text id="net" class="cls-4" transform="translate(719.467 472.897) scale(12.04)">net</text>
+</svg>
