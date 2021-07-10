@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -69,10 +70,10 @@ public class AuthenticationController {
         String password = registerForm.getPassword();
         String name = registerForm.getName();
         String phone = registerForm.getPhone();
-
+        String webpageUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().scheme("http").replacePath(null).build().toUriString();
         try {
             authenticationLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}, has image:{}",email,password,name,phone,byteImage != null);
-            userService.register(email, password, name, phone, byteImage, localeResolver.resolveLocale(servletRequest));
+            userService.register(email, password, name, phone, byteImage, localeResolver.resolveLocale(servletRequest),webpageUrl);
         } catch (UserAlreadyExistsException e) {
             authenticationLogger.error("Register error: email already exists");
             errors.rejectValue("email", "register.existingemail");
@@ -133,7 +134,8 @@ public class AuthenticationController {
         }
 
         authenticationLogger.debug("Recovering password for email: {}", form.getEmail());
-        userService.recoverUserAccount(form.getEmail(), localeResolver.resolveLocale(servletRequest));
+        String webpageUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().scheme("http").replacePath(null).build().toUriString();
+        userService.recoverUserAccount(form.getEmail(), localeResolver.resolveLocale(servletRequest),webpageUrl);
 
         return new ModelAndView("recover").addObject("confirmed", true);
     }

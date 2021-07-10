@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -73,14 +74,14 @@ public class HireController {
         }
 
         String email = principal.getName();
-
+        String webpageUrl =  ServletUriComponentsBuilder.fromCurrentRequestUri().scheme("http").replacePath(null).build().toUriString();
         if (form.getImage().getSize() == 0) {
             hireControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{}", packId, email, form.getDescription());
-            jobContractService.create(email, packId, form.getDescription(), form.getScheduledDate(), localeResolver.resolveLocale(servletRequest));
+            jobContractService.create(email, packId, form.getDescription(), form.getScheduledDate(), localeResolver.resolveLocale(servletRequest),webpageUrl);
         } else {
             try {
                 hireControllerLogger.debug("Creating contract fo package {} with data: email:{}, description:{} with image", packId, email, form.getDescription());
-                jobContractService.create(email, packId, form.getDescription(), form.getScheduledDate(), imageService.create(form.getImage().getBytes(), form.getImage().getContentType()), localeResolver.resolveLocale(servletRequest));
+                jobContractService.create(email, packId, form.getDescription(), form.getScheduledDate(), imageService.create(form.getImage().getBytes(), form.getImage().getContentType()), localeResolver.resolveLocale(servletRequest),webpageUrl);
             } catch (IOException e) {
                 hireControllerLogger.debug("Error creating contract");
                 throw new RuntimeException(e.getMessage());

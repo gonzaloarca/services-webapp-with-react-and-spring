@@ -34,7 +34,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User register(String email, String password, String username, String phone,
-                         ByteImage image, Locale locale) throws UserAlreadyExistsException, UserNotVerifiedException {
+                         ByteImage image, Locale locale, String webpageUrl) throws UserAlreadyExistsException, UserNotVerifiedException {
         Optional<User> maybeUser = userDao.findByEmail(email);
 
         if (maybeUser.isPresent()) {
@@ -51,7 +51,7 @@ public class SimpleUserService implements UserService {
             userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
 
             VerificationToken token = tokenService.createVerificationToken(user);
-            mailingService.sendVerificationTokenEmail(user, token, locale);
+            mailingService.sendVerificationTokenEmail(user, token, locale,webpageUrl);
 
             throw new UserNotVerifiedException();
         }
@@ -63,7 +63,7 @@ public class SimpleUserService implements UserService {
             registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone, image);
 
         VerificationToken token = tokenService.createVerificationToken(registeredUser);
-        mailingService.sendVerificationTokenEmail(registeredUser, token, locale);
+        mailingService.sendVerificationTokenEmail(registeredUser, token, locale,webpageUrl);
 
         return registeredUser;
     }
@@ -142,14 +142,13 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void recoverUserAccount(String email, Locale locale){
+    public void recoverUserAccount(String email, Locale locale,String webpageUrl){
         User user;
         RecoveryToken recoveryToken;
-
         try {
             user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
             recoveryToken = tokenService.createRecoveryToken(user);
-            mailingService.sendRecoverPasswordEmail(user, recoveryToken, locale);
+            mailingService.sendRecoverPasswordEmail(user, recoveryToken, locale,webpageUrl);
         } catch (UserNotFoundException e) {
             //Si el usuario no existe, no hago nada
         }

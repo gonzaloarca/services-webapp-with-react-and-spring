@@ -27,10 +27,8 @@ import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -538,7 +536,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindContractsQuantityByProId() {
 
-        int ans = jobContractDaoJpa.findContractsQuantityByProId(PROFESSIONAL.getId());
+        int ans = jobContractDaoJpa.findCompletedContractsQuantityByProId(PROFESSIONAL.getId());
 
         Assert.assertEquals(0, ans);
     }
@@ -546,7 +544,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindContractsQuantityByNotExistingProId() {
 
-        int ans = jobContractDaoJpa.findContractsQuantityByProId(PROFESSIONAL.getId() + 100);
+        int ans = jobContractDaoJpa.findCompletedContractsQuantityByProId(PROFESSIONAL.getId() + 100);
 
         Assert.assertEquals(0, ans);
     }

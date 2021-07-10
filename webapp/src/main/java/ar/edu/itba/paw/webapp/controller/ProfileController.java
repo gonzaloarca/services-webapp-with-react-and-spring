@@ -59,7 +59,7 @@ public class ProfileController {
 
     @ModelAttribute("totalContractsCompleted")
     private int getTotalContractsCompleted(@PathVariable("id") final long id) {
-        return jobContractService.findContractsQuantityByProId(id);
+        return jobContractService.findCompletedContractsQuantityByProId(id);
     }
 
     @RequestMapping(value = "/services")

@@ -30,7 +30,7 @@ import java.util.*;
 public class SimpleJobContractServiceTest {
 
     private static final List<JobPost.Zone> ZONES =
-            new ArrayList<JobPost.Zone>(Arrays.asList(JobPost.Zone.values()[1],
+            new ArrayList<>(Arrays.asList(JobPost.Zone.values()[1],
                     JobPost.Zone.values()[2]));
     private static final User CLIENT = new User(
             3, "manurodriguez@gmail.com", "Manuel Rodriguez", "0303456", true, true,
@@ -127,7 +127,7 @@ public class SimpleJobContractServiceTest {
                         CREATION_DATE, time, CREATION_DATE, CONTRACT_DESCRIPTION, BYTE_IMAGE));
 
         JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(),
-                JOB_PACKAGE.getDescription(), date, BYTE_IMAGE, Locale.getDefault());
+                JOB_PACKAGE.getDescription(), date, BYTE_IMAGE, Locale.getDefault(),"");
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -157,7 +157,7 @@ public class SimpleJobContractServiceTest {
                         CREATION_DATE, time, CREATION_DATE, CONTRACT_DESCRIPTION, null));
 
         JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(),
-                JOB_PACKAGE.getDescription(), date, null, Locale.getDefault());
+                JOB_PACKAGE.getDescription(), date, null, Locale.getDefault(),"");
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -177,7 +177,7 @@ public class SimpleJobContractServiceTest {
                 Mockito.eq(null), Mockito.eq(Locale.getDefault()))).thenReturn(datePattern);
         String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
         simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),date,
-                new ByteImage(image1Bytes, image1Type), Locale.getDefault());
+                new ByteImage(image1Bytes, image1Type), Locale.getDefault(),"");
 
         Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),CREATION_DATE.plusDays(5),
                 new ByteImage(image1Bytes, image1Type));

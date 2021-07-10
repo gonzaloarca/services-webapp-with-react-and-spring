@@ -49,8 +49,8 @@ public class CurrentUserController {
         mav
                 .addObject("user", userService.getUserByRoleAndId(1, id))
                 .addObject("avgRate", Math.floor(reviewService.findProfessionalAvgRate(id) * 100) / 100)
-                .addObject("totalContractsCompleted", jobContractService.findContractsQuantityByProId(id))
-                .addObject("totalReviewsSize", reviewService.findReviewsSizeByProId(id));
+                .addObject("totalContractsCompleted", jobContractService.findCompletedContractsQuantityByProId(id))
+                .addObject("totalReviewsSize", reviewService.findProfessionalReviewsSize(id));
         currentUserControllerLogger.debug("Finding analytics rankings for user {}", id);
         mav
                 .addObject("analyticRankings", userService.findUserAnalyticRankings(id));

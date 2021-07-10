@@ -41,12 +41,12 @@ public class SimpleJobContractService implements JobContractService {
 
 
     @Override
-    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, Locale locale) {
-        return create(clientEmail, packageId, description, scheduledDate, null, locale);
+    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, Locale locale,String webpageUrl) {
+        return create(clientEmail, packageId, description, scheduledDate, null, locale,webpageUrl);
     }
 
     @Override
-    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, ByteImage image, Locale locale) {
+    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, ByteImage image, Locale locale,String webpageUrl) {
 
         User user = userService.findByEmail(clientEmail).orElseThrow(UserNotFoundException::new);
         JobContractWithImage jobContract;
@@ -59,8 +59,7 @@ public class SimpleJobContractService implements JobContractService {
                     parsedDate);
         else
             jobContract = jobContractDao.create(user.getId(), packageId, description, parsedDate, image);
-
-        mailingService.sendContractEmail(jobContract, locale);
+        mailingService.sendContractEmail(jobContract, locale,webpageUrl);
 
         return jobContract;
     }
@@ -138,8 +137,8 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public int findContractsQuantityByProId(long id) {
-        return jobContractDao.findContractsQuantityByProId(id);
+    public int findCompletedContractsQuantityByProId(long id) {
+        return jobContractDao.findCompletedContractsQuantityByProId(id);
     }
 
     @Override

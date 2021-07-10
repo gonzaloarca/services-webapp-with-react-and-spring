@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User register(String email, String password, String username, String phone, ByteImage image, Locale locale)
+    User register(String email, String password, String username, String phone, ByteImage image, Locale locale, String webpageUrl)
             throws UserAlreadyExistsException, UserNotVerifiedException;
 
     User findById(long id);
@@ -39,7 +39,7 @@ public interface UserService {
 
     List<AnalyticRanking> findUserAnalyticRankings(long id);
 
-    void recoverUserAccount(String email, Locale locale);
+    void recoverUserAccount(String email, Locale locale,String webpageUrl);
 
     void recoverUserPassword(long user_id, String password);
 
