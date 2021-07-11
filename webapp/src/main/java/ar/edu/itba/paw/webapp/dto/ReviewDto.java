@@ -17,11 +17,7 @@ public class ReviewDto {
         reviewDto.rate = review.getRate();
         reviewDto.title = review.getTitle();
         reviewDto.description = review.getDescription();
-        reviewDto.jobContract = new JobContractDto();
-        reviewDto.jobContract.setId(review.getJobContract().getId());
-        reviewDto.jobContract.setJobContractURI(uriInfo.getBaseUriBuilder().path("/job-contracts/")
-                //TODO: CHEQUEAR SI SE PUEDE EVITAR HARDCODEAR EL PREFIJO DE LA URI
-                .path(String.valueOf(review.getJobContract().getId())).build());
+        reviewDto.jobContract = JobContractDto.linkDataFromJobContract(review.getJobContract(),uriInfo);
         reviewDto.creationDate = review.getCreationDate();
         return reviewDto;
     }

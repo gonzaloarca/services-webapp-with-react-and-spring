@@ -3,27 +3,24 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
-public class ProfessionalDto extends UserDto {
+public class ProfessionalDto {
     private Double reviewAvg;
     private long reviewsQuantity;
     private long contractsCompleted;
-
+    private UserDto user;
     public static ProfessionalDto fromUserAndRoles(User user,
-                                                   List<UserAuth.Role> roles,
                                                    Double reviewAvg,
                                                    long reviewsQuantity,
-                                                   long contractsCompleted) {
+                                                   long contractsCompleted,
+                                                   UriInfo uriInfo) {
         ProfessionalDto dto = new ProfessionalDto();
-        dto.setId(user.getId());
-        dto.setEmail(user.getEmail());
-        dto.setUsername(user.getUsername());
-        dto.setPhone(user.getPhone());
-        dto.setRoles(roles);
         dto.reviewAvg = reviewAvg;
         dto.reviewsQuantity = reviewsQuantity;
         dto.contractsCompleted = contractsCompleted;
+        dto.user = UserDto.linkDataFromUser(user,uriInfo);
         return dto;
     }
 
@@ -49,5 +46,13 @@ public class ProfessionalDto extends UserDto {
 
     public void setContractsCompleted(long contractsCompleted) {
         this.contractsCompleted = contractsCompleted;
+    }
+
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
     }
 }

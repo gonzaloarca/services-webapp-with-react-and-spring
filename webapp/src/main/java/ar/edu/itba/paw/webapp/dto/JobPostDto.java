@@ -6,6 +6,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JobPostDto {
     private Long id;
@@ -13,10 +14,11 @@ public class JobPostDto {
     private UserDto professional;
     private String title;
     private String availableHours;
-    private JobPost.JobType jobType;
+    private JobTypeDto jobType;
     private Boolean isActive;
-    private List<JobPost.Zone> zones;
+    private List<JobPostZoneDto> zones;
     private LocalDateTime creationDate;
+    private List<JobPackageDto> packages;
 
     public static JobPostDto fromJobPost(JobPost jobPost, UriInfo uriInfo) {
         final JobPostDto jobPostDto = new JobPostDto();
@@ -28,10 +30,19 @@ public class JobPostDto {
                 .path(String.valueOf(jobPost.getUser().getId())).build());
         jobPostDto.title = jobPost.getTitle();
         jobPostDto.availableHours = jobPost.getAvailableHours();
-        jobPostDto.jobType = jobPost.getJobType();
+        jobPostDto.jobType = JobTypeDto.fromJobType(jobPost.getJobType());
         jobPostDto.isActive = jobPost.isActive();
-        jobPostDto.zones = jobPost.getZones();
+        jobPostDto.zones = jobPost.getZones().stream().map(JobPostZoneDto::fromJobPostZone).collect(Collectors.toList());
         jobPostDto.creationDate = jobPost.getCreationDate();
+        jobPostDto.packages = jobPost.getJobPackages().stream().map(p->JobPackageDto.linkDataFromJobPackage(p,uriInfo)).collect(Collectors.toList());
+        return jobPostDto;
+    }
+    public static JobPostDto linkDataFromJobPost(JobPost jobPost, UriInfo uriInfo) {
+        final JobPostDto jobPostDto = new JobPostDto();
+        jobPostDto.id = jobPost.getId();
+        jobPostDto.uri = uriInfo.getBaseUriBuilder().path("/job-posts/")
+                .path(String.valueOf(jobPost.getId())).build();
+        //TODO CHEQUEAR SI SE PUEDE NO HARDCODEAR EL PREJIJO DE LA URI
         return jobPostDto;
     }
 
@@ -67,27 +78,26 @@ public class JobPostDto {
         this.availableHours = availableHours;
     }
 
-    public JobPost.JobType getJobType() {
+    public JobTypeDto getJobType() {
         return jobType;
     }
 
-    public void setJobType(JobPost.JobType jobType) {
+    public void setJobType(JobTypeDto jobType) {
         this.jobType = jobType;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
     }
 
-    public List<JobPost.Zone> getZones() {
+    public Boolean getActive() {
+        return isActive;
+    }
+    public List<JobPostZoneDto> getZones() {
         return zones;
     }
 
-    public void setZones(List<JobPost.Zone> zones) {
+    public void setZones(List<JobPostZoneDto> zones) {
         this.zones = zones;
     }
 
@@ -105,5 +115,14 @@ public class JobPostDto {
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+
+    public List<JobPackageDto> getPackages() {
+        return packages;
+    }
+
+    public void setPackages(List<JobPackageDto> packages) {
+        this.packages = packages;
     }
 }

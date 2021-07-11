@@ -9,9 +9,6 @@ import java.time.LocalDateTime;
 @Table(name = "contract")
 public class JobContract extends JobContractAbstract {
 
-    @Column(name = "contract_image_type", length = 100)
-    private String imageType;
-
     /*Default*/ JobContract() {
     }
 
@@ -38,33 +35,31 @@ public class JobContract extends JobContractAbstract {
         this.state = ContractState.PENDING_APPROVAL;
     }
 
-    public String getImageType() {
-        return imageType;
-    }
-
-    public void setImageType(String imageType) {
-        this.imageType = imageType;
-    }
-
     public enum ContractState {
-        PENDING_APPROVAL("JobContract.ContractState.PendingApproval"),
-        APPROVED("JobContract.ContractState.Approved"),
-        CLIENT_REJECTED("JobContract.ContractState.ClientRejected"),
-        PRO_REJECTED("JobContract.ContractState.ProRejected"),
-        CLIENT_CANCELLED("JobContract.ContractState.ClientCancelled"),
-        PRO_CANCELLED("JobContract.ContractState.ProCancelled"),
-        COMPLETED("JobContract.ContractState.Completed"),
-        CLIENT_MODIFIED("JobContract.ContractState.ClientModified"),
-        PRO_MODIFIED("JobContract.ContractState.ProModified");
+        PENDING_APPROVAL("PENDING_APPROVAL"),
+        APPROVED("APPROVED"),
+        CLIENT_REJECTED("CLIENT_REJECTED"),
+        PRO_REJECTED("PRO_REJECTED"),
+        CLIENT_CANCELLED("CLIENT_CANCELLED"),
+        PRO_CANCELLED("PRO_CANCELLED"),
+        COMPLETED("COMPLETED"),
+        CLIENT_MODIFIED("CLIENT_MODIFIED"),
+        PRO_MODIFIED("PRO_MODIFIED");
 
-        final String stringCode;
+        final private String description;
+        final private long id;
 
-        ContractState(String stringCode) {
-            this.stringCode = stringCode;
+        ContractState(String description) {
+            this.description = description;
+            this.id = ordinal();
         }
 
-        public String getStringCode() {
-            return stringCode;
+        public String getDescription() {
+            return description;
+        }
+
+        public long getId() {
+            return id;
         }
     }
 }

@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
@@ -16,16 +17,16 @@ public class UserDto {
     private long id;
     private URI uri;
 
-    @NotBlank
-    @Size(max = 100)
-    @Email
+//    @NotBlank
+//    @Size(max = 100)
+//    @Email
     private String email;
 
-    @NotBlank
-    @Size(max = 100)
+//    @NotBlank
+//    @Size(max = 100)
     private String username;
 
-    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
+//    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
     private String phone;
 
     //TODO FIX NOT NULL
@@ -47,6 +48,13 @@ public class UserDto {
         final UserDto dto = fromUser(user);
         dto.roles = roles;
         return dto;
+    }
+
+    public static UserDto linkDataFromUser(User user, UriInfo uriInfo){
+        UserDto userDto = new UserDto();
+        userDto.id = user.getId();
+        userDto.uri = uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(user.getId())).build();
+        return userDto;
     }
 
     public long getId() {

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.JobPackage;
 
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 public class JobPackageDto {
     private long id;
@@ -10,22 +11,34 @@ public class JobPackageDto {
     private String title;
     private String description;
     private Double price;
-    private JobPackage.RateType rateType;
-    private boolean isActive;
+    private JobPackageRateTypeDto rateType;
+    private Boolean isActive;
+    private URI uri;
 
     public static JobPackageDto fromJobPackage(JobPackage jobPackage, UriInfo uriInfo) {
         JobPackageDto jobPackageDto = new JobPackageDto();
         jobPackageDto.id = jobPackage.getId();
         jobPackageDto.jobPost = new JobPostDto();
         jobPackageDto.jobPost.setId(jobPackage.getPostId());
-        jobPackageDto.jobPost.setUri(uriInfo.getAbsolutePathBuilder().path("/job-posts/")
+        jobPackageDto.jobPost.setUri(uriInfo.getBaseUriBuilder().path("/job-posts/")
                 .path(String.valueOf(jobPackage.getPostId())).build());
         //TODO: CHEQUEAR SI SE PUEDE EVITAR HARDCODEAR EL PREFIJO DE LA URI
         jobPackageDto.title = jobPackage.getTitle();
         jobPackageDto.description = jobPackage.getDescription();
         jobPackageDto.price = jobPackage.getPrice();
-        jobPackageDto.rateType = jobPackage.getRateType();
+        jobPackageDto.rateType = JobPackageRateTypeDto.fromJobPackageRateType(jobPackage.getRateType());
         jobPackageDto.isActive = jobPackage.is_active();
+        return jobPackageDto;
+    }
+    public static JobPackageDto linkDataFromJobPackage(JobPackage jobPackage, UriInfo uriInfo){
+        final JobPackageDto jobPackageDto = new JobPackageDto();
+        jobPackageDto.id = jobPackage.getId();
+        jobPackageDto.uri = uriInfo.getBaseUriBuilder()
+                .path("/job-posts/")
+                .path(String.valueOf(jobPackage.getPostId()))
+                .path("/packages")
+                .path(String.valueOf(jobPackage.getId())).build();
+        //TODO CHEQUEAR SI SE PUEDE NO HARDCODEAR EL PREJIJO DE LA URI
         return jobPackageDto;
     }
 
@@ -61,19 +74,19 @@ public class JobPackageDto {
         this.price = price;
     }
 
-    public JobPackage.RateType getRateType() {
+    public JobPackageRateTypeDto getRateType() {
         return rateType;
     }
 
-    public void setRateType(JobPackage.RateType rateType) {
+    public void setRateType(JobPackageRateTypeDto rateType) {
         this.rateType = rateType;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
     }
 
@@ -83,5 +96,13 @@ public class JobPackageDto {
 
     public void setJobPost(JobPostDto jobPost) {
         this.jobPost = jobPost;
+    }
+
+    public URI getUri() {
+        return uri;
+    }
+
+    public void setUri(URI uri) {
+        this.uri = uri;
     }
 }

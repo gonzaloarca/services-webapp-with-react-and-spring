@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.JobContract;
 
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.time.LocalDateTime;
 
@@ -9,23 +10,37 @@ public class JobContractDto {
     private Long id;
     private URI uri;
     private Long clientId;
-    private Long jobPackageId;
+    private JobPackageDto jobPackage;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private LocalDateTime scheduledDate;
     private String description;
-    private JobContract.ContractState state;
+    private JobContractStateDto state;
 
-    public static JobContractDto fromJobContract(JobContract jobContract) {
+    public static JobContractDto fromJobContract(JobContract jobContract, UriInfo uriInfo) {
         JobContractDto jobContractDto = new JobContractDto();
         jobContractDto.id = jobContract.getId();
         jobContractDto.clientId = jobContract.getClient().getId();
-        jobContractDto.jobPackageId = jobContract.getJobPackage().getId();
+        jobContractDto.jobPackage = JobPackageDto.linkDataFromJobPackage(jobContract.getJobPackage(),uriInfo);
         jobContractDto.creationDate = jobContract.getCreationDate();
         jobContractDto.lastModifiedDate = jobContract.getLastModifiedDate();
         jobContractDto.scheduledDate = jobContract.getScheduledDate();
         jobContractDto.description = jobContract.getDescription();
-        jobContractDto.state = jobContract.getState();
+        jobContractDto.state = JobContractStateDto.fromJobContractState(jobContract.getState());
+        return jobContractDto;
+    }
+
+    public static JobContractDto linkDataFromJobContract(JobContract jobContract, UriInfo uriInfo) {
+        JobContractDto jobContractDto = new JobContractDto();
+        jobContractDto.id = jobContract.getId();
+        jobContractDto.uri = uriInfo.getBaseUriBuilder()
+                .path("/job-posts")
+                .path(String.valueOf(jobContract.getJobPackage().getJobPost().getId()))
+                .path("/packages")
+                .path(String.valueOf(jobContract.getJobPackage().getId()))
+                .path("/contracts")
+                .path(String.valueOf(jobContract.getId())).build();
+            //TODO: CHEQUEAR SI SE PUEDE EVITAR HARDCODEAR EL PREFIJO DE LA URI
         return jobContractDto;
     }
 
@@ -45,12 +60,12 @@ public class JobContractDto {
         this.clientId = clientId;
     }
 
-    public Long getJobPackageId() {
-        return jobPackageId;
+    public JobPackageDto getJobPackage() {
+        return jobPackage;
     }
 
-    public void setJobPackageId(Long jobPackageId) {
-        this.jobPackageId = jobPackageId;
+    public void setJobPackage(JobPackageDto jobPackage) {
+        this.jobPackage = jobPackage;
     }
 
     public LocalDateTime getCreationDate() {
@@ -85,19 +100,19 @@ public class JobContractDto {
         this.description = description;
     }
 
-    public JobContract.ContractState getState() {
+    public JobContractStateDto getState() {
         return state;
     }
 
-    public void setState(JobContract.ContractState state) {
+    public void setState(JobContractStateDto state) {
         this.state = state;
     }
 
-    public URI getJobContractURI() {
+    public URI getUri() {
         return uri;
     }
 
-    public void setJobContractURI(URI jobContractURI) {
-        this.uri = jobContractURI;
+    public void setUri(URI uri) {
+        this.uri = uri;
     }
 }
