@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.restcontrollers;
+package ar.edu.itba.paw.webapp.exceptionmappers;
 
 import org.glassfish.jersey.server.validation.ValidationError;
 import org.glassfish.jersey.server.validation.internal.ValidationHelper;

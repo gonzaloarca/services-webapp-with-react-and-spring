@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.restcontrollers;
+package ar.edu.itba.paw.webapp.exceptionmappers;
 
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
