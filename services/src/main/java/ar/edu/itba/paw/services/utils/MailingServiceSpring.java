@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.MailCreationException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -105,7 +104,7 @@ public class MailingServiceSpring implements MailingService {
             price = (double) 0;
 
         data.put("jobPackagePrice", String.valueOf(Math.round(price * 100 / 100)));
-        data.put("jobPackageRateType", jobPack.getRateType().getStringCode());
+        data.put("jobPackageRateType", jobPack.getRateType().getDescription());
         data.put("jobPostTitle", jobPost.getTitle());
         data.put("client", client.getUsername());
         data.put("clientEmail", client.getEmail());
@@ -174,7 +173,7 @@ public class MailingServiceSpring implements MailingService {
             price = (double) 0;
 
         data.put("jobPackagePrice", String.valueOf(Math.round(price * 100 / 100)));
-        data.put("jobPackageRateType", jobPack.getRateType().getStringCode());
+        data.put("jobPackageRateType", jobPack.getRateType().getDescription());
         data.put("jobPostTitle", jobPost.getTitle());
         data.put("client", client.getUsername());
         data.put("clientEmail", client.getEmail());
@@ -183,7 +182,7 @@ public class MailingServiceSpring implements MailingService {
         data.put("contractDate", jobContract.getCreationDate().format(DateTimeFormatter.ofPattern(messageSource.getMessage("date.format", new Object[]{}, locale))));
         data.put("scheduledDate", jobContract.getScheduledDate().toLocalDate().toString());
         data.put("scheduledTime", jobContract.getScheduledDate().toLocalTime().toString());
-        data.put("status", jobContract.getState().getStringCode());
+        data.put("status", jobContract.getState().getDescription());
         data.put("professional", professional.getUsername());
         data.put("professionalEmail", professional.getEmail());
         data.put("professionalPhone", professional.getPhone());
@@ -205,7 +204,7 @@ public class MailingServiceSpring implements MailingService {
         sendMessageUsingThymeleafTemplate(updatedByClient ? professional.getEmail() : client.getEmail(),
                 messageSource.getMessage("mail.updateContract.subject." + jobContract.getState().toString(),
                         new Object[]{
-                                messageSource.getMessage(jobContract.getState().getStringCode(), new Object[]{}, locale)
+                                messageSource.getMessage(jobContract.getState().getDescription(), new Object[]{}, locale)
                         }, locale),
                 data, "updateContractStatus", attachment, locale);
     }

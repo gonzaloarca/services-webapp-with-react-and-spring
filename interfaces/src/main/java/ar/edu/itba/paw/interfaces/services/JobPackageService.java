@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface JobPackageService {
 
-    JobPackage create(long postId, String title, String description, String price, int rateType);
+    JobPackage create(long postId, String title, String description, String price, long rateType);
 
     JobPackage findById(long id);
 

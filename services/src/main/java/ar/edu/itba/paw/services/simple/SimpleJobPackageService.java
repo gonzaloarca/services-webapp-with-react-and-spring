@@ -21,9 +21,9 @@ public class SimpleJobPackageService implements JobPackageService {
     private JobPackageDao jobPackageDao;
 
     @Override
-    public JobPackage create(long postId, String title, String description, String price, int rateType) {
+    public JobPackage create(long postId, String title, String description, String price, long rateType) {
 
-        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
+        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[(int) rateType];
         Double parsedPrice = parsePrice(parsedRateType,price);
 
         return jobPackageDao.create(postId, title, description, parsedPrice, parsedRateType);
@@ -64,9 +64,7 @@ public class SimpleJobPackageService implements JobPackageService {
 
     @Override
     public JobPackage findByIdWithJobPost(int id) {
-        JobPackage jobPackage = jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
-        jobPackage.getJobPost().getId();
-        return jobPackage;
+        return jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
     }
 
     private Double parsePrice(JobPackage.RateType rateType, String price){

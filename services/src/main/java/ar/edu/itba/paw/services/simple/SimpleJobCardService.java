@@ -120,7 +120,7 @@ public class SimpleJobCardService implements JobCardService {
         List<JobPost.JobType> types = new ArrayList<>();
 
         Arrays.stream(JobPost.JobType.values()).forEach(jobType -> {
-            String typeName = messageSource.getMessage(jobType.getStringCode(), null, locale);
+            String typeName = messageSource.getMessage(jobType.getDescription(), null, locale);
             //FIXME: levenshteinDistance es null?
             int distance = levenshteinDistance.apply(query.toLowerCase(), typeName.toLowerCase());
             double similarity = 1.0 - ((double) distance / Math.max(query.length(), typeName.length()));
