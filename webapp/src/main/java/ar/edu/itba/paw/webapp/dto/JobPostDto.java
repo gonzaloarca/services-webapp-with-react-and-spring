@@ -20,17 +20,13 @@ public class JobPostDto {
     private LocalDateTime creationDate;
     private List<JobPackageDto> packages;
 
-    public static JobPostDto fromJobPost(JobPost jobPost, UriInfo uriInfo) {
+    public static JobPostDto fromJobPostWithLocalizedMessage(JobPost jobPost, UriInfo uriInfo, String message) {
         final JobPostDto jobPostDto = new JobPostDto();
         jobPostDto.id = jobPost.getId();
-        jobPostDto.professional = new UserDto();
-        jobPostDto.professional.setId(jobPost.getUser().getId());
-        jobPostDto.professional.setUri(uriInfo.getBaseUriBuilder().path("/users/")
-                //TODO: CHEQUEAR SI SE PUEDE EVITAR HARDCODEAR EL PREFIJO DE LA URI
-                .path(String.valueOf(jobPost.getUser().getId())).build());
+        jobPostDto.professional = UserDto.linkDataFromUser(jobPost.getUser(),uriInfo);
         jobPostDto.title = jobPost.getTitle();
         jobPostDto.availableHours = jobPost.getAvailableHours();
-        jobPostDto.jobType = JobTypeDto.fromJobType(jobPost.getJobType());
+        jobPostDto.jobType = JobTypeDto.fromJobTypeWithLocalizedMessage(jobPost.getJobType(),message );
         jobPostDto.isActive = jobPost.isActive();
         jobPostDto.zones = jobPost.getZones().stream().map(JobPostZoneDto::fromJobPostZone).collect(Collectors.toList());
         jobPostDto.creationDate = jobPost.getCreationDate();

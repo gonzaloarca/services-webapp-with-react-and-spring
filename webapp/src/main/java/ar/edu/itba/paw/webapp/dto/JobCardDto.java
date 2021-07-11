@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.JobCard;
-import ar.edu.itba.paw.models.JobPost;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -20,22 +19,23 @@ public class JobCardDto {
     private JobPackageRateTypeDto rateType;
     private URI imageUrl;
 
-    public static JobCardDto fromJobCard(JobCard jobCard, UriInfo uriInfo){
+    public static JobCardDto fromJobCardWithLocalizedMessage(JobCard jobCard, UriInfo uriInfo,String jobTypeMessage){
         JobCardDto jobCardDto = new JobCardDto();
         jobCardDto.jobPost = JobPostDto.linkDataFromJobPost(jobCard.getJobPost(),uriInfo);
         jobCardDto.title = jobCard.getJobPost().getTitle();
-        jobCardDto.jobType = JobTypeDto.fromJobType(jobCard.getJobPost().getJobType());
+        jobCardDto.jobType = JobTypeDto.fromJobTypeWithLocalizedMessage(jobCard.getJobPost().getJobType(),jobTypeMessage);
         jobCardDto.zones = jobCard.getJobPost().getZones().stream().map(JobPostZoneDto::fromJobPostZone).collect(Collectors.toList());
         jobCardDto.reviewsCount = jobCard.getReviewsCount();
         jobCardDto.avgRate = jobCard.getRating();
         jobCardDto.contractsCompleted = jobCard.getContractsCompleted();
         jobCardDto.price = jobCard.getPrice();
         jobCardDto.rateType = JobPackageRateTypeDto.fromJobPackageRateType(jobCard.getRateType());
-        jobCardDto.imageUrl =  uriInfo.getBaseUriBuilder().path("/job-posts")
-                .path(String.valueOf(jobCardDto.jobPost.getId()))
-                .path("/images")
-                .path(String.valueOf(jobCard.getPostImageId()))
-                .build();
+        if(jobCard.getPostImageId() != null)
+            jobCardDto.imageUrl =  uriInfo.getBaseUriBuilder().path("/job-posts")
+                    .path(String.valueOf(jobCardDto.jobPost.getId()))
+                    .path("/images")
+                    .path(String.valueOf(jobCard.getPostImageId()))
+                    .build();
         return jobCardDto;
     }
 

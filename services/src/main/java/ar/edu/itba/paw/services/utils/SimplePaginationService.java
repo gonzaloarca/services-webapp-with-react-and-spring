@@ -66,6 +66,8 @@ public class SimplePaginationService implements PaginationService {
 
     @Override
     public int findJobCardsSearchMaxPage(String query, int zone, int jobType, Locale locale) {
+        if(query == null)
+            return 0;
         JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
         if (jobType == HirenetUtils.SEARCH_WITHOUT_CATEGORIES)
             return jobCardService.searchMaxPage(query, parsedZone, locale);

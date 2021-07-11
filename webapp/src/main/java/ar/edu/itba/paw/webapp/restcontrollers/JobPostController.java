@@ -5,8 +5,10 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.JobPackageDto;
 import ar.edu.itba.paw.webapp.dto.JobPostDto;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
+import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import org.slf4j.Logger;
@@ -37,8 +39,14 @@ public class JobPostController {
     @Autowired
     private JobPackageService jobPackageService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Context
     private UriInfo uriInfo;
+
+    @Context
+    private HttpHeaders headers;
 
     @GET
     @Path("/{id}/")
@@ -47,8 +55,10 @@ public class JobPostController {
 
         jobPostControllerLogger.debug("Finding job post by id: {}", id);
         JobPost jobPost = jobPostService.findByIdWithInactive(id);
-
-        return Response.ok(JobPostDto.fromJobPost(jobPost, uriInfo)).build();
+        return Response.ok(JobPostDto.fromJobPostWithLocalizedMessage(
+                jobPost, uriInfo,
+                messageSource.getMessage(jobPost.getJobType().getDescription(),null,LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))))
+                .build();
     }
 
     @GET
@@ -85,10 +95,26 @@ public class JobPostController {
         jobPostControllerLogger.debug("Finding packages for post: {}", id);
         int maxPage = paginationService.findJobPackageByPostIdMaxPage(id);
         final List<JobPackageDto> packageDtoList = jobPackageService.findByPostId(id,page-1)
-                .stream().map(pack -> JobPackageDto.fromJobPackage(pack,uriInfo)).collect(Collectors.toList());
+                .stream().map(pack -> JobPackageDto.fromJobPackage(pack,uriInfo))
+                .collect(Collectors.toList());
 
         return PageResponseUtil.getGenericListResponse(page,maxPage,uriInfo,
                 Response.ok(new GenericEntity<List<JobPackageDto>>(packageDtoList){}));
+    }
+
+    @Path("/{postId}/packages/{packageId}")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response packagesById(
+            @PathParam("postId") final long postId,
+            @PathParam("packageId") final long packageId){
+
+        jobPostControllerLogger.debug("Finding packages by Id: {}", packageId);
+        final JobPackage jobPackage = jobPackageService.findById(packageId);
+        final JobPackageDto packageDto = JobPackageDto.fromJobPackage(jobPackage,uriInfo);
+
+        return Response.ok(new GenericEntity<JobPackageDto>(packageDto){}).build();
     }
 
 }

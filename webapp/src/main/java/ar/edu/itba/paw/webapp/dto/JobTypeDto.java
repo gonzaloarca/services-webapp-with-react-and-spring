@@ -5,10 +5,10 @@ import ar.edu.itba.paw.models.JobPost;
 public class JobTypeDto {
     private int id;
     private String description;
-    public static JobTypeDto fromJobType(JobPost.JobType jobType){
+    public static JobTypeDto fromJobTypeWithLocalizedMessage(JobPost.JobType jobType, String message){
         JobTypeDto jobTypeDto = new JobTypeDto();
         jobTypeDto.id = jobType.getValue();
-        jobTypeDto.description = jobType.getDescription();
+        jobTypeDto.description = message;
         return jobTypeDto;
     }
 

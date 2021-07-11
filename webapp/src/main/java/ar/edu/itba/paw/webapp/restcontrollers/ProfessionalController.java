@@ -8,15 +8,18 @@ import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.JobCardDto;
 import ar.edu.itba.paw.webapp.dto.ProfessionalDto;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
+import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
@@ -42,8 +45,14 @@ public class ProfessionalController {
     @Autowired
     private JobContractService jobContractService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Context
     private UriInfo uriInfo;
+
+    @Context
+    private HttpHeaders headers;
 
     @GET
     @Path("/{id}")
@@ -97,8 +106,11 @@ public class ProfessionalController {
 
         professionalControllerLogger.debug("Finding jobCards for pro with id: {}", id);
         int maxPage = paginationService.findJobCardsByUserIdMaxPage(id);
+        Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         final List<JobCardDto> jobCardDtoList = jobCardService.findByUserId(id, page - 1)
-                .stream().map(jobCard -> JobCardDto.fromJobCard(jobCard, uriInfo)).collect(Collectors.toList());
+                .stream().map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
+                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(),null,locale)))
+                .collect(Collectors.toList());
 
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<JobCardDto>>(jobCardDtoList) {
