@@ -43,6 +43,9 @@ public class JobPost {
     @Column(name = "post_creation_date", nullable = false)
     private LocalDateTime creationDate;
 
+    @OneToMany(mappedBy = "jobPost",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<JobPackage> jobPackages;
+
     /*default*/ JobPost() {
     }
 
@@ -144,6 +147,14 @@ public class JobPost {
         this.creationDate = creationDate;
     }
 
+    public List<JobPackage> getJobPackages() {
+        return jobPackages;
+    }
+
+    public void setJobPackages(List<JobPackage> jobPackages) {
+        this.jobPackages = jobPackages;
+    }
+
     @Override
     public String toString() {
         return "JobPost{" +
@@ -171,22 +182,22 @@ public class JobPost {
     }
 
     public enum JobType {
-        PLUMBING("plumbing.jpeg", "JobPost.JobType.PLUMBING"),
-        ELECTRICITY("electrician.jpeg", "JobPost.JobType.ELECTRICITY"),
-        CARPENTRY("carpentry.jpeg", "JobPost.JobType.CARPENTRY"),
-        CATERING("catering.png", "JobPost.JobType.CATERING"),
-        PAINTING("painter.jpeg", "JobPost.JobType.PAINTING"),
-        TEACHING("teaching.jpeg", "JobPost.JobType.TEACHING"),
-        CLEANING("cleaning.png", "JobPost.JobType.CLEANING"),
-        BABYSITTING("babysitting.jpeg", "JobPost.JobType.BABYSITTING");
+        PLUMBING("plumbing.jpeg", "PLUMBING"),
+        ELECTRICITY("electrician.jpeg", "ELECTRICITY"),
+        CARPENTRY("carpentry.jpeg", "CARPENTRY"),
+        CATERING("catering.png", "CATERING"),
+        PAINTING("painter.jpeg", "PAINTING"),
+        TEACHING("teaching.jpeg", "TEACHING"),
+        CLEANING("cleaning.png", "CLEANING"),
+        BABYSITTING("babysitting.jpeg", "BABYSITTING");
 
         private String imagePath;
-        private String stringCode;
+        private String description;
         private int value;
 
         JobType(String imagePath, String stringCode) {
             this.imagePath = imagePath;
-            this.stringCode = stringCode;
+            this.description = stringCode;
             this.value = ordinal();
         }
 
@@ -198,12 +209,12 @@ public class JobPost {
             this.imagePath = imagePath;
         }
 
-        public String getStringCode() {
-            return stringCode;
+        public String getDescription() {
+            return description;
         }
 
-        public void setStringCode(String stringCode) {
-            this.stringCode = stringCode;
+        public void setDescription(String stringCode) {
+            this.description = stringCode;
         }
 
         public int getValue() {
@@ -216,60 +227,60 @@ public class JobPost {
     }
 
     public enum Zone {
-        AGRONOMIA("JobPost.Zone.AGRONOMIA"),
-        ALMAGRO("JobPost.Zone.ALMAGRO"),
-        BALVANERA("JobPost.Zone.BALVANERA"),
-        BARRACAS("JobPost.Zone.BARRACAS"),
-        BELGRANO("JobPost.Zone.BELGRANO"),
-        BOEDO("JobPost.Zone.BOEDO"),
-        CABALLITO("JobPost.Zone.CABALLITO"),
-        CHACARITA("JobPost.Zone.CHACARITA"),
-        COGHLAN("JobPost.Zone.COGHLAN"),
-        COLEGIALES("JobPost.Zone.COLEGIALES"),
-        CONSTITUCION("JobPost.Zone.CONSTITUCION"),
-        FLORES("JobPost.Zone.FLORES"),
-        FLORESTA("JobPost.Zone.FLORESTA"),
-        BOCA("JobPost.Zone.BOCA"),
-        PATERNAL("JobPost.Zone.PATERNAL"),
-        LINIERS("JobPost.Zone.LINIERS"),
-        MATADEROS("JobPost.Zone.MATADEROS"),
-        MONTECASTRO("JobPost.Zone.MONTECASTRO"),
-        MONSERRAT("JobPost.Zone.MONSERRAT"),
-        NPOMPEYA("JobPost.Zone.NPOMPEYA"),
-        NUNIEZ("JobPost.Zone.NUNIEZ"),
-        PALERMO("JobPost.Zone.PALERMO"),
-        PAVELLANEDA("JobPost.Zone.PAVELLANEDA"),
-        PCHACABUCO("JobPost.Zone.PCHACABUCO"),
-        PCHAS("JobPost.Zone.PCHAS"),
-        PATRICIOS("JobPost.Zone.PATRICIOS"),
-        MADERO("JobPost.Zone.MADERO"),
-        RECOLETA("JobPost.Zone.RECOLETA"),
-        RETIRO("JobPost.Zone.RETIRO"),
-        SAAVEDRA("JobPost.Zone.SAAVEDRA"),
-        SANCRISTOBAL("JobPost.Zone.SANCRISTOBAL"),
-        SANNICOLAS("JobPost.Zone.SANNICOLAS"),
-        SANTELMO("JobPost.Zone.SANTELMO"),
-        VELEZ("JobPost.Zone.VELEZ"),
-        VERSALLES("JobPost.Zone.VERSALLES"),
-        CRESPO("JobPost.Zone.CRESPO"),
-        VPARQUE("JobPost.Zone.VPARQUE"),
-        DEVOTO("JobPost.Zone.DEVOTO"),
-        MITRE("JobPost.Zone.MITRE"),
-        LUGANO("JobPost.Zone.LUGANO"),
-        LURO("JobPost.Zone.LURO"),
-        ORTUZAR("JobPost.Zone.ORTUZAR"),
-        PUEYRREDON("JobPost.Zone.PUEYRREDON"),
-        VREAL("JobPost.Zone.VREAL"),
-        RIACHUELO("JobPost.Zone.RIACHUELO"),
-        SANTARITA("JobPost.Zone.SANTARITA"),
-        SOLDATI("JobPost.Zone.SOLDATI"),
-        URQUIZA("JobPost.Zone.URQUIZA");
+        AGRONOMIA("AGRONOMIA"),
+        ALMAGRO("ALMAGRO"),
+        BALVANERA("BALVANERA"),
+        BARRACAS("BARRACAS"),
+        BELGRANO("BELGRANO"),
+        BOEDO("BOEDO"),
+        CABALLITO("CABALLITO"),
+        CHACARITA("CHACARITA"),
+        COGHLAN("COGHLAN"),
+        COLEGIALES("COLEGIALES"),
+        CONSTITUCION("CONSTITUCION"),
+        FLORES("FLORES"),
+        FLORESTA("FLORESTA"),
+        BOCA("BOCA"),
+        PATERNAL("PATERNAL"),
+        LINIERS("LINIERS"),
+        MATADEROS("MATADEROS"),
+        MONTECASTRO("MONTECASTRO"),
+        MONSERRAT("MONSERRAT"),
+        NPOMPEYA("NPOMPEYA"),
+        NUNIEZ("NUNIEZ"),
+        PALERMO("PALERMO"),
+        PAVELLANEDA("PAVELLANEDA"),
+        PCHACABUCO("PCHACABUCO"),
+        PCHAS("PCHAS"),
+        PATRICIOS("PATRICIOS"),
+        MADERO("MADERO"),
+        RECOLETA("RECOLETA"),
+        RETIRO("RETIRO"),
+        SAAVEDRA("SAAVEDRA"),
+        SANCRISTOBAL("SANCRISTOBAL"),
+        SANNICOLAS("SANNICOLAS"),
+        SANTELMO("SANTELMO"),
+        VELEZ("VELEZ"),
+        VERSALLES("VERSALLES"),
+        CRESPO("CRESPO"),
+        VPARQUE("VPARQUE"),
+        DEVOTO("DEVOTO"),
+        MITRE("MITRE"),
+        LUGANO("LUGANO"),
+        LURO("LURO"),
+        ORTUZAR("ORTUZAR"),
+        PUEYRREDON("PUEYRREDON"),
+        VREAL("VREAL"),
+        RIACHUELO("RIACHUELO"),
+        SANTARITA("SANTARITA"),
+        SOLDATI("SOLDATI"),
+        URQUIZA("URQUIZA");
 
-        private final String stringCode;
+        private final String description;
         private final int value;
 
         Zone(final String stringCode) {
-            this.stringCode = stringCode;
+            this.description = stringCode;
             this.value = ordinal();
         }
 
@@ -277,8 +288,8 @@ public class JobPost {
             return value;
         }
 
-        public String getStringCode() {
-            return stringCode;
+        public String getDescription() {
+            return description;
         }
     }
 }
