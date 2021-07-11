@@ -7,14 +7,22 @@ import javax.ws.rs.core.UriInfo;
 
 public class PageResponseUtil {
 
-    public static Response getGenericListResponse(@DefaultValue("1") @QueryParam("page") int page, int maxPage,
+    public static Response getGenericListResponse(int page, int maxPage,
                                                   UriInfo uriInfo, Response.ResponseBuilder builder) {
-        return builder
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPage).build(), "last")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", (page == 1) ? page : page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", (page == maxPage) ? page : page + 1).build(), "next")
-                .build();
+        if(maxPage > 0) {
+            if (page > 1) {
+                builder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                        .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev");
+            }
+            if (page < maxPage) {
+                builder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPage).build(), "last")
+                        .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next");
+            }
+            if (page > maxPage) {
+                builder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPage).build(), "last");
+            }
+        }
+        return builder.build();
     }
 
     private PageResponseUtil() {

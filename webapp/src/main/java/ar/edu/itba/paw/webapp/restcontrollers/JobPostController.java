@@ -37,9 +37,9 @@ public class JobPostController {
     private UriInfo uriInfo;
 
     @GET
-    @Path("/{postId}/")
+    @Path("/{id}/")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response jobPostDetails(@PathParam("postId") final long id) {
+    public Response jobPostDetails(@PathParam("id") final long id) {
 
         jobPostControllerLogger.debug("Finding job post by id: {}", id);
         JobPost jobPost = jobPostService.findByIdWithInactive(id);
@@ -52,10 +52,9 @@ public class JobPostController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response reviewsByPostId(
             @PathParam("id") final long id,
-            @QueryParam(value = "page") @DefaultValue("1") final int page) {
+            @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            jobPostControllerLogger.debug("Invalid page: {}", page);
-            throw new IllegalArgumentException();
+            page = 1;
         }
 
         jobPostControllerLogger.debug("Finding reviews for post: {}", id);
@@ -64,7 +63,7 @@ public class JobPostController {
         final List<ReviewDto> reviewDtoList = reviewService.findReviewsByPostId(id, page - 1)
                 .stream().map(review -> ReviewDto.fromReview(review, uriInfo)).collect(Collectors.toList());
 
-        return PageResponseUtil.getGenericListResponse(page - 1, maxPage, uriInfo,
+        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<ReviewDto>>(reviewDtoList) {
                 }));
     }
