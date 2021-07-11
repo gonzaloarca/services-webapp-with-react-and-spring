@@ -36,7 +36,6 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response register(@Valid final UserDto userDto) {
 
-        Locale locale = headers.getAcceptableLanguages().get(0);
         String webpageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
 
@@ -45,7 +44,7 @@ public class UserController {
             accountControllerLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}",
                     userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone());
             currentUser = userService.register(userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone(),
-                    null, locale, webpageUrl);
+                    null, headers.getAcceptableLanguages().get(0), webpageUrl);
         } catch (UserAlreadyExistsException e) {
             accountControllerLogger.error("Register error: email already exists");
             return Response.status(Response.Status.CONFLICT).build();

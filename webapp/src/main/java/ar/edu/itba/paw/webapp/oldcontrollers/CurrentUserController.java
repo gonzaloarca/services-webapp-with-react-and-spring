@@ -41,13 +41,13 @@ public class CurrentUserController {
         // Principal es distinto de null porque en Auth config este mapping tiene hasRole("PROFESSIONAL")
         currentUserControllerLogger.debug("Finding user with email {}", principal.getName());
         long id = userService.findByEmail(principal.getName()).orElseThrow(UserNotFoundException::new).getId();
-        int maxPage = paginationService.findMaxPageRelatedJobCards(id);
+        int maxPage = paginationService.findRelatedJobCardsMaxPage(id);
         ModelAndView mav = new ModelAndView("analytics");
         mav
                 .addObject("user", userService.getUserByRoleAndId(1, id))
                 .addObject("avgRate", Math.floor(reviewService.findProfessionalAvgRate(id) * 100) / 100)
-                .addObject("totalContractsCompleted", jobContractService.findCompletedContractsQuantityByProId(id))
-                .addObject("totalReviewsSize", reviewService.findReviewsSizeByProId(id));
+                .addObject("totalContractsCompleted", jobContractService.findCompletedContractsByProIdQuantity(id))
+                .addObject("totalReviewsSize", reviewService.findReviewsByProIdSize(id));
         currentUserControllerLogger.debug("Finding analytics rankings for user {}", id);
         mav
                 .addObject("analyticRankings", userService.findUserAnalyticRankings(id));

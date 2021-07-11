@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.dto.JobCardDto;
 import ar.edu.itba.paw.webapp.dto.ProfessionalDto;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
@@ -32,6 +33,9 @@ public class ProfessionalController {
     private JobPostService jobPostService;
 
     @Autowired
+    private JobCardService jobCardService;
+
+    @Autowired
     private ReviewService reviewService;
 
     @Autowired
@@ -54,8 +58,8 @@ public class ProfessionalController {
 
         ProfessionalDto proAnswer = ProfessionalDto.fromUserAndRoles(user, auth.getRoles(),
                 reviewService.findProfessionalAvgRate(id),
-                reviewService.findReviewsSizeByProId(id),
-                jobContractService.findCompletedContractsQuantityByProId(id));
+                reviewService.findReviewsByProIdSize(id),
+                jobContractService.findCompletedContractsByProIdQuantity(id));
         return Response.ok(proAnswer).build();
     }
 
@@ -71,13 +75,33 @@ public class ProfessionalController {
         }
 
         professionalControllerLogger.debug("Finding reviews for pro with id: {}", id);
-        int maxPage = paginationService.findMaxPageReviewsByUserId(id);
-
+        int maxPage = paginationService.findReviewsByUserIdMaxPage(id);
         final List<ReviewDto> reviewDtoList = reviewService.findReviewsByProId(id, page - 1)
                 .stream().map(review -> ReviewDto.fromReview(review, uriInfo)).collect(Collectors.toList());
 
         return PageResponseUtil.getGenericListResponse(page - 1, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<ReviewDto>>(reviewDtoList) {
+                }));
+    }
+
+    @GET
+    @Path("/{id}/job-cards")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response jobCards(
+            @PathParam("id") final long id,
+            @QueryParam(value = "page") @DefaultValue("1") final int page) {
+        if (page < 1) {
+            professionalControllerLogger.debug("Invalid page: {}", page);
+            throw new IllegalArgumentException();
+        }
+
+        professionalControllerLogger.debug("Finding jobCards for pro with id: {}", id);
+        int maxPage = paginationService.findJobCardsByUserIdMaxPage(id);
+        final List<JobCardDto> jobCardDtoList = jobCardService.findByUserId(id, page - 1)
+                .stream().map(jobCard -> JobCardDto.fromJobCard(jobCard, uriInfo)).collect(Collectors.toList());
+
+        return PageResponseUtil.getGenericListResponse(page - 1, maxPage, uriInfo,
+                Response.ok(new GenericEntity<List<JobCardDto>>(jobCardDtoList) {
                 }));
     }
 }

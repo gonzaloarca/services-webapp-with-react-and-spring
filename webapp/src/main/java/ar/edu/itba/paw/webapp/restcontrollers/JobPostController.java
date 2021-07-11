@@ -59,7 +59,7 @@ public class JobPostController {
         }
 
         jobPostControllerLogger.debug("Finding reviews for post: {}", id);
-        int maxPage = paginationService.findMaxPageReviewsByPostId(id);
+        int maxPage = paginationService.findReviewsByPostIdMaxPage(id);
 
         final List<ReviewDto> reviewDtoList = reviewService.findReviewsByPostId(id, page - 1)
                 .stream().map(review -> ReviewDto.fromReview(review, uriInfo)).collect(Collectors.toList());

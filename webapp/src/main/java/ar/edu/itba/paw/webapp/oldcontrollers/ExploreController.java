@@ -2,14 +2,12 @@ package ar.edu.itba.paw.webapp.oldcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.JobCardService;
 import ar.edu.itba.paw.interfaces.services.PaginationService;
-import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Arrays;
 
 @Controller
@@ -41,14 +37,14 @@ public class ExploreController {
             mainLogger.error("Invalid search page");
             throw new IllegalArgumentException();
         }
-        int maxPage = paginationService.findMaxPageJobCards();
+        int maxPage = paginationService.findJobCardsMaxPage();
         return new ModelAndView("index")
                 .addObject("jobCards", jobCardService.findAll(page - 1))
                 .addObject("maxPage", maxPage)
                 .addObject("currentPages", paginationService.findCurrentPages(page, maxPage))
                 .addObject("categories", Arrays.copyOfRange(JobPost.JobType.values(), 0, 3));
     }
-
+/*
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ModelAndView search(@Valid @ModelAttribute("searchForm") SearchForm form, final BindingResult errors,
                                final ModelAndView mav, @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
@@ -89,7 +85,7 @@ public class ExploreController {
                 localeResolver.resolveLocale(request)));
         return searchMav;
     }
-
+*/
     @RequestMapping("/categories")
     public ModelAndView categories() {
         return new ModelAndView("categories")

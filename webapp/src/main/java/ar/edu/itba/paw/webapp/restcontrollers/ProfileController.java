@@ -49,17 +49,17 @@ public class ProfileController {
 
     @ModelAttribute("servicesSize")
     private int getServicesSize(@PathVariable("id") final long id) {
-        return jobCardService.findSizeByUserId(id);
+        return jobCardService.findByUserIdSize(id);
     }
 
     @ModelAttribute("totalReviewsSize")
     private int getReviews(@PathVariable("id") final long id) {
-        return reviewService.findReviewsSizeByProId(id);
+        return reviewService.findReviewsByProIdSize(id);
     }
 
     @ModelAttribute("totalContractsCompleted")
     private int getTotalContractsCompleted(@PathVariable("id") final long id) {
-        return jobContractService.findCompletedContractsQuantityByProId(id);
+        return jobContractService.findCompletedContractsByProIdQuantity(id);
     }
 
     @RequestMapping(value = "/services")
@@ -74,7 +74,7 @@ public class ProfileController {
 
         profileControllerLogger.debug("Getting auth info for user: {}",user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
-        int maxPage = paginationService.findMaxPageJobPostsByUserId(id);
+        int maxPage = paginationService.findJobCardsByUserIdMaxPage(id);
         return new ModelAndView("profile")
                 .addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
                 .addObject("withServices", true)
@@ -92,7 +92,7 @@ public class ProfileController {
 
         profileControllerLogger.debug("Getting auth info for user: {}",user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
-        int maxPage = paginationService.findMaxPageReviewsByUserId(id);
+        int maxPage = paginationService.findReviewsByUserIdMaxPage(id);
         return new ModelAndView("profile")
                 .addObject("isPro", auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
                 .addObject("withServices", false)
