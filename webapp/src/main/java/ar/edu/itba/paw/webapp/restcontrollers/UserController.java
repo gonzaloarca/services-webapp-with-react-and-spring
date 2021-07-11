@@ -59,13 +59,13 @@ public class UserController {
     @Path("/{id}")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getById(@PathParam("id") String id) {
+    public Response getById(@PathParam("id") long id) {
         accountControllerLogger.debug("Finding user with email {}", id);
-        User currentUser = userService.findById(Integer.parseInt(id));
-        accountControllerLogger.debug("Finding auth info for user with email {}", currentUser.getEmail());
-        UserAuth auth = userService.getAuthInfo(currentUser.getEmail()).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(id);
+        accountControllerLogger.debug("Finding auth info for user with email {}", user.getEmail());
+        UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        UserDto userAnswer = UserDto.fromUserAndRoles(currentUser, auth.getRoles());
+        UserDto userAnswer = UserDto.fromUserAndRoles(user, auth.getRoles());
         return Response.ok(userAnswer).build();
     }
 

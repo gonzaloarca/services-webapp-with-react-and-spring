@@ -8,11 +8,13 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.net.URI;
 import java.util.List;
 
 public class UserDto {
 
     private long id;
+    private URI uri;
 
     @NotBlank
     @Size(max = 100)
@@ -93,5 +95,13 @@ public class UserDto {
 
     public void setRoles(List<UserAuth.Role> roles) {
         this.roles = roles;
+    }
+
+    public URI getUri() {
+        return uri;
+    }
+
+    public void setUri(URI uri) {
+        this.uri = uri;
     }
 }

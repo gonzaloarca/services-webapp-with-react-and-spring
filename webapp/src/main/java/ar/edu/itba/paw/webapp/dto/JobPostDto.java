@@ -2,26 +2,30 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.JobPost;
 
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class JobPostDto {
-    private long id;
-    private UserDto userDto;
+    private Long id;
+    private URI uri;
+    private UserDto professional;
     private String title;
     private String availableHours;
     private JobPost.JobType jobType;
-    private boolean isActive;
+    private Boolean isActive;
     private List<JobPost.Zone> zones;
     private LocalDateTime creationDate;
-    private long ratesQuantity;
-    private Double avgRate;
-    private long contractsCompleted;
 
-    public static JobPostDto fromJobPost(JobPost jobPost) {
+    public static JobPostDto fromJobPost(JobPost jobPost, UriInfo uriInfo) {
         final JobPostDto jobPostDto = new JobPostDto();
         jobPostDto.id = jobPost.getId();
-        jobPostDto.userDto = UserDto.fromUser(jobPost.getUser());
+        jobPostDto.professional = new UserDto();
+        jobPostDto.professional.setId(jobPost.getUser().getId());
+        jobPostDto.professional.setUri(uriInfo.getBaseUriBuilder().path("/users/")
+                //TODO: CHEQUEAR SI SE PUEDE EVITAR HARDCODEAR EL PREFIJO DE LA URI
+                .path(String.valueOf(jobPost.getUser().getId())).build());
         jobPostDto.title = jobPost.getTitle();
         jobPostDto.availableHours = jobPost.getAvailableHours();
         jobPostDto.jobType = jobPost.getJobType();
@@ -31,28 +35,20 @@ public class JobPostDto {
         return jobPostDto;
     }
 
-    public static JobPostDto fromJobPostWithExtraData(JobPost jobPost, long ratesQuantity, Double avgRate, long contractsCompleted) {
-        final JobPostDto jobPostDto = fromJobPost(jobPost);
-        jobPostDto.ratesQuantity = ratesQuantity;
-        jobPostDto.avgRate = avgRate;
-        jobPostDto.contractsCompleted = contractsCompleted;
-        return jobPostDto;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UserDto getUserDto() {
-        return userDto;
+    public UserDto getProfessional() {
+        return professional;
     }
 
-    public void setUserDto(UserDto userDto) {
-        this.userDto = userDto;
+    public void setProfessional(UserDto professional) {
+        this.professional = professional;
     }
 
     public String getTitle() {
@@ -103,27 +99,11 @@ public class JobPostDto {
         this.creationDate = creationDate;
     }
 
-    public long getRatesQuantity() {
-        return ratesQuantity;
+    public URI getUri() {
+        return uri;
     }
 
-    public void setRatesQuantity(long ratesQuantity) {
-        this.ratesQuantity = ratesQuantity;
-    }
-
-    public Double getAvgRate() {
-        return avgRate;
-    }
-
-    public void setAvgRate(Double avgRate) {
-        this.avgRate = avgRate;
-    }
-
-    public long getContractsCompleted() {
-        return contractsCompleted;
-    }
-
-    public void setContractsCompleted(long contractsCompleted) {
-        this.contractsCompleted = contractsCompleted;
+    public void setUri(URI uri) {
+        this.uri = uri;
     }
 }

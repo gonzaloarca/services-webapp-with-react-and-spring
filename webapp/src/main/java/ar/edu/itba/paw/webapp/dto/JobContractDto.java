@@ -2,12 +2,14 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.JobContract;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 
 public class JobContractDto {
-    private long id;
-    private UserDto client;
-    private JobPackageDto jobPackage;
+    private Long id;
+    private URI uri;
+    private Long clientId;
+    private Long jobPackageId;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private LocalDateTime scheduledDate;
@@ -17,7 +19,8 @@ public class JobContractDto {
     public static JobContractDto fromJobContract(JobContract jobContract) {
         JobContractDto jobContractDto = new JobContractDto();
         jobContractDto.id = jobContract.getId();
-        jobContractDto.client = UserDto.fromUser(jobContract.getClient());
+        jobContractDto.clientId = jobContract.getClient().getId();
+        jobContractDto.jobPackageId = jobContract.getJobPackage().getId();
         jobContractDto.creationDate = jobContract.getCreationDate();
         jobContractDto.lastModifiedDate = jobContract.getLastModifiedDate();
         jobContractDto.scheduledDate = jobContract.getScheduledDate();
@@ -26,28 +29,28 @@ public class JobContractDto {
         return jobContractDto;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UserDto getClient() {
-        return client;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setClient(UserDto client) {
-        this.client = client;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
-    public JobPackageDto getJobPackage() {
-        return jobPackage;
+    public Long getJobPackageId() {
+        return jobPackageId;
     }
 
-    public void setJobPackage(JobPackageDto jobPackage) {
-        this.jobPackage = jobPackage;
+    public void setJobPackageId(Long jobPackageId) {
+        this.jobPackageId = jobPackageId;
     }
 
     public LocalDateTime getCreationDate() {
@@ -88,5 +91,13 @@ public class JobContractDto {
 
     public void setState(JobContract.ContractState state) {
         this.state = state;
+    }
+
+    public URI getJobContractURI() {
+        return uri;
+    }
+
+    public void setJobContractURI(URI jobContractURI) {
+        this.uri = jobContractURI;
     }
 }

@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.JobPostDto;
+import ar.edu.itba.paw.webapp.dto.ReviewDto;
+import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
-@Path("/jobpost")
+@Path("/job-posts")
 public class JobPostController {
     private final Logger jobPostControllerLogger = LoggerFactory.getLogger(JobPostController.class);
 
@@ -40,17 +44,29 @@ public class JobPostController {
         jobPostControllerLogger.debug("Finding job post by id: {}", id);
         JobPost jobPost = jobPostService.findByIdWithInactive(id);
 
-        //TODO: SE DEBERIA HACER ACA? O ES UN REQUEST APARTE?
-//        jobPostControllerLogger.debug("Finding images for post: {}", jobPost.getId());
-//        List<Long> imageList = jobPostImageService.getImagesIdsByPostId(jobPost.getId());
+        return Response.ok(JobPostDto.fromJobPost(jobPost, uriInfo)).build();
+    }
 
-        long totalJobPostContractsCompleted = jobContractService.findContractsQuantityByPostId(jobPost.getId());
-        long totalReviewsSize = reviewService.findJobPostReviewsSize(id);
-        Double avgRate = Math.floor(reviewService.findJobPostAvgRate(id) * 100) / 100;
+    @GET
+    @Path("/{id}/reviews")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response reviewsByPostId(
+            @PathParam("id") final long id,
+            @QueryParam(value = "page") @DefaultValue("1") final int page) {
+        if (page < 1) {
+            jobPostControllerLogger.debug("Invalid page: {}", page);
+            throw new IllegalArgumentException();
+        }
 
-        return Response.ok(
-                JobPostDto.fromJobPostWithExtraData(jobPost, totalReviewsSize, avgRate, totalJobPostContractsCompleted)
-        ).build();
+        jobPostControllerLogger.debug("Finding reviews for post: {}", id);
+        int maxPage = paginationService.findMaxPageReviewsByPostId(id);
+
+        final List<ReviewDto> reviewDtoList = reviewService.findReviewsByPostId(id, page - 1)
+                .stream().map(review -> ReviewDto.fromReview(review, uriInfo)).collect(Collectors.toList());
+
+        return PageResponseUtil.getGenericListResponse(page - 1, maxPage, uriInfo,
+                Response.ok(new GenericEntity<List<ReviewDto>>(reviewDtoList) {
+                }));
     }
 
 }
