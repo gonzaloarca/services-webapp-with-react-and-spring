@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.exceptions.ProfessionalNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.JobCardDto;
 import ar.edu.itba.paw.webapp.dto.ProfessionalDto;
@@ -54,12 +55,13 @@ public class ProfessionalController {
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
 
         if (!auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
-            return Response.noContent().build();//FIXME: Que hacer si no es PRO?
+            throw new ProfessionalNotFoundException();
 
-        ProfessionalDto proAnswer = ProfessionalDto.fromUserAndRoles(user, auth.getRoles(),
+        ProfessionalDto proAnswer = ProfessionalDto.fromUserAndRoles(user,
                 reviewService.findProfessionalAvgRate(id),
                 reviewService.findReviewsByProIdSize(id),
-                jobContractService.findCompletedContractsByProIdQuantity(id));
+                jobContractService.findCompletedContractsByProIdQuantity(id),
+                uriInfo);
         return Response.ok(proAnswer).build();
     }
 
@@ -68,10 +70,9 @@ public class ProfessionalController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response reviews(
             @PathParam("id") final long id,
-            @QueryParam(value = "page") @DefaultValue("1") final int page) {
+            @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            professionalControllerLogger.debug("Invalid page: {}", page);
-            throw new IllegalArgumentException();
+            page = 0;
         }
 
         professionalControllerLogger.debug("Finding reviews for pro with id: {}", id);
@@ -79,7 +80,7 @@ public class ProfessionalController {
         final List<ReviewDto> reviewDtoList = reviewService.findReviewsByProId(id, page - 1)
                 .stream().map(review -> ReviewDto.fromReview(review, uriInfo)).collect(Collectors.toList());
 
-        return PageResponseUtil.getGenericListResponse(page - 1, maxPage, uriInfo,
+        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<ReviewDto>>(reviewDtoList) {
                 }));
     }
@@ -89,10 +90,9 @@ public class ProfessionalController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response jobCards(
             @PathParam("id") final long id,
-            @QueryParam(value = "page") @DefaultValue("1") final int page) {
+            @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            professionalControllerLogger.debug("Invalid page: {}", page);
-            throw new IllegalArgumentException();
+            page = 0;
         }
 
         professionalControllerLogger.debug("Finding jobCards for pro with id: {}", id);
@@ -100,7 +100,7 @@ public class ProfessionalController {
         final List<JobCardDto> jobCardDtoList = jobCardService.findByUserId(id, page - 1)
                 .stream().map(jobCard -> JobCardDto.fromJobCard(jobCard, uriInfo)).collect(Collectors.toList());
 
-        return PageResponseUtil.getGenericListResponse(page - 1, maxPage, uriInfo,
+        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<JobCardDto>>(jobCardDtoList) {
                 }));
     }
