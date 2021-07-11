@@ -1,24 +1,21 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.MailingService;
 import ar.edu.itba.paw.interfaces.services.PaginationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractCard;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.dto.JobCardDto;
 import ar.edu.itba.paw.webapp.dto.JobContractCardDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -42,11 +39,14 @@ public class UserController {
     @Autowired
     private PaginationService paginationService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Context
     private UriInfo uriInfo;
 
     @Context
-    HttpHeaders headers;
+    private HttpHeaders headers;
 
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -99,7 +99,11 @@ public class UserController {
         int maxPage = paginationService.findContractsByClientIdMaxPage(id, states);
         List<JobContractCardDto> jobContractCardDtoList = jobContractService
                 .findJobContractCardsByClientIdAndSorted(id, states, page - 1, locale).stream()
-                .map(jobContractCard -> JobContractCardDto.fromJobContractCard(jobContractCard, uriInfo, true))
+                .map(jobContractCard -> JobContractCardDto.fromJobContractCardWithLocalizedMessage(
+                        jobContractCard, uriInfo, true,
+                        messageSource.getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(),null,locale
+                        )
+                ))
                 .collect(Collectors.toList());
 
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,

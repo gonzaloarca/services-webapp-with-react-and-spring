@@ -28,7 +28,7 @@ public class JobContractCardDto {
     private JobPostDto jobPost;                 //URL e id
     private JobPackageDto jobPackageDto;        //URL e id
 
-    public static JobContractCardDto fromJobContractCard(JobContractCard card, UriInfo uriInfo, boolean fromClient) {
+    public static JobContractCardDto fromJobContractCardWithLocalizedMessage(JobContractCard card, UriInfo uriInfo, boolean fromClient, String message) {
         JobContractCardDto dto = new JobContractCardDto();
         if (fromClient)
             dto.professional = UserDto.linkDataFromUser(card.getJobContract().getProfessional(), uriInfo);
@@ -41,7 +41,7 @@ public class JobContractCardDto {
         dto.scheduledDate = card.getJobContract().getScheduledDate();
 
         dto.jobTitle = card.getJobCard().getJobPost().getTitle();
-        dto.jobType = JobTypeDto.fromJobType(card.getJobCard().getJobPost().getJobType());
+        dto.jobType = JobTypeDto.fromJobTypeWithLocalizedMessage(card.getJobCard().getJobPost().getJobType(),message);
         dto.reviewsCount = card.getJobCard().getReviewsCount();
         dto.avgRate = card.getJobCard().getRating();
         dto.contractsCompleted = card.getJobCard().getContractsCompleted();

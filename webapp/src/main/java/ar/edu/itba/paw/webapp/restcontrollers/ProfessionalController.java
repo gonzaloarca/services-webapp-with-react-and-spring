@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractCard;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.models.exceptions.ProfessionalNotFoundException;
@@ -50,9 +49,6 @@ public class ProfessionalController {
 
     @Autowired
     private MessageSource messageSource;
-
-    @Context
-    HttpHeaders headers;
 
     @Context
     private UriInfo uriInfo;
@@ -137,7 +133,9 @@ public class ProfessionalController {
         int maxPage = paginationService.findContractsByProIdMaxPage(id, states);
         List<JobContractCardDto> jobContractCardDtoList = jobContractService
                 .findJobContractCardsByProIdAndSorted(id, states, page - 1, locale).stream()
-                .map(jobContractCard -> JobContractCardDto.fromJobContractCard(jobContractCard, uriInfo, false))
+                .map(jobContractCard -> JobContractCardDto.fromJobContractCardWithLocalizedMessage(jobContractCard, uriInfo, false,
+                        messageSource.getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(),null,locale)
+                ))
                 .collect(Collectors.toList());
 
 
