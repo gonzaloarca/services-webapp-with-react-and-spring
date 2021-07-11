@@ -137,20 +137,20 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public int findCompletedContractsQuantityByProId(long id) {
+    public int findCompletedContractsByProIdQuantity(long id) {
         return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id AND jc.state = :completedState", Long.class)
                 .setParameter("completedState", JobContract.ContractState.COMPLETED)
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
     @Override
-    public int findContractsQuantityByPostId(long id) {
+    public int findContractsByPostIdQuantity(long id) {
         return em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.id = :id", Long.class)
                 .setParameter("id", id).getResultList().stream().findFirst().orElse(0L).intValue();
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states) {
+    public int findContractsByClientIdMaxPage(long id, List<JobContract.ContractState> states) {
         if (states == null)
             throw new IllegalArgumentException();
 
@@ -161,7 +161,7 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states) {
+    public int findContractsByProIdMaxPage(long id, List<JobContract.ContractState> states) {
         if (states == null)
             throw new IllegalArgumentException();
 

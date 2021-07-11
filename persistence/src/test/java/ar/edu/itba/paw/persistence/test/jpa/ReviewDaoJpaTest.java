@@ -440,7 +440,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindMaxPageReviewsByUserId() {
 
-        int maxPage = reviewDaoJpa.findMaxPageReviewsByProId(PROFESSIONAL.getId());
+        int maxPage = reviewDaoJpa.findReviewsByProIdMaxPage(PROFESSIONAL.getId());
 
         Assert.assertEquals(MAX_PAGE_FOR_PRO, maxPage);
     }
@@ -448,7 +448,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindMaxPageReviewsByNonExistingUserId() {
 
-        int maxPage = reviewDaoJpa.findMaxPageReviewsByProId(NON_EXISTENT_ID);
+        int maxPage = reviewDaoJpa.findReviewsByProIdMaxPage(NON_EXISTENT_ID);
 
         Assert.assertEquals(0, maxPage);
     }
@@ -456,7 +456,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindProfessionalReviewsSize() {
 
-        int size = reviewDaoJpa.findReviewsSizeByProId(PROFESSIONAL.getId());
+        int size = reviewDaoJpa.findReviewsByProIdSize(PROFESSIONAL.getId());
 
         Assert.assertEquals(TOTAL_REVIEW_COUNT_PRO, size);
     }
@@ -464,7 +464,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindNonExistingProfessionalReviewsSize() {
 
-        int size = reviewDaoJpa.findReviewsSizeByProId(NON_EXISTENT_ID);
+        int size = reviewDaoJpa.findReviewsByProIdSize(NON_EXISTENT_ID);
 
         Assert.assertEquals(0, size);
     }
@@ -472,7 +472,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindMaxPageReviewsByPostId() {
 
-        int maxPage = reviewDaoJpa.findMaxPageReviewsByPostId(JOB_POST.getId());
+        int maxPage = reviewDaoJpa.findReviewsByPostIdMaxPage(JOB_POST.getId());
 
         Assert.assertEquals(MAX_PAGE_FOR_POST, maxPage);
     }
@@ -480,7 +480,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindMaxPageReviewsByNonExistingPostId() {
 
-        int maxPage = reviewDaoJpa.findMaxPageReviewsByPostId(NON_EXISTENT_ID);
+        int maxPage = reviewDaoJpa.findReviewsByPostIdMaxPage(NON_EXISTENT_ID);
 
         Assert.assertEquals(0, maxPage);
     }

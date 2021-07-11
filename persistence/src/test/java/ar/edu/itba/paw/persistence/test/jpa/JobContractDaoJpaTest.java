@@ -536,7 +536,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindContractsQuantityByProId() {
 
-        int ans = jobContractDaoJpa.findCompletedContractsQuantityByProId(PROFESSIONAL.getId());
+        int ans = jobContractDaoJpa.findCompletedContractsByProIdQuantity(PROFESSIONAL.getId());
 
         Assert.assertEquals(0, ans);
     }
@@ -544,7 +544,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindContractsQuantityByNotExistingProId() {
 
-        int ans = jobContractDaoJpa.findCompletedContractsQuantityByProId(PROFESSIONAL.getId() + 100);
+        int ans = jobContractDaoJpa.findCompletedContractsByProIdQuantity(PROFESSIONAL.getId() + 100);
 
         Assert.assertEquals(0, ans);
     }
@@ -554,7 +554,7 @@ public class JobContractDaoJpaTest {
 
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"contract","package_id = " + JOB_PACKAGES[0].getId());
 
-        int qty = jobContractDaoJpa.findContractsQuantityByPostId(JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getPostId());
+        int qty = jobContractDaoJpa.findContractsByPostIdQuantity(JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getPostId());
 
         Assert.assertEquals(realQty, qty);
     }
@@ -564,7 +564,7 @@ public class JobContractDaoJpaTest {
 
         int rowQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"contract","contract_state = 0 AND client_id = " + CLIENT.getId());
 
-        int qty = jobContractDaoJpa.findMaxPageContractsByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL));
+        int qty = jobContractDaoJpa.findContractsByClientIdMaxPage(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL));
 
         Assert.assertEquals((int) Math.ceil((double) rowQty / HirenetUtils.PAGE_SIZE), qty);
     }
@@ -574,7 +574,7 @@ public class JobContractDaoJpaTest {
 
         int rowQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,"contract","contract_state = 1 AND client_id = " + CLIENT.getId());
 
-        int qty = jobContractDaoJpa.findMaxPageContractsByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.APPROVED));
+        int qty = jobContractDaoJpa.findContractsByClientIdMaxPage(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.APPROVED));
 
 
         Assert.assertEquals((int) Math.ceil((double) rowQty / HirenetUtils.PAGE_SIZE), qty);
@@ -585,7 +585,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindCMaxPageContractsByClientIdWithNonExistentClient() {
 
-        int qty = jobContractDaoJpa.findMaxPageContractsByClientId(NON_EXISTENT_ID, Collections.singletonList(JobContract.ContractState.APPROVED));
+        int qty = jobContractDaoJpa.findContractsByClientIdMaxPage(NON_EXISTENT_ID, Collections.singletonList(JobContract.ContractState.APPROVED));
 
         Assert.assertEquals(0, qty);
     }
@@ -593,7 +593,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindCMaxPageContractsByProId() {
 
-        int qty = jobContractDaoJpa.findMaxPageContractsByProId(PROFESSIONAL.getId(),ALL_STATES);
+        int qty = jobContractDaoJpa.findContractsByProIdMaxPage(PROFESSIONAL.getId(),ALL_STATES);
 
         Assert.assertEquals((int) Math.ceil((double) JOB_CONTRACTS_PRO1_COUNT/ HirenetUtils.PAGE_SIZE), qty);
     }
@@ -601,7 +601,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindCMaxPageContractsByProIdWithNonExistentPro() {
 
-        int qty = jobContractDaoJpa.findMaxPageContractsByProId(NON_EXISTENT_ID,Collections.singletonList(JobContract.ContractState.APPROVED));
+        int qty = jobContractDaoJpa.findContractsByProIdMaxPage(NON_EXISTENT_ID,Collections.singletonList(JobContract.ContractState.APPROVED));
 
         Assert.assertEquals(0, qty);
     }
@@ -610,7 +610,7 @@ public class JobContractDaoJpaTest {
     public void testFindCMaxPageContractsByProIdWithPendingState() {
 
 
-        int qty = jobContractDaoJpa.findMaxPageContractsByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL));
+        int qty = jobContractDaoJpa.findContractsByProIdMaxPage(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL));
 
         Assert.assertEquals((int) Math.ceil((double) JOB_CONTRACTS_PRO1_COUNT_PENDING / HirenetUtils.PAGE_SIZE), qty);
     }
@@ -619,7 +619,7 @@ public class JobContractDaoJpaTest {
     public void testFindCMaxPageContractsByProIdWithApprovedState() {
 
 
-        int qty = jobContractDaoJpa.findMaxPageContractsByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.APPROVED));
+        int qty = jobContractDaoJpa.findContractsByProIdMaxPage(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.APPROVED));
 
 
         Assert.assertEquals((int) Math.ceil((double) JOB_CONTRACTS_PRO1_COUNT_APPROVED / HirenetUtils.PAGE_SIZE), qty);

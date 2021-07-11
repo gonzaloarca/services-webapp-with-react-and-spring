@@ -63,11 +63,11 @@ public class MyContractsController {
         Locale locale = localeResolver.resolveLocale(servletRequest);
 
         if (contractType.equals("professional")) {
-            maxPage = paginationService.findMaxPageContractsByProId(id, states);
+            maxPage = paginationService.findContractsByProIdMaxPage(id, states);
             jobContractCards = jobContractService
                     .findJobContractCardsByProIdAndSorted(id, states, page - 1, locale);
         } else if (contractType.equals("client")) {
-            maxPage = paginationService.findMaxPageContractsByClientId(id, states);
+            maxPage = paginationService.findContractsByClientIdMaxPage(id, states);
             jobContractCards = jobContractService
                     .findJobContractCardsByClientIdAndSorted(id, states, page - 1, locale);
         } else

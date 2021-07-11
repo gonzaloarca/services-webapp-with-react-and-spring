@@ -50,46 +50,46 @@ public class SimplePaginationService implements PaginationService {
     }
 
     @Override
-    public int findMaxPageJobCards() {
-        return jobCardService.findMaxPage();
+    public int findJobCardsMaxPage() {
+        return jobCardService.findAllMaxPage();
     }
 
     @Override
-    public int findMaxPageReviewsByUserId(long id) {
-        return reviewService.findMaxPageReviewsByProId(id);
+    public int findReviewsByUserIdMaxPage(long id) {
+        return reviewService.findReviewsByProIdMaxPage(id);
     }
 
     @Override
-    public int findMaxPageJobPostsByUserId(long id) {
-        return jobCardService.findMaxPageByUserId(id);
+    public int findJobCardsByUserIdMaxPage(long id) {
+        return jobCardService.findByUserIdMaxPage(id);
     }
 
     @Override
-    public int findMaxPageJobPostsSearch(String query, int zone, int jobType, Locale locale) {
+    public int findJobCardsSearchMaxPage(String query, int zone, int jobType, Locale locale) {
         JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
         if (jobType == HirenetUtils.SEARCH_WITHOUT_CATEGORIES)
-            return jobCardService.findMaxPageSearch(query, parsedZone, locale);
+            return jobCardService.searchMaxPage(query, parsedZone, locale);
 
-        return jobCardService.findMaxPageSearchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType], locale);
+        return jobCardService.searchWithCategoryMaxPage(query, parsedZone, JobPost.JobType.values()[jobType], locale);
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states) {
-        return jobContractService.findMaxPageContractsByClientId(id, states);
+    public int findContractsByClientIdMaxPage(long id, List<JobContract.ContractState> states) {
+        return jobContractService.findContractsByClientIdMaxPage(id, states);
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states) {
-        return jobContractService.findMaxPageContractsByProId(id, states);
+    public int findContractsByProIdMaxPage(long id, List<JobContract.ContractState> states) {
+        return jobContractService.findContractsByProIdMaxPage(id, states);
     }
 
     @Override
-    public int findMaxPageReviewsByPostId(long id) {
-        return reviewService.findMaxPageByPostId(id);
+    public int findReviewsByPostIdMaxPage(long id) {
+        return reviewService.findByPostIdMaxPage(id);
     }
 
     @Override
-    public int findMaxPageRelatedJobCards(long professional_id) {
-        return jobCardService.findMaxPageRelatedJobCards(professional_id);
+    public int findRelatedJobCardsMaxPage(long professional_id) {
+        return jobCardService.findRelatedJobCardsMaxPage(professional_id);
     }
 }

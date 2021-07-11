@@ -72,18 +72,18 @@ public class SimpleReviewService implements ReviewService {
     }
 
     @Override
-    public int findMaxPageReviewsByProId(long id) {
-        return reviewDao.findMaxPageReviewsByProId(id);
+    public int findReviewsByProIdMaxPage(long id) {
+        return reviewDao.findReviewsByProIdMaxPage(id);
     }
 
     @Override
-    public int findReviewsSizeByProId(long id) {
-        return reviewDao.findReviewsSizeByProId(id);
+    public int findReviewsByProIdSize(long id) {
+        return reviewDao.findReviewsByProIdSize(id);
     }
 
     @Override
-    public int findMaxPageByPostId(long id) {
-        return reviewDao.findMaxPageReviewsByPostId(id);
+    public int findByPostIdMaxPage(long id) {
+        return reviewDao.findReviewsByPostIdMaxPage(id);
     }
 
     @Override

@@ -23,10 +23,10 @@ public interface ReviewDao {
 
     Optional<Review> findReviewByContractId(long id);
 
-    int findMaxPageReviewsByProId(long id);
+    int findReviewsByProIdMaxPage(long id);
 
-    int findReviewsSizeByProId(long id);
+    int findReviewsByProIdSize(long id);
 
-    int findMaxPageReviewsByPostId(long id);
+    int findReviewsByPostIdMaxPage(long id);
 
 }

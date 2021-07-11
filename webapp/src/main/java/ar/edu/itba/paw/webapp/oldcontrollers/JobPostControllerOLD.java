@@ -1,5 +1,5 @@
-/*
-package ar.edu.itba.paw.webapp.controller;
+
+package ar.edu.itba.paw.webapp.oldcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class JobPostController {
+public class JobPostControllerOLD {
 
-    private final Logger jobPostControllerLogger = LoggerFactory.getLogger(JobPostController.class);
+    private final Logger jobPostControllerLogger = LoggerFactory.getLogger(JobPostControllerOLD.class);
 
     @Autowired
     PaginationService paginationService;
@@ -65,20 +65,20 @@ public class JobPostController {
         jobPostControllerLogger.debug("Finding images for post: {}",jobPost.getId());
         List<Long> imageList = jobPostImageService.getImagesIdsByPostId(jobPost.getId());
 
-        int maxPage = paginationService.findMaxPageReviewsByPostId(id);
+        int maxPage = paginationService.findReviewsByPostIdMaxPage(id);
 
-        mav.addObject("isOwner", isOwner).addObject("jobPost", jobPost)
-                .addObject("imageList", imageList)
-                .addObject("totalContractsCompleted",
-                        jobContractService.findContractsQuantityByPostId(jobPost.getId()));
-
-        jobPostControllerLogger.debug("Finding packages for post: {}",id);
-        mav.addObject("packages", jobPackageService.findByPostId(id))
-                .addObject("contractsCompleted",
-                        jobContractService.findContractsQuantityByPostId(jobPost.getUser().getId()))
-                .addObject("avgRate",
-                        Math.floor(reviewService.findJobPostAvgRate(id) * 100) / 100)
-                .addObject("totalReviewsSize", reviewService.findJobPostReviewsSize(id));
+//        mav.addObject("isOwner", isOwner).addObject("jobPost", jobPost)
+//                .addObject("imageList", imageList)
+//                .addObject("totalContractsCompleted",
+//                        jobContractService.findContractsQuantityByPostId(jobPost.getId()));
+//
+//        jobPostControllerLogger.debug("Finding packages for post: {}",id);
+//        mav.addObject("packages", jobPackageService.findByPostId(id))
+//                .addObject("contractsCompleted",
+//                        jobContractService.findContractsQuantityByPostId(jobPost.getUser().getId()))
+//                .addObject("avgRate",
+//                        Math.floor(reviewService.findJobPostAvgRate(id) * 100) / 100)
+//                .addObject("totalReviewsSize", reviewService.findJobPostReviewsSize(id));
 
         jobPostControllerLogger.debug("Finding reviews for post: {}",id);
         mav.addObject("reviews", reviewService.findReviewsByPostId(jobPost.getId(), page - 1))
@@ -314,4 +314,3 @@ public class JobPostController {
 
 
 }
-*/

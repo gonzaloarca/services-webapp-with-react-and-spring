@@ -25,11 +25,11 @@ public interface ReviewService {
 
     Optional<Review> findContractReview(long id);
 
-    int findMaxPageReviewsByProId(long id);
+    int findReviewsByProIdMaxPage(long id);
 
-    int findReviewsSizeByProId(long id);
+    int findReviewsByProIdSize(long id);
 
-    int findMaxPageByPostId(long id);
+    int findByPostIdMaxPage(long id);
 
     Double findJobPostAvgRate(long id);
 

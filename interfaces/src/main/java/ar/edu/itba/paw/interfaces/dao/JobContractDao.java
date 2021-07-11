@@ -19,13 +19,11 @@ public interface JobContractDao {
 
     List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
-                                                                int page);
+    List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page);
 
     List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
-                                                             int page);
+    List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page);
 
     List<JobContract> findByPostId(long id, int page);
 
@@ -33,13 +31,13 @@ public interface JobContractDao {
 
     Optional<User> findClientByContractId(long id);
 
-    int findCompletedContractsQuantityByProId(long id);
+    int findCompletedContractsByProIdQuantity(long id);
 
-    int findContractsQuantityByPostId(long id);
+    int findContractsByPostIdQuantity(long id);
 
-    int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states);
+    int findContractsByClientIdMaxPage(long id, List<JobContract.ContractState> states);
 
-    int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states);
+    int findContractsByProIdMaxPage(long id, List<JobContract.ContractState> states);
 
     void changeContractState(long id, JobContract.ContractState state);
 

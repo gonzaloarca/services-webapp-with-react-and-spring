@@ -137,23 +137,23 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public int findCompletedContractsQuantityByProId(long id) {
-        return jobContractDao.findCompletedContractsQuantityByProId(id);
+    public int findCompletedContractsByProIdQuantity(long id) {
+        return jobContractDao.findCompletedContractsByProIdQuantity(id);
     }
 
     @Override
-    public int findContractsQuantityByPostId(long id) {
-        return jobContractDao.findContractsQuantityByPostId(id);
+    public int findContractsByPostIdQuantity(long id) {
+        return jobContractDao.findContractsByPostIdQuantity(id);
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states) {
-        return jobContractDao.findMaxPageContractsByClientId(id, states);
+    public int findContractsByClientIdMaxPage(long id, List<JobContract.ContractState> states) {
+        return jobContractDao.findContractsByClientIdMaxPage(id, states);
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states) {
-        return jobContractDao.findMaxPageContractsByProId(id, states);
+    public int findContractsByProIdMaxPage(long id, List<JobContract.ContractState> states) {
+        return jobContractDao.findContractsByProIdMaxPage(id, states);
     }
 
     @Override
