@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.dto.JobPackageDto;
 import ar.edu.itba.paw.webapp.dto.JobPostDto;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
@@ -32,6 +33,9 @@ public class JobPostController {
 
     @Autowired
     private JobContractService jobContractService;
+
+    @Autowired
+    private JobPackageService jobPackageService;
 
     @Context
     private UriInfo uriInfo;
@@ -66,6 +70,25 @@ public class JobPostController {
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<ReviewDto>>(reviewDtoList) {
                 }));
+    }
+
+    @Path("/{id}/packages")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response packagesByPostId(
+            @PathParam("id") final long id,
+            @QueryParam(value = "page") @DefaultValue("1") int page){
+        if (page < 1) {
+            page = 1;
+        }
+        jobPostControllerLogger.debug("Finding packages for post: {}", id);
+        int maxPage = paginationService.findJobPackageByPostIdMaxPage(id);
+        final List<JobPackageDto> packageDtoList = jobPackageService.findByPostId(id,page-1)
+                .stream().map(pack -> JobPackageDto.fromJobPackage(pack,uriInfo)).collect(Collectors.toList());
+
+        return PageResponseUtil.getGenericListResponse(page,maxPage,uriInfo,
+                Response.ok(new GenericEntity<List<JobPackageDto>>(packageDtoList){}));
     }
 
 }

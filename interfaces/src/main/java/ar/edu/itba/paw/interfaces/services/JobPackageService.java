@@ -22,4 +22,6 @@ public interface JobPackageService {
     boolean deleteJobPackage(long id);
 
     JobPackage findByIdWithJobPost(int id);
+
+    int findByPostIdMaxPage(long id);
 }

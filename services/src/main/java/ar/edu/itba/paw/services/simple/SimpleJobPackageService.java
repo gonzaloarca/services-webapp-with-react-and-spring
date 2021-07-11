@@ -67,6 +67,11 @@ public class SimpleJobPackageService implements JobPackageService {
         return jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
     }
 
+    @Override
+    public int findByPostIdMaxPage(long id) {
+        return jobPackageDao.findByPostIdMaxPage(id);
+    }
+
     private Double parsePrice(JobPackage.RateType rateType, String price){
         if(!rateType.equals(JobPackage.RateType.TBD)) {
             if (price != null && !price.isEmpty()) {

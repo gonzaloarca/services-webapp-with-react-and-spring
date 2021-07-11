@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.jpa;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
@@ -82,5 +83,12 @@ public class JobPackageDaoJpa implements JobPackageDao {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int findByPostIdMaxPage(long id) {
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobPackage jpackage WHERE jpackage.jobPost.id = :id AND jpackage.isActive = TRUE", Long.class)
+                .setParameter("id", id).getSingleResult();
+        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 }

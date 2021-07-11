@@ -19,4 +19,6 @@ public interface JobPackageDao {
     boolean deletePackage(long id);
 
     boolean updatePackage(long id, String title, String description, Double price, JobPackage.RateType rateType);
+
+    int findByPostIdMaxPage(long id);
 }
