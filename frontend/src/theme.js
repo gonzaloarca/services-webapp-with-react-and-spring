@@ -1,5 +1,15 @@
 import { createTheme } from '@material-ui/core/styles';
 
+export const themeUtils = {
+  colors: {
+    blue: '#485696',
+    yellow: '#FCB839',
+    orange: '#FC7A27',
+    darkBlue: '#2F3965',
+    grey: 'grey',
+  },
+};
+
 const appTheme = createTheme({
   palette: {
     primary: {

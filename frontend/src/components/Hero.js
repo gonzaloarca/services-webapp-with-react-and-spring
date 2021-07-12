@@ -1,59 +1,47 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import {
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import React, { useEffect, useState } from 'react';
+import { LocationOn, Search } from '@material-ui/icons';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { themeUtils } from '../theme';
+import HeroStyles from './HeroStyles';
 
-const useStyles = makeStyles((theme) => ({
-  heroBackground: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
+const useStyles = makeStyles(HeroStyles);
+
+const steps = [
+  {
+    iconSrc: '/img/location-1.svg',
+    instruction: 'home.steps.location',
+    number: 1,
+    numberColor: themeUtils.colors.orange,
+    backgroundColor: themeUtils.colors.darkBlue,
   },
-  heroContainer: {
-    width: '100vw',
-    height: '100vh',
-    position: 'relative',
+  {
+    iconSrc: '/img/search1.svg',
+    instruction: 'home.steps.search',
+    number: 2,
+    numberColor: themeUtils.colors.blue,
+    backgroundColor: themeUtils.colors.yellow,
   },
-  heroContent: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2,
+  {
+    iconSrc: '/img/hire-1.svg',
+    instruction: 'home.steps.hire',
+    number: 3,
+    numberColor: themeUtils.colors.yellow,
+    backgroundColor: themeUtils.colors.orange,
   },
-  heroText: {
-    margin: '0 30px 20px',
-    color: 'white',
-    fontSize: '2rem',
-    textAlign: 'center',
-  },
-  searchBarContainer: {
-    height: 70,
-    borderRadius: 100,
-    backgroundColor: 'transparent',
-    backdropFilter: 'blur(10px) brightness(60%)',
-    width: '80%',
-    maxWidth: 950,
-  },
-  locationSelect: {
-    width: '30%',
-  },
-}));
+];
 
 const Hero = () => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [offsetY, setOffsetY] = useState(0);
-  const handleScroll = () => setOffsetY(window.pageYOffset);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  });
 
   return (
     <div className={classes.heroContainer}>
@@ -63,7 +51,6 @@ const Hero = () => {
       </div>
       <img
         className={classes.heroBackground}
-        style={{ transform: `translateY(${offsetY * 0.5}px)` }}
         src="/img/landingbg1.svg"
         alt=""
       />
@@ -80,44 +67,137 @@ const HeroSearchBar = () => {
 
   return (
     <div className={classes.searchBarContainer}>
-      <div>
-        <FormControl className={classes.locationSelect} variant="filled">
-          <InputLabel id="location-select-label">
+      <div className={classes.locationContent}>
+        <LocationOn className={classes.locationIcon} />
+        <CustomFormControl className={classes.locationForm} variant="filled">
+          <InputLabel
+            id="location-select-label"
+            className={classes.selectLabel}
+          >
             {t('home.location')}
           </InputLabel>
           <CustomSelect
+            className={classes.locationSelect}
+            inputProps={{
+              classes: {
+                icon: classes.locationSelectIcon,
+              },
+            }}
             labelId="location-select-label"
             id="location-select"
             value={location}
-            onChange={handleLocationChange}
+            onChange={(e) => handleLocationChange(e.target.value)}
+            disableUnderline={true}
           >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value={'La Boca'}>La Boca</MenuItem>
-            <MenuItem value={'Palermo'}>Palermo</MenuItem>
-            <MenuItem value={'Recoleta'}>Recoleta</MenuItem>
+            <MenuItem value={0}>La Boca</MenuItem>
+            <MenuItem value={1}>Palermo</MenuItem>
+            <MenuItem value={2}>Recoleta</MenuItem>
           </CustomSelect>
-        </FormControl>
+        </CustomFormControl>
       </div>
+
+      <CustomSearchBar
+        InputProps={{
+          disableUnderline: true,
+        }}
+        hiddenLabel
+        placeholder={t('home.searchJob')}
+        variant="filled"
+        margin="none"
+      />
+      <IconButton type="submit" className={classes.searchButton}>
+        <Search />
+      </IconButton>
+    </div>
+  );
+};
+
+export const HeroSteps = () => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.stepsContainer}>
+      {steps.map((i) => (
+        <HeroStep
+          key={i.number}
+          numberColor={i.numberColor}
+          backgroundColor={i.backgroundColor}
+          iconSrc={i.iconSrc}
+          instruction={i.instruction}
+          number={i.number}
+        />
+      ))}
+    </div>
+  );
+};
+
+const HeroStep = ({
+  iconSrc,
+  instruction,
+  number,
+  numberColor,
+  backgroundColor,
+}) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+    <div
+      className={classes.stepContainer}
+      style={{ backgroundColor: backgroundColor }}
+    >
+      <div
+        className={classes.stepNumber}
+        style={{ backgroundColor: numberColor }}
+      >
+        {number}
+      </div>
+      <img className={'m-2'} src={iconSrc} alt="" />
+      <p>{t(instruction)}</p>
     </div>
   );
 };
 
 const CustomSelect = withStyles((theme) => ({
   root: {
-    '& .MuiInputBase-root': {
-      backgroundColor: 'white',
-      backdropFilter: 'blur(10px)',
-      borderRadius: '50px !important',
-      border: 'none',
-      '&:focus': {
-        backgroundColor: 'white',
-        backdropFilter: 'blur(10px)',
-        borderRadius: 50,
-      },
+    color: 'white',
+    backgroundColor: '#2C345B',
+    borderRadius: '50px',
+    border: 'none',
+    '&:focus': {
+      color: 'white',
+      backgroundColor: '#2C345B',
+      borderRadius: 50,
     },
+    input: {},
   },
 }))(Select);
+
+const CustomSearchBar = withStyles((theme) => ({
+  root: {
+    flex: 3,
+    height: '100%',
+    '& .MuiFilledInput-root': {
+      paddingRight: 30,
+      fontWeight: 500,
+      backgroundColor: 'white',
+      borderRadius: '0 100px 100px 0',
+      height: '100%',
+    },
+  },
+}))(TextField);
+
+const CustomFormControl = withStyles((theme) => ({
+  root: {
+    '& .MuiFilledInput-root': {
+      height: '100%',
+      color: 'white',
+      borderRadius: '50px',
+    },
+  },
+}))(FormControl);
 
 export default Hero;

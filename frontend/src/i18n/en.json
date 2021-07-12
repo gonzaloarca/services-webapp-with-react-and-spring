@@ -5,12 +5,50 @@
       "categories": "Categories",
       "publish": "Publish",
       "mycontracts": "My Contracts",
-      "analytics": "Analytics"
+      "analytics": "Analytics",
+      "explore": "Explore"
     },
     "search": "Search..."
   },
   "home": {
     "herotext": "Find and hire the service you're looking for",
-    "location": "Location"
+    "location": "Location",
+    "searchJob": "Search for a service...",
+    "steps": {
+      "location": "Choose your location",
+      "search": "Search for a service",
+      "hire": "Hire it!"
+    },
+    "explore": "Explore service categories",
+    "morecategories": "See more",
+    "newest": "Newest services"
+  },
+  "jobcard": {
+    "noreviews": "No reviews",
+    "details": "View details",
+    "morezones": "{{firstZone}} and {{zoneCount}} more"
+  },
+  "jobtype": {
+    "plumbing": "Plumbing",
+    "electricity": "Electricity",
+    "carpentry": "Carpentry",
+    "catering": "Catering",
+    "painting": "Painting",
+    "teaching": "Teaching",
+    "cleaning": "Cleaning",
+    "babysitting": "Babysitting"
+  },
+  "ratetype": {
+    "hourly": "{{amount}}/hour",
+    "tbd": "To be determined"
+  },
+  "price": "{{value, price, ARS}}",
+  "reviewcount": "({{count}})",
+  "completedcontracts": "Hired {{count}} times",
+  "completedcontractsonce": "Hired once",
+  "footer": {
+    "creators": "Site creators",
+    "contact": "Contact us",
+    "copyright": "© 2021 HireNet"
   }
 }

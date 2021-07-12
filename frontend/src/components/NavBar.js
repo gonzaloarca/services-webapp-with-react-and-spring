@@ -22,6 +22,7 @@ const useStyles = makeStyles(navBarStyles);
 
 const sections = [
   { name: 'navigation.sections.home', path: '/' },
+  { name: 'navigation.sections.explore', path: '/search' },
   { name: 'navigation.sections.publish', path: '/create-job-post' },
   { name: 'navigation.sections.categories', path: '/categories' },
   {
@@ -38,7 +39,7 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
   const [scrolled, setScrolled] = useState(false);
 
   const changeBarBackground = () => {
-    if (window.scrollY >= 80) {
+    if (window.scrollY >= 200) {
       setScrolled(true);
     } else {
       setScrolled(false);

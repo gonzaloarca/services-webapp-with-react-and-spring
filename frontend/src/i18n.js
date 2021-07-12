@@ -32,6 +32,16 @@ i18n
     resources,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
+      format: (value, rawFormat, lng) => {
+        const [format, ...additionalValues] = rawFormat
+          .split(',')
+          .map((v) => v.trim());
+        if (format === 'price')
+          return Intl.NumberFormat(lng, {
+            style: 'currency',
+            currency: additionalValues[0],
+          }).format(value);
+      },
     },
   });
 
