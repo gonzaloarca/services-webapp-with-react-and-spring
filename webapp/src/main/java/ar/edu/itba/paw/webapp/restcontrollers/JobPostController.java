@@ -41,6 +41,9 @@ public class JobPostController {
     private JobPackageService jobPackageService;
 
     @Autowired
+    private JobContractService jobContractService;
+
+    @Autowired
     private MessageSource messageSource;
 
     @Context
@@ -48,45 +51,6 @@ public class JobPostController {
 
     @Context
     private HttpHeaders headers;
-
-    @POST
-    @Path("/{postId}/packages")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response createJobPackage(final JobPackageDto jobPackageDto, @PathParam("postId") final long postId) {
-        String title = jobPackageDto.getTitle();
-        String description = jobPackageDto.getDescription();
-        String price = jobPackageDto.getPrice().toString();
-        long rateType = jobPackageDto.getRateType().getId();
-        jobPostControllerLogger.debug("Creating package for post {} with data: title: {}, description: {}, price: {}, rate type:{}", postId, title, description, price, rateType);
-        JobPackage jobPackage = jobPackageService.create(postId, title, description, price, rateType);
-
-        final URI packageUri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(jobPackage.getId())).build();
-        return Response.created(packageUri).build();
-    }
-
-    @PUT
-    @Path("/{postId}/packages/{packageId}")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response editJobPackage(final JobPackageDto jobPackageDto,
-                                   @PathParam("postId") final long postId,
-                                   @PathParam("packageId") final long packageId) {
-        String title = jobPackageDto.getTitle();
-        String description = jobPackageDto.getDescription();
-        String price = jobPackageDto.getPrice().toString();
-        long rateType = jobPackageDto.getRateType().getId();
-        boolean isActive = jobPackageDto.isActive();
-
-        jobPostControllerLogger.debug("Updating package {} with data: title: {}, description: {}, price: {}, rate type: {}, isActive: {}",
-                packageId, title, description, price, rateType, isActive);
-        if (!jobPackageService.updateJobPackage(packageId, title, description, price, rateType, isActive)) {
-            jobPostControllerLogger.debug("Error updating package {}", packageId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        final URI packageUri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(packageId)).build();
-        return Response.ok(packageUri).build();
-    }
 
     @GET
     @Path("/{id}/")
@@ -142,6 +106,45 @@ public class JobPostController {
                 }));
     }
 
+    @POST
+    @Path("/{postId}/packages")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response createJobPackage(final JobPackageDto jobPackageDto, @PathParam("postId") final long postId) {
+        String title = jobPackageDto.getTitle();
+        String description = jobPackageDto.getDescription();
+        String price = jobPackageDto.getPrice().toString();
+        long rateType = jobPackageDto.getRateType().getId();
+        jobPostControllerLogger.debug("Creating package for post {} with data: title: {}, description: {}, price: {}, rate type:{}", postId, title, description, price, rateType);
+        JobPackage jobPackage = jobPackageService.create(postId, title, description, price, rateType);
+
+        final URI packageUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(jobPackage.getId())).build();
+        return Response.created(packageUri).build();
+    }
+
+    @PUT
+    @Path("/{postId}/packages/{packageId}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response editJobPackage(final JobPackageDto jobPackageDto,
+                                   @PathParam("postId") final long postId,
+                                   @PathParam("packageId") final long packageId) {
+        String title = jobPackageDto.getTitle();
+        String description = jobPackageDto.getDescription();
+        String price = jobPackageDto.getPrice().toString();
+        long rateType = jobPackageDto.getRateType().getId();
+        boolean isActive = jobPackageDto.isActive();
+
+        jobPostControllerLogger.debug("Updating package {} with data: title: {}, description: {}, price: {}, rate type: {}, isActive: {}",
+                packageId, title, description, price, rateType, isActive);
+        if (!jobPackageService.updateJobPackage(packageId, title, description, price, rateType, isActive)) {
+            jobPostControllerLogger.debug("Error updating package {}", packageId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        final URI packageUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(packageId)).build();
+        return Response.ok(packageUri).build();
+    }
+
     @Path("/{postId}/packages/{packageId}")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -158,4 +161,61 @@ public class JobPostController {
         }).build();
     }
 
+    @POST
+    @Path("/{postId}/packages/{packageId}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response create(final JobContractDto jobContractDto,
+                           @PathParam("postId") final long postId,
+                           @PathParam("packageId") final long packageId) {
+        Locale locale = headers.getAcceptableLanguages().get(0);
+        String webpageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
+                .build().toString();
+
+        jobPostControllerLogger.debug("Creating contract fo package {} with data: client id:{}, description:{}",
+                jobContractDto.getJobPackage().getId(), jobContractDto.getClientId(), jobContractDto.getDescription());
+        JobContractWithImage jobContract = jobContractService
+                .create(jobContractDto.getClientId(), jobContractDto.getJobPackage().getId(),
+                        jobContractDto.getDescription(), jobContractDto.getScheduledDate(), locale, webpageUrl);
+
+        final URI contractUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(jobContract.getId())).build();
+        return Response.created(contractUri).build();
+    }
+
+    @PUT
+    @Path("/{postId}/packages/{packageId}/contracts/{contractId}/{contractType}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response updateContract(final JobContractDto jobContractDto,
+                                   @PathParam("postId") final long postId,
+                                   @PathParam("packageId") final long packageId,
+                                   @PathParam("contractId") final long contractId,
+                                   @PathParam(value = "contractType") String contractType) {
+        Locale locale = headers.getAcceptableLanguages().get(0);
+        String webPageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
+                .build().toString();
+
+        jobPostControllerLogger.debug("Updating job contract  id: {} with data: scheduledDate: {}, state: {}", contractId, jobContractDto.getScheduledDate(), jobContractDto.getState());
+        jobContractService.changeContractScheduledDate(jobContractDto.getId(),
+                jobContractDto.getScheduledDate(), contractType.equals("professional"),
+                locale);
+        jobContractService.changeContractState(jobContractDto.getId(),
+                JobContract.ContractState.values()[Math.toIntExact(jobContractDto.getState().getId())],
+                headers.getAcceptableLanguages().get(0), webPageUrl);
+
+        final URI contractUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(jobContractDto.getId())).build();
+        return Response.ok(contractUri).build();
+    }
+
+    @GET
+    @Path("/{postId}/packages/{packageId}/contracts/{contractId}/")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getById(@PathParam("postId") final long postId,
+                            @PathParam("packageId") final long packageId,
+                            @PathParam("contractId") final long contractId) {
+        jobPostControllerLogger.debug("Finding job contract by id: {}", contractId);
+        return Response.ok(JobContractDto
+                .fromJobContract(jobContractService.findById(contractId), uriInfo))
+                .build();
+    }
 }
