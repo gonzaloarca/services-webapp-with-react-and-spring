@@ -45,7 +45,7 @@ public class MyContractsController {
 
     @Autowired
     private LocaleResolver localeResolver;
-
+/*
     @RequestMapping(path = "/{contractType}/{contractState}", method = RequestMethod.GET)
     public ModelAndView getMyContracts(Principal principal,
                                        @RequestParam(value = "page", required = false, defaultValue = "1") final int page,
@@ -114,5 +114,5 @@ public class MyContractsController {
 
         return new ModelAndView("redirect:" + form.getReturnURL());
     }
-
+*/
 }

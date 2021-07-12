@@ -1,15 +1,13 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.AnalyticRanking;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.models.exceptions.ProfessionalNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.dto.JobCardDto;
-import ar.edu.itba.paw.webapp.dto.JobContractCardDto;
-import ar.edu.itba.paw.webapp.dto.ProfessionalDto;
-import ar.edu.itba.paw.webapp.dto.ReviewDto;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.slf4j.Logger;
@@ -111,7 +109,7 @@ public class ProfessionalController {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         final List<JobCardDto> jobCardDtoList = jobCardService.findByUserId(id, page - 1)
                 .stream().map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
-                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(),null,locale)))
+                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, locale)))
                 .collect(Collectors.toList());
 
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
@@ -123,24 +121,67 @@ public class ProfessionalController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getServedContracts(@PathParam("id") long id,
-                                      @QueryParam(value = "state") final String contractState,
-                                      @QueryParam(value = "page") @DefaultValue("1") final int page) {
+                                       @QueryParam(value = "state") final String contractState,
+                                       @QueryParam(value = "page") @DefaultValue("1") int page) {
+        if (page < 1) {
+            page = 0;
+        }
         if (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized"))
             throw new IllegalArgumentException();
 
-        List<JobContract.ContractState> states = jobContractService.getContractStates(contractState);
         Locale locale = headers.getAcceptableLanguages().get(0);
+        professionalControllerLogger.debug("Finding contractStates rankings for user {}", id);
+        List<JobContract.ContractState> states = jobContractService.getContractStates(contractState);
+        //TODO: MOVER PARTE REPETIDA A UN UTILS?
         int maxPage = paginationService.findContractsByProIdMaxPage(id, states);
         List<JobContractCardDto> jobContractCardDtoList = jobContractService
                 .findJobContractCardsByProIdAndSorted(id, states, page - 1, locale).stream()
                 .map(jobContractCard -> JobContractCardDto.fromJobContractCardWithLocalizedMessage(jobContractCard, uriInfo, false,
-                        messageSource.getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(),null,locale)
+                        messageSource.getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(), null, locale)
                 ))
                 .collect(Collectors.toList());
 
 
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<JobContractCardDto>>(jobContractCardDtoList) {
+                }));
+    }
+
+    @Path("/{id}/category-rankings")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getCategoryRankings(@PathParam("id") long id) {
+        Locale locale = headers.getAcceptableLanguages().get(0);
+
+        professionalControllerLogger.debug("Finding analytics rankings for user {}", id);
+        List<AnalyticRankingDto> rankingDtoList = userService.findUserAnalyticRankings(id).stream()
+                .map(ranking -> AnalyticRankingDto.fromAnalyticRanking(ranking,
+                        messageSource.getMessage(ranking.getJobType().getDescription(), null, locale)))
+                .collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<AnalyticRankingDto>>(rankingDtoList) {
+        }).build();
+    }
+
+    @Path("/{id}/related-job-cards")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getRelatedJobCards(@PathParam("id") long id,
+                                       @QueryParam(value = "page") @DefaultValue("1") int page) {
+        if (page < 1) {
+            page = 0;
+        }
+
+        professionalControllerLogger.debug("Finding relatedJobCards for pro with id: {}", id);
+        int maxPage = paginationService.findRelatedJobCardsMaxPage(id);
+        Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
+        final List<JobCardDto> jobCardDtoList = jobCardService.findRelatedJobCards(id, page - 1)
+                .stream().map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
+                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, locale)))
+                .collect(Collectors.toList());
+
+        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
+                Response.ok(new GenericEntity<List<JobCardDto>>(jobCardDtoList) {
                 }));
     }
 }
