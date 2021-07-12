@@ -1,4 +1,4 @@
-import { Button, Grid, makeStyles } from '@material-ui/core';
+import { Button, Grid, makeStyles, withStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import CategoryCard from '../components/CategoryCard';
 import Hero, { HeroSteps } from '../components/Hero';
 import JobCard from '../components/JobCard';
 import NavBar from '../components/NavBar';
+import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
 
 const useStyles = makeStyles(homeStyles);
@@ -178,7 +179,7 @@ export const Home = () => {
           </Grid>
         </Grid>
       </div>
-      <div>
+      <div className={classes.sectionShadow}>
         <div className={classes.contentContainerTransparent}>
           <h3 className={clsx(classes.header, 'mb-5')}>{t('home.newest')}</h3>
 
@@ -202,7 +203,23 @@ const PublishBanner = () => {
 
   return (
     <div className={classes.publishBannerContainer}>
-      <Button></Button>
+      <p>{t('home.publishbanner.question')}</p>
+      <p>{t('home.publishbanner.answer')}</p>
+      <PublishButton className="mt-4">
+        {t('home.publishbanner.button')}
+      </PublishButton>
     </div>
   );
 };
+
+const PublishButton = withStyles((theme) => ({
+  root: {
+    fontSize: '1.1rem',
+    color: themeUtils.colors.yellow,
+    backgroundColor: themeUtils.colors.blue,
+    '&:hover': {
+      color: LightenDarkenColor(themeUtils.colors.yellow, 30),
+      backgroundColor: LightenDarkenColor(themeUtils.colors.blue, 30),
+    },
+  },
+}))(Button);

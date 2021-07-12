@@ -21,7 +21,12 @@
     },
     "explore": "Explorar categorías de servicios",
     "morecategories": "Ver más",
-    "newest": "Servicios más recientes"
+    "newest": "Servicios más recientes",
+    "publishbanner": {
+      "question": "¿Desea publicar su servicio en nuestro sitio?",
+      "answer": "Hágalo ahora mismo",
+      "button": "Publicar"
+    }
   },
   "jobcard": {
     "noreviews": "Sin calificaciones",

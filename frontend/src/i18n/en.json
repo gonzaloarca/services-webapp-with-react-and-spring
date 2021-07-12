@@ -21,7 +21,12 @@
     },
     "explore": "Explore service categories",
     "morecategories": "See more",
-    "newest": "Newest services"
+    "newest": "Newest services",
+    "publishbanner": {
+      "question": "Do you wish to publish your services on our site?",
+      "answer": "Start now",
+      "button": "Publish"
+    }
   },
   "jobcard": {
     "noreviews": "No reviews",

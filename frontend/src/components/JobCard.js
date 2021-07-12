@@ -35,10 +35,13 @@ const useStyles = makeStyles({
     color: themeUtils.colors.grey,
   },
   priceContainer: {
-    margin: '10px auto',
     color: themeUtils.colors.blue,
     fontSize: '1.1rem',
     fontWeight: 600,
+    width: '100%',
+    height: '4rem',
+    overflowWrap: 'break-word',
+    textOverflow: 'ellipsis',
   },
   ratingContainer: {
     display: 'flex',

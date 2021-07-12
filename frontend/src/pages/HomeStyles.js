@@ -29,8 +29,11 @@ const homeStyles = (theme) => ({
     alignItems: 'center',
     backgroundSize: 'cover',
     textAlign: 'center',
-    paddingTop: 35,
+    padding: '70px 0',
     color: '#485696',
+    background: 'url("/img/publish-landing-bg-1.svg")',
+    fontSize: '1.5rem',
+    fontWeight: 600,
   },
 });
 

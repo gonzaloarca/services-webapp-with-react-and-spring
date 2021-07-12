@@ -20,6 +20,7 @@
     "react-dom": "^17.0.2",
     "react-helmet": "^6.1.0",
     "react-i18next": "^11.11.1",
+    "react-material-ui-carousel": "^2.2.7",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"
