@@ -31,6 +31,12 @@ public class SimpleJobContractService implements JobContractService {
     private JobCardService jobCardService;
 
     @Autowired
+    private JobPackageService jobPackageService;
+
+    @Autowired
+    private JobPostService jobPostService;
+
+    @Autowired
     private ReviewService reviewService;
 
     @Autowired
@@ -41,25 +47,19 @@ public class SimpleJobContractService implements JobContractService {
 
 
     @Override
-    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, Locale locale,String webpageUrl) {
-        return create(clientEmail, packageId, description, scheduledDate, null, locale,webpageUrl);
+    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, Locale locale, String webpageUrl) {
+        return create(clientId, packageId, description, scheduledDate, null, locale, webpageUrl);
     }
 
     @Override
-    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, ByteImage image, Locale locale,String webpageUrl) {
-
-        User user = userService.findByEmail(clientEmail).orElseThrow(UserNotFoundException::new);
+    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, ByteImage image, Locale locale, String webpageUrl) {
         JobContractWithImage jobContract;
 
-        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
-        LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ofPattern(datePattern));
-
         if (image == null)
-            jobContract = jobContractDao.create(user.getId(), packageId, description,
-                    parsedDate);
+            jobContract = jobContractDao.create(clientId, packageId, description, scheduledDate);
         else
-            jobContract = jobContractDao.create(user.getId(), packageId, description, parsedDate, image);
-        mailingService.sendContractEmail(jobContract, locale,webpageUrl);
+            jobContract = jobContractDao.create(clientId, packageId, description, scheduledDate, image);
+        mailingService.sendContractEmail(jobContract, locale, webpageUrl);
 
         return jobContract;
     }
@@ -225,7 +225,7 @@ public class SimpleJobContractService implements JobContractService {
 
 
     @Override
-    public void changeContractState(long id, JobContract.ContractState state) {
+    public void changeContractState(long id, JobContract.ContractState state, Locale locale, String webPageUrl) {
         Optional<JobContract> maybeContract = jobContractDao.findById(id);
 
         if (!maybeContract.isPresent())
@@ -240,15 +240,16 @@ public class SimpleJobContractService implements JobContractService {
             throw new IllegalStateException();
 
         jobContractDao.changeContractState(id, state);
+        JobContractWithImage jobContract = findJobContractWithImage(id);
+        JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId());
+        JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
+
+        mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, locale, webPageUrl);
     }
 
     @Override
-    public void changeContractScheduledDate(long id, String dateTime, boolean isServiceOwner, Locale locale) {
-        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
-        LocalDateTime parsedDate = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(datePattern));
-
-        jobContractDao.changeContractScheduledDate(id, parsedDate);
-
+    public void changeContractScheduledDate(long id, LocalDateTime scheduledDate, boolean isServiceOwner, Locale locale) {
+        jobContractDao.changeContractScheduledDate(id, scheduledDate);
     }
 
     private String localDateTimeToString(LocalDateTime dateTime, Locale locale) {

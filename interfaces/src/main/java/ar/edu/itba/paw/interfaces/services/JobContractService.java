@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface JobContractService {
 
-    JobContractWithImage create(String client_email, long packageId, String description, String scheduledDate, Locale locale,String webpageUrl);
+    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, Locale locale,String webpageUrl);
 
-    JobContractWithImage create(String client_email, long packageId, String description, String scheduledDate, ByteImage image, Locale locale,String webpageUrl);
+    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, ByteImage image, Locale locale,String webpageUrl);
 
     JobContract findById(long id);
 
@@ -57,9 +57,9 @@ public interface JobContractService {
 
     List<JobContractCard> findJobContractCardsByClientIdAndSorted(long id, List<JobContract.ContractState> states, int page, Locale locale);
 
-    void changeContractState(long id, JobContract.ContractState state);
+    void changeContractState(long id, JobContract.ContractState state, Locale locale, String webPageUrl);
 
-    void changeContractScheduledDate(long id, String dateTime, boolean isServiceOwner, Locale locale);
+    void changeContractScheduledDate(long id, LocalDateTime scheduledDate, boolean isServiceOwner, Locale locale);
 
     JobContractWithImage findJobContractWithImage(long id);
 

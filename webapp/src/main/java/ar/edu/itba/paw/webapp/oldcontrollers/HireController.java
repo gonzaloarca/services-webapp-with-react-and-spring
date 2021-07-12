@@ -45,7 +45,7 @@ public class HireController {
 
     @Autowired
     private LocaleResolver localeResolver;
-
+/*
     @RequestMapping(path = "/package/{packId}", method = RequestMethod.GET)
     public ModelAndView createContract(@PathVariable("packId") final long packId,
                                        @ModelAttribute("jobPost") final JobPost jobPost,
@@ -88,7 +88,7 @@ public class HireController {
         }
 
         return new ModelAndView("redirect:/hire/" + packId + "/success");
-    }
+    }*/
 
     @RequestMapping("/{packId}/success")
     public ModelAndView contractSuccess(@PathVariable final long packId) {

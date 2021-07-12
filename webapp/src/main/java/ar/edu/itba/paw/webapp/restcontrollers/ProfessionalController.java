@@ -81,7 +81,7 @@ public class ProfessionalController {
             @PathParam("id") final long id,
             @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            page = 0;
+            page =1;
         }
 
         professionalControllerLogger.debug("Finding reviews for pro with id: {}", id);
@@ -101,7 +101,7 @@ public class ProfessionalController {
             @PathParam("id") final long id,
             @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            page = 0;
+            page =1;
         }
 
         professionalControllerLogger.debug("Finding jobCards for pro with id: {}", id);
@@ -124,7 +124,7 @@ public class ProfessionalController {
                                        @QueryParam(value = "state") final String contractState,
                                        @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            page = 0;
+            page =1;
         }
         if (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized"))
             throw new IllegalArgumentException();
@@ -132,7 +132,6 @@ public class ProfessionalController {
         Locale locale = headers.getAcceptableLanguages().get(0);
         professionalControllerLogger.debug("Finding contractStates rankings for user {}", id);
         List<JobContract.ContractState> states = jobContractService.getContractStates(contractState);
-        //TODO: MOVER PARTE REPETIDA A UN UTILS?
         int maxPage = paginationService.findContractsByProIdMaxPage(id, states);
         List<JobContractCardDto> jobContractCardDtoList = jobContractService
                 .findJobContractCardsByProIdAndSorted(id, states, page - 1, locale).stream()
@@ -169,7 +168,7 @@ public class ProfessionalController {
     public Response getRelatedJobCards(@PathParam("id") long id,
                                        @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            page = 0;
+            page =1;
         }
 
         professionalControllerLogger.debug("Finding relatedJobCards for pro with id: {}", id);
