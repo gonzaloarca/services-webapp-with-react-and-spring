@@ -52,7 +52,6 @@ public class UserController {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response register(@Valid final UserDto userDto) {
-
         String webpageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
 

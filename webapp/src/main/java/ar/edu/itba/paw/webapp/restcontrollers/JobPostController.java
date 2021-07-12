@@ -34,9 +34,6 @@ public class JobPostController {
     private ReviewService reviewService;
 
     @Autowired
-    private JobContractService jobContractService;
-
-    @Autowired
     private JobPackageService jobPackageService;
 
     @Autowired
@@ -52,7 +49,6 @@ public class JobPostController {
     @Path("/{id}/")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response jobPostDetails(@PathParam("id") final long id) {
-
         jobPostControllerLogger.debug("Finding job post by id: {}", id);
         JobPost jobPost = jobPostService.findByIdWithInactive(id);
         return Response.ok(JobPostDto.fromJobPostWithLocalizedMessage(
