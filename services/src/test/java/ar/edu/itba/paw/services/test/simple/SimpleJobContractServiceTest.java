@@ -110,24 +110,15 @@ public class SimpleJobContractServiceTest {
 
     @Test
     public void testCreate() {
-        Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail())))
-                .thenReturn(Optional.of(CLIENT));
-
-        Locale.setDefault(new Locale("es", "ES"));
-        String datePattern = "dd/MM/yyyy H:mm";
-
         LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).plusDays(5);
-        String date = time.format(DateTimeFormatter.ofPattern(datePattern));
-
-        Mockito.when(messageSource.getMessage("spring.mvc.format.date-time", null, Locale.getDefault())).thenReturn(datePattern);
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(time), Mockito.eq(BYTE_IMAGE)))
                 .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE,
                         CREATION_DATE, time, CREATION_DATE, CONTRACT_DESCRIPTION, BYTE_IMAGE));
 
-        JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(),
-                JOB_PACKAGE.getDescription(), date, BYTE_IMAGE, Locale.getDefault(),"");
+        JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getId(), JOB_PACKAGE.getId(),
+                JOB_PACKAGE.getDescription(), time, BYTE_IMAGE, Locale.getDefault(), "");
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -140,24 +131,15 @@ public class SimpleJobContractServiceTest {
 
     @Test
     public void testCreateWithoutImage() {
-        Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail())))
-                .thenReturn(Optional.of(CLIENT));
-
-        Locale.setDefault(new Locale("es", "ES"));
-        String datePattern = "dd/MM/yyyy H:mm";
-
         LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).plusDays(5);
-        String date = time.format(DateTimeFormatter.ofPattern(datePattern));
-
-        Mockito.when(messageSource.getMessage("spring.mvc.format.date-time", null, Locale.getDefault())).thenReturn(datePattern);
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
                 Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(time)))
                 .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE,
                         CREATION_DATE, time, CREATION_DATE, CONTRACT_DESCRIPTION, null));
 
-        JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(),
-                JOB_PACKAGE.getDescription(), date, null, Locale.getDefault(),"");
+        JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getId(), JOB_PACKAGE.getId(),
+                JOB_PACKAGE.getDescription(), time, null, Locale.getDefault(), "");
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -169,17 +151,11 @@ public class SimpleJobContractServiceTest {
 
     @Test
     public void testCreateUserWithImage() {
-        Mockito.when(simpleUserService.findByEmail(Mockito.eq(CLIENT.getEmail()))).thenReturn(Optional.of(CLIENT));
-        Locale.setDefault(new Locale("es", "ES"));
-        String datePattern = "dd/MM/yyyy HH:mm:ss.SSS";
+        LocalDateTime date = CREATION_DATE.plusDays(5);
+        simpleJobContractService.create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), date,
+                new ByteImage(image1Bytes, image1Type), Locale.getDefault(), "");
 
-        Mockito.when(messageSource.getMessage(Mockito.eq("spring.mvc.format.date-time"),
-                Mockito.eq(null), Mockito.eq(Locale.getDefault()))).thenReturn(datePattern);
-        String date = CREATION_DATE.plusDays(5).format(DateTimeFormatter.ofPattern(datePattern));
-        simpleJobContractService.create(CLIENT.getEmail(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),date,
-                new ByteImage(image1Bytes, image1Type), Locale.getDefault(),"");
-
-        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(),CREATION_DATE.plusDays(5),
+        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CREATION_DATE.plusDays(5),
                 new ByteImage(image1Bytes, image1Type));
     }
 
@@ -215,10 +191,10 @@ public class SimpleJobContractServiceTest {
     }
 
     @Test
-    public void testFindJobContractCardsByClientId(){
+    public void testFindJobContractCardsByClientId() {
         List<JobContract.ContractState> allStates = Arrays.asList(JobContract.ContractState.values());
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
-        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(CLIENT.getId(),allStates,HirenetUtils.ALL_PAGES);
+        Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService).findByProId(CLIENT.getId(), allStates, HirenetUtils.ALL_PAGES);
         Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
         Locale.setDefault(new Locale("es", "ES"));
@@ -230,7 +206,7 @@ public class SimpleJobContractServiceTest {
 
 
         Assert.assertFalse(jobContractCards.isEmpty());
-        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS),jobContractCards);
+        Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS), jobContractCards);
     }
 
     @Test

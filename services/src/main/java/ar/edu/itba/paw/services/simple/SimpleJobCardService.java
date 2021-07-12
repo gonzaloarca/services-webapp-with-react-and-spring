@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static ar.edu.itba.paw.interfaces.HirenetUtils.ALL_PAGES;
 import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
 
 @Transactional
@@ -57,7 +58,7 @@ public class SimpleJobCardService implements JobCardService {
     public List<JobCard> search(String query, int zone, int jobType, int order, int page, Locale locale) {
         if (query == null || zone < 0 || zone > JobPost.Zone.values().length || jobType < SEARCH_WITHOUT_CATEGORIES ||
                 jobType > JobPost.JobType.values().length || order < 0
-                || order > JobCard.OrderBy.values().length || page < 0) {
+                || order > JobCard.OrderBy.values().length || page < ALL_PAGES) {
             return new ArrayList<>();
         }
         List<JobPost.JobType> similarTypes = getSimilarTypes(query, locale);

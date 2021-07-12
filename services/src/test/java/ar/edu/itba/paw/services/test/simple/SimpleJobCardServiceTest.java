@@ -73,7 +73,7 @@ public class SimpleJobCardServiceTest {
         spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, 0, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).search(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(new ArrayList<>()), Mockito.eq(null), Mockito.eq(HirenetUtils.ALL_PAGES));
+                Mockito.eq(new ArrayList<>()), Mockito.eq(JobCard.OrderBy.MOST_HIRED), Mockito.eq(HirenetUtils.ALL_PAGES));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class SimpleJobCardServiceTest {
         spy.search(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), 0, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).searchWithCategory(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(null), Mockito.eq(HirenetUtils.ALL_PAGES));
+                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(JobCard.OrderBy.MOST_HIRED), Mockito.eq(HirenetUtils.ALL_PAGES));
     }
 
     @Test

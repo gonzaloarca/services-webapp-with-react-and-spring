@@ -374,7 +374,7 @@ public class JobPackageDaoJpaTest {
     public void testDeletePackageNonExistentId() {
         JobPackage jobPackage = JOB_PACKAGES[0];
 
-        boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(), jobPackage.getRateType(), false);
+        boolean ret = jobPackageDaoJpa.updatePackage(NON_EXISTENT_ID, jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(), jobPackage.getRateType(), false);
         em.flush();
         Assert.assertFalse(ret);
     }
