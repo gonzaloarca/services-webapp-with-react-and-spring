@@ -235,7 +235,7 @@ public class JobPostControllerOLD {
                 .addObject("editPackageForm", editPackageForm)
                 .addObject("existing", true);
     }
-
+/*
     @RequestMapping(path = "/job/{postId}/packages/{packageId}/edit", method = RequestMethod.POST)
     public ModelAndView submitEditPackage(@Valid @ModelAttribute("editPackageForm") PackageForm form, BindingResult errors,
                                           @PathVariable final long postId, @PathVariable final long packageId) {
@@ -250,7 +250,7 @@ public class JobPostControllerOLD {
         int rateType = form.getRateType();
 
         jobPostControllerLogger.debug("Updating package {} with data: title: {}, description: {}, price: {}, rate type: {}",packageId,title,description,price,rateType);
-        if (!jobPackageService.updateJobPackage(packageId, title, description, price, rateType)) {
+        if (!jobPackageService.updateJobPackage(packageId, title, description, price, rateType, )) {
             jobPostControllerLogger.debug("Error updating package {}",packageId);
             throw new UpdateFailException();
         }
@@ -268,7 +268,7 @@ public class JobPostControllerOLD {
         }
         return viewPackages(form, postId);
     }
-
+*/
     @RequestMapping(path = "/job/{postId}/packages/add", method = RequestMethod.GET)
     public ModelAndView addPackage(@ModelAttribute("editPackageForm") PackageForm form,
                                    @PathVariable final long postId) {

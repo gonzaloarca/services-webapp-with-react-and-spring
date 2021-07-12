@@ -61,24 +61,14 @@ public class JobPackageDaoJpa implements JobPackageDao {
     }
 
     @Override
-    public boolean deletePackage(long id) {
-        JobPackage jobPack = em.find(JobPackage.class, id);
-        if (jobPack != null) {
-            jobPack.setActive(false);
-            em.persist(jobPack);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean updatePackage(long id, String title, String description, Double price, JobPackage.RateType rateType) {
+    public boolean updatePackage(long id, String title, String description, Double price, JobPackage.RateType rateType, boolean isActive) {
         JobPackage jobPack = em.find(JobPackage.class, id);
         if (jobPack != null) {
             jobPack.setTitle(title);
             jobPack.setDescription(description);
             jobPack.setPrice(price);
             jobPack.setRateType(rateType);
+            jobPack.setActive(isActive);
             em.persist(jobPack);
             return true;
         }

@@ -24,7 +24,7 @@ public class SimpleJobPackageService implements JobPackageService {
     public JobPackage create(long postId, String title, String description, String price, long rateType) {
 
         JobPackage.RateType parsedRateType = JobPackage.RateType.values()[(int) rateType];
-        Double parsedPrice = parsePrice(parsedRateType,price);
+        Double parsedPrice = parsePrice(parsedRateType, price);
 
         return jobPackageDao.create(postId, title, description, parsedPrice, parsedRateType);
     }
@@ -40,8 +40,8 @@ public class SimpleJobPackageService implements JobPackageService {
     }
 
     @Override
-    public List<JobPackage> findByPostId(long id,int page) {
-        return jobPackageDao.findByPostId(id,page);
+    public List<JobPackage> findByPostId(long id, int page) {
+        return jobPackageDao.findByPostId(id, page);
     }
 
     @Override
@@ -50,16 +50,11 @@ public class SimpleJobPackageService implements JobPackageService {
     }
 
     @Override
-    public boolean updateJobPackage(long id, String title, String description, String price, int rateType){
-        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
-        Double parsedPrice = parsePrice(parsedRateType,price);
+    public boolean updateJobPackage(long id, String title, String description, String price, long rateType, boolean isActive) {
+        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[(int) rateType];
+        Double parsedPrice = parsePrice(parsedRateType, price);
 
-        return jobPackageDao.updatePackage(id,title,description,parsedPrice,parsedRateType);
-    }
-
-    @Override
-    public boolean deleteJobPackage(long id){
-        return jobPackageDao.deletePackage(id);
+        return jobPackageDao.updatePackage(id, title, description, parsedPrice, parsedRateType, isActive);
     }
 
     @Override
@@ -72,11 +67,11 @@ public class SimpleJobPackageService implements JobPackageService {
         return jobPackageDao.findByPostIdMaxPage(id);
     }
 
-    private Double parsePrice(JobPackage.RateType rateType, String price){
-        if(!rateType.equals(JobPackage.RateType.TBD)) {
+    private Double parsePrice(JobPackage.RateType rateType, String price) {
+        if (!rateType.equals(JobPackage.RateType.TBD)) {
             if (price != null && !price.isEmpty()) {
                 return Double.parseDouble(price);
-            }else {
+            } else {
                 throw new RuntimeException("Error loading form");
             }
         }

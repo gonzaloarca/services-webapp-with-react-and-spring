@@ -66,7 +66,7 @@ public class JobContractController {
     @Path("/{contractType}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response updateContract(final JobContractDto jobContractDto,
-                                @PathParam(value = "contractType") String contractType) {
+                                   @PathParam(value = "contractType") String contractType) {
         Locale locale = headers.getAcceptableLanguages().get(0);
         String webPageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
@@ -80,7 +80,7 @@ public class JobContractController {
 
         final URI contractUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(jobContractDto.getId())).build();
-        return Response.accepted(contractUri).build();
+        return Response.ok(contractUri).build();
     }
 
     @GET
