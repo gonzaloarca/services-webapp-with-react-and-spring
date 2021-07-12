@@ -188,11 +188,11 @@
     "contractsCompleted": 4,
     "creationDate": "2021-06-16T16:48:40.860",
     "imageUrl": "http://localhost:8080/job-posts/8/images/12",
-    "jobContractDto": {
+    "jobContract": {
         "id": 29,
         "uri": "http://localhost:8080/job-posts/8/packages/8/contracts/29"
     },
-    "jobPackageDto": {
+    "jobPackage": {
         "id": 8,
         "uri": "http://localhost:8080/job-posts/8/packages/8"
     },
@@ -226,11 +226,11 @@
     "contractsCompleted": 1,
     "creationDate": "2021-05-05T18:41:31.191",
     "imageUrl": "http://localhost:8080/job-posts/5/images/8",
-    "jobContractDto": {
+    "jobContract": {
         "id": 12,
         "uri": "http://localhost:8080/job-posts/5/packages/5/contracts/12"
     },
-    "jobPackageDto": {
+    "jobPackage": {
         "id": 5,
         "uri": "http://localhost:8080/job-posts/5/packages/5"
     },
