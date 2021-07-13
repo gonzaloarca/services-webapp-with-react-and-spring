@@ -298,4 +298,10 @@ public class SimpleJobContractService implements JobContractService {
     public JobContract findByIdWithUser(long id) {
         return jobContractDao.findByIdWithUser(id).orElseThrow(JobContractNotFoundException::new);
     }
+
+    @Override
+    public int findByPackageIdMaxPage(long id){
+        return jobContractDao.findByPackageIdMaxPage(id);
+    }
+
 }

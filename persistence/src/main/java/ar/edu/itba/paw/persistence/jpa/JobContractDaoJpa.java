@@ -130,6 +130,13 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
+    public int findByPackageIdMaxPage(long id){
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.id = :id", Long.class)
+                .setParameter("id", id).getSingleResult();
+        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
     public Optional<User> findClientByContractId(long id) {
         return em.createQuery(
                 "SELECT jc.client FROM JobContract jc WHERE jc.id = :id", User.class

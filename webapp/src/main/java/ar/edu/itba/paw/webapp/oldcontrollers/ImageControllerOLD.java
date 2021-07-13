@@ -11,18 +11,26 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-@Controller
-@RequestMapping("/image")
+@Component
+//@Path("/")
 public class ImageControllerOLD {
 
     @Autowired
@@ -34,85 +42,52 @@ public class ImageControllerOLD {
     @Autowired
     JobContractService jobContractService;
 
-    @RequestMapping("/user/{id}")
-    public void getProfileImage(@PathVariable("id") final long id, HttpServletRequest request, HttpServletResponse response) {
-        ByteImage profilePic;
+//    @RequestMapping("/user/{id}")
+//    public void getProfileImage(@PathVariable("id") final long id, HttpServletRequest request, HttpServletResponse response) {
+//        ByteImage profilePic;
+//
+//        try {
+//            profilePic = userService.findImageByUserId(id);
+//        } catch (ImageNotFoundException e) {
+//            profilePic = null;
+//        }
+//
+//        try {
+//            if(profilePic == null || profilePic.getData() == null) {
+//                response.sendRedirect(request.getContextPath() + "/resources/images/defaultavatar.svg");
+//                return;
+//            }
+//
+//            buildResponse(profilePic, response);
+//
+//        } catch (IOException e) {
+//            //No hago nada
+//        }
+//    }
 
-        try {
-            profilePic = userService.findImageByUserId(id);
-        } catch (ImageNotFoundException e) {
-            profilePic = null;
-        }
 
-        try {
-            if(profilePic == null || profilePic.getData() == null) {
-                response.sendRedirect(request.getContextPath() + "/resources/images/defaultavatar.svg");
-                return;
-            }
 
-            buildResponse(profilePic, response);
+//    @RequestMapping("/contract/{id}")
+//    public void getContractImage(@PathVariable("id") final long id, HttpServletRequest request, HttpServletResponse response) {
+//        ByteImage contractImage;
+//
+//        try {
+//            contractImage = jobContractService.findImageByContractId(id);
+//        } catch (ImageNotFoundException e) {
+//            contractImage = null;
+//        }
+//
+//        try {
+//            if (contractImage == null || contractImage.getData() == null) {
+//                response.sendRedirect(request.getContextPath() + "/resources/images/service-default.svg");
+//                return;
+//            }
+//
+//            buildResponse(contractImage, response);
+//        } catch (IOException e) {
+//            //No hago nada
+//        }
+//    }
 
-        } catch (IOException e) {
-            //No hago nada
-        }
-    }
 
-    @RequestMapping("/post/{id}")
-    public void getPostImage(@PathVariable("id") final long imageId, HttpServletRequest request, HttpServletResponse response) {
-        JobPostImage jobPostImage;
-
-        try {
-            jobPostImage = jobPostImageService.findById(imageId);
-        } catch (JobPostImageNotFoundException e) {
-            jobPostImage = null;
-        }
-
-        try {
-            if(jobPostImage == null || jobPostImage.getByteImage() == null || jobPostImage.getByteImage().getData() == null) {
-                //Aunque devolvemos esta imagen default, los jsp se encargan de usar las imagenes predeterminadas de cada tipo de servicio
-                response.sendRedirect(request.getContextPath() + "/resources/images/service-default.svg");
-                return;
-            }
-
-            buildResponse(jobPostImage.getByteImage(), response);
-
-        } catch (IOException e) {
-            //No hago nada
-        }
-    }
-
-    @RequestMapping("/contract/{id}")
-    public void getContractImage(@PathVariable("id") final long id, HttpServletRequest request, HttpServletResponse response) {
-        ByteImage contractImage;
-
-        try {
-            contractImage = jobContractService.findImageByContractId(id);
-        } catch (ImageNotFoundException e) {
-            contractImage = null;
-        }
-
-        try {
-            if (contractImage == null || contractImage.getData() == null) {
-                response.sendRedirect(request.getContextPath() + "/resources/images/service-default.svg");
-                return;
-            }
-
-            buildResponse(contractImage, response);
-        } catch (IOException e) {
-            //No hago nada
-        }
-    }
-
-    private void buildResponse(ByteImage byteImage, HttpServletResponse response) throws IOException {
-        OutputStream out = response.getOutputStream();
-
-        response.setHeader("Content-Disposition", "inline;filename=\"image\"");
-        response.setContentType(byteImage.getType());
-        response.setContentLength(byteImage.getData().length);
-
-        IOUtils.copy(new ByteArrayInputStream(byteImage.getData()), out);
-
-        out.flush();
-        out.close();
-    }
 }

@@ -68,4 +68,6 @@ public interface JobContractService {
     List<JobContract.ContractState> getContractStates(String contractState);
 
     JobContract findByIdWithUser(long id);
+
+    int findByPackageIdMaxPage(long id);
 }

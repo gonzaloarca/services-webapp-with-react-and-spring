@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.exceptions.JobPostImageNotFoundException;
+import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.models.exceptions.UpdateFailException;
 import ar.edu.itba.paw.webapp.dto.JobContractDto;
 import ar.edu.itba.paw.webapp.dto.JobPackageDto;
@@ -18,6 +20,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.ByteArrayInputStream;
+import java.net.URI;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +45,9 @@ public class JobPostController {
 
     @Autowired
     private JobPackageService jobPackageService;
+
+    @Autowired
+    private JobPostImageService jobPostImageService;
 
     @Autowired
     private JobContractService jobContractService;
@@ -64,6 +73,26 @@ public class JobPostController {
                 .build();
     }
 
+    @Path("/{postId}/images")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response jobPostImages(@PathParam("postId") long postId) {
+        List<Long> ids = jobPostImageService.getImagesIdsByPostId(postId);
+        List<ImageDto> uris = ids.stream().map(id -> ImageDto.fromImageId(id, postId, uriInfo)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<ImageDto>>(uris) {
+        }).build();
+    }
+
+    @Path("/{postId}/images/{id}")
+    @GET
+    @Produces(value = {"image/png", "image/jpg"})
+    public Response getPostImage(@PathParam("postId") final long postId, @PathParam("id") final long imageId) {
+        JobPostImage jobPostImage = jobPostImageService.findById(imageId);
+        return Response.ok(new ByteArrayInputStream(jobPostImage.getByteImage().getData())).build();
+
+    }
+
+
     @GET
     @Path("/{id}/reviews")
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -88,7 +117,6 @@ public class JobPostController {
     @Path("/{id}/packages")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response packagesByPostId(
             @PathParam("id") final long id,
             @QueryParam(value = "page") @DefaultValue("1") int page) {
@@ -148,7 +176,6 @@ public class JobPostController {
     @Path("/{postId}/packages/{packageId}")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response packagesById(
             @PathParam("postId") final long postId,
             @PathParam("packageId") final long packageId) {
@@ -180,6 +207,22 @@ public class JobPostController {
         final URI contractUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(jobContract.getId())).build();
         return Response.created(contractUri).build();
+    }
+
+    @Path("/{postId}/packages/{packageId}/contracts")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response contractsByPackageId(
+            @PathParam("postId") final long postId,
+            @PathParam("packageId") final long packageId,
+            @QueryParam("page") @DefaultValue("1") int page) {
+        if(page < 1)
+            page = 1;
+        jobPostControllerLogger.debug("Finding contracts by package id: {}", packageId);
+        List<JobContractDto> packages = jobContractService.findByPackageId(packageId,page-1).stream().map(jobContract -> JobContractDto.fromJobContract(jobContract,uriInfo)).collect(Collectors.toList());
+        int maxPage = jobContractService.findByPackageIdMaxPage(packageId);
+        return PageResponseUtil.getGenericListResponse(page,maxPage,uriInfo,Response.ok(new GenericEntity<List<JobContractDto>>(packages){}));
+
     }
 
     @PUT
@@ -217,5 +260,13 @@ public class JobPostController {
         return Response.ok(JobContractDto
                 .fromJobContract(jobContractService.findById(contractId), uriInfo))
                 .build();
+    }
+
+    @Path("/{postId}/packages/{packageId}/contracts/{contractId}/image")
+    @GET
+    @Produces(value = {"image/png", "image/jpg"})
+    public Response getContractImage(@PathParam("postId") final long postId,@PathParam("packageId") final long packageId,@PathParam("contractId") final long contractId) {
+        ByteImage byteImage = jobContractService.findImageByContractId(contractId);
+        return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
     }
 }

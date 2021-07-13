@@ -3,9 +3,7 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.PaginationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.JobContractCardDto;
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Locale;
@@ -108,6 +107,14 @@ public class UserController {
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<JobContractCardDto>>(jobContractCardDtoList) {
                 }));
+    }
+
+    @Path("/{id}/image")
+    @GET
+    @Produces(value = {"image/png", "image/jpg"})
+    public Response getPostImage(@PathParam("id") final long id) {
+        ByteImage byteImage = userService.findImageByUserId(id);
+        return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
     }
 
     @Path("/search/")
