@@ -26,7 +26,5 @@ public interface JobPostDao {
 
     Optional<User> findUserByPostId(long id);
 
-    boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones);
-
-    boolean deleteJobPost(long id);
+    boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones, boolean isActive);
 }

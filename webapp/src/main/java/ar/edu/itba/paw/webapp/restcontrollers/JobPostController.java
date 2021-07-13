@@ -5,10 +5,8 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.JobPostImageNotFoundException;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.models.exceptions.UpdateFailException;
-import ar.edu.itba.paw.webapp.dto.JobContractDto;
-import ar.edu.itba.paw.webapp.dto.JobPackageDto;
-import ar.edu.itba.paw.webapp.dto.JobPostDto;
-import ar.edu.itba.paw.webapp.dto.ReviewDto;
+import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.form.PackageForm;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -24,7 +23,9 @@ import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -60,6 +61,44 @@ public class JobPostController {
 
     @Context
     private HttpHeaders headers;
+
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response createJobPost(final JobPostDto jobPostDto) {
+        long proId = jobPostDto.getProfessional().getId();
+        String title = jobPostDto.getTitle();
+        String availableHours = jobPostDto.getAvailableHours();
+        int jobType = jobPostDto.getJobType().getId();
+        List<Integer> zones = jobPostDto.getZones().stream().map(JobPostZoneDto::getId).collect(Collectors.toList());
+
+        jobPostControllerLogger.debug("Creating job post with data: email: {}, title: {}, available hours: {}, job type: {}, zones: {}", proId, title, availableHours, jobType, zones);
+        JobPost newJobPost = jobPostService.create(proId, title, availableHours, jobType, zones);
+
+        final URI packageUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(newJobPost.getId())).build();
+        return Response.created(packageUri).build();
+    }
+
+    @PUT
+    @Path("/{id}/")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public Response editJobPost(final JobPostDto jobPostDto, @PathParam("id") final long id) {
+        String title = jobPostDto.getTitle();
+        String availableHours = jobPostDto.getAvailableHours();
+        int jobType = jobPostDto.getJobType().getId();
+        List<Integer> zones = jobPostDto.getZones().stream().map(JobPostZoneDto::getId).collect(Collectors.toList());
+        boolean isActive = jobPostDto.getActive();
+
+        jobPostControllerLogger.debug("Updating post {} with data: title: {}, available hours: {}, job type: {}, zones: {}, isActive: {}", id, title, availableHours, jobType, zones, isActive);
+        if (!jobPostService.updateJobPost(id, title, availableHours, jobType, zones, isActive)) {
+            jobPostControllerLogger.debug("Error updating job post {}", id);
+            throw new UpdateFailException();
+        }
+
+        final URI packageUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(id)).build();
+        return Response.created(packageUri).build();
+    }
 
     @GET
     @Path("/{id}/")
