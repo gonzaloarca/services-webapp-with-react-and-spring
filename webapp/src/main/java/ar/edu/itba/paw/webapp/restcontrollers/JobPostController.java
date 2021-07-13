@@ -2,11 +2,9 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.exceptions.JobPostImageNotFoundException;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.models.exceptions.UpdateFailException;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.form.PackageForm;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +13,11 @@ import org.springframework.stereotype.Component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -126,9 +118,8 @@ public class JobPostController {
     @GET
     @Produces(value = {"image/png", "image/jpg"})
     public Response getPostImage(@PathParam("postId") final long postId, @PathParam("id") final long imageId) {
-        JobPostImage jobPostImage = jobPostImageService.findById(imageId);
+        JobPostImage jobPostImage = jobPostImageService.findById(imageId, postId);
         return Response.ok(new ByteArrayInputStream(jobPostImage.getByteImage().getData())).build();
-
     }
 
 
@@ -203,9 +194,9 @@ public class JobPostController {
 
         jobPostControllerLogger.debug("Updating package {} with data: title: {}, description: {}, price: {}, rate type: {}, isActive: {}",
                 packageId, title, description, price, rateType, isActive);
-        if (!jobPackageService.updateJobPackage(packageId, title, description, price, rateType, isActive)) {
-            jobPostControllerLogger.debug("Error updating package {}", packageId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        if (!jobPackageService.updateJobPackage(packageId, postId, title, description, price, rateType, isActive)) {
+            jobPostControllerLogger.debug("Package not found {}", packageId);
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         final URI packageUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(packageId)).build();
@@ -218,9 +209,8 @@ public class JobPostController {
     public Response packagesById(
             @PathParam("postId") final long postId,
             @PathParam("packageId") final long packageId) {
-
         jobPostControllerLogger.debug("Finding packages by Id: {}", packageId);
-        final JobPackage jobPackage = jobPackageService.findById(packageId);
+        final JobPackage jobPackage = jobPackageService.findById(packageId, postId);
         final JobPackageDto packageDto = JobPackageDto.fromJobPackage(jobPackage, uriInfo);
 
         return Response.ok(new GenericEntity<JobPackageDto>(packageDto) {
@@ -230,17 +220,18 @@ public class JobPostController {
     @POST
     @Path("/{postId}/packages/{packageId}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response create(final JobContractDto jobContractDto,
-                           @PathParam("postId") final long postId,
-                           @PathParam("packageId") final long packageId) {
+    public Response createJobContract(final JobContractDto jobContractDto,
+                                      @PathParam("postId") final long postId,
+                                      @PathParam("packageId") final long packageId) {
         Locale locale = headers.getAcceptableLanguages().get(0);
         String webpageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
 
-        jobPostControllerLogger.debug("Creating contract fo package {} with data: client id:{}, description:{}",
+        jobPostControllerLogger.debug("Creating contract for package {} with data: client id:{}, description:{}",
                 jobContractDto.getJobPackage().getId(), jobContractDto.getClientId(), jobContractDto.getDescription());
         JobContractWithImage jobContract = jobContractService
                 .create(jobContractDto.getClientId(), jobContractDto.getJobPackage().getId(),
+                        jobContractDto.getJobPackage().getJobPost().getId(),
                         jobContractDto.getDescription(), jobContractDto.getScheduledDate(), locale, webpageUrl);
 
         final URI contractUri = uriInfo.getAbsolutePathBuilder()
@@ -255,13 +246,13 @@ public class JobPostController {
             @PathParam("postId") final long postId,
             @PathParam("packageId") final long packageId,
             @QueryParam("page") @DefaultValue("1") int page) {
-        if(page < 1)
+        if (page < 1)
             page = 1;
         jobPostControllerLogger.debug("Finding contracts by package id: {}", packageId);
-        List<JobContractDto> packages = jobContractService.findByPackageId(packageId,page-1).stream().map(jobContract -> JobContractDto.fromJobContract(jobContract,uriInfo)).collect(Collectors.toList());
-        int maxPage = jobContractService.findByPackageIdMaxPage(packageId);
-        return PageResponseUtil.getGenericListResponse(page,maxPage,uriInfo,Response.ok(new GenericEntity<List<JobContractDto>>(packages){}));
-
+        List<JobContractDto> packages = jobContractService.findByPackageId(packageId, postId, page - 1).stream().map(jobContract -> JobContractDto.fromJobContract(jobContract, uriInfo)).collect(Collectors.toList());
+        int maxPage = jobContractService.findByPackageIdMaxPage(packageId, postId);
+        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo, Response.ok(new GenericEntity<List<JobContractDto>>(packages) {
+        }));
     }
 
     @PUT
@@ -276,6 +267,7 @@ public class JobPostController {
         String webPageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
 
+        jobContractService.findById(packageId, packageId, postId);
         jobPostControllerLogger.debug("Updating job contract  id: {} with data: scheduledDate: {}, state: {}", contractId, jobContractDto.getScheduledDate(), jobContractDto.getState());
         jobContractService.changeContractScheduledDate(jobContractDto.getId(),
                 jobContractDto.getScheduledDate(), contractType.equals("professional"),
@@ -297,15 +289,17 @@ public class JobPostController {
                             @PathParam("contractId") final long contractId) {
         jobPostControllerLogger.debug("Finding job contract by id: {}", contractId);
         return Response.ok(JobContractDto
-                .fromJobContract(jobContractService.findById(contractId), uriInfo))
+                .fromJobContract(jobContractService.findById(contractId, packageId, postId), uriInfo))
                 .build();
     }
 
     @Path("/{postId}/packages/{packageId}/contracts/{contractId}/image")
     @GET
     @Produces(value = {"image/png", "image/jpg"})
-    public Response getContractImage(@PathParam("postId") final long postId,@PathParam("packageId") final long packageId,@PathParam("contractId") final long contractId) {
-        ByteImage byteImage = jobContractService.findImageByContractId(contractId);
+    public Response getContractImage(@PathParam("postId") final long postId,
+                                     @PathParam("packageId") final long packageId,
+                                     @PathParam("contractId") final long contractId) {
+        ByteImage byteImage = jobContractService.findImageByContractId(contractId, packageId, postId);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
     }
 }

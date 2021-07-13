@@ -180,7 +180,7 @@ public class SimpleJobPostImageServiceTest {
 		Mockito.when(jobPostImageDao.findById(Mockito.eq(IMAGE1_ID)))
 				.thenReturn(Optional.of(postImage1));
 
-		JobPostImage result = jobPostImageService.findById(IMAGE1_ID);
+		JobPostImage result = jobPostImageService.findById(IMAGE1_ID, POST_ID);
 
 		Assert.assertNotNull(result);
 		Assert.assertEquals(postImage1, result);
@@ -191,7 +191,7 @@ public class SimpleJobPostImageServiceTest {
 		Mockito.when(jobPostImageDao.findById(Mockito.eq(FAKE_ID)))
 				.thenReturn(Optional.empty());
 
-		jobPostImageService.findById(FAKE_ID);
+		jobPostImageService.findById(FAKE_ID, POST_ID);
 	}
 
 	@Test

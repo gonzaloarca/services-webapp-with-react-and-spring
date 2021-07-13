@@ -9,11 +9,9 @@ import java.util.Optional;
 
 public interface JobContractService {
 
-    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, Locale locale,String webpageUrl);
+    JobContractWithImage create(long clientId, long packageId, long postId, String description, LocalDateTime scheduledDate, Locale locale,String webpageUrl);
 
-    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, ByteImage image, Locale locale,String webpageUrl);
-
-    JobContract findById(long id);
+    JobContract findById(long contractId, long packageId, long postId);
 
     List<JobContract> findByClientId(long id);
 
@@ -35,9 +33,9 @@ public interface JobContractService {
 
     List<JobContract> findByPostId(long id, int page);
 
-    List<JobContract> findByPackageId(long id);
+    List<JobContract> findByPackageId(long packageId, long postId);
 
-    List<JobContract> findByPackageId(long id, int page);
+    List<JobContract> findByPackageId(long packageId, long postId, int page);
 
     User findClientByContractId(long id);
 
@@ -63,11 +61,11 @@ public interface JobContractService {
 
     JobContractWithImage findJobContractWithImage(long id);
 
-    ByteImage findImageByContractId(long id);
+    ByteImage findImageByContractId(long contractId, long packageId, long postId);
 
     List<JobContract.ContractState> getContractStates(String contractState);
 
     JobContract findByIdWithUser(long id);
 
-    int findByPackageIdMaxPage(long id);
+    int findByPackageIdMaxPage(long packageId, long postId);
 }

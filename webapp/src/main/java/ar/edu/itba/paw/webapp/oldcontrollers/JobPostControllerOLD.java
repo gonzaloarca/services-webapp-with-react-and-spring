@@ -7,21 +7,16 @@ import ar.edu.itba.paw.webapp.form.DeleteItemForm;
 import ar.edu.itba.paw.webapp.form.EditJobPostForm;
 import ar.edu.itba.paw.webapp.form.JobPostForm;
 import ar.edu.itba.paw.webapp.form.PackageForm;
-import ar.edu.itba.paw.models.exceptions.DeleteFailException;
-import ar.edu.itba.paw.models.exceptions.UpdateFailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -210,12 +205,12 @@ public class JobPostControllerOLD {
                 .addObject("jobPost", jobPost)
                 .addObject("packages", jobPackages);
     }
-
+/*
     @RequestMapping(path = "/job/{postId}/packages/{packageId}/edit", method = RequestMethod.GET)
     public ModelAndView editPackage(@ModelAttribute("editPackageForm") PackageForm form,
                                     @PathVariable final long postId, @PathVariable final long packageId) {
         jobPostControllerLogger.debug("finding package {}",packageId);
-        JobPackage jobPackage = jobPackageService.findById(packageId);
+        JobPackage jobPackage = jobPackageService.findById(packageId, );
         PackageForm editPackageForm;
 
         // si el form tiene al menos un campo en null, quiere decir que todavia no hubo errores en la validacion.
@@ -235,7 +230,7 @@ public class JobPostControllerOLD {
                 .addObject("editPackageForm", editPackageForm)
                 .addObject("existing", true);
     }
-/*
+
     @RequestMapping(path = "/job/{postId}/packages/{packageId}/edit", method = RequestMethod.POST)
     public ModelAndView submitEditPackage(@Valid @ModelAttribute("editPackageForm") PackageForm form, BindingResult errors,
                                           @PathVariable final long postId, @PathVariable final long packageId) {

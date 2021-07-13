@@ -30,8 +30,8 @@ public class SimpleJobPackageService implements JobPackageService {
     }
 
     @Override
-    public JobPackage findById(long id) {
-        return jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
+    public JobPackage findById(long packageId, long postId) {
+        return jobPackageDao.findById(packageId, postId).orElseThrow(JobPackageNotFoundException::new);
     }
 
     @Override
@@ -45,21 +45,11 @@ public class SimpleJobPackageService implements JobPackageService {
     }
 
     @Override
-    public JobPost findPostByPackageId(long id) {
-        return jobPackageDao.findPostByPackageId(id).orElseThrow(JobPostNotFoundException::new);
-    }
-
-    @Override
-    public boolean updateJobPackage(long id, String title, String description, String price, long rateType, boolean isActive) {
+    public boolean updateJobPackage(long packageId, long postId, String title, String description, String price, long rateType, boolean isActive) {
         JobPackage.RateType parsedRateType = JobPackage.RateType.values()[(int) rateType];
         Double parsedPrice = parsePrice(parsedRateType, price);
 
-        return jobPackageDao.updatePackage(id, title, description, parsedPrice, parsedRateType, isActive);
-    }
-
-    @Override
-    public JobPackage findByIdWithJobPost(int id) {
-        return jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
+        return jobPackageDao.updatePackage(packageId, postId, title, description, parsedPrice, parsedRateType, isActive);
     }
 
     @Override
@@ -77,6 +67,5 @@ public class SimpleJobPackageService implements JobPackageService {
         }
         return null;
     }
-
 
 }
