@@ -10,6 +10,7 @@ public class ReviewDto {
     private String title;
     private String description;
     private JobContractDto jobContract;
+    private UserDto client;
     private LocalDateTime creationDate;
 
     public static ReviewDto fromReview(Review review, UriInfo uriInfo) {
@@ -17,7 +18,8 @@ public class ReviewDto {
         reviewDto.rate = review.getRate();
         reviewDto.title = review.getTitle();
         reviewDto.description = review.getDescription();
-        reviewDto.jobContract = JobContractDto.linkDataFromJobContract(review.getJobContract(),uriInfo);
+        reviewDto.jobContract = JobContractDto.linkDataFromJobContract(review.getJobContract(), uriInfo);
+        reviewDto.client = UserDto.linkDataFromUser(review.getClient(), uriInfo);
         reviewDto.creationDate = review.getCreationDate();
         return reviewDto;
     }
@@ -46,6 +48,22 @@ public class ReviewDto {
         this.description = description;
     }
 
+    public JobContractDto getJobContract() {
+        return jobContract;
+    }
+
+    public void setJobContract(JobContractDto jobContract) {
+        this.jobContract = jobContract;
+    }
+
+    public UserDto getClient() {
+        return client;
+    }
+
+    public void setClient(UserDto client) {
+        this.client = client;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -54,11 +72,4 @@ public class ReviewDto {
         this.creationDate = creationDate;
     }
 
-    public JobContractDto getJobContract() {
-        return jobContract;
-    }
-
-    public void setJobContract(JobContractDto jobContract) {
-        this.jobContract = jobContract;
-    }
 }

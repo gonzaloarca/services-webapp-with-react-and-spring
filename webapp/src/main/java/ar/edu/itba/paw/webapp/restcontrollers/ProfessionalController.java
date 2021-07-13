@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.AnalyticRanking;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
@@ -20,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Component
@@ -81,7 +81,7 @@ public class ProfessionalController {
             @PathParam("id") final long id,
             @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            page =1;
+            page = 1;
         }
 
         professionalControllerLogger.debug("Finding reviews for pro with id: {}", id);
@@ -95,13 +95,22 @@ public class ProfessionalController {
     }
 
     @GET
+    @Path("/{id}/reviews-by-exact-rate")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response reviews(@PathParam("id") final long id) {
+        professionalControllerLogger.debug("Finding reviews by exact rates for pro with id: {}", id);
+        return Response.ok(ReviewsByExactRateDto.fromListWithRates(reviewService.findProfessionalReviewsByPoints(id)))
+                .build();
+    }
+
+    @GET
     @Path("/{id}/job-cards")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response jobCards(
             @PathParam("id") final long id,
             @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            page =1;
+            page = 1;
         }
 
         professionalControllerLogger.debug("Finding jobCards for pro with id: {}", id);
@@ -124,7 +133,7 @@ public class ProfessionalController {
                                        @QueryParam(value = "state") final String contractState,
                                        @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            page =1;
+            page = 1;
         }
         if (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized"))
             throw new IllegalArgumentException();
@@ -168,7 +177,7 @@ public class ProfessionalController {
     public Response getRelatedJobCards(@PathParam("id") long id,
                                        @QueryParam(value = "page") @DefaultValue("1") int page) {
         if (page < 1) {
-            page =1;
+            page = 1;
         }
 
         professionalControllerLogger.debug("Finding relatedJobCards for pro with id: {}", id);
