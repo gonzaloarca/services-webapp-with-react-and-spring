@@ -84,9 +84,6 @@ public class SimpleJobPostServiceTest {
                 Mockito.eq(JOB_POST_NEW_USER.getAvailableHours()), Mockito.eq(JOB_POST_NEW_USER.getJobType()),
                 Mockito.eq(ZONES)))
                 .thenReturn(JOB_POST_NEW_USER);
-        List<UserAuth.Role> roles = new ArrayList<>();
-        roles.add(UserAuth.Role.CLIENT);
-        roles.add(UserAuth.Role.PROFESSIONAL);
         Mockito.doNothing().when(userService).assignRole(NEW_PROFESSIONAL.getId(),
                 UserAuth.Role.PROFESSIONAL.ordinal());
 
@@ -95,18 +92,21 @@ public class SimpleJobPostServiceTest {
 
         Assert.assertEquals(jobPost, JOB_POST_NEW_USER);
     }
-//
-//    @Test
-//    public void testCreatePostExistingUserNoProf() {
-//        Mockito.when(jobPostDao.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType(), ZONES))
-//                .thenReturn(JOB_POST_EXISTING_USER);
-//        JobPost jobPost = jobPostService.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(),
-//                JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(),
-//                ZONES.stream().map(JobPost.Zone::getValue).collect(Collectors.toList()));
-//
-//        Assert.assertEquals(JOB_POST_EXISTING_USER, jobPost);
-//        Assert.assertEquals(0, 0);
-//    }
+
+    @Test
+    public void testCreatePostExistingUserNoProf() {
+        Mockito.when(jobPostDao.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType(), ZONES))
+                .thenReturn(JOB_POST_EXISTING_USER);
+        Mockito.doNothing().when(userService).assignRole(NEW_PROFESSIONAL.getId(),
+                UserAuth.Role.PROFESSIONAL.ordinal());
+
+        JobPost jobPost = jobPostService.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(),
+                JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(),
+                ZONES.stream().map(JobPost.Zone::getValue).collect(Collectors.toList()));
+
+        Assert.assertEquals(JOB_POST_EXISTING_USER, jobPost);
+        Assert.assertEquals(0, 0);
+    }
 
     @Test(expected = JobPostNotFoundException.class)
     public void updateJobPostExceptionTest() {
