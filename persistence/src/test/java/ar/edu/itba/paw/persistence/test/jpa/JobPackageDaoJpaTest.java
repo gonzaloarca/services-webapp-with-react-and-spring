@@ -278,7 +278,7 @@ public class JobPackageDaoJpaTest {
     @Test
     public void testFindById() {
 
-        Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(JOB_PACKAGES[0].getId());
+        Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(JOB_PACKAGES[0].getId(), JOB_PACKAGES[0].getJobPost().getId());
 
         Assert.assertTrue(jobPackage.isPresent());
         Assert.assertEquals(jobPackage.get(), JOB_PACKAGES[0]);
@@ -287,7 +287,7 @@ public class JobPackageDaoJpaTest {
     @Test
     public void testFindByIdWithNonExistentId() {
 
-        Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(NON_EXISTENT_ID);
+        Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(NON_EXISTENT_ID, JOB_PACKAGES[0].getJobPost().getId());
 
         Assert.assertFalse(jobPackage.isPresent());
     }
@@ -346,7 +346,7 @@ public class JobPackageDaoJpaTest {
         Double newPrice = 123.4;
 
 
-        boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), newTitle, newDescription, newPrice, jobPackage.getRateType(), jobPackage.is_active());
+        boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), jobPackage.getJobPost().getId(), newTitle, newDescription, newPrice, jobPackage.getRateType(), jobPackage.is_active());
         em.flush();
         JobPackage dbJobPackage = em.find(JobPackage.class, JOB_PACKAGES[0].getId());
         Assert.assertTrue(ret);
@@ -362,7 +362,7 @@ public class JobPackageDaoJpaTest {
     public void testDeletePackage() {
         JobPackage jobPackage = JOB_PACKAGES[0];
 
-        boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(), jobPackage.getRateType(), false);
+        boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), jobPackage.getJobPost().getId(), jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(), jobPackage.getRateType(), false);
         em.flush();
         JobPackage dbJobPackage = em.find(JobPackage.class, jobPackage.getId());
         Assert.assertTrue(ret);
@@ -374,7 +374,9 @@ public class JobPackageDaoJpaTest {
     public void testDeletePackageNonExistentId() {
         JobPackage jobPackage = JOB_PACKAGES[0];
 
-        boolean ret = jobPackageDaoJpa.updatePackage(NON_EXISTENT_ID, jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(), jobPackage.getRateType(), false);
+        boolean ret = jobPackageDaoJpa.updatePackage(NON_EXISTENT_ID, jobPackage.getJobPost().getId(),
+                jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(),
+                jobPackage.getRateType(), false);
         em.flush();
         Assert.assertFalse(ret);
     }

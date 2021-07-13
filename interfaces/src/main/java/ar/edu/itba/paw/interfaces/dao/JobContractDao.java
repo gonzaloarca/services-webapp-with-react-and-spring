@@ -11,9 +11,7 @@ import java.util.Optional;
 
 public interface JobContractDao {
 
-    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate);
-
-    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, ByteImage image);
+    JobContractWithImage create(long clientId, long packageId, long postId, String description, LocalDateTime scheduledDate);
 
     Optional<JobContract> findById(long id);
 
@@ -27,7 +25,7 @@ public interface JobContractDao {
 
     List<JobContract> findByPostId(long id, int page);
 
-    List<JobContract> findByPackageId(long id, int page);
+    List<JobContract> findByPackageId(long packageId, long postId, int page);
 
     Optional<User> findClientByContractId(long id);
 
@@ -45,9 +43,9 @@ public interface JobContractDao {
 
     Optional<JobContractWithImage> findJobContractWithImage(long id);
 
-    Optional<ByteImage> findImageByContractId(long id);
+    Optional<ByteImage> findImageByContractId(long contractId, long packageId, long postId);
 
     Optional<JobContract> findByIdWithUser(long id);
 
-    int findByPackageIdMaxPage(long id);
+    int findByPackageIdMaxPage(long packageId, long postId);
 }

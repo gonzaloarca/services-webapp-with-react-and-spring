@@ -2,22 +2,13 @@ package ar.edu.itba.paw.webapp.oldcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.form.ContractForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.List;
-import java.security.Principal;
 
 @RequestMapping("/hire")
 @Controller
@@ -94,12 +85,12 @@ public class HireController {
     public ModelAndView contractSuccess(@PathVariable final long packId) {
         return new ModelAndView("contractSubmitted");
     }
-
+/*
     @ModelAttribute("jobPack")
     public JobPackage getJobPackage(@PathVariable("packId") final long packId) {
-        return jobPackageService.findById(packId);
+        return jobPackageService.findById(packId, );
     }
-
+*/
     @ModelAttribute("jobPost")
     public JobPost getJobPost(@ModelAttribute("jobPack") final JobPackage jobPackage) {
         return jobPostService.findById(jobPackage.getPostId());

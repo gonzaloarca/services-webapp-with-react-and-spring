@@ -25,7 +25,7 @@ public class JobPackageDaoJpa implements JobPackageDao {
     @Override
     public JobPackage create(long postId, String title, String description, Double price, JobPackage.RateType rateType) {
         JobPost jobPost = em.find(JobPost.class, postId);
-        if(jobPost == null)
+        if (jobPost == null)
             throw new JobPostNotFoundException();
 
         JobPackage jobPackage = new JobPackage(jobPost, title, description, price, rateType);
@@ -34,8 +34,9 @@ public class JobPackageDaoJpa implements JobPackageDao {
     }
 
     @Override
-    public Optional<JobPackage> findById(long id) {
-        return Optional.ofNullable(em.find(JobPackage.class, id));
+    public Optional<JobPackage> findById(long packageId, long postId) {
+        return em.createQuery("FROM JobPackage jobPackage WHERE jobPackage.id = :packageId AND jobPackage.jobPost.id = :postId", JobPackage.class)
+                .setParameter("packageId", packageId).setParameter("postId", postId).getResultList().stream().findFirst();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class JobPackageDaoJpa implements JobPackageDao {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM JobPackage AS jpack WHERE jpack.id IN :filteredIds", JobPackage.class)
-                .setParameter("filteredIds", (filteredIds.isEmpty())? null : filteredIds)
+                .setParameter("filteredIds", (filteredIds.isEmpty()) ? null : filteredIds)
                 .getResultList().stream().sorted(
                         //Ordenamos los elementos segun el orden de filteredIds
                         Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
@@ -61,9 +62,9 @@ public class JobPackageDaoJpa implements JobPackageDao {
     }
 
     @Override
-    public boolean updatePackage(long id, String title, String description, Double price, JobPackage.RateType rateType, boolean isActive) {
-        JobPackage jobPack = em.find(JobPackage.class, id);
-        if (jobPack != null) {
+    public boolean updatePackage(long packageId, long postId, String title, String description, Double price, JobPackage.RateType rateType, boolean isActive) {
+        JobPackage jobPack = em.find(JobPackage.class, packageId);
+        if (jobPack != null && jobPack.getJobPost().getId() == postId) {
             jobPack.setTitle(title);
             jobPack.setDescription(description);
             jobPack.setPrice(price);

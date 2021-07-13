@@ -6,7 +6,6 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
-import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -45,28 +44,20 @@ public class SimpleJobContractService implements JobContractService {
     @Autowired
     private MessageSource messageSource;
 
-
     @Override
-    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, Locale locale, String webpageUrl) {
-        return create(clientId, packageId, description, scheduledDate, null, locale, webpageUrl);
-    }
-
-    @Override
-    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, ByteImage image, Locale locale, String webpageUrl) {
-        JobContractWithImage jobContract;
-
-        if (image == null)
-            jobContract = jobContractDao.create(clientId, packageId, description, scheduledDate);
-        else
-            jobContract = jobContractDao.create(clientId, packageId, description, scheduledDate, image);
+    public JobContractWithImage create(long clientId, long packageId, long postId, String description, LocalDateTime scheduledDate, Locale locale, String webpageUrl) {
+        JobContractWithImage jobContract = jobContractDao.create(clientId, packageId, postId, description, scheduledDate);
         mailingService.sendContractEmail(jobContract, locale, webpageUrl);
-
         return jobContract;
     }
 
     @Override
-    public JobContract findById(long id) {
-        return jobContractDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
+    public JobContract findById(long contractId, long packageId, long postId) {
+        Optional<JobContract> jobContract = jobContractDao.findById(contractId);
+        if (!jobContract.isPresent() || jobContract.get().getJobPackage().getId() != packageId
+                || jobContract.get().getJobPackage().getJobPost().getId() != postId)
+            throw new JobContractNotFoundException();
+        return jobContract.get();
     }
 
     @Override
@@ -122,13 +113,14 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public List<JobContract> findByPackageId(long id) {
-        return jobContractDao.findByPackageId(id, HirenetUtils.ALL_PAGES);
+    public List<JobContract> findByPackageId(long packageId, long postId) {
+        return jobContractDao.findByPackageId(packageId, postId, HirenetUtils.ALL_PAGES);
     }
 
     @Override
-    public List<JobContract> findByPackageId(long id, int page) {
-        return jobContractDao.findByPackageId(id, page);
+    public List<JobContract> findByPackageId(long packageId, long postId, int page) {
+        jobPackageService.findById(packageId, postId); //chequeo que el postId tenga correlacion con el packageId
+        return jobContractDao.findByPackageId(packageId, postId, page);
     }
 
     @Override
@@ -241,7 +233,7 @@ public class SimpleJobContractService implements JobContractService {
 
         jobContractDao.changeContractState(id, state);
         JobContractWithImage jobContract = findJobContractWithImage(id);
-        JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId());
+        JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId(), jobContract.getJobPackage().getJobPost().getId());
         JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
 
         mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, locale, webPageUrl);
@@ -265,8 +257,8 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public ByteImage findImageByContractId(long id) {
-        return jobContractDao.findImageByContractId(id).orElseThrow(ImageNotFoundException::new);
+    public ByteImage findImageByContractId(long contractId, long packageId, long postId) {
+        return jobContractDao.findImageByContractId(contractId, packageId, postId).orElseThrow(ImageNotFoundException::new);
     }
 
     @Override
@@ -300,8 +292,9 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public int findByPackageIdMaxPage(long id){
-        return jobContractDao.findByPackageIdMaxPage(id);
+    public int findByPackageIdMaxPage(long packageId, long postId) {
+        jobPackageService.findById(packageId, postId); //chequeo que el postId tenga correlacion con el packageId
+        return jobContractDao.findByPackageIdMaxPage(packageId, postId);
     }
 
 }

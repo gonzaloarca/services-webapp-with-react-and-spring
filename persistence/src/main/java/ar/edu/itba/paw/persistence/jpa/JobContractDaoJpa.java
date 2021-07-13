@@ -25,21 +25,16 @@ public class JobContractDaoJpa implements JobContractDao {
     private EntityManager em;
 
     @Override
-    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate) {
-        return create(clientId, packageId, description, scheduledDate, null);
-    }
-
-    @Override
-    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, ByteImage image) {
+    public JobContractWithImage create(long clientId, long packageId, long postId, String description, LocalDateTime scheduledDate) {
         User client = em.find(User.class, clientId);
         if (client == null)
             throw new UserNotFoundException();
 
         JobPackage jobPackage = em.find(JobPackage.class, packageId);
-        if (jobPackage == null)
+        if (jobPackage == null || jobPackage.getPostId() != postId)
             throw new JobPackageNotFoundException();
 
-        JobContractWithImage jobContractWithImage = new JobContractWithImage(client, jobPackage, LocalDateTime.now(), scheduledDate, LocalDateTime.now(), description, image);
+        JobContractWithImage jobContractWithImage = new JobContractWithImage(client, jobPackage, LocalDateTime.now(), scheduledDate, LocalDateTime.now(), description, null);
         em.persist(jobContractWithImage);
 
         return jobContractWithImage;
@@ -120,19 +115,19 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public List<JobContract> findByPackageId(long id, int page) {
+    public List<JobContract> findByPackageId(long packageId, long postId, int page) {
         Query nativeQuery = em.createNativeQuery(
-                "SELECT contract_id FROM contract " +
-                        "WHERE package_id = :id ORDER BY contract_creation_date DESC")
-                .setParameter("id", id);
+                "SELECT contract_id FROM contract NATURAL JOIN job_package " +
+                        "WHERE package_id = :packageId AND post_id = :postId ORDER BY contract_creation_date DESC")
+                .setParameter("packageId", packageId).setParameter("postId", postId);
 
         return executePageQuery(page, nativeQuery);
     }
 
     @Override
-    public int findByPackageIdMaxPage(long id){
-        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.id = :id", Long.class)
-                .setParameter("id", id).getSingleResult();
+    public int findByPackageIdMaxPage(long packageId, long postId) {
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.id = :packageId AND jc.jobPackage.jobPost.id = :postId", Long.class)
+                .setParameter("packageId", packageId).setParameter("postId", postId).getSingleResult();
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
@@ -220,16 +215,19 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public Optional<ByteImage> findImageByContractId(long id) {
-        List<ByteImage> resultList = em.createQuery("SELECT contract.byteImage FROM JobContractWithImage contract WHERE contract.id = :id", ByteImage.class).setParameter("id", id).getResultList();
+    public Optional<ByteImage> findImageByContractId(long contractId, long packageId, long postId) {
+        List<ByteImage> resultList = em.createQuery("SELECT contract.byteImage FROM JobContractWithImage contract WHERE contract.id = :contractId AND contract.jobPackage.id = :packageId AND contract.jobPackage.jobPost.id = :postId",
+                ByteImage.class)
+                .setParameter("contractId", contractId).setParameter("packageId", packageId).setParameter("postId", postId)
+                .getResultList();
         return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
 
     }
 
     @Override
     public Optional<JobContract> findByIdWithUser(long id) {
-        List<JobContract> contracts = em.createQuery("FROM JobContract as jc JOIN FETCH jc.client JOIN FETCH jc.jobPackage as jp JOIN FETCH jp.jobPost as post JOIN FETCH post.user WHERE jc.id = :id",JobContract.class).setParameter("id",id).getResultList();
-        if(contracts.isEmpty()){
+        List<JobContract> contracts = em.createQuery("FROM JobContract as jc JOIN FETCH jc.client JOIN FETCH jc.jobPackage as jp JOIN FETCH jp.jobPost as post JOIN FETCH post.user WHERE jc.id = :id", JobContract.class).setParameter("id", id).getResultList();
+        if (contracts.isEmpty()) {
             return Optional.empty();
         }
         return Optional.ofNullable(contracts.get(0));

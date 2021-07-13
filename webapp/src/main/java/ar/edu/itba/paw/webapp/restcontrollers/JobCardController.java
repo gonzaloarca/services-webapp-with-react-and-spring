@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
-    import java.util.Locale;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
@@ -47,12 +47,12 @@ public class JobCardController {
         if (page < 1) {
             page = 1;
         }
-
+        JobCardControllerLogger.debug("Finding all jobcards for page: {}", page);
         int maxPage = paginationService.findJobCardsMaxPage();
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         final List<JobCardDto> jobCardDtoList = jobCardService.findAll(page - 1)
                 .stream().map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
-                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(),null,locale)))
+                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, locale)))
                 .collect(Collectors.toList());
 
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
@@ -78,13 +78,14 @@ public class JobCardController {
 
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
 
+        JobCardControllerLogger.debug("searching jobcards with data: zone: {}, query: {}, category: {}, orderby: {}, page: {}", zone, query, category, orderBy, page);
         int maxPage = paginationService
                 .findJobCardsSearchMaxPage(query, zone, category, locale);
 
         final List<JobCardDto> jobCardDtoList = jobCardService.search(query, zone, category,
                 orderBy, page - 1, headers.getAcceptableLanguages().get(0))
                 .stream().map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
-                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(),null,locale)))
+                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, locale)))
                 .collect(Collectors.toList());
 
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,

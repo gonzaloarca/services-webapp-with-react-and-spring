@@ -113,12 +113,14 @@ public class SimpleJobContractServiceTest {
         LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).plusDays(5);
 
         Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
-                Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(time), Mockito.eq(BYTE_IMAGE)))
+                Mockito.eq(JOB_PACKAGE.getJobPost().getId()),
+                Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(time)))
                 .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE,
                         CREATION_DATE, time, CREATION_DATE, CONTRACT_DESCRIPTION, BYTE_IMAGE));
 
         JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getId(), JOB_PACKAGE.getId(),
-                JOB_PACKAGE.getDescription(), time, BYTE_IMAGE, Locale.getDefault(), "");
+                JOB_PACKAGE.getJobPost().getId(),
+                JOB_PACKAGE.getDescription(), time, Locale.getDefault(), "");
 
         Assert.assertNotNull(maybeContract);
         Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
@@ -127,36 +129,6 @@ public class SimpleJobContractServiceTest {
         Assert.assertEquals(CLIENT, maybeContract.getClient());
         Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
         Assert.assertEquals(BYTE_IMAGE, maybeContract.getByteImage());
-    }
-
-    @Test
-    public void testCreateWithoutImage() {
-        LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).plusDays(5);
-
-        Mockito.when(jobContractDao.create(Mockito.eq(CLIENT.getId()), Mockito.eq(JOB_PACKAGE.getId()),
-                Mockito.eq(JOB_PACKAGE.getDescription()), Mockito.eq(time)))
-                .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE,
-                        CREATION_DATE, time, CREATION_DATE, CONTRACT_DESCRIPTION, null));
-
-        JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getId(), JOB_PACKAGE.getId(),
-                JOB_PACKAGE.getDescription(), time, null, Locale.getDefault(), "");
-
-        Assert.assertNotNull(maybeContract);
-        Assert.assertEquals(CREATION_DATE, maybeContract.getCreationDate());
-        Assert.assertEquals(CONTRACT_DESCRIPTION, maybeContract.getDescription());
-        Assert.assertEquals(JOB_PACKAGE, maybeContract.getJobPackage());
-        Assert.assertEquals(CLIENT, maybeContract.getClient());
-        Assert.assertEquals(PROFESSIONAL, maybeContract.getProfessional());
-    }
-
-    @Test
-    public void testCreateUserWithImage() {
-        LocalDateTime date = CREATION_DATE.plusDays(5);
-        simpleJobContractService.create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), date,
-                new ByteImage(image1Bytes, image1Type), Locale.getDefault(), "");
-
-        Mockito.verify(jobContractDao).create(CLIENT.getId(), JOB_PACKAGE.getId(), JOB_PACKAGE.getDescription(), CREATION_DATE.plusDays(5),
-                new ByteImage(image1Bytes, image1Type));
     }
 
     @Test

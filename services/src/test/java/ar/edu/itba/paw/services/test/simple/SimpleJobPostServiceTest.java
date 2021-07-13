@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.services.test.simple;
 
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
+import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.models.exceptions.JobPostNotFoundException;
 import ar.edu.itba.paw.services.simple.SimpleJobPostService;
 import org.junit.Assert;
@@ -15,10 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -76,10 +75,18 @@ public class SimpleJobPostServiceTest {
     @Mock
     private JobPostDao jobPostDao;
 
+    @Mock
+    private UserService userService;
+
     @Test
     public void testCreatePostNewUser() {
-        Mockito.when(jobPostDao.create(NEW_PROFESSIONAL.getId(), JOB_POST_NEW_USER.getTitle(), JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType(), ZONES))
+        Mockito.when(jobPostDao.create(Mockito.eq(NEW_PROFESSIONAL.getId()), Mockito.eq(JOB_POST_NEW_USER.getTitle()),
+                Mockito.eq(JOB_POST_NEW_USER.getAvailableHours()), Mockito.eq(JOB_POST_NEW_USER.getJobType()),
+                Mockito.eq(ZONES)))
                 .thenReturn(JOB_POST_NEW_USER);
+        Mockito.doNothing().when(userService).assignRole(NEW_PROFESSIONAL.getId(),
+                UserAuth.Role.PROFESSIONAL.ordinal());
+
         JobPost jobPost = jobPostService.create(NEW_PROFESSIONAL.getId(), JOB_POST_NEW_USER.getTitle(),
                 JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType().ordinal(), ZONES.stream().map(JobPost.Zone::getValue).collect(Collectors.toList()));
 
@@ -90,6 +97,9 @@ public class SimpleJobPostServiceTest {
     public void testCreatePostExistingUserNoProf() {
         Mockito.when(jobPostDao.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType(), ZONES))
                 .thenReturn(JOB_POST_EXISTING_USER);
+        Mockito.doNothing().when(userService).assignRole(NEW_PROFESSIONAL.getId(),
+                UserAuth.Role.PROFESSIONAL.ordinal());
+
         JobPost jobPost = jobPostService.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(),
                 JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(),
                 ZONES.stream().map(JobPost.Zone::getValue).collect(Collectors.toList()));

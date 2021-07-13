@@ -10,13 +10,13 @@ public interface JobPackageDao {
 
     JobPackage create(long postId, String title, String description, Double price, JobPackage.RateType rateType);
 
-    Optional<JobPackage> findById(long id);
+    Optional<JobPackage> findById(long packageId, long postId);
 
     List<JobPackage> findByPostId(long id, int page);
 
     Optional<JobPost> findPostByPackageId(long id);
 
-    boolean updatePackage(long id, String title, String description, Double price, JobPackage.RateType rateType, boolean isActive);
+    boolean updatePackage(long packageId, long postId, String title, String description, Double price, JobPackage.RateType rateType, boolean isActive);
 
     int findByPostIdMaxPage(long id);
 }
