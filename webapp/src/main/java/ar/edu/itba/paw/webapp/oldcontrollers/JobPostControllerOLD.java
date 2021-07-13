@@ -123,7 +123,7 @@ public class JobPostControllerOLD {
                 .addObject("jobTypes", JobPost.JobType.values())
                 .addObject("zoneValues", JobPost.Zone.values());
     }
-
+/*
     @RequestMapping(path = "/create-job-post", method = RequestMethod.POST)
     public ModelAndView submitJobPost(@Valid @ModelAttribute("createJobPostForm") final JobPostForm form,
                                       final BindingResult errors, Principal principal) {
@@ -191,7 +191,7 @@ public class JobPostControllerOLD {
 
         return new ModelAndView("redirect:/job/" + id);
     }
-
+*/
     @RequestMapping("/create-job-post/success")
     public ModelAndView createSuccess(@RequestParam("postId") final long postId) {
 
@@ -300,7 +300,7 @@ public class JobPostControllerOLD {
     public ModelAndView addPackageSuccess(@PathVariable final long postId) {
         return new ModelAndView("addPackageSuccess").addObject("postId", postId);
     }
-
+/*
     @RequestMapping(path = "/job/delete", method = RequestMethod.POST)
     public ModelAndView deleteJobPost(@ModelAttribute DeleteItemForm form) {
         jobPostControllerLogger.debug("Deleting post {}",form.getId());
@@ -311,6 +311,6 @@ public class JobPostControllerOLD {
 
         return new ModelAndView("redirect:" + form.getReturnURL());
     }
-
+*/
 
 }

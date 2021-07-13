@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleJobPostServiceTest {
@@ -68,45 +69,30 @@ public class SimpleJobPostServiceTest {
             ZONES,
             true,
             LocalDateTime.now());
-    private final long FAKE_ID = 999L;
 
     @InjectMocks
     private final SimpleJobPostService jobPostService = new SimpleJobPostService();
-
-    @Mock
-    private UserService userService;
 
     @Mock
     private JobPostDao jobPostDao;
 
     @Test
     public void testCreatePostNewUser() {
-        Mockito.when(userService.findByEmail(NEW_PROFESSIONAL.getEmail()))
-                .thenReturn(Optional.of(NEW_PROFESSIONAL));
         Mockito.when(jobPostDao.create(NEW_PROFESSIONAL.getId(), JOB_POST_NEW_USER.getTitle(), JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType(), ZONES))
                 .thenReturn(JOB_POST_NEW_USER);
-        int[] zonesInt = new int[ZONES.size()];
-        for (int i = 0; i < ZONES.size(); i++) {
-            zonesInt[i] = ZONES.get(i).getValue();
-        }
-        JobPost jobPost = jobPostService.create(NEW_PROFESSIONAL.getEmail(), JOB_POST_NEW_USER.getTitle(),
-                JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType().ordinal(), zonesInt);
+        JobPost jobPost = jobPostService.create(NEW_PROFESSIONAL.getId(), JOB_POST_NEW_USER.getTitle(),
+                JOB_POST_NEW_USER.getAvailableHours(), JOB_POST_NEW_USER.getJobType().ordinal(), ZONES.stream().map(JobPost.Zone::getValue).collect(Collectors.toList()));
 
         Assert.assertEquals(jobPost, JOB_POST_NEW_USER);
-
     }
 
     @Test
     public void testCreatePostExistingUserNoProf() {
-        Mockito.when(userService.findByEmail(EXISTING_USER.getEmail()))
-                .thenReturn(Optional.of(EXISTING_USER));
         Mockito.when(jobPostDao.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType(), ZONES))
                 .thenReturn(JOB_POST_EXISTING_USER);
-        int[] zonesInt = new int[ZONES.size()];
-        for (int i = 0; i < ZONES.size(); i++) {
-            zonesInt[i] = ZONES.get(i).getValue();
-        }
-        JobPost jobPost = jobPostService.create(EXISTING_USER.getEmail(), JOB_POST_EXISTING_USER.getTitle(), JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(), zonesInt);
+        JobPost jobPost = jobPostService.create(EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(),
+                JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().ordinal(),
+                ZONES.stream().map(JobPost.Zone::getValue).collect(Collectors.toList()));
 
         Assert.assertEquals(JOB_POST_EXISTING_USER, jobPost);
         Assert.assertEquals(0, 0);
@@ -115,19 +101,11 @@ public class SimpleJobPostServiceTest {
     @Test(expected = JobPostNotFoundException.class)
     public void updateJobPostExceptionTest() {
         Mockito.when(jobPostDao.updateById(Mockito.eq(JOB_POST_EXISTING_USER.getId()), Mockito.anyString(), Mockito.anyString(),
-                Mockito.any(), Mockito.anyList()))
+                Mockito.any(), Mockito.anyList(), Mockito.eq(true)))
                 .thenReturn(false);
 
         jobPostService.updateJobPost(JOB_POST_EXISTING_USER.getId(), JOB_POST_EXISTING_USER.getTitle(),
                 JOB_POST_EXISTING_USER.getAvailableHours(), JOB_POST_EXISTING_USER.getJobType().getValue(),
-                new int[]{});
-    }
-
-    @Test(expected = JobPostNotFoundException.class)
-    public void deleteJobPostExceptionTest() {
-        Mockito.when(jobPostDao.deleteJobPost(Mockito.eq(FAKE_ID)))
-                .thenReturn(false);
-
-        jobPostService.deleteJobPost(FAKE_ID);
+                new ArrayList<>(), true);
     }
 }

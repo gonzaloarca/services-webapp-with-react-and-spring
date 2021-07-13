@@ -95,24 +95,14 @@ public class JobPostDaoJpa implements JobPostDao {
     }
 
     @Override
-    public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones) {
+    public boolean updateById(long id, String title, String availableHours, JobPost.JobType jobType, List<JobPost.Zone> zones, boolean isActive) {
         JobPost jobPost = em.find(JobPost.class, id);
         if (jobPost != null) {
             jobPost.setTitle(title);
             jobPost.setAvailableHours(availableHours);
             jobPost.setJobType(jobType);
             jobPost.setZones(zones);
-            em.persist(jobPost);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean deleteJobPost(long id) {
-        JobPost jobPost = em.find(JobPost.class, id);
-        if (jobPost != null) {
-            jobPost.setActive(false);
+            jobPost.setActive(isActive);
             em.persist(jobPost);
             return true;
         }
