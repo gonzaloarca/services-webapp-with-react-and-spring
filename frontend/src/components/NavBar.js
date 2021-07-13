@@ -130,7 +130,7 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder={t('navigation.search')}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
