@@ -75,18 +75,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     textAlign: 'center',
   },
-  priceDivider: {
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-    color: 'white',
-  },
-  hireDivider: {
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-    color: 'white',
-  },
+
   hireContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -128,12 +117,9 @@ const PackageAccordion = ({ pack, isHireable }) => {
             item
             xs={12}
             sm={8}
-            md={isHireable ? 7 : 8}
+            md={isHireable ? 6 : 8}
           >
             <div className={classes.packageTitle}>{pack.title}</div>
-          </Grid>
-          <Grid className={classes.priceDivider} item xs={12}>
-            <hr />
           </Grid>
 
           <Grid
@@ -149,21 +135,9 @@ const PackageAccordion = ({ pack, isHireable }) => {
             </div>
           </Grid>
           {isHireable ? (
-            <>
-              {' '}
-              <Grid className={classes.hireDivider} item xs={12}>
-                <hr />
-              </Grid>
-              <Grid
-                className={classes.hireContainer}
-                item
-                xs={12}
-                sm={12}
-                md={2}
-              >
-                <HireButton>{t('hire').toUpperCase()}</HireButton>
-              </Grid>{' '}
-            </>
+            <Grid className={classes.hireContainer} item xs={12} sm={12} md={3}>
+              <HireButton>{t('hire').toUpperCase()}</HireButton>
+            </Grid>
           ) : (
             <></>
           )}
@@ -189,7 +163,7 @@ const HireButton = withStyles((theme) => ({
     backgroundColor: themeUtils.colors.lightBlue,
     color: 'white',
     width: '80%',
-    fontSize: '1.1rem',
+    fontSize: '1rem',
     '&:hover': {
       backgroundColor: LightenDarkenColor(themeUtils.colors.lightBlue, 20),
       color: 'white',

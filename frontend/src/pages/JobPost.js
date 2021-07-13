@@ -475,10 +475,11 @@ const StatsCard = ({
             <div
               className={clsx(
                 classes.dataDisplayContainer,
-                classes.roundedCorners
+                classes.roundedCorners,
+                'flex-col'
               )}
             >
-              <div>
+              <div className="flex flex-row items-center">
                 <p className={classes.ratingValue}>{avgRate.toFixed(2)}</p>
                 <div className="flex">
                   <Rating precision={0.5} readOnly value={avgRate} />
