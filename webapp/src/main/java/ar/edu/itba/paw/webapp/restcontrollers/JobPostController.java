@@ -7,8 +7,11 @@ import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.models.exceptions.UpdateFailException;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.PackageForm;
+import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -19,10 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.net.URI;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -120,6 +122,22 @@ public class JobPostController {
         List<ImageDto> uris = ids.stream().map(id -> ImageDto.fromImageId(id, postId, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<ImageDto>>(uris) {
         }).build();
+    }
+
+
+    @Path("/{postId}/images")
+    @POST
+    @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response uploadPostImage(@PathParam("postId") long postId) {
+        InputStream file = new ByteArrayInputStream(null);
+        JobPostImage image;
+        try {
+            image = jobPostImageService.addImage(postId, ImageUploadUtil.fromInputStream(file));
+        } catch (IOException e) {
+            throw new RuntimeException("Upload failed");
+        }
+        return Response.created(uriInfo.getBaseUriBuilder().path("/job-posts").path(String.valueOf(postId)).path("/images").path(String.valueOf(image.getImageId())).build()).build();
     }
 
     @Path("/{postId}/images/{id}")
@@ -255,12 +273,13 @@ public class JobPostController {
             @PathParam("postId") final long postId,
             @PathParam("packageId") final long packageId,
             @QueryParam("page") @DefaultValue("1") int page) {
-        if(page < 1)
+        if (page < 1)
             page = 1;
         jobPostControllerLogger.debug("Finding contracts by package id: {}", packageId);
-        List<JobContractDto> packages = jobContractService.findByPackageId(packageId,page-1).stream().map(jobContract -> JobContractDto.fromJobContract(jobContract,uriInfo)).collect(Collectors.toList());
+        List<JobContractDto> packages = jobContractService.findByPackageId(packageId, page - 1).stream().map(jobContract -> JobContractDto.fromJobContract(jobContract, uriInfo)).collect(Collectors.toList());
         int maxPage = jobContractService.findByPackageIdMaxPage(packageId);
-        return PageResponseUtil.getGenericListResponse(page,maxPage,uriInfo,Response.ok(new GenericEntity<List<JobContractDto>>(packages){}));
+        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo, Response.ok(new GenericEntity<List<JobContractDto>>(packages) {
+        }));
 
     }
 
@@ -304,7 +323,7 @@ public class JobPostController {
     @Path("/{postId}/packages/{packageId}/contracts/{contractId}/image")
     @GET
     @Produces(value = {"image/png", "image/jpg"})
-    public Response getContractImage(@PathParam("postId") final long postId,@PathParam("packageId") final long packageId,@PathParam("contractId") final long contractId) {
+    public Response getContractImage(@PathParam("postId") final long postId, @PathParam("packageId") final long packageId, @PathParam("contractId") final long contractId) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
     }

@@ -290,6 +290,11 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-jaxb</artifactId>
                 <version>${jersey.version}</version>
             </dependency>
