@@ -9,10 +9,12 @@ import Search from './pages/Search';
 import Footer from './components/Footer';
 import JobPost from './pages/JobPost';
 import Profile from './pages/Profile';
+import ScrollToTop from './utils/ScrollToTop';
 
 const App = () => {
   return (
     <>
+      <ScrollToTop />
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/categories" exact component={Categories} />
