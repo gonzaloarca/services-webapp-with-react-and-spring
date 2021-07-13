@@ -6,7 +6,10 @@ export const themeUtils = {
     yellow: '#FCB839',
     orange: '#FC7A27',
     darkBlue: '#2F3965',
+    lightBlue: '#89AAE6',
     grey: 'grey',
+    lightGrey: '#EAEAEA',
+    aqua: '#5FB0B7',
   },
 };
 

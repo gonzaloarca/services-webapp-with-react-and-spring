@@ -28,6 +28,9 @@
       "button": "Publish"
     }
   },
+  "jobpost": {
+    "seereviews": "See reviews"
+  },
   "jobcard": {
     "noreviews": "No reviews",
     "details": "View details",
@@ -45,11 +48,23 @@
   },
   "professional": "Professional",
   "avgrate": "Average rating",
+  "timeshired": "Times hired",
+  "workinghours": "Working hours",
+  "availablezones": "Available zones",
+  "availablepackages": "Available packages",
+  "pricelabel": "Price",
+  "hire": "Hire",
+  "packagedescription": "Package description",
+  "reviews": "Reviews",
   "ratetype": {
     "hourly": "{{amount}}/hour",
     "tbd": "To be determined"
   },
+  "review": {
+    "jobreference": "From <semibold>{{title}}</semibold>"
+  },
   "price": "{{value, price, ARS}}",
+  "date": "{{date, MM/DD/YYYY}}",
   "reviewcount": "({{count}})",
   "completedcontracts": "Hired {{count}} times",
   "completedcontractsonce": "Hired once",

@@ -1,15 +1,32 @@
-import { Avatar, Card, CardActionArea, Grid } from '@material-ui/core';
-import { ChevronRight } from '@material-ui/icons';
+import {
+  Avatar,
+  Card,
+  CardActionArea,
+  Chip,
+  Grid,
+  Link,
+} from '@material-ui/core';
+import {
+  ChevronRight,
+  LocationOn,
+  RateReview,
+  Schedule,
+  Work,
+} from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Carousel from 'react-material-ui-carousel';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { themeUtils } from '../theme';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCube } from '@fortawesome/free-solid-svg-icons';
+import PackageAccordion from '../components/PackageAccordion';
+import ReviewCard from '../components/ReviewCard';
 
 const post = {
   active: true,
@@ -107,17 +124,22 @@ const packages = [
     },
     title: '4 dias a la semana 4 horas',
   },
-];
-
-const professional = {
-  contractsCompleted: 3,
-  reviewAvg: 3.0,
-  reviewsQuantity: 2,
-  user: {
-    id: 5,
-    uri: 'http://localhost:8080/users/5',
+  {
+    active: true,
+    description:
+      'Atencion constante y juego para el desarrollo de musculos como brazos y piernas.',
+    id: 8,
+    jobPost: {
+      id: 8,
+      uri: 'http://localhost:8080/job-posts/8',
+    },
+    rateType: {
+      description: 'TBD',
+      id: 2,
+    },
+    title: '4 dias a la semana 4 horas',
   },
-};
+];
 
 const proUser = {
   email: 'manaaasd@gmail.com',
@@ -132,6 +154,10 @@ const reviews = [
   {
     creationDate: '2021-05-02T18:22:21.684413',
     description: 'EL MEJOR NIÑERO',
+    client: {
+      username: 'El Beto',
+      image: '/img/babysitting.jpeg',
+    },
     jobContract: {
       id: 1,
       uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/1',
@@ -140,11 +166,19 @@ const reviews = [
     title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
   },
   {
-    creationDate: '2021-05-02T18:22:21.684413',
+    creationDate: '2021-10-02T18:22:21.684413',
     description: 'EL MEJOR NIÑERO',
+    client: {
+      username: 'El Beto',
+      image: '/img/babysitting.jpeg',
+    },
+    jobPost: {
+      title: 'Niñero turno mañana',
+      id: 3,
+    },
     jobContract: {
       id: 2,
-      uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/1',
+      uri: 'http://localhost:8080/job-posts/3/packages/8/contracts/2',
     },
     rate: 5,
     title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
@@ -160,6 +194,19 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContainer: {
     boxShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+  },
+  cardLabel: {
+    display: 'flex',
+    padding: '5px 10px',
+    fontWeight: 600,
+    fontSize: '1.2rem',
+  },
+  cardLabelIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: '0.5rem',
+  },
+  cardContentContainer: {
     padding: 30,
   },
   roundedCorners: {
@@ -186,6 +233,16 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     fontSize: '0.9rem',
   },
+  usernameContainer: {
+    WebkitLineClamp: 3,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    overflowWrap: 'break-word',
+    textOverflow: 'ellipsis',
+    width: '60%',
+    paddingLeft: '0.5rem',
+  },
   ratingContainer: {
     backgroundColor: 'white',
     display: 'flex',
@@ -200,7 +257,50 @@ const useStyles = makeStyles((theme) => ({
     color: themeUtils.colors.grey,
     fontWeight: 400,
   },
-  hiredContainer: {},
+  contractsCompleted: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '2rem',
+    fontWeight: 500,
+    color: 'white',
+    backgroundColor: themeUtils.colors.blue,
+    width: '3rem',
+    height: '3rem',
+    borderRadius: '3rem',
+    border: '2px solid ' + themeUtils.colors.yellow,
+  },
+  workingHoursContainer: {
+    display: 'flex',
+    alignItems: 'start',
+    justifyContent: 'center',
+    backgroundColor: themeUtils.colors.lightGrey,
+    borderRadius: 20,
+    fontWeight: 500,
+    fontSize: '0.9rem',
+    padding: 20,
+    height: 120,
+    overflow: 'auto',
+  },
+  locationsContainer: {
+    display: 'flex',
+    alignItems: 'start',
+    alignContent: 'start',
+    justifyContent: 'start',
+    flexWrap: 'wrap',
+    backgroundColor: themeUtils.colors.lightGrey,
+    borderRadius: 20,
+    padding: 20,
+    height: 120,
+    overflow: 'auto',
+  },
+  locationChip: {
+    backgroundColor: themeUtils.colors.grey,
+    color: 'white',
+    fontWeight: 500,
+    marginRight: 5,
+    marginBottom: 5,
+  },
 }));
 
 const useGlobalStyles = makeStyles(styles);
@@ -208,6 +308,7 @@ const useGlobalStyles = makeStyles(styles);
 const JobPost = ({ match }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -218,21 +319,120 @@ const JobPost = ({ match }) => {
             <img key={i} src={item} className={classes.carouselImage} alt="" />
           ))}
         </Carousel>
-        <ProfessionalCard
-          professional={professional}
-          user={proUser}
-          avgRate={jobCard.avgRate}
-          reviewsCount={jobCard.reviewsCount}
-          contractsCompleted={jobCard.contractsCompleted}
-        />
+        {/* Datos profesional / estadisticas del servicio */}
+        <div className="mt-4">
+          <StatsCard
+            title={jobCard.title}
+            user={proUser}
+            avgRate={jobCard.avgRate}
+            reviewsCount={jobCard.reviewsCount}
+            contractsCompleted={jobCard.contractsCompleted}
+          />
+        </div>
+        {/* Horarios y zonas */}
+        <Grid className="mt-4" container spacing={3}>
+          <Grid item sm={6} xs={12}>
+            {/* Horarios */}
+            <SectionCard
+              icon={<Schedule />}
+              title={t('workinghours')}
+              labelBackgroundColor={themeUtils.colors.aqua}
+            >
+              <div className={classes.workingHoursContainer}>
+                {post.availableHours}
+              </div>
+            </SectionCard>
+          </Grid>
+          {/* Zonas */}
+          <Grid item sm={6} xs={12}>
+            <SectionCard
+              icon={<LocationOn />}
+              title={t('availablezones')}
+              labelBackgroundColor={themeUtils.colors.orange}
+            >
+              <div className={classes.locationsContainer}>
+                {post.zones.map((zone) => (
+                  <Chip
+                    className={classes.locationChip}
+                    key={zone.id}
+                    label={zone.description}
+                  />
+                ))}
+              </div>
+            </SectionCard>
+          </Grid>
+        </Grid>
+        {/* Paquetes */}
+        <div className="mt-7">
+          <PackageListCard packages={packages} />
+        </div>
+        {/* Opiniones */}
+        <div id="reviews" className="mt-7">
+          <ReviewListCard reviews={reviews} />
+        </div>
       </div>
-      Viendo jobpost con id {match.params.id}
     </>
   );
 };
 
-const ProfessionalCard = ({
-  professional,
+const SectionCard = ({
+  icon,
+  title,
+  labelBackgroundColor = themeUtils.colors.blue,
+  labelTextColor = 'white',
+  children,
+}) => {
+  const classes = useStyles();
+
+  return (
+    <>
+      <div className={classes.cardContainer}>
+        <div
+          className={classes.cardLabel}
+          style={{
+            backgroundColor: labelBackgroundColor,
+            color: labelTextColor,
+          }}
+        >
+          {
+            <>
+              <div className={classes.cardLabelIcon}>{icon}</div>
+              {title}
+            </>
+          }
+        </div>
+        <div className={classes.cardContentContainer}>{children}</div>
+      </div>
+    </>
+  );
+};
+
+const DataDisplayCard = ({ title, color, routePath = '', children }) => {
+  const classes = useStyles();
+
+  return (
+    <Card className={classes.roundedCorners}>
+      <div className="p-1" style={{ backgroundColor: color }}>
+        {routePath === '' ? (
+          children
+        ) : (
+          <CardActionArea component={RouterLink} to={routePath}>
+            {children}
+          </CardActionArea>
+        )}
+      </div>
+      <div
+        className={classes.dataDisplayLabel}
+        style={{ backgroundColor: color }}
+      >
+        {title.toUpperCase()}
+      </div>
+    </Card>
+  );
+};
+
+const StatsCard = ({
+  title,
   user,
   avgRate,
   reviewsCount,
@@ -242,8 +442,12 @@ const ProfessionalCard = ({
   const { t } = useTranslation();
 
   return (
-    <div className={classes.cardContainer}>
-      <Grid container spacing={4}>
+    <SectionCard
+      icon={<Work />}
+      title={title}
+      labelBackgroundColor={themeUtils.colors.blue}
+    >
+      <Grid justifyContent="center" container spacing={4}>
         <Grid item md={4} sm={6} xs={12}>
           {/* Avatar y nombre */}
           <DataDisplayCard
@@ -258,7 +462,7 @@ const ProfessionalCard = ({
               )}
             >
               <Avatar src={user.image} className={classes.avatar} />
-              {user.username}
+              <p className={classes.usernameContainer}>{user.username}</p>
               <ChevronRight />
             </div>
           </DataDisplayCard>
@@ -274,45 +478,74 @@ const ProfessionalCard = ({
                 classes.roundedCorners
               )}
             >
-              <p className={classes.ratingValue}>{avgRate.toFixed(2)}</p>
-              <div className="flex">
-                <Rating precision={0.5} readOnly value={avgRate} />
-                <p className={classes.reviewsCount}>
-                  {t('reviewcount', { count: reviewsCount })}
-                </p>
+              <div>
+                <p className={classes.ratingValue}>{avgRate.toFixed(2)}</p>
+                <div className="flex">
+                  <Rating precision={0.5} readOnly value={avgRate} />
+                  <p className={classes.reviewsCount}>
+                    {t('reviewcount', { count: reviewsCount })}
+                  </p>
+                </div>
               </div>
+              <Link href="#reviews">{t('jobpost.seereviews')}</Link>
             </div>
           </DataDisplayCard>
         </Grid>
         <Grid item md={4} sm={6} xs={12}>
-          <div className={classes.hiredContainer}></div>
+          <DataDisplayCard
+            title={t('timeshired')}
+            color={themeUtils.colors.lightBlue}
+          >
+            <div
+              className={clsx(
+                classes.dataDisplayContainer,
+                classes.roundedCorners
+              )}
+            >
+              <div className="flex justify-center items-center">
+                <div className={classes.contractsCompleted}>
+                  {contractsCompleted}
+                </div>
+              </div>
+            </div>
+          </DataDisplayCard>
         </Grid>
       </Grid>
-    </div>
+    </SectionCard>
   );
 };
 
-const DataDisplayCard = ({ title, color, routePath = null, children }) => {
-  const classes = useStyles();
+const PackageListCard = ({ packages }) => {
+  const { t } = useTranslation();
 
   return (
-    <Card className={classes.roundedCorners}>
-      <div className="p-1" style={{ backgroundColor: color }}>
-        <CardActionArea
-          disabled={routePath == null}
-          component={Link}
-          to={routePath}
-        >
-          {children}
-        </CardActionArea>
-      </div>
-      <div
-        className={classes.dataDisplayLabel}
-        style={{ backgroundColor: color }}
-      >
-        {title.toUpperCase()}
-      </div>
-    </Card>
+    <SectionCard
+      labelBackgroundColor={themeUtils.colors.lightBlue}
+      icon={<FontAwesomeIcon icon={faCube} />}
+      title={t('availablepackages')}
+    >
+      {packages.map((pack) => (
+        <PackageAccordion key={pack.id} pack={pack} isHireable />
+      ))}
+    </SectionCard>
+  );
+};
+
+const ReviewListCard = ({ reviews }) => {
+  const { t } = useTranslation();
+
+  return (
+    <SectionCard
+      labelBackgroundColor={themeUtils.colors.yellow}
+      icon={<RateReview />}
+      title={t('reviews')}
+    >
+      {reviews.map((review) => (
+        <div key={review.jobContract.id} className="mb-4">
+          <ReviewCard review={review} />
+        </div>
+      ))}
+    </SectionCard>
   );
 };
 

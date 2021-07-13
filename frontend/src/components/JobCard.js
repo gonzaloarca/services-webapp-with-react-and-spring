@@ -13,6 +13,7 @@ import { themeUtils } from '../theme';
 import { Rating } from '@material-ui/lab';
 import { Check, LocalOffer, LocationOn, Star } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
+import packagePriceFormatter from '../utils/packagePriceFormatter';
 
 const useStyles = makeStyles({
   image: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles({
     WebkitLineClamp: 3,
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
+    overflowWrap: 'break-word',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
@@ -74,19 +76,6 @@ const JobCard = ({ job }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const formatPrice = (rateType, price) => {
-    switch (rateType.description) {
-      case 'HOURLY':
-        return t('ratetype.hourly', { amount: t('price', { value: price }) });
-      case 'TBD':
-        return t('ratetype.tbd');
-      case 'ONE_TIME':
-        return t('price', { value: price });
-      default:
-        return '';
-    }
-  };
-
   return (
     <div>
       <Card>
@@ -104,7 +93,7 @@ const JobCard = ({ job }) => {
             <CardRating avgRate={job.avgRate} reviewsCount={job.reviewsCount} />
             <div className={classes.priceContainer}>
               <LocalOffer className="mr-2" />
-              {formatPrice(job.rateType, job.price)}
+              {packagePriceFormatter(t, job.rateType, job.price)}
             </div>
             <div className="mt-4">
               <ZonesChip zones={job.zones} />

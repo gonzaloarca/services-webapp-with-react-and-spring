@@ -1,4 +1,4 @@
-import { Grid, makeStyles } from '@material-ui/core';
+import { Grid, Link, makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
@@ -77,9 +77,9 @@ const Footer = () => {
             {t('footer.contact')}
           </Grid>
           <Grid className={classes.text} item md={12}>
-            <a className="block" href="mailto: paw.hirenet@gmail.com">
+            <Link href="mailto: paw.hirenet@gmail.com">
               paw.hirenet@gmail.com
-            </a>
+            </Link>
           </Grid>
         </Grid>
         <Grid container item justifyContent="center" md={12}>

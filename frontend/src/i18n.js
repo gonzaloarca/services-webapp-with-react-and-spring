@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import detector from 'i18next-browser-languagedetector';
 import translationES from './i18n/es.json';
 import translationEN from './i18n/en.json';
+import moment from 'moment';
 // the translations
 // (tip move them in a JSON file and import them,
 // or even better, manage them via a UI: https://react.i18next.com/guides/multiple-translation-files#manage-your-translations-with-a-management-gui)
@@ -41,6 +42,8 @@ i18n
             style: 'currency',
             currency: additionalValues[0],
           }).format(value);
+        if (value instanceof Date) return moment(value).format(rawFormat);
+        return value;
       },
     },
   });
