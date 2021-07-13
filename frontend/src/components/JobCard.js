@@ -131,7 +131,7 @@ const CardRating = ({ avgRate, reviewsCount }) => {
     <div className={classes.ratingContainer}>
       {reviewsCount > 0 ? (
         <>
-          <Rating value={avgRate} readOnly />
+          <Rating precision={0.5} value={avgRate} readOnly />
           <p className={classes.reviewsCount}>
             {t('reviewcount', { count: reviewsCount })}
           </p>

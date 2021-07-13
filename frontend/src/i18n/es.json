@@ -43,6 +43,8 @@
     "cleaning": "Limpieza",
     "babysitting": "Niñera"
   },
+  "professional": "Profesional",
+  "avgrate": "Calificación promedio",
   "ratetype": {
     "hourly": "{{amount}}/hora",
     "tbd": "A acordar"

@@ -43,6 +43,8 @@
     "cleaning": "Cleaning",
     "babysitting": "Babysitting"
   },
+  "professional": "Professional",
+  "avgrate": "Average rating",
   "ratetype": {
     "hourly": "{{amount}}/hour",
     "tbd": "To be determined"

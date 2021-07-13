@@ -8,6 +8,7 @@ import MyContracts from './pages/MyContracts';
 import Search from './pages/Search';
 import Footer from './components/Footer';
 import JobPost from './pages/JobPost';
+import Profile from './pages/Profile';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/search/:id" exact component={Search} />
         <Route path="/search" exact component={Search} />
         <Route path="/job/:id" exact component={JobPost} />
+        <Route path="/profile/:id" exact component={Profile} />
       </Switch>
       <Footer />
     </>

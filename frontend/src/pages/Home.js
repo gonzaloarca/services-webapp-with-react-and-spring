@@ -6,10 +6,12 @@ import CategoryCard from '../components/CategoryCard';
 import Hero, { HeroSteps } from '../components/Hero';
 import JobCard from '../components/JobCard';
 import NavBar from '../components/NavBar';
+import styles from '../styles';
 import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
 
 const useStyles = makeStyles(homeStyles);
+const useGlobalStyles = makeStyles(styles);
 
 const categories = [
   { name: 'PLUMBING', image: '/img/plumbing.jpeg', id: 0 },
@@ -159,13 +161,14 @@ const jobs = [
 
 export const Home = () => {
   const classes = useStyles();
+  const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
   return (
     <>
       <NavBar currentSection={'/'} isTransparent />
       <Hero />
       <HeroSteps />
-      <div className={classes.contentContainerTransparent}>
+      <div className={globalClasses.contentContainerTransparent}>
         <h3 className={clsx(classes.header, 'mb-5')}>{t('home.explore')}</h3>
 
         <Grid container justifyContent="space-evenly" spacing={3}>
@@ -180,7 +183,7 @@ export const Home = () => {
         </Grid>
       </div>
       <div className={classes.sectionShadow}>
-        <div className={classes.contentContainerTransparent}>
+        <div className={globalClasses.contentContainerTransparent}>
           <h3 className={clsx(classes.header, 'mb-5')}>{t('home.newest')}</h3>
 
           <Grid container spacing={3}>
