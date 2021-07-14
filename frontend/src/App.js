@@ -11,6 +11,7 @@ import JobPost from './pages/JobPost';
 import Profile from './pages/Profile';
 import ScrollToTop from './utils/ScrollToTop';
 import Login from './pages/Login';
+import Hire from './pages/Hire';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/job/:id" exact component={JobPost} />
         <Route path="/profile/:id" exact component={Profile} />
         <Route path="/login" exact component={Login} />
+        <Route path="/hire/package/:id" exact component={Hire} />
       </Switch>
       <Footer />
     </>

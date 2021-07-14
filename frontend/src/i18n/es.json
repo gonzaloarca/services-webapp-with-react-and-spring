@@ -59,8 +59,9 @@
   "packagedescription": "Descripción del paquete",
   "reviews": "Opiniones",
   "ratetype": {
-    "hourly": "{{amount}}/hora",
-    "tbd": "A acordar"
+    "hourly": "${{amount}}/hora",
+    "tbd": "A acordar",
+    "oneTime": "${{amount}}"
   },
   "review": {
     "jobreference": "En <semibold>{{title}}</semibold>"
@@ -92,5 +93,11 @@
     "inputPass": "Ingrese una contraseña",
     "recoverQuestion": "¿Olvidó su contraseña?",
     "recover": "Recupérela"
+  },
+  "hirePage": {
+    "title": "Solicitar Servicio",
+    "detail": {
+      "title": "Detalles del Servicio"
+    }
   }
 }

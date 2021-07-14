@@ -59,8 +59,9 @@
   "packagedescription": "Package description",
   "reviews": "Reviews",
   "ratetype": {
-    "hourly": "{{amount}}/hour",
-    "tbd": "To be determined"
+    "hourly": "${{amount}}/hour",
+    "tbd": "To be determined",
+    "oneTime": "${{amount}}"
   },
   "review": {
     "jobreference": "From <semibold>{{title}}</semibold>"
@@ -92,5 +93,11 @@
     "inputPass": "Enter a password.",
     "recoverQuestion": "Forgot Password?",
     "recover": "Recover it"
+  },
+  "hirePage": {
+    "title": "Hire Service",
+    "detail": {
+      "title": "Service details"
+    }
   }
 }
