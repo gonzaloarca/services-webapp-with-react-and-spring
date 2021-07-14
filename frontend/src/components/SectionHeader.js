@@ -11,6 +11,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20,
     boxShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
     overflow: 'hidden',
+    position: 'relative',
+    borderRadius: '5px',
   },
   title: {
     position: 'absolute',
@@ -18,18 +20,25 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     color: 'white',
   },
+  headerImg: {
+    width: '100%',
+    height: '11vh',
+    objectFit: 'cover',
+  }
 }));
 
 const SectionHeader = ({
   sectionName,
-  image = <img src="/img/sectionbg.svg" alt="" />,
+  imageSrc = "/img/sectionbg.svg",
+  filterClass,
 }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.siteHeader}>
+      <div className={filterClass} />
       <h1 className={classes.title}>{sectionName}</h1>
-      {image}
+      <img src={imageSrc} alt="" className={classes.headerImg}/>
     </div>
   );
 };
