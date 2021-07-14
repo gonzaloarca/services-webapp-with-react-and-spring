@@ -6,7 +6,9 @@
       "publish": "Publicar",
       "mycontracts": "Mis Contratos",
       "analytics": "Estadísticas",
-      "explore": "Explorar"
+      "explore": "Explorar",
+      "login": "Ingresar",
+      "register": "Registrarme"
     },
     "search": "Buscar..."
   },
@@ -72,5 +74,23 @@
     "creators": "Creadores del sitio",
     "contact": "Contáctenos",
     "copyright": "© 2021 HireNet"
+  },
+  "login": {
+    "into": "Ingresar a HireNet",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Contraseña",
+    "rememberMe": "Recordarme",
+    "submit": "Iniciar sesión",
+    "hasAccountQuestion": "¿No tiene una cuenta?",
+    "getAccount": "Regístrese",
+    "badCredentials": "Usuario o contraseña incorrectos",
+    "userNotVerified": "Su usuario no está verificado, por favor revise su email o realice de nuevo el registro",
+    "error": "Ha ocurrido un error, vuelva a intentarlo",
+    "inputEmail": "Ingrese un email",
+    "inputPass": "Ingrese una contraseña",
+    "recoverQuestion": "¿Olvidó su contraseña?",
+    "recover": "Recupérela"
   }
 }

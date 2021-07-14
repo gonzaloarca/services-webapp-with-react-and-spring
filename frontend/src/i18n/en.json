@@ -6,7 +6,9 @@
       "publish": "Publish",
       "mycontracts": "My Contracts",
       "analytics": "Analytics",
-      "explore": "Explore"
+      "explore": "Explore",
+      "login": "Login",
+      "register": "Register"
     },
     "search": "Search..."
   },
@@ -72,5 +74,23 @@
     "creators": "Site creators",
     "contact": "Contact us",
     "copyright": "© 2021 HireNet"
+  },
+  "login": {
+    "into": "Login to Hirenet",
+    "email": "Email address",
+    "emailPlaceholder": "Email address",
+    "password": "Password",
+    "passwordPlaceholder": "Password",
+    "rememberMe": "Remember me",
+    "submit": "Log in",
+    "hasAccountQuestion": "No account?",
+    "getAccount": "Register now",
+    "badCredentials": "User or password invalid",
+    "userNotVerified": "Your account is not verified, please check your email or register again",
+    "error": "An error has occurred, please try again",
+    "inputEmail": "Enter an email.",
+    "inputPass": "Enter a password.",
+    "recoverQuestion": "Forgot Password?",
+    "recover": "Recover it"
   }
 }

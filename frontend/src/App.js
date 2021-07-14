@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import JobPost from './pages/JobPost';
 import Profile from './pages/Profile';
 import ScrollToTop from './utils/ScrollToTop';
+import Login from './pages/Login';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/search" exact component={Search} />
         <Route path="/job/:id" exact component={JobPost} />
         <Route path="/profile/:id" exact component={Profile} />
+        <Route path="/login" exact component={Login} />
       </Switch>
       <Footer />
     </>

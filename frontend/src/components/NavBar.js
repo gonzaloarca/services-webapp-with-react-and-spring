@@ -17,6 +17,8 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import navBarStyles from './NavBarStyles';
+import clsx from 'clsx';
+import { themeUtils } from '../theme';
 
 const useStyles = makeStyles(navBarStyles);
 
@@ -30,6 +32,11 @@ const sections = [
     path: '/my-contracts',
   },
   { name: 'navigation.sections.analytics', path: '/analytics' },
+];
+
+const rightSections = [
+  { name: 'navigation.sections.login', path: '/login' },
+  { name: 'navigation.sections.register', path: '/register' },
 ];
 
 const NavBar = ({ currentSection, isTransparent = false }) => {
@@ -66,77 +73,106 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
         }
         position="fixed"
       >
-        <Toolbar>
-          <div className={classes.drawerButton}>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              onClick={() => setShowDrawer(true)}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Drawer
-              anchor="left"
-              open={showDrawer}
-              onClose={() => setShowDrawer(false)}
-            >
-              <List className={classes.drawerContainer} component="nav">
-                {sections.map((i) => (
-                  <ListItem key={i.path} button component={Link} to={i.path}>
-                    <ListItemText
-                      disableTypography
-                      primary={
-                        <Typography
-                          type="body2"
-                          className={
-                            i.path === currentSection
-                              ? classes.selectedDrawerSection
-                              : ''
-                          }
-                        >
-                          {t(i.name)}
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </Drawer>
-          </div>
-          <Link to="/">
-            <img
-              className={classes.hirenetIcon}
-              src="/img/hirenet-logo-nav-1.svg"
-              alt=""
-            />
-          </Link>
-          <div className={classes.sectionsContainer}>
-            {sections.map((i) => (
-              <LinkButton
-                className={
-                  currentSection === i.path ? classes.selectedSection : ''
-                }
-                key={i.path}
-                component={Link}
-                to={i.path}
+        <Toolbar className="flex justify-between">
+          <div className="flex items-center">
+            <div className={classes.drawerButton}>
+              <IconButton
+                edge="start"
+                className={classes.menuButton}
+                onClick={() => setShowDrawer(true)}
+                color="inherit"
               >
-                {t(i.name)}
-              </LinkButton>
-            ))}
-          </div>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+                <MenuIcon />
+              </IconButton>
+              <Drawer
+                anchor="left"
+                open={showDrawer}
+                onClose={() => setShowDrawer(false)}
+              >
+                <List className={classes.drawerContainer} component="nav">
+                  {sections.map((i) => (
+                    <ListItem key={i.path} button component={Link} to={i.path}>
+                      <ListItemText
+                        disableTypography
+                        primary={
+                          <Typography
+                            type="body2"
+                            className={
+                              i.path === currentSection
+                                ? classes.selectedDrawerSection
+                                : ''
+                            }
+                          >
+                            {t(i.name)}
+                          </Typography>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Drawer>
             </div>
-            <InputBase
-              placeholder={t('navigation.search')}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            <Link to="/">
+              <img
+                className={classes.hirenetIcon}
+                src="/img/hirenet-logo-nav-1.svg"
+                alt=""
+              />
+            </Link>
+            <div className={classes.sectionsContainer}>
+              {sections.map((i) => (
+                <LinkButton
+                  className={
+                    currentSection === i.path ? classes.selectedSection : ''
+                  }
+                  key={i.path}
+                  component={Link}
+                  to={i.path}
+                >
+                  {t(i.name)}
+                </LinkButton>
+              ))}
+            </div>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder={t('navigation.search')}
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </div>
+          </div>
+          <div className={clsx(classes.sectionsContainer, 'items-end', 'flex')}>
+            {rightSections.map((i) =>
+              i.path === '/login' ? (
+                <LinkButton
+                  className={
+                    currentSection === i.path ? classes.selectedSection : ''
+                  }
+                  key={i.path}
+                  component={Link}
+                  to={i.path}
+                >
+                  {t(i.name)}
+                </LinkButton>
+              ) : (
+                <LinkButtonRegister
+                  className={
+                    currentSection === i.path ? classes.selectedSection : ''
+                  }
+                  key={i.path}
+                  component={Link}
+                  to={i.path}
+                >
+                  {t(i.name)}
+                </LinkButtonRegister>
+              )
+            )}
           </div>
         </Toolbar>
       </AppBar>
@@ -157,5 +193,18 @@ const LinkButton = withStyles((theme) => ({
     marginLeft: 5,
   },
 }))(Button);
+
+const LinkButtonRegister = withStyles((theme) => ({
+	root: {
+	  color: themeUtils.colors.blue,
+	  transition: 'color 0.1s',
+	  backgroundColor: 'rgba(255, 255, 255, 1)',
+	  '&:hover': {
+		backgroundColor: 'rgba(255, 255, 255, 0.9)',
+		transition: 'color 0.1s',
+	  },
+	  marginLeft: 5,
+	},
+  }))(Button);
 
 export default NavBar;
