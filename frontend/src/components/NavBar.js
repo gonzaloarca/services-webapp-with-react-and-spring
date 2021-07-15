@@ -163,7 +163,7 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
               ) : (
                 <LinkButtonRegister
                   className={
-                    currentSection === i.path ? classes.selectedSection : ''
+                    currentSection === i.path ? classes.selectedRegisterSection : ''
                   }
                   key={i.path}
                   component={Link}

@@ -77,11 +77,10 @@
     "copyright": "© 2021 HireNet"
   },
   "login": {
+    "title": "Login",
     "into": "Login to Hirenet",
     "email": "Email address",
-    "emailPlaceholder": "Email address",
     "password": "Password",
-    "passwordPlaceholder": "Password",
     "rememberMe": "Remember me",
     "submit": "Log in",
     "hasAccountQuestion": "No account?",
@@ -93,6 +92,31 @@
     "inputPass": "Enter a password.",
     "recoverQuestion": "Forgot Password?",
     "recover": "Recover it"
+  },
+  "register": {
+    "title": "Register",
+    "into": "Create an account in HireNet",
+    "username": "Full name",
+    "phone": "Phone number",
+    "email": "Email address",
+    "password": "Password",
+    "passwordRepeat": "Repeat password",
+    "submit": "Register",
+    "alreadyHasAccount": "Already have an account?",
+    "login": "Log in",
+    "continue": "Continue",
+    "selectImage": "Choose a profile picture (optional)",
+    "fileDisclaimer": "Image must be PNG or JPG and less than 2 MB in size",
+    "goBack": "Go back",
+    "imagePreview": "Image preview",
+    "existingEmail": "The email address is already in use",
+    "passwordInvalid": "Password must be between 8 and 100 characters",
+    "passwordNotMatch": "The passwords must match"
+  },
+  "image": {
+    "clear": "Clear",
+    "invalid": "Invalid file, please try again",
+	"pick": "Choose file"
   },
   "hirePage": {
     "title": "Hire Service",

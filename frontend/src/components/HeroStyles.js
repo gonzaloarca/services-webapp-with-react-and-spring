@@ -30,8 +30,7 @@ const HeroStyles = (theme) => ({
   searchBarContainer: {
     height: 70,
     borderRadius: 100,
-    backgroundColor: 'transparent',
-    backdropFilter: 'blur(10px) brightness(60%)',
+    backgroundColor: '#2C345B',
     width: '80%',
     maxWidth: 950,
     display: 'flex',

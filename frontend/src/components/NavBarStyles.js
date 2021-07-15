@@ -80,6 +80,9 @@ const navBarStyles = (theme) => ({
   selectedSection: {
     color: '#fff !important',
   },
+  selectedRegisterSection: {
+    color: 'black !important',
+  },
   drawerButton: {
     [theme.breakpoints.up('md')]: {
       display: 'none',

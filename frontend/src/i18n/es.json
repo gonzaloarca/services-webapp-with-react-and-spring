@@ -77,6 +77,7 @@
     "copyright": "© 2021 HireNet"
   },
   "login": {
+	"title": "Ingresar",
     "into": "Ingresar a HireNet",
     "email": "Correo electrónico",
     "emailPlaceholder": "Correo electrónico",
@@ -93,6 +94,31 @@
     "inputPass": "Ingrese una contraseña",
     "recoverQuestion": "¿Olvidó su contraseña?",
     "recover": "Recupérela"
+  },
+  "register": {
+    "title": "Registrarme",
+    "into": "Crear cuenta de HireNet",
+    "username": "Nombre completo",
+    "phone": "Teléfono",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordRepeat": "Repetir contraseña",
+    "submit": "Registrarme",
+    "alreadyHasAccount": "¿Ya tiene una cuenta?",
+    "login": "Inicie sesion",
+    "continue": "Continuar",
+    "selectImage": "Seleccione una imagen de perfil (opcional)",
+    "fileDisclaimer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta 2 MB",
+    "goBack": "Volver atrás",
+    "imagePreview": "Vista previa",
+    "existingEmail": "El email que ha ingresado ya pertenece a un usuario",
+    "passwordInvalid": "La contraseña debe ser de entre 8 y 100 caracteres",
+    "passwordNotMatch": "Las contraseñas deben coincidir"
+  },
+  "image": {
+    "clear": "Descartar",
+    "invalid": "Archivo inválido, intente con otro archivo",
+	"pick": "Seleccionar archivo"
   },
   "hirePage": {
     "title": "Solicitar Servicio",
