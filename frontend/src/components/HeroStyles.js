@@ -7,7 +7,7 @@ const HeroStyles = (theme) => ({
   heroContainer: {
     overflowY: 'hidden',
     width: '100%',
-    height: '100vh',
+    height: '80vh',
     position: 'relative',
   },
   heroContent: {
@@ -36,6 +36,7 @@ const HeroStyles = (theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    position: 'relative',
   },
   locationContent: {
     flex: 2,
@@ -78,12 +79,18 @@ const HeroStyles = (theme) => ({
     width: '100%',
     display: 'flex',
     flexWrap: 'wrap',
+    [theme.breakpoints.up('sm')]: {
+      height: '20vh',
+    }
   },
   stepContainer: {
     position: 'relative',
     color: 'white',
     fontWeight: 600,
-    height: '150px',
+    height: '100%',
+    [theme.breakpoints.down('sm')]: {
+      height: 150,
+    },
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
