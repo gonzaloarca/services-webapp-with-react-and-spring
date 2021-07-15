@@ -5,19 +5,18 @@ import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import { withStyles } from '@material-ui/core/styles';
 
-const FileInput = ({ name }) => {
+const FileInput = ({ fileName }) => {
   const { t } = useTranslation();
 
   const { values, setFieldValue } = useFormikContext();
-
   return (
     <div className="h-14">
       <div className="w-full flex justify-between">
         <Input
-          name={name}
+          name={fileName}
           onChange={(event) =>
             event.target.files[0] !== undefined &&
-            setFieldValue(name, event.target.files[0])
+            setFieldValue(fileName, event.target.files[0])
           }
           type="file"
           id="fileInput"
@@ -26,7 +25,7 @@ const FileInput = ({ name }) => {
         <GreyButton
           disabled={values.image === ''}
           onClick={() => {
-            setFieldValue(name, '');
+            setFieldValue(fileName, '');
             document.querySelector('#fileInput').value = '';
           }}
         >
@@ -34,7 +33,7 @@ const FileInput = ({ name }) => {
         </GreyButton>
       </div>
       <FormHelperText>
-        <ErrorMessage name={name} />
+        <ErrorMessage name={fileName} />
       </FormHelperText>
     </div>
   );

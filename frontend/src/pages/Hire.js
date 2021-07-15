@@ -317,7 +317,7 @@ const HireForm = () => {
                 </div>
               </Grid>
               <Grid item sm={12} className="mx-10 mb-5">
-                <FileInput name="image" />
+                <FileInput fileName="image" />
                 <div className="font-thin text-sm">
                   {t('hirePage.form.imagedisclamer')}
                 </div>

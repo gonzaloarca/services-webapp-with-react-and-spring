@@ -7,13 +7,10 @@ import clsx from 'clsx';
 import { themeUtils } from '../theme';
 import {
   Button,
-  FilledInput,
-  InputLabel,
-  FormControl,
   Card,
   Grid,
-  FormHelperText,
   Link,
+  TextField,
 } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
@@ -79,12 +76,6 @@ const Register = () => {
           </div>
           <Card className={clsx(classes.customCard, classes.registerCard)}>
             {steps[currentStep]}
-
-            {/* <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={onSubmit}
-            ></Formik> */}
             <span className={classes.bottomLabel}>
               <p>{t('register.alreadyhasaccount')}</p>
               <Link
@@ -130,63 +121,52 @@ const StepOne = (props) => {
       .min(8, t('validationerror.minlength', { length: 8 }))
       .oneOf([Yup.ref('password'), null], t('validationerror.passwordrepeat')),
   });
-  console.log(props.data);
+
   return (
     <Formik
       initialValues={props.data}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
+      enableReinitialize={true}
     >
       {({ values }) => (
         <Form>
           <Grid container spacing={3}>
             <Grid item sm={7} xs={12}>
               <Field
-                as={FormControl}
+                as={TextField}
+                variant="filled"
+                fullWidth
+                label={t('register.username')}
                 name="username"
                 required
-                fullWidth
-                variant="filled"
                 className={classes.FieldHeight}
-              >
-                <InputLabel>{t('register.username')}</InputLabel>
-                <FilledInput id="username" required />
-                <FormHelperText>
-                  <ErrorMessage name="username" />
-                </FormHelperText>
-              </Field>
+                helperText={<ErrorMessage name="username"></ErrorMessage>}
+              />
             </Grid>
             <Grid item sm={5} xs={12}>
               <Field
-                as={FormControl}
+                as={TextField}
+                variant="filled"
+                fullWidth
+                label={t('register.phone')}
                 name="phone"
                 required
-                fullWidth
-                variant="filled"
                 className={classes.FieldHeight}
-              >
-                <InputLabel>{t('register.phone')}</InputLabel>
-                <FilledInput id="phone" required />
-                <FormHelperText>
-                  <ErrorMessage name="phone" />
-                </FormHelperText>
-              </Field>
+                helperText={<ErrorMessage name="phone"></ErrorMessage>}
+              />
             </Grid>
             <Grid item xs={12}>
               <Field
-                as={FormControl}
+                as={TextField}
+                variant="filled"
+                fullWidth
+                label={t('register.email')}
                 name="email"
                 required
-                fullWidth
-                variant="filled"
                 className={classes.FieldHeight}
-              >
-                <InputLabel>{t('register.email')}</InputLabel>
-                <FilledInput id="email" type="email" required />
-                <FormHelperText>
-                  <ErrorMessage name="email" />
-                </FormHelperText>
-              </Field>
+                helperText={<ErrorMessage name="email"></ErrorMessage>}
+              />
             </Grid>
             <Grid item sm={6} xs={12}>
               <FormControlPassword
@@ -256,7 +236,6 @@ const StepTwo = (props) => {
             </p>
 
             <div className={clsx('flex justify-center mb-3')}>
-              {console.log(values.image)}
               <img
                 className={'rounded-full h-48 w-48 object-cover'}
                 id="img-preview"
@@ -271,7 +250,7 @@ const StepTwo = (props) => {
             <p className={'mb-3 text-center'}>{t('register.imagepreview')}</p>
             <Grid container className={'mb-3 justify-center'}>
               <Grid item>
-                <FileInput name="image" />
+                <FileInput fileName="image"/>
               </Grid>
             </Grid>
             <p className={'mb-5 text-gray-500'}>

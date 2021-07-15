@@ -2,14 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import {
-  FilledInput,
-  InputLabel,
-  FormControl,
-  InputAdornment,
-  IconButton,
-  FormHelperText,
-} from '@material-ui/core';
+import { IconButton, TextField } from '@material-ui/core';
 import { Field, ErrorMessage } from 'formik';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 
@@ -35,33 +28,26 @@ const FormControlPassword = ({
 
   return (
     <Field
-      as={FormControl}
-      fullWidth={fullWidth}
-      required={required}
+      as={TextField}
       variant="filled"
+      fullWidth={fullWidth}
+      label={placeholder}
       name={variable}
+      required={required}
       className={classes.FieldHeight}
-    >
-      <InputLabel>{placeholder}</InputLabel>
-      <FilledInput
-        id={variable}
-        type={values.toggle ? 'text' : 'password'}
-        required
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-            >
-              {values.toggle ? <Visibility /> : <VisibilityOff />}
-            </IconButton>
-          </InputAdornment>
-        }
-      />
-      <FormHelperText>
-        <ErrorMessage name={variable} />
-      </FormHelperText>
-    </Field>
+	  type={values.toggle ? 'text' : 'password'}
+      helperText={<ErrorMessage name={variable}></ErrorMessage>}
+      InputProps={{
+        endAdornment: (
+          <IconButton
+            onClick={handleClickShowPassword}
+            onMouseDown={handleMouseDownPassword}
+          >
+            {values.toggle ? <Visibility /> : <VisibilityOff />}
+          </IconButton>
+        ),
+      }}
+    />
   );
 };
 
