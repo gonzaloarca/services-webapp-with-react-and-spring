@@ -45,20 +45,15 @@ const Login = () => {
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
-            <img
-              src="/img/log-in.svg"
-              alt={t('login.title')}
-            />
+            <img src="/img/log-in.svg" alt={t('login.title')} />
             <p className={classes.title}>{t('login.into')}</p>
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg')}>
             <form>
               <FormControl fullWidth variant="filled">
-                <InputLabel>
-                  {t('login.email')}
-                </InputLabel>
+                <InputLabel>{t('login.email')}</InputLabel>
                 <FilledInput
-				variant="outlined"
+                  variant="outlined"
                   className={'mb-5'}
                   id="email"
                   type="email"
@@ -72,8 +67,8 @@ const Login = () => {
                 variable="password"
                 handleChange={handleChange('password')}
                 value={values.password}
-				fullWidth
-				className={'mb-3'}
+                fullWidth
+                className={'mb-3'}
               />
               <FormControlLabel
                 className={'mb-2'}
@@ -87,9 +82,9 @@ const Login = () => {
                 }
                 label={t('login.rememberMe')}
               />
-              <SubmitButton fullWidth className={'mb-4'}>
+              <Button fullWidth className={clsx(classes.submitButton, 'mb-4')}>
                 {t('login.submit')}
-              </SubmitButton>
+              </Button>
             </form>
             <div className={'flex justify-around'}>
               <span className={classes.bottomLabel}>

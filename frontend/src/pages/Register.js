@@ -120,13 +120,13 @@ const Register = () => {
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <SubmitButton
+                    <Button
                       fullWidth
-                      className={'mb-4'}
+                      className={clsx(classes.submitButton, 'mb-4')}
                       onClick={() => changeToStep(1)}
                     >
                       {t('register.continue')}
-                    </SubmitButton>
+                    </Button>
                   </Grid>
                 </Grid>
               ) : (
@@ -175,13 +175,13 @@ const Register = () => {
                     </GoBackButton>
                   </div>
                   <div className="flex justify-center">
-                    <SubmitButton
+                    <Button
                       fullWidth
-                      className={'mb-4'}
-                      //   onClick={() => ()} TODO: REGISTRAR
+                      className={clsx(classes.submitButton, 'mb-4')}
+                      //   onClick={() => ()} TODO: REGISTRAR CON VALORES DE values
                     >
                       {t('register.submit')}
-                    </SubmitButton>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -200,19 +200,6 @@ const Register = () => {
   );
 };
 
-const SubmitButton = withStyles({
-  root: {
-    color: 'white',
-    backgroundColor: themeUtils.colors.blue,
-    transition: 'color 0.1s',
-    '&:hover': {
-      backgroundColor: themeUtils.colors.darkBlue,
-      transition: 'color 0.1s',
-    },
-    fontSize: '1em',
-  },
-})(Button);
-
 const GoBackButton = withStyles({
   root: {
     color: themeUtils.colors.grey,
@@ -226,28 +213,5 @@ const GoBackButton = withStyles({
     fontSize: '1em',
   },
 })(Button);
-
-class Upload extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      file: null,
-    };
-    this.handleChange = this.handleChange.bind(this);
-  }
-  handleChange(event) {
-    this.setState({
-      file: URL.createObjectURL(event.target.files[0]),
-    });
-  }
-  render() {
-    return (
-      <div>
-        <input type="file" onChange={this.handleChange} />
-        <img src={this.state.file} />
-      </div>
-    );
-  }
-}
 
 export default Register;

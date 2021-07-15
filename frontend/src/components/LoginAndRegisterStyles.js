@@ -46,6 +46,16 @@ const LoginAndRegisterStyles = (theme) => ({
   bottomLabelLink: {
     color: themeUtils.colors.darkBlue,
   },
+  submitButton: {
+    color: 'white',
+    backgroundColor: themeUtils.colors.blue,
+    transition: 'color 0.1s',
+    '&:hover': {
+      backgroundColor: themeUtils.colors.darkBlue,
+      transition: 'color 0.1s',
+    },
+    fontSize: '1em',
+  },
 });
 
 export default LoginAndRegisterStyles;
