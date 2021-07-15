@@ -1,5 +1,6 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
+import FileInput from '../components/FileInput';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -13,7 +14,6 @@ import {
   Grid,
   FormHelperText,
   Link,
-  Input,
 } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
@@ -271,23 +271,7 @@ const StepTwo = (props) => {
             <p className={'mb-3 text-center'}>{t('register.imagepreview')}</p>
             <Grid container className={'mb-3 justify-center'}>
               <Grid item>
-                <Input
-                  name="image"
-                  onChange={(event) =>
-                    event.target.files[0] !== undefined &&
-                    setFieldValue('image', event.target.files[0])
-                  }
-                  type="file"
-                />
-                <GreyButton
-                  disabled={values.image === ''}
-                  onClick={() => setFieldValue('image', '')}
-                >
-                  {t('register.discardimage')}
-                </GreyButton>
-                <FormHelperText>
-                  <ErrorMessage name="image" />
-                </FormHelperText>
+                <FileInput name="image" />
               </Grid>
             </Grid>
             <p className={'mb-5 text-gray-500'}>

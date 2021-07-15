@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import NavBar from '../components/NavBar';
+import FileInput from '../components/FileInput';
 import styles from '../styles';
 import clsx from 'clsx';
 import SectionHeader from '../components/SectionHeader';
@@ -221,7 +222,7 @@ const HireForm = () => {
   const initialValues = {
     description: '',
     date: '',
-    //image:
+    image: '',
   };
 
   const validationSchema = Yup.object({
@@ -229,6 +230,18 @@ const HireForm = () => {
       .required(t('validationerror.required'))
       .max(100, t('validationerror.maxlength', { length: 100 })),
     date: Yup.date().required(t('validationerror.required')).nullable(),
+    image: Yup.mixed()
+      .test(
+        'is-correct-type',
+        t('validationerror.avatarfile.type'),
+        (file) =>
+          file === undefined || ['image/png', 'image/jpeg'].includes(file.type)
+      )
+      .test(
+        'is-correct-size',
+        t('validationerror.avatarfile.size', { size: 2 }),
+        (file) => file === undefined || file.size <= 2 * 1024 * 1024
+      ),
   });
 
   const onSubmit = (values, props) => {
@@ -285,15 +298,14 @@ const HireForm = () => {
               </Grid>
               <Grid item sm={12} className="mx-10 mb-5 h-20">
                 <DatePickerField name="date" />
-                <div className="font-thin text-sm">
-                  {t('hirePage.form.datedisclamer')}
-                </div>
                 <FormHelperText>
                   <ErrorMessage name="date"></ErrorMessage>
                 </FormHelperText>
+                <div className="font-thin text-sm">
+                  {t('hirePage.form.datedisclamer')}
+                </div>
               </Grid>
 
-              {/* TODO: Cambiar por otro tipo de input de imagen + client-side validation */}
               <Grid item sm={1}>
                 <div className={globalClasses.yellowCircle}>
                   <p className={globalClasses.circleText}>3</p>
@@ -305,17 +317,7 @@ const HireForm = () => {
                 </div>
               </Grid>
               <Grid item sm={12} className="mx-10 mb-5">
-                <div className={classes.fileInputContainer}>
-                  <input type="file" path="image" id="imageInput" />
-                  <Button
-                    className={classes.cancelBtn}
-                    variant="outlined"
-                    type="button"
-                    onClick={() => clearImage()}
-                  >
-                    Descartar
-                  </Button>
-                </div>
+                <FileInput name="image" />
                 <div className="font-thin text-sm">
                   {t('hirePage.form.imagedisclamer')}
                 </div>
@@ -493,12 +495,5 @@ const PriceTag = () => {
     </div>
   );
 };
-
-function clearImage() {
-  let imageInput = document.querySelector('#imageInput');
-  imageInput.value = '';
-  //TODO:
-  //validateImage(imageInput);
-}
 
 export default Hire;
