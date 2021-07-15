@@ -26,6 +26,7 @@ import {
 } from 'formik';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import { es } from 'date-fns/esm/locale';
+import { themeUtils } from '../theme';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -102,13 +103,13 @@ const useStyles = makeStyles((theme) => ({
   hireForm: {
     padding: '50px 30px 10px 30px',
     backgroundColor: 'white',
-    boxShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+    boxShadow: themeUtils.shadows.containerShadow,
   },
   packageInfo: {
     paddingTop: '20px',
     paddingBottom: '10px',
     backgroundColor: 'white',
-    boxShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+    boxShadow: themeUtils.shadows.containerShadow,
   },
   headerFilter: {
     position: 'absolute',
@@ -153,7 +154,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formSectionTitle: {
     margin: '5px 0 10px 0',
-    fontWeight: '600',
+    fontWeight: 600,
   },
   fillInput: {
     backgroundColor: 'rgba(0, 0, 0, 0.09)',

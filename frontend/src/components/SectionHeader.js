@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
+import { themeUtils } from '../theme';
 
 const useStyles = makeStyles((theme) => ({
   siteHeader: {
@@ -9,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    boxShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+    boxShadow: themeUtils.shadows.containerShadow,
     overflow: 'hidden',
     position: 'relative',
     borderRadius: '5px',
@@ -24,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '11vh',
     objectFit: 'cover',
-  }
+  },
 }));
 
 const SectionHeader = ({
   sectionName,
-  imageSrc = "/img/sectionbg.svg",
+  imageSrc = '/img/sectionbg.svg',
   filterClass = '',
 }) => {
   const classes = useStyles();
@@ -38,7 +39,7 @@ const SectionHeader = ({
     <div className={classes.siteHeader}>
       <div className={filterClass} />
       <h1 className={classes.title}>{sectionName}</h1>
-      <img src={imageSrc} alt="" className={classes.headerImg}/>
+      <img src={imageSrc} alt="" className={classes.headerImg} />
     </div>
   );
 };

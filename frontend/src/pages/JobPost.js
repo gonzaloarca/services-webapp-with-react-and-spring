@@ -190,10 +190,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: 400,
     objectFit: 'cover',
-    boxShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+    boxShadow: themeUtils.shadows.containerShadow,
   },
   cardContainer: {
-    boxShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+    boxShadow: themeUtils.shadows.containerShadow,
   },
   cardLabel: {
     display: 'flex',

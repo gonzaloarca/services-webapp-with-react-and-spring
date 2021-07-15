@@ -1,3 +1,5 @@
+import { themeUtils } from '../theme';
+
 const homeStyles = (theme) => ({
   header: {
     fontSize: '1.5rem',
@@ -5,7 +7,7 @@ const homeStyles = (theme) => ({
   },
 
   sectionShadow: {
-    boxShadow: '0 -3px 6px rgba(0, 0, 0, 0.16)',
+    boxShadow: themeUtils.shadows.containerShadow,
   },
 
   publishBannerContainer: {

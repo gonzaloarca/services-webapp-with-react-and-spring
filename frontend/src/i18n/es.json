@@ -133,6 +133,16 @@
     "invalid": "Archivo inválido, intente con otro archivo",
     "pick": "Seleccionar archivo"
   },
+  "mycontracts": {
+    "hiredservices": "Servicios contratados",
+    "myservices": "Mis servicios",
+    "activecontracts": "Contratos activos",
+    "active": "Activos",
+    "pendingapprovalcontracts": "Contratos pendientes de aprobación",
+    "pendingapproval": "Pendientes de aprobación",
+    "finalizedcontracts": "Contratos finalizados",
+    "finalized": "Finalizados"
+  },
   "hirePage": {
     "title": "Solicitar Servicio",
     "detail": {

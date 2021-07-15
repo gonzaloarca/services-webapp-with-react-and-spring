@@ -129,6 +129,16 @@
     "invalid": "Invalid file, please try again",
     "pick": "Choose file"
   },
+  "mycontracts": {
+    "hiredservices": "Hired services",
+    "myservices": "My services",
+    "activecontracts": "Active contracts",
+    "active": "Active",
+    "pendingapprovalcontracts": "Pending approval contracts",
+    "pendingapproval": "Pending approval",
+    "finalizedcontracts": "Finalized contracts",
+    "finalized": "Finalized"
+  },
   "hirePage": {
     "title": "Hire Service",
     "detail": {

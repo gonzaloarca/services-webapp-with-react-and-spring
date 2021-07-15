@@ -13,6 +13,10 @@ const styles = (theme) => ({
     margin: '0 auto',
     padding: '30px 5%',
   },
+  sectionTitle: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+  },
   blueCircle: {
     width: '35px',
     height: '35px',

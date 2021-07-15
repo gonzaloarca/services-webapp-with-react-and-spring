@@ -10,6 +10,12 @@ export const themeUtils = {
     grey: 'grey',
     lightGrey: '#EAEAEA',
     aqua: '#5FB0B7',
+    green: '#7BC778',
+    background: '#EFEFEF',
+  },
+  shadows: {
+    containerShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+    cardHoverShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
   },
 };
 
@@ -50,7 +56,7 @@ const appTheme = createTheme({
       main: '#FCB839',
     },
     background: {
-      default: '#fff',
+      default: '#efefef',
     },
   },
   typography: {

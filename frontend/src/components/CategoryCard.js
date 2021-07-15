@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { themeUtils } from '../theme';
 
 const useStyles = makeStyles((theme) => ({
   categoryContainer: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     transition: 'box-shadow 0.2s',
     '&:hover': {
-      boxShadow: '0 3px 6px rgba(0, 0, 0, 0.3)',
+      boxShadow: themeUtils.shadows.cardHoverShadow,
       transition: 'box-shadow 0.2s',
     },
   },
