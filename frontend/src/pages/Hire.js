@@ -226,9 +226,9 @@ const HireForm = () => {
 
   const validationSchema = Yup.object({
     description: Yup.string()
-      .required(t('validation.required'))
-      .max(100, t('validation.maxLength', { length: 100 })),
-    date: Yup.date().required(t('validation.required')).nullable(),
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
+    date: Yup.date().required(t('validationerror.required')).nullable(),
   });
 
   const onSubmit = (values, props) => {
