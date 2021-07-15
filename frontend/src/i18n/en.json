@@ -134,15 +134,17 @@
     "form": {
       "title": "Contact Info",
       "required": "* required field",
-      "descTitle": "Write a description for your required work*",
+      "desctitle": "Write a description for your required work*",
       "description": "Description",
-      "descDefault": "Work description",
-      "dateTitle": "Pick a date and time for the service delivery*",
-      "dateDisclamer": "Be sure to respect the professional's available hours",
-      "imageTitle": "Choose an image to upload",
-      "imageDisclamer": "Image must be PNG or JPG and less than 2 MB in size",
-      "submit": "Submit contract"
+      "descdefault": "Work description",
+      "datetitle": "Pick a date and time for the service delivery*",
+      "datedisclamer": "Be sure to respect the professional's available hours",
+      "dateplaceholder": "Date & time",
+      "imagetitle": "Choose an image to upload",
+      "imagedisclamer": "Image must be PNG or JPG and less than 2 MB in size",
+      "submit": "Hire"
     }
   },
-  "dateTimeFormat": "yyyy/MM/dd HH:mm"
+  "datetimeformat": "MMMM d, yyyy - h:mm aa",
+  "locale": "en"
 }

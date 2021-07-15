@@ -136,15 +136,17 @@
     "form": {
       "title": "Datos de Contacto",
       "required": "* campo obligatorio",
-      "descTitle": "Ingrese una descripción del trabajo que precisa*",
+      "desctitle": "Ingrese una descripción del trabajo que precisa*",
       "description": "Descripción",
-      "descDefault": "Descripción del trabajo",
-      "dateTitle": "Seleccione una fecha y hora para la realización del servicio*",
-      "dateDisclamer": "Asegúrese de respetar los horarios de disponibilidad del profesional",
-      "imageTitle": "Seleccione una imagen para subir",
-      "imageDisclamer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta 2 MB",
-      "submit": "Solicitar Servicio"
+      "descdefault": "Descripción del trabajo",
+      "datetitle": "Seleccione una fecha y hora para la realización del servicio*",
+      "datedisclamer": "Asegúrese de respetar los horarios de disponibilidad del profesional",
+      "dateplaceholder": "Fecha y hora",
+      "imagetitle": "Seleccione una imagen para subir",
+      "imagedisclamer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta 2 MB",
+      "submit": "Contratar"
     }
   },
-  "dateTimeFormat": "dd/MM/yyyy HH:mm"
+  "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
+  "locale": "es"
 }

@@ -1,5 +1,11 @@
-import { Button, Grid, makeStyles, TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+import {
+  Button,
+  FormHelperText,
+  Grid,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
+import React from 'react';
 import NavBar from '../components/NavBar';
 import styles from '../styles';
 import clsx from 'clsx';
@@ -8,11 +14,21 @@ import { useTranslation } from 'react-i18next';
 import { AttachMoney, LocationOn, Schedule } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBoxOpen, faBriefcase } from '@fortawesome/free-solid-svg-icons';
+import * as Yup from 'yup';
 import {
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+  useField,
+  useFormikContext,
+} from 'formik';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import { es } from 'date-fns/esm/locale';
+
+import 'react-datepicker/dist/react-datepicker.css';
+
+registerLocale('es', es);
 
 const pack = {
   active: true,
@@ -140,6 +156,8 @@ const useStyles = makeStyles((theme) => ({
   },
   fillInput: {
     backgroundColor: 'rgba(0, 0, 0, 0.09)',
+    width: '100%',
+    padding: '5px',
   },
   fileInputContainer: {
     display: 'flex',
@@ -200,107 +218,157 @@ const HireForm = () => {
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
 
-  const [selectedDate, handleDateChange] = useState(new Date());
+  const initialValues = {
+    description: '',
+    date: '',
+    //image:
+  };
+
+  const validationSchema = Yup.object({
+    description: Yup.string()
+      .required(t('validation.required'))
+      .max(100, t('validation.maxLength', { length: 100 })),
+    date: Yup.date().required(t('validation.required')).nullable(),
+  });
+
+  const onSubmit = (values, props) => {
+    console.log(values); //TODO: SUBMITEAR
+  };
 
   return (
     <div className={classes.hireForm}>
       <div className="text-3xl font-bold mb-3">{t('hirePage.form.title')}</div>
       <div>{t('hirePage.form.required')}</div>
       <hr className={classes.detailDividerBar} />
-      {/* TODO: Client Side Validation!!! */}
-      <form noValidate autoComplete="off" className="p-5">
-        <Grid container>
-          <Grid item sm={1}>
-            <div className={globalClasses.blueCircle}>
-              <p className={globalClasses.circleText}>1</p>
-            </div>
-          </Grid>
-          <Grid item sm={11}>
-            <div className={classes.formSectionTitle}>
-              {t('hirePage.form.descTitle')}
-            </div>
-          </Grid>
-          <Grid item sm={12} className="mx-10 mb-5">
-            <TextField
-              id="filled-multiline-static"
-              multiline
-              rows={8}
-              defaultValue={t('hirePage.form.descDefault')}
-              variant="filled"
-              fullWidth
-              label={t('hirePage.form.description')}
-            />
-          </Grid>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        {(props) => (
+          <Form className="p-5">
+            <Grid container>
+              <Grid item sm={1}>
+                <div className={globalClasses.blueCircle}>
+                  <p className={globalClasses.circleText}>1</p>
+                </div>
+              </Grid>
+              <Grid item sm={11}>
+                <div className={classes.formSectionTitle}>
+                  {t('hirePage.form.desctitle')}
+                </div>
+              </Grid>
+              <Grid item sm={12} className="mx-10 mb-5 h-56">
+                <Field
+                  as={TextField}
+                  id="filled-multiline-static"
+                  multiline
+                  rows={8}
+                  placeholder={t('hirePage.form.descdefault')}
+                  variant="filled"
+                  fullWidth
+                  label={t('hirePage.form.description')}
+                  name="description"
+                  helperText={<ErrorMessage name="description"></ErrorMessage>}
+                />
+              </Grid>
 
-          <Grid item sm={1}>
-            <div className={globalClasses.orangeCircle}>
-              <p className={globalClasses.circleText}>2</p>
-            </div>
-          </Grid>
-          <Grid item sm={11}>
-            <div className={classes.formSectionTitle}>
-              {t('hirePage.form.dateTitle')}
-            </div>
-          </Grid>
-          <Grid item sm={12} className="mx-10 mb-5">
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDateTimePicker
-                variant="inline"
-                inputVariant="outlined"
-                ampm={false}
-                value={selectedDate}
-                onChange={handleDateChange}
-                disablePast
-                format={t('dateTimeFormat')}
-                fullWidth
-                className={classes.fillInput}
-              />
-            </MuiPickersUtilsProvider>
-            <div className="font-thin text-sm">
-              {t('hirePage.form.dateDisclamer')}
-            </div>
-          </Grid>
+              <Grid item sm={1}>
+                <div className={globalClasses.orangeCircle}>
+                  <p className={globalClasses.circleText}>2</p>
+                </div>
+              </Grid>
+              <Grid item sm={11}>
+                <div className={classes.formSectionTitle}>
+                  {t('hirePage.form.datetitle')}
+                </div>
+              </Grid>
+              <Grid item sm={12} className="mx-10 mb-5 h-20">
+                <DatePickerField name="date" />
+                <div className="font-thin text-sm">
+                  {t('hirePage.form.datedisclamer')}
+                </div>
+                <FormHelperText>
+                  <ErrorMessage name="date"></ErrorMessage>
+                </FormHelperText>
+              </Grid>
 
-          <Grid item sm={1}>
-            <div className={globalClasses.yellowCircle}>
-              <p className={globalClasses.circleText}>3</p>
-            </div>
-          </Grid>
-          <Grid item sm={11}>
-            <div className={classes.formSectionTitle}>
-              {t('hirePage.form.imageTitle')}
-            </div>
-          </Grid>
-          <Grid item sm={12} className="mx-10 mb-5">
-            <div className={classes.fileInputContainer}>
-              <input type="file" path="image" id="imageInput" />
-              <Button
-                className={classes.cancelBtn}
-                variant="outlined"
-                type="button"
-                onClick={() => clearImage()}
-              >
-                Descartar
-              </Button>
-            </div>
-            <div className="font-thin text-sm">
-              {t('hirePage.form.imageDisclamer')}
-            </div>
-          </Grid>
+              {/* TODO: Cambiar por otro tipo de input de imagen + client-side validation */}
+              <Grid item sm={1}>
+                <div className={globalClasses.yellowCircle}>
+                  <p className={globalClasses.circleText}>3</p>
+                </div>
+              </Grid>
+              <Grid item sm={11}>
+                <div className={classes.formSectionTitle}>
+                  {t('hirePage.form.imagetitle')}
+                </div>
+              </Grid>
+              <Grid item sm={12} className="mx-10 mb-5">
+                <div className={classes.fileInputContainer}>
+                  <input type="file" path="image" id="imageInput" />
+                  <Button
+                    className={classes.cancelBtn}
+                    variant="outlined"
+                    type="button"
+                    onClick={() => clearImage()}
+                  >
+                    Descartar
+                  </Button>
+                </div>
+                <div className="font-thin text-sm">
+                  {t('hirePage.form.imagedisclamer')}
+                </div>
+              </Grid>
 
-          <Grid item sm={12} className="flex justify-end">
-            <Button
-              type="submit"
-              variant="contained"
-              disableElevation
-              className={classes.submitButton}
-            >
-              {t('hirePage.form.submit')}
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+              <Grid item sm={12} className="flex justify-end">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disableElevation
+                  className={classes.submitButton}
+                >
+                  {t('hirePage.form.submit')}
+                </Button>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
     </div>
+  );
+};
+
+const filterPast = (date) => {
+  const currentDate = new Date();
+  const selectedDate = new Date(date);
+
+  return currentDate.getTime() < selectedDate.getTime();
+};
+
+export const DatePickerField = ({ ...props }) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  const { setFieldValue } = useFormikContext();
+  const [field] = useField(props);
+
+  return (
+    <DatePicker
+      selected={(field.value && new Date(field.value)) || null}
+      onChange={(val) => {
+        setFieldValue(field.name, val);
+      }}
+      showTimeSelect
+      dateFormat={t('datetimeformat')}
+      name="date"
+      wrapperClassName="w-full"
+      className={classes.fillInput}
+      filterDate={filterPast}
+      filterTime={filterPast}
+      placeholderText={t('hirePage.form.dateplaceholder')}
+      locale={t('locale')}
+    />
   );
 };
 
