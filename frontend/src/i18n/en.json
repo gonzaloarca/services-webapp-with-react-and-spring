@@ -122,6 +122,19 @@
     "title": "Hire Service",
     "detail": {
       "title": "Service details"
+    },
+    "form": {
+      "title": "Contact Info",
+      "required": "* required field",
+      "descTitle": "Write a description for your required work*",
+      "description": "Description",
+      "descDefault": "Work description",
+      "dateTitle": "Pick a date and time for the service delivery*",
+      "dateDisclamer": "Be sure to respect the professional's available hours",
+      "imageTitle": "Choose an image to upload",
+      "imageDisclamer": "Image must be PNG or JPG and less than 2 MB in size",
+      "submit": "Submit contract"
     }
-  }
+  },
+  "dateTimeFormat": "yyyy/MM/dd HH:mm"
 }

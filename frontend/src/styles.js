@@ -13,6 +13,40 @@ const styles = (theme) => ({
     margin: '0 auto',
     padding: '30px 5%',
   },
+  blueCircle: {
+    width: '35px',
+    height: '35px',
+    borderRadius: '35px',
+    backgroundColor: '#485696',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  yellowCircle: {
+    width: '35px',
+    height: '35px',
+    borderRadius: '35px',
+    backgroundColor: '#ffc800',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  orangeCircle: {
+    width: '35px',
+    height: '35px',
+    borderRadius: '35px',
+    backgroundColor: 'darkorange',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circleText: {
+    position: 'absolute',
+    margin: '0',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '18px',
+  },
 });
 
 export default styles;

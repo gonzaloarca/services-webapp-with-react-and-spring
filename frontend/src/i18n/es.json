@@ -124,6 +124,19 @@
     "title": "Solicitar Servicio",
     "detail": {
       "title": "Detalles del Servicio"
+    },
+    "form": {
+      "title": "Datos de Contacto",
+      "required": "* campo obligatorio",
+      "descTitle": "Ingrese una descripción del trabajo que precisa*",
+      "description": "Descripción",
+      "descDefault": "Descripción del trabajo",
+      "dateTitle": "Seleccione una fecha y hora para la realización del servicio*",
+      "dateDisclamer": "Asegúrese de respetar los horarios de disponibilidad del profesional",
+      "imageTitle": "Seleccione una imagen para subir",
+      "imageDisclamer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta 2 MB",
+      "submit": "Solicitar Servicio"
     }
-  }
+  },
+  "dateTimeFormat": "dd/MM/yyyy HH:mm"
 }
