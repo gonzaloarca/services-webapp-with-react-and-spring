@@ -12,13 +12,17 @@
     },
     "search": "Buscar..."
   },
-  "validation": {
+  "validationerror": {
     "required": "Este campo es obligatorio",
     "email": "Por favor ingrese una direccion de correo electronico",
-    "phone": "Por favor ingrese un telefono de almenos {{length}} numeros",
-    "minLength": "Porfavor ingrese almenos {{length}} caracteres",
-    "maxLength": "Porfavor ingrese menos de {{length}} characters",
-    "passwordRepeat": "Las contraseña no coinciden"
+    "phone": "Por favor ingrese un telefono valido",
+    "minlength": "Porfavor ingrese almenos {{length}} caracteres",
+    "maxlength": "Porfavor ingrese menos de {{length}} characters",
+    "passwordrepeat": "Las contraseña no coinciden",
+    "avatarfile": {
+      "size": "El tamaño del archivo debe ser menor que {{size}}MB",
+      "type": "El archivo debe ser de tipo PNG o JPG"
+    }
   },
   "home": {
     "herotext": "Encuentre y contrate el servicio que necesita",
@@ -91,16 +95,16 @@
     "emailPlaceholder": "Correo electrónico",
     "password": "Contraseña",
     "passwordPlaceholder": "Contraseña",
-    "rememberMe": "Recordarme",
+    "rememberme": "Recordarme",
     "submit": "Iniciar sesión",
-    "hasAccountQuestion": "¿No tiene una cuenta?",
-    "getAccount": "Regístrese",
-    "badCredentials": "Usuario o contraseña incorrectos",
-    "userNotVerified": "Su usuario no está verificado, por favor revise su email o realice de nuevo el registro",
+    "hasaccountquestion": "¿No tiene una cuenta?",
+    "getaccount": "Regístrese",
+    "badcredentials": "Usuario o contraseña incorrectos",
+    "usernotverified": "Su usuario no está verificado, por favor revise su email o realice de nuevo el registro",
     "error": "Ha ocurrido un error, vuelva a intentarlo",
-    "inputEmail": "Ingrese un email",
-    "inputPass": "Ingrese una contraseña",
-    "recoverQuestion": "¿Olvidó su contraseña?",
+    "inputemail": "Ingrese un email",
+    "inputpass": "Ingrese una contraseña",
+    "recoverquestion": "¿Olvidó su contraseña?",
     "recover": "Recupérela"
   },
   "register": {
@@ -110,18 +114,19 @@
     "phone": "Teléfono",
     "email": "Correo electrónico",
     "password": "Contraseña",
-    "passwordRepeat": "Repetir contraseña",
+    "passwordrepeat": "Repetir contraseña",
     "submit": "Registrarme",
-    "alreadyHasAccount": "¿Ya tiene una cuenta?",
+    "alreadyhasaccount": "¿Ya tiene una cuenta?",
     "login": "Inicie sesion",
     "continue": "Continuar",
-    "selectImage": "Seleccione una imagen de perfil (opcional)",
-    "fileDisclaimer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta 2 MB",
-    "goBack": "Volver atrás",
-    "imagePreview": "Vista previa",
-    "existingEmail": "El email que ha ingresado ya pertenece a un usuario",
+    "selectimage": "Seleccione una imagen de perfil (opcional)",
+    "filedisclaimer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta {{size}} MB",
+    "goback": "Volver atrás",
+    "imagepreview": "Vista previa",
+    "existingemail": "El email que ha ingresado ya pertenece a un usuario",
     "passwordInvalid": "La contraseña debe ser de entre 8 y 100 caracteres",
-    "passwordNotMatch": "Las contraseñas deben coincidir"
+    "passwordNotMatch": "Las contraseñas deben coincidir",
+	"discardimage": "Descartar"
   },
   "image": {
     "clear": "Descartar",

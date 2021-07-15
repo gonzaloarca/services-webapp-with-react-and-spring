@@ -12,13 +12,17 @@
     },
     "search": "Search..."
   },
-  "validation": {
+  "validationerror": {
     "required": "This field is required",
     "email": "Please enter a valid email address",
-    "phone": "Please enter a valid number of at least {{length}} numbers",
-    "minLength": "Please enter at least {{length}} characters",
-    "maxLength": "Please enter less than {{length}} characters",
-    "passwordRepeat": "Passwords doesn't match"
+    "phone": "Please enter a valid phone number",
+    "minlength": "Please enter at least {{length}} characters",
+    "maxlength": "Please enter less than {{length}} characters",
+    "passwordrepeat": "Passwords doesn't match",
+    "avatarfile": {
+      "size": "The file size must be less than {{size}}MB",
+      "type": "The file type must be PNG or JPG"
+    }
   },
   "home": {
     "herotext": "Find and hire the service you're looking for",
@@ -89,16 +93,16 @@
     "into": "Login to Hirenet",
     "email": "Email address",
     "password": "Password",
-    "rememberMe": "Remember me",
+    "rememberme": "Remember me",
     "submit": "Log in",
-    "hasAccountQuestion": "No account?",
-    "getAccount": "Register now",
-    "badCredentials": "User or password invalid",
-    "userNotVerified": "Your account is not verified, please check your email or register again",
+    "hasaccountquestion": "No account?",
+    "getaccount": "Register now",
+    "badcredentials": "User or password invalid",
+    "usernotverified": "Your account is not verified, please check your email or register again",
     "error": "An error has occurred, please try again",
-    "inputEmail": "Enter an email.",
-    "inputPass": "Enter a password.",
-    "recoverQuestion": "Forgot Password?",
+    "inputemail": "Enter an email.",
+    "inputpass": "Enter a password.",
+    "recoverquestion": "Forgot Password?",
     "recover": "Recover it"
   },
   "register": {
@@ -108,18 +112,17 @@
     "phone": "Phone number",
     "email": "Email address",
     "password": "Password",
-    "passwordRepeat": "Repeat password",
+    "passwordrepeat": "Repeat password",
     "submit": "Register",
-    "alreadyHasAccount": "Already have an account?",
+    "alreadyhasaccount": "Already have an account?",
     "login": "Log in",
     "continue": "Continue",
-    "selectImage": "Choose a profile picture (optional)",
-    "fileDisclaimer": "Image must be PNG or JPG and less than 2 MB in size",
-    "goBack": "Go back",
-    "imagePreview": "Image preview",
-    "existingEmail": "The email address is already in use",
-    "passwordInvalid": "Password must be between 8 and 100 characters",
-    "passwordNotMatch": "The passwords must match"
+    "selectimage": "Choose a profile picture (optional)",
+    "filedisclaimer": "Image must be PNG or JPG and less than {{size}}MB in size",
+    "goback": "Go back",
+    "imagepreview": "Image preview",
+    "existingemail": "The email address is already in use",
+	"discardimage": "Discard"
   },
   "image": {
     "clear": "Clear",

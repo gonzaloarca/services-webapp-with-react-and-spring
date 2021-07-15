@@ -29,18 +29,18 @@ const Login = () => {
   const initialValues = {
     email: '',
     password: '',
-    rememberMe: false,
+    rememberme: false,
   };
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .required(t('validation.required'))
-      .email(t('validation.email'))
-      .max(100, t('validation.maxLength', { length: 100 })),
+      .required(t('validationerror.required'))
+      .email(t('validationerror.email'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
     password: Yup.string()
-      .required(t('validation.required'))
-      .max(100, t('validation.maxLength', { length: 100 }))
-      .min(8, t('validation.minLength', { length: 8 })),
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 }))
+      .min(8, t('validationerror.minlength', { length: 8 })),
   });
 
   const onSubmit = (values, props) => {
@@ -56,7 +56,7 @@ const Login = () => {
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
-            <img src="/img/log-in.svg" alt={t('login.title')} />
+            <img src="/img/log-in.svg" alt={t('login.title')} loading="lazy"/>
             <p className={classes.title}>{t('login.into')}</p>
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg')}>
@@ -87,15 +87,15 @@ const Login = () => {
                   />
                   <Field
                     as={FormControlLabel}
-                    name="rememberMe"
+                    name="rememberme"
                     className={'mb-2'}
                     control={
                       <BlueCheckBox
                         id="remember-me"
-                        className={classes.rememberMe}
+                        className={classes.rememberme}
                       />
                     }
-                    label={t('login.rememberMe')}
+                    label={t('login.rememberme')}
                   />
                   <Button
                     fullWidth
@@ -109,18 +109,18 @@ const Login = () => {
             </Formik>
             <div className={'flex justify-around'}>
               <span className={classes.bottomLabel}>
-                <p>{t('login.hasAccountQuestion')}</p>
+                <p>{t('login.hasaccountquestion')}</p>
                 <Link
                   component={RouterLink}
                   to="/register"
                   className={classes.bottomLabelLink}
                 >
-                  {t('login.getAccount')}
+                  {t('login.getaccount')}
                 </Link>
               </span>
               <div className={classes.separator} />
               <span className={classes.bottomLabel}>
-                <p>{t('login.recoverQuestion')}</p>
+                <p>{t('login.recoverquestion')}</p>
                 <Link
                   component={RouterLink}
                   to="/register"
