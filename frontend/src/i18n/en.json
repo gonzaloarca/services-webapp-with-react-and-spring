@@ -12,6 +12,14 @@
     },
     "search": "Search..."
   },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "phone": "Please enter a valid number of at least {{length}} numbers",
+    "minLength": "Please enter at least {{length}} characters",
+    "maxLength": "Please enter less than {{length}} characters",
+    "passwordRepeat": "Passwords doesn't match"
+  },
   "home": {
     "herotext": "Find and hire the service you're looking for",
     "location": "Location",
@@ -116,7 +124,7 @@
   "image": {
     "clear": "Clear",
     "invalid": "Invalid file, please try again",
-	"pick": "Choose file"
+    "pick": "Choose file"
   },
   "hirePage": {
     "title": "Hire Service",

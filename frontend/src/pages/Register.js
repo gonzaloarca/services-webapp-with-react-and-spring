@@ -11,9 +11,14 @@ import {
   FormControl,
   Card,
   Grid,
+  FormHelperText,
+  Link,
 } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
+import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -21,17 +26,43 @@ const Register = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [values, setValues] = React.useState({
+    avatar: null,
+    currentStep: 0,
+  });
+
+  const initialValues = {
     username: '',
     phone: '',
     email: '',
     password: '',
     passwordRepeat: '',
-    avatar: null,
-    currentStep: 0,
+  };
+
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .required(t('validation.required'))
+      .max(100, t('validation.maxLength', { length: 100 })),
+    phone: Yup.string()
+      .required(t('validation.required'))
+      .matches(/^\+?[\d-]{7,100}$/, t('validation.phone', { length: 7 })),
+    email: Yup.string()
+      .required(t('validation.required'))
+      .email(t('validation.email'))
+      .max(100, t('validation.maxLength', { length: 100 })),
+    password: Yup.string()
+      .required(t('validation.required'))
+      .max(100, t('validation.maxLength', { length: 100 }))
+      .min(8, t('validation.minLength', { length: 8 })),
+    passwordRepeat: Yup.string()
+      .required(t('validation.required'))
+      .max(100, t('validation.maxLength', { length: 100 }))
+      .min(8, t('validation.minLength', { length: 8 }))
+      .oneOf([Yup.ref('password'), null], t('validation.passwordRepeat')),
+    //TODO: add avatar validation
   });
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const onSubmit = (values, props) => {
+    console.log(props); //TODO: REGISTRAR
   };
 
   const changeToStep = (newStep) => {
@@ -60,138 +91,162 @@ const Register = () => {
             <p className={classes.title}>{t('register.into')}</p>
           </div>
           <Card className={clsx(classes.customCard, classes.registerCard)}>
-            <form>
-              {values.currentStep <= 0 ? (
-                <Grid container spacing={3}>
-                  <Grid item sm={8} xs={12}>
-                    <FormControl fullWidth variant="filled">
-                      <InputLabel>{t('register.username')}</InputLabel>
-                      <FilledInput
-                        variant="outlined"
-                        id="username"
-                        value={values.username}
-                        onChange={handleChange('username')}
-                        required
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item sm={4} xs={12}>
-                    <FormControl fullWidth variant="filled">
-                      <InputLabel>{t('register.phone')}</InputLabel>
-                      <FilledInput
-                        variant="outlined"
-                        id="phone"
-                        value={values.phone}
-                        onChange={handleChange('phone')}
-                        required
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl fullWidth variant="filled">
-                      <InputLabel>{t('register.email')}</InputLabel>
-                      <FilledInput
-                        variant="outlined"
-                        id="email"
-                        type="email"
-                        value={values.email}
-                        onChange={handleChange('email')}
-                        required
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <FormControlPassword
-                      placeholder={t('register.password')}
-                      variable="password"
-                      handleChange={handleChange('password')}
-                      value={values.password}
-                      className={'mr-4'}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <FormControlPassword
-                      placeholder={t('register.passwordRepeat')}
-                      variable="passwordRepeat"
-                      handleChange={handleChange('passwordRepeat')}
-                      value={values.passwordRepeat}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      className={clsx(classes.submitButton, 'mb-4')}
-                      onClick={() => changeToStep(1)}
-                    >
-                      {t('register.continue')}
-                    </Button>
-                  </Grid>
-                </Grid>
-              ) : (
-                <div>
-                  <p className={clsx(classes.subtitle, 'mb-3')}>
-                    {t('register.selectImage')}
-                  </p>
-
-                  <div className={clsx('flex justify-center mb-3')}>
-                    <img
-                      className={'rounded-full h-48 w-48 object-cover'}
-                      id="img-preview"
-                      src={
-                        values.avatar === null
-                          ? './img/defaultavatar.svg'
-                          : values.avatar
-                      }
-                      alt=""
-                    />
-                  </div>
-                  <p className={'mb-3 text-center'}>
-                    {t('register.imagePreview')}
-                  </p>
-                  <Grid container className={'mb-3 justify-center'}>
-                    <Grid item sm={4}>
-                      <Button variant="contained" component="label" fullWidth>
-                        {t('image.pick')}
-                        <input
-                          onChange={(event) => handleAvatarChange(event)}
-                          type="file"
-                          id="file"
-                          hidden
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={onSubmit}
+            >
+              {(props) => (
+                <Form>
+                  {values.currentStep <= 0 ? (
+                    <Grid container spacing={3}>
+                      <Grid item sm={8} xs={12}>
+                        <Field
+                          as={FormControl}
+                          name="username"
+                          required
+                          fullWidth
+                          variant="filled"
+                          className={classes.FieldHeight}
+                        >
+                          <InputLabel>{t('register.username')}</InputLabel>
+                          <FilledInput id="username" required />
+                          <FormHelperText>
+                            <ErrorMessage name="username" />
+                          </FormHelperText>
+                        </Field>
+                      </Grid>
+                      <Grid item sm={4} xs={12}>
+                        <Field
+                          as={FormControl}
+                          name="phone"
+                          required
+                          fullWidth
+                          variant="filled"
+                          className={classes.FieldHeight}
+                        >
+                          <InputLabel>{t('register.phone')}</InputLabel>
+                          <FilledInput id="phone" required />
+                          <FormHelperText>
+                            <ErrorMessage name="phone" />
+                          </FormHelperText>
+                        </Field>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Field
+                          as={FormControl}
+                          name="email"
+                          required
+                          fullWidth
+                          variant="filled"
+                          className={classes.FieldHeight}
+                        >
+                          <InputLabel>{t('register.email')}</InputLabel>
+                          <FilledInput id="email" type="email" required />
+                          <FormHelperText>
+                            <ErrorMessage name="email" />
+                          </FormHelperText>
+                        </Field>
+                      </Grid>
+                      <Grid item sm={6} xs={12}>
+                        <FormControlPassword
+                          required
+                          placeholder={t('register.password')}
+                          variable="password"
+                          fullWidth
                         />
-                      </Button>
+                      </Grid>
+                      <Grid item sm={6} xs={12}>
+                        <FormControlPassword
+                          required
+                          placeholder={t('register.passwordRepeat')}
+                          variable="passwordRepeat"
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button
+                          fullWidth
+                          className={clsx(classes.submitButton, 'mb-4')}
+                          onClick={() => changeToStep(1)}
+                        >
+                          {t('register.continue')}
+                        </Button>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <p className={'mb-5 text-gray-500'}>
-                    {t('register.fileDisclaimer')}
-                  </p>
-                  <div className="flex justify-center">
-                    <GoBackButton
-                      className={'mb-4 align-center'}
-                      onClick={() => changeToStep(0)}
-                    >
-                      {t('register.goBack')}
-                    </GoBackButton>
-                  </div>
-                  <div className="flex justify-center">
-                    <Button
-                      fullWidth
-                      className={clsx(classes.submitButton, 'mb-4')}
-                      //   onClick={() => ()} TODO: REGISTRAR CON VALORES DE values
-                    >
-                      {t('register.submit')}
-                    </Button>
-                  </div>
-                </div>
+                  ) : (
+                    <div>
+                      <p className={clsx(classes.subtitle, 'mb-3')}>
+                        {t('register.selectImage')}
+                      </p>
+
+                      <div className={clsx('flex justify-center mb-3')}>
+                        <img
+                          className={'rounded-full h-48 w-48 object-cover'}
+                          id="img-preview"
+                          src={
+                            values.avatar === null
+                              ? './img/defaultavatar.svg'
+                              : values.avatar
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <p className={'mb-3 text-center'}>
+                        {t('register.imagePreview')}
+                      </p>
+                      <Grid container className={'mb-3 justify-center'}>
+                        <Grid item sm={4}>
+                          <Button
+                            variant="contained"
+                            component="label"
+                            fullWidth
+                          >
+                            {t('image.pick')}
+                            <input
+                              onChange={(event) => handleAvatarChange(event)}
+                              type="file"
+                              id="file"
+                              hidden
+                            />
+                          </Button>
+                        </Grid>
+                      </Grid>
+                      <p className={'mb-5 text-gray-500'}>
+                        {t('register.fileDisclaimer')}
+                      </p>
+                      <div className="flex justify-center">
+                        <GoBackButton
+                          className={'mb-4 align-center'}
+                          onClick={() => changeToStep(0)}
+                        >
+                          {t('register.goBack')}
+                        </GoBackButton>
+                      </div>
+                      <div className="flex justify-center">
+                        <Button
+                          fullWidth
+                          className={clsx(classes.submitButton, 'mb-4')}
+                          //   onClick={() => ()} TODO: REGISTRAR CON VALORES DE values
+                          type="submit"
+                        >
+                          {t('register.submit')}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </Form>
               )}
-            </form>
+            </Formik>
             <span className={classes.bottomLabel}>
               <p>{t('register.alreadyHasAccount')}</p>
-              <a href="/login" className={classes.bottomLabelLink}>
-                {/* TODO: FIX HREF? */}
+              <Link
+                component={RouterLink}
+                to="/login"
+                className={classes.bottomLabelLink}
+              >
                 {t('register.login')}
-              </a>
+              </Link>
             </span>
           </Card>
         </div>

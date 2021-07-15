@@ -207,6 +207,7 @@ const HireForm = () => {
       <div className="text-3xl font-bold mb-3">{t('hirePage.form.title')}</div>
       <div>{t('hirePage.form.required')}</div>
       <hr className={classes.detailDividerBar} />
+      {/* TODO: Client Side Validation!!! */}
       <form noValidate autoComplete="off" className="p-5">
         <Grid container>
           <Grid item sm={1}>

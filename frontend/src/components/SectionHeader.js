@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 const SectionHeader = ({
   sectionName,
   imageSrc = "/img/sectionbg.svg",
-  filterClass,
+  filterClass = '',
 }) => {
   const classes = useStyles();
 

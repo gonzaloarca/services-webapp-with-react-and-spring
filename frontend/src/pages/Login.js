@@ -12,28 +12,39 @@ import {
   InputLabel,
   FormControl,
   Card,
+  FormHelperText,
+  Link,
 } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
+import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
 const Login = () => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [values, setValues] = React.useState({
+  const initialValues = {
     email: '',
     password: '',
     rememberMe: false,
-    showPassword: false,
-  });
-
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
   };
 
-  const handleCheckboxChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.checked });
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .required(t('validation.required'))
+      .email(t('validation.email'))
+      .max(100, t('validation.maxLength', { length: 100 })),
+    password: Yup.string()
+      .required(t('validation.required'))
+      .max(100, t('validation.maxLength', { length: 100 }))
+      .min(8, t('validation.minLength', { length: 8 })),
+  });
+
+  const onSubmit = (values, props) => {
+    console.log(props); //TODO: INICIAR SESION
   };
 
   return (
@@ -49,58 +60,74 @@ const Login = () => {
             <p className={classes.title}>{t('login.into')}</p>
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg')}>
-            <form>
-              <FormControl fullWidth variant="filled">
-                <InputLabel>{t('login.email')}</InputLabel>
-                <FilledInput
-                  variant="outlined"
-                  className={'mb-5'}
-                  id="email"
-                  type="email"
-                  value={values.email}
-                  onChange={handleChange('email')}
-                  required
-                />
-              </FormControl>
-              <FormControlPassword
-                placeholder={t('register.password')}
-                variable="password"
-                handleChange={handleChange('password')}
-                value={values.password}
-                fullWidth
-                className={'mb-3'}
-              />
-              <FormControlLabel
-                className={'mb-2'}
-                control={
-                  <BlueCheckBox
-                    id="remember-me"
-                    className={classes.rememberMe}
-                    checked={values.rememberMe}
-                    onChange={handleCheckboxChange('rememberMe')}
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={onSubmit}
+            >
+              {(props) => (
+                <Form>
+                  <Field
+                    as={FormControl}
+                    fullWidth
+                    variant="filled"
+                    name="email"
+                    className={classes.FieldHeight}
+                  >
+                    <InputLabel>{t('login.email')}</InputLabel>
+                    <FilledInput id="email" />
+                    <FormHelperText>
+                      <ErrorMessage name="email" />
+                    </FormHelperText>
+                  </Field>
+                  <FormControlPassword
+                    placeholder={t('register.password')}
+                    variable="password"
+                    fullWidth
                   />
-                }
-                label={t('login.rememberMe')}
-              />
-              <Button fullWidth className={clsx(classes.submitButton, 'mb-4')}>
-                {t('login.submit')}
-              </Button>
-            </form>
+                  <Field
+                    as={FormControlLabel}
+                    name="rememberMe"
+                    className={'mb-2'}
+                    control={
+                      <BlueCheckBox
+                        id="remember-me"
+                        className={classes.rememberMe}
+                      />
+                    }
+                    label={t('login.rememberMe')}
+                  />
+                  <Button
+                    fullWidth
+                    className={clsx(classes.submitButton, 'mb-4')}
+                    type="submit"
+                  >
+                    {t('login.submit')}
+                  </Button>
+                </Form>
+              )}
+            </Formik>
             <div className={'flex justify-around'}>
               <span className={classes.bottomLabel}>
                 <p>{t('login.hasAccountQuestion')}</p>
-                <a href="/register" className={classes.bottomLabelLink}>
-                  {/* TODO: FIX HREF? */}
+                <Link
+                  component={RouterLink}
+                  to="/register"
+                  className={classes.bottomLabelLink}
+                >
                   {t('login.getAccount')}
-                </a>
+                </Link>
               </span>
               <div className={classes.separator} />
               <span className={classes.bottomLabel}>
                 <p>{t('login.recoverQuestion')}</p>
-                <a href="/recover" className={classes.bottomLabelLink}>
-                  {/* TODO: FIX HREF? */}
+                <Link
+                  component={RouterLink}
+                  to="/register"
+                  className={classes.bottomLabelLink}
+                >
                   {t('login.recover')}
-                </a>
+                </Link>
               </span>
             </div>
           </Card>
@@ -115,18 +142,5 @@ const BlueCheckBox = withStyles({
     color: themeUtils.colors.blue,
   },
 })((props) => <Checkbox color="default" {...props} />);
-
-const SubmitButton = withStyles({
-  root: {
-    color: 'white',
-    backgroundColor: themeUtils.colors.blue,
-    transition: 'color 0.1s',
-    '&:hover': {
-      backgroundColor: themeUtils.colors.darkBlue,
-      transition: 'color 0.1s',
-    },
-    fontSize: '1em',
-  },
-})(Button);
 
 export default Login;
