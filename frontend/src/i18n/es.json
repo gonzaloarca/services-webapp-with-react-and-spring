@@ -12,6 +12,14 @@
     },
     "search": "Buscar..."
   },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "email": "Por favor ingrese una direccion de correo electronico",
+    "phone": "Por favor ingrese un telefono de almenos {{length}} numeros",
+    "minLength": "Porfavor ingrese almenos {{length}} caracteres",
+    "maxLength": "Porfavor ingrese menos de {{length}} characters",
+    "passwordRepeat": "Las contraseña no coinciden"
+  },
   "home": {
     "herotext": "Encuentre y contrate el servicio que necesita",
     "location": "Ubicación",
@@ -77,7 +85,7 @@
     "copyright": "© 2021 HireNet"
   },
   "login": {
-	"title": "Ingresar",
+    "title": "Ingresar",
     "into": "Ingresar a HireNet",
     "email": "Correo electrónico",
     "emailPlaceholder": "Correo electrónico",
@@ -118,7 +126,7 @@
   "image": {
     "clear": "Descartar",
     "invalid": "Archivo inválido, intente con otro archivo",
-	"pick": "Seleccionar archivo"
+    "pick": "Seleccionar archivo"
   },
   "hirePage": {
     "title": "Solicitar Servicio",

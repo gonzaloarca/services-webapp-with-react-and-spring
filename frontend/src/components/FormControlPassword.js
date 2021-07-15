@@ -1,4 +1,5 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {
@@ -7,15 +8,20 @@ import {
   FormControl,
   InputAdornment,
   IconButton,
+  FormHelperText,
 } from '@material-ui/core';
+import { Field, ErrorMessage } from 'formik';
+import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
+
+const useStyles = makeStyles(LoginAndRegisterStyles);
 
 const FormControlPassword = ({
   placeholder,
   variable,
-  handleChange,
-  value,
   fullWidth,
+  required,
 }) => {
+  const classes = useStyles();
   const [values, setValues] = React.useState({
     toggle: false,
   });
@@ -28,13 +34,18 @@ const FormControlPassword = ({
   };
 
   return (
-    <FormControl fullWidth={fullWidth} variant="filled">
+    <Field
+      as={FormControl}
+      fullWidth={fullWidth}
+      required={required}
+      variant="filled"
+      name={variable}
+      className={classes.FieldHeight}
+    >
       <InputLabel>{placeholder}</InputLabel>
       <FilledInput
         id={variable}
         type={values.toggle ? 'text' : 'password'}
-        value={value}
-        onChange={handleChange}
         required
         endAdornment={
           <InputAdornment position="end">
@@ -47,7 +58,10 @@ const FormControlPassword = ({
           </InputAdornment>
         }
       />
-    </FormControl>
+      <FormHelperText>
+        <ErrorMessage name={variable} />
+      </FormHelperText>
+    </Field>
   );
 };
 

@@ -4,3 +4,7 @@ body {
   font-family: 'Montserrat', 'Roboto', 'Helvetica', 'Arial', sans-serif;
   font-weight: 400;
 }
+
+.MuiFormHelperText-root{
+	color: red !important;
+}
