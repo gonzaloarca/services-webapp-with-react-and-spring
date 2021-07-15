@@ -191,4 +191,15 @@ public class UserDaoJpa implements UserDao {
         List<ByteImage> resultList = em.createQuery("SELECT u.byteImage FROM UserWithImage u WHERE u.id = :id", ByteImage.class).setParameter("id", id).getResultList();
         return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
     }
+
+    @Override
+    public long updateUserImage(long id, ByteImage userImage) {
+        UserWithImage user = em.find(UserWithImage.class,id);
+        if(user != null){
+            user.setByteImage(userImage);
+            em.persist(user);
+            return id;
+        }
+        return -1;
+    }
 }

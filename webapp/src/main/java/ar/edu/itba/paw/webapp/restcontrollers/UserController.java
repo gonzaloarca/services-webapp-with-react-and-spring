@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.PaginationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -8,7 +9,10 @@ import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.JobContractCardDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Locale;
@@ -40,6 +45,7 @@ public class UserController {
 
     @Autowired
     private MessageSource messageSource;
+
 
     @Context
     private UriInfo uriInfo;
@@ -111,10 +117,28 @@ public class UserController {
 
     @Path("/{id}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg"})
+    @Produces(value = {"image/png", "image/jpg",MediaType.APPLICATION_JSON})
     public Response getPostImage(@PathParam("id") final long id) {
         ByteImage byteImage = userService.findImageByUserId(id);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
+    }
+
+    @Path("/{id}/image")
+    @PUT
+    @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response uploadUserImage(@PathParam("id") long id,
+                                    @FormDataParam("file") FormDataBodyPart body) {
+
+        long result;
+        try {
+            result = userService.updateUserImage(id, ImageUploadUtil.fromInputStream(body));
+        } catch (IOException e) {
+            throw new RuntimeException("Upload failed");
+        }
+        if(result == -1)
+            throw new RuntimeException("Couldn't save image");
+        return Response.created(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(id)).path("/image").build()).build();
     }
 
     @Path("/search/")

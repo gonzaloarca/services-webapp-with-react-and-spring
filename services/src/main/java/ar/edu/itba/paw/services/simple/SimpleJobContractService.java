@@ -297,4 +297,9 @@ public class SimpleJobContractService implements JobContractService {
         return jobContractDao.findByPackageIdMaxPage(packageId, postId);
     }
 
+    @Override
+    public long addContractImage(long contractId, ByteImage contractImage) {
+        return jobContractDao.addContractImage(contractId,contractImage);
+    }
+
 }

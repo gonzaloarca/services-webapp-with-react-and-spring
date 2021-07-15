@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 public interface JobContractService {
 
@@ -68,4 +67,6 @@ public interface JobContractService {
     JobContract findByIdWithUser(long id);
 
     int findByPackageIdMaxPage(long packageId, long postId);
+
+    long addContractImage(long contractId, ByteImage contractImage);
 }

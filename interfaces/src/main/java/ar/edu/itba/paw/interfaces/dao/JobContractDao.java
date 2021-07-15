@@ -48,4 +48,6 @@ public interface JobContractDao {
     Optional<JobContract> findByIdWithUser(long id);
 
     int findByPackageIdMaxPage(long packageId, long postId);
+
+    long addContractImage(long contractId,ByteImage contractImage);
 }

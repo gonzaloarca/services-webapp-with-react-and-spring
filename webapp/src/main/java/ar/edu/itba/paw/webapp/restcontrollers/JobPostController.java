@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.form.PackageForm;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,11 +128,12 @@ public class JobPostController {
     @POST
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response uploadPostImage(@PathParam("postId") long postId) {
-        InputStream file = new ByteArrayInputStream(null);
+    public Response uploadPostImage(@PathParam("postId") long postId,
+                                    @FormDataParam("file") FormDataBodyPart body) {
+
         JobPostImage image;
         try {
-            image = jobPostImageService.addImage(postId, ImageUploadUtil.fromInputStream(file));
+            image = jobPostImageService.addImage(postId, ImageUploadUtil.fromInputStream(body));
         } catch (IOException e) {
             throw new RuntimeException("Upload failed");
         }
@@ -319,11 +321,35 @@ public class JobPostController {
 
     @Path("/{postId}/packages/{packageId}/contracts/{contractId}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg"})
+    @Produces(value = {"image/png", "image/jpg",MediaType.APPLICATION_JSON})
     public Response getContractImage(@PathParam("postId") final long postId,
                                      @PathParam("packageId") final long packageId,
                                      @PathParam("contractId") final long contractId) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId, packageId, postId);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
+    }
+
+    @Path("/{postId}/packages/{packageId}/contracts/{contractId}/image")
+    @PUT
+    @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response uploadUserImage(@PathParam("postId") final long postId,
+                                    @PathParam("packageId") final long packageId,
+                                    @PathParam("contractId") final long contractId,
+                                    @FormDataParam("file") FormDataBodyPart body) {
+
+        long result;
+        try {
+            result = jobContractService.addContractImage(contractId, ImageUploadUtil.fromInputStream(body));
+        } catch (IOException e) {
+            throw new RuntimeException("Upload failed");
+        }
+        if (result == -1)
+            throw new RuntimeException("Couldn't save image");
+        return Response.created(uriInfo.getBaseUriBuilder()
+                .path("/job-posts").path(String.valueOf(postId))
+                .path("/packages").path(String.valueOf(packageId))
+                .path("/contracts").path(String.valueOf(contractId))
+                .path("/image").build()).build();
     }
 }

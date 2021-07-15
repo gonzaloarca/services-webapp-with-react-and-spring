@@ -132,6 +132,18 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
+    public long addContractImage(long contractId,ByteImage contractImage) {
+        JobContractWithImage contract = em.find(JobContractWithImage.class,contractId);
+        if(contract != null){
+            contract.setByteImage(contractImage);
+            em.persist(contract);
+            return contractId;
+        }
+        return -1;
+
+    }
+
+    @Override
     public Optional<User> findClientByContractId(long id) {
         return em.createQuery(
                 "SELECT jc.client FROM JobContract jc WHERE jc.id = :id", User.class

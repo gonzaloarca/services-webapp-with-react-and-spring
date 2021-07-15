@@ -42,4 +42,6 @@ public interface UserDao {
     Optional<UserWithImage> findUserWithImage(long id);
 
     Optional<ByteImage> findImageByUserId(long id);
+
+    long updateUserImage(long id, ByteImage userImage);
 }

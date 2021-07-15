@@ -157,4 +157,9 @@ public class SimpleUserService implements UserService {
     public ByteImage findImageByUserId(long id) {
         return userDao.findImageByUserId(id).orElseThrow(ImageNotFoundException::new);
     }
+
+    @Override
+    public long updateUserImage(long id, ByteImage userImage) {
+        return userDao.updateUserImage(id,userImage);
+    }
 }

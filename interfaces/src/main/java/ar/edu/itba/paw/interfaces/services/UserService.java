@@ -46,4 +46,6 @@ public interface UserService {
     UserWithImage findUserWithImage(long id);
 
     ByteImage findImageByUserId(long id);
+
+    long updateUserImage(long id, ByteImage userImage);
 }
