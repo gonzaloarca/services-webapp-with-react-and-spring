@@ -13,6 +13,7 @@ import {
   Grid,
   FormHelperText,
   Link,
+  Input,
 } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
@@ -26,7 +27,6 @@ const Register = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [values, setValues] = React.useState({
-    avatar: null,
     currentStep: 0,
   });
 
@@ -35,47 +35,51 @@ const Register = () => {
     phone: '',
     email: '',
     password: '',
-    passwordRepeat: '',
+    passwordrepeat: '',
+    image: '',
   };
 
   const validationSchema = Yup.object({
     username: Yup.string()
-      .required(t('validation.required'))
-      .max(100, t('validation.maxLength', { length: 100 })),
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
     phone: Yup.string()
-      .required(t('validation.required'))
-      .matches(/^\+?[\d-]{7,100}$/, t('validation.phone', { length: 7 })),
+      .required(t('validationerror.required'))
+      .matches(/^\+?[\d-]{7,100}$/, t('validationerror.phone', { length: 7 })),
     email: Yup.string()
-      .required(t('validation.required'))
-      .email(t('validation.email'))
-      .max(100, t('validation.maxLength', { length: 100 })),
+      .required(t('validationerror.required'))
+      .email(t('validationerror.email'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
     password: Yup.string()
-      .required(t('validation.required'))
-      .max(100, t('validation.maxLength', { length: 100 }))
-      .min(8, t('validation.minLength', { length: 8 })),
-    passwordRepeat: Yup.string()
-      .required(t('validation.required'))
-      .max(100, t('validation.maxLength', { length: 100 }))
-      .min(8, t('validation.minLength', { length: 8 }))
-      .oneOf([Yup.ref('password'), null], t('validation.passwordRepeat')),
-    //TODO: add avatar validation
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 }))
+      .min(8, t('validationerror.minlength', { length: 8 })),
+    passwordrepeat: Yup.string()
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 }))
+      .min(8, t('validationerror.minlength', { length: 8 }))
+      .oneOf([Yup.ref('password'), null], t('validationerror.passwordrepeat')),
+    image: Yup.mixed()
+      .test(
+        'is-correct-type',
+        t('validationerror.avatarfile.type'),
+        (file) =>
+          file === '' ||
+          (file && ['image/png', 'image/jpeg'].includes(file.type))
+      )
+      .test(
+        'is-correct-size',
+        t('validationerror.avatarfile.size', { size: 2 }),
+        (file) => file === '' || (file && file.size <= 2 * 1024 * 1024)
+      ),
   });
 
   const onSubmit = (values, props) => {
-    console.log(props); //TODO: REGISTRAR
+    console.log(values); //TODO: REGISTRAR
   };
 
   const changeToStep = (newStep) => {
     setValues({ ...values, currentStep: newStep });
-  };
-
-  const handleAvatarChange = (event) => {
-    if (event.target.files[0] !== undefined) {
-      setValues({
-        ...values,
-        avatar: URL.createObjectURL(event.target.files[0]),
-      });
-    }
   };
 
   return (
@@ -87,7 +91,11 @@ const Register = () => {
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
-            <img src="/img/adduser.svg" alt={t('register.title')} />
+            <img
+              src="/img/adduser.svg"
+              alt={t('register.title')}
+              loading="lazy"
+            />
             <p className={classes.title}>{t('register.into')}</p>
           </div>
           <Card className={clsx(classes.customCard, classes.registerCard)}>
@@ -100,7 +108,7 @@ const Register = () => {
                 <Form>
                   {values.currentStep <= 0 ? (
                     <Grid container spacing={3}>
-                      <Grid item sm={8} xs={12}>
+                      <Grid item sm={7} xs={12}>
                         <Field
                           as={FormControl}
                           name="username"
@@ -116,7 +124,7 @@ const Register = () => {
                           </FormHelperText>
                         </Field>
                       </Grid>
-                      <Grid item sm={4} xs={12}>
+                      <Grid item sm={5} xs={12}>
                         <Field
                           as={FormControl}
                           name="phone"
@@ -159,8 +167,8 @@ const Register = () => {
                       <Grid item sm={6} xs={12}>
                         <FormControlPassword
                           required
-                          placeholder={t('register.passwordRepeat')}
-                          variable="passwordRepeat"
+                          placeholder={t('register.passwordrepeat')}
+                          variable="passwordrepeat"
                           fullWidth
                         />
                       </Grid>
@@ -177,57 +185,64 @@ const Register = () => {
                   ) : (
                     <div>
                       <p className={clsx(classes.subtitle, 'mb-3')}>
-                        {t('register.selectImage')}
+                        {t('register.selectimage')}
                       </p>
 
                       <div className={clsx('flex justify-center mb-3')}>
+                        {console.log(props.values.image)}
                         <img
                           className={'rounded-full h-48 w-48 object-cover'}
                           id="img-preview"
                           src={
-                            values.avatar === null
+                            props.values.image === ''
                               ? './img/defaultavatar.svg'
-                              : values.avatar
+                              : URL.createObjectURL(props.values.image)
                           }
                           alt=""
                         />
                       </div>
                       <p className={'mb-3 text-center'}>
-                        {t('register.imagePreview')}
+                        {t('register.imagepreview')}
                       </p>
                       <Grid container className={'mb-3 justify-center'}>
-                        <Grid item sm={4}>
-                          <Button
-                            variant="contained"
-                            component="label"
-                            fullWidth
+                        <Grid item>
+                          <Input
+                            name="image"
+                            onChange={(event) =>
+                              event.target.files[0] !== undefined &&
+                              props.setFieldValue(
+                                'image',
+                                event.target.files[0]
+                              )
+                            }
+                            type="file"
+                          />
+                          <GreyButton
+                            disabled={props.values.image === ''}
+                            onClick={() => props.setFieldValue('image', '')}
                           >
-                            {t('image.pick')}
-                            <input
-                              onChange={(event) => handleAvatarChange(event)}
-                              type="file"
-                              id="file"
-                              hidden
-                            />
-                          </Button>
+                            {t('register.discardimage')}
+                          </GreyButton>
+                          <FormHelperText>
+                            <ErrorMessage name="image" />
+                          </FormHelperText>
                         </Grid>
                       </Grid>
                       <p className={'mb-5 text-gray-500'}>
-                        {t('register.fileDisclaimer')}
+                        {t('register.filedisclaimer', { size: 2 })}
                       </p>
                       <div className="flex justify-center">
-                        <GoBackButton
+                        <GreyButton
                           className={'mb-4 align-center'}
                           onClick={() => changeToStep(0)}
                         >
-                          {t('register.goBack')}
-                        </GoBackButton>
+                          {t('register.goback')}
+                        </GreyButton>
                       </div>
                       <div className="flex justify-center">
                         <Button
                           fullWidth
                           className={clsx(classes.submitButton, 'mb-4')}
-                          //   onClick={() => ()} TODO: REGISTRAR CON VALORES DE values
                           type="submit"
                         >
                           {t('register.submit')}
@@ -239,7 +254,7 @@ const Register = () => {
               )}
             </Formik>
             <span className={classes.bottomLabel}>
-              <p>{t('register.alreadyHasAccount')}</p>
+              <p>{t('register.alreadyhasaccount')}</p>
               <Link
                 component={RouterLink}
                 to="/login"
@@ -255,7 +270,7 @@ const Register = () => {
   );
 };
 
-const GoBackButton = withStyles({
+const GreyButton = withStyles({
   root: {
     color: themeUtils.colors.grey,
     backgroundColor: themeUtils.colors.lightGrey,

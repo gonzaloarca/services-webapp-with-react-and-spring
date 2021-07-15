@@ -6,5 +6,6 @@ body {
 }
 
 .MuiFormHelperText-root{
-	color: red !important;
+	/* error messagges */
+	color: red !important; 
 }
