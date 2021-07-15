@@ -274,10 +274,14 @@ const HireForm = () => {
           <Grid item sm={12} className="mx-10 mb-5">
             <div className={classes.fileInputContainer}>
               <input type="file" path="image" id="imageInput" />
-              {/* TODO: boton de descartar imagen subida
-              <Button className={classes.cancelBtn} variant="outlined" type="button">
+              <Button
+                className={classes.cancelBtn}
+                variant="outlined"
+                type="button"
+                onClick={() => clearImage()}
+              >
                 Descartar
-              </Button> */}
+              </Button>
             </div>
             <div className="font-thin text-sm">
               {t('hirePage.form.imageDisclamer')}
@@ -421,5 +425,12 @@ const PriceTag = () => {
     </div>
   );
 };
+
+function clearImage() {
+  let imageInput = document.querySelector('#imageInput');
+  imageInput.value = '';
+  //TODO:
+  //validateImage(imageInput);
+}
 
 export default Hire;
