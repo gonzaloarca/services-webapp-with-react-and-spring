@@ -4,6 +4,7 @@ import { Rating } from '@material-ui/lab';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
+import createDate from '../utils/createDate';
 
 const useStyles = makeStyles((theme) => ({
   reviewHeader: {
@@ -47,7 +48,7 @@ const ReviewCard = ({ review }) => {
             <p className="text-sm font-semibold">{review.client.username}</p>
             {/* Fecha de review */}
             <p className="text-gray-400 font-medium text-sm">
-              {t('date', { date: new Date(review.creationDate + 'Z') })}
+              {t('date', { date: createDate(review.creationDate) })}
             </p>
             {/* Referencia al jobPost */}
             {review.jobPost && (

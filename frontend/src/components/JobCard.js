@@ -14,6 +14,7 @@ import { Rating } from '@material-ui/lab';
 import { Check, LocalOffer, LocationOn, Star } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import packagePriceFormatter from '../utils/packagePriceFormatter';
+import RatingDisplay from './RatingDisplay';
 
 const useStyles = makeStyles({
   image: {
@@ -119,12 +120,7 @@ const CardRating = ({ avgRate, reviewsCount }) => {
   return (
     <div className={classes.ratingContainer}>
       {reviewsCount > 0 ? (
-        <>
-          <Rating precision={0.5} value={avgRate} readOnly />
-          <p className={classes.reviewsCount}>
-            {t('reviewcount', { count: reviewsCount })}
-          </p>
-        </>
+        <RatingDisplay avgRate={avgRate} reviewsCount={reviewsCount} />
       ) : (
         <Chip
           className={classes.noReviewsChip}

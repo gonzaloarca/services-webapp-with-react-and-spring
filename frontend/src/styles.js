@@ -1,21 +1,22 @@
 const styles = (theme) => ({
   contentContainer: {
-    width: '90vw',
-    maxWidth: 1184,
+    width: '95vw',
+    maxWidth: 1284,
     margin: '0 auto',
     padding: '30px 5%',
     backgroundColor: 'white',
     boxShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
   },
   contentContainerTransparent: {
-    width: '90vw',
-    maxWidth: 1184,
+    width: '95vw',
+    maxWidth: 1284,
     margin: '0 auto',
     padding: '30px 5%',
   },
   sectionTitle: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
+    padding: '25px 30px 0',
+    fontSize: '1.3rem',
+    fontWeight: 600,
   },
   blueCircle: {
     width: '35px',

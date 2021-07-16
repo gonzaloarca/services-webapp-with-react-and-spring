@@ -14,7 +14,6 @@ export const themeUtils = {
     darkGreen: '#54AA51',
     red: '#E26767',
     background: '#EFEFEF',
-    red: 'red',
   },
   shadows: {
     containerShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
