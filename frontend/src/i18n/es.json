@@ -126,7 +126,7 @@
     "existingemail": "El email que ha ingresado ya pertenece a un usuario",
     "passwordInvalid": "La contraseña debe ser de entre 8 y 100 caracteres",
     "passwordNotMatch": "Las contraseñas deben coincidir",
-	"discardimage": "Descartar"
+    "discardimage": "Descartar"
   },
   "image": {
     "clear": "Descartar",
@@ -134,6 +134,7 @@
     "pick": "Seleccionar archivo"
   },
   "mycontracts": {
+    "contracts": "Contratos",
     "hiredservices": "Servicios contratados",
     "myservices": "Mis servicios",
     "activecontracts": "Contratos activos",

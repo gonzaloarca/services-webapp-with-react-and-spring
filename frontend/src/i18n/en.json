@@ -122,7 +122,7 @@
     "goback": "Go back",
     "imagepreview": "Image preview",
     "existingemail": "The email address is already in use",
-	"discardimage": "Discard"
+    "discardimage": "Discard"
   },
   "image": {
     "clear": "Clear",
@@ -130,6 +130,7 @@
     "pick": "Choose file"
   },
   "mycontracts": {
+    "contracts": "Contracts",
     "hiredservices": "Hired services",
     "myservices": "My services",
     "activecontracts": "Active contracts",

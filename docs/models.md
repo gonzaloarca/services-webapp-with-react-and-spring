@@ -10,8 +10,7 @@
   - [professional](#professional)
   - [user](#user)
   - [package](#package)
-  - [contract (Mis servicios)](#contract-mis-servicios)
-  - [contract (Servicios contratados)](#contract-servicios-contratados)
+  - [jobContractCard](#jobcontractcard)
   - [jobContract](#jobcontract-1)
 ## jobContract
 ```json
@@ -177,7 +176,7 @@
     "title": "4 dias a la semana 4 horas"
 }
 ```
-## contract (Mis servicios)
+## jobContractCard
 ```json
 {
     "avgRate": 3.6666666666666665,
@@ -185,9 +184,15 @@
         "id": 11,
         "uri": "http://localhost:8080/users/11"
     },
+    "professional": {
+        "id": 12,
+        "uri": "http://localhost:8080/users/12"
+    },
     "contractsCompleted": 4,
     "creationDate": "2021-06-16T16:48:40.860",
-    "imageUrl": "http://localhost:8080/job-posts/8/images/12",
+    "image": {
+         "uri": "http://localhost:8080/job-posts/8/images/12",
+    }
     "jobContract": {
         "id": 29,
         "uri": "http://localhost:8080/job-posts/8/packages/8/contracts/29"
@@ -219,64 +224,22 @@
 }
 ```
 
-## contract (Servicios contratados)
-```json
-{
-    "avgRate": 0.0,
-    "contractsCompleted": 1,
-    "creationDate": "2021-05-05T18:41:31.191",
-    "imageUrl": "http://localhost:8080/job-posts/5/images/8",
-    "jobContract": {
-        "id": 12,
-        "uri": "http://localhost:8080/job-posts/5/packages/5/contracts/12"
-    },
-    "jobPackage": {
-        "id": 5,
-        "uri": "http://localhost:8080/job-posts/5/packages/5"
-    },
-    "jobPost": {
-        "id": 5,
-        "uri": "http://localhost:8080/job-posts/5"
-    },
-    "jobTitle": "Pintor Profesional",
-    "jobType": {
-        "description": "PAINTING",
-        "id": 4
-    },
-    "packageTitle": "Se pinta cualquier objeto",
-    "professional": {
-        "id": 3,
-        "uri": "http://localhost:8080/users/3"
-    },
-    "rateType": {
-        "description": "TBD",
-        "id": 2
-    },
-    "reviewsCount": 0,
-    "scheduledDate": "2021-06-16T14:25:28.028799",
-    "state": {
-        "description": "COMPLETED",
-        "id": 6
-    }
-}
-```
-
 ## jobContract
 ```json
 {
  "clientId": 7,
-    "creationDate": "2021-05-02T18:22:13.558460",
-    "description": "Arreglar un ca ̃õ <alert>1</alert>",
-    "id": 5,
-    "jobPackage": {
-        "id": 1,
-        "uri": "http://localhost:8080/job-posts/1/packages/1"
-    },
-    "lastModifiedDate": "2021-06-16T14:25:28.028799",
-    "scheduledDate": "2021-06-16T14:25:28.028799",
-    "state": {
-        "description": "COMPLETED",
-        "id": 6
-    }
+ "creationDate": "2021-05-02T18:22:13.558460",
+ "description": "Arreglar un ca ̃õ <alert>1</alert>",
+ "id": 5,
+ "jobPackage": {
+    "id": 1,
+    "uri": "http://localhost:8080/job-posts/1/packages/1"
+  },
+  "lastModifiedDate": "2021-06-16T14:25:28.028799",
+  "scheduledDate": "2021-06-16T14:25:28.028799",
+  "state": {
+    "description": "COMPLETED",
+    "id": 6
+   }
 }
 ```

@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Divider,
   Grid,
   makeStyles,
   Tab,
@@ -15,6 +16,7 @@ import styles from '../styles';
 import { themeUtils } from '../theme';
 import { Check, Group, Person, Schedule, Work } from '@material-ui/icons';
 import clsx from 'clsx';
+import ContractCard from '../components/ContractCard';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -22,16 +24,85 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     backgroundColor: 'white',
     color: 'black',
+    '& .MuiTab-wrapper': {
+      flexDirection: 'row',
+      justifyContent: 'start',
+    },
   },
   tabContent: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'start',
   },
   contractSection: {
-    padding: 10,
+    padding: '10px 30px',
+    backgroundColor: 'white',
+    boxShadow: themeUtils.shadows.containerShadow,
+  },
+  contractTypeSection: {
+    padding: '10px 0',
+    backgroundColor: 'white',
+    boxShadow: themeUtils.shadows.containerShadow,
   },
 }));
+
+const hiredServices = {
+  activeContracts: [
+    {
+      avgRate: 3.6666666666666665,
+      client: {
+        id: 11,
+        username: 'El Beto (Julian Sicardi)',
+        image: '/img/plumbing.jpeg',
+      },
+      professional: {
+        id: 12,
+        username: 'El Beto (Julian Sicardi)',
+        image: '/img/plumbing.jpeg',
+      },
+      contractsCompleted: 4,
+      creationDate: '2021-06-16T16:48:40.860',
+      image: {
+        uri: '/img/plumbing.jpeg',
+      },
+      jobContract: {
+        id: 29,
+        uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
+      },
+      jobPackage: {
+        id: 8,
+        uri: 'http://localhost:8080/job-posts/8/packages/8',
+      },
+      jobPost: {
+        id: 8,
+        uri: 'http://localhost:8080/job-posts/8',
+      },
+      jobTitle: 'Niñero turno mañana',
+      jobType: {
+        description: 'BABYSITTING',
+        id: 7,
+      },
+      packageTitle: '4 dias a la semana 4 horas',
+      rateType: {
+        description: 'TBD',
+        id: 2,
+      },
+      reviewsCount: 3,
+      scheduledDate: '2021-06-16T16:48',
+      state: {
+        description: 'PENDING_APPROVAL',
+        id: 0,
+      },
+    },
+  ],
+  pendingContracts: [],
+  finalizedContracts: [],
+};
+
+const myServices = {
+  activeContracts: [],
+  pendingContracts: [],
+  finalizedContracts: [],
+};
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -100,13 +171,10 @@ const MyContracts = () => {
           </AppBar>
 
           <TabPanel value={tabValue} index={0}>
-            <ContractsDashboard />
+            <ContractsDashboard contracts={hiredServices} />
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
-            Item Two
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            Item Three
+            <ContractsDashboard contracts={myServices} />
           </TabPanel>
         </div>
       </div>
@@ -114,7 +182,7 @@ const MyContracts = () => {
   );
 };
 
-const ContractsDashboard = () => {
+const ContractsDashboard = ({ contracts }) => {
   const [tabValue, setTabValue] = React.useState(0);
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
@@ -145,6 +213,19 @@ const ContractsDashboard = () => {
     },
   ];
 
+  const getContracts = (index) => {
+    switch (index) {
+      case 0:
+        return contracts.activeContracts;
+      case 1:
+        return contracts.pendingContracts;
+      case 2:
+        return contracts.finalizedContracts;
+      default:
+        return [];
+    }
+  };
+
   // const getSectionTitle = (index) => {
   //   switch (index) {
   //     case 0:
@@ -173,44 +254,59 @@ const ContractsDashboard = () => {
 
   return (
     <Grid container spacing={4}>
+      {/* Sección con selector de tipo de contrato */}
       <Grid item sm={12} md={3}>
-        <Tabs
-          orientation="vertical"
-          value={tabValue}
-          onChange={handleChange}
-          aria-label="Vertical tabs example"
-          className={classes.tabs}
-        >
-          {contractSections.map((section, index) => (
-            <HirenetTab
-              key={index}
-              className="items-start"
-              label={
-                <div
-                  className={clsx(
-                    classes.tabContent,
-                    index === tabValue ? 'font-semibold' : 'font-medium'
-                  )}
-                >
-                  <CircleIcon
-                    className="mr-2"
-                    color={section.color}
-                    size="2rem"
+        <div className={classes.contractTypeSection}>
+          <h2 className={clsx(globalClasses.sectionTitle, 'p-3')}>
+            {t('mycontracts.contracts')}
+          </h2>
+          <Divider />
+          <Tabs
+            orientation="vertical"
+            value={tabValue}
+            indicatorColor="primary"
+            onChange={handleChange}
+            className={classes.tabs}
+          >
+            {contractSections.map((section, index) => (
+              <HirenetTab
+                key={index}
+                className="items-start"
+                label={
+                  <div
+                    className={clsx(
+                      classes.tabContent,
+                      index === tabValue ? 'font-semibold' : 'font-medium'
+                    )}
                   >
-                    {section.icon}
-                  </CircleIcon>
-                  {section.tabLabel}
-                </div>
-              }
-            />
-          ))}
-        </Tabs>
+                    <CircleIcon
+                      className="mr-2"
+                      color={section.color}
+                      size="2rem"
+                    >
+                      {section.icon}
+                    </CircleIcon>
+                    <div className="text-left">{section.tabLabel}</div>
+                  </div>
+                }
+              />
+            ))}
+          </Tabs>
+        </div>
       </Grid>
+
+      {/* Sección con lista de contratos */}
       <Grid item sm={12} md={9}>
         <div className={classes.contractSection}>
           {contractSections.map((section, index) => (
-            <TabPanel value={tabValue} index={index}>
-              <h2 className={globalClasses.sectionTitle}>{section.title}</h2>
+            <TabPanel key={index} value={tabValue} index={index}>
+              <h2 className={clsx(globalClasses.sectionTitle, 'py-3')}>
+                {section.title}
+              </h2>
+              <Divider />
+              {getContracts(index).map((contract) => (
+                <ContractCard contract={contract} key={contract.id} />
+              ))}
             </TabPanel>
           ))}
         </div>
