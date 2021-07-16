@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.dto.AnalyticRankingDto;
+import ar.edu.itba.paw.webapp.dto.ReviewsByExactRateDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
@@ -13,6 +15,7 @@ import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -21,6 +24,8 @@ import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Path("/users")
@@ -33,12 +38,17 @@ public class UserController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
+    private MessageSource messageSource;
+
     @Context
     private UriInfo uriInfo;
 
     @Context
     private HttpHeaders headers;
-
 
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -197,7 +207,30 @@ public class UserController {
 
         userService.recoverUserPassword(user.getId(), newPassword);
         return Response.ok(new GenericEntity<String>("Recovery mail sent"){}).build();
+    }
 
+    @GET
+    @Path("/{id}/rates")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response rates(@PathParam("id") final long id) {
+        accountControllerLogger.debug("Finding rates for pro with id: {}", id);
+        return Response.ok(ReviewsByExactRateDto.fromListWithRates(reviewService.findProfessionalReviewsByPoints(id)))
+                .build();
+    }
+
+    @Path("/{id}/rankings")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getCategoryRankings(@PathParam("id") long id) {
+        accountControllerLogger.debug("Finding analytics rankings for user {}", id);
+        List<AnalyticRankingDto> rankingDtoList = userService.findUserAnalyticRankings(id).stream()
+                .map(ranking -> AnalyticRankingDto.fromAnalyticRanking(ranking,
+                        messageSource.getMessage(ranking.getJobType().getDescription(), null,
+                                LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))))
+                .collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<AnalyticRankingDto>>(rankingDtoList) {
+        }).build();
     }
 }
 

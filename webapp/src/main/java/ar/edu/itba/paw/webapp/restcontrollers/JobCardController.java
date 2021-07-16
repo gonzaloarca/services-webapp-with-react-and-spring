@@ -43,15 +43,32 @@ public class JobCardController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findAll(
-            @QueryParam(value = "page") @DefaultValue("1") int page) {
-        if (page < 1) {
+            @QueryParam("userId") final Long userId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("type") final String type) {
+        if (page < 1)
             page = 1;
-        }
-        JobCardControllerLogger.debug("Finding all jobcards for page: {}", page);
-        int maxPage = paginationService.findJobCardsMaxPage();
+
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
-        final List<JobCardDto> jobCardDtoList = jobCardService.findAll(page - 1)
-                .stream().map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
+        int maxPage;
+        List<JobCard> jobCards;
+
+        if (userId == null) {
+            JobCardControllerLogger.debug("Finding all jobcards for page: {}", page);
+            maxPage = paginationService.findJobCardsMaxPage();
+            jobCards = jobCardService.findAll(page - 1);
+        } else if (type != null && type.equalsIgnoreCase("related")) {
+            JobCardControllerLogger.debug("Finding relatedJobCards for pro with id: {}", userId);
+            maxPage = paginationService.findRelatedJobCardsMaxPage(userId);
+            jobCards = jobCardService.findRelatedJobCards(userId, page - 1);
+        } else {
+            JobCardControllerLogger.debug("Finding jobCards for pro with id: {}", userId);
+            maxPage = paginationService.findJobCardsByUserIdMaxPage(userId);
+            jobCards = jobCardService.findByUserId(userId, page - 1);
+        }
+
+        List<JobCardDto> jobCardDtoList = jobCards.stream()
+                .map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
                         messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, locale)))
                 .collect(Collectors.toList());
 
@@ -63,11 +80,12 @@ public class JobCardController {
     @GET
     @Path("/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response search(@QueryParam(value = "zone") @NotNull final int zone,
-                           @QueryParam(value = "query") String query,
-                           @QueryParam(value = "category") Integer category,
-                           @QueryParam(value = "orderBy") Integer orderBy,
-                           @QueryParam(value = "page") @DefaultValue("1") int page) {
+    public Response search(@QueryParam("zone") @NotNull final int zone,
+                           @QueryParam("query") String query,
+                           @QueryParam("category") Integer category,
+                           @QueryParam("orderBy") Integer orderBy,
+                           @QueryParam("page") @DefaultValue("1") int page) {
+
         if (category == null)
             category = SEARCH_WITHOUT_CATEGORIES;
         if (orderBy == null)

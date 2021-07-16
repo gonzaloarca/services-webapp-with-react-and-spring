@@ -50,9 +50,9 @@ public class JobContractController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findContracts(@QueryParam("userId") final Long userId,
-                                  @QueryParam(value = "state") final String contractState,
-                                  @QueryParam(value = "role") final String role,
-                                  @QueryParam(value = "page") @DefaultValue("1") int page) {
+                                  @QueryParam("state") final String contractState,
+                                  @QueryParam("role") final String role,
+                                  @QueryParam("page") @DefaultValue("1") int page) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         JobContractsControllerLogger.debug("Finding contracts Max page {}", userId);
         int maxPage = jobContractService.findContractsMaxPage(userId, contractState, role);
@@ -102,7 +102,7 @@ public class JobContractController {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response updateContract(final JobContractDto jobContractDto,
                                    @PathParam("contractId") final long contractId,
-                                   @QueryParam(value = "role") String role) {
+                                   @QueryParam("role") String role) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         String webPageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();

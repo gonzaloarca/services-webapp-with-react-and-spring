@@ -150,7 +150,7 @@ public class JobPostController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response reviewsByPostId(
             @PathParam("id") final long id,
-            @QueryParam(value = "page") @DefaultValue("1") int page) {
+            @QueryParam("page") @DefaultValue("1") int page) {
         if (page < 1) {
             page = 1;
         }
@@ -171,7 +171,7 @@ public class JobPostController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response packagesByPostId(
             @PathParam("id") final long id,
-            @QueryParam(value = "page") @DefaultValue("1") int page) {
+            @QueryParam("page") @DefaultValue("1") int page) {
         if (page < 1) {
             page = 1;
         }

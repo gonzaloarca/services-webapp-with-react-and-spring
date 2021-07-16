@@ -57,8 +57,7 @@ public class ReviewController {
     public Response getReviews(@QueryParam("userId") final Long userId,
                                @QueryParam("role") final String role,
                                @QueryParam("postId") final Long postId,
-                               @QueryParam(value = "page") @DefaultValue("1") int page){
-        Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
+                               @QueryParam("page") @DefaultValue("1") int page){
         reviewControllerLogger.debug("Finding reviews Max page {}", userId);
         int maxPage = reviewService.findReviewsMaxPage(userId,postId, role);
 
