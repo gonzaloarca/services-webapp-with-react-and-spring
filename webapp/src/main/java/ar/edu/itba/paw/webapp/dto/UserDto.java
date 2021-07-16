@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
+import ar.edu.itba.paw.models.UserWithImage;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -35,17 +36,20 @@ public class UserDto {
     //TODO FIX NOT NULL
     private List<UserAuth.Role> roles;
 
-    public static UserDto fromUser(User user){
+    private LinkDto image;
+
+    public static UserDto fromUser(UserWithImage user, UriInfo uriInfo){
         final UserDto dto = new UserDto();
         dto.id = user.getId();
         dto.email = user.getEmail();
         dto.username = user.getUsername();
         dto.phone = user.getPhone();
+        dto.image = user.getByteImage() != null ? new LinkDto(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(dto.id)).path("/image").build()) : null;
         return dto;
     }
 
-    public static UserDto fromUserAndRoles(User user, List<UserAuth.Role> roles){
-        final UserDto dto = fromUser(user);
+    public static UserDto fromUserAndRoles(UserWithImage user, List<UserAuth.Role> roles, UriInfo uriInfo){
+        final UserDto dto = fromUser(user,uriInfo);
         dto.roles = roles;
         return dto;
     }
@@ -111,5 +115,13 @@ public class UserDto {
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public LinkDto getImage() {
+        return image;
+    }
+
+    public void setImage(LinkDto image) {
+        this.image = image;
     }
 }

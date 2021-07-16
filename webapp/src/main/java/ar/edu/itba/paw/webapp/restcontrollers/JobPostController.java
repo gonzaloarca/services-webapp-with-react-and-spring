@@ -107,8 +107,9 @@ public class JobPostController {
     public Response jobPostDetails(@PathParam("id") final long id) {
         jobPostControllerLogger.debug("Finding job post by id: {}", id);
         JobPost jobPost = jobPostService.findByIdWithInactive(id);
+        List<Long> images = jobPostImageService.getImagesIdsByPostId(id);
         return Response.ok(JobPostDto.fromJobPostWithLocalizedMessage(
-                jobPost, uriInfo,
+                jobPost,images, uriInfo,
                 messageSource.getMessage(jobPost.getJobType().getDescription(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))))
                 .build();
     }

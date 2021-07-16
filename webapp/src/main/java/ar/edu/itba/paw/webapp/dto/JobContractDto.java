@@ -16,6 +16,7 @@ public class JobContractDto {
     private LocalDateTime scheduledDate;
     private String description;
     private JobContractStateDto state;
+    private LinkDto image;
 
     public static JobContractDto fromJobContract(JobContract jobContract, UriInfo uriInfo) {
         JobContractDto jobContractDto = new JobContractDto();
@@ -27,6 +28,7 @@ public class JobContractDto {
         jobContractDto.scheduledDate = jobContract.getScheduledDate();
         jobContractDto.description = jobContract.getDescription();
         jobContractDto.state = JobContractStateDto.fromJobContractState(jobContract.getState());
+        jobContractDto.image = new LinkDto(uriInfo.getBaseUriBuilder().path("/contracts").path(String.valueOf(jobContractDto.id)).path("/image").build());
         return jobContractDto;
     }
 
@@ -114,5 +116,13 @@ public class JobContractDto {
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public LinkDto getImage() {
+        return image;
+    }
+
+    public void setImage(LinkDto image) {
+        this.image = image;
     }
 }

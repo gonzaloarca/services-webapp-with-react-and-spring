@@ -55,8 +55,8 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public Optional<User> updateUserById(long id, String name, String phone) {
-        User aux = em.find(User.class, id);
+    public Optional<UserWithImage> updateUserById(long id, String name, String phone) {
+        UserWithImage aux = em.find(UserWithImage.class, id);
         if (aux != null) {
             aux.setUsername(name);
             aux.setPhone(phone);
@@ -201,5 +201,11 @@ public class UserDaoJpa implements UserDao {
             return id;
         }
         return -1;
+    }
+
+    @Override
+    public Optional<UserWithImage> findUserWithImageByEmail(String email) {
+        return em.createQuery("FROM UserWithImage AS u WHERE u.email = :email", UserWithImage.class)
+                .setParameter("email", email).getResultList().stream().findFirst();
     }
 }

@@ -81,11 +81,11 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getById(@PathParam("id") long id) {
         accountControllerLogger.debug("Finding user with email {}", id);
-        User user = userService.findById(id);
+        UserWithImage user = userService.findUserWithImage(id);
         accountControllerLogger.debug("Finding auth info for user with email {}", user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        UserDto userAnswer = UserDto.fromUserAndRoles(user, auth.getRoles());
+        UserDto userAnswer = UserDto.fromUserAndRoles(user, auth.getRoles(),uriInfo);
         return Response.ok(userAnswer).build();
     }
 
@@ -146,11 +146,11 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getByEmail(@QueryParam("email") String email) {
         accountControllerLogger.debug("Finding user with email {}", email);
-        User currentUser = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        UserWithImage currentUser = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
         accountControllerLogger.debug("Finding auth info for user with email {}", currentUser.getEmail());
         UserAuth auth = userService.getAuthInfo(currentUser.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        UserDto userAnswer = UserDto.fromUserAndRoles(currentUser, auth.getRoles());
+        UserDto userAnswer = UserDto.fromUserAndRoles(currentUser, auth.getRoles(),uriInfo);
         return Response.ok(userAnswer).build();
     }
 
@@ -169,9 +169,9 @@ public class UserController {
         String phone = userDto.getPhone() != null ? userDto.getPhone() : user.getPhone();
         accountControllerLogger.debug("Updating user {} with data: name: {}, phone: {}", id,
                 username, phone);
-        User updatedUser = userService.updateUserById(id, username, phone);
+        UserWithImage updatedUser = userService.updateUserById(id, username, phone);
 
-        UserDto userAnswer = UserDto.fromUserAndRoles(updatedUser, auth.getRoles());
+        UserDto userAnswer = UserDto.fromUserAndRoles(updatedUser, auth.getRoles(),uriInfo);
         return Response.ok(userAnswer).build();
     }
 

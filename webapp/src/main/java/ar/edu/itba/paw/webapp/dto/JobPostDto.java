@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.JobPost;
+import ar.edu.itba.paw.models.JobPostImage;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -19,8 +20,9 @@ public class JobPostDto {
     private List<JobPostZoneDto> zones;
     private LocalDateTime creationDate;
     private List<JobPackageDto> packages;
+    private List<JobPostImageDto> images;
 
-    public static JobPostDto fromJobPostWithLocalizedMessage(JobPost jobPost, UriInfo uriInfo, String message) {
+    public static JobPostDto fromJobPostWithLocalizedMessage(JobPost jobPost,List<Long> imagesId, UriInfo uriInfo, String message) {
         final JobPostDto jobPostDto = new JobPostDto();
         jobPostDto.id = jobPost.getId();
         jobPostDto.professional = UserDto.linkDataFromUser(jobPost.getUser(),uriInfo);
@@ -31,6 +33,7 @@ public class JobPostDto {
         jobPostDto.zones = jobPost.getZones().stream().map(JobPostZoneDto::fromJobPostZone).collect(Collectors.toList());
         jobPostDto.creationDate = jobPost.getCreationDate();
         jobPostDto.packages = jobPost.getJobPackages().stream().map(p->JobPackageDto.linkDataFromJobPackage(p,uriInfo)).collect(Collectors.toList());
+        jobPostDto.images = imagesId.stream().map(imageId -> JobPostImageDto.fromJobPostImage(jobPostDto.id,imageId,uriInfo)).collect(Collectors.toList());
         return jobPostDto;
     }
     public static JobPostDto linkDataFromJobPost(JobPost jobPost, UriInfo uriInfo) {
@@ -120,5 +123,13 @@ public class JobPostDto {
 
     public void setPackages(List<JobPackageDto> packages) {
         this.packages = packages;
+    }
+
+    public List<JobPostImageDto> getImages() {
+        return images;
+    }
+
+    public void setImages(List<JobPostImageDto> images) {
+        this.images = images;
     }
 }

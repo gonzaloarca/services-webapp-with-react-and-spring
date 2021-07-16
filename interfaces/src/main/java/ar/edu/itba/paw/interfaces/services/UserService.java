@@ -19,7 +19,7 @@ public interface UserService {
 
     User updateUserByEmail(String email,String phone, String name);
 
-    User updateUserById(long id, String name, String phone);
+    UserWithImage updateUserById(long id, String name, String phone);
 
     User updateUserById(long id, String name, String phone, ByteImage byteImage);
 
@@ -48,4 +48,6 @@ public interface UserService {
     ByteImage findImageByUserId(long id);
 
     long updateUserImage(long id, ByteImage userImage);
+
+    Optional<UserWithImage> findUserWithImageByEmail(String email);
 }

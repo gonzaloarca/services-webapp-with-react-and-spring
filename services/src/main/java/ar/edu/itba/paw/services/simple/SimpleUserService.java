@@ -69,7 +69,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public User updateUserById(long id, String name, String phone) {
+    public UserWithImage updateUserById(long id, String name, String phone) {
         return userDao.updateUserById(id, name, phone).orElseThrow(NoSuchElementException::new);
     }
 
@@ -161,5 +161,10 @@ public class SimpleUserService implements UserService {
     @Override
     public long updateUserImage(long id, ByteImage userImage) {
         return userDao.updateUserImage(id,userImage);
+    }
+
+    @Override
+    public Optional<UserWithImage> findUserWithImageByEmail(String email) {
+        return userDao.findUserWithImageByEmail(email);
     }
 }
