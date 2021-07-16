@@ -130,6 +130,19 @@
     "invalid": "Invalid file, please try again",
     "pick": "Choose file"
   },
+  "recover": {
+    "title": "Recover password",
+    "instructions": "Enter the email address linked to your account",
+    "disclaimer": "If the address belongs to an existing account, an email will be sent with instructions for recovering your password.",
+    "submit": "Recover",
+    "success": "Request received! If the address is valid, an email will arrive shortly.",
+    "enternewpass": "Enter your new password",
+    "wronglink": "Invalid or expired link",
+    "wrongexplained": "This link is invalid. If you still need to change your password, try again from the login screen",
+    "login": "Log In",
+    "passwordChanged": "Password changed successfully!",
+    "changedinstructions": "Please log in to continue using the site."
+  },
   "mycontracts": {
     "contracts": "Contracts",
     "hiredservices": "Hired services",

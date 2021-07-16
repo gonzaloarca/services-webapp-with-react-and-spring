@@ -56,7 +56,7 @@ const Login = () => {
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
-            <img src="/img/log-in.svg" alt={t('login.title')} loading="lazy"/>
+            <img src="/img/log-in.svg" alt={t('login.title')} loading="lazy" />
             <p className={classes.title}>{t('login.into')}</p>
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg')}>
@@ -123,7 +123,7 @@ const Login = () => {
                 <p>{t('login.recoverquestion')}</p>
                 <Link
                   component={RouterLink}
-                  to="/register"
+                  to="/recover"
                   className={classes.bottomLabelLink}
                 >
                   {t('login.recover')}

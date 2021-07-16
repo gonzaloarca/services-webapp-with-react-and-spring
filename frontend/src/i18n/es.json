@@ -134,6 +134,19 @@
     "invalid": "Archivo inválido, intente con otro archivo",
     "pick": "Seleccionar archivo"
   },
+  "recover": {
+    "title": "Recuperar contraseña",
+    "instructions": "Ingrese el correo electrónico asociado a su cuenta",
+    "disclaimer": "Si la dirección pertenece a una cuenta registrada, se le enviará un correo con instrucciones para cambiar su contraseña.",
+    "submit": "Recuperar",
+    "success": "¡Solicitud recibida! Si la dirección es válida, le llegará un correo pronto.",
+    "enternewpass": "Ingrese su nueva contraseña",
+    "wronglink": "Enlace inválido o caducado",
+    "wrongexplained": "El enlace al que has ingresado no es correcto. Si necesitas cambiar tu contraseña, vuelve a intentarlo desde la página de inicio de sesión.",
+    "login": "Iniciar Sesión",
+    "passwordChanged": "¡Contraseña cambiada correctamente!",
+    "changedinstructions": "Inicie sesión para continuar utilizando la página."
+  },
   "mycontracts": {
     "contracts": "Contratos",
     "hiredservices": "Servicios contratados",

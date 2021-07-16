@@ -14,6 +14,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Hire from './pages/Hire';
 import Account from './pages/Account';
+import RecoverPass from './pages/RecoverPass';
+import ChangePass from './pages/ChangePass';
 
 const App = () => {
   return (
@@ -33,6 +35,8 @@ const App = () => {
         <Route path="/register" exact component={Register} />
         <Route path="/hire/package/:id" exact component={Hire} />
         <Route path="/account" exact component={Account} />
+        <Route path="/recover" exact component={RecoverPass} />
+        <Route path="/change-password" exact component={ChangePass} />
       </Switch>
       <Footer />
     </>
