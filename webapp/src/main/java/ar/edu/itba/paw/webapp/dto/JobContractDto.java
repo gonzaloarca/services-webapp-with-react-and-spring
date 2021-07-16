@@ -8,41 +8,31 @@ import java.time.LocalDateTime;
 
 public class JobContractDto {
     private Long id;
-    private URI uri;
     private Long clientId;
-    private JobPackageDto jobPackage;
+    private LinkDto jobPackage;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private LocalDateTime scheduledDate;
     private String description;
     private JobContractStateDto state;
-    private LinkDto image;
+    private URI image;
 
     public static JobContractDto fromJobContract(JobContract jobContract, UriInfo uriInfo) {
         JobContractDto jobContractDto = new JobContractDto();
         jobContractDto.id = jobContract.getId();
         jobContractDto.clientId = jobContract.getClient().getId();
-        jobContractDto.jobPackage = JobPackageDto.linkDataFromJobPackage(jobContract.getJobPackage(),uriInfo);
+        jobContractDto.jobPackage = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder()
+                .path("/job-posts/")
+                .path(String.valueOf(jobContract.getJobPackage().getPostId()))
+                .path("/packages")
+                .path(String.valueOf(jobContract.getJobPackage().getId())).build(), jobContract.getJobPackage().getId());
         jobContractDto.creationDate = jobContract.getCreationDate();
         jobContractDto.lastModifiedDate = jobContract.getLastModifiedDate();
         jobContractDto.scheduledDate = jobContract.getScheduledDate();
         jobContractDto.description = jobContract.getDescription();
         jobContractDto.state = JobContractStateDto.fromJobContractState(jobContract.getState());
-        jobContractDto.image = new LinkDto(uriInfo.getBaseUriBuilder().path("/contracts").path(String.valueOf(jobContractDto.id)).path("/image").build());
-        return jobContractDto;
-    }
-
-    public static JobContractDto linkDataFromJobContract(JobContract jobContract, UriInfo uriInfo) {
-        JobContractDto jobContractDto = new JobContractDto();
-        jobContractDto.id = jobContract.getId();
-        jobContractDto.uri = uriInfo.getBaseUriBuilder()
-                .path("/job-posts")
-                .path(String.valueOf(jobContract.getJobPackage().getJobPost().getId()))
-                .path("/packages")
-                .path(String.valueOf(jobContract.getJobPackage().getId()))
-                .path("/contracts")
-                .path(String.valueOf(jobContract.getId())).build();
-            //TODO: CHEQUEAR SI SE PUEDE EVITAR HARDCODEAR EL PREFIJO DE LA URI
+        jobContractDto.image = uriInfo.getBaseUriBuilder().path("/contracts")
+                .path(String.valueOf(jobContractDto.id)).path("/image").build();//TODO: FIX VALIDACION CONTRA NULL
         return jobContractDto;
     }
 
@@ -62,11 +52,11 @@ public class JobContractDto {
         this.clientId = clientId;
     }
 
-    public JobPackageDto getJobPackage() {
+    public LinkDto getJobPackage() {
         return jobPackage;
     }
 
-    public void setJobPackage(JobPackageDto jobPackage) {
+    public void setJobPackage(LinkDto jobPackage) {
         this.jobPackage = jobPackage;
     }
 
@@ -110,19 +100,11 @@ public class JobContractDto {
         this.state = state;
     }
 
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
-    }
-
-    public LinkDto getImage() {
+    public URI getImage() {
         return image;
     }
 
-    public void setImage(LinkDto image) {
+    public void setImage(URI image) {
         this.image = image;
     }
 }

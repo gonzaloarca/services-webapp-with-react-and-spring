@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JobCardDto {
-    private JobPostDto jobPost;
+    private LinkDto jobPost;
     private String title;
     private JobTypeDto jobType;
     private List<JobPostZoneDto> zones;
@@ -19,19 +19,21 @@ public class JobCardDto {
     private JobPackageRateTypeDto rateType;
     private URI imageUrl;
 
-    public static JobCardDto fromJobCardWithLocalizedMessage(JobCard jobCard, UriInfo uriInfo,String jobTypeMessage){
+    public static JobCardDto fromJobCardWithLocalizedMessage(JobCard jobCard, UriInfo uriInfo, String jobTypeMessage) {
         JobCardDto jobCardDto = new JobCardDto();
-        jobCardDto.jobPost = JobPostDto.linkDataFromJobPost(jobCard.getJobPost(),uriInfo);
+        long jobPostId = jobCard.getJobPost().getId();
+        jobCardDto.jobPost = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder().path("/job-posts/")
+                .path(String.valueOf(jobPostId)).build(), jobPostId);
         jobCardDto.title = jobCard.getJobPost().getTitle();
-        jobCardDto.jobType = JobTypeDto.fromJobTypeWithLocalizedMessage(jobCard.getJobPost().getJobType(),jobTypeMessage);
+        jobCardDto.jobType = JobTypeDto.fromJobTypeWithLocalizedMessage(jobCard.getJobPost().getJobType(), jobTypeMessage);
         jobCardDto.zones = jobCard.getJobPost().getZones().stream().map(JobPostZoneDto::fromJobPostZone).collect(Collectors.toList());
         jobCardDto.reviewsCount = jobCard.getReviewsCount();
         jobCardDto.avgRate = jobCard.getRating();
         jobCardDto.contractsCompleted = jobCard.getContractsCompleted();
         jobCardDto.price = jobCard.getPrice();
         jobCardDto.rateType = JobPackageRateTypeDto.fromJobPackageRateType(jobCard.getRateType());
-        if(jobCard.getPostImageId() != null)
-            jobCardDto.imageUrl =  uriInfo.getBaseUriBuilder().path("/job-posts")
+        if (jobCard.getPostImageId() != null)
+            jobCardDto.imageUrl = uriInfo.getBaseUriBuilder().path("/job-posts")
                     .path(String.valueOf(jobCardDto.jobPost.getId()))
                     .path("/images")
                     .path(String.valueOf(jobCard.getPostImageId()))
@@ -39,11 +41,11 @@ public class JobCardDto {
         return jobCardDto;
     }
 
-    public JobPostDto getJobPost() {
+    public LinkDto getJobPost() {
         return jobPost;
     }
 
-    public void setJobPost(JobPostDto jobPost) {
+    public void setJobPost(LinkDto jobPost) {
         this.jobPost = jobPost;
     }
 

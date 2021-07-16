@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.models.exceptions.UpdateFailException;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
@@ -23,7 +22,6 @@ import java.net.URI;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
@@ -67,7 +65,7 @@ public class JobPostController {
         int jobType = jobPostDto.getJobType().getId();
         List<Integer> zones = jobPostDto.getZones().stream().map(JobPostZoneDto::getId).collect(Collectors.toList());
 
-        jobPostControllerLogger.debug("Creating job post with data: email: {}, title: {}, available hours: {}, job type: {}, zones: {}", proId, title, availableHours, jobType, zones);
+        jobPostControllerLogger.debug("Creating job post with data: title: {}, available hours: {}, job type: {}, zones: {}", title, availableHours, jobType, zones);
         JobPost newJobPost = jobPostService.create(proId, title, availableHours, jobType, zones);
 
         final URI packageUri = uriInfo.getAbsolutePathBuilder()
@@ -104,7 +102,7 @@ public class JobPostController {
         JobPost jobPost = jobPostService.findByIdWithInactive(id);
         List<Long> images = jobPostImageService.getImagesIdsByPostId(id);
         return Response.ok(JobPostDto.fromJobPostWithLocalizedMessage(
-                jobPost,images, uriInfo,
+                jobPost, images, uriInfo,
                 messageSource.getMessage(jobPost.getJobType().getDescription(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))))
                 .build();
     }
@@ -113,9 +111,11 @@ public class JobPostController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response jobPostImages(@PathParam("postId") long postId) {
-        List<Long> ids = jobPostImageService.getImagesIdsByPostId(postId);
-        List<ImageDto> uris = ids.stream().map(id -> ImageDto.fromImageId(id, postId, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<ImageDto>>(uris) {
+        List<LinkDto> uris = jobPostImageService.getImagesIdsByPostId(postId).stream().map(id -> LinkDto.fromUriAndId(
+                uriInfo.getBaseUriBuilder().path("/job-posts").path(String.valueOf(postId))
+                        .path("/images").path(String.valueOf(id)).build(), id))
+                .collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<LinkDto>>(uris) {
         }).build();
     }
 

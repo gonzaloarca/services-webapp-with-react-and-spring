@@ -1,16 +1,17 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.JobContractCard;
+import ar.edu.itba.paw.models.JobPackage;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.time.LocalDateTime;
 
 public class JobContractCardDto {
-    private UserDto client;
-    private UserDto professional;
+    private LinkDto client;
+    private LinkDto professional;
 
-    private JobContractDto jobContractDto;      //URL e id
+    private LinkDto jobContractDto;
     private JobContractStateDto state;
     private LocalDateTime creationDate;
     private LocalDateTime scheduledDate;
@@ -25,15 +26,24 @@ public class JobContractCardDto {
     private JobPackageRateTypeDto rateType;
     private URI imageUrl;
 
-    private JobPostDto jobPost;                 //URL e id
-    private JobPackageDto jobPackageDto;        //URL e id
+    private LinkDto jobPost;
+    private LinkDto jobPackageDto;
 
     public static JobContractCardDto fromJobContractCardWithLocalizedMessage(JobContractCard card, UriInfo uriInfo, String message) {
         JobContractCardDto dto = new JobContractCardDto();
-        dto.professional = UserDto.linkDataFromUser(card.getJobContract().getProfessional(), uriInfo);
-        dto.client = UserDto.linkDataFromUser(card.getJobContract().getClient(), uriInfo);
+        long professionalId = card.getJobContract().getProfessional().getId();
+        dto.professional = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder().path("/users")
+                .path(String.valueOf(professionalId)).build(), professionalId);
+        long clientId = card.getJobContract().getClient().getId();
+        dto.client = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder().path("/users")
+                .path(String.valueOf(clientId)).build(), clientId);
 
-        dto.jobContractDto = JobContractDto.linkDataFromJobContract(card.getJobContract(), uriInfo);
+        dto.jobContractDto = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder()
+                        .path("/job-posts").path(String.valueOf(card.getJobContract().getJobPackage().getJobPost().getId()))
+                        .path("/packages").path(String.valueOf(card.getJobContract().getJobPackage().getId()))
+                        .path("/contracts").path(String.valueOf(card.getJobContract().getId())).build(),
+                card.getJobContract().getId());
+
         dto.state = JobContractStateDto.fromJobContractState(card.getJobContract().getState());
         dto.creationDate = card.getJobContract().getCreationDate();
         dto.scheduledDate = card.getJobContract().getScheduledDate();
@@ -51,33 +61,39 @@ public class JobContractCardDto {
                 .path("/images")
                 .path(String.valueOf(card.getJobCard().getPostImageId()))
                 .build();
-
-        dto.jobPost = JobPostDto.linkDataFromJobPost(card.getJobCard().getJobPost(), uriInfo);
-        dto.jobPackageDto = JobPackageDto.linkDataFromJobPackage(card.getJobContract().getJobPackage(), uriInfo);
+        long jobPostId = card.getJobCard().getJobPost().getId();
+        dto.jobPost = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder().path("/job-posts/")
+                .path(String.valueOf(jobPostId)).build(), jobPostId);
+        JobPackage pack = card.getJobContract().getJobPackage();
+        dto.jobPackageDto = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder()
+                .path("/job-posts/")
+                .path(String.valueOf(pack.getJobPost().getId()))
+                .path("/packages")
+                .path(String.valueOf(pack.getId())).build(), pack.getId());
         return dto;
     }
 
-    public UserDto getClient() {
+    public LinkDto getClient() {
         return client;
     }
 
-    public void setClient(UserDto client) {
+    public void setClient(LinkDto client) {
         this.client = client;
     }
 
-    public UserDto getProfessional() {
+    public LinkDto getProfessional() {
         return professional;
     }
 
-    public void setProfessional(UserDto professional) {
+    public void setProfessional(LinkDto professional) {
         this.professional = professional;
     }
 
-    public JobContractDto getJobContractDto() {
+    public LinkDto getJobContractDto() {
         return jobContractDto;
     }
 
-    public void setJobContractDto(JobContractDto jobContractDto) {
+    public void setJobContractDto(LinkDto jobContractDto) {
         this.jobContractDto = jobContractDto;
     }
 
@@ -177,19 +193,19 @@ public class JobContractCardDto {
         this.imageUrl = imageUrl;
     }
 
-    public JobPostDto getJobPost() {
+    public LinkDto getJobPost() {
         return jobPost;
     }
 
-    public void setJobPost(JobPostDto jobPost) {
+    public void setJobPost(LinkDto jobPost) {
         this.jobPost = jobPost;
     }
 
-    public JobPackageDto getJobPackageDto() {
+    public LinkDto getJobPackageDto() {
         return jobPackageDto;
     }
 
-    public void setJobPackageDto(JobPackageDto jobPackageDto) {
+    public void setJobPackageDto(LinkDto jobPackageDto) {
         this.jobPackageDto = jobPackageDto;
     }
 }
