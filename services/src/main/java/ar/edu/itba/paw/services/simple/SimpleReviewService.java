@@ -91,4 +91,48 @@ public class SimpleReviewService implements ReviewService {
         return reviewDao.findJobPostAvgRate(id);
     }
 
+    @Override
+    public int findReviewsMaxPage(Long userId,Long postId, String role) {
+        validateParameters(userId,role,postId);
+
+        if(userId != null){
+            if(role.equalsIgnoreCase("professional"))
+                return reviewDao.findReviewsByProIdMaxPage(userId);
+            else
+                return reviewDao.findReviewsByClientIdMaxPage(userId);
+        }
+        if(postId != null){
+            return reviewDao.findReviewsByPostIdMaxPage(postId);
+        }
+        return reviewDao.findReviewsMaxPage();
+    }
+
+    @Override
+    public List<Review> findReviews(Long userId, String role, Long postId, int page) {
+        validateParameters(userId,role,postId);
+
+        if(userId != null){
+            if(role.equalsIgnoreCase("professional"))
+                return reviewDao.findReviewsByProId(userId,page);
+            else
+                return reviewDao.findReviewsByClientId(userId,page);
+        }
+        if(postId != null){
+            return reviewDao.findReviewsByPostId(postId,page);
+        }
+        return reviewDao.findAllReviews(page);
+    }
+
+    private void validateParameters(Long userId, String role, Long postId){
+        if((userId != null || role != null) && postId != null )
+            throw new IllegalArgumentException("Incompatible Query Parameters");
+
+        if(userId != null && role == null)
+            throw new IllegalArgumentException("Must set Query parameter role for userId");
+
+        if(role != null && !role.equalsIgnoreCase("professional") && !role.equalsIgnoreCase("client"))
+            throw new IllegalArgumentException("Invalid role value");
+        return;
+    }
+
 }

@@ -1,34 +1,26 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
-import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.PaginationService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.dto.JobContractCardDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
-import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Component
 @Path("/users")
@@ -39,14 +31,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private JobContractService jobContractService;
-
-    @Autowired
-    private PaginationService paginationService;
-
-    @Autowired
-    private MessageSource messageSource;
-
+    private TokenService tokenService;
 
     @Context
     private UriInfo uriInfo;
@@ -54,19 +39,17 @@ public class UserController {
     @Context
     private HttpHeaders headers;
 
+
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response register(@Valid final UserDto userDto) {
-        String webpageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
-                .build().toString();
-
         User currentUser;
         try {
             accountControllerLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}",
                     userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone());
             currentUser = userService.register(userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone(),
-                    null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()), webpageUrl);
+                    null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()), uriInfo.getBaseUri().toString());
         } catch (UserAlreadyExistsException e) {
             accountControllerLogger.error("Register error: email already exists");
             return Response.status(Response.Status.CONFLICT).build();
@@ -116,7 +99,6 @@ public class UserController {
         return Response.created(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(id)).path("/image").build()).build();
     }
 
-    @Path("/search/")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getByEmail(@QueryParam("email") String email) {
@@ -159,6 +141,63 @@ public class UserController {
         accountControllerLogger.debug("Updating user password with id {}", id);
         userService.changeUserPassword(id, user.getPassword());
         return Response.ok(userService.findById(id)).build();
+    }
+
+
+    @Path("/{id}/verify")
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response verifyEmail(@PathParam("id") long id, @FormParam("token") String token){
+        accountControllerLogger.debug("Finding user with id: {}",id);
+        User user = userService.findById(id);
+
+        if (user.isVerified()) {
+            throw new IllegalArgumentException("User is already verified");
+        }
+
+        accountControllerLogger.debug("verifying verification token: {} for user:{}",token,user.getId());
+
+        if(!tokenService.verifyVerificationToken(user, token)) {
+            accountControllerLogger.debug("Verification token expired");
+            throw new IllegalArgumentException("Token expired");
+        }
+        return Response.ok(new GenericEntity<String>("User verified"){}).build();
+
+    }
+
+    @Path("/recover-account")
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response recoverAccount(@Email @FormParam("email") String email){
+
+        accountControllerLogger.debug("Recovering password for email: {}",email);
+
+        userService.recoverUserAccount(email, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()),uriInfo.getBaseUri().toString());
+
+        return Response.ok(new GenericEntity<String>("Recovery mail sent"){}).build();
+
+    }
+
+    @Path("/recover-account/change-password")
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response recoverAccount(@FormParam("token") String token,@Email @FormParam("email") String email,@FormParam("password") String newPassword){
+
+        User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        accountControllerLogger.debug("verifying recovery token: {} for user:{}",token,user.getId());
+
+        if(!tokenService.verifyRecoveryToken(user.getId(), token)) {
+            accountControllerLogger.debug("Recovery token expired");
+            throw new IllegalArgumentException("Token expired");
+        }
+
+        userService.recoverUserPassword(user.getId(), newPassword);
+        return Response.ok(new GenericEntity<String>("Recovery mail sent"){}).build();
+
     }
 }
 

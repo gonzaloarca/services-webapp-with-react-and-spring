@@ -55,26 +55,6 @@ public class ProfessionalController {
     private HttpHeaders headers;
 
     @GET
-    @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getById(@PathParam("id") final long id) {
-        professionalControllerLogger.debug("Finding user with email {}", id);
-        User user = userService.findById(id);
-        professionalControllerLogger.debug("Finding auth info for user with email {}", user.getEmail());
-        UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
-
-        if (!auth.getRoles().contains(UserAuth.Role.PROFESSIONAL))
-            throw new ProfessionalNotFoundException();
-
-        ProfessionalDto proAnswer = ProfessionalDto.fromUserAndRoles(user,
-                reviewService.findProfessionalAvgRate(id),
-                reviewService.findReviewsByProIdSize(id),
-                jobContractService.findCompletedContractsByProIdQuantity(id),
-                uriInfo);
-        return Response.ok(proAnswer).build();
-    }
-
-    @GET
     @Path("/{id}/reviews")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response reviews(

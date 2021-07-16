@@ -10,9 +10,9 @@ public interface JobContractService {
 
     List<JobContract> findAll(int page);
 
-    List<JobContractCard> findContracts(Long userId, String contractState, String role, int page, Locale locale);
+    List<JobContractCard> findContracts(Long userId, String contractState, String role, int page);
 
-    int findContractsMaxPage(Long userId, String contractState, String role, Locale locale);
+    int findContractsMaxPage(Long userId, String contractState, String role);
 
     JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, Locale locale, String webpageUrl);
 

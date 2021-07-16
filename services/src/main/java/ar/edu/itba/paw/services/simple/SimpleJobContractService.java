@@ -48,27 +48,27 @@ public class SimpleJobContractService implements JobContractService {
     private MessageSource messageSource;
 
     @Override
-    public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page, Locale locale) {
+    public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
         if (page < 1) page = 1;
 
         if (userId == null && contractState == null && role == null)
-            return getJobContractCards(locale, jobContractDao.findAll(page));
+            return getJobContractCards(jobContractDao.findAll(page));
 
         if (userId == null || contractState == null || role == null ||
                 (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized")))
             throw new IllegalArgumentException();
 
         List<JobContract.ContractState> states = getContractStates(contractState);
-        if (role.equals("professional")) {
-            return getJobContractCards(locale, findByProIdAndSortedByModificationDate(userId, states, page - 1));
+        if (role.equalsIgnoreCase("professional")) {
+            return getJobContractCards(findByProIdAndSortedByModificationDate(userId, states, page - 1));
         } else if (role.equals("client")) {
-            return getJobContractCards(locale, findByClientIdAndSortedByModificationDate(userId, states, page - 1));
+            return getJobContractCards(findByClientIdAndSortedByModificationDate(userId, states, page - 1));
         } else
             throw new IllegalArgumentException();
     }
 
     @Override
-    public int findContractsMaxPage(Long userId, String contractState, String role, Locale locale) {
+    public int findContractsMaxPage(Long userId, String contractState, String role) {
 
         if (userId == null && contractState == null && role == null)
             return jobContractDao.findAllMaxPage();
@@ -157,7 +157,7 @@ public class SimpleJobContractService implements JobContractService {
         return jobContractDao.findContractsByProIdMaxPage(id, states);
     }
 
-    private List<JobContractCard> getJobContractCards(Locale locale, List<JobContract> jobContracts) {
+    private List<JobContractCard> getJobContractCards(List<JobContract> jobContracts) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
         jobContracts.
@@ -165,7 +165,7 @@ public class SimpleJobContractService implements JobContractService {
                                 jobContractCards.add(
                                         new JobContractCard(jobContract,
                                                 jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getJobPost().getId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale))
+                                                reviewService.findContractReview(jobContract.getId()).orElse(null), jobContract.getScheduledDate().toString())
                                 )
                         //puede no tener una review
                 );
@@ -199,13 +199,6 @@ public class SimpleJobContractService implements JobContractService {
     @Override
     public void changeContractScheduledDate(long id, LocalDateTime scheduledDate, boolean isServiceOwner, Locale locale) {
         jobContractDao.changeContractScheduledDate(id, scheduledDate);
-    }
-
-    private String localDateTimeToString(LocalDateTime dateTime, Locale locale) {
-        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
-
-        return formatter.format(dateTime);
     }
 
     @Override

@@ -29,4 +29,11 @@ public interface ReviewDao {
 
     int findReviewsByPostIdMaxPage(long id);
 
+    int findReviewsByClientIdMaxPage(long userId);
+
+    int findReviewsMaxPage();
+
+    List<Review> findReviewsByClientId(long userId, int page);
+
+    List<Review> findAllReviews(int page);
 }

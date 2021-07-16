@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Review;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,4 +34,7 @@ public interface ReviewService {
 
     Double findJobPostAvgRate(long id);
 
+    int findReviewsMaxPage(Long userId,Long postId, String role);
+
+    List<Review> findReviews(Long userId, String role, Long postId, int page);
 }

@@ -100,6 +100,35 @@ public class ReviewDaoJpa implements ReviewDao {
         return (int) Math.ceil(((double) aux.intValue())/ HirenetUtils.PAGE_SIZE);
     }
 
+    @Override
+    public int findReviewsByClientIdMaxPage(long userId) {
+        Long aux = em.createQuery("SELECT count(*) from Review as r where r.jobContract.client.id = :id", Long.class)
+                .setParameter("id", userId).getResultList().stream().findFirst().orElse(0L);
+        return (int) Math.ceil(((double) aux.intValue())/ HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public int findReviewsMaxPage() {
+        Long aux = em.createQuery("SELECT count(*) from Review", Long.class)
+                .getResultList().stream().findFirst().orElse(0L);
+        return (int) Math.ceil(((double) aux.intValue())/ HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public List<Review> findReviewsByClientId(long userId, int page) {
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract WHERE client_id = :id ORDER BY review_creation_date DESC")
+                .setParameter("id", userId);
+
+        return executePageQuery(page, nativeQuery);
+    }
+
+    @Override
+    public List<Review> findAllReviews(int page) {
+        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review ORDER BY contract_id ASC");
+
+        return executePageQuery(page, nativeQuery);
+    }
+
     private List<Review> executePageQuery(int page, Query nativeQuery) {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
