@@ -5,8 +5,10 @@ import ar.edu.itba.paw.interfaces.services.PaginationService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobContractWithImage;
-import ar.edu.itba.paw.webapp.dto.JobContractCardDto;
-import ar.edu.itba.paw.webapp.dto.JobContractDto;
+import ar.edu.itba.paw.webapp.dto.input.EditJobContractDto;
+import ar.edu.itba.paw.webapp.dto.input.NewJobContractDto;
+import ar.edu.itba.paw.webapp.dto.output.JobContractCardDto;
+import ar.edu.itba.paw.webapp.dto.output.JobContractDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -71,16 +74,16 @@ public class JobContractController {
 
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response createJobContract(final JobContractDto jobContractDto) {
+    public Response createJobContract(final NewJobContractDto newContract) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         String webpageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
 
         JobContractsControllerLogger.debug("Creating contract for package {} with data: client id:{}, description:{}",
-                jobContractDto.getJobPackage().getId(), jobContractDto.getClientId(), jobContractDto.getDescription());
-        JobContractWithImage jobContract = jobContractService
-                .create(jobContractDto.getClientId(), jobContractDto.getJobPackage().getId(),
-                        jobContractDto.getDescription(), jobContractDto.getScheduledDate(), locale, webpageUrl);
+                newContract.getJobPackageId(), newContract.getClientId(), newContract.getDescription());
+        JobContractWithImage jobContract = jobContractService.create(
+                newContract.getClientId(), newContract.getJobPackageId(),
+                newContract.getDescription(), newContract.getScheduledDate(), locale, webpageUrl);
 
         final URI contractUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(jobContract.getId())).build();
@@ -100,9 +103,9 @@ public class JobContractController {
     @PUT
     @Path("/{contractId}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
-    public Response updateContract(final JobContractDto jobContractDto,
+    public Response updateContract(@Valid final EditJobContractDto editJobContractDto,
                                    @PathParam("contractId") final long contractId,
-                                   @QueryParam("role") String role) {
+                                   @QueryParam("role") final String role) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         String webPageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
@@ -114,12 +117,19 @@ public class JobContractController {
             isPro = false;
         else throw new IllegalArgumentException("Invalid role type in query param");
 
-        JobContractsControllerLogger.debug("Updating job contract  id: {} with data: scheduledDate: {}, state: {}", contractId, jobContractDto.getScheduledDate(), jobContractDto.getState());
+        if (editJobContractDto.getNewScheduledDate() == null)
+            JobContractsControllerLogger.debug("Updating job contract id: {} from {} with data: state: {}",
+                    contractId, isPro ? "professional" : "client", editJobContractDto.getNewState());
+        else
+            JobContractsControllerLogger.debug("Updating job contract id: {} from {} with data: scheduledDate: {}, state: {}",
+                    contractId, isPro ? "professional" : "client", editJobContractDto.getNewScheduledDate(),
+                    editJobContractDto.getNewState());
+
         jobContractService.changeContractScheduledDate(contractId,
-                jobContractDto.getScheduledDate(), isPro,
+                editJobContractDto.getNewScheduledDate(), isPro,
                 locale);
         jobContractService.changeContractState(contractId,
-                JobContract.ContractState.values()[Math.toIntExact(jobContractDto.getState().getId())],
+                JobContract.ContractState.values()[Math.toIntExact(editJobContractDto.getNewState())],
                 locale, webPageUrl);
 
         final URI contractUri = uriInfo.getAbsolutePathBuilder().build();
@@ -139,7 +149,7 @@ public class JobContractController {
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response uploadContractImage(@PathParam("contractId") final long contractId,
-                                        @FormDataParam("file") FormDataBodyPart body) {
+                                        @FormDataParam("file") final FormDataBodyPart body) {
         try {
             if (jobContractService.addContractImage(contractId, ImageUploadUtil.fromInputStream(body)) == -1)
                 throw new RuntimeException("Couldn't save image");

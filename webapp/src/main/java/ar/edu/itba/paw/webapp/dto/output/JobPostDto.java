@@ -1,8 +1,9 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.JobPost;
 
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,8 +17,9 @@ public class JobPostDto {
     private Boolean isActive;
     private List<JobPostZoneDto> zones;
     private LocalDateTime creationDate;
-    private List<LinkDto> packages;
+    private URI packages;
     private List<LinkDto> images;
+    private URI reviews;
 
     public static JobPostDto fromJobPostWithLocalizedMessage(JobPost jobPost, List<Long> imagesId, UriInfo uriInfo, String message) {
         final JobPostDto jobPostDto = new JobPostDto();
@@ -31,16 +33,13 @@ public class JobPostDto {
         jobPostDto.isActive = jobPost.isActive();
         jobPostDto.zones = jobPost.getZones().stream().map(JobPostZoneDto::fromJobPostZone).collect(Collectors.toList());
         jobPostDto.creationDate = jobPost.getCreationDate();
-        jobPostDto.packages = jobPost.getJobPackages().stream().map(pack ->
-                LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder()
-                        .path("/job-posts/")
-                        .path(String.valueOf(pack.getJobPost().getId()))
-                        .path("/packages")
-                        .path(String.valueOf(pack.getId())).build(), pack.getId())).collect(Collectors.toList());
+        jobPostDto.packages = uriInfo.getBaseUriBuilder().path("/job-posts/")
+                .path(String.valueOf(jobPost.getId())).path("/packages").build();
         jobPostDto.images = imagesId.stream().map(imageId -> LinkDto.fromUriAndId(
                 uriInfo.getBaseUriBuilder().path("/job-posts")
                         .path(String.valueOf(jobPostDto.id)).path("/images").path(String.valueOf(imageId)).build(), imageId))
                 .collect(Collectors.toList());
+        jobPostDto.reviews = uriInfo.getAbsolutePathBuilder().path("/reviews?postId=" + jobPostDto.id).build();
         return jobPostDto;
     }
 
@@ -108,11 +107,11 @@ public class JobPostDto {
         this.creationDate = creationDate;
     }
 
-    public List<LinkDto> getPackages() {
+    public URI getPackages() {
         return packages;
     }
 
-    public void setPackages(List<LinkDto> packages) {
+    public void setPackages(URI packages) {
         this.packages = packages;
     }
 
@@ -122,5 +121,13 @@ public class JobPostDto {
 
     public void setImages(List<LinkDto> images) {
         this.images = images;
+    }
+
+    public URI getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(URI reviews) {
+        this.reviews = reviews;
     }
 }

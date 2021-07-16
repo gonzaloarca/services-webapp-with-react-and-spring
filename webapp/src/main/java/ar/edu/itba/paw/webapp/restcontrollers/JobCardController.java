@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
-import ar.edu.itba.paw.webapp.dto.JobCardDto;
+import ar.edu.itba.paw.webapp.dto.output.JobCardDto;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.slf4j.Logger;

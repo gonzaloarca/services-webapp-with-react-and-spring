@@ -45,11 +45,15 @@ public class SimpleJobPackageService implements JobPackageService {
     }
 
     @Override
-    public boolean updateJobPackage(long packageId, long postId, String title, String description, String price, long rateType, boolean isActive) {
-        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[(int) rateType];
-        Double parsedPrice = parsePrice(parsedRateType, price);
+    public boolean updateJobPackage(long packageId, long postId, String title, String description, String price, Integer rateType, Boolean isActive) {
+        JobPackage current = findById(packageId, postId);
+        String parsedTitle = (title == null) ? current.getTitle() : title;
+        String parsedDescription = (description == null) ? current.getDescription() : description;
+        JobPackage.RateType parsedRateType = (rateType == null) ? current.getRateType() : JobPackage.RateType.values()[rateType];
+        Double parsedPrice = (price == null) ? current.getPrice() : parsePrice(parsedRateType, price);
+        boolean parsedActive = (isActive == null) ? current.is_active() : isActive;
 
-        return jobPackageDao.updatePackage(packageId, postId, title, description, parsedPrice, parsedRateType, isActive);
+        return jobPackageDao.updatePackage(packageId, postId, parsedTitle, parsedDescription, parsedPrice, parsedRateType, parsedActive);
     }
 
     @Override

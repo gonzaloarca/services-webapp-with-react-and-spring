@@ -1,9 +1,8 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.JobPackage;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class JobPackageDto {
     private long id;

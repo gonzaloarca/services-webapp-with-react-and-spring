@@ -14,7 +14,7 @@ public interface JobContractService {
 
     int findContractsMaxPage(Long userId, String contractState, String role);
 
-    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, Locale locale, String webpageUrl);
+    JobContractWithImage create(long clientId, long packageId, String description, String scheduledDate, Locale locale, String webpageUrl);
 
     JobContract findById(long contractId);
 
@@ -40,7 +40,7 @@ public interface JobContractService {
 
     void changeContractState(long id, JobContract.ContractState state, Locale locale, String webPageUrl);
 
-    void changeContractScheduledDate(long id, LocalDateTime scheduledDate, boolean isServiceOwner, Locale locale);
+    void changeContractScheduledDate(long id, String scheduledDate, boolean isServiceOwner, Locale locale);
 
     JobContractWithImage findJobContractWithImage(long id);
 

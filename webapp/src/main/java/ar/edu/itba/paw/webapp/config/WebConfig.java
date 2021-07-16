@@ -53,7 +53,7 @@ public class WebConfig {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
         ds.setDriverClass(org.postgresql.Driver.class);
-        webConfigLogger.debug("Datasoruce driver set to {}", ds.getDriver());
+        webConfigLogger.debug("Datasource driver set to {}", ds.getDriver());
 
         if(PRODUCTION) {
             //        PARA DEPLOY

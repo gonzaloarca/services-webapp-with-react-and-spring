@@ -15,7 +15,7 @@ public interface JobPackageService {
 
     List<JobPackage> findByPostId(long id, int page);
 
-    boolean updateJobPackage(long packageId, long postId, String title, String description, String price, long rateType, boolean isActive);
+    boolean updateJobPackage(long packageId, long postId, String title, String description, String price, Integer rateType, Boolean isActive);
 
     int findByPostIdMaxPage(long id);
 }

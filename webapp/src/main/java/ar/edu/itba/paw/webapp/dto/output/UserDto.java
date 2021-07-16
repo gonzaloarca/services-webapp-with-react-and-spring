@@ -1,14 +1,8 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.output;
 
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserAuth;
 import ar.edu.itba.paw.models.UserWithImage;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
@@ -16,26 +10,12 @@ import java.util.List;
 public class UserDto {
 
     private long id;
-
-    //    @NotBlank
-//    @Size(max = 100)
-//    @Email
     private String email;
-
-    //    @NotBlank
-//    @Size(max = 100)
     private String username;
-
-    //    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
     private String phone;
-
-    //TODO FIX NOT NULL
-    private String password;
-
-    //TODO FIX NOT NULL
     private List<UserAuth.Role> roles;
-
     private URI image;
+    private URI contracts;
 
     public static UserDto fromUser(UserWithImage user, UriInfo uriInfo) {
         final UserDto dto = new UserDto();
@@ -44,6 +24,7 @@ public class UserDto {
         dto.username = user.getUsername();
         dto.phone = user.getPhone();
         dto.image = user.getByteImage() != null ? uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(dto.id)).path("/image").build() : null;
+        dto.contracts = uriInfo.getBaseUriBuilder().path("/contracts?userId=" + dto.id).build();
         return dto;
     }
 
@@ -73,14 +54,6 @@ public class UserDto {
         return phone;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -107,5 +80,13 @@ public class UserDto {
 
     public void setImage(URI image) {
         this.image = image;
+    }
+
+    public URI getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(URI contracts) {
+        this.contracts = contracts;
     }
 }

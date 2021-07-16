@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.webapp.dto.JobPostZoneDto;
+import ar.edu.itba.paw.webapp.dto.output.JobPostZoneDto;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;

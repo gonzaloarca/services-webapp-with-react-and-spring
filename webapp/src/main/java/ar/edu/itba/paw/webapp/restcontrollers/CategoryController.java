@@ -1,13 +1,11 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
-import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPost;
-import ar.edu.itba.paw.webapp.dto.JobTypeDto;
+import ar.edu.itba.paw.webapp.dto.output.JobTypeDto;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

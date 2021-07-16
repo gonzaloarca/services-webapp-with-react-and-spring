@@ -91,8 +91,10 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, Locale locale, String webpageUrl) {
-        JobContractWithImage jobContract = jobContractDao.create(clientId, packageId, description, scheduledDate);
+    public JobContractWithImage create(long clientId, long packageId, String description, String scheduledDate, Locale locale, String webpageUrl) {
+        LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
+
+        JobContractWithImage jobContract = jobContractDao.create(clientId, packageId, description, parsedDate);
         mailingService.sendContractEmail(jobContract, locale, webpageUrl);
         return jobContract;
     }
@@ -197,8 +199,10 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public void changeContractScheduledDate(long id, LocalDateTime scheduledDate, boolean isServiceOwner, Locale locale) {
-        jobContractDao.changeContractScheduledDate(id, scheduledDate);
+    public void changeContractScheduledDate(long id, String scheduledDate, boolean isServiceOwner, Locale locale) {
+        LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
+
+        jobContractDao.changeContractScheduledDate(id, parsedDate);
     }
 
     @Override
