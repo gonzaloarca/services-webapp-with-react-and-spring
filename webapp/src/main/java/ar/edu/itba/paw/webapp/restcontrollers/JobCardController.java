@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -80,8 +82,8 @@ public class JobCardController {
     @GET
     @Path("/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response search(@QueryParam("zone") @NotNull final int zone,
-                           @QueryParam("query") String query,
+    public Response search(@Valid @NotNull @QueryParam("zone") final int zone,
+                           @Valid @Size(max = 100) @QueryParam("query") String query,
                            @QueryParam("category") Integer category,
                            @QueryParam("orderBy") Integer orderBy,
                            @QueryParam("page") @DefaultValue("1") int page) {

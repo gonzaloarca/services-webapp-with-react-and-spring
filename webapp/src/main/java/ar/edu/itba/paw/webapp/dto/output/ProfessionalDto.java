@@ -3,12 +3,13 @@ package ar.edu.itba.paw.webapp.dto.output;
 import ar.edu.itba.paw.models.User;
 
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 public class ProfessionalDto {
     private Double reviewAvg;
     private long reviewsQuantity;
     private long contractsCompleted;
-    private LinkDto user;
+    private URI user;
 
     public static ProfessionalDto fromUserAndRoles(User user,
                                                    Double reviewAvg,
@@ -19,8 +20,7 @@ public class ProfessionalDto {
         dto.reviewAvg = reviewAvg;
         dto.reviewsQuantity = reviewsQuantity;
         dto.contractsCompleted = contractsCompleted;
-        dto.user = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder().path("/users")
-                .path(String.valueOf(user.getId())).build(), user.getId());
+        dto.user = uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(user.getId())).build();
         return dto;
     }
 
@@ -48,11 +48,11 @@ public class ProfessionalDto {
         this.contractsCompleted = contractsCompleted;
     }
 
-    public LinkDto getUser() {
+    public URI getUser() {
         return user;
     }
 
-    public void setUser(LinkDto user) {
+    public void setUser(URI user) {
         this.user = user;
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JobCardDto {
-    private LinkDto jobPost;
+    private URI jobPost;
     private String title;
     private JobTypeDto jobType;
     private List<JobPostZoneDto> zones;
@@ -22,8 +22,8 @@ public class JobCardDto {
     public static JobCardDto fromJobCardWithLocalizedMessage(JobCard jobCard, UriInfo uriInfo, String jobTypeMessage) {
         JobCardDto jobCardDto = new JobCardDto();
         long jobPostId = jobCard.getJobPost().getId();
-        jobCardDto.jobPost = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder().path("/job-posts/")
-                .path(String.valueOf(jobPostId)).build(), jobPostId);
+        jobCardDto.jobPost = uriInfo.getBaseUriBuilder().path("/job-posts/")
+                .path(String.valueOf(jobPostId)).build();
         jobCardDto.title = jobCard.getJobPost().getTitle();
         jobCardDto.jobType = JobTypeDto.fromJobTypeWithLocalizedMessage(jobCard.getJobPost().getJobType(), jobTypeMessage);
         jobCardDto.zones = jobCard.getJobPost().getZones().stream().map(JobPostZoneDto::fromJobPostZone).collect(Collectors.toList());
@@ -34,18 +34,18 @@ public class JobCardDto {
         jobCardDto.rateType = JobPackageRateTypeDto.fromJobPackageRateType(jobCard.getRateType());
         if (jobCard.getPostImageId() != null)
             jobCardDto.imageUrl = uriInfo.getBaseUriBuilder().path("/job-posts")
-                    .path(String.valueOf(jobCardDto.jobPost.getId()))
+                    .path(String.valueOf(jobCard.getJobPost().getId()))
                     .path("/images")
                     .path(String.valueOf(jobCard.getPostImageId()))
                     .build();
         return jobCardDto;
     }
 
-    public LinkDto getJobPost() {
+    public URI getJobPost() {
         return jobPost;
     }
 
-    public void setJobPost(LinkDto jobPost) {
+    public void setJobPost(URI jobPost) {
         this.jobPost = jobPost;
     }
 

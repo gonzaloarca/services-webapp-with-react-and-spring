@@ -3,14 +3,15 @@ package ar.edu.itba.paw.webapp.dto.output;
 import ar.edu.itba.paw.models.Review;
 
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.time.LocalDateTime;
 
 public class ReviewDto {
     private int rate;
     private String title;
     private String description;
-    private LinkDto jobContract;
-    private LinkDto client;
+    private URI jobContract;
+    private URI client;
     private LocalDateTime creationDate;
 
     public static ReviewDto fromReview(Review review, UriInfo uriInfo) {
@@ -19,15 +20,11 @@ public class ReviewDto {
         reviewDto.title = review.getTitle();
         reviewDto.description = review.getDescription();
 
-        reviewDto.jobContract = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder()
-                .path("/job-posts").path(String.valueOf(review.getJobContract().getJobPackage().getJobPost().getId()))
-                .path("/packages").path(String.valueOf(review.getJobContract().getJobPackage().getId()))
-                .path("/contracts").path(String.valueOf(review.getJobContract().getId())).build(),
-                review.getJobContract().getId());
+        reviewDto.jobContract = uriInfo.getBaseUriBuilder()
+                .path("/contracts").path(String.valueOf(review.getJobContract().getId())).build();
 
         long clientId = review.getClient().getId();
-        reviewDto.client = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder().path("/users")
-                .path(String.valueOf(clientId)).build(), clientId);
+        reviewDto.client = uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(clientId)).build();
         reviewDto.creationDate = review.getCreationDate();
         return reviewDto;
     }
@@ -56,19 +53,19 @@ public class ReviewDto {
         this.description = description;
     }
 
-    public LinkDto getJobContract() {
+    public URI getJobContract() {
         return jobContract;
     }
 
-    public void setJobContract(LinkDto jobContract) {
+    public void setJobContract(URI jobContract) {
         this.jobContract = jobContract;
     }
 
-    public LinkDto getClient() {
+    public URI getClient() {
         return client;
     }
 
-    public void setClient(LinkDto client) {
+    public void setClient(URI client) {
         this.client = client;
     }
 

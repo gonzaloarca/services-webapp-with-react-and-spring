@@ -24,7 +24,7 @@ public class UserDto {
         dto.username = user.getUsername();
         dto.phone = user.getPhone();
         dto.image = user.getByteImage() != null ? uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(dto.id)).path("/image").build() : null;
-        dto.contracts = uriInfo.getBaseUriBuilder().path("/contracts?userId=" + dto.id).build();
+        dto.contracts = uriInfo.getBaseUriBuilder().path("/contracts").queryParam("userId", String.valueOf(dto.id)).build();
         return dto;
     }
 

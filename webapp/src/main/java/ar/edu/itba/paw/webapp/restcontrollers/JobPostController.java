@@ -115,11 +115,10 @@ public class JobPostController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response jobPostImages(@PathParam("postId") final long postId) {
-        List<LinkDto> uris = jobPostImageService.getImagesIdsByPostId(postId).stream().map(id -> LinkDto.fromUriAndId(
-                uriInfo.getBaseUriBuilder().path("/job-posts").path(String.valueOf(postId))
-                        .path("/images").path(String.valueOf(id)).build(), id))
+        List<URI> uris = jobPostImageService.getImagesIdsByPostId(postId).stream().map(id -> uriInfo.getBaseUriBuilder()
+                .path("/job-posts").path(String.valueOf(postId)).path("/images").path(String.valueOf(id)).build())
                 .collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<LinkDto>>(uris) {
+        return Response.ok(new GenericEntity<List<URI>>(uris) {
         }).build();
     }
 
@@ -148,36 +147,17 @@ public class JobPostController {
         return Response.ok(new ByteArrayInputStream(jobPostImage.getByteImage().getData())).build();
     }
 
-    @GET
-    @Path("/{id}/reviews")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response reviewsByPostId(@PathParam("id") final long id,
-                                    @QueryParam("page") @DefaultValue("1") int page) {
-        if (page < 1)
-            page = 1;
-
-        jobPostControllerLogger.debug("Finding reviews for post: {}", id);
-        int maxPage = paginationService.findReviewsByPostIdMaxPage(id);
-
-        final List<ReviewDto> reviewDtoList = reviewService.findReviewsByPostId(id, page - 1)
-                .stream().map(review -> ReviewDto.fromReview(review, uriInfo)).collect(Collectors.toList());
-
-        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
-                Response.ok(new GenericEntity<List<ReviewDto>>(reviewDtoList) {
-                }));
-    }
-
-    @Path("/{id}/packages")
+    @Path("/{postId}/packages")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response packagesByPostId(@PathParam("id") final long id,
+    public Response packagesByPostId(@PathParam("postId") final long postId,
                                      @QueryParam("page") @DefaultValue("1") int page) {
         if (page < 1)
             page = 1;
 
-        jobPostControllerLogger.debug("Finding packages for post: {}", id);
-        int maxPage = paginationService.findJobPackageByPostIdMaxPage(id);
-        final List<JobPackageDto> packageDtoList = jobPackageService.findByPostId(id, page - 1)
+        jobPostControllerLogger.debug("Finding packages for post: {}", postId);
+        int maxPage = paginationService.findJobPackageByPostIdMaxPage(postId);
+        final List<JobPackageDto> packageDtoList = jobPackageService.findByPostId(postId, page - 1)
                 .stream().map(pack -> JobPackageDto.fromJobPackage(pack, uriInfo))
                 .collect(Collectors.toList());
 

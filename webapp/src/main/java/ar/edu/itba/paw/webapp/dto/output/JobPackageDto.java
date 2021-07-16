@@ -3,10 +3,11 @@ package ar.edu.itba.paw.webapp.dto.output;
 import ar.edu.itba.paw.models.JobPackage;
 
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 public class JobPackageDto {
     private long id;
-    private LinkDto jobPost;
+    private URI jobPost;
     private String title;
     private String description;
     private Double price;
@@ -16,9 +17,8 @@ public class JobPackageDto {
     public static JobPackageDto fromJobPackage(JobPackage jobPackage, UriInfo uriInfo) {
         JobPackageDto jobPackageDto = new JobPackageDto();
         jobPackageDto.id = jobPackage.getId();
-        jobPackageDto.jobPost = LinkDto.fromUriAndId(
-                uriInfo.getBaseUriBuilder().path("/job-posts/").path(String.valueOf(jobPackage.getPostId())).build(),
-                jobPackage.getPostId());
+        jobPackageDto.jobPost = uriInfo.getBaseUriBuilder().path("/job-posts/")
+                .path(String.valueOf(jobPackage.getPostId())).build();
         jobPackageDto.title = jobPackage.getTitle();
         jobPackageDto.description = jobPackage.getDescription();
         jobPackageDto.price = jobPackage.getPrice();
@@ -75,11 +75,11 @@ public class JobPackageDto {
         isActive = active;
     }
 
-    public LinkDto getJobPost() {
+    public URI getJobPost() {
         return jobPost;
     }
 
-    public void setJobPost(LinkDto jobPost) {
+    public void setJobPost(URI jobPost) {
         this.jobPost = jobPost;
     }
 }

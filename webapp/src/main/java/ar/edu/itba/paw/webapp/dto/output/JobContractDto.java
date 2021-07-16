@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class JobContractDto {
     private Long id;
     private Long clientId;
-    private LinkDto jobPackage;
+    private URI jobPackage;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private LocalDateTime scheduledDate;
@@ -21,11 +21,9 @@ public class JobContractDto {
         JobContractDto jobContractDto = new JobContractDto();
         jobContractDto.id = jobContract.getId();
         jobContractDto.clientId = jobContract.getClient().getId();
-        jobContractDto.jobPackage = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder()
-                .path("/job-posts/")
-                .path(String.valueOf(jobContract.getJobPackage().getPostId()))
-                .path("/packages")
-                .path(String.valueOf(jobContract.getJobPackage().getId())).build(), jobContract.getJobPackage().getId());
+        jobContractDto.jobPackage = uriInfo.getBaseUriBuilder()
+                .path("/job-posts/").path(String.valueOf(jobContract.getJobPackage().getPostId()))
+                .path("/packages").path(String.valueOf(jobContract.getJobPackage().getId())).build();
         jobContractDto.creationDate = jobContract.getCreationDate();
         jobContractDto.lastModifiedDate = jobContract.getLastModifiedDate();
         jobContractDto.scheduledDate = jobContract.getScheduledDate();
@@ -52,11 +50,11 @@ public class JobContractDto {
         this.clientId = clientId;
     }
 
-    public LinkDto getJobPackage() {
+    public URI getJobPackage() {
         return jobPackage;
     }
 
-    public void setJobPackage(LinkDto jobPackage) {
+    public void setJobPackage(URI jobPackage) {
         this.jobPackage = jobPackage;
     }
 
