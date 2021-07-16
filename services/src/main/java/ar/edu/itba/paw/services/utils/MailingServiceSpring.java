@@ -83,7 +83,7 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendContractEmail(JobContractWithImage jobContract, Locale locale,String webpageUrl) {
+    public void sendContractEmail(JobContractWithImage jobContract, Locale locale, String webpageUrl) {
         DataSource attachment = null;
         ByteImage image = jobContract.getByteImage();
         JobPackage jobPack = jobContract.getJobPackage();
@@ -104,7 +104,7 @@ public class MailingServiceSpring implements MailingService {
             price = (double) 0;
 
         data.put("jobPackagePrice", String.valueOf(Math.round(price * 100 / 100)));
-        data.put("jobPackageRateType", jobPack.getRateType().getDescription());
+        data.put("jobPackageRateType", "JobPackage.RateType." + jobPack.getRateType().getDescription());
         data.put("jobPostTitle", jobPost.getTitle());
         data.put("client", client.getUsername());
         data.put("clientEmail", client.getEmail());
@@ -115,7 +115,7 @@ public class MailingServiceSpring implements MailingService {
         data.put("hasAttachment", attachment != null);
         data.put("contractDate", jobContract.getCreationDate().format(DateTimeFormatter.ofPattern(messageSource.getMessage("date.format", new Object[]{}, locale))));
         data.put("scheduledDate", jobContract.getScheduledDate().toLocalDate().toString());
-        data.put("scheduledTime", jobContract.getScheduledDate().toLocalTime().toString());
+        data.put("scheduledTime", jobContract.getScheduledDate().toLocalTime().toString().split("\\.")[0]);
 
         sendMessageUsingThymeleafTemplate(professional.getEmail(),
                 messageSource.getMessage("mail.contractToPro.subject",
@@ -144,7 +144,7 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale,String webpageUrl) {
+    public void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale, String webpageUrl) {
         Map<String, Object> data = new HashMap<>();
         data.put("url", webpageUrl + "/change-password?user_id=" + user.getId() + "&token=" + token.getToken());
 
@@ -155,7 +155,7 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale,String webpageUrl) {
+    public void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale, String webpageUrl) {
         DataSource attachment = null;
         ByteImage image = jobContract.getByteImage();
 

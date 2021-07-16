@@ -16,18 +16,17 @@ import java.util.List;
 public class UserDto {
 
     private long id;
-    private URI uri;
 
-//    @NotBlank
+    //    @NotBlank
 //    @Size(max = 100)
 //    @Email
     private String email;
 
-//    @NotBlank
+    //    @NotBlank
 //    @Size(max = 100)
     private String username;
 
-//    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
+    //    @Pattern(regexp = "^\\+?[0-9- ]{7,50}")
     private String phone;
 
     //TODO FIX NOT NULL
@@ -36,29 +35,22 @@ public class UserDto {
     //TODO FIX NOT NULL
     private List<UserAuth.Role> roles;
 
-    private LinkDto image;
+    private URI image;
 
-    public static UserDto fromUser(UserWithImage user, UriInfo uriInfo){
+    public static UserDto fromUser(UserWithImage user, UriInfo uriInfo) {
         final UserDto dto = new UserDto();
         dto.id = user.getId();
         dto.email = user.getEmail();
         dto.username = user.getUsername();
         dto.phone = user.getPhone();
-        dto.image = user.getByteImage() != null ? new LinkDto(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(dto.id)).path("/image").build()) : null;
+        dto.image = user.getByteImage() != null ? uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(dto.id)).path("/image").build() : null;
         return dto;
     }
 
-    public static UserDto fromUserAndRoles(UserWithImage user, List<UserAuth.Role> roles, UriInfo uriInfo){
-        final UserDto dto = fromUser(user,uriInfo);
+    public static UserDto fromUserAndRoles(UserWithImage user, List<UserAuth.Role> roles, UriInfo uriInfo) {
+        final UserDto dto = fromUser(user, uriInfo);
         dto.roles = roles;
         return dto;
-    }
-
-    public static UserDto linkDataFromUser(User user, UriInfo uriInfo){
-        UserDto userDto = new UserDto();
-        userDto.id = user.getId();
-        userDto.uri = uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(user.getId())).build();
-        return userDto;
     }
 
     public long getId() {
@@ -109,19 +101,11 @@ public class UserDto {
         this.roles = roles;
     }
 
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
-    }
-
-    public LinkDto getImage() {
+    public URI getImage() {
         return image;
     }
 
-    public void setImage(LinkDto image) {
+    public void setImage(URI image) {
         this.image = image;
     }
 }

@@ -9,8 +9,8 @@ public class ReviewDto {
     private int rate;
     private String title;
     private String description;
-    private JobContractDto jobContract;
-    private UserDto client;
+    private LinkDto jobContract;
+    private LinkDto client;
     private LocalDateTime creationDate;
 
     public static ReviewDto fromReview(Review review, UriInfo uriInfo) {
@@ -18,8 +18,16 @@ public class ReviewDto {
         reviewDto.rate = review.getRate();
         reviewDto.title = review.getTitle();
         reviewDto.description = review.getDescription();
-        reviewDto.jobContract = JobContractDto.linkDataFromJobContract(review.getJobContract(), uriInfo);
-        reviewDto.client = UserDto.linkDataFromUser(review.getClient(), uriInfo);
+
+        reviewDto.jobContract = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder()
+                .path("/job-posts").path(String.valueOf(review.getJobContract().getJobPackage().getJobPost().getId()))
+                .path("/packages").path(String.valueOf(review.getJobContract().getJobPackage().getId()))
+                .path("/contracts").path(String.valueOf(review.getJobContract().getId())).build(),
+                review.getJobContract().getId());
+
+        long clientId = review.getClient().getId();
+        reviewDto.client = LinkDto.fromUriAndId(uriInfo.getBaseUriBuilder().path("/users")
+                .path(String.valueOf(clientId)).build(), clientId);
         reviewDto.creationDate = review.getCreationDate();
         return reviewDto;
     }
@@ -48,19 +56,19 @@ public class ReviewDto {
         this.description = description;
     }
 
-    public JobContractDto getJobContract() {
+    public LinkDto getJobContract() {
         return jobContract;
     }
 
-    public void setJobContract(JobContractDto jobContract) {
+    public void setJobContract(LinkDto jobContract) {
         this.jobContract = jobContract;
     }
 
-    public UserDto getClient() {
+    public LinkDto getClient() {
         return client;
     }
 
-    public void setClient(UserDto client) {
+    public void setClient(LinkDto client) {
         this.client = client;
     }
 

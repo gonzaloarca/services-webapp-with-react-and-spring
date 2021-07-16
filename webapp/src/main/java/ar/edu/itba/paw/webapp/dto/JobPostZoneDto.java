@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.JobPost;
 public class JobPostZoneDto {
     private int id;
     private String description;
+
     public static JobPostZoneDto fromJobPostZone(JobPost.Zone jobPostZone){
         JobPostZoneDto jobPostZoneDto = new JobPostZoneDto();
         jobPostZoneDto.id = jobPostZone.getValue();
