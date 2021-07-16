@@ -16,6 +16,7 @@ import Hire from './pages/Hire';
 import Account from './pages/Account';
 import RecoverPass from './pages/RecoverPass';
 import ChangePass from './pages/ChangePass';
+import VerifyEmail from './pages/VerifyEmail';
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/account" exact component={Account} />
         <Route path="/recover" exact component={RecoverPass} />
         <Route path="/change-password" exact component={ChangePass} />
+        <Route path="/token" exact component={VerifyEmail} />
       </Switch>
       <Footer />
     </>

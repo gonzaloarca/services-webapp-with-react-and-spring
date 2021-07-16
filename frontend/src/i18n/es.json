@@ -148,6 +148,15 @@
     "passwordChanged": "¡Contraseña cambiada correctamente!",
     "changedinstructions": "Inicie sesión para continuar utilizando la página."
   },
+  "verifyemail": {
+    "title": "Verificación de email",
+    "success": "¡Email verificado correctamente!",
+    "pleaselogin": "Por favor, inicie sesión con su usuario para utilizar el sitio.",
+    "login": "Iniciar Sesión",
+    "invalid": "Enlace inválido o caducado",
+    "instructions": "El enlace al que has ingresado no es correcto. Por favor, realiza el registro de nuevo si todavía no tienes una cuenta.",
+    "register": "Registrarme"
+  },
   "mycontracts": {
     "contracts": "Contratos",
     "hiredservices": "Servicios contratados",

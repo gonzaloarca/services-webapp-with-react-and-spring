@@ -144,6 +144,15 @@
     "passwordChanged": "Password changed successfully!",
     "changedinstructions": "Please log in to continue using the site."
   },
+  "verifyemail": {
+    "title": "Email verification",
+    "success": "Email verified successfully!",
+    "pleaselogin": "Please, log in into your account to use the site.",
+    "login": "Log in",
+    "invalid": "Invalid or expired link",
+    "instructions": "This link is invalid. Please, register again if you don't have an account.",
+    "register": "Register"
+  },
   "mycontracts": {
     "contracts": "Contracts",
     "hiredservices": "Hired services",
