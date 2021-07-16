@@ -142,7 +142,30 @@
     "pendingapprovalcontracts": "Contratos pendientes de aprobación",
     "pendingapproval": "Pendientes de aprobación",
     "finalizedcontracts": "Contratos finalizados",
-    "finalized": "Finalizados"
+    "finalized": "Finalizados",
+    "contractstate": {
+      "nocontractsheader": "No hay contratos para mostrar",
+      "noactivecontractsheader": "No hay contratos activos para mostrar",
+      "noactivecontractssubtitle": "Una vez que el profesional apruebe un contrato, se mostrará en esta sección",
+      "noactivecontractssubtitlepro": "Una vez que aceptes una petición, el contrato se mostrará en esta sección",
+      "nopendingcontractsheader": "No hay contratos pendientes de aprobación para mostrar",
+      "nopendingcontractssubtitle": "Aquí aparecerán los servicios recién contratados que requieren de la aprobación del profesional",
+      "nopendingcontractssubtitlepro": "Una vez que alguien te contrate, la petición se mostrará en esta sección",
+      "nofinalizedcontractsheader": "No hay contratos finalizados para mostrar",
+      "nofinalizedcontractssubtitle": "Aquí aparecerán los contratos que dé por finalizados o cancelados desde la sección de contratos activos",
+      "nocontractssubtitleclient": "Para tener contratos, primero solicite algún servicio",
+      "nocontractssubtitlepro": "Cuando un usuario solicite un servicio suyo, acá aparecerán los datos de la solicitud",
+      "clientcancelled": "El cliente canceló el contrato",
+      "procancelled": "El profesional canceló el contrato",
+      "youcancelled": "Usted canceló el contrato",
+      "prorejected": "El profesional rechazó la petición de contrato",
+      "clientrejected": "El cliente rechazó la petición de contrato",
+      "yourejected": "Usted rechazó la petición de contrato",
+      "finalized": "El contrato ha sido marcado como finalizado",
+      "clientrescheduled": "El cliente ha solicitado una reprogramación de la fecha del trabajo",
+      "prorescheduled": "El profesional ha solicitado una reprogramación de la fecha del trabajo",
+      "yourescheduled": "Esperando por la aprobación de la reprogramación de la fecha del trabajo"
+    }
   },
   "hirePage": {
     "title": "Solicitar Servicio",

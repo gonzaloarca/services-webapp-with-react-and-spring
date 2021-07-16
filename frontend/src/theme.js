@@ -11,6 +11,8 @@ export const themeUtils = {
     lightGrey: '#EAEAEA',
     aqua: '#5FB0B7',
     green: '#7BC778',
+    darkGreen: '#54AA51',
+    red: '#E26767',
     background: '#EFEFEF',
   },
   shadows: {

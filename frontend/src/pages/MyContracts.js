@@ -46,7 +46,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const hiredServices = {
-  activeContracts: [
+  activeContracts: [],
+  pendingContracts: [
     {
       avgRate: 3.6666666666666665,
       client: {
@@ -94,8 +95,54 @@ const hiredServices = {
       },
     },
   ],
-  pendingContracts: [],
-  finalizedContracts: [],
+  finalizedContracts: [
+    {
+      avgRate: 3.6666666666666665,
+      client: {
+        id: 11,
+        username: 'El Beto (Julian Sicardi)',
+        image: '/img/plumbing.jpeg',
+      },
+      professional: {
+        id: 12,
+        username: 'El Beto (Julian Sicardi)',
+        image: '/img/plumbing.jpeg',
+      },
+      contractsCompleted: 4,
+      creationDate: '2021-06-16T16:48:40.860',
+      image: {
+        uri: '/img/plumbing.jpeg',
+      },
+      jobContract: {
+        id: 29,
+        uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
+      },
+      jobPackage: {
+        id: 8,
+        uri: 'http://localhost:8080/job-posts/8/packages/8',
+      },
+      jobPost: {
+        id: 8,
+        uri: 'http://localhost:8080/job-posts/8',
+      },
+      jobTitle: 'Niñero turno mañana',
+      jobType: {
+        description: 'BABYSITTING',
+        id: 7,
+      },
+      packageTitle: '4 dias a la semana 4 horas',
+      rateType: {
+        description: 'TBD',
+        id: 2,
+      },
+      reviewsCount: 3,
+      scheduledDate: '2021-06-16T16:48',
+      state: {
+        description: 'PRO_REJECTED',
+        id: 0,
+      },
+    },
+  ],
 };
 
 const myServices = {
@@ -107,7 +154,7 @@ const myServices = {
 const TabPanel = ({ children, value, index }) => {
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
     >
@@ -132,22 +179,22 @@ const MyContracts = () => {
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('navigation.sections.mycontracts')} />
         <div>
-          <AppBar position="static">
+          <AppBar position='static'>
             <Tabs
-              variant="fullWidth"
+              variant='fullWidth'
               className={classes.tabs}
               value={tabValue}
               onChange={handleChange}
             >
               <Tab
                 label={
-                  <div className="flex items-center justify-center">
+                  <div className='flex items-center justify-center'>
                     <CircleIcon
-                      className="mr-2"
+                      className='mr-2'
                       color={themeUtils.colors.yellow}
-                      size="2rem"
+                      size='2rem'
                     >
-                      <Group className="text-white" />
+                      <Group className='text-white' />
                     </CircleIcon>
                     {t('mycontracts.hiredservices')}
                   </div>
@@ -155,13 +202,13 @@ const MyContracts = () => {
               />
               <Tab
                 label={
-                  <div className="flex items-center justify-center">
+                  <div className='flex items-center justify-center'>
                     <CircleIcon
-                      className="mr-2"
+                      className='mr-2'
                       color={themeUtils.colors.lightBlue}
-                      size="2rem"
+                      size='2rem'
                     >
-                      <Person className="text-white" />
+                      <Person className='text-white' />
                     </CircleIcon>
                     {t('mycontracts.myservices')}
                   </div>
@@ -197,19 +244,19 @@ const ContractsDashboard = ({ contracts }) => {
       title: t('mycontracts.activecontracts'),
       tabLabel: t('mycontracts.active'),
       color: themeUtils.colors.green,
-      icon: <Work className="text-white" />,
+      icon: <Work className='text-white' />,
     },
     {
       title: t('mycontracts.pendingapprovalcontracts'),
       tabLabel: t('mycontracts.pendingapproval'),
       color: themeUtils.colors.orange,
-      icon: <Schedule className="text-white" />,
+      icon: <Schedule className='text-white' />,
     },
     {
       title: t('mycontracts.finalizedcontracts'),
       tabLabel: t('mycontracts.finalized'),
       color: themeUtils.colors.aqua,
-      icon: <Check className="text-white" />,
+      icon: <Check className='text-white' />,
     },
   ];
 
@@ -262,31 +309,31 @@ const ContractsDashboard = ({ contracts }) => {
           </h2>
           <Divider />
           <Tabs
-            orientation="vertical"
+            orientation='vertical'
             value={tabValue}
-            indicatorColor="primary"
+            indicatorColor='primary'
             onChange={handleChange}
             className={classes.tabs}
           >
             {contractSections.map((section, index) => (
               <HirenetTab
                 key={index}
-                className="items-start"
+                className='items-start'
                 label={
                   <div
                     className={clsx(
                       classes.tabContent,
-                      index === tabValue ? 'font-semibold' : 'font-medium'
+                      index === tabValue ? 'font-semibold' : 'font-medium',
                     )}
                   >
                     <CircleIcon
-                      className="mr-2"
+                      className='mr-2'
                       color={section.color}
-                      size="2rem"
+                      size='2rem'
                     >
                       {section.icon}
                     </CircleIcon>
-                    <div className="text-left">{section.tabLabel}</div>
+                    <div className='text-left'>{section.tabLabel}</div>
                   </div>
                 }
               />
@@ -305,7 +352,7 @@ const ContractsDashboard = ({ contracts }) => {
               </h2>
               <Divider />
               {getContracts(index).map((contract) => (
-                <ContractCard contract={contract} key={contract.id} />
+                <ContractCard contract={contract} key={contract.id} isOwner={false} />
               ))}
             </TabPanel>
           ))}

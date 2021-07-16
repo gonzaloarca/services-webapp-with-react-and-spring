@@ -138,7 +138,30 @@
     "pendingapprovalcontracts": "Pending approval contracts",
     "pendingapproval": "Pending approval",
     "finalizedcontracts": "Finalized contracts",
-    "finalized": "Finalized"
+    "finalized": "Finalized",
+    "contractstate": {
+      "nocontractsheader": "No contracts to show",
+      "nocontractssubtitleclient": "Hire a service to see your contracts here",
+      "nocontractssubtitlepro": "When one of your services is hired, a contract will appear here",
+      "noactivecontractsheader": "No active contracts to show",
+      "noactivecontractssubtitle": "Once a contract is approved by the professional, it will be displayed right here",
+      "noactivecontractssubtitlepro": "Once you accept a contract request, the contract will be shown right here",
+      "nopendingcontractsheader": "No pending approval contracts to show",
+      "nopendingcontractssubtitle": "All newly hired services will appear in this section, until it gets approved or rejected by the professional",
+      "nopendingcontractssubtitlepro": "Once you are hired contracts will be displayed here, waiting for your approval",
+      "nofinalizedcontractsheader": "No finalized contracts to show",
+      "nofinalizedontractssubtitle": "All finalized and cancelled contracts will appear in this section",
+      "clientcancelled": "The client cancelled the contract",
+      "procancelled": "The professional cancelled the contract",
+      "youcancelled": "You cancelled the contract",
+      "yourejected": "You rejected the contract",
+      "finalized": "The contract has concluded",
+      "prorejected": "The professional has rejected the contract request",
+      "clientrejected": "The client has rejected the contract request",
+      "clientrescheduled": "The client has requested a rescheduling of the contract",
+      "prorescheduled": "The professional has requested a rescheduling of the contract",
+      "yourescheduled": "Waiting for rescheduling approval"
+    }
   },
   "hirePage": {
     "title": "Hire Service",
