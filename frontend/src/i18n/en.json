@@ -61,6 +61,7 @@
     "babysitting": "Babysitting"
   },
   "professional": "Professional",
+  "client": "Client",
   "avgrate": "Average rating",
   "timeshired": "Times hired",
   "workinghours": "Working hours",
@@ -199,5 +200,27 @@
     }
   },
   "datetimeformat": "MMMM d, yyyy - h:mm aa",
-  "locale": "en"
+  "locale": "en",
+  "account": {
+    "header": "My account",
+    "tabstitle": "Account",
+    "data": {
+      "title": "Personal info",
+      "imagealt": "User image",
+      "edit": "Edit information",
+      "profilepic": "Change profile picture"
+    },
+    "security": {
+      "title": "Log in info",
+      "changepass": "Change password",
+      "oldpassword": "Current password",
+      "newpassword": "New password",
+      "repeatpassword": "Repeat new password"
+    },
+    "logout": {
+      "title": "Log out",
+      "btn": "LOG OUT"
+    },
+    "savechanges": "Save changes"
+  }
 }

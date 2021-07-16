@@ -61,6 +61,7 @@
     "babysitting": "Niñera"
   },
   "professional": "Profesional",
+  "client": "Cliente",
   "avgrate": "Calificación promedio",
   "timeshired": "Veces contratado",
   "workinghours": "Horarios",
@@ -203,5 +204,27 @@
     }
   },
   "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
-  "locale": "es"
+  "locale": "es",
+  "account": {
+    "header": "Mi Cuenta",
+    "tabstitle": "Cuenta",
+    "data": {
+      "title": "Datos personales",
+      "imagealt": "Imagen del usuario",
+      "edit": "Editar datos",
+      "profilepic": "Cambiar foto de perfil"
+    },
+    "security": {
+      "title": "Inicio de sesión y contraseña",
+      "changepass": "Cambiar contraseña",
+      "oldpassword": "Contraseña actual",
+      "newpassword": "Nueva contraseña",
+      "repeatpassword": "Repita nueva contraseña"
+    },
+    "logout": {
+      "title": "Cerrar sesión",
+      "btn": "CERRAR SESIÓN"
+    },
+    "savechanges": "Guardar cambios"
+  }
 }

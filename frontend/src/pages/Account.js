@@ -10,16 +10,19 @@ import {
   Tab,
   Tabs,
   withStyles,
+  TextField,
 } from '@material-ui/core';
 import { themeUtils } from '../theme';
 import { ExitToApp, Lock, Person } from '@material-ui/icons';
 import clsx from 'clsx';
 import CircleIcon from '../components/CircleIcon';
 import * as Yup from 'yup';
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useTranslation } from 'react-i18next';
 import FormControlPassword from '../components/FormControlPassword';
+import FileInput from '../components/FileInput';
 
+// TODO: integracion con API
 const currentUser = {
   email: 'manaaasd@gmail.com',
   id: 5,
@@ -63,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'red',
     border: 'transparent',
     color: 'white',
+    width: '25%',
   },
   profileImg: {
     borderRadius: '50%',
@@ -77,6 +81,8 @@ const useGlobalStyles = makeStyles(styles);
 const Account = () => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
+  const { t } = useTranslation();
+
   const [tabValue, setTabValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -85,19 +91,19 @@ const Account = () => {
 
   const accountSections = [
     {
-      tabLabel: 'Datos personales',
+      tabLabel: t('account.data.title'),
       color: themeUtils.colors.orange,
       icon: <Person className="text-white" />,
       component: <PersonalData />,
     },
     {
-      tabLabel: 'Inicio de sesión y contraseña',
+      tabLabel: t('account.security.title'),
       color: themeUtils.colors.blue,
       icon: <Lock className="text-white" />,
       component: <SecurityData />,
     },
     {
-      tabLabel: 'Cerrar sesión',
+      tabLabel: t('account.logout.title'),
       color: themeUtils.colors.red,
       icon: <ExitToApp className="text-white" />,
       component: <Logout />,
@@ -108,12 +114,12 @@ const Account = () => {
     <>
       <NavBar />
       <div className={globalClasses.contentContainerTransparent}>
-        <SectionHeader sectionName="Mi Cuenta" />
+        <SectionHeader sectionName={t('account.header')} />
         <Grid container spacing={4}>
           <Grid item sm={12} md={3}>
             <div className={classes.accountTypeSection}>
               <h2 className={clsx(globalClasses.sectionTitle, 'p-3')}>
-                Cuenta
+                {t('account.tabstitle')}
               </h2>
               <Divider />
               <Tabs
@@ -189,34 +195,142 @@ const TabPanel = ({ children, value, index }) => {
 const PersonalData = () => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
+  const { t } = useTranslation();
+
+  const initialValues = {
+    username: currentUser.username,
+    phone: currentUser.phone,
+    image: '',
+  };
+
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
+    phone: Yup.string()
+      .required(t('validationerror.required'))
+      .matches(/^\+?[\d-]{7,100}$/, t('validationerror.phone', { length: 7 })),
+    image: Yup.mixed()
+      .test(
+        'is-correct-type',
+        t('validationerror.avatarfile.type'),
+        (file) =>
+          file === undefined || ['image/png', 'image/jpeg'].includes(file.type)
+      )
+      .test(
+        'is-correct-size',
+        t('validationerror.avatarfile.size', { size: 2 }),
+        (file) => file === undefined || file.size <= 2 * 1024 * 1024
+      ),
+  });
+
+  const onSubmit = (values, props) => {
+    console.log(values); //TODO: GUARDAR CAMBIOS
+  };
 
   return (
     <>
       <h1 className={clsx(globalClasses.sectionTitle, 'px-5')}>
-        Datos Personales
+        {t('account.data.title')}
       </h1>
       <Divider />
       <div className="p-5">
-        <div>
+        <div className="mb-5">
           <Grid container className="mx-10 flex" spacing={3}>
-            <Grid item sm={2}>
+            <Grid item sm={2} xs={12}>
               <img
                 loading="lazy"
                 className={classes.profileImg}
                 src={currentUser.image}
-                alt="Imagen del usuario"
+                alt={t('account.data.imagealt')}
               />
             </Grid>
-            <Grid item sm={10} className="flex flex-col justify-center">
-              <div>{currentUser.username}</div>
-              <div>Profesional</div>
+            <Grid item sm={10} xs={12} className="flex flex-col justify-center">
+              <div className="font-bold text-lg">{currentUser.username}</div>
+              <div>
+                {currentUser.roles.includes('PROFESSIONAL')
+                  ? t('professional')
+                  : t('client')}
+              </div>
             </Grid>
           </Grid>
         </div>
-        <Divider />
-        {/* TODO: Cambio de nombre y telefono */}
-        <Divider />
-        {/* TODO: CAmbio de imagen de perfil */}
+        <Divider className="mb-3" />
+        <h1 className={globalClasses.sectionTitle}>{t('account.data.edit')}</h1>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {({ values }) => (
+            <Form>
+              <Grid container spacing={3} className="my-3">
+                <Grid item sm={8} xs={12}>
+                  <Field
+                    as={TextField}
+                    variant="filled"
+                    fullWidth
+                    label={t('register.username')}
+                    name="username"
+                    required
+                    helperText={<ErrorMessage name="username"></ErrorMessage>}
+                  />
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <Field
+                    as={TextField}
+                    variant="filled"
+                    fullWidth
+                    label={t('register.phone')}
+                    name="phone"
+                    required
+                    helperText={<ErrorMessage name="phone"></ErrorMessage>}
+                  />
+                </Grid>
+              </Grid>
+              <div>
+                <div className="text-base font-semibold mb-5">
+                  {t('account.data.profilepic')}
+                </div>
+                <Grid container spacing={3} className="px-5">
+                  <Grid item sm={3} xs={12}>
+                    <div className={clsx('flex justify-center mb-3')}>
+                      <img
+                        className={'rounded-full h-24 w-24 object-cover'}
+                        id="img-preview"
+                        src={
+                          values.image === ''
+                            ? './img/defaultavatar.svg'
+                            : URL.createObjectURL(values.image)
+                        }
+                        alt=""
+                      />
+                    </div>
+                    <p className={'mb-3 text-center'}>
+                      {t('register.imagepreview')}
+                    </p>
+                  </Grid>
+                  <Grid
+                    item
+                    sm={9}
+                    xs={12}
+                    className="flex justify-center flex-col"
+                  >
+                    <FileInput fileName="image" />
+                    <div className="font-thin text-sm">
+                      {t('hirePage.form.imagedisclamer')}
+                    </div>
+                  </Grid>
+                </Grid>
+              </div>
+              <div className="flex justify-end">
+                <Button type="submit" className={classes.submitBtn}>
+                  {t('account.savechanges')}
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </>
   );
@@ -260,12 +374,14 @@ const SecurityData = () => {
   return (
     <>
       <h1 className={clsx(globalClasses.sectionTitle, 'px-5')}>
-        Inicio de sesión y contraseña
+        {t('account.security.title')}
       </h1>
       <Divider />
       <div className="p-5">
         <div className="px-10">
-          <h2 className="font-bold text-lg mb-5">Cambiar contraseña</h2>
+          <h2 className="font-bold text-lg mb-5">
+            {t('account.security.changepass')}
+          </h2>
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -274,23 +390,23 @@ const SecurityData = () => {
             {(props) => (
               <Form>
                 <FormControlPassword
-                  placeholder="Contraseña actual"
+                  placeholder={t('account.security.oldpassword')}
                   variable="oldpassword"
                   fullWidth
                 />
                 <FormControlPassword
-                  placeholder="Nueva contraseña"
+                  placeholder={t('account.security.newpassword')}
                   variable="newpassword"
                   fullWidth
                 />
                 <FormControlPassword
-                  placeholder="Repita nueva contraseña"
+                  placeholder={t('account.security.repeatpassword')}
                   variable="repeatnewpassword"
                   fullWidth
                 />
                 <div className="flex justify-end">
                   <Button type="submit" className={classes.submitBtn}>
-                    Guardar cambios
+                    {t('account.savechanges')}
                   </Button>
                 </div>
               </Form>
@@ -305,17 +421,18 @@ const SecurityData = () => {
 const Logout = () => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <>
       <h1 className={clsx(globalClasses.sectionTitle, 'px-5')}>
-        Cerrar Sesión
+        {t('account.logout.title')}
       </h1>
       <Divider />
       <div className="p-5 flex justify-center">
         {/* TODO: llamar a cerrar sesión */}
         <Button type="button" className={classes.logoutBtn}>
-          CERRAR SESIÓN
+          {t('account.logout.btn')}
         </Button>
       </div>
     </>
