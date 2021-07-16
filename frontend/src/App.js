@@ -13,6 +13,7 @@ import ScrollToTop from './utils/ScrollToTop';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Hire from './pages/Hire';
+import Account from './pages/Account';
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/login" exact component={Login} />
         <Route path="/register" exact component={Register} />
         <Route path="/hire/package/:id" exact component={Hire} />
+        <Route path="/account" exact component={Account} />
       </Switch>
       <Footer />
     </>
