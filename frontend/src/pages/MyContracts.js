@@ -133,7 +133,7 @@ const hiredServices = {
       reviewsCount: 3,
       scheduledDate: '2021-06-16T16:48',
       state: {
-        description: 'PRO_REJECTED',
+        description: 'COMPLETED',
         id: 0,
       },
     },
