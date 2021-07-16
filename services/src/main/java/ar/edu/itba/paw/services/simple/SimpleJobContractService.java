@@ -6,7 +6,6 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
-import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -31,73 +30,87 @@ public class SimpleJobContractService implements JobContractService {
     private JobCardService jobCardService;
 
     @Autowired
+    private JobPackageService jobPackageService;
+
+    @Autowired
+    private JobPostService jobPostService;
+
+    @Autowired
     private ReviewService reviewService;
 
     @Autowired
     private MailingService mailingService;
 
     @Autowired
+    PaginationService paginationService;
+
+    @Autowired
     private MessageSource messageSource;
 
-
     @Override
-    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, Locale locale,String webpageUrl) {
-        return create(clientEmail, packageId, description, scheduledDate, null, locale,webpageUrl);
+    public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
+        if (page < 1) page = 1;
+
+        if (userId == null && contractState == null && role == null)
+            return getJobContractCards(jobContractDao.findAll(page));
+
+        if (userId == null || contractState == null || role == null ||
+                (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized")))
+            throw new IllegalArgumentException();
+
+        List<JobContract.ContractState> states = getContractStates(contractState);
+        if (role.equalsIgnoreCase("professional")) {
+            return getJobContractCards(findByProIdAndSortedByModificationDate(userId, states, page - 1));
+        } else if (role.equals("client")) {
+            return getJobContractCards(findByClientIdAndSortedByModificationDate(userId, states, page - 1));
+        } else
+            throw new IllegalArgumentException();
     }
 
     @Override
-    public JobContractWithImage create(String clientEmail, long packageId, String description, String scheduledDate, ByteImage image, Locale locale,String webpageUrl) {
+    public int findContractsMaxPage(Long userId, String contractState, String role) {
 
-        User user = userService.findByEmail(clientEmail).orElseThrow(UserNotFoundException::new);
-        JobContractWithImage jobContract;
+        if (userId == null && contractState == null && role == null)
+            return jobContractDao.findAllMaxPage();
 
-        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
-        LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ofPattern(datePattern));
+        if (userId == null || contractState == null || role == null ||
+                (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized")))
+            throw new IllegalArgumentException();
 
-        if (image == null)
-            jobContract = jobContractDao.create(user.getId(), packageId, description,
-                    parsedDate);
-        else
-            jobContract = jobContractDao.create(user.getId(), packageId, description, parsedDate, image);
-        mailingService.sendContractEmail(jobContract, locale,webpageUrl);
+        if (role.equals("professional")) {
+            return findContractsByProIdMaxPage(userId, getContractStates(contractState));
+        } else if (role.equals("client")) {
+            return findContractsByClientIdMaxPage(userId, getContractStates(contractState));
+        } else
+            throw new IllegalArgumentException();
+    }
 
+    @Override
+    public List<JobContract> findAll(int page) {
+        return jobContractDao.findAll(page);
+    }
+
+    @Override
+    public JobContractWithImage create(long clientId, long packageId, String description, String scheduledDate, Locale locale, String webpageUrl) {
+        LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
+
+        JobContractWithImage jobContract = jobContractDao.create(clientId, packageId, description, parsedDate);
+        mailingService.sendContractEmail(jobContract, locale, webpageUrl);
         return jobContract;
     }
 
     @Override
-    public JobContract findById(long id) {
-        return jobContractDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
-    }
-
-    @Override
-    public List<JobContract> findByClientId(long id) {
-        return jobContractDao.findByClientId(id, Arrays.asList(JobContract.ContractState.values()), HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page) {
-        return jobContractDao.findByClientId(id, states, page);
-    }
-
-    @Override
-    public List<JobContract> findByClientId(long id, int page) {
-        return jobContractDao.findByClientId(id, Arrays.asList(JobContract.ContractState.values()), page);
+    public JobContract findById(long contractId) {
+        Optional<JobContract> jobContract = jobContractDao.findById(contractId);
+        if (!jobContract.isPresent())
+            throw new JobContractNotFoundException();
+        return jobContract.get();
     }
 
     @Override
     public List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
                                                                        int page) {
         return jobContractDao.findByClientIdAndSortedByModificationDate(id, states, page);
-    }
-
-    @Override
-    public List<JobContract> findByProId(long id) {
-        return jobContractDao.findByProId(id, Arrays.asList(JobContract.ContractState.values()), HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobContract> findByProId(long id, int page) {
-        return jobContractDao.findByProId(id, Arrays.asList(JobContract.ContractState.values()), page);
     }
 
     @Override
@@ -122,110 +135,48 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public List<JobContract> findByPackageId(long id) {
-        return jobContractDao.findByPackageId(id, HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobContract> findByPackageId(long id, int page) {
-        return jobContractDao.findByPackageId(id, page);
-    }
-
-    @Override
     public User findClientByContractId(long id) {
         return jobContractDao.findClientByContractId(id).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
-    public int findCompletedContractsQuantityByProId(long id) {
-        return jobContractDao.findCompletedContractsQuantityByProId(id);
+    public int findCompletedContractsByProIdQuantity(long id) {
+        return jobContractDao.findCompletedContractsByProIdQuantity(id);
     }
 
     @Override
-    public int findContractsQuantityByPostId(long id) {
-        return jobContractDao.findContractsQuantityByPostId(id);
+    public int findAllMaxPage() {
+        return jobContractDao.findAllMaxPage();
     }
 
     @Override
-    public int findMaxPageContractsByClientId(long id, List<JobContract.ContractState> states) {
-        return jobContractDao.findMaxPageContractsByClientId(id, states);
+    public int findContractsByClientIdMaxPage(long id, List<JobContract.ContractState> states) {
+        return jobContractDao.findContractsByClientIdMaxPage(id, states);
     }
 
     @Override
-    public int findMaxPageContractsByProId(long id, List<JobContract.ContractState> states) {
-        return jobContractDao.findMaxPageContractsByProId(id, states);
+    public int findContractsByProIdMaxPage(long id, List<JobContract.ContractState> states) {
+        return jobContractDao.findContractsByProIdMaxPage(id, states);
     }
 
-    @Override
-    public List<JobContractCard> findJobContractCardsByProId(long id, List<JobContract.ContractState> states, int page, Locale locale) {
+    private List<JobContractCard> getJobContractCards(List<JobContract> jobContracts) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
-        findByProId(id, states, page)
-                .forEach(jobContract ->
-                                jobContractCards.add(
-                                        new JobContractCard(jobContract, jobCardService
-                                                .findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale)))
-                        //puede no tener una review
-                );
-
-        return jobContractCards;
-    }
-
-    @Override
-    public List<JobContractCard> findJobContractCardsByProIdAndSorted(long id, List<JobContract.ContractState> states, int page, Locale locale) {
-        List<JobContractCard> jobContractCards = new ArrayList<>();
-
-        findByProIdAndSortedByModificationDate(id, states, page)
-                .forEach(jobContract ->
-                                jobContractCards.add(
-                                        new JobContractCard(jobContract, jobCardService
-                                                .findByPostIdWithInactive(jobContract.getJobPackage().getPostId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale)))
-                        //puede no tener una review
-                );
-
-        return jobContractCards;
-    }
-
-
-    @Override
-    public List<JobContractCard> findJobContractCardsByClientId(long id, List<JobContract.ContractState> states, int page, Locale locale) {
-        List<JobContractCard> jobContractCards = new ArrayList<>();
-
-        findByClientId(id, states, page).
+        jobContracts.
                 forEach(jobContract ->
                                 jobContractCards.add(
                                         new JobContractCard(jobContract,
-                                                jobCardService.findByPackageIdWithPackageInfoWithInactive(jobContract.getJobPackage().getId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale))
+                                                jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getJobPost().getId()),
+                                                reviewService.findContractReview(jobContract.getId()).orElse(null), jobContract.getScheduledDate().toString())
                                 )
                         //puede no tener una review
                 );
-
-        return jobContractCards;
-    }
-
-    @Override
-    public List<JobContractCard> findJobContractCardsByClientIdAndSorted(long id, List<JobContract.ContractState> states, int page, Locale locale) {
-        List<JobContractCard> jobContractCards = new ArrayList<>();
-
-        findByClientIdAndSortedByModificationDate(id, states, page).
-                forEach(jobContract ->
-                                jobContractCards.add(
-                                        new JobContractCard(jobContract,
-                                                jobCardService.findByPackageIdWithPackageInfoWithInactive(jobContract.getJobPackage().getId()),
-                                                reviewService.findContractReview(jobContract.getId()).orElse(null), localDateTimeToString(jobContract.getScheduledDate(), locale))
-                                )
-                        //puede no tener una review
-                );
-
         return jobContractCards;
     }
 
 
     @Override
-    public void changeContractState(long id, JobContract.ContractState state) {
+    public void changeContractState(long id, JobContract.ContractState state, Locale locale, String webPageUrl) {
         Optional<JobContract> maybeContract = jobContractDao.findById(id);
 
         if (!maybeContract.isPresent())
@@ -240,22 +191,18 @@ public class SimpleJobContractService implements JobContractService {
             throw new IllegalStateException();
 
         jobContractDao.changeContractState(id, state);
+        JobContractWithImage jobContract = findJobContractWithImage(id);
+        JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId(), jobContract.getJobPackage().getJobPost().getId());
+        JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
+
+        mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, locale, webPageUrl);
     }
 
     @Override
-    public void changeContractScheduledDate(long id, String dateTime, boolean isServiceOwner, Locale locale) {
-        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
-        LocalDateTime parsedDate = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(datePattern));
+    public void changeContractScheduledDate(long id, String scheduledDate, boolean isServiceOwner, Locale locale) {
+        LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
 
         jobContractDao.changeContractScheduledDate(id, parsedDate);
-
-    }
-
-    private String localDateTimeToString(LocalDateTime dateTime, Locale locale) {
-        String datePattern = messageSource.getMessage("spring.mvc.format.date-time", null, locale);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
-
-        return formatter.format(dateTime);
     }
 
     @Override
@@ -264,8 +211,8 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public ByteImage findImageByContractId(long id) {
-        return jobContractDao.findImageByContractId(id).orElseThrow(ImageNotFoundException::new);
+    public ByteImage findImageByContractId(long contractId) {
+        return jobContractDao.findImageByContractId(contractId).orElseThrow(ImageNotFoundException::new);
     }
 
     @Override
@@ -297,4 +244,10 @@ public class SimpleJobContractService implements JobContractService {
     public JobContract findByIdWithUser(long id) {
         return jobContractDao.findByIdWithUser(id).orElseThrow(JobContractNotFoundException::new);
     }
+
+    @Override
+    public long addContractImage(long contractId, ByteImage contractImage) {
+        return jobContractDao.addContractImage(contractId, contractImage);
+    }
+
 }

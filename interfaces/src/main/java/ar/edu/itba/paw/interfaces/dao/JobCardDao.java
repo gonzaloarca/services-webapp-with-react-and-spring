@@ -26,11 +26,11 @@ public interface JobCardDao {
 
     int findAllMaxPage();
 
-    int findMaxPageByUserId(long id);
+    int findByUserIdMaxPage(long id);
 
-    int findMaxPageSearch(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes);
+    int searchMaxPage(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes);
 
-    int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes);
+    int searchWithCategoryMaxPage(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes);
 
-    int findMaxPageRelatedJobCards(long professional_id);
+    int findRelatedJobCardsMaxPage(long professional_id);
 }

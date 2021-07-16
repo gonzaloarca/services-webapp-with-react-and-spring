@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,26 +33,12 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User register(String email, String password, String username, String phone,
-                         ByteImage image, Locale locale, String webpageUrl) throws UserAlreadyExistsException, UserNotVerifiedException {
+                         ByteImage image, Locale locale, String webpageUrl) throws UserAlreadyExistsException {
         Optional<User> maybeUser = userDao.findByEmail(email);
 
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
-
-            if (user.isVerified())
-                throw new UserAlreadyExistsException();
-
-            //registrar usuario de nuevo
-            if (image == null)
-                userDao.updateUserById(user.getId(), username, phone);
-            else
-                userDao.updateUserById(user.getId(), username, phone, image);
-            userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
-
-            VerificationToken token = tokenService.createVerificationToken(user);
-            mailingService.sendVerificationTokenEmail(user, token, locale,webpageUrl);
-
-            throw new UserNotVerifiedException();
+            throw new UserAlreadyExistsException();
         }
 
         User registeredUser;
@@ -84,7 +69,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public User updateUserById(long id, String name, String phone) {
+    public UserWithImage updateUserById(long id, String name, String phone) {
         return userDao.updateUserById(id, name, phone).orElseThrow(NoSuchElementException::new);
     }
 
@@ -117,9 +102,8 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void changeUserPassword(String email, String password) {
-        User user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
+    public void changeUserPassword(long id, String password) {
+        userDao.changeUserPassword(id, passwordEncoder.encode(password));
     }
 
     @Override
@@ -172,5 +156,15 @@ public class SimpleUserService implements UserService {
     @Override
     public ByteImage findImageByUserId(long id) {
         return userDao.findImageByUserId(id).orElseThrow(ImageNotFoundException::new);
+    }
+
+    @Override
+    public long updateUserImage(long id, ByteImage userImage) {
+        return userDao.updateUserImage(id,userImage);
+    }
+
+    @Override
+    public Optional<UserWithImage> findUserWithImageByEmail(String email) {
+        return userDao.findUserWithImageByEmail(email);
     }
 }

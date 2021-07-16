@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.jpa;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPackageDao;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
@@ -24,7 +25,7 @@ public class JobPackageDaoJpa implements JobPackageDao {
     @Override
     public JobPackage create(long postId, String title, String description, Double price, JobPackage.RateType rateType) {
         JobPost jobPost = em.find(JobPost.class, postId);
-        if(jobPost == null)
+        if (jobPost == null)
             throw new JobPostNotFoundException();
 
         JobPackage jobPackage = new JobPackage(jobPost, title, description, price, rateType);
@@ -33,8 +34,9 @@ public class JobPackageDaoJpa implements JobPackageDao {
     }
 
     @Override
-    public Optional<JobPackage> findById(long id) {
-        return Optional.ofNullable(em.find(JobPackage.class, id));
+    public Optional<JobPackage> findById(long packageId, long postId) {
+        return em.createQuery("FROM JobPackage jobPackage WHERE jobPackage.id = :packageId AND jobPackage.jobPost.id = :postId", JobPackage.class)
+                .setParameter("packageId", packageId).setParameter("postId", postId).getResultList().stream().findFirst();
     }
 
     @Override
@@ -45,7 +47,7 @@ public class JobPackageDaoJpa implements JobPackageDao {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM JobPackage AS jpack WHERE jpack.id IN :filteredIds", JobPackage.class)
-                .setParameter("filteredIds", (filteredIds.isEmpty())? null : filteredIds)
+                .setParameter("filteredIds", (filteredIds.isEmpty()) ? null : filteredIds)
                 .getResultList().stream().sorted(
                         //Ordenamos los elementos segun el orden de filteredIds
                         Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
@@ -60,10 +62,14 @@ public class JobPackageDaoJpa implements JobPackageDao {
     }
 
     @Override
-    public boolean deletePackage(long id) {
-        JobPackage jobPack = em.find(JobPackage.class, id);
-        if (jobPack != null) {
-            jobPack.setActive(false);
+    public boolean updatePackage(long packageId, long postId, String title, String description, Double price, JobPackage.RateType rateType, boolean isActive) {
+        JobPackage jobPack = em.find(JobPackage.class, packageId);
+        if (jobPack != null && jobPack.getJobPost().getId() == postId) {
+            jobPack.setTitle(title);
+            jobPack.setDescription(description);
+            jobPack.setPrice(price);
+            jobPack.setRateType(rateType);
+            jobPack.setActive(isActive);
             em.persist(jobPack);
             return true;
         }
@@ -71,16 +77,9 @@ public class JobPackageDaoJpa implements JobPackageDao {
     }
 
     @Override
-    public boolean updatePackage(long id, String title, String description, Double price, JobPackage.RateType rateType) {
-        JobPackage jobPack = em.find(JobPackage.class, id);
-        if (jobPack != null) {
-            jobPack.setTitle(title);
-            jobPack.setDescription(description);
-            jobPack.setPrice(price);
-            jobPack.setRateType(rateType);
-            em.persist(jobPack);
-            return true;
-        }
-        return false;
+    public int findByPostIdMaxPage(long id) {
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobPackage jpackage WHERE jpackage.jobPost.id = :id AND jpackage.isActive = TRUE", Long.class)
+                .setParameter("id", id).getSingleResult();
+        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 }

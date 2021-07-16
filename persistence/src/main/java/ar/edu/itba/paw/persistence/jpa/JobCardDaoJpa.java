@@ -114,19 +114,19 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     @Override
-    public int findMaxPageByUserId(long id) {
+    public int findByUserIdMaxPage(long id) {
         Long size = em.createQuery("SELECT COUNT(*) FROM JobPost jpost WHERE jpost.user.id = :id AND jpost.isActive = TRUE", Long.class)
                 .setParameter("id", id).getSingleResult();
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes) {
-        return findMaxPageSearchWithCategory(query, zone, null, similarTypes);
+    public int searchMaxPage(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes) {
+        return searchWithCategoryMaxPage(query, zone, null, similarTypes);
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
+    public int searchWithCategoryMaxPage(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards");
 
         Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, JobCard.OrderBy.BETTER_QUALIFIED); // no importa el orden
@@ -137,7 +137,7 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     @Override
-    public int findMaxPageRelatedJobCards(long professional_id) {
+    public int findRelatedJobCardsMaxPage(long professional_id) {
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT count(*) ")
                 .append(RELATED_CARDS_QUERY);

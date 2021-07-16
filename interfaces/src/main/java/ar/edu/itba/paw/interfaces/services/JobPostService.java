@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface JobPostService {
 
-    JobPost create(String email, String title, String availableHours, int jobType, int[] zones);
+    JobPost create(long proId, String title, String availableHours, int jobType, List<Integer> zones);
 
     JobPost findById(long id);
 
@@ -34,7 +34,5 @@ public interface JobPostService {
 
     int findSizeByUserId(long id);
 
-    boolean updateJobPost(long id, String title, String availableHours, Integer jobType, int[] zones);
-
-    boolean deleteJobPost(long id);
+    boolean updateJobPost(long id, String title, String availableHours, Integer jobType, List<Integer> zones, boolean isActive);
 }

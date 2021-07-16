@@ -70,10 +70,10 @@ public class SimpleJobCardServiceTest {
         SimpleJobCardService spy = Mockito.spy(simpleJobCardService);
         Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, null, HirenetUtils.ALL_PAGES, Locale.getDefault());
+        spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, 0, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).search(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(new ArrayList<>()), Mockito.eq(null), Mockito.eq(HirenetUtils.ALL_PAGES));
+                Mockito.eq(new ArrayList<>()), Mockito.eq(JobCard.OrderBy.MOST_HIRED), Mockito.eq(HirenetUtils.ALL_PAGES));
     }
 
     @Test
@@ -81,10 +81,10 @@ public class SimpleJobCardServiceTest {
         SimpleJobCardService spy = Mockito.spy(simpleJobCardService);
         Mockito.doReturn(new ArrayList<>()).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        spy.search(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), null, HirenetUtils.ALL_PAGES, Locale.getDefault());
+        spy.search(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), 0, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).searchWithCategory(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(null), Mockito.eq(HirenetUtils.ALL_PAGES));
+                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(JobCard.OrderBy.MOST_HIRED), Mockito.eq(HirenetUtils.ALL_PAGES));
     }
 
     @Test
@@ -235,7 +235,7 @@ public class SimpleJobCardServiceTest {
         Mockito.when(jobPostService.findSizeByUserId(Mockito.eq(USER_ID)))
                 .thenReturn(SIZE);
 
-        int result = simpleJobCardService.findSizeByUserId(USER_ID);
+        int result = simpleJobCardService.findByUserIdSize(USER_ID);
 
         Assert.assertEquals(SIZE, result);
     }
@@ -245,17 +245,17 @@ public class SimpleJobCardServiceTest {
         Mockito.when(jobCardDao.findAllMaxPage())
                 .thenReturn(PAGE);
 
-        int result = simpleJobCardService.findMaxPage();
+        int result = simpleJobCardService.findAllMaxPage();
 
         Assert.assertEquals(PAGE, result);
     }
 
     @Test
     public void findMaxPageByUserIdTest() {
-        Mockito.when(jobCardDao.findMaxPageByUserId(Mockito.eq(USER_ID)))
+        Mockito.when(jobCardDao.findByUserIdMaxPage(Mockito.eq(USER_ID)))
                 .thenReturn(PAGE);
 
-        int result = simpleJobCardService.findMaxPageByUserId(USER_ID);
+        int result = simpleJobCardService.findByUserIdMaxPage(USER_ID);
 
         Assert.assertEquals(PAGE, result);
     }
@@ -268,10 +268,10 @@ public class SimpleJobCardServiceTest {
 
         Mockito.doReturn(jobTypeList).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        Mockito.when(jobCardDao.findMaxPageSearch(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(jobTypeList)))
+        Mockito.when(jobCardDao.searchMaxPage(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(jobTypeList)))
                 .thenReturn(PAGE);
 
-        int result = spy.findMaxPageSearch(QUERY, ZONE, Locale.getDefault());
+        int result = spy.searchMaxPage(QUERY, ZONE, Locale.getDefault());
 
         Assert.assertEquals(PAGE, result);
     }
@@ -284,21 +284,21 @@ public class SimpleJobCardServiceTest {
 
         Mockito.doReturn(jobTypeList).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        Mockito.when(jobCardDao.findMaxPageSearchWithCategory(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(TYPE),
+        Mockito.when(jobCardDao.searchWithCategoryMaxPage(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(TYPE),
                 Mockito.eq(jobTypeList)))
                 .thenReturn(PAGE);
 
-        int result = spy.findMaxPageSearchWithCategory(QUERY, ZONE, TYPE, Locale.getDefault());
+        int result = spy.searchWithCategoryMaxPage(QUERY, ZONE, TYPE, Locale.getDefault());
 
         Assert.assertEquals(PAGE, result);
     }
 
     @Test
     public void findMaxPageRelatedJobCardsTest() {
-        Mockito.when(jobCardDao.findMaxPageRelatedJobCards(Mockito.eq(USER_ID)))
+        Mockito.when(jobCardDao.findRelatedJobCardsMaxPage(Mockito.eq(USER_ID)))
                 .thenReturn(PAGE);
 
-        int result = simpleJobCardService.findMaxPageRelatedJobCards(USER_ID);
+        int result = simpleJobCardService.findRelatedJobCardsMaxPage(USER_ID);
 
         Assert.assertEquals(PAGE, result);
     }

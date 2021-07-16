@@ -35,12 +35,12 @@ public class SimpleReviewService implements ReviewService {
     }
 
     @Override
-    public List<Review> findProfessionalReviews(long id) {
-        return reviewDao.findProfessionalReviews(id, HirenetUtils.ALL_PAGES);
+    public List<Review> findReviewsByProId(long id) {
+        return reviewDao.findReviewsByProId(id, HirenetUtils.ALL_PAGES);
     }
 
-    public List<Review> findProfessionalReviews(long id, int page) {
-        return reviewDao.findProfessionalReviews(id, page);
+    public List<Review> findReviewsByProId(long id, int page) {
+        return reviewDao.findReviewsByProId(id, page);
     }
 
 
@@ -54,8 +54,8 @@ public class SimpleReviewService implements ReviewService {
         List<Integer> answer = new ArrayList<>();
         while (answer.size() < 5)
             answer.add(0);
-        
-        findProfessionalReviews(id).forEach((review) ->
+
+        findReviewsByProId(id).forEach((review) ->
                 answer.set(review.getRate() - 1, answer.get(review.getRate() - 1) + 1));
 
         return answer;
@@ -72,23 +72,67 @@ public class SimpleReviewService implements ReviewService {
     }
 
     @Override
-    public int findMaxPageReviewsByUserId(long id) {
-        return reviewDao.findMaxPageReviewsByUserId(id);
+    public int findReviewsByProIdMaxPage(long id) {
+        return reviewDao.findReviewsByProIdMaxPage(id);
     }
 
     @Override
-    public int findProfessionalReviewsSize(long id) {
-        return reviewDao.findProfessionalReviewsSize(id);
+    public int findReviewsByProIdSize(long id) {
+        return reviewDao.findReviewsByProIdSize(id);
     }
 
     @Override
-    public int findMaxPageByPostId(long id) {
-        return reviewDao.findMaxPageReviewsByPostId(id);
+    public int findByPostIdMaxPage(long id) {
+        return reviewDao.findReviewsByPostIdMaxPage(id);
     }
 
     @Override
     public Double findJobPostAvgRate(long id) {
         return reviewDao.findJobPostAvgRate(id);
+    }
+
+    @Override
+    public int findReviewsMaxPage(Long userId,Long postId, String role) {
+        validateParameters(userId,role,postId);
+
+        if(userId != null){
+            if(role.equalsIgnoreCase("professional"))
+                return reviewDao.findReviewsByProIdMaxPage(userId);
+            else
+                return reviewDao.findReviewsByClientIdMaxPage(userId);
+        }
+        if(postId != null){
+            return reviewDao.findReviewsByPostIdMaxPage(postId);
+        }
+        return reviewDao.findReviewsMaxPage();
+    }
+
+    @Override
+    public List<Review> findReviews(Long userId, String role, Long postId, int page) {
+        validateParameters(userId,role,postId);
+
+        if(userId != null){
+            if(role.equalsIgnoreCase("professional"))
+                return reviewDao.findReviewsByProId(userId,page);
+            else
+                return reviewDao.findReviewsByClientId(userId,page);
+        }
+        if(postId != null){
+            return reviewDao.findReviewsByPostId(postId,page);
+        }
+        return reviewDao.findAllReviews(page);
+    }
+
+    private void validateParameters(Long userId, String role, Long postId){
+        if((userId != null || role != null) && postId != null )
+            throw new IllegalArgumentException("Incompatible Query Parameters");
+
+        if(userId != null && role == null)
+            throw new IllegalArgumentException("Must set Query parameter role for userId");
+
+        if(role != null && !role.equalsIgnoreCase("professional") && !role.equalsIgnoreCase("client"))
+            throw new IllegalArgumentException("Invalid role value");
+        return;
     }
 
 }

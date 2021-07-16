@@ -12,7 +12,7 @@ public interface JobPostImageService {
 
 	List<JobPostImage> addImages(long postId, List<ByteImage> byteImages);
 
-	JobPostImage findById(long imageId);
+	JobPostImage findById(long imageId, long postId);
 
 	List<Long> getImagesIdsByPostId(long postId);
 

@@ -25,13 +25,11 @@ public class SimpleJobPostService implements JobPostService {
     private UserService userService;
 
     @Override
-    public JobPost create(String email, String title, String availableHours, int jobType, int[] zones) {
-        User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        userService.assignRole(user.getId(), UserAuth.Role.PROFESSIONAL.ordinal());
-        List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone])
-                .collect(Collectors.toList());
+    public JobPost create(long proId, String title, String availableHours, int jobType, List<Integer> zones) {
+        userService.assignRole(proId, UserAuth.Role.PROFESSIONAL.ordinal());
+        List<JobPost.Zone> parsedZones = zones.stream().map(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
-        return jobPostDao.create(user.getId(), title, availableHours, parsedJobType, parsedZones);
+        return jobPostDao.create(proId, title, availableHours, parsedJobType, parsedZones);
     }
 
     @Override
@@ -96,18 +94,10 @@ public class SimpleJobPostService implements JobPostService {
     }
 
     @Override
-    public boolean updateJobPost(long id, String title, String availableHours, Integer jobType, int[] zones) {
-        List<JobPost.Zone> parsedZones = Arrays.stream(zones).mapToObj(zone -> JobPost.Zone.values()[zone])
-                .collect(Collectors.toList());
+    public boolean updateJobPost(long id, String title, String availableHours, Integer jobType, List<Integer> zones, boolean isActive) {
+        List<JobPost.Zone> parsedZones = zones.stream().map(zone -> JobPost.Zone.values()[zone]).collect(Collectors.toList());
         JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
-        if (!jobPostDao.updateById(id, title, availableHours, parsedJobType, parsedZones))
-            throw new JobPostNotFoundException();
-        else return true;
-    }
-
-    @Override
-    public boolean deleteJobPost(long id) {
-        if (!jobPostDao.deleteJobPost(id))
+        if (!jobPostDao.updateById(id, title, availableHours, parsedJobType, parsedZones, isActive))
             throw new JobPostNotFoundException();
         else return true;
     }

@@ -55,8 +55,8 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public Optional<User> updateUserById(long id, String name, String phone) {
-        User aux = em.find(User.class, id);
+    public Optional<UserWithImage> updateUserById(long id, String name, String phone) {
+        UserWithImage aux = em.find(UserWithImage.class, id);
         if (aux != null) {
             aux.setUsername(name);
             aux.setPhone(phone);
@@ -190,5 +190,22 @@ public class UserDaoJpa implements UserDao {
     public Optional<ByteImage> findImageByUserId(long id){
         List<ByteImage> resultList = em.createQuery("SELECT u.byteImage FROM UserWithImage u WHERE u.id = :id", ByteImage.class).setParameter("id", id).getResultList();
         return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
+    }
+
+    @Override
+    public long updateUserImage(long id, ByteImage userImage) {
+        UserWithImage user = em.find(UserWithImage.class,id);
+        if(user != null){
+            user.setByteImage(userImage);
+            em.persist(user);
+            return id;
+        }
+        return -1;
+    }
+
+    @Override
+    public Optional<UserWithImage> findUserWithImageByEmail(String email) {
+        return em.createQuery("FROM UserWithImage AS u WHERE u.email = :email", UserWithImage.class)
+                .setParameter("email", email).getResultList().stream().findFirst();
     }
 }

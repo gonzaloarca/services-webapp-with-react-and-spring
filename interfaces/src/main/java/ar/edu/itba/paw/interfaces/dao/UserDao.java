@@ -17,7 +17,7 @@ public interface UserDao {
 
     Optional<User> updateUserByEmail(String email, String phone, String name);
 
-    Optional<User> updateUserById(long id, String name, String phone);
+    Optional<UserWithImage> updateUserById(long id, String name, String phone);
 
     Optional<User> updateUserById(long id, String name, String phone, ByteImage image);
 
@@ -42,4 +42,8 @@ public interface UserDao {
     Optional<UserWithImage> findUserWithImage(long id);
 
     Optional<ByteImage> findImageByUserId(long id);
+
+    long updateUserImage(long id, ByteImage userImage);
+
+    Optional<UserWithImage> findUserWithImageByEmail(String email);
 }

@@ -311,7 +311,7 @@ public class JobCardDaoJpaTest {
     @Test
     public void testFindMaxPageByUserId1() {
 
-        int maxPage = jobCardDaoJpa.findMaxPageByUserId(USER1.getId());
+        int maxPage = jobCardDaoJpa.findByUserIdMaxPage(USER1.getId());
 
         Assert.assertEquals(Math.ceil((double) TOTAL_JOB_CARDS_USER_ID_1 / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
@@ -319,7 +319,7 @@ public class JobCardDaoJpaTest {
     @Test
     public void testFindMaxPageByUserId3() {
 
-        int maxPage = jobCardDaoJpa.findMaxPageByUserId(USER2.getId());
+        int maxPage = jobCardDaoJpa.findByUserIdMaxPage(USER2.getId());
 
         Assert.assertEquals(Math.ceil((double) TOTAL_JOB_CARDS_USER_ID_3 / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
@@ -327,7 +327,7 @@ public class JobCardDaoJpaTest {
     @Test
     public void testFindMaxPageByNonExistingUserId() {
 
-        int maxPage = jobCardDaoJpa.findMaxPageByUserId(NON_EXISTING_ID);
+        int maxPage = jobCardDaoJpa.findByUserIdMaxPage(NON_EXISTING_ID);
 
         Assert.assertEquals(0, maxPage);
     }
@@ -337,7 +337,7 @@ public class JobCardDaoJpaTest {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.values()[1];
 
-        int maxPage = jobCardDaoJpa.findMaxPageSearch(title, zone, new ArrayList<>());
+        int maxPage = jobCardDaoJpa.searchMaxPage(title, zone, new ArrayList<>());
 
         Assert.assertEquals(Math.ceil((double) SEARCH_ELECTRICISTA_COUNT / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
@@ -348,7 +348,7 @@ public class JobCardDaoJpaTest {
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
 
-        int maxPage = jobCardDaoJpa.findMaxPageSearchWithCategory(title, zone, jobType, new ArrayList<>());
+        int maxPage = jobCardDaoJpa.searchWithCategoryMaxPage(title, zone, jobType, new ArrayList<>());
 
         Assert.assertEquals(Math.ceil((double) SEARCH_ELECTRICISTA_COUNT / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
@@ -356,7 +356,7 @@ public class JobCardDaoJpaTest {
     @Test
     public void testFindMaxPageRelatedJobCards() {
 
-        int maxPage = jobCardDaoJpa.findMaxPageRelatedJobCards(1);
+        int maxPage = jobCardDaoJpa.findRelatedJobCardsMaxPage(1);
 
         Assert.assertEquals(Math.ceil((double) RELATED_JOB_CARDS_COUNT / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }

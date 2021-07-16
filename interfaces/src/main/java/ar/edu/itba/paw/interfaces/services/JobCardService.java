@@ -16,7 +16,7 @@ public interface JobCardService {
 
     List<JobCard> findByUserId(long id, int page);
 
-    List<JobCard> search(String title, int zone, int jobType, JobCard.OrderBy orderBy, int page, Locale locale);
+    List<JobCard> search(String query, int zone, int jobType, int order, int page, Locale locale);
 
     JobCard findByPostId(long id);
 
@@ -26,17 +26,17 @@ public interface JobCardService {
 
     List<JobCard> findRelatedJobCards(long professional_id, int page);
 
-    int findSizeByUserId(long id);
+    int findByUserIdSize(long id);
 
-    int findMaxPage();
+    int findAllMaxPage();
 
-    int findMaxPageByUserId(long id);
+    int findByUserIdMaxPage(long id);
 
-    int findMaxPageSearch(String query, JobPost.Zone zone, Locale locale);
+    int searchMaxPage(String query, JobPost.Zone zone, Locale locale);
 
-    int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, Locale locale);
+    int searchWithCategoryMaxPage(String query, JobPost.Zone zone, JobPost.JobType jobType, Locale locale);
 
-    int findMaxPageRelatedJobCards(long professional_id);
+    int findRelatedJobCardsMaxPage(long professional_id);
 
     public List<JobPost.JobType> getSimilarTypes(String query, Locale locale);
 }

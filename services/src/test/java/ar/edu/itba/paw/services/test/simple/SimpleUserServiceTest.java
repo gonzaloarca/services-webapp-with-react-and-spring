@@ -92,7 +92,7 @@ public class SimpleUserServiceTest {
                 byteImage, Locale.getDefault(),"");
     }
 
-    @Test(expected = UserNotVerifiedException.class)
+    @Test(expected = UserAlreadyExistsException.class)
     public void testRegisterUserNotVerified() {
         Mockito.when(userDaoJpa.findByEmail(Mockito.eq(EXISTING_USER.getEmail())))
                 .thenReturn(Optional.of(EXISTING_USER));

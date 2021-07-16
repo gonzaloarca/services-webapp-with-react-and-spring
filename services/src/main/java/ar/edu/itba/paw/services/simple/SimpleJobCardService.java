@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static ar.edu.itba.paw.interfaces.HirenetUtils.ALL_PAGES;
 import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
 
 @Transactional
@@ -54,13 +55,19 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobCard> search(String title, int zone, int jobType, JobCard.OrderBy orderBy, int page, Locale locale) {
-        List<JobPost.JobType> similarTypes = getSimilarTypes(title, locale);
+    public List<JobCard> search(String query, int zone, int jobType, int order, int page, Locale locale) {
+        if (query == null || zone < 0 || zone > JobPost.Zone.values().length || jobType < SEARCH_WITHOUT_CATEGORIES ||
+                jobType > JobPost.JobType.values().length || order < 0
+                || order > JobCard.OrderBy.values().length || page < ALL_PAGES) {
+            return new ArrayList<>();
+        }
+        List<JobPost.JobType> similarTypes = getSimilarTypes(query, locale);
         JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
+        JobCard.OrderBy orderBy = JobCard.OrderBy.values()[order];
         if (jobType == SEARCH_WITHOUT_CATEGORIES)
-            return jobCardDao.search(title, parsedZone, similarTypes, orderBy, page);
+            return jobCardDao.search(query, parsedZone, similarTypes, orderBy, page);
         else
-            return jobCardDao.searchWithCategory(title, parsedZone, JobPost.JobType.values()[jobType], similarTypes, orderBy, page);
+            return jobCardDao.searchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType], similarTypes, orderBy, page);
     }
 
     @Override
@@ -84,28 +91,28 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public int findSizeByUserId(long id) {
+    public int findByUserIdSize(long id) {
         return jobPostService.findSizeByUserId(id);
     }
 
     @Override
-    public int findMaxPage() {
+    public int findAllMaxPage() {
         return jobCardDao.findAllMaxPage();
     }
 
     @Override
-    public int findMaxPageByUserId(long id) {
-        return jobCardDao.findMaxPageByUserId(id);
+    public int findByUserIdMaxPage(long id) {
+        return jobCardDao.findByUserIdMaxPage(id);
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPost.Zone value, Locale locale) {
-        return jobCardDao.findMaxPageSearch(query, value, getSimilarTypes(query, locale));
+    public int searchMaxPage(String query, JobPost.Zone value, Locale locale) {
+        return jobCardDao.searchMaxPage(query, value, getSimilarTypes(query, locale));
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPost.Zone value, JobPost.JobType jobType, Locale locale) {
-        return jobCardDao.findMaxPageSearchWithCategory(query, value, jobType, getSimilarTypes(query, locale));
+    public int searchWithCategoryMaxPage(String query, JobPost.Zone value, JobPost.JobType jobType, Locale locale) {
+        return jobCardDao.searchWithCategoryMaxPage(query, value, jobType, getSimilarTypes(query, locale));
     }
 
     @Override
@@ -114,7 +121,7 @@ public class SimpleJobCardService implements JobCardService {
         List<JobPost.JobType> types = new ArrayList<>();
 
         Arrays.stream(JobPost.JobType.values()).forEach(jobType -> {
-            String typeName = messageSource.getMessage(jobType.getStringCode(), null, locale);
+            String typeName = messageSource.getMessage(jobType.getDescription(), null, locale);
             int distance = levenshteinDistance.apply(query.toLowerCase(), typeName.toLowerCase());
             double similarity = 1.0 - ((double) distance / Math.max(query.length(), typeName.length()));
 
@@ -126,8 +133,8 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public int findMaxPageRelatedJobCards(long professional_id) {
-        return jobCardDao.findMaxPageRelatedJobCards(professional_id);
+    public int findRelatedJobCardsMaxPage(long professional_id) {
+        return jobCardDao.findRelatedJobCardsMaxPage(professional_id);
     }
 
 }
