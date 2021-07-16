@@ -1,118 +1,163 @@
-import { Card, CardActionArea, makeStyles } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  Avatar,
+  Button,
+  Card,
+  Divider,
+  Grid,
+  makeStyles,
+} from '@material-ui/core';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { themeUtils } from '../theme';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import {
+  contractActionsMap,
+  contractStateDataMap,
+} from '../utils/contractState';
+import createDate from '../utils/createDate';
+import contractCardStyles from './ContractCardStyles';
+import RatingDisplay from './RatingDisplay';
 
-const useStyles = makeStyles((theme) => ({
-  contractTitle: {
-    fontSize: '1.2rem',
-    fontWeight: 500,
-    WebkitLineClamp: 3,
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    overflowWrap: 'break-word',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  stateContainer: {
-    display: 'flex',
-    justifyContent: 'start',
-    alignItems: 'center',
-    width: '100%',
-    color: 'white',
-    fontSize: '0.9rem',
-    fontWeight: 500,
-  },
-}));
+const useStyles = makeStyles(contractCardStyles);
 
 const ContractStateHeader = ({ contract, isOwner }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const contractStateDataMap = {
-    'PENDING_APPROVAL': {
-      message: '',
-      state: 'PENDING',
-    },
-    'APPROVED': {
-      message: '',
-      state: 'ACTIVE',
-    },
-    'CLIENT_REJECTED': {
-      message: t(
-        'mycontracts.contractstate.' + (isOwner ? 'client' : 'you') + 'rejected'
-      ),
-      state: 'FINALIZED',
-      color: themeUtils.colors.red,
-    },
-    'PRO_REJECTED': {
-      message: t(
-        'mycontracts.contractstate.' + (isOwner ? 'you' : 'pro') + 'rejected'
-      ),
-      state: 'FINALIZED',
-      color: themeUtils.colors.red,
-    },
-    'CLIENT_CANCELLED': {
-      message: t(
-        'mycontracts.contractstate.' +
-          (isOwner ? 'client' : 'you') +
-          'cancelled'
-      ),
-      state: 'FINALIZED',
-      color: themeUtils.colors.red,
-    },
-    'PRO_CANCELLED': {
-      message: t(
-        'mycontracts.contractstate.' + (isOwner ? 'you' : 'pro') + 'cancelled'
-      ),
-      state: 'FINALIZED',
-      color: themeUtils.colors.red,
-    },
-    'COMPLETED': {
-      message: t('mycontracts.contractstate.finalized'),
-      state: 'FINALIZED',
-      color: themeUtils.colors.darkGreen,
-    },
-    'CLIENT_MODIFIED': {
-      message: t(
-        'mycontracts.contractstate.' +
-          (isOwner ? 'client' : 'you') +
-          'rescheduled'
-      ),
-      state: 'PENDING',
-      color: themeUtils.colors.yellow,
-    },
-    'PRO_MODIFIED': {
-      message: t(
-        'mycontracts.contractstate.' + (isOwner ? 'you' : 'pro') + 'rescheduled'
-      ),
-      state: 'PENDING',
-      color: themeUtils.colors.yellow,
-    },
-  };
-
   const stateData = contractStateDataMap[contract.state.description];
-
-  return stateData.message === '' ? (
-    <></>
-  ) : (
+  console.log(stateData);
+  return stateData.clientMessage ? (
     <div
       className={classes.stateContainer}
       style={{ backgroundColor: stateData.color }}
     >
-      {stateData.message}
+      <FontAwesomeIcon className="text-lg mr-2" icon={stateData.icon} />
+      {t(isOwner ? stateData.proMessage : stateData.clientMessage)}
     </div>
+  ) : (
+    <></>
   );
 };
+
 const ContractCard = ({ contract, isOwner }) => {
   const classes = useStyles();
+  const { t } = useTranslation();
+
   return (
-    <Card>
-      <ContractStateHeader contract={contract} isOwner={isOwner} />
-      <CardActionArea>
-        <h3 className={classes.contractTitle}>{contract.jobTitle}</h3>
-      </CardActionArea>
-    </Card>
+    <>
+      <Card className={classes.contractCard}>
+        <ContractStateHeader contract={contract} isOwner={isOwner} />
+        <Grid className="p-4 pr-4" container spacing={3}>
+          <Grid
+            className={classes.jobImageContainer}
+            item
+            xs={12}
+            md={4}
+            lg={3}
+          >
+            {/* Fecha programada */}
+            <div className={classes.scheduledDateContainer}>
+              {t('mycontracts.scheduleddate')}
+              <Trans
+                i18nKey="mycontracts.scheduleddateformat"
+                components={{
+                  date: <div className={classes.scheduledDate} />,
+                  time: <div className={classes.scheduledTime} />,
+                }}
+                values={{
+                  date: t('date', {
+                    date: createDate(contract.scheduledDate),
+                  }),
+                  time: t('time', {
+                    date: createDate(contract.scheduledDate),
+                  }),
+                }}
+              />
+            </div>
+            <img
+              className={classes.jobImage}
+              src={contract.jobPost.image}
+              alt=""
+            />
+          </Grid>
+          <Grid
+            className="flex flex-col justify-center"
+            item
+            xs={12}
+            md={8}
+            lg={9}
+          >
+            {/* Titulo */}
+            <Link
+              to={`/job/${contract.jobPost.id}`}
+              className={classes.contractTitle}
+            >
+              {contract.jobTitle}
+            </Link>
+            {/* Categoria y calificacion */}
+            <Grid className="mb-1" container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <p className={classes.jobType}>
+                  {contract.jobType.description}
+                </p>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <RatingDisplay
+                  className="justify-end"
+                  avgRate={contract.avgRate}
+                  reviewsCount={contract.reviewsCount}
+                />
+              </Grid>
+            </Grid>
+            <div>
+              <p className={classes.fieldLabel}>
+                {t(
+                  isOwner ? 'mycontracts.hiredby' : 'mycontracts.professional'
+                )}
+              </p>
+              <div className={classes.userContainer}>
+                <Avatar
+                  className={classes.avatarSize}
+                  src={
+                    isOwner
+                      ? contract.client.image
+                      : contract.professional.image
+                  }
+                />
+                <p className={classes.username}>
+                  {isOwner
+                    ? contract.client.username
+                    : contract.professional.username}
+                </p>
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+        <Divider />
+        <div className={classes.contractActions}>
+          {contractActionsMap[
+            contractStateDataMap[contract.state.description].state
+          ].map(({ label, onClick, icon, color, roles }, index) =>
+            (isOwner && roles.includes('PROFESSIONAL')) ||
+            (!isOwner && roles.includes('CLIENT')) ? (
+              <Button
+                className="ml-2"
+                key={index}
+                onClick={onClick}
+                style={{ color: color }}
+                startIcon={
+                  <FontAwesomeIcon icon={icon} style={{ color: color }} />
+                }
+              >
+                {t(label)}
+              </Button>
+            ) : (
+              <></>
+            )
+          )}
+        </div>
+      </Card>
+    </>
   );
 };
 

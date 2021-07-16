@@ -24,22 +24,16 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     backgroundColor: 'white',
     color: 'black',
-    '& .MuiTab-wrapper': {
-      flexDirection: 'row',
-      justifyContent: 'start',
-    },
   },
   tabContent: {
     display: 'flex',
     alignItems: 'center',
   },
   contractSection: {
-    padding: '10px 30px',
     backgroundColor: 'white',
     boxShadow: themeUtils.shadows.containerShadow,
   },
   contractTypeSection: {
-    padding: '10px 0',
     backgroundColor: 'white',
     boxShadow: themeUtils.shadows.containerShadow,
   },
@@ -76,6 +70,7 @@ const hiredServices = {
       jobPost: {
         id: 8,
         uri: 'http://localhost:8080/job-posts/8',
+        image: '/img/plumbing.jpeg',
       },
       jobTitle: 'Niñero turno mañana',
       jobType: {
@@ -138,7 +133,7 @@ const hiredServices = {
       reviewsCount: 3,
       scheduledDate: '2021-06-16T16:48',
       state: {
-        description: 'PRO_REJECTED',
+        description: 'COMPLETED',
         id: 0,
       },
     },
@@ -154,7 +149,7 @@ const myServices = {
 const TabPanel = ({ children, value, index }) => {
   return (
     <div
-      role='tabpanel'
+      role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
     >
@@ -179,22 +174,22 @@ const MyContracts = () => {
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('navigation.sections.mycontracts')} />
         <div>
-          <AppBar position='static'>
+          <AppBar position="static">
             <Tabs
-              variant='fullWidth'
+              variant="fullWidth"
               className={classes.tabs}
               value={tabValue}
               onChange={handleChange}
             >
               <Tab
                 label={
-                  <div className='flex items-center justify-center'>
+                  <div className="flex items-center justify-center">
                     <CircleIcon
-                      className='mr-2'
+                      className="mr-2"
                       color={themeUtils.colors.yellow}
-                      size='2rem'
+                      size="2rem"
                     >
-                      <Group className='text-white' />
+                      <Group className="text-white" />
                     </CircleIcon>
                     {t('mycontracts.hiredservices')}
                   </div>
@@ -202,13 +197,13 @@ const MyContracts = () => {
               />
               <Tab
                 label={
-                  <div className='flex items-center justify-center'>
+                  <div className="flex items-center justify-center">
                     <CircleIcon
-                      className='mr-2'
+                      className="mr-2"
                       color={themeUtils.colors.lightBlue}
-                      size='2rem'
+                      size="2rem"
                     >
-                      <Person className='text-white' />
+                      <Person className="text-white" />
                     </CircleIcon>
                     {t('mycontracts.myservices')}
                   </div>
@@ -244,19 +239,19 @@ const ContractsDashboard = ({ contracts }) => {
       title: t('mycontracts.activecontracts'),
       tabLabel: t('mycontracts.active'),
       color: themeUtils.colors.green,
-      icon: <Work className='text-white' />,
+      icon: <Work className="text-white" />,
     },
     {
       title: t('mycontracts.pendingapprovalcontracts'),
       tabLabel: t('mycontracts.pendingapproval'),
       color: themeUtils.colors.orange,
-      icon: <Schedule className='text-white' />,
+      icon: <Schedule className="text-white" />,
     },
     {
       title: t('mycontracts.finalizedcontracts'),
       tabLabel: t('mycontracts.finalized'),
       color: themeUtils.colors.aqua,
-      icon: <Check className='text-white' />,
+      icon: <Check className="text-white" />,
     },
   ];
 
@@ -304,36 +299,38 @@ const ContractsDashboard = ({ contracts }) => {
       {/* Sección con selector de tipo de contrato */}
       <Grid item sm={12} md={3}>
         <div className={classes.contractTypeSection}>
-          <h2 className={clsx(globalClasses.sectionTitle, 'p-3')}>
+          <h2 className={clsx(globalClasses.sectionTitle)}>
             {t('mycontracts.contracts')}
           </h2>
-          <Divider />
+          <Divider className="mb-2" />
           <Tabs
-            orientation='vertical'
+            orientation="vertical"
             value={tabValue}
-            indicatorColor='primary'
+            indicatorColor="primary"
             onChange={handleChange}
             className={classes.tabs}
           >
             {contractSections.map((section, index) => (
               <HirenetTab
+                fullWidth
                 key={index}
-                className='items-start'
+                className="items-start"
                 label={
                   <div
                     className={clsx(
                       classes.tabContent,
                       index === tabValue ? 'font-semibold' : 'font-medium',
+                      'w-full'
                     )}
                   >
                     <CircleIcon
-                      className='mr-2'
+                      className="mr-2"
                       color={section.color}
-                      size='2rem'
+                      size="2rem"
                     >
                       {section.icon}
                     </CircleIcon>
-                    <div className='text-left'>{section.tabLabel}</div>
+                    <div className="text-left">{section.tabLabel}</div>
                   </div>
                 }
               />
@@ -347,13 +344,18 @@ const ContractsDashboard = ({ contracts }) => {
         <div className={classes.contractSection}>
           {contractSections.map((section, index) => (
             <TabPanel key={index} value={tabValue} index={index}>
-              <h2 className={clsx(globalClasses.sectionTitle, 'py-3')}>
-                {section.title}
-              </h2>
-              <Divider />
-              {getContracts(index).map((contract) => (
-                <ContractCard contract={contract} key={contract.id} isOwner={false} />
-              ))}
+              <h2 className={globalClasses.sectionTitle}>{section.title}</h2>
+              <Divider className="mb-2" />
+
+              <div className="p-4">
+                {getContracts(index).map((contract) => (
+                  <ContractCard
+                    contract={contract}
+                    key={contract.id}
+                    isOwner={false}
+                  />
+                ))}
+              </div>
             </TabPanel>
           ))}
         </div>
@@ -364,10 +366,20 @@ const ContractsDashboard = ({ contracts }) => {
 
 const HirenetTab = withStyles((theme) => ({
   root: {
+    padding: '6px 10px',
+    maxWidth: '100%',
+    width: '100%',
     transition: '0.1s opacity',
     '&:hover': {
       opacity: 1,
       transition: '0.1s opacity',
+    },
+    // '& .MuiTab-root': {
+    //   p
+    // },
+    '& .MuiTab-wrapper': {
+      flexDirection: 'row',
+      justifyContent: 'start',
     },
   },
 }))(Tab);

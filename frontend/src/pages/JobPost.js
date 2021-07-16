@@ -27,6 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCube } from '@fortawesome/free-solid-svg-icons';
 import PackageAccordion from '../components/PackageAccordion';
 import ReviewCard from '../components/ReviewCard';
+import RatingDisplay from '../components/RatingDisplay';
 
 const post = {
   active: true,
@@ -207,6 +208,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '0.5rem',
   },
   cardContentContainer: {
+    backgroundColor: 'white',
     padding: 30,
   },
   roundedCorners: {
@@ -481,12 +483,7 @@ const StatsCard = ({
             >
               <div className="flex flex-row items-center">
                 <p className={classes.ratingValue}>{avgRate.toFixed(2)}</p>
-                <div className="flex">
-                  <Rating precision={0.5} readOnly value={avgRate} />
-                  <p className={classes.reviewsCount}>
-                    {t('reviewcount', { count: reviewsCount })}
-                  </p>
-                </div>
+                <RatingDisplay avgRate={avgRate} reviewsCount={reviewsCount} />
               </div>
               <Link href="#reviews">{t('jobpost.seereviews')}</Link>
             </div>

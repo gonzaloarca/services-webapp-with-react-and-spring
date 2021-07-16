@@ -164,7 +164,7 @@ export const Home = () => {
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
   return (
-    <>
+    <div className="bg-white">
       <NavBar currentSection={'/'} isTransparent />
       <Hero />
       <HeroSteps />
@@ -196,7 +196,7 @@ export const Home = () => {
         </div>
       </div>
       <PublishBanner />
-    </>
+    </div>
   );
 };
 
