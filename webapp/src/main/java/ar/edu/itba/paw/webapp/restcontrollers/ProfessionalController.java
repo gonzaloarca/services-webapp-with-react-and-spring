@@ -126,45 +126,15 @@ public class ProfessionalController {
                 }));
     }
 
-    @Path("/{id}/contracts")
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getServedContracts(@PathParam("id") long id,
-                                       @QueryParam(value = "state") final String contractState,
-                                       @QueryParam(value = "page") @DefaultValue("1") int page) {
-        if (page < 1) {
-            page = 1;
-        }
-        if (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized"))
-            throw new IllegalArgumentException();
-
-        Locale locale = headers.getAcceptableLanguages().get(0);
-        professionalControllerLogger.debug("Finding contractStates rankings for user {}", id);
-        List<JobContract.ContractState> states = jobContractService.getContractStates(contractState);
-        int maxPage = paginationService.findContractsByProIdMaxPage(id, states);
-        List<JobContractCardDto> jobContractCardDtoList = jobContractService
-                .findJobContractCardsByProIdAndSorted(id, states, page - 1, locale).stream()
-                .map(jobContractCard -> JobContractCardDto.fromJobContractCardWithLocalizedMessage(jobContractCard, uriInfo, false,
-                        messageSource.getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(), null, locale)
-                ))
-                .collect(Collectors.toList());
-
-
-        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
-                Response.ok(new GenericEntity<List<JobContractCardDto>>(jobContractCardDtoList) {
-                }));
-    }
-
     @Path("/{id}/category-rankings")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getCategoryRankings(@PathParam("id") long id) {
-        Locale locale = headers.getAcceptableLanguages().get(0);
-
         professionalControllerLogger.debug("Finding analytics rankings for user {}", id);
         List<AnalyticRankingDto> rankingDtoList = userService.findUserAnalyticRankings(id).stream()
                 .map(ranking -> AnalyticRankingDto.fromAnalyticRanking(ranking,
-                        messageSource.getMessage(ranking.getJobType().getDescription(), null, locale)))
+                        messageSource.getMessage(ranking.getJobType().getDescription(), null,
+                                LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<AnalyticRankingDto>>(rankingDtoList) {

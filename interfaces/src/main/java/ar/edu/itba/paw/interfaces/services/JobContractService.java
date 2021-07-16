@@ -8,21 +8,17 @@ import java.util.Locale;
 
 public interface JobContractService {
 
-    JobContractWithImage create(long clientId, long packageId, long postId, String description, LocalDateTime scheduledDate, Locale locale,String webpageUrl);
+    List<JobContract> findAll(int page);
 
-    JobContract findById(long contractId, long packageId, long postId);
+    List<JobContractCard> findContracts(Long userId, String contractState, String role, int page, Locale locale);
 
-    List<JobContract> findByClientId(long id);
+    int findContractsMaxPage(Long userId, String contractState, String role, Locale locale);
 
-    List<JobContract> findByClientId(long id, int page);
+    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate, Locale locale, String webpageUrl);
 
-    List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page);
+    JobContract findById(long contractId);
 
     List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page);
-
-    List<JobContract> findByProId(long id);
-
-    List<JobContract> findByProId(long id, int page);
 
     List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page);
 
@@ -32,27 +28,15 @@ public interface JobContractService {
 
     List<JobContract> findByPostId(long id, int page);
 
-    List<JobContract> findByPackageId(long packageId, long postId);
-
-    List<JobContract> findByPackageId(long packageId, long postId, int page);
-
     User findClientByContractId(long id);
 
-    int findCompletedContractsByProIdQuantity(long id);
+    int findAllMaxPage();
 
-    int findContractsByPostIdQuantity(long id);
+    int findCompletedContractsByProIdQuantity(long id);
 
     int findContractsByClientIdMaxPage(long id, List<JobContract.ContractState> states);
 
     int findContractsByProIdMaxPage(long id, List<JobContract.ContractState> states);
-
-    List<JobContractCard> findJobContractCardsByProIdAndSorted(long id, List<JobContract.ContractState> states, int page, Locale locale);
-
-    List<JobContractCard> findJobContractCardsByClientId(long id, List<JobContract.ContractState> states, int page, Locale locale);
-
-    List<JobContractCard> findJobContractCardsByProId(long id, List<JobContract.ContractState> states, int page, Locale locale);
-
-    List<JobContractCard> findJobContractCardsByClientIdAndSorted(long id, List<JobContract.ContractState> states, int page, Locale locale);
 
     void changeContractState(long id, JobContract.ContractState state, Locale locale, String webPageUrl);
 
@@ -60,13 +44,11 @@ public interface JobContractService {
 
     JobContractWithImage findJobContractWithImage(long id);
 
-    ByteImage findImageByContractId(long contractId, long packageId, long postId);
+    ByteImage findImageByContractId(long contractId);
 
     List<JobContract.ContractState> getContractStates(String contractState);
 
     JobContract findByIdWithUser(long id);
-
-    int findByPackageIdMaxPage(long packageId, long postId);
 
     long addContractImage(long contractId, ByteImage contractImage);
 }

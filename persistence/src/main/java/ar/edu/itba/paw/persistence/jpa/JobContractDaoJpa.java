@@ -23,15 +23,24 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @PersistenceContext
     private EntityManager em;
+    private String s;
 
     @Override
-    public JobContractWithImage create(long clientId, long packageId, long postId, String description, LocalDateTime scheduledDate) {
+    public List<JobContract> findAll(int page) {
+        Query nativeQuery = em.createNativeQuery(
+                "SELECT contract_id FROM contract"
+        );
+        return executePageQuery(page, nativeQuery);
+    }
+
+    @Override
+    public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate) {
         User client = em.find(User.class, clientId);
         if (client == null)
             throw new UserNotFoundException();
 
         JobPackage jobPackage = em.find(JobPackage.class, packageId);
-        if (jobPackage == null || jobPackage.getPostId() != postId)
+        if (jobPackage == null)
             throw new JobPackageNotFoundException();
 
         JobContractWithImage jobContractWithImage = new JobContractWithImage(client, jobPackage, LocalDateTime.now(), scheduledDate, LocalDateTime.now(), description, null);
@@ -132,9 +141,9 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public long addContractImage(long contractId,ByteImage contractImage) {
-        JobContractWithImage contract = em.find(JobContractWithImage.class,contractId);
-        if(contract != null){
+    public long addContractImage(long contractId, ByteImage contractImage) {
+        JobContractWithImage contract = em.find(JobContractWithImage.class, contractId);
+        if (contract != null) {
             contract.setByteImage(contractImage);
             em.persist(contract);
             return contractId;
@@ -148,6 +157,13 @@ public class JobContractDaoJpa implements JobContractDao {
         return em.createQuery(
                 "SELECT jc.client FROM JobContract jc WHERE jc.id = :id", User.class
         ).setParameter("id", id).getResultList().stream().findFirst();
+    }
+
+    @Override
+    public int findAllMaxPage() {
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jcontract", Long.class)
+                .getSingleResult();
+        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
@@ -227,11 +243,9 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public Optional<ByteImage> findImageByContractId(long contractId, long packageId, long postId) {
-        List<ByteImage> resultList = em.createQuery("SELECT contract.byteImage FROM JobContractWithImage contract WHERE contract.id = :contractId AND contract.jobPackage.id = :packageId AND contract.jobPackage.jobPost.id = :postId",
-                ByteImage.class)
-                .setParameter("contractId", contractId).setParameter("packageId", packageId).setParameter("postId", postId)
-                .getResultList();
+    public Optional<ByteImage> findImageByContractId(long contractId) {
+        List<ByteImage> resultList = em.createQuery("SELECT contract.byteImage FROM JobContractWithImage contract WHERE contract.id = :contractId ",
+                ByteImage.class).setParameter("contractId", contractId).getResultList();
         return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
 
     }

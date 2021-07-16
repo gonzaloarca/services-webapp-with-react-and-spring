@@ -7,8 +7,8 @@ import java.net.URI;
 import java.time.LocalDateTime;
 
 public class JobContractCardDto {
-    private UserDto client;                     //URL e id
-    private UserDto professional;               //URL e id
+    private UserDto client;
+    private UserDto professional;
 
     private JobContractDto jobContractDto;      //URL e id
     private JobContractStateDto state;
@@ -28,12 +28,10 @@ public class JobContractCardDto {
     private JobPostDto jobPost;                 //URL e id
     private JobPackageDto jobPackageDto;        //URL e id
 
-    public static JobContractCardDto fromJobContractCardWithLocalizedMessage(JobContractCard card, UriInfo uriInfo, boolean fromClient, String message) {
+    public static JobContractCardDto fromJobContractCardWithLocalizedMessage(JobContractCard card, UriInfo uriInfo, String message) {
         JobContractCardDto dto = new JobContractCardDto();
-        if (fromClient)
-            dto.professional = UserDto.linkDataFromUser(card.getJobContract().getProfessional(), uriInfo);
-        else
-            dto.client = UserDto.linkDataFromUser(card.getJobContract().getClient(), uriInfo);
+        dto.professional = UserDto.linkDataFromUser(card.getJobContract().getProfessional(), uriInfo);
+        dto.client = UserDto.linkDataFromUser(card.getJobContract().getClient(), uriInfo);
 
         dto.jobContractDto = JobContractDto.linkDataFromJobContract(card.getJobContract(), uriInfo);
         dto.state = JobContractStateDto.fromJobContractState(card.getJobContract().getState());
@@ -41,7 +39,7 @@ public class JobContractCardDto {
         dto.scheduledDate = card.getJobContract().getScheduledDate();
 
         dto.jobTitle = card.getJobCard().getJobPost().getTitle();
-        dto.jobType = JobTypeDto.fromJobTypeWithLocalizedMessage(card.getJobCard().getJobPost().getJobType(),message);
+        dto.jobType = JobTypeDto.fromJobTypeWithLocalizedMessage(card.getJobCard().getJobPost().getJobType(), message);
         dto.reviewsCount = card.getJobCard().getReviewsCount();
         dto.avgRate = card.getJobCard().getRating();
         dto.contractsCompleted = card.getJobCard().getContractsCompleted();

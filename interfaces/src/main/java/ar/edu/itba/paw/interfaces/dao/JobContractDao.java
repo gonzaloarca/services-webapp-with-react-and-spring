@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.interfaces.dao;
 
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractWithImage;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,7 +8,9 @@ import java.util.Optional;
 
 public interface JobContractDao {
 
-    JobContractWithImage create(long clientId, long packageId, long postId, String description, LocalDateTime scheduledDate);
+    List<JobContract> findAll(int page);
+
+    JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate);
 
     Optional<JobContract> findById(long id);
 
@@ -29,6 +28,8 @@ public interface JobContractDao {
 
     Optional<User> findClientByContractId(long id);
 
+    int findAllMaxPage();
+
     int findCompletedContractsByProIdQuantity(long id);
 
     int findContractsByPostIdQuantity(long id);
@@ -43,7 +44,7 @@ public interface JobContractDao {
 
     Optional<JobContractWithImage> findJobContractWithImage(long id);
 
-    Optional<ByteImage> findImageByContractId(long contractId, long packageId, long postId);
+    Optional<ByteImage> findImageByContractId(long contractId);
 
     Optional<JobContract> findByIdWithUser(long id);
 

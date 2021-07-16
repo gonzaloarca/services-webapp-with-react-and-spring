@@ -210,7 +210,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testCreate() {
 
-        JobContractWithImage jobContract = jobContractDaoJpa.create(CLIENT.getId(), JOB_PACKAGES[0].getId(), JOB_PACKAGES[0].getJobPost().getId(),
+        JobContractWithImage jobContract = jobContractDaoJpa.create(CLIENT.getId(), JOB_PACKAGES[0].getId(),
                 JOB_CONTRACTS_PACKAGE1[0].getDescription(), LocalDateTime.now().plusDays(5));
         em.flush();
         Assert.assertNotNull(jobContract);
@@ -244,13 +244,13 @@ public class JobContractDaoJpaTest {
 
     @Test(expected = PersistenceException.class)
     public void testCreateWithInvalidDescription() {
-        jobContractDaoJpa.create(CLIENT.getId(), JOB_PACKAGES[0].getId(), JOB_PACKAGES[0].getJobPost().getId(), null, LocalDateTime.now());
+        jobContractDaoJpa.create(CLIENT.getId(), JOB_PACKAGES[0].getId(), null, LocalDateTime.now());
     }
 
     @Test(expected = UserNotFoundException.class)
     public void testCreateWithNonExistentClient() {
 
-        jobContractDaoJpa.create(NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getJobPost().getId(),
+        jobContractDaoJpa.create(NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(),
                 JOB_CONTRACTS_PACKAGE1[0].getDescription(), LocalDateTime.now());
 
     }
@@ -258,7 +258,7 @@ public class JobContractDaoJpaTest {
     @Test(expected = JobPackageNotFoundException.class)
     public void testCreateWithNonExistentPackage() {
 
-        jobContractDaoJpa.create(CLIENT.getId(), NON_EXISTENT_ID, JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getJobPost().getId(),
+        jobContractDaoJpa.create(CLIENT.getId(), NON_EXISTENT_ID,
                 JOB_CONTRACTS_PACKAGE1[0].getDescription(), LocalDateTime.now());
 
     }
@@ -658,14 +658,14 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindImageByContractId() {
-        Optional<ByteImage> jobContract = jobContractDaoJpa.findImageByContractId(JOB_CONTRACTS_PACKAGE1[0].getId(), JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getId(), JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getJobPost().getId());
+        Optional<ByteImage> jobContract = jobContractDaoJpa.findImageByContractId(JOB_CONTRACTS_PACKAGE1[0].getId());
         Assert.assertTrue(jobContract.isPresent());
         Assert.assertEquals(CONTRACT1_IMAGE, jobContract.get());
     }
 
     @Test
     public void testFindImageByContractIdWithNonExistentId() {
-        Optional<ByteImage> jobContract = jobContractDaoJpa.findImageByContractId(NON_EXISTENT_ID, NON_EXISTENT_ID, NON_EXISTENT_ID);
+        Optional<ByteImage> jobContract = jobContractDaoJpa.findImageByContractId(NON_EXISTENT_ID);
         Assert.assertFalse(jobContract.isPresent());
     }
 

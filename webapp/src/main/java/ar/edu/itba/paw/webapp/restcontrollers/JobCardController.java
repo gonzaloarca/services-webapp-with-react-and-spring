@@ -83,7 +83,7 @@ public class JobCardController {
                 .findJobCardsSearchMaxPage(query, zone, category, locale);
 
         final List<JobCardDto> jobCardDtoList = jobCardService.search(query, zone, category,
-                orderBy, page - 1, headers.getAcceptableLanguages().get(0))
+                orderBy, page - 1, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))
                 .stream().map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
                         messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, locale)))
                 .collect(Collectors.toList());

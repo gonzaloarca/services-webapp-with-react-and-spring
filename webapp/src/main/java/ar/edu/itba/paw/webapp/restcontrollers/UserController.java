@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.JobContractCardDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
+import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -65,7 +66,7 @@ public class UserController {
             accountControllerLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}",
                     userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone());
             currentUser = userService.register(userDto.getEmail(), userDto.getPassword(), userDto.getUsername(), userDto.getPhone(),
-                    null, headers.getAcceptableLanguages().get(0), webpageUrl);
+                    null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()), webpageUrl);
         } catch (UserAlreadyExistsException e) {
             accountControllerLogger.error("Register error: email already exists");
             return Response.status(Response.Status.CONFLICT).build();
@@ -85,40 +86,14 @@ public class UserController {
         accountControllerLogger.debug("Finding auth info for user with email {}", user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        UserDto userAnswer = UserDto.fromUserAndRoles(user, auth.getRoles(),uriInfo);
+        UserDto userAnswer = UserDto.fromUserAndRoles(user, auth.getRoles(), uriInfo);
         return Response.ok(userAnswer).build();
-    }
-
-    @Path("/{id}/contracts")
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getHiredContracts(@PathParam("id") long id,
-                                      @QueryParam(value = "state") final String contractState,
-                                      @QueryParam(value = "page") @DefaultValue("1") final int page) {
-        if (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized"))
-            throw new IllegalArgumentException();
-
-        List<JobContract.ContractState> states = jobContractService.getContractStates(contractState);
-        Locale locale = headers.getAcceptableLanguages().get(0);
-        int maxPage = paginationService.findContractsByClientIdMaxPage(id, states);
-        List<JobContractCardDto> jobContractCardDtoList = jobContractService
-                .findJobContractCardsByClientIdAndSorted(id, states, page - 1, locale).stream()
-                .map(jobContractCard -> JobContractCardDto.fromJobContractCardWithLocalizedMessage(
-                        jobContractCard, uriInfo, true,
-                        messageSource.getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(),null,locale
-                        )
-                ))
-                .collect(Collectors.toList());
-
-        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
-                Response.ok(new GenericEntity<List<JobContractCardDto>>(jobContractCardDtoList) {
-                }));
     }
 
     @Path("/{id}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg",MediaType.APPLICATION_JSON})
-    public Response getPostImage(@PathParam("id") final long id) {
+    @Produces(value = {"image/png", "image/jpg", MediaType.APPLICATION_JSON})
+    public Response getUserImage(@PathParam("id") final long id) {
         ByteImage byteImage = userService.findImageByUserId(id);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
     }
@@ -136,7 +111,7 @@ public class UserController {
         } catch (IOException e) {
             throw new RuntimeException("Upload failed");
         }
-        if(result == -1)
+        if (result == -1)
             throw new RuntimeException("Couldn't save image");
         return Response.created(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(id)).path("/image").build()).build();
     }
@@ -150,7 +125,7 @@ public class UserController {
         accountControllerLogger.debug("Finding auth info for user with email {}", currentUser.getEmail());
         UserAuth auth = userService.getAuthInfo(currentUser.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        UserDto userAnswer = UserDto.fromUserAndRoles(currentUser, auth.getRoles(),uriInfo);
+        UserDto userAnswer = UserDto.fromUserAndRoles(currentUser, auth.getRoles(), uriInfo);
         return Response.ok(userAnswer).build();
     }
 
@@ -171,7 +146,7 @@ public class UserController {
                 username, phone);
         UserWithImage updatedUser = userService.updateUserById(id, username, phone);
 
-        UserDto userAnswer = UserDto.fromUserAndRoles(updatedUser, auth.getRoles(),uriInfo);
+        UserDto userAnswer = UserDto.fromUserAndRoles(updatedUser, auth.getRoles(), uriInfo);
         return Response.ok(userAnswer).build();
     }
 
@@ -182,9 +157,7 @@ public class UserController {
     public Response changePassword(final UserDto user, @PathParam("id") final long id) {
 
         accountControllerLogger.debug("Updating user password with id {}", id);
-
         userService.changeUserPassword(id, user.getPassword());
-
         return Response.ok(userService.findById(id)).build();
     }
 }
