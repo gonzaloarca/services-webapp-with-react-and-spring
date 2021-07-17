@@ -38,9 +38,6 @@ public class JobPostController {
     private final Logger jobPostControllerLogger = LoggerFactory.getLogger(JobPostController.class);
 
     @Autowired
-    PaginationService paginationService;
-
-    @Autowired
     private JobPostService jobPostService;
 
     @Autowired
@@ -174,7 +171,7 @@ public class JobPostController {
             page = 1;
 
         jobPostControllerLogger.debug("Finding packages for post: {}", postId);
-        int maxPage = paginationService.findJobPackageByPostIdMaxPage(postId);
+        int maxPage = jobPackageService.findByPostIdMaxPage(postId);
         final List<JobPackageDto> packageDtoList = jobPackageService.findByPostId(postId, page - 1)
                 .stream().map(pack -> JobPackageDto.fromJobPackage(pack, uriInfo))
                 .collect(Collectors.toList());

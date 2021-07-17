@@ -32,11 +32,10 @@ public interface JobCardService {
 
     int findByUserIdMaxPage(long id);
 
-    int searchMaxPage(String query, JobPost.Zone zone, Locale locale);
-
-    int searchWithCategoryMaxPage(String query, JobPost.Zone zone, JobPost.JobType jobType, Locale locale);
+    int searchMaxPage(String query, int zone, int jobType, Locale locale) ;
 
     int findRelatedJobCardsMaxPage(long professional_id);
 
     public List<JobPost.JobType> getSimilarTypes(String query, Locale locale);
+
 }

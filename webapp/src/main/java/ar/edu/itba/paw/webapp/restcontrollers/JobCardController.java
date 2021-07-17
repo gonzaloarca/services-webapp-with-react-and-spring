@@ -28,9 +28,6 @@ public class JobCardController {
     private final Logger JobCardControllerLogger = LoggerFactory.getLogger(JobCardController.class);
 
     @Autowired
-    PaginationService paginationService;
-
-    @Autowired
     private JobCardService jobCardService;
 
     @Context
@@ -57,15 +54,15 @@ public class JobCardController {
 
         if (userId == null) {
             JobCardControllerLogger.debug("Finding all jobcards for page: {}", page);
-            maxPage = paginationService.findJobCardsMaxPage();
+            maxPage = jobCardService.findAllMaxPage();
             jobCards = jobCardService.findAll(page - 1);
         } else if (type != null && type.equalsIgnoreCase("related")) {
             JobCardControllerLogger.debug("Finding relatedJobCards for pro with id: {}", userId);
-            maxPage = paginationService.findRelatedJobCardsMaxPage(userId);
+            maxPage = jobCardService.findRelatedJobCardsMaxPage(userId);
             jobCards = jobCardService.findRelatedJobCards(userId, page - 1);
         } else {
             JobCardControllerLogger.debug("Finding jobCards for pro with id: {}", userId);
-            maxPage = paginationService.findJobCardsByUserIdMaxPage(userId);
+            maxPage = jobCardService.findByUserIdMaxPage(userId);
             jobCards = jobCardService.findByUserId(userId, page - 1);
         }
 
@@ -99,8 +96,7 @@ public class JobCardController {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
 
         JobCardControllerLogger.debug("searching jobcards with data: zone: {}, query: {}, category: {}, orderby: {}, page: {}", zone, query, category, orderBy, page);
-        int maxPage = paginationService
-                .findJobCardsSearchMaxPage(query, zone, category, locale);
+        int maxPage = jobCardService.searchMaxPage(query, zone, category, locale);
 
         final List<JobCardDto> jobCardDtoList = jobCardService.search(query, zone, category,
                 orderBy, page - 1, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))

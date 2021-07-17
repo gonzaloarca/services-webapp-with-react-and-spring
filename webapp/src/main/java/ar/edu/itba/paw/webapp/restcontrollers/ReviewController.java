@@ -24,9 +24,6 @@ public class ReviewController {
     private final Logger reviewControllerLogger = LoggerFactory.getLogger(ReviewController.class);
 
     @Autowired
-    PaginationService paginationService;
-
-    @Autowired
     private ReviewService reviewService;
 
     @Context
