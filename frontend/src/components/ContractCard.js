@@ -355,7 +355,7 @@ const ContactBody = ({ username, email, phone }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.contactModalBody}>
+    <div>
       <Card
         className="mb-2"
         style={{ backgroundColor: themeUtils.colors.aqua }}
