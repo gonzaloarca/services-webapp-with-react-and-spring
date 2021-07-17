@@ -4,17 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@material-ui/core';
-import { Router } from 'react-router-dom';
+import { Router, BrowserRouter } from 'react-router-dom';
 import history from './history';
 import appTheme from './theme';
 import './i18n';
 
 ReactDOM.render(
-  <Router history={history}>
+  <BrowserRouter history={history} basename={process.env.PUBLIC_URL}>
     <ThemeProvider theme={appTheme}>
       <App />
     </ThemeProvider>
-  </Router>,
+  </BrowserRouter>,
   document.getElementById('root')
 );
 

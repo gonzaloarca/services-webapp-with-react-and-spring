@@ -17,21 +17,21 @@ const useStyles = makeStyles(HeroStyles);
 
 const steps = [
   {
-    iconSrc: '/img/location-1.svg',
+    iconSrc: `${process.env.PUBLIC_URL}/img/location-1.svg`,
     instruction: 'home.steps.location',
     number: 1,
     numberColor: themeUtils.colors.orange,
     backgroundColor: themeUtils.colors.darkBlue,
   },
   {
-    iconSrc: '/img/search1.svg',
+    iconSrc: `${process.env.PUBLIC_URL}/img/search1.svg`,
     instruction: 'home.steps.search',
     number: 2,
     numberColor: themeUtils.colors.blue,
     backgroundColor: themeUtils.colors.yellow,
   },
   {
-    iconSrc: '/img/hire-1.svg',
+    iconSrc: `${process.env.PUBLIC_URL}/img/hire-1.svg`,
     instruction: 'home.steps.hire',
     number: 3,
     numberColor: themeUtils.colors.yellow,
@@ -51,7 +51,7 @@ const Hero = () => {
       </div>
       <img
         className={classes.heroBackground}
-        src="/img/landingbg1.svg"
+        src={`${process.env.PUBLIC_URL}/img/landingbg1.svg`}
         alt=""
       />
     </div>

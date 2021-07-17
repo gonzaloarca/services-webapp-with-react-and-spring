@@ -52,11 +52,11 @@ const Login = () => {
       <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}
-        style={{ backgroundImage: `url(./img/background.jpg)` }}
+        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)` }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
-            <img src="/img/log-in.svg" alt={t('login.title')} loading="lazy" />
+            <img src={`${process.env.PUBLIC_URL}/img/log-in.svg`} alt={t('login.title')} loading="lazy" />
             <p className={classes.title}>{t('login.into')}</p>
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg')}>

@@ -17,7 +17,7 @@ const homeStyles = (theme) => ({
     textAlign: 'center',
     padding: '70px 0',
     color: '#485696',
-    background: 'url("/img/publish-landing-bg-1.svg")',
+    background: `url(${process.env.PUBLIC_URL}/img/publish-landing-bg-1.svg)`,
     fontSize: '1.5rem',
     fontWeight: 600,
   },

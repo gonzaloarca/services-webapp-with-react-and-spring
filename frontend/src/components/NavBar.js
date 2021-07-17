@@ -115,7 +115,7 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
             <Link to="/">
               <img
                 className={classes.hirenetIcon}
-                src="/img/hirenet-logo-nav-1.svg"
+                src={`${process.env.PUBLIC_URL}//img/hirenet-logo-nav-1.svg`}
                 alt=""
               />
             </Link>

@@ -29,7 +29,7 @@ const currentUser = {
   phone: '03034560',
   roles: ['CLIENT', 'PROFESSIONAL'],
   username: 'Manuel Rodriguez',
-  image: '/img/plumbing.jpeg',
+  image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -300,7 +300,7 @@ const PersonalData = () => {
                         id="img-preview"
                         src={
                           values.image === ''
-                            ? './img/defaultavatar.svg'
+                            ? `${process.env.PUBLIC_URL}/img/defaultavatar.svg`
                             : URL.createObjectURL(values.image)
                         }
                         alt=""

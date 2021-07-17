@@ -46,17 +46,17 @@ const hiredServices = {
       client: {
         id: 11,
         username: 'El Beto (Julian Sicardi)',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       professional: {
         id: 12,
         username: 'El Beto (Julian Sicardi)',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       contractsCompleted: 4,
       creationDate: '2021-06-16T16:48:40.860',
       image: {
-        uri: '/img/plumbing.jpeg',
+        uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       jobContract: {
         id: 29,
@@ -69,7 +69,7 @@ const hiredServices = {
       jobPost: {
         id: 8,
         uri: 'http://localhost:8080/job-posts/8',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       jobTitle: 'Niñero turno mañana',
       jobType: {
@@ -95,17 +95,17 @@ const hiredServices = {
       client: {
         id: 11,
         username: 'El Beto (Julian Sicardi)',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       professional: {
         id: 12,
         username: 'El Beto (Julian Sicardi)',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       contractsCompleted: 4,
       creationDate: '2021-06-16T16:48:40.860',
       image: {
-        uri: '/img/plumbing.jpeg',
+        uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       jobContract: {
         id: 29,
@@ -118,7 +118,7 @@ const hiredServices = {
       jobPost: {
         id: 8,
         uri: 'http://localhost:8080/job-posts/8',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       jobTitle: 'Niñero turno mañana',
       jobType: {
@@ -144,17 +144,17 @@ const hiredServices = {
       client: {
         id: 11,
         username: 'El Beto (Julian Sicardi)',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       professional: {
         id: 12,
         username: 'El Beto (Julian Sicardi)',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       contractsCompleted: 4,
       creationDate: '2021-06-16T16:48:40.860',
       image: {
-        uri: '/img/plumbing.jpeg',
+        uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       jobContract: {
         id: 29,
@@ -167,7 +167,7 @@ const hiredServices = {
       jobPost: {
         id: 8,
         uri: 'http://localhost:8080/job-posts/8',
-        image: '/img/plumbing.jpeg',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
       },
       jobTitle: 'Niñero turno mañana',
       jobType: {

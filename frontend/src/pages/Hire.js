@@ -58,7 +58,7 @@ const post = {
     description: 'BABYSITTING',
     id: 7,
   },
-  images: ['/img/plumbing.jpeg', '/img/carpentry.jpeg'],
+  images: [`${process.env.PUBLIC_URL}/img/plumbing.jpeg`, `${process.env.PUBLIC_URL}/img/carpentry.jpeg`],
   packages: [
     {
       id: 8,
@@ -92,7 +92,7 @@ const proUser = {
   phone: '03034560',
   roles: ['CLIENT', 'PROFESSIONAL'],
   username: 'Manuel Rodriguez',
-  image: '/img/plumbing.jpeg',
+  image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
 };
 
 const useStyles = makeStyles((theme) => ({

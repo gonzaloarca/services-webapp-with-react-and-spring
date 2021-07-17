@@ -63,12 +63,12 @@ const Register = () => {
       <NavBar currentSection={'/register'} isTransparent />
       <div
         className={classes.background}
-        style={{ backgroundImage: `url(./img/background.jpg)` }}
+        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)` }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
             <img
-              src="/img/adduser.svg"
+              src={`${process.env.PUBLIC_URL}/img/adduser.svg`}
               alt={t('register.title')}
               loading="lazy"
             />
@@ -241,7 +241,7 @@ const StepTwo = (props) => {
                 id="img-preview"
                 src={
                   values.image === ''
-                    ? './img/defaultavatar.svg'
+                    ? `${process.env.PUBLIC_URL}/img/defaultavatar.svg`
                     : URL.createObjectURL(values.image)
                 }
                 alt=""

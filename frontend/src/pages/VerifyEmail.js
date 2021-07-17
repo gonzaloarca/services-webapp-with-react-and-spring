@@ -31,12 +31,12 @@ const VerifyEmail = () => {
       <NavBar isTransparent />
       <div
         className={classes.background}
-        style={{ backgroundImage: `url(./img/background.jpg)` }}
+        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)` }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
             <img
-              src="/img/log-in.svg"
+              src={`${process.env.PUBLIC_URL}/img/log-in.svg`}
               alt={t('verifyemail.title')}
               loading="lazy"
             />

@@ -54,7 +54,7 @@ const CategoryCard = ({ showAll = false, category = null, height = 175 }) => {
         </div>
         <img
           className={classes.categoryImage}
-          src={showAll ? '/img/morecategories1.svg' : category.image}
+          src={showAll ? `${process.env.PUBLIC_URL}/img/morecategories1.svg` : category.image}
           alt=""
         />
       </div>

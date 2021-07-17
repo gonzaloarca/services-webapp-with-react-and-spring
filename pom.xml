@@ -381,6 +381,7 @@
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <packagingExcludes>**/logback-test.xml</packagingExcludes>
+                    <packagingExcludes>**/.end.development  </packagingExcludes>
                     <webResources>
                         <resource>
                             <directory>../frontend/build</directory>

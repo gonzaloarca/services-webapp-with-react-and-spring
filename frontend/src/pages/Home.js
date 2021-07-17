@@ -14,10 +14,10 @@ const useStyles = makeStyles(homeStyles);
 const useGlobalStyles = makeStyles(styles);
 
 const categories = [
-  { name: 'PLUMBING', image: '/img/plumbing.jpeg', id: 0 },
-  { name: 'PLUMBING', image: '/img/plumbing.jpeg', id: 1 },
-  { name: 'PLUMBING', image: '/img/plumbing.jpeg', id: 2 },
-  { name: 'PLUMBING', image: '/img/plumbing.jpeg', id: 3 },
+  { name: 'PLUMBING', image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`, id: 0 },
+  { name: 'PLUMBING', image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`, id: 1 },
+  { name: 'PLUMBING', image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`, id: 2 },
+  { name: 'PLUMBING', image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`, id: 3 },
 ];
 
 const jobs = [
@@ -25,7 +25,7 @@ const jobs = [
     avgRate: 3,
     contractsCompleted: 3,
     price: 2000.1,
-    imageUrl: '/img/babysitting.jpeg',
+    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
     jobPost: {
       id: 3,
       uri: 'http://localhost:8080/job-posts/8',
@@ -59,7 +59,7 @@ const jobs = [
     avgRate: 3,
     contractsCompleted: 3,
     price: 1500,
-    imageUrl: '/img/babysitting.jpeg',
+    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
     jobPost: {
       id: 7,
       uri: 'http://localhost:8080/job-posts/8',
@@ -93,7 +93,7 @@ const jobs = [
   {
     avgRate: 3,
     contractsCompleted: 3,
-    imageUrl: '/img/babysitting.jpeg',
+    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
     jobPost: {
       id: 8,
       uri: 'http://localhost:8080/job-posts/8',
@@ -127,7 +127,7 @@ const jobs = [
     avgRate: 3,
     contractsCompleted: 3,
     price: 1500,
-    imageUrl: '/img/babysitting.jpeg',
+    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
     jobPost: {
       id: 2,
       uri: 'http://localhost:8080/job-posts/8',
