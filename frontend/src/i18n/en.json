@@ -169,6 +169,13 @@
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
     "contractimage": "Job image",
     "contractdescription": "Job description",
+    "rate": {
+      "header": "How would you rate your experience with this service?",
+      "tellus": "Tell us about your experience",
+      "tellusplaceholder": "Write about the quality of the job, how you were treated, etc.",
+      "summarize": "Summarize your experience in a short phrase (optional)",
+      "summarizeplaceholder": "Review title"
+    },
     "contractactions": {
       "approve": "Approve",
       "reject": "Reject",

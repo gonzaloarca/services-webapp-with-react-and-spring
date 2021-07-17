@@ -151,6 +151,24 @@ const contractCardStyles = (theme) => ({
     width: 50,
     color: 'white',
   },
+  ratingContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: themeUtils.colors.yellow,
+    padding: 15,
+    borderRadius: 10,
+  },
+  ratingInput: {
+    fontSize: '0.9rem',
+    fontWeight: 500,
+  },
+  ratingLabel: {
+    fontSize: '1rem',
+    fontWeight: 600,
+    marginTop: 20,
+    marginBottom: 5,
+  },
 });
 
 export default contractCardStyles;

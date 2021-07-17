@@ -173,6 +173,13 @@
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
     "contractimage": "Imagen del trabajo requerido",
     "contractdescription": "Descripción del trabajo requerido",
+    "rate": {
+      "header": "¿Cómo calificarías tu experiencia con el servicio?",
+      "tellus": "Cuente un poco sobre la experiencia",
+      "tellusplaceholder": "Escriba sobre la calidad del trabajo, el trato con el profesional, la atencion, etc.",
+      "summarize": "Resuma su opinion en una frase (opcional)",
+      "summarizeplaceholder": "Título de la opinión"
+    },
     "contractactions": {
       "approve": "Aprovar",
       "reject": "Rechazar",

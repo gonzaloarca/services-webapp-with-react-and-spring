@@ -12,8 +12,12 @@ import {
   Grid,
   IconButton,
   makeStyles,
+  TextField,
+  withStyles,
 } from '@material-ui/core';
 import { Close, Email, Person, Phone, Subject } from '@material-ui/icons';
+import { Rating } from '@material-ui/lab';
+import clsx from 'clsx';
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -108,7 +112,7 @@ const ContractCard = ({ contract, isOwner }) => {
       openModal: () => setOpenRate(true),
       onNegative: () => setOpenRate(false),
       onAffirmative: () => setOpenRate(false),
-      title: t('mycontracts.modals.rate.title'),
+      body: <RateBody />,
       negativeLabel: t('mycontracts.modals.rate.negative'),
       affirmativeLabel: t('mycontracts.modals.rate.affirmative'),
       affirmativeColor: themeUtils.colors.yellow,
@@ -383,5 +387,58 @@ const ContactBody = ({ username, email, phone }) => {
     </div>
   );
 };
+
+const RateBody = () => {
+  const [rating, setRating] = useState(0);
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <div className={classes.ratingContainer}>
+        <h2 className="font-bold text-lg">{t('mycontracts.rate.header')}</h2>
+        <WhiteRating
+          precision={0.5}
+          value={rating}
+          onChange={(event, newValue) => setRating(newValue)}
+        />
+      </div>
+      <p className={classes.ratingLabel}>{t('mycontracts.rate.tellus')}</p>
+      <TextField
+        variant="filled"
+        InputProps={{
+          classes: {
+            input: classes.ratingInput,
+          },
+        }}
+        placeholder={t('mycontracts.rate.tellusplaceholder')}
+        multiline
+        rows={3}
+        hiddenLabel
+        fullWidth
+      />
+      <p className={classes.ratingLabel}>{t('mycontracts.rate.summarize')}</p>
+      <TextField
+        fullWidth
+        hiddenLabel
+        variant="filled"
+        InputProps={{ classes: { input: classes.ratingInput } }}
+        placeholder={t('mycontracts.rate.summarizeplaceholder')}
+      />
+    </>
+  );
+};
+
+const WhiteRating = withStyles((theme) => ({
+  icon: {
+    fontSize: '3rem',
+  },
+  iconFilled: {
+    color: 'white',
+  },
+  iconHover: {
+    color: 'white',
+  },
+}))(Rating);
 
 export default ContractCard;
