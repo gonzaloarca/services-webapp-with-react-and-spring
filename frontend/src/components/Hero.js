@@ -16,7 +16,6 @@ import HeroStyles from './HeroStyles';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import clsx from 'clsx';
-import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles(HeroStyles);
 
@@ -90,9 +89,8 @@ const HeroSearchBar = () => {
       onSubmit={onSubmit}
     >
       {({ values }) => (
-        <Form
-		className="flex flex-col items-center w-full h-32">
-          <div className={clsx("h-16", classes.searchBarContainer)}>
+        <Form className="flex flex-col items-center w-full h-32">
+          <div className={clsx('h-16', classes.searchBarContainer)}>
             <div className={classes.locationContent}>
               <LocationOn className={classes.locationIcon} />
               <CustomFormControl
@@ -120,11 +118,11 @@ const HeroSearchBar = () => {
                   value={values.zone !== undefined ? values.zone : ''}
                 >
                   <MenuItem value="">
-                    <em>None</em>
+                    <em>{t('nonselected')}</em>
                   </MenuItem>
-                  <MenuItem value="0">La Boca</MenuItem>
-                  <MenuItem value="1">Palermo</MenuItem>
-                  <MenuItem value="2">Recoleta</MenuItem>
+                  <MenuItem value={0}>La Boca</MenuItem>
+                  <MenuItem value={1}>Palermo</MenuItem>
+                  <MenuItem value={2}>Recoleta</MenuItem>
                 </Field>
               </CustomFormControl>
             </div>
@@ -149,18 +147,12 @@ const HeroSearchBar = () => {
             </IconButton>
           </div>
           <FormHelperText className={classes.zoneErrorMessage}>
-            <ErrorMessage name="zone"/>
+            <ErrorMessage name="zone" />
           </FormHelperText>
         </Form>
       )}
     </Formik>
   );
-};
-
-const CustomErrorMessage = () => {
-  const classes = useStyles();
-
-  return <p className={classes.zoneErrorMessage}></p>;
 };
 
 export const HeroSteps = () => {

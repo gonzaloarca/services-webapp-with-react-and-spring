@@ -23,7 +23,7 @@
       "size": "The file size must be less than {{size}}MB",
       "type": "The file type must be PNG or JPG"
     },
-	"zone": "Please select your location"
+    "zone": "Please select your location"
   },
   "home": {
     "herotext": "Find and hire the service you're looking for",
@@ -322,5 +322,20 @@
     "starsplural": "{{count}} stars"
   },
   "timesHiredSingular": "Hired 1 time",
-  "timesHiredPlural": "Hired {{times}} times"
+  "timesHiredPlural": "Hired {{times}} times",
+  "search": {
+    "title": "Search",
+    "service": "Search for a service",
+    "jobTypeplaceholder": "Search services...",
+    "filters": "Filters",
+    "categories": "Categories",
+    "noqueryresults": "Results in {{zone}}",
+    "results": "Results for {{query}} in {{zone}}",
+    "badquery": "Search error",
+    "filteringby": "Active filter:",
+    "noresults": "No results for your search at the moment",
+    "sorry": "Sorry for the inconvenience",
+    "orderby": "Order by"
+  },
+  "nonselected": "None"
 }
