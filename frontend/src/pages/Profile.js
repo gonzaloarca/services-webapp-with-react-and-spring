@@ -10,6 +10,7 @@ import {
   Tab,
   Tabs,
   AppBar,
+  Divider,
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
@@ -18,6 +19,8 @@ import { themeUtils } from '../theme';
 import TabPanel from '../components/TabPanel';
 import RatingDisplay from '../components/RatingDisplay';
 import ServiceCard from '../components/ServiceCard';
+import ReviewCard from '../components/ReviewCard';
+import { Rating } from '@material-ui/lab';
 
 const professional = {
   'contractsCompleted': 3,
@@ -80,6 +83,45 @@ const jobCard = {
     },
   ],
 };
+
+const reviews = [
+  {
+    creationDate: '2021-05-02T18:22:21.684413',
+    description: 'EL MEJOR NIÑERO',
+    client: {
+      username: 'El Beto',
+      image: '/img/babysitting.jpeg',
+    },
+    jobPost: {
+      title: 'Niñero turno mañana',
+      id: 3,
+    },
+    jobContract: {
+      id: 1,
+      uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/1',
+    },
+    rate: 5,
+    title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
+  },
+  {
+    creationDate: '2021-10-02T18:22:21.684413',
+    description: 'EL MEJOR NIÑERO',
+    client: {
+      username: 'El Beto',
+      image: '/img/babysitting.jpeg',
+    },
+    jobPost: {
+      title: 'Niñero turno mañana',
+      id: 3,
+    },
+    jobContract: {
+      id: 2,
+      uri: 'http://localhost:8080/job-posts/3/packages/8/contracts/2',
+    },
+    rate: 5,
+    title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
+  },
+];
 
 const services = [jobCard, jobCard];
 
@@ -269,9 +311,41 @@ const ProfileTabs = () => {
         })}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        <div className="mt-6" style={{ height: '500px' }}>
-          Reseñas
-        </div>
+        <Grid container spacing={5} className="my-1">
+          <Grid item sm={6} xs={12} className="flex justify-center">
+            <div className="flex flex-col justify-center items-end">
+              <div className="font-bold text-7xl">
+                {professional.reviewAvg.toFixed(2)}
+              </div>
+              <Rating readOnly value={professional.reviewAvg} />
+              <div>
+                {t('profile.ratecount', {
+                  count: professional.reviewsQuantity,
+                })}
+              </div>
+            </div>
+          </Grid>
+          <Grid
+            item
+            sm={6}
+            xs={12}
+            className="flex flex-col justify-center items-center"
+          >
+            {/* TODO: barras de distribucion de reviews */}
+            <div>5 estrellas</div>
+            <div>4 estrellas</div>
+            <div>3 estrellas</div>
+            <div>2 estrellas</div>
+            <div>1 estrella</div>
+          </Grid>
+        </Grid>
+
+        <Divider />
+        {reviews.map((review) => (
+          <div key={review.jobContract.id}>
+            <ReviewCard review={review} />
+          </div>
+        ))}
       </TabPanel>
     </>
   );
