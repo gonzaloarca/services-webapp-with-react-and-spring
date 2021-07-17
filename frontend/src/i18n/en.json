@@ -338,4 +338,10 @@
     "orderby": "Order by"
   },
   "nonselected": "None"
+  "analytics": {
+    "title": "Analytics",
+    "number": "No.{{rank}}",
+    "mosthired": "Most hired in {{jobType}}",
+    "similar": "Your clients have also hired..."
+  }
 }

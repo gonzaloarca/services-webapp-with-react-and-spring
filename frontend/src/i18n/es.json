@@ -342,4 +342,10 @@
     "orderby": "Ordenar por"
   },
   "nonselected": "Ninguno"
+  "analytics": {
+    "title": "Estadísticas",
+    "number": "N°{{rank}}",
+    "mosthired": "Más contratado en {{jobType}}",
+    "similar": "Tus clientes también contrataron..."
+  }
 }
