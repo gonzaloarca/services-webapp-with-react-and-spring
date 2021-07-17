@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditUserDto;
+import ar.edu.itba.paw.webapp.dto.input.VerifyEmailDto;
 import ar.edu.itba.paw.webapp.dto.output.AnalyticRankingDto;
 import ar.edu.itba.paw.webapp.dto.output.JobCardDto;
 import ar.edu.itba.paw.webapp.dto.output.ReviewsByExactRateDto;
@@ -182,7 +183,7 @@ public class UserController {
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response verifyEmail(@Valid @NotBlank @FormParam("token") final String token,
+    public Response verifyEmail(@Valid VerifyEmailDto token,
                                 @PathParam("id") final long id) {
         accountControllerLogger.debug("Finding user with id: {}", id);
         User user = userService.findById(id);
@@ -193,7 +194,7 @@ public class UserController {
 
         accountControllerLogger.debug("verifying verification token: {} for user:{}", token, user.getId());
 
-        if (!tokenService.verifyVerificationToken(user, token)) {
+        if (!tokenService.verifyVerificationToken(user, token.getToken())) {
             accountControllerLogger.debug("Verification token expired");
             throw new IllegalArgumentException("Token expired");
         }

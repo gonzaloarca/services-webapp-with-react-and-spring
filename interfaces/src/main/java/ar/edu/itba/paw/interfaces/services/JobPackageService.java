@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 
@@ -18,4 +19,10 @@ public interface JobPackageService {
     boolean updateJobPackage(long packageId, long postId, String title, String description, String price, Integer rateType, Boolean isActive);
 
     int findByPostIdMaxPage(long id);
+
+    List<JobPackage> findByPostIdOnlyActive(long postId, int page);
+
+    int findByPostIdOnlyActiveMaxPage(long postId);
+
+    JobPackage findByOnlyId(long packageId);
 }

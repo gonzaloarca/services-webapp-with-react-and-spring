@@ -1,9 +1,13 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
+import ar.edu.itba.paw.interfaces.services.PaginationService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobContractWithImage;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditJobContractDto;
 import ar.edu.itba.paw.webapp.dto.input.NewJobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractCardDto;
@@ -17,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -35,7 +40,13 @@ public class JobContractController {
     private final Logger JobContractsControllerLogger = LoggerFactory.getLogger(ar.edu.itba.paw.webapp.restcontrollers.JobContractController.class);
 
     @Autowired
+    PaginationService paginationService;
+
+    @Autowired
     private JobContractService jobContractService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private MessageSource messageSource;
@@ -74,11 +85,11 @@ public class JobContractController {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         String webpageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
-
+        User current = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(UserNotFoundException::new);
         JobContractsControllerLogger.debug("Creating contract for package {} with data: client id:{}, description:{}",
-                newContract.getJobPackageId(), newContract.getClientId(), newContract.getDescription());
+                newContract.getJobPackageId(), current.getId(), newContract.getDescription());
         JobContractWithImage jobContract = jobContractService.create(
-                newContract.getClientId(), newContract.getJobPackageId(),
+                current.getId(), newContract.getJobPackageId(),
                 newContract.getDescription(), newContract.getScheduledDate(), locale, webpageUrl);
 
         final URI contractUri = uriInfo.getAbsolutePathBuilder()
