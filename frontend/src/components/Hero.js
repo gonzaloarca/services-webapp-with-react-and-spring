@@ -5,13 +5,18 @@ import {
   MenuItem,
   Select,
   TextField,
+  FormHelperText,
 } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { LocationOn, Search } from '@material-ui/icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import HeroStyles from './HeroStyles';
+import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import clsx from 'clsx';
+import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles(HeroStyles);
 
@@ -59,60 +64,103 @@ const Hero = () => {
 };
 
 const HeroSearchBar = () => {
-  const [location, setLocation] = useState('');
   const classes = useStyles();
   const { t } = useTranslation();
+  const initialValues = {
+    zone: '',
+    query: '',
+  };
 
-  const handleLocationChange = (newLocation) => setLocation(newLocation);
+  const validationSchema = Yup.object({
+    zone: Yup.string()
+      .required(t('validationerror.zone'))
+      .matches(/^[0-9]+$/, t('validationerror.zone')),
+    query: Yup.string(),
+  });
+
+  const onSubmit = (values, props) => {
+    console.log('SUBMITTING');
+    console.log(values); //TODO: REDIRIGIR A SEARCH CON QUERY
+  };
 
   return (
-    <div className={classes.searchBarContainer}>
-      <div className={classes.locationContent}>
-        <LocationOn className={classes.locationIcon} />
-        <CustomFormControl className={classes.locationForm} variant="filled">
-          <InputLabel
-            id="location-select-label"
-            className={classes.selectLabel}
-          >
-            {t('home.location')}
-          </InputLabel>
-          <CustomSelect
-            className={classes.locationSelect}
-            inputProps={{
-              classes: {
-                icon: classes.locationSelectIcon,
-              },
-            }}
-            labelId="location-select-label"
-            id="location-select"
-            value={location}
-            onChange={(e) => handleLocationChange(e.target.value)}
-            disableUnderline={true}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={0}>La Boca</MenuItem>
-            <MenuItem value={1}>Palermo</MenuItem>
-            <MenuItem value={2}>Recoleta</MenuItem>
-          </CustomSelect>
-        </CustomFormControl>
-      </div>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      {({ values }) => (
+        <Form
+		className="flex flex-col items-center w-full h-32">
+          <div className={clsx("h-16", classes.searchBarContainer)}>
+            <div className={classes.locationContent}>
+              <LocationOn className={classes.locationIcon} />
+              <CustomFormControl
+                className={classes.locationForm}
+                variant="filled"
+              >
+                <InputLabel
+                  id="location-select-label"
+                  className={classes.selectLabel}
+                >
+                  {t('home.location')}
+                </InputLabel>
+                <Field
+                  as={CustomSelect}
+                  name="zone"
+                  className={classes.locationSelect}
+                  inputProps={{
+                    classes: {
+                      icon: classes.locationSelectIcon,
+                    },
+                  }}
+                  labelId="location-select-label"
+                  id="location-select"
+                  disableUnderline={true}
+                  value={values.zone !== undefined ? values.zone : ''}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="0">La Boca</MenuItem>
+                  <MenuItem value="1">Palermo</MenuItem>
+                  <MenuItem value="2">Recoleta</MenuItem>
+                </Field>
+              </CustomFormControl>
+            </div>
 
-      <CustomSearchBar
-        InputProps={{
-          disableUnderline: true,
-        }}
-        hiddenLabel
-        placeholder={t('home.searchJob')}
-        variant="filled"
-        margin="none"
-      />
-      <IconButton type="submit" className={classes.searchButton}>
-        <Search />
-      </IconButton>
-    </div>
+            <Field
+              as={CustomSearchBar}
+              InputProps={{
+                disableUnderline: true,
+              }}
+              hiddenLabel
+              placeholder={t('home.searchJob')}
+              variant="filled"
+              margin="none"
+              name="query"
+              helperText={<ErrorMessage name="query" />}
+              onSubmit={(e) => {
+                onSubmit({ values });
+              }}
+            />
+            <IconButton type="submit" className={classes.searchButton}>
+              <Search />
+            </IconButton>
+          </div>
+          <FormHelperText className={classes.zoneErrorMessage}>
+            <ErrorMessage name="zone"/>
+          </FormHelperText>
+        </Form>
+      )}
+    </Formik>
   );
+};
+
+const CustomErrorMessage = () => {
+  const classes = useStyles();
+
+  return <p className={classes.zoneErrorMessage}></p>;
 };
 
 export const HeroSteps = () => {

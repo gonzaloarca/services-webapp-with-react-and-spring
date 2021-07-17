@@ -22,7 +22,8 @@
     "avatarfile": {
       "size": "The file size must be less than {{size}}MB",
       "type": "The file type must be PNG or JPG"
-    }
+    },
+	"zone": "Please select your location"
   },
   "home": {
     "herotext": "Find and hire the service you're looking for",
