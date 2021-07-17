@@ -43,7 +43,6 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
-        if (page < 1) page = 1;
 
         if (userId == null && contractState == null && role == null)
             return getJobContractCards(jobContractDao.findAll(page));
@@ -54,9 +53,9 @@ public class SimpleJobContractService implements JobContractService {
 
         List<JobContract.ContractState> states = getContractStates(contractState);
         if (role.equalsIgnoreCase("professional")) {
-            return getJobContractCards(findByProIdAndSortedByModificationDate(userId, states, page - 1));
+            return getJobContractCards(findByProIdAndSortedByModificationDate(userId, states, page));
         } else if (role.equals("client")) {
-            return getJobContractCards(findByClientIdAndSortedByModificationDate(userId, states, page - 1));
+            return getJobContractCards(findByClientIdAndSortedByModificationDate(userId, states, page));
         } else
             throw new IllegalArgumentException();
     }
@@ -87,7 +86,8 @@ public class SimpleJobContractService implements JobContractService {
     @Override
     public JobContractWithImage create(long clientId, long packageId, String description, String scheduledDate, Locale locale, String webpageUrl) {
         LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
-
+        if(jobPackageService.findByOnlyId(packageId).getJobPost().getUser().getId() == clientId)
+            throw new IllegalArgumentException("Cannot create contract to self");
         JobContractWithImage jobContract = jobContractDao.create(clientId, packageId, description, parsedDate);
         mailingService.sendContractEmail(jobContract, locale, webpageUrl);
         return jobContract;

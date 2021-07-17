@@ -19,4 +19,10 @@ public interface JobPackageDao {
     boolean updatePackage(long packageId, long postId, String title, String description, Double price, JobPackage.RateType rateType, boolean isActive);
 
     int findByPostIdMaxPage(long id);
+
+    List<JobPackage> findByPostIdOnlyActive(long postId, int page);
+
+    int  findByPostIdOnlyActiveMaxPage(long id);
+
+    JobPackage findByOnlyId(long packageId);
 }

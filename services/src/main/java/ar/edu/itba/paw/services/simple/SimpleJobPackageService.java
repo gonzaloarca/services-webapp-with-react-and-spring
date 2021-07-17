@@ -61,6 +61,21 @@ public class SimpleJobPackageService implements JobPackageService {
         return jobPackageDao.findByPostIdMaxPage(id);
     }
 
+    @Override
+    public List<JobPackage> findByPostIdOnlyActive(long postId, int page) {
+        return jobPackageDao.findByPostIdOnlyActive(postId,page);
+    }
+
+    @Override
+    public int findByPostIdOnlyActiveMaxPage(long postId) {
+        return jobPackageDao.findByPostIdOnlyActiveMaxPage(postId);
+    }
+
+    @Override
+    public JobPackage findByOnlyId(long packageId) {
+        return jobPackageDao.findByOnlyId(packageId);
+    }
+
     private Double parsePrice(JobPackage.RateType rateType, String price) {
         if (!rateType.equals(JobPackage.RateType.TBD)) {
             if (price != null && !price.isEmpty()) {
