@@ -7,6 +7,10 @@ import java.util.Optional;
 
 public interface UserDao {
 
+    List<UserWithImage> findAllWithImage(int page);
+
+    int findAllWithImageMaxPage();
+
     User register(String email, String password, String username, String phone);
 
     User register(String email, String password, String username, String phone, ByteImage image);

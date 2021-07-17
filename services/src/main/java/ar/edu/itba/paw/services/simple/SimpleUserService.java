@@ -32,6 +32,16 @@ public class SimpleUserService implements UserService {
     private MailingService mailingService;
 
     @Override
+    public List<UserWithImage> findAllWithImage(int page) {
+        return userDao.findAllWithImage(page);
+    }
+
+    @Override
+    public int findAllWithImageMaxPage() {
+        return userDao.findAllWithImageMaxPage();
+    }
+
+    @Override
     public User register(String email, String password, String username, String phone,
                          ByteImage image, Locale locale, String webpageUrl) throws UserAlreadyExistsException {
         Optional<User> maybeUser = userDao.findByEmail(email);
@@ -48,7 +58,7 @@ public class SimpleUserService implements UserService {
             registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone, image);
 
         VerificationToken token = tokenService.createVerificationToken(registeredUser);
-        mailingService.sendVerificationTokenEmail(registeredUser, token, locale,webpageUrl);
+        mailingService.sendVerificationTokenEmail(registeredUser, token, locale, webpageUrl);
 
         return registeredUser;
     }
@@ -126,13 +136,13 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void recoverUserAccount(String email, Locale locale,String webpageUrl){
+    public void recoverUserAccount(String email, Locale locale, String webpageUrl) {
         User user;
         RecoveryToken recoveryToken;
         try {
             user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
             recoveryToken = tokenService.createRecoveryToken(user);
-            mailingService.sendRecoverPasswordEmail(user, recoveryToken, locale,webpageUrl);
+            mailingService.sendRecoverPasswordEmail(user, recoveryToken, locale, webpageUrl);
         } catch (UserNotFoundException e) {
             //Si el usuario no existe, no hago nada
         }
@@ -142,7 +152,7 @@ public class SimpleUserService implements UserService {
     public void recoverUserPassword(long user_id, String password) {
         boolean changed = userDao.changeUserPassword(user_id, passwordEncoder.encode(password));
 
-        if(!changed)
+        if (!changed)
             throw new UserNotFoundException();
 
         tokenService.deleteRecoveryToken(user_id);
@@ -160,7 +170,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public long updateUserImage(long id, ByteImage userImage) {
-        return userDao.updateUserImage(id,userImage);
+        return userDao.updateUserImage(id, userImage);
     }
 
     @Override

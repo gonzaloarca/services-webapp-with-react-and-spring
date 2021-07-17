@@ -6,11 +6,13 @@ import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditUserDto;
 import ar.edu.itba.paw.webapp.dto.output.AnalyticRankingDto;
+import ar.edu.itba.paw.webapp.dto.output.JobCardDto;
 import ar.edu.itba.paw.webapp.dto.output.ReviewsByExactRateDto;
 import ar.edu.itba.paw.webapp.dto.output.UserDto;
 import ar.edu.itba.paw.webapp.dto.input.NewUserDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
+import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.hibernate.validator.constraints.Email;
@@ -55,6 +57,34 @@ public class UserController {
     @Context
     private HttpHeaders headers;
 
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response findAll(@QueryParam("email") final String email,
+                            @QueryParam("page") int page) {
+        if(email != null){
+            accountControllerLogger.debug("Finding user with email {}", email);
+            UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
+            return Response.ok(getUserDto(user)).build();
+        }
+        if (page < 1)
+            page = 1;
+
+        accountControllerLogger.debug("Finding all users for page {}", page);
+        List<UserDto> usersDto = userService.findAllWithImage(page).stream()
+                .map(this::getUserDto).collect(Collectors.toList());
+        int maxPage = userService.findAllWithImageMaxPage();
+        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
+                Response.ok(new GenericEntity<List<UserDto>>(usersDto) {
+                }));
+    }
+
+    private UserDto getUserDto(UserWithImage userWithImage) {
+        accountControllerLogger.debug("Finding auth info for user with email {}", userWithImage.getEmail());
+        UserAuth auth = userService.getAuthInfo(userWithImage.getEmail()).orElseThrow(UserNotFoundException::new);
+
+        return UserDto.fromUserAndRoles(userWithImage, auth.getRoles(), uriInfo);
+    }
+
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -81,7 +111,7 @@ public class UserController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getById(@PathParam("id") final long id) {
-        accountControllerLogger.debug("Finding user with email {}", id);
+        accountControllerLogger.debug("Finding user with id {}", id);
         UserWithImage user = userService.findUserWithImage(id);
         accountControllerLogger.debug("Finding auth info for user with email {}", user.getEmail());
         UserAuth auth = userService.getAuthInfo(user.getEmail()).orElseThrow(UserNotFoundException::new);
@@ -114,18 +144,6 @@ public class UserController {
         if (result == -1)
             throw new RuntimeException("Couldn't save image");
         return Response.created(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(id)).path("/image").build()).build();
-    }
-
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getByEmail(@QueryParam("email") final String email) {
-        accountControllerLogger.debug("Finding user with email {}", email);
-        UserWithImage currentUser = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
-        accountControllerLogger.debug("Finding auth info for user with email {}", currentUser.getEmail());
-        UserAuth auth = userService.getAuthInfo(currentUser.getEmail()).orElseThrow(UserNotFoundException::new);
-
-        UserDto userAnswer = UserDto.fromUserAndRoles(currentUser, auth.getRoles(), uriInfo);
-        return Response.ok(userAnswer).build();
     }
 
     @Path("/{id}")

@@ -329,6 +329,21 @@ En un form con key "file" viajara la imagen
     "email": "masdasdasdasdasd@itba.edu.ar"
 }
 ```
+### GET: {{baseUrl}}/users
+```json
+[
+    {
+        "contracts": "http://localhost:8080/api/v1/contracts?userId=13",
+        "email": "amigoitba@yopmail.com",
+        "id": 13,
+        "phone": "1234467567",
+        "roles": [
+            "CLIENT"
+        ],
+        "username": "amigo"
+    }
+]
+```
 ### PUT: {{baseUrl}}/users/5
 ```json
 {
@@ -338,8 +353,8 @@ En un form con key "file" viajara la imagen
     "password": "1232312323"
 }
 ```
-### GET: {{baseUrl}}/users/5
-### GET: {{baseUrl}}/users/search?email=manaaasd@gmail.com
+### GET by id: {{baseUrl}}/users/5
+### GET by email: {{baseUrl}}/users/search?email=manaaasd@gmail.com
 ```json
 {
     "contracts": "http://localhost:8080/api/v1/contracts?userId=5",
