@@ -257,6 +257,16 @@
       "yourescheduled": "Waiting for rescheduling approval"
     }
   },
+  "createjobpost": {
+    "steps": {
+      "category": "Service category",
+      "title": "Service title",
+      "packages": "Packages",
+      "photos": "Photos",
+      "hours": "Available hours",
+      "locations": "Available locations"
+    }
+  },
   "hirePage": {
     "title": "Hire Service",
     "detail": {

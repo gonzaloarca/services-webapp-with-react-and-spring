@@ -261,6 +261,16 @@
       "yourescheduled": "Esperando por la aprobación de la reprogramación de la fecha del trabajo"
     }
   },
+  "createjobpost": {
+    "steps": {
+      "category": "Categoría del servicio",
+      "title": "Título del servicio",
+      "packages": "Paquetes",
+      "photos": "Fotos",
+      "hours": "Horarios",
+      "locations": "Ubicaciones"
+    }
+  },
   "hirePage": {
     "title": "Solicitar Servicio",
     "detail": {

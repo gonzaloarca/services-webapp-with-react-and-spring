@@ -1,27 +1,41 @@
+import { faImage } from '@fortawesome/free-regular-svg-icons';
+import {
+  faBriefcase,
+  faBusinessTime,
+  faCube,
+  faEdit,
+  faMapMarkerAlt,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   makeStyles,
   Step,
+  StepConnector,
   StepLabel,
   Stepper,
+  withStyles,
 } from '@material-ui/core';
+import { Create, Work } from '@material-ui/icons';
+import clsx from 'clsx';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import NavBar from '../components/NavBar';
+import styles from '../styles';
+import { themeUtils } from '../theme';
 
-const ColorlibConnector = withStyles({
+const HirenetConnector = withStyles({
   alternativeLabel: {
     top: 22,
   },
   active: {
     '& $line': {
-      backgroundImage:
-        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+      backgroundColor: themeUtils.colors.yellow,
     },
   },
   completed: {
     '& $line': {
-      backgroundImage:
-        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+      backgroundColor: themeUtils.colors.blue,
     },
   },
   line: {
@@ -32,7 +46,7 @@ const ColorlibConnector = withStyles({
   },
 })(StepConnector);
 
-const useColorlibStepIconStyles = makeStyles({
+const useHirenetStepIconStyles = makeStyles({
   root: {
     backgroundColor: '#ccc',
     zIndex: 1,
@@ -45,24 +59,25 @@ const useColorlibStepIconStyles = makeStyles({
     alignItems: 'center',
   },
   active: {
-    backgroundImage:
-      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    backgroundColor: themeUtils.colors.yellow,
     boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
   },
   completed: {
-    backgroundImage:
-      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    backgroundColor: themeUtils.colors.blue,
   },
 });
 
-function ColorlibStepIcon(props) {
-  const classes = useColorlibStepIconStyles();
+const HirenetStepIcon = (props) => {
+  const classes = useHirenetStepIconStyles();
   const { active, completed } = props;
 
   const icons = {
-    1: <SettingsIcon />,
-    2: <GroupAddIcon />,
-    3: <VideoLabelIcon />,
+    1: faBriefcase,
+    2: faEdit,
+    3: faCube,
+    4: faImage,
+    5: faBusinessTime,
+    6: faMapMarkerAlt,
   };
 
   return (
@@ -72,14 +87,15 @@ function ColorlibStepIcon(props) {
         [classes.completed]: completed,
       })}
     >
-      {icons[String(props.icon)]}
+      <FontAwesomeIcon className="text-lg" icon={icons[String(props.icon)]} />
     </div>
   );
-}
+};
 
+const useGlobalStyles = makeStyles(styles);
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
+  stepperContainer: {
+    boxShadow: themeUtils.shadows.containerShadow,
   },
   button: {
     marginRight: theme.spacing(1),
@@ -90,9 +106,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getSteps() {
-  return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
-}
+const getSteps = () => {
+  return [
+    'createjobpost.steps.category',
+    'createjobpost.steps.title',
+    'createjobpost.steps.packages',
+    'createjobpost.steps.photos',
+    'createjobpost.steps.hours',
+    'createjobpost.steps.locations',
+  ];
+};
 
 function getStepContent(step) {
   switch (step) {
@@ -109,6 +132,8 @@ function getStepContent(step) {
 
 const CreateJobPost = () => {
   const classes = useStyles();
+  const globalClasses = useGlobalStyles();
+  const { t } = useTranslation();
   const [activeStep, setActiveStep] = React.useState(1);
   const steps = getSteps();
 
@@ -128,16 +153,17 @@ const CreateJobPost = () => {
     <>
       <NavBar currentSection={'/create-job-post'} />
 
-      <div className={classes.root}>
+      <div className={globalClasses.contentContainerTransparent}>
         <Stepper
+          className={classes.stepperContainer}
           alternativeLabel
           activeStep={activeStep}
-          connector={<ColorlibConnector />}
+          connector={<HirenetConnector />}
         >
           {steps.map((label) => (
             <Step key={label}>
-              <StepLabel StepIconComponent={ColorlibStepIcon}>
-                {label}
+              <StepLabel StepIconComponent={HirenetStepIcon}>
+                <p className="text-sm font-semibold">{t(label)}</p>
               </StepLabel>
             </Step>
           ))}
@@ -178,5 +204,34 @@ const CreateJobPost = () => {
     </>
   );
 };
+
+const jobTypes = [
+  {
+    id: 0,
+    description: 'Plumbing',
+  },
+  {
+    id: 1,
+    description: 'Carpentry',
+  },
+  {
+    id: 2,
+    description: 'Painting',
+  },
+  {
+    id: 3,
+    description: 'Babysitting',
+  },
+  {
+    id: 4,
+    description: 'Electricity',
+  },
+  {
+    id: 5,
+    description: 'Other',
+  },
+];
+
+// const JobCategory = () => {
 
 export default CreateJobPost;
