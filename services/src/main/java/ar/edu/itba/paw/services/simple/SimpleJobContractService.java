@@ -41,9 +41,6 @@ public class SimpleJobContractService implements JobContractService {
     @Autowired
     private MailingService mailingService;
 
-    @Autowired
-    PaginationService paginationService;
-
     @Override
     public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
         if (page < 1) page = 1;
@@ -108,11 +105,6 @@ public class SimpleJobContractService implements JobContractService {
     public List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
                                                                        int page) {
         return jobContractDao.findByClientIdAndSortedByModificationDate(id, states, page);
-    }
-
-    @Override
-    public List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page) {
-        return jobContractDao.findByProId(id, states, page);
     }
 
     @Override

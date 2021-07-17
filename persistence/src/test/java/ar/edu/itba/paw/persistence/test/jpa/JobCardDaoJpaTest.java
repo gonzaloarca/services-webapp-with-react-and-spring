@@ -301,14 +301,6 @@ public class JobCardDaoJpaTest {
     }
 
     @Test
-    public void testFindAllMaxPage() {
-
-        int maxPage = jobCardDaoJpa.findAllMaxPage();
-
-        Assert.assertEquals(Math.ceil((double) TOTAL_JOB_CARDS_ACTIVE / HirenetUtils.PAGE_SIZE), maxPage, 0.00001);
-    }
-
-    @Test
     public void testFindMaxPageByUserId1() {
 
         int maxPage = jobCardDaoJpa.findByUserIdMaxPage(USER1.getId());

@@ -97,7 +97,7 @@ public class SimpleJobCardService implements JobCardService {
 
     @Override
     public int findAllMaxPage() {
-        return jobCardDao.findAllMaxPage();
+        return jobPostService.findAllMaxPage();
     }
 
     @Override
@@ -106,13 +106,13 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public int searchMaxPage(String query, JobPost.Zone value, Locale locale) {
-        return jobCardDao.searchMaxPage(query, value, getSimilarTypes(query, locale));
-    }
+    public int searchMaxPage(String query, int zone, int jobType, Locale locale) {
+        JobPost.Zone parsedZone = JobPost.Zone.values()[zone];
+        if (jobType == HirenetUtils.SEARCH_WITHOUT_CATEGORIES)
+            return jobCardDao.searchMaxPage(query, parsedZone, getSimilarTypes(query, locale));
 
-    @Override
-    public int searchWithCategoryMaxPage(String query, JobPost.Zone value, JobPost.JobType jobType, Locale locale) {
-        return jobCardDao.searchWithCategoryMaxPage(query, value, jobType, getSimilarTypes(query, locale));
+        JobPost.JobType parsedJobType = JobPost.JobType.values()[jobType];
+        return jobCardDao.searchWithCategoryMaxPage(query, parsedZone, parsedJobType, getSimilarTypes(query, locale));
     }
 
     @Override

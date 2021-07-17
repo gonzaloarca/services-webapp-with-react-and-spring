@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,13 +38,7 @@ public class JobPostController {
     private final Logger jobPostControllerLogger = LoggerFactory.getLogger(JobPostController.class);
 
     @Autowired
-    PaginationService paginationService;
-
-    @Autowired
     private JobPostService jobPostService;
-
-    @Autowired
-    private ReviewService reviewService;
 
     @Autowired
     private JobPackageService jobPackageService;
@@ -96,6 +91,26 @@ public class JobPostController {
         final URI packageUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(id)).build();
         return Response.created(packageUri).build();
+    }
+
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response findAll(@QueryParam("page") @DefaultValue("1") int page) {
+        if (page < 1)
+            page = 1;
+
+        Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
+        jobPostControllerLogger.debug("Finding al jobPosts for page {}", page);
+        int maxPage = jobPostService.findAllMaxPage();
+        List<JobPostDto> jobPostDtoList = jobPostService.findAll(page).stream()
+                .map(jobPost -> JobPostDto.fromJobPostWithLocalizedMessage(jobPost,
+                        jobPostImageService.getImagesIdsByPostId(jobPost.getId()),uriInfo,
+                        messageSource.getMessage(jobPost.getJobType().getDescription(), null, locale)))
+                .collect(Collectors.toList());
+
+        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
+                Response.ok(new GenericEntity<List<JobPostDto>>(jobPostDtoList) {
+                }));
     }
 
     @GET
@@ -156,7 +171,7 @@ public class JobPostController {
             page = 1;
 
         jobPostControllerLogger.debug("Finding packages for post: {}", postId);
-        int maxPage = paginationService.findJobPackageByPostIdMaxPage(postId);
+        int maxPage = jobPackageService.findByPostIdMaxPage(postId);
         final List<JobPackageDto> packageDtoList = jobPackageService.findByPostId(postId, page - 1)
                 .stream().map(pack -> JobPackageDto.fromJobPackage(pack, uriInfo))
                 .collect(Collectors.toList());

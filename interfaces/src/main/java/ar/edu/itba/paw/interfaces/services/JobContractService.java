@@ -20,8 +20,6 @@ public interface JobContractService {
 
     List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page);
-
     List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page);
 
     List<JobContract> findByPostId(long id);

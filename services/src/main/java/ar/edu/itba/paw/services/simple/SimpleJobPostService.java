@@ -52,35 +52,14 @@ public class SimpleJobPostService implements JobPostService {
         return jobPostDao.findByUserId(id, page);
     }
 
-
-    @Override
-    public List<JobPost> findByJobType(JobPost.JobType jobType) {
-        return jobPostDao.findByJobType(jobType, HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobPost> findByJobType(JobPost.JobType jobType, int page) {
-        return jobPostDao.findByJobType(jobType, page);
-    }
-
-    @Override
-    public List<JobPost> findByZone(JobPost.Zone zone) {
-        return jobPostDao.findByZone(zone, HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobPost> findByZone(JobPost.Zone zone, int page) {
-        return jobPostDao.findByZone(zone, page);
-    }
-
-    @Override
-    public List<JobPost> findAll() {
-        return jobPostDao.findAll(HirenetUtils.ALL_PAGES);
-    }
-
     @Override
     public List<JobPost> findAll(int page) {
         return jobPostDao.findAll(page);
+    }
+
+    @Override
+    public int findAllMaxPage() {
+        return jobPostDao.findAllMaxPage();
     }
 
     @Override

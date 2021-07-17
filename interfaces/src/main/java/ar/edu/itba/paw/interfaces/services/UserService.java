@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public interface UserService {
 
+    List<UserWithImage> findAllWithImage(int page);
+
+    int findAllWithImageMaxPage();
+
     User register(String email, String password, String username, String phone, ByteImage image, Locale locale, String webpageUrl)
             throws UserAlreadyExistsException, UserNotVerifiedException;
 

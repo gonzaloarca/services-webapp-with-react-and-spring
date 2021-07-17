@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.jpa;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobPostDao;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
@@ -88,6 +89,13 @@ public class JobPostDaoJpa implements JobPostDao {
     }
 
     @Override
+    public int findAllMaxPage() {
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobPost jpost WHERE jpost.isActive = TRUE", Long.class)
+                .getSingleResult();
+        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
     public Optional<User> findUserByPostId(long id) {
         return em.createQuery(
                 "SELECT jp.user FROM JobPost jp WHERE jp.id = :id", User.class
@@ -113,7 +121,7 @@ public class JobPostDaoJpa implements JobPostDao {
         List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
 
         return em.createQuery("FROM JobPost AS jp WHERE jp.id IN :filteredIds", JobPost.class)
-                .setParameter("filteredIds", (filteredIds.isEmpty())? null : filteredIds)
+                .setParameter("filteredIds", (filteredIds.isEmpty()) ? null : filteredIds)
                 .getResultList().stream().sorted(
                         //Ordenamos los elementos segun el orden de filteredIds
                         Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))

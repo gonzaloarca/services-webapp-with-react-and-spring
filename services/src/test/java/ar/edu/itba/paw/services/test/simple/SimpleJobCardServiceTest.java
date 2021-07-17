@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services.test.simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
+import ar.edu.itba.paw.interfaces.services.JobCardService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPackage;
@@ -241,16 +242,6 @@ public class SimpleJobCardServiceTest {
     }
 
     @Test
-    public void findMaxPageTest() {
-        Mockito.when(jobCardDao.findAllMaxPage())
-                .thenReturn(PAGE);
-
-        int result = simpleJobCardService.findAllMaxPage();
-
-        Assert.assertEquals(PAGE, result);
-    }
-
-    @Test
     public void findMaxPageByUserIdTest() {
         Mockito.when(jobCardDao.findByUserIdMaxPage(Mockito.eq(USER_ID)))
                 .thenReturn(PAGE);
@@ -271,7 +262,7 @@ public class SimpleJobCardServiceTest {
         Mockito.when(jobCardDao.searchMaxPage(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(jobTypeList)))
                 .thenReturn(PAGE);
 
-        int result = spy.searchMaxPage(QUERY, ZONE, Locale.getDefault());
+        int result = spy.searchMaxPage(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, Locale.getDefault());
 
         Assert.assertEquals(PAGE, result);
     }
@@ -288,7 +279,7 @@ public class SimpleJobCardServiceTest {
                 Mockito.eq(jobTypeList)))
                 .thenReturn(PAGE);
 
-        int result = spy.searchWithCategoryMaxPage(QUERY, ZONE, TYPE, Locale.getDefault());
+        int result = spy.searchMaxPage(QUERY, ZONE.ordinal(), TYPE.ordinal(), Locale.getDefault());
 
         Assert.assertEquals(PAGE, result);
     }

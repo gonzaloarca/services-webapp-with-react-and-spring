@@ -107,13 +107,6 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     @Override
-    public int findAllMaxPage() {
-        Long size = em.createQuery("SELECT COUNT(*) FROM JobPost jpost WHERE jpost.isActive = TRUE", Long.class)
-                .getSingleResult();
-        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
-    }
-
-    @Override
     public int findByUserIdMaxPage(long id) {
         Long size = em.createQuery("SELECT COUNT(*) FROM JobPost jpost WHERE jpost.user.id = :id AND jpost.isActive = TRUE", Long.class)
                 .setParameter("id", id).getSingleResult();
