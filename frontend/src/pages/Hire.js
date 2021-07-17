@@ -34,66 +34,67 @@ import 'react-datepicker/dist/react-datepicker.css';
 registerLocale('es', es);
 
 const pack = {
-  active: true,
-  description:
+  'active': true,
+  'description':
     'Atencion constante y juego para el desarrollo de musculos como brazos y piernas.',
-  id: 8,
-  jobPost: {
-    id: 8,
-    uri: 'http://localhost:8080/job-posts/8',
+  'id': 8,
+  'jobPost': {
+    'id': 8,
+    'uri': 'http://localhost:8080/job-posts/8',
   },
-  price: 160.0,
-  rateType: {
-    description: 'HOURLY',
-    id: 2,
+  'rateType': {
+    'description': 'TBD',
+    'id': 2,
   },
-  title: '4 dias a la semana 4 horas',
+  'title': '4 dias a la semana 4 horas',
 };
 
+//TODO: como se levanta esto?
+const jobpostimages = ['/img/plumbing.jpeg', '/img/carpentry.jpeg'];
+
 const post = {
-  active: true,
-  availableHours: 'Lunes a viernes entre las 8am y 2pm',
-  creationDate: '2021-05-02T18:22:13.338478',
-  id: 8,
-  jobType: {
-    description: 'BABYSITTING',
-    id: 7,
+  'active': true,
+  'availableHours': 'Lunes a viernes entre las 8am y 2pm',
+  'creationDate': '2021-05-02T18:22:13.338478',
+  'id': 8,
+  'jobType': {
+    'description': 'BABYSITTING',
+    'id': 7,
   },
-  images: ['/img/plumbing.jpeg', '/img/carpentry.jpeg'],
-  packages: [
+  'packages': [
     {
-      id: 8,
-      uri: 'http://localhost:8080/job-posts/8/packages/8',
+      'id': 8,
+      'uri': 'http://localhost:8080/job-posts/8/packages/8',
     },
   ],
-  professional: {
-    id: 5,
-    uri: 'http://localhost:8080/users/5',
+  'professional': {
+    'id': 5,
+    'uri': 'http://localhost:8080/users/5',
   },
-  title: 'Niñero turno mañana',
-  zones: [
+  'title': 'Niñero turno mañana',
+  'zones': [
     {
-      description: 'RETIRO',
-      id: 28,
+      'description': 'RETIRO',
+      'id': 28,
     },
     {
-      description: 'NUNIEZ',
-      id: 20,
+      'description': 'NUNIEZ',
+      'id': 20,
     },
     {
-      description: 'COLEGIALES',
-      id: 9,
+      'description': 'COLEGIALES',
+      'id': 9,
     },
   ],
 };
 
 const proUser = {
-  email: 'manaaasd@gmail.com',
-  id: 5,
-  phone: '03034560',
-  roles: ['CLIENT', 'PROFESSIONAL'],
-  username: 'Manuel Rodriguez',
-  image: '/img/plumbing.jpeg',
+  'email': 'manaaasd@gmail.com',
+  'id': 5,
+  'phone': '03034560',
+  'roles': ['CLIENT', 'PROFESSIONAL'],
+  'username': 'Manuel Rodriguez',
+  image: '/img/plumbing.jpeg', //TODO la foto de perfil está aca?
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -191,7 +192,7 @@ const Hire = ({ match }) => {
       >
         <SectionHeader
           sectionName={t('hirePage.title')}
-          imageSrc={post.images[0]}
+          imageSrc={jobpostimages[0]}
           filterClass={classes.headerFilter}
         />
         <Grid className="mt-4" container spacing={3}>
@@ -378,7 +379,7 @@ const PackageInfo = () => {
         loading="lazy"
         className={classes.detailImg}
         alt=""
-        src={post.images[0]}
+        src={jobpostimages[0]}
       />
       <div className="flex flex-col px-5">
         <DetailRow text={post.title} icon={<Work fontSize="large" />} divider />
