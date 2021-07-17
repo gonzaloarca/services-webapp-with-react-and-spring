@@ -82,6 +82,7 @@
   "price": "{{value, price, ARS}}",
   "date": "{{date, MM/DD/YYYY}}",
   "time": "{{date, h:mm A}}",
+  "datetime": "{{date, DD/MM/YYYY h:mm A}}",
   "reviewcount": "({{count}})",
   "completedcontracts": "Hired {{count}} times",
   "completedcontractsonce": "Hired once",
@@ -165,8 +166,24 @@
     "finalized": "Finalized",
     "hiredby": "Hired by",
     "professional": "Professional",
-    "scheduleddate": "Fecha programada",
+    "scheduleddate": "Scheduled date",
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractimage": "Job image",
+    "contractdescription": "Job description",
+    "package": "Hired package",
+    "creationdate": "Contract creation date",
+    "pickdate": "Select a new date and time for the appointment",
+    "rate": {
+      "header": "How would you rate your experience with this service?",
+      "tellus": "Tell us about your experience",
+      "tellusplaceholder": "Write about the quality of the job, how you were treated, etc.",
+      "summarize": "Summarize your experience in a short phrase (optional)",
+      "summarizeplaceholder": "Review title"
+    },
+    "reviewreschedule": {
+      "disclaimer": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
+      "newdate": "New date proposal"
+    },
     "contractactions": {
       "approve": "Approve",
       "reject": "Reject",
@@ -199,7 +216,6 @@
       },
       "reviewreschedule": {
         "title": "Review rescheduling",
-        "message": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
         "affirmative": "Accept",
         "negative": "Reject"
       },
@@ -283,5 +299,17 @@
       "btn": "LOG OUT"
     },
     "savechanges": "Save changes"
-  }
+  },
+  "profile": {
+    "rating": "Average rating",
+    "countsingular": "Time hired",
+    "countplural": "Times hired",
+    "services": "Services ({{count}})",
+    "reviews": "Reviews ({{count}})",
+    "ratecount": "Average between {{count}} reviews",
+    "starsingular": "1 star",
+    "starsplural": "{{count}} stars"
+  },
+  "timesHiredSingular": "Hired 1 time",
+  "timesHiredPlural": "Hired {{times}} times"
 }

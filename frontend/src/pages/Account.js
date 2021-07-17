@@ -21,6 +21,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useTranslation } from 'react-i18next';
 import FormControlPassword from '../components/FormControlPassword';
 import FileInput from '../components/FileInput';
+import TabPanel from '../components/TabPanel';
 
 // TODO: integracion con API
 const currentUser = {
@@ -179,18 +180,6 @@ const HirenetTab = withStyles((theme) => ({
     },
   },
 }))(Tab);
-
-const TabPanel = ({ children, value, index }) => {
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-    >
-      {value === index && children}
-    </div>
-  );
-};
 
 const PersonalData = () => {
   const classes = useStyles();

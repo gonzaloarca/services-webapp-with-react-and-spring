@@ -12,9 +12,9 @@ import styles from '../styles';
 import clsx from 'clsx';
 import SectionHeader from '../components/SectionHeader';
 import { useTranslation } from 'react-i18next';
-import { AttachMoney, LocationOn, Schedule } from '@material-ui/icons';
+import { LocalOffer, LocationOn, WatchLater, Work } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBoxOpen, faBriefcase } from '@fortawesome/free-solid-svg-icons';
+import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import * as Yup from 'yup';
 import {
   Formik,
@@ -27,61 +27,63 @@ import {
 import DatePicker, { registerLocale } from 'react-datepicker';
 import { es } from 'date-fns/locale';
 import { themeUtils } from '../theme';
+import PriceTag from '../components/PriceTag';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 registerLocale('es', es);
 
 const pack = {
-  active: true,
-  description:
+  'active': true,
+  'description':
     'Atencion constante y juego para el desarrollo de musculos como brazos y piernas.',
-  id: 8,
-  jobPost: {
-    id: 8,
-    uri: 'http://localhost:8080/job-posts/8',
+  'id': 8,
+  'jobPost': {
+    'id': 8,
+    'uri': 'http://localhost:8080/job-posts/8',
   },
-  price: 160.0,
-  rateType: {
-    description: 'HOURLY',
-    id: 2,
+  'rateType': {
+    'description': 'TBD',
+    'id': 2,
   },
-  title: '4 dias a la semana 4 horas',
+  'title': '4 dias a la semana 4 horas',
 };
 
+//TODO: como se levanta esto?
+const jobpostimages = [`${process.env.PUBLIC_URL}/img/plumbing.jpeg`, `${process.env.PUBLIC_URL}/img/carpentry.jpeg`];
+
 const post = {
-  active: true,
-  availableHours: 'Lunes a viernes entre las 8am y 2pm',
-  creationDate: '2021-05-02T18:22:13.338478',
-  id: 8,
-  jobType: {
-    description: 'BABYSITTING',
-    id: 7,
+  'active': true,
+  'availableHours': 'Lunes a viernes entre las 8am y 2pm',
+  'creationDate': '2021-05-02T18:22:13.338478',
+  'id': 8,
+  'jobType': {
+    'description': 'BABYSITTING',
+    'id': 7,
   },
-  images: [`${process.env.PUBLIC_URL}/img/plumbing.jpeg`, `${process.env.PUBLIC_URL}/img/carpentry.jpeg`],
-  packages: [
+  'packages': [
     {
-      id: 8,
-      uri: 'http://localhost:8080/job-posts/8/packages/8',
+      'id': 8,
+      'uri': 'http://localhost:8080/job-posts/8/packages/8',
     },
   ],
-  professional: {
-    id: 5,
-    uri: 'http://localhost:8080/users/5',
+  'professional': {
+    'id': 5,
+    'uri': 'http://localhost:8080/users/5',
   },
-  title: 'Niñero turno mañana',
-  zones: [
+  'title': 'Niñero turno mañana',
+  'zones': [
     {
-      description: 'RETIRO',
-      id: 28,
+      'description': 'RETIRO',
+      'id': 28,
     },
     {
-      description: 'NUNIEZ',
-      id: 20,
+      'description': 'NUNIEZ',
+      'id': 20,
     },
     {
-      description: 'COLEGIALES',
-      id: 9,
+      'description': 'COLEGIALES',
+      'id': 9,
     },
   ],
 };
@@ -143,15 +145,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '40px !important',
     objectFit: 'cover',
   },
-  priceTag: {
-    backgroundColor: '#485696',
-    color: 'white',
-    margin: '5px 0 5px 0',
-    fontSize: 'larger',
-    fontWeight: 'bold',
-    padding: '5px 10px 5px 10px',
-    borderRadius: '15px',
-  },
   formSectionTitle: {
     margin: '5px 0 10px 0',
     fontWeight: 600,
@@ -190,7 +183,7 @@ const Hire = ({ match }) => {
 
   return (
     <>
-      <NavBar />
+      <NavBar currentSection="/search" />
       <div
         className={clsx(
           classes.hireBody,
@@ -199,7 +192,7 @@ const Hire = ({ match }) => {
       >
         <SectionHeader
           sectionName={t('hirePage.title')}
-          imageSrc={post.images[0]}
+          imageSrc={jobpostimages[0]}
           filterClass={classes.headerFilter}
         />
         <Grid className="mt-4" container spacing={3}>
@@ -349,7 +342,7 @@ const filterPast = (date) => {
   return currentDate.getTime() < selectedDate.getTime();
 };
 
-export const DatePickerField = ({ ...props }) => {
+export const DatePickerField = (props) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -386,14 +379,10 @@ const PackageInfo = () => {
         loading="lazy"
         className={classes.detailImg}
         alt=""
-        src={post.images[0]}
+        src={jobpostimages[0]}
       />
       <div className="flex flex-col px-5">
-        <DetailRow
-          text={post.title}
-          icon={<FontAwesomeIcon icon={faBriefcase} size="2x" />}
-          divider
-        />
+        <DetailRow text={post.title} icon={<Work fontSize="large" />} divider />
         <DetailRow
           text={pack.title}
           icon={<FontAwesomeIcon icon={faBoxOpen} size="2x" />}
@@ -418,19 +407,19 @@ const PackageInfo = () => {
         />
         <DetailRow
           text={post.availableHours}
-          icon={<Schedule fontSize="large" />}
+          icon={<WatchLater fontSize="large" />}
           divider
         />
         <DetailRow
-          text={<PriceTag />}
-          icon={<AttachMoney fontSize="large" />}
+          text={<PriceTag rateType={pack.rateType} price={pack.price} />}
+          icon={<LocalOffer fontSize="large" />}
         />
       </div>
     </div>
   );
 };
 
-const DetailRow = ({ icon, text, divider }) => {
+const DetailRow = ({ icon, text, divider = false }) => {
   const classes = useStyles();
 
   const renderDivider = () => {
@@ -468,33 +457,6 @@ const ZonesText = () => {
   });
 
   return result;
-};
-
-const PriceTag = () => {
-  const classes = useStyles();
-  const { t } = useTranslation();
-  let priceStr;
-
-  //TODO: verificar si esta logica todavia se cumple
-  switch (pack.rateType.description) {
-    case 'HOURLY':
-      priceStr = t('ratetype.hourly', { amount: pack.price });
-      break;
-    case 'TBD':
-      priceStr = t('ratetype.tbd');
-      break;
-    case 'ONE_TIME':
-      priceStr = t('ratetype.oneTime', { amount: pack.price });
-      break;
-    default:
-      break;
-  }
-
-  return (
-    <div className="flex">
-      <div className={classes.priceTag}>{priceStr}</div>
-    </div>
-  );
 };
 
 export default Hire;

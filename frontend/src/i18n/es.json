@@ -82,6 +82,7 @@
   "price": "{{value, price, ARS}}",
   "date": "{{date, DD/MM/YYYY}}",
   "time": "{{date, H:mm}} hs",
+  "datetime": "{{date, DD/MM/YYYY H:mm}} hs",
   "reviewcount": "({{count}})",
   "completedcontracts": "Contratado {{count}} veces",
   "completedcontractsonce": "Contratado 1 vez",
@@ -171,6 +172,22 @@
     "professional": "Profesional",
     "scheduleddate": "Fecha programada",
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractimage": "Imagen del trabajo requerido",
+    "contractdescription": "Descripción del trabajo requerido",
+    "package": "Paquete contratado",
+    "creationdate": "Fecha de creación del contrato",
+    "pickdate": "Seleccione una nueva fecha y horario para la realización del trabajo",
+    "rate": {
+      "header": "¿Cómo calificarías tu experiencia con el servicio?",
+      "tellus": "Cuente un poco sobre la experiencia",
+      "tellusplaceholder": "Escriba sobre la calidad del trabajo, el trato con el profesional, la atencion, etc.",
+      "summarize": "Resuma su opinion en una frase (opcional)",
+      "summarizeplaceholder": "Título de la opinión"
+    },
+    "reviewreschedule": {
+      "disclaimer": "Si acepta la reprogramación no podrá reprogramar nuevamente. Si la rechaza se cancelará el contrato.",
+      "newdate": "Nueva fecha propuesta"
+    },
     "contractactions": {
       "approve": "Aprovar",
       "reject": "Rechazar",
@@ -203,7 +220,6 @@
       },
       "reviewreschedule": {
         "title": "Revisar reprogramación",
-        "message": "Si acepta la reprogramación no podrá reprogramar nuevamente. Si la rechaza se cancelará el contrato.",
         "affirmative": "Aceptar",
         "negative": "Rechazar"
       },
@@ -287,5 +303,17 @@
       "btn": "CERRAR SESIÓN"
     },
     "savechanges": "Guardar cambios"
-  }
+  },
+  "profile": {
+    "rating": "Calificación promedio",
+    "countsingular": "Vez contratado",
+    "countplural": "Veces contratado",
+    "services": "Servicios ({{count}})",
+    "reviews": "Reseñas ({{count}})",
+    "ratecount": "Promedio entre {{count}} reseñas",
+    "starsingular": "1 estrella",
+    "starsplural": "{{count}} estrellas"
+  },
+  "timesHiredSingular": "Contratado 1 vez",
+  "timesHiredPlural": "Contratado {{times}} veces"
 }
