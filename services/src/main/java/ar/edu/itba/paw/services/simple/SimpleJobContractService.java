@@ -44,9 +44,6 @@ public class SimpleJobContractService implements JobContractService {
     @Autowired
     PaginationService paginationService;
 
-    @Autowired
-    private MessageSource messageSource;
-
     @Override
     public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
         if (page < 1) page = 1;
