@@ -165,8 +165,21 @@
     "finalized": "Finalized",
     "hiredby": "Hired by",
     "professional": "Professional",
-    "scheduleddate": "Fecha programada",
+    "scheduleddate": "Scheduled date",
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractimage": "Job image",
+    "contractdescription": "Job description",
+    "rate": {
+      "header": "How would you rate your experience with this service?",
+      "tellus": "Tell us about your experience",
+      "tellusplaceholder": "Write about the quality of the job, how you were treated, etc.",
+      "summarize": "Summarize your experience in a short phrase (optional)",
+      "summarizeplaceholder": "Review title"
+    },
+    "reviewreschedule": {
+      "disclaimer": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
+      "newdate": "New date proposal"
+    },
     "contractactions": {
       "approve": "Approve",
       "reject": "Reject",
@@ -199,7 +212,6 @@
       },
       "reviewreschedule": {
         "title": "Review rescheduling",
-        "message": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
         "affirmative": "Accept",
         "negative": "Reject"
       },

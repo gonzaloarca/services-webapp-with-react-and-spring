@@ -1,3 +1,4 @@
+import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Avatar,
@@ -7,14 +8,27 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   Divider,
   Grid,
+  IconButton,
   makeStyles,
+  TextField,
+  withStyles,
 } from '@material-ui/core';
-import React from 'react';
+import {
+  Close,
+  Email,
+  Error,
+  Person,
+  Phone,
+  Subject,
+} from '@material-ui/icons';
+import { Rating } from '@material-ui/lab';
+import clsx from 'clsx';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { themeUtils } from '../theme';
 import {
   contractActionsMap,
   contractStateDataMap,
@@ -45,56 +59,100 @@ const ContractStateHeader = ({ contract, isOwner }) => {
 };
 
 const ContractCard = ({ contract, isOwner }) => {
-  const [openCancel, setOpenCancel] = React.useState(false);
-  const [openReject, setOpenReject] = React.useState(false);
-  const [openReschedule, setOpenReschedule] = React.useState(false);
-  const [openReviewReschedule, setOpenReviewReschedule] = React.useState(false);
-  const [openRate, setOpenRate] = React.useState(false);
-  const [openDetails, setOpenDetails] = React.useState(false);
-  const [openContact, setOpenContact] = React.useState(false);
+  const [openCancel, setOpenCancel] = useState(false);
+  const [openReject, setOpenReject] = useState(false);
+  const [openReschedule, setOpenReschedule] = useState(false);
+  const [openReviewReschedule, setOpenReviewReschedule] = useState(false);
+  const [openRate, setOpenRate] = useState(false);
+  const [openDetails, setOpenDetails] = useState(false);
+  const [openContact, setOpenContact] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const modalStateMap = {
+  const modalDataMap = {
     'cancel': {
       open: openCancel,
       openModal: () => setOpenCancel(true),
       onNegative: () => setOpenCancel(false),
       onAffirmative: () => setOpenCancel(false),
+      title: t('mycontracts.modals.cancel.title'),
+      body: t('mycontracts.modals.cancel.message'),
+      negativeLabel: t('mycontracts.modals.cancel.negative'),
+      affirmativeLabel: t('mycontracts.modals.cancel.affirmative'),
+      affirmativeColor: themeUtils.colors.red,
     },
     'reject': {
       open: openReject,
       openModal: () => setOpenReject(true),
       onNegative: () => setOpenReject(false),
       onAffirmative: () => setOpenReject(false),
+      title: t('mycontracts.modals.reject.title'),
+      body: t('mycontracts.modals.reject.message'),
+      negativeLabel: t('mycontracts.modals.reject.negative'),
+      affirmativeLabel: t('mycontracts.modals.reject.affirmative'),
+      affirmativeColor: themeUtils.colors.red,
     },
     'reschedule': {
       open: openReschedule,
       openModal: () => setOpenReschedule(true),
       onNegative: () => setOpenReschedule(false),
       onAffirmative: () => setOpenReschedule(false),
+      title: t('mycontracts.modals.reschedule.title'),
+      body: t('mycontracts.modals.reschedule.message'),
+      negativeLabel: t('mycontracts.modals.reschedule.negative'),
+      affirmativeLabel: t('mycontracts.modals.reschedule.affirmative'),
+      affirmativeColor: themeUtils.colors.yellow,
     },
     'reviewreschedule': {
       open: openReviewReschedule,
       openModal: () => setOpenReviewReschedule(true),
       onNegative: () => setOpenReviewReschedule(false),
       onAffirmative: () => setOpenReviewReschedule(false),
+      title: t('mycontracts.modals.reviewreschedule.title'),
+      body: <ReviewRescheduleBody newDate={contract.scheduledDate} />,
+      negativeLabel: t('mycontracts.modals.reviewreschedule.negative'),
+      affirmativeLabel: t('mycontracts.modals.reviewreschedule.affirmative'),
+      affirmativeColor: themeUtils.colors.yellow,
+      negativeColor: themeUtils.colors.red,
     },
     'rate': {
       open: openRate,
       openModal: () => setOpenRate(true),
       onNegative: () => setOpenRate(false),
       onAffirmative: () => setOpenRate(false),
+      body: <RateBody />,
+      negativeLabel: t('mycontracts.modals.rate.negative'),
+      affirmativeLabel: t('mycontracts.modals.rate.affirmative'),
+      affirmativeColor: themeUtils.colors.yellow,
     },
     'details': {
       open: openDetails,
       openModal: () => setOpenDetails(true),
       onNegative: () => setOpenDetails(false),
+      title: t('mycontracts.modals.details.title'),
+      body: (
+        <DetailsBody
+          text={contract.jobContract.description}
+          image={contract.jobContract.image}
+        />
+      ),
+      negativeLabel: t('mycontracts.modals.details.negative'),
     },
     'contact': {
       open: openContact,
       openModal: () => setOpenContact(true),
       onNegative: () => setOpenContact(false),
+      title: t('mycontracts.modals.contact.title'),
+      body: (
+        <ContactBody
+          username={
+            isOwner ? contract.client.username : contract.professional.username
+          }
+          email={isOwner ? contract.client.email : contract.professional.email}
+          phone={isOwner ? contract.client.phone : contract.professional.phone}
+        />
+      ),
+      negativeLabel: t('mycontracts.modals.contact.negative'),
     },
   };
 
@@ -135,11 +193,7 @@ const ContractCard = ({ contract, isOwner }) => {
                 }}
               />
             </div>
-            <img
-              className={classes.jobImage}
-              src={contract.jobPost.image}
-              alt=""
-            />
+            <img className={classes.jobImage} src={contract.image} alt="" />
           </Grid>
           <Grid
             className="flex flex-col justify-center"
@@ -206,8 +260,8 @@ const ContractCard = ({ contract, isOwner }) => {
                   className="ml-2"
                   key={index}
                   onClick={
-                    modalStateMap[action]
-                      ? modalStateMap[action].openModal
+                    modalDataMap[action]
+                      ? modalDataMap[action].openModal
                       : onClick
                   }
                   style={{ color: color }}
@@ -217,19 +271,16 @@ const ContractCard = ({ contract, isOwner }) => {
                 >
                   {t(label)}
                 </Button>
-                {modalStateMap[action] && (
-                  <WarningModal
-                    title={t('mycontracts.modals.' + action + '.title')}
-                    body={t('mycontracts.modals.' + action + '.message')}
-                    open={modalStateMap[action].open}
-                    onNegative={modalStateMap[action].onNegative}
-                    onAffirmative={modalStateMap[action].onAffirmative}
-                    affirmativeLabel={t(
-                      'mycontracts.modals.' + action + '.affirmative'
-                    )}
-                    negativeLabel={t(
-                      'mycontracts.modals.' + action + '.negative'
-                    )}
+                {modalDataMap[action] && (
+                  <HirenetModal
+                    title={modalDataMap[action].title}
+                    body={modalDataMap[action].body}
+                    open={modalDataMap[action].open}
+                    onNegative={modalDataMap[action].onNegative}
+                    onAffirmative={modalDataMap[action].onAffirmative}
+                    affirmativeLabel={modalDataMap[action].affirmativeLabel}
+                    negativeLabel={modalDataMap[action].negativeLabel}
+                    affirmativeColor={modalDataMap[action].affirmativeColor}
                   />
                 )}
               </>
@@ -243,25 +294,42 @@ const ContractCard = ({ contract, isOwner }) => {
   );
 };
 
-const WarningModal = ({
+const HirenetModal = ({
   open,
   title,
   body,
+  onClose = null,
   onNegative,
   onAffirmative,
   affirmativeLabel,
   negativeLabel,
+  affirmativeColor,
+  negativeColor = 'black',
 }) => {
   return (
-    <Dialog open={open} onClose={onNegative}>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{body}</DialogContentText>
-      </DialogContent>
+    <Dialog open={open} onClose={onClose ? onClose : onNegative}>
+      <div className="p-2">
+        <div className="flex justify-end">
+          <IconButton
+            onClick={onClose ? onClose : onNegative}
+            style={{ width: 30, height: 30 }}
+          >
+            <Close />
+          </IconButton>
+        </div>
+        <h2 className="font-semibold px-4 text-lg">{title}</h2>
+      </div>
+      <DialogContent>{body}</DialogContent>
       <DialogActions>
-        <Button onClick={onNegative}>{negativeLabel}</Button>
+        <Button style={{ color: negativeColor }} onClick={onNegative}>
+          {negativeLabel}
+        </Button>
         {onAffirmative && (
-          <Button onClick={onAffirmative} autoFocus>
+          <Button
+            style={{ color: affirmativeColor }}
+            onClick={onAffirmative}
+            autoFocus
+          >
             {affirmativeLabel}
           </Button>
         )}
@@ -269,5 +337,175 @@ const WarningModal = ({
     </Dialog>
   );
 };
+
+const DetailsBody = ({ text, image }) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+    <div className={classes.detailsModalBody}>
+      {image && (
+        <>
+          <div className="flex w-full mb-2 items-center">
+            <FontAwesomeIcon className="text-lg" icon={faImage} />
+            <h3 className="ml-2 font-semibold text-base">
+              {t('mycontracts.contractimage')}
+            </h3>
+          </div>
+          <img className={classes.detailsImage} src={image} alt="" />
+        </>
+      )}
+      <div className="flex w-full mt-6 mb-2 items-center">
+        <Subject />
+        <h3 className="ml-2 font-semibold text-base">
+          {t('mycontracts.contractdescription')}
+        </h3>
+      </div>
+      <p className={classes.detailsDescription}>{text}</p>
+    </div>
+  );
+};
+
+const ContactBody = ({ username, email, phone }) => {
+  const classes = useStyles();
+
+  return (
+    <div>
+      <Card
+        className="mb-2"
+        style={{ backgroundColor: themeUtils.colors.aqua }}
+      >
+        <div className={classes.contactField}>
+          <Person className={classes.contactIcon} />
+          <div className={classes.contactFieldValue}>{username}</div>
+        </div>
+      </Card>
+      <Card
+        className="mb-2"
+        style={{ backgroundColor: themeUtils.colors.lightBlue }}
+      >
+        <div className={classes.contactField}>
+          <Phone className={classes.contactIcon} />
+          <div className={classes.contactFieldValue}>{phone}</div>
+        </div>
+      </Card>
+      <Card style={{ backgroundColor: themeUtils.colors.orange }}>
+        <div className={classes.contactField}>
+          <Email className={classes.contactIcon} />
+          <div className={classes.contactFieldValue}>{email}</div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+const RateBody = () => {
+  const [rating, setRating] = useState(0);
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <div className={classes.ratingContainer}>
+        <h2 className="font-bold text-lg">{t('mycontracts.rate.header')}</h2>
+        <WhiteRating
+          precision={0.5}
+          value={rating}
+          onChange={(event, newValue) => setRating(newValue)}
+        />
+      </div>
+      <p className={classes.ratingLabel}>{t('mycontracts.rate.tellus')}</p>
+      <TextField
+        variant="filled"
+        InputProps={{
+          classes: {
+            input: classes.ratingInput,
+          },
+        }}
+        placeholder={t('mycontracts.rate.tellusplaceholder')}
+        multiline
+        rows={3}
+        hiddenLabel
+        fullWidth
+      />
+      <p className={classes.ratingLabel}>{t('mycontracts.rate.summarize')}</p>
+      <TextField
+        fullWidth
+        hiddenLabel
+        variant="filled"
+        InputProps={{ classes: { input: classes.ratingInput } }}
+        placeholder={t('mycontracts.rate.summarizeplaceholder')}
+      />
+    </>
+  );
+};
+
+const ReviewRescheduleBody = ({ newDate }) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <div className={classes.rescheduleContainer}>
+        <CalendarDisplay date={newDate} size={200} />
+        <div className={classes.rescheduleDisclaimer}>
+          <Error className={classes.disclaimerIcon} />
+          <p className="font-medium text-sm ml-2">
+            {t('mycontracts.reviewreschedule.disclaimer')}
+          </p>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const CalendarDisplay = ({ date = null, size }) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <div
+        className={classes.calendarTop}
+        style={{ height: size / 4, width: size }}
+      />
+      <div
+        className={classes.calendarBody}
+        style={{ height: size, width: size }}
+      >
+        <p>{t('mycontracts.reviewreschedule.newdate')}</p>
+        {date && (
+          <Trans
+            i18nKey="mycontracts.scheduleddateformat"
+            components={{
+              date: <div className={classes.calendarDate} />,
+              time: <div className={classes.calendarTime} />,
+            }}
+            values={{
+              date: t('date', {
+                date: createDate(date),
+              }),
+              time: t('time', {
+                date: createDate(date),
+              }),
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+const WhiteRating = withStyles((theme) => ({
+  icon: {
+    fontSize: '3rem',
+  },
+  iconFilled: {
+    color: 'white',
+  },
+  iconHover: {
+    color: 'white',
+  },
+}))(Rating);
 
 export default ContractCard;
