@@ -309,7 +309,9 @@
     "countplural": "Veces contratado",
     "services": "Servicios ({{count}})",
     "reviews": "Reseñas ({{count}})",
-    "ratecount": "Promedio entre {{count}} reseñas"
+    "ratecount": "Promedio entre {{count}} reseñas",
+    "starsingular": "1 estrella",
+    "starsplural": "{{count}} estrellas"
   },
   "timesHiredSingular": "Contratado 1 vez",
   "timesHiredPlural": "Contratado {{times}} veces"

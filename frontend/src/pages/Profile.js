@@ -11,6 +11,7 @@ import {
   Tabs,
   AppBar,
   Divider,
+  LinearProgress,
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
@@ -38,7 +39,8 @@ const user = {
   'phone': '03034560',
   'roles': ['CLIENT', 'PROFESSIONAL'],
   'username': 'Manuel Rodriguez',
-  'image': 'http://pawserver.it.itba.edu.ar/paw-2021a-03/image/user/1',
+  'image':
+    'https://i.pinimg.com/474x/ec/e4/89/ece489af93d39071a6e23bd6b93766a3.jpg',
 };
 
 const jobCard = {
@@ -118,7 +120,7 @@ const reviews = [
       id: 2,
       uri: 'http://localhost:8080/job-posts/3/packages/8/contracts/2',
     },
-    rate: 5,
+    rate: 3,
     title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
   },
 ];
@@ -331,12 +333,7 @@ const ProfileTabs = () => {
             xs={12}
             className="flex flex-col justify-center items-center"
           >
-            {/* TODO: barras de distribucion de reviews */}
-            <div>5 estrellas</div>
-            <div>4 estrellas</div>
-            <div>3 estrellas</div>
-            <div>2 estrellas</div>
-            <div>1 estrella</div>
+            <ReviewsDistribution />
           </Grid>
         </Grid>
 
@@ -348,6 +345,49 @@ const ProfileTabs = () => {
         ))}
       </TabPanel>
     </>
+  );
+};
+
+const ReviewsDistribution = () => {
+  let distribution = [0, 0, 0, 0, 0];
+
+  reviews.forEach((review) => {
+    distribution[review.rate - 1]++;
+  });
+
+  return (
+    <>
+      <ReviewCountComponent stars={5} count={distribution[5 - 1]} />
+      <ReviewCountComponent stars={4} count={distribution[4 - 1]} />
+      <ReviewCountComponent stars={3} count={distribution[3 - 1]} />
+      <ReviewCountComponent stars={2} count={distribution[2 - 1]} />
+      <ReviewCountComponent stars={1} count={distribution[1 - 1]} />
+    </>
+  );
+};
+
+const ReviewCountComponent = ({ stars, count }) => {
+  const { t } = useTranslation();
+
+  return (
+    <Grid container spacing={1}>
+      <Grid item sm={3} xs={3} className="flex justify-end">
+        {stars === 1
+          ? t('profile.starsingular')
+          : t('profile.starsplural', { count: stars })}
+      </Grid>
+      <Grid item sm={6} xs={6} className="flex flex-col justify-center">
+        <LinearProgress
+          variant="determinate"
+          value={(100 * count) / professional.reviewsQuantity}
+          color="secondary"
+          className="rounded"
+        />
+      </Grid>
+      <Grid item sm={1} xs={1} className="flex justify-start">
+        <div className="flex justify-center w-full">{count}</div>
+      </Grid>
+    </Grid>
   );
 };
 

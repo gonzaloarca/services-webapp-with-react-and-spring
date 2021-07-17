@@ -305,7 +305,9 @@
     "countplural": "Times hired",
     "services": "Services ({{count}})",
     "reviews": "Reviews ({{count}})",
-    "ratecount": "Average between {{count}} reviews"
+    "ratecount": "Average between {{count}} reviews",
+    "starsingular": "1 star",
+    "starsplural": "{{count}} stars"
   },
   "timesHiredSingular": "Hired 1 time",
   "timesHiredPlural": "Hired {{times}} times"
