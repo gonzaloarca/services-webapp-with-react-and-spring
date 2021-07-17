@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.HireNetAccessDeniedHandler;
-import ar.edu.itba.paw.webapp.auth.HireNetAuthenticationFailureHandler;
-import ar.edu.itba.paw.webapp.auth.HireNetUserDetails;
-import ar.edu.itba.paw.webapp.auth.OwnershipVoter;
+import ar.edu.itba.paw.webapp.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,10 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.ConsensusBased;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -27,8 +26,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
@@ -36,17 +37,22 @@ import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
 @Configuration
-@ComponentScan({"ar.edu.itba.paw.webapp.auth"})
+@ComponentScan({"ar.edu.itba.paw.webapp.auth","ar.edu.itba.paw.webapp.restcontrollers"})
 public class AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Value("classpath:key.txt")
     private Resource key;
+
+    final String BASE_URL = "/api/v1";
 
     @Autowired
     private HireNetUserDetails hireNetUserDetails;
 
     @Autowired
     private AccessDecisionVoter ownershipVoter;
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -61,35 +67,28 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        String keyString = StreamUtils.copyToString(key.getInputStream(), Charset.availableCharsets().get("utf-8"));
+        http = http.csrf().disable();
+
+
+        http = http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and();
+
+        http = http
+                .exceptionHandling()
+                .authenticationEntryPoint((request,response,ex)->response.sendError(HttpServletResponse.SC_UNAUTHORIZED,ex.getMessage()))
+                .and();
+
 
         http.authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
-                .antMatchers("/analytics","/job/delete","/job/*/packages/**", "/my-contracts/professional/**").hasRole("PROFESSIONAL")
+                .antMatchers("/api/v1/users/*/rankings","/job/delete","/job/*/packages/**", "/my-contracts/professional/**").hasRole("CLIENT")
                 .antMatchers("/rate-contract/*","/account/*","/hire/**","/my-contracts/**","/password-changed","/create-job-post/**").hasRole("CLIENT")
                 .antMatchers("/login", "/register","/token","/recover","/change-password").anonymous()
-                .antMatchers("/**").permitAll()
-                .and().formLogin()
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/", false)
-                .loginPage("/login")
-                .failureHandler(authenticationFailureHandler())
-                .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .deleteCookies("JSESSIONID")
-                .and()
-                .sessionManagement()
-                .sessionAuthenticationErrorUrl("/login")
-//                .invalidSessionUrl("/login")
-                .and().rememberMe()
-                .rememberMeParameter("rememberMeCheck")
-                .key(keyString)
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                .userDetailsService(hireNetUserDetails)
-                .and().exceptionHandling().accessDeniedPage("/error/404.jsp").accessDeniedHandler(accessDeniedHandler())
-                .and().csrf().disable();
+                .anyRequest().permitAll();
+
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -107,14 +106,10 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
         return new UnanimousBased(decisionVoters);
     }
 
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new HireNetAuthenticationFailureHandler();
-    }
 
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new HireNetAccessDeniedHandler();
+    @Override @Bean
+    public AuthenticationManager authenticationManagerBean()throws Exception{
+        return super.authenticationManagerBean();
     }
 
 }

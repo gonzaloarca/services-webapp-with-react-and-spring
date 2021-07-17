@@ -46,6 +46,7 @@
         <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
         <org.jboss.logging.version>3.3.0.Final</org.jboss.logging.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
+        <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
 
     </properties>
 
@@ -223,6 +224,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>${org.hibernate.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.logging</groupId>
+                        <artifactId>jboss-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
@@ -302,13 +309,14 @@
                 <groupId>org.glassfish.jersey.ext</groupId>
                 <artifactId>jersey-bean-validation</artifactId>
                 <version>${jersey.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-validator</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${io.jsonwebtoken.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
