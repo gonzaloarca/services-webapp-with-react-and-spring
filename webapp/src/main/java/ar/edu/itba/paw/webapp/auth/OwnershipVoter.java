@@ -47,6 +47,8 @@ public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
             String[] query = {};
             if (request.getQueryString() != null)
                 query = request.getQueryString().split("&");
+            if(request.getPathInfo() == null || request.getPathInfo().equals("/"))
+                return ACCESS_ABSTAIN;
             String[] paths = request.getPathInfo().substring(1).split("/");
             Map<String, String> queryParams = new HashMap<>();
             for (String q :

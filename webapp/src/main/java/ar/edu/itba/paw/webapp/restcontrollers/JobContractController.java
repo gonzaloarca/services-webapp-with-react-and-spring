@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
-import ar.edu.itba.paw.interfaces.services.PaginationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.ByteImage;
 import ar.edu.itba.paw.models.JobContract;
@@ -38,9 +37,6 @@ import java.util.stream.Collectors;
 @Component
 public class JobContractController {
     private final Logger JobContractsControllerLogger = LoggerFactory.getLogger(ar.edu.itba.paw.webapp.restcontrollers.JobContractController.class);
-
-    @Autowired
-    PaginationService paginationService;
 
     @Autowired
     private JobContractService jobContractService;

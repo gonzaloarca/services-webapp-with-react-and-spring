@@ -183,10 +183,10 @@ public class JobPostController {
         List<JobPackage> jobPackages;
         if (role != null && role.equalsIgnoreCase("PROFESSIONAL")) {
             jobPackages = jobPackageService.findByPostId(postId, page - 1);
-            maxPage = paginationService.findJobPackageByPostIdMaxPage(postId);
+            maxPage = jobPackageService.findByPostIdMaxPage(postId);
         }else{
             jobPackages = jobPackageService.findByPostIdOnlyActive(postId,page - 1);
-            maxPage = paginationService.findByPostIdOnlyActiveMaxPage(postId);
+            maxPage = jobPackageService.findByPostIdOnlyActiveMaxPage(postId);
         }
         final List<JobPackageDto> packageDtoList = jobPackages
                 .stream().map(pack -> JobPackageDto.fromJobPackage(pack, uriInfo))
