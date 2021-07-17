@@ -171,6 +171,8 @@
     "professional": "Profesional",
     "scheduleddate": "Fecha programada",
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractimage": "Imagen del trabajo requerido",
+    "contractdescription": "Descripción del trabajo requerido",
     "contractactions": {
       "approve": "Aprovar",
       "reject": "Rechazar",

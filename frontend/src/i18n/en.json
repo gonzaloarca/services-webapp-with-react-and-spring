@@ -165,8 +165,10 @@
     "finalized": "Finalized",
     "hiredby": "Hired by",
     "professional": "Professional",
-    "scheduleddate": "Fecha programada",
+    "scheduleddate": "Scheduled date",
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractimage": "Job image",
+    "contractdescription": "Job description",
     "contractactions": {
       "approve": "Approve",
       "reject": "Reject",
