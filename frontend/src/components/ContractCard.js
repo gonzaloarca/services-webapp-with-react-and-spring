@@ -15,7 +15,14 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
-import { Close, Email, Person, Phone, Subject } from '@material-ui/icons';
+import {
+  Close,
+  Email,
+  Error,
+  Person,
+  Phone,
+  Subject,
+} from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
 import clsx from 'clsx';
 import React, { useState } from 'react';
@@ -102,10 +109,11 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenReviewReschedule(false),
       onAffirmative: () => setOpenReviewReschedule(false),
       title: t('mycontracts.modals.reviewreschedule.title'),
-      body: t('mycontracts.modals.reviewreschedule.message'),
+      body: <ReviewRescheduleBody newDate={contract.scheduledDate} />,
       negativeLabel: t('mycontracts.modals.reviewreschedule.negative'),
       affirmativeLabel: t('mycontracts.modals.reviewreschedule.affirmative'),
       affirmativeColor: themeUtils.colors.yellow,
+      negativeColor: themeUtils.colors.red,
     },
     'rate': {
       open: openRate,
@@ -296,6 +304,7 @@ const HirenetModal = ({
   affirmativeLabel,
   negativeLabel,
   affirmativeColor,
+  negativeColor = 'black',
 }) => {
   return (
     <Dialog open={open} onClose={onClose ? onClose : onNegative}>
@@ -312,7 +321,9 @@ const HirenetModal = ({
       </div>
       <DialogContent>{body}</DialogContent>
       <DialogActions>
-        <Button onClick={onNegative}>{negativeLabel}</Button>
+        <Button style={{ color: negativeColor }} onClick={onNegative}>
+          {negativeLabel}
+        </Button>
         {onAffirmative && (
           <Button
             style={{ color: affirmativeColor }}
@@ -426,6 +437,62 @@ const RateBody = () => {
         placeholder={t('mycontracts.rate.summarizeplaceholder')}
       />
     </>
+  );
+};
+
+const ReviewRescheduleBody = ({ newDate }) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <div className={classes.rescheduleContainer}>
+        <CalendarDisplay date={newDate} size={200} />
+        <div className={classes.rescheduleDisclaimer}>
+          <Error className={classes.disclaimerIcon} />
+          <p className="font-medium text-sm ml-2">
+            {t('mycontracts.reviewreschedule.disclaimer')}
+          </p>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const CalendarDisplay = ({ date = null, size }) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <div
+        className={classes.calendarTop}
+        style={{ height: size / 4, width: size }}
+      />
+      <div
+        className={classes.calendarBody}
+        style={{ height: size, width: size }}
+      >
+        <p>{t('mycontracts.reviewreschedule.newdate')}</p>
+        {date && (
+          <Trans
+            i18nKey="mycontracts.scheduleddateformat"
+            components={{
+              date: <div className={classes.calendarDate} />,
+              time: <div className={classes.calendarTime} />,
+            }}
+            values={{
+              date: t('date', {
+                date: createDate(date),
+              }),
+              time: t('time', {
+                date: createDate(date),
+              }),
+            }}
+          />
+        )}
+      </div>
+    </div>
   );
 };
 

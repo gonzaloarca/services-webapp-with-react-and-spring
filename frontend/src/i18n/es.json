@@ -180,6 +180,10 @@
       "summarize": "Resuma su opinion en una frase (opcional)",
       "summarizeplaceholder": "Título de la opinión"
     },
+    "reviewreschedule": {
+      "disclaimer": "Si acepta la reprogramación no podrá reprogramar nuevamente. Si la rechaza se cancelará el contrato.",
+      "newdate": "Nueva fecha propuesta"
+    },
     "contractactions": {
       "approve": "Aprovar",
       "reject": "Rechazar",
@@ -212,7 +216,6 @@
       },
       "reviewreschedule": {
         "title": "Revisar reprogramación",
-        "message": "Si acepta la reprogramación no podrá reprogramar nuevamente. Si la rechaza se cancelará el contrato.",
         "affirmative": "Aceptar",
         "negative": "Rechazar"
       },

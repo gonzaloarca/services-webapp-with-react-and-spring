@@ -169,6 +169,49 @@ const contractCardStyles = (theme) => ({
     marginTop: 20,
     marginBottom: 5,
   },
+  rescheduleContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  calendarTop: {
+    backgroundColor: themeUtils.colors.red,
+    boxShadow: themeUtils.shadows.containerShadow,
+  },
+  calendarBody: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    boxShadow: themeUtils.shadows.containerShadow,
+    borderRadius: '0 0 10px 10px',
+  },
+  calendarDate: {
+    fontSize: '2rem',
+    fontWeight: 700,
+  },
+  calendarTime: {
+    fontSize: '1.3rem',
+    fontWeight: 600,
+  },
+  disclaimerIcon: {
+    fontSize: '3rem',
+    color: themeUtils.colors.yellow,
+  },
+  rescheduleDisclaimer: {
+    marginTop: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    borderRadius: 15,
+    border: '2px solid ' + themeUtils.colors.yellow,
+    padding: 10,
+    boxShadow: themeUtils.shadows.containerShadow,
+  },
 });
 
 export default contractCardStyles;

@@ -176,6 +176,10 @@
       "summarize": "Summarize your experience in a short phrase (optional)",
       "summarizeplaceholder": "Review title"
     },
+    "reviewreschedule": {
+      "disclaimer": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
+      "newdate": "New date proposal"
+    },
     "contractactions": {
       "approve": "Approve",
       "reject": "Reject",
@@ -208,7 +212,6 @@
       },
       "reviewreschedule": {
         "title": "Review rescheduling",
-        "message": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
         "affirmative": "Accept",
         "negative": "Reject"
       },
