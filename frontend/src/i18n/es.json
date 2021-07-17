@@ -1,0 +1,291 @@
+{
+  "navigation": {
+    "sections": {
+      "home": "Inicio",
+      "categories": "Categorías",
+      "publish": "Publicar",
+      "mycontracts": "Mis Contratos",
+      "analytics": "Estadísticas",
+      "explore": "Explorar",
+      "login": "Ingresar",
+      "register": "Registrarme"
+    },
+    "search": "Buscar..."
+  },
+  "validationerror": {
+    "required": "Este campo es obligatorio",
+    "email": "Por favor ingrese una direccion de correo electronico",
+    "phone": "Por favor ingrese un telefono valido",
+    "minlength": "Porfavor ingrese almenos {{length}} caracteres",
+    "maxlength": "Porfavor ingrese menos de {{length}} characters",
+    "passwordrepeat": "Las contraseña no coinciden",
+    "avatarfile": {
+      "size": "El tamaño del archivo debe ser menor que {{size}}MB",
+      "type": "El archivo debe ser de tipo PNG o JPG"
+    }
+  },
+  "home": {
+    "herotext": "Encuentre y contrate el servicio que necesita",
+    "location": "Ubicación",
+    "searchJob": "Buscar un servicio...",
+    "steps": {
+      "location": "Seleccione su ubicación",
+      "search": "Busque el servicio que necesita",
+      "hire": "Contrate el servicio"
+    },
+    "explore": "Explorar categorías de servicios",
+    "morecategories": "Ver más",
+    "newest": "Servicios más recientes",
+    "publishbanner": {
+      "question": "¿Desea publicar su servicio en nuestro sitio?",
+      "answer": "Hágalo ahora mismo",
+      "button": "Publicar"
+    }
+  },
+  "jobpost": {
+    "seereviews": "Ver opiniones"
+  },
+  "jobcard": {
+    "noreviews": "Sin calificaciones",
+    "details": "Ver detalles",
+    "morezones": "{{firstZone}} y {{zoneCount}} más"
+  },
+  "jobtype": {
+    "plumbing": "Plomería",
+    "electricity": "Electricidad",
+    "carpentry": "Carpintería",
+    "catering": "Catering",
+    "painting": "Pintura",
+    "teaching": "Enseñanza",
+    "cleaning": "Limpieza",
+    "babysitting": "Niñera"
+  },
+  "professional": "Profesional",
+  "client": "Cliente",
+  "avgrate": "Calificación promedio",
+  "timeshired": "Veces contratado",
+  "workinghours": "Horarios",
+  "availablezones": "Zonas de disponibilidad",
+  "availablepackages": "Paquetes disponibles",
+  "pricelabel": "Precio",
+  "hire": "Contratar",
+  "packagedescription": "Descripción del paquete",
+  "reviews": "Opiniones",
+  "ratetype": {
+    "hourly": "${{amount}}/hora",
+    "tbd": "A acordar",
+    "oneTime": "${{amount}}"
+  },
+  "review": {
+    "jobreference": "En <semibold>{{title}}</semibold>"
+  },
+  "price": "{{value, price, ARS}}",
+  "date": "{{date, DD/MM/YYYY}}",
+  "time": "{{date, H:mm}} hs",
+  "reviewcount": "({{count}})",
+  "completedcontracts": "Contratado {{count}} veces",
+  "completedcontractsonce": "Contratado 1 vez",
+  "footer": {
+    "creators": "Creadores del sitio",
+    "contact": "Contáctenos",
+    "copyright": "© 2021 HireNet"
+  },
+  "login": {
+    "title": "Ingresar",
+    "into": "Ingresar a HireNet",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Contraseña",
+    "rememberme": "Recordarme",
+    "submit": "Iniciar sesión",
+    "hasaccountquestion": "¿No tiene una cuenta?",
+    "getaccount": "Regístrese",
+    "badcredentials": "Usuario o contraseña incorrectos",
+    "usernotverified": "Su usuario no está verificado, por favor revise su email o realice de nuevo el registro",
+    "error": "Ha ocurrido un error, vuelva a intentarlo",
+    "inputemail": "Ingrese un email",
+    "inputpass": "Ingrese una contraseña",
+    "recoverquestion": "¿Olvidó su contraseña?",
+    "recover": "Recupérela"
+  },
+  "register": {
+    "title": "Registrarme",
+    "into": "Crear cuenta de HireNet",
+    "username": "Nombre completo",
+    "phone": "Teléfono",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordrepeat": "Repetir contraseña",
+    "submit": "Registrarme",
+    "alreadyhasaccount": "¿Ya tiene una cuenta?",
+    "login": "Inicie sesion",
+    "continue": "Continuar",
+    "selectimage": "Seleccione una imagen de perfil (opcional)",
+    "filedisclaimer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta {{size}} MB",
+    "goback": "Volver atrás",
+    "imagepreview": "Vista previa",
+    "existingemail": "El email que ha ingresado ya pertenece a un usuario",
+    "passwordInvalid": "La contraseña debe ser de entre 8 y 100 caracteres",
+    "passwordNotMatch": "Las contraseñas deben coincidir",
+    "discardimage": "Descartar"
+  },
+  "image": {
+    "clear": "Descartar",
+    "invalid": "Archivo inválido, intente con otro archivo",
+    "pick": "Seleccionar archivo"
+  },
+  "recover": {
+    "title": "Recuperar contraseña",
+    "instructions": "Ingrese el correo electrónico asociado a su cuenta",
+    "disclaimer": "Si la dirección pertenece a una cuenta registrada, se le enviará un correo con instrucciones para cambiar su contraseña.",
+    "submit": "Recuperar",
+    "success": "¡Solicitud recibida! Si la dirección es válida, le llegará un correo pronto.",
+    "enternewpass": "Ingrese su nueva contraseña",
+    "wronglink": "Enlace inválido o caducado",
+    "wrongexplained": "El enlace al que has ingresado no es correcto. Si necesitas cambiar tu contraseña, vuelve a intentarlo desde la página de inicio de sesión.",
+    "login": "Iniciar Sesión",
+    "passwordChanged": "¡Contraseña cambiada correctamente!",
+    "changedinstructions": "Inicie sesión para continuar utilizando la página."
+  },
+  "verifyemail": {
+    "title": "Verificación de email",
+    "success": "¡Email verificado correctamente!",
+    "pleaselogin": "Por favor, inicie sesión con su usuario para utilizar el sitio.",
+    "login": "Iniciar Sesión",
+    "invalid": "Enlace inválido o caducado",
+    "instructions": "El enlace al que has ingresado no es correcto. Por favor, realiza el registro de nuevo si todavía no tienes una cuenta.",
+    "register": "Registrarme"
+  },
+  "mycontracts": {
+    "contracts": "Contratos",
+    "hiredservices": "Servicios contratados",
+    "myservices": "Mis servicios",
+    "activecontracts": "Contratos activos",
+    "active": "Activos",
+    "pendingapprovalcontracts": "Contratos pendientes de aprobación",
+    "pendingapproval": "Pendientes de aprobación",
+    "finalizedcontracts": "Contratos finalizados",
+    "finalized": "Finalizados",
+    "hiredby": "Contratado por",
+    "professional": "Profesional",
+    "scheduleddate": "Fecha programada",
+    "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractactions": {
+      "approve": "Aprovar",
+      "reject": "Rechazar",
+      "finalize": "Finalizar",
+      "cancel": "Cancelar",
+      "rate": "Calificar",
+      "contact": "Contactar",
+      "details": "Detalles",
+      "reschedule": "Reprogramar",
+      "reviewreschedule": "Revisar reprogramación"
+    },
+    "modals": {
+      "cancel": {
+        "title": "¿Desea cancelar el contrato?",
+        "message": "Esta acción no se puede deshacer",
+        "affirmative": "Confirmar",
+        "negative": "Cerrar"
+      },
+      "reject": {
+        "title": "¿Desea rechazar el contrato?",
+        "message": "Esta acción no se puede deshacer",
+        "affirmative": "Rechazar",
+        "negative": "Cerrar"
+      },
+      "reschedule": {
+        "title": "¿Desea reprogramar el contrato?",
+        "message": "Esta acción sólo puede realizarse una vez por contrato",
+        "affirmative": "Reprogramar",
+        "negative": "Cerrar"
+      },
+      "reviewreschedule": {
+        "title": "Revisar reprogramación",
+        "message": "Si acepta la reprogramación no podrá reprogramar nuevamente. Si la rechaza se cancelará el contrato.",
+        "affirmative": "Aceptar",
+        "negative": "Rechazar"
+      },
+      "rate": {
+        "title": "Calificar servicio",
+        "affirmative": "Calificar",
+        "negative": "Cancelar"
+      },
+      "contact": {
+        "title": "Información de contacto",
+        "negative": "Cerrar"
+      },
+      "details": {
+        "title": "Detalles del trabajo a realizar",
+        "negative": "Cerrar"
+      }
+    },
+    "contractstate": {
+      "nocontractsheader": "No hay contratos para mostrar",
+      "noactivecontractsheader": "No hay contratos activos para mostrar",
+      "noactivecontractssubtitle": "Una vez que el profesional apruebe un contrato, se mostrará en esta sección",
+      "noactivecontractssubtitlepro": "Una vez que aceptes una petición, el contrato se mostrará en esta sección",
+      "nopendingcontractsheader": "No hay contratos pendientes de aprobación para mostrar",
+      "nopendingcontractssubtitle": "Aquí aparecerán los servicios recién contratados que requieren de la aprobación del profesional",
+      "nopendingcontractssubtitlepro": "Una vez que alguien te contrate, la petición se mostrará en esta sección",
+      "nofinalizedcontractsheader": "No hay contratos finalizados para mostrar",
+      "nofinalizedcontractssubtitle": "Aquí aparecerán los contratos que dé por finalizados o cancelados desde la sección de contratos activos",
+      "nocontractssubtitleclient": "Para tener contratos, primero solicite algún servicio",
+      "nocontractssubtitlepro": "Cuando un usuario solicite un servicio suyo, acá aparecerán los datos de la solicitud",
+      "clientcancelled": "El cliente canceló el contrato",
+      "procancelled": "El profesional canceló el contrato",
+      "youcancelled": "Usted canceló el contrato",
+      "prorejected": "El profesional rechazó la petición de contrato",
+      "clientrejected": "El cliente rechazó la petición de contrato",
+      "yourejected": "Usted rechazó la petición de contrato",
+      "finalized": "El contrato ha sido marcado como finalizado",
+      "clientrescheduled": "El cliente ha solicitado una reprogramación de la fecha del trabajo",
+      "prorescheduled": "El profesional ha solicitado una reprogramación de la fecha del trabajo",
+      "yourescheduled": "Esperando por la aprobación de la reprogramación de la fecha del trabajo"
+    }
+  },
+  "hirePage": {
+    "title": "Solicitar Servicio",
+    "detail": {
+      "title": "Detalles del Servicio"
+    },
+    "form": {
+      "title": "Datos de Contacto",
+      "required": "* campo obligatorio",
+      "desctitle": "Ingrese una descripción del trabajo que precisa*",
+      "description": "Descripción",
+      "descdefault": "Descripción del trabajo",
+      "datetitle": "Seleccione una fecha y hora para la realización del servicio*",
+      "datedisclamer": "Asegúrese de respetar los horarios de disponibilidad del profesional",
+      "dateplaceholder": "Fecha y hora",
+      "imagetitle": "Seleccione una imagen para subir",
+      "imagedisclamer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta 2 MB",
+      "submit": "Contratar"
+    }
+  },
+  "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
+  "locale": "es",
+  "account": {
+    "header": "Mi Cuenta",
+    "tabstitle": "Cuenta",
+    "data": {
+      "title": "Datos personales",
+      "imagealt": "Imagen del usuario",
+      "edit": "Editar datos",
+      "profilepic": "Cambiar foto de perfil"
+    },
+    "security": {
+      "title": "Inicio de sesión y contraseña",
+      "changepass": "Cambiar contraseña",
+      "oldpassword": "Contraseña actual",
+      "newpassword": "Nueva contraseña",
+      "repeatpassword": "Repita nueva contraseña"
+    },
+    "logout": {
+      "title": "Cerrar sesión",
+      "btn": "CERRAR SESIÓN"
+    },
+    "savechanges": "Guardar cambios"
+  }
+}

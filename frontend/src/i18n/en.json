@@ -1,0 +1,287 @@
+{
+  "navigation": {
+    "sections": {
+      "home": "Home",
+      "categories": "Categories",
+      "publish": "Publish",
+      "mycontracts": "My Contracts",
+      "analytics": "Analytics",
+      "explore": "Explore",
+      "login": "Login",
+      "register": "Register"
+    },
+    "search": "Search..."
+  },
+  "validationerror": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "phone": "Please enter a valid phone number",
+    "minlength": "Please enter at least {{length}} characters",
+    "maxlength": "Please enter less than {{length}} characters",
+    "passwordrepeat": "Passwords doesn't match",
+    "avatarfile": {
+      "size": "The file size must be less than {{size}}MB",
+      "type": "The file type must be PNG or JPG"
+    }
+  },
+  "home": {
+    "herotext": "Find and hire the service you're looking for",
+    "location": "Location",
+    "searchJob": "Search for a service...",
+    "steps": {
+      "location": "Choose your location",
+      "search": "Search for a service",
+      "hire": "Hire it!"
+    },
+    "explore": "Explore service categories",
+    "morecategories": "See more",
+    "newest": "Newest services",
+    "publishbanner": {
+      "question": "Do you wish to publish your services on our site?",
+      "answer": "Start now",
+      "button": "Publish"
+    }
+  },
+  "jobpost": {
+    "seereviews": "See reviews"
+  },
+  "jobcard": {
+    "noreviews": "No reviews",
+    "details": "View details",
+    "morezones": "{{firstZone}} and {{zoneCount}} more"
+  },
+  "jobtype": {
+    "plumbing": "Plumbing",
+    "electricity": "Electricity",
+    "carpentry": "Carpentry",
+    "catering": "Catering",
+    "painting": "Painting",
+    "teaching": "Teaching",
+    "cleaning": "Cleaning",
+    "babysitting": "Babysitting"
+  },
+  "professional": "Professional",
+  "client": "Client",
+  "avgrate": "Average rating",
+  "timeshired": "Times hired",
+  "workinghours": "Working hours",
+  "availablezones": "Available zones",
+  "availablepackages": "Available packages",
+  "pricelabel": "Price",
+  "hire": "Hire",
+  "packagedescription": "Package description",
+  "reviews": "Reviews",
+  "ratetype": {
+    "hourly": "${{amount}}/hour",
+    "tbd": "To be determined",
+    "oneTime": "${{amount}}"
+  },
+  "review": {
+    "jobreference": "From <semibold>{{title}}</semibold>"
+  },
+  "price": "{{value, price, ARS}}",
+  "date": "{{date, MM/DD/YYYY}}",
+  "time": "{{date, h:mm A}}",
+  "reviewcount": "({{count}})",
+  "completedcontracts": "Hired {{count}} times",
+  "completedcontractsonce": "Hired once",
+  "footer": {
+    "creators": "Site creators",
+    "contact": "Contact us",
+    "copyright": "© 2021 HireNet"
+  },
+  "login": {
+    "title": "Login",
+    "into": "Login to Hirenet",
+    "email": "Email address",
+    "password": "Password",
+    "rememberme": "Remember me",
+    "submit": "Log in",
+    "hasaccountquestion": "No account?",
+    "getaccount": "Register now",
+    "badcredentials": "User or password invalid",
+    "usernotverified": "Your account is not verified, please check your email or register again",
+    "error": "An error has occurred, please try again",
+    "inputemail": "Enter an email.",
+    "inputpass": "Enter a password.",
+    "recoverquestion": "Forgot Password?",
+    "recover": "Recover it"
+  },
+  "register": {
+    "title": "Register",
+    "into": "Create an account in HireNet",
+    "username": "Full name",
+    "phone": "Phone number",
+    "email": "Email address",
+    "password": "Password",
+    "passwordrepeat": "Repeat password",
+    "submit": "Register",
+    "alreadyhasaccount": "Already have an account?",
+    "login": "Log in",
+    "continue": "Continue",
+    "selectimage": "Choose a profile picture (optional)",
+    "filedisclaimer": "Image must be PNG or JPG and less than {{size}}MB in size",
+    "goback": "Go back",
+    "imagepreview": "Image preview",
+    "existingemail": "The email address is already in use",
+    "discardimage": "Discard"
+  },
+  "image": {
+    "clear": "Clear",
+    "invalid": "Invalid file, please try again",
+    "pick": "Choose file"
+  },
+  "recover": {
+    "title": "Recover password",
+    "instructions": "Enter the email address linked to your account",
+    "disclaimer": "If the address belongs to an existing account, an email will be sent with instructions for recovering your password.",
+    "submit": "Recover",
+    "success": "Request received! If the address is valid, an email will arrive shortly.",
+    "enternewpass": "Enter your new password",
+    "wronglink": "Invalid or expired link",
+    "wrongexplained": "This link is invalid. If you still need to change your password, try again from the login screen",
+    "login": "Log In",
+    "passwordChanged": "Password changed successfully!",
+    "changedinstructions": "Please log in to continue using the site."
+  },
+  "verifyemail": {
+    "title": "Email verification",
+    "success": "Email verified successfully!",
+    "pleaselogin": "Please, log in into your account to use the site.",
+    "login": "Log in",
+    "invalid": "Invalid or expired link",
+    "instructions": "This link is invalid. Please, register again if you don't have an account.",
+    "register": "Register"
+  },
+  "mycontracts": {
+    "contracts": "Contracts",
+    "hiredservices": "Hired services",
+    "myservices": "My services",
+    "activecontracts": "Active contracts",
+    "active": "Active",
+    "pendingapprovalcontracts": "Pending approval contracts",
+    "pendingapproval": "Pending approval",
+    "finalizedcontracts": "Finalized contracts",
+    "finalized": "Finalized",
+    "hiredby": "Hired by",
+    "professional": "Professional",
+    "scheduleddate": "Fecha programada",
+    "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractactions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "finalize": "Finalize",
+      "cancel": "Cancel",
+      "rate": "Rate",
+      "contact": "Contact",
+      "details": "Details",
+      "reschedule": "Reschedule",
+      "reviewreschedule": "Review rescheduling"
+    },
+    "modals": {
+      "cancel": {
+        "title": "Are you sure that you want to cancel this contract?",
+        "message": "This action cannot be undone",
+        "affirmative": "Confirm",
+        "negative": "Dismiss"
+      },
+      "reject": {
+        "title": "Are you sure that you want to reject this contract?",
+        "message": "This action cannot be undone",
+        "affirmative": "Reject",
+        "negative": "Dismiss"
+      },
+      "reschedule": {
+        "title": "Are you sure that you want to reschedule this contract?",
+        "message": "This action may only be performed once per contract",
+        "affirmative": "Reschedule",
+        "negative": "Dismiss"
+      },
+      "reviewreschedule": {
+        "title": "Review rescheduling",
+        "message": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
+        "affirmative": "Accept",
+        "negative": "Reject"
+      },
+      "rate": {
+        "title": "Rate service",
+        "affirmative": "Submit",
+        "negative": "Dismiss"
+      },
+      "contact": {
+        "title": "Contact information",
+        "negative": "Dismiss"
+      },
+      "details": {
+        "title": "Job details",
+        "negative": "Dismiss"
+      }
+    },
+    "contractstate": {
+      "nocontractsheader": "No contracts to show",
+      "nocontractssubtitleclient": "Hire a service to see your contracts here",
+      "nocontractssubtitlepro": "When one of your services is hired, a contract will appear here",
+      "noactivecontractsheader": "No active contracts to show",
+      "noactivecontractssubtitle": "Once a contract is approved by the professional, it will be displayed right here",
+      "noactivecontractssubtitlepro": "Once you accept a contract request, the contract will be shown right here",
+      "nopendingcontractsheader": "No pending approval contracts to show",
+      "nopendingcontractssubtitle": "All newly hired services will appear in this section, until it gets approved or rejected by the professional",
+      "nopendingcontractssubtitlepro": "Once you are hired contracts will be displayed here, waiting for your approval",
+      "nofinalizedcontractsheader": "No finalized contracts to show",
+      "nofinalizedontractssubtitle": "All finalized and cancelled contracts will appear in this section",
+      "clientcancelled": "The client cancelled the contract",
+      "procancelled": "The professional cancelled the contract",
+      "youcancelled": "You cancelled the contract",
+      "yourejected": "You rejected the contract",
+      "finalized": "The contract has concluded",
+      "prorejected": "The professional has rejected the contract request",
+      "clientrejected": "The client has rejected the contract request",
+      "clientrescheduled": "The client has requested a rescheduling of the contract",
+      "prorescheduled": "The professional has requested a rescheduling of the contract",
+      "yourescheduled": "Waiting for rescheduling approval"
+    }
+  },
+  "hirePage": {
+    "title": "Hire Service",
+    "detail": {
+      "title": "Service details"
+    },
+    "form": {
+      "title": "Contact Info",
+      "required": "* required field",
+      "desctitle": "Write a description for your required work*",
+      "description": "Description",
+      "descdefault": "Work description",
+      "datetitle": "Pick a date and time for the service delivery*",
+      "datedisclamer": "Be sure to respect the professional's available hours",
+      "dateplaceholder": "Date & time",
+      "imagetitle": "Choose an image to upload",
+      "imagedisclamer": "Image must be PNG or JPG and less than 2 MB in size",
+      "submit": "Hire"
+    }
+  },
+  "datetimeformat": "MMMM d, yyyy - h:mm aa",
+  "locale": "en",
+  "account": {
+    "header": "My account",
+    "tabstitle": "Account",
+    "data": {
+      "title": "Personal info",
+      "imagealt": "User image",
+      "edit": "Edit information",
+      "profilepic": "Change profile picture"
+    },
+    "security": {
+      "title": "Log in info",
+      "changepass": "Change password",
+      "oldpassword": "Current password",
+      "newpassword": "New password",
+      "repeatpassword": "Repeat new password"
+    },
+    "logout": {
+      "title": "Log out",
+      "btn": "LOG OUT"
+    },
+    "savechanges": "Save changes"
+  }
+}
