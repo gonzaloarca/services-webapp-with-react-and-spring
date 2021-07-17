@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
@@ -83,9 +84,16 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
-                .antMatchers("/api/v1/users/*/rankings","/job/delete","/job/*/packages/**", "/my-contracts/professional/**").hasRole("CLIENT")
-                .antMatchers("/rate-contract/*","/account/*","/hire/**","/my-contracts/**","/password-changed","/create-job-post/**").hasRole("CLIENT")
-                .antMatchers("/login", "/register","/token","/recover","/change-password").anonymous()
+                .antMatchers("/api/v1/users/*/rankings").hasRole("PROFESSIONAL")
+                .antMatchers(HttpMethod.POST,"/api/v1/job-posts").hasRole("CLIENT")
+                .antMatchers(HttpMethod.POST,"/api/v1/job-posts/**").hasRole("PROFESSIONAL")
+                .antMatchers(HttpMethod.PUT,"/api/v1/job-posts/**").hasRole("PROFESSIONAL")
+                .antMatchers("/api/v1/contracts/**","/api/v1/reviews/**","/api/v1/users/security").hasRole("CLIENT")
+                .antMatchers(HttpMethod.GET,"/api/v1/job-posts/**").permitAll()
+                .antMatchers("/api/v1/login", "/api/v1/categories/**","/api/v1/job-cards/**","/api/v1/zones/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/v1/users","/api/v1/users/*/verify","/api/v1/users/*/recover-account/**").anonymous()
+                .antMatchers(HttpMethod.GET,"/api/v1/users/*/rates","/api/v1/users/*/rankings").hasRole("PROFESSIONAL")
+                .antMatchers(HttpMethod.PUT,"/api/v1/users/**").hasRole("CLIENT")
                 .anyRequest().permitAll();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

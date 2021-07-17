@@ -93,7 +93,8 @@ public class SimpleJobContractService implements JobContractService {
     @Override
     public JobContractWithImage create(long clientId, long packageId, String description, String scheduledDate, Locale locale, String webpageUrl) {
         LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
-
+        if(jobPackageService.findByOnlyId(packageId).getJobPost().getUser().getId() == clientId)
+            throw new IllegalArgumentException("Cannot create contract to self");
         JobContractWithImage jobContract = jobContractDao.create(clientId, packageId, description, parsedDate);
         mailingService.sendContractEmail(jobContract, locale, webpageUrl);
         return jobContract;

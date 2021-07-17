@@ -23,9 +23,6 @@ public class NewJobPostDto {
     @NotEmpty
     private int[] zones;
 
-    @NotNull
-    @Min(0)
-    private Long proId;
 
     public Integer getJobType() {
         return jobType;
@@ -57,13 +54,5 @@ public class NewJobPostDto {
 
     public void setZones(int[] zones) {
         this.zones = zones;
-    }
-
-    public Long getProId() {
-        return proId;
-    }
-
-    public void setProId(Long proId) {
-        this.proId = proId;
     }
 }

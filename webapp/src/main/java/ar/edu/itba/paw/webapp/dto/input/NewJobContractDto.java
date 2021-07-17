@@ -20,10 +20,6 @@ public class NewJobContractDto {
 
     @NotNull
     @Min(0)
-    private Long clientId;
-
-    @NotNull
-    @Min(0)
     private Long jobPackageId;
 
     public String getDescription() {
@@ -40,14 +36,6 @@ public class NewJobContractDto {
 
     public void setScheduledDate(String scheduledDate) {
         this.scheduledDate = scheduledDate;
-    }
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
     }
 
     public Long getJobPackageId() {

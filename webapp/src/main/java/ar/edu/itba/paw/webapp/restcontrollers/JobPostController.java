@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UpdateFailException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditJobPackageDto;
 import ar.edu.itba.paw.webapp.dto.input.EditJobPostDto;
 import ar.edu.itba.paw.webapp.dto.input.NewJobPackageDto;
@@ -15,6 +16,7 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import org.slf4j.Logger;
@@ -29,6 +31,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,7 +46,7 @@ public class JobPostController {
     private JobPostService jobPostService;
 
     @Autowired
-    private ReviewService reviewService;
+    private UserService userService;
 
     @Autowired
     private JobPackageService jobPackageService;
@@ -63,7 +66,8 @@ public class JobPostController {
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response createJobPost(@Valid final NewJobPostDto newJobPostDto) {
-        long proId = newJobPostDto.getProId();
+        String proEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        long proId = userService.findByEmail(proEmail).orElseThrow(UserNotFoundException::new).getId();
         String title = newJobPostDto.getTitle();
         String availableHours = newJobPostDto.getAvailableHours();
         int jobType = newJobPostDto.getJobType();
@@ -151,13 +155,22 @@ public class JobPostController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response packagesByPostId(@PathParam("postId") final long postId,
+                                     @QueryParam("role") final String role,
                                      @QueryParam("page") @DefaultValue("1") int page) {
         if (page < 1)
             page = 1;
 
         jobPostControllerLogger.debug("Finding packages for post: {}", postId);
-        int maxPage = paginationService.findJobPackageByPostIdMaxPage(postId);
-        final List<JobPackageDto> packageDtoList = jobPackageService.findByPostId(postId, page - 1)
+        int maxPage;
+        List<JobPackage> jobPackages;
+        if (role != null && role.equalsIgnoreCase("PROFESSIONAL")) {
+            jobPackages = jobPackageService.findByPostId(postId, page - 1);
+            maxPage = paginationService.findJobPackageByPostIdMaxPage(postId);
+        }else{
+            jobPackages = jobPackageService.findByPostIdOnlyActive(postId,page - 1);
+            maxPage = paginationService.findByPostIdOnlyActiveMaxPage(postId);
+        }
+        final List<JobPackageDto> packageDtoList = jobPackages
                 .stream().map(pack -> JobPackageDto.fromJobPackage(pack, uriInfo))
                 .collect(Collectors.toList());
 
@@ -196,9 +209,9 @@ public class JobPostController {
         String price = editJobPackageDto.getPrice();
         Integer rateType = editJobPackageDto.getRateType();
         Boolean isActive = null;
-        if(editJobPackageDto.getIsActive().equalsIgnoreCase("false"))
+        if (editJobPackageDto.getIsActive().equalsIgnoreCase("false"))
             isActive = false;
-        else if(editJobPackageDto.getIsActive().equalsIgnoreCase("true"))
+        else if (editJobPackageDto.getIsActive().equalsIgnoreCase("true"))
             isActive = true;
 
         jobPostControllerLogger.debug(

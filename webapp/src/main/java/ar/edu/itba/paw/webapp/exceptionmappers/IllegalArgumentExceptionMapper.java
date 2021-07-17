@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.exceptionmappers;
 
+import org.glassfish.jersey.server.ParamException;
+
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

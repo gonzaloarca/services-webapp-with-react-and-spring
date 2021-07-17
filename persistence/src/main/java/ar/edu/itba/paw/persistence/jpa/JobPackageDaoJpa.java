@@ -78,8 +78,35 @@ public class JobPackageDaoJpa implements JobPackageDao {
 
     @Override
     public int findByPostIdMaxPage(long id) {
+        Long size = em.createQuery("SELECT COUNT(*) FROM JobPackage jpackage WHERE jpackage.jobPost.id = :id", Long.class)
+                .setParameter("id", id).getSingleResult();
+        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public List<JobPackage> findByPostIdOnlyActive(long postId, int page) {
+        Query nativeQuery = em.createNativeQuery("SELECT package_id FROM job_package WHERE post_id = :id")
+                .setParameter("id", postId);
+
+        List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
+
+        return em.createQuery("FROM JobPackage AS jpack WHERE jpack.id IN :filteredIds AND jpack.isActive = TRUE", JobPackage.class)
+                .setParameter("filteredIds", (filteredIds.isEmpty()) ? null : filteredIds)
+                .getResultList().stream().sorted(
+                        //Ordenamos los elementos segun el orden de filteredIds
+                        Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
+                ).collect(Collectors.toList());
+    }
+
+    @Override
+    public int findByPostIdOnlyActiveMaxPage(long id) {
         Long size = em.createQuery("SELECT COUNT(*) FROM JobPackage jpackage WHERE jpackage.jobPost.id = :id AND jpackage.isActive = TRUE", Long.class)
                 .setParameter("id", id).getSingleResult();
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
+    }
+
+    @Override
+    public JobPackage findByOnlyId(long packageId) {
+        return em.find(JobPackage.class,packageId);
     }
 }

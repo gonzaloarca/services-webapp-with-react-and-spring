@@ -99,4 +99,9 @@ public class SimplePaginationService implements PaginationService {
     public int findJobPackageByPostIdMaxPage(long id) {
         return jobPackageService.findByPostIdMaxPage(id);
     }
+
+    @Override
+    public int findByPostIdOnlyActiveMaxPage(long postId) {
+        return jobPackageService.findByPostIdOnlyActiveMaxPage(postId);
+    }
 }

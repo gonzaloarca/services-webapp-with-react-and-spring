@@ -26,4 +26,6 @@ public interface PaginationService {
     int findRelatedJobCardsMaxPage(long professional_id);
 
     int findJobPackageByPostIdMaxPage(long id);
+
+    int findByPostIdOnlyActiveMaxPage(long postId);
 }
