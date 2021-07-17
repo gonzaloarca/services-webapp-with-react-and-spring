@@ -341,7 +341,7 @@
     "sorry": "Disculpe las molestias",
     "orderby": "Ordenar por"
   },
-  "nonselected": "Ninguno"
+  "nonselected": "Ninguno",
   "analytics": {
     "title": "Estadísticas",
     "number": "N°{{rank}}",

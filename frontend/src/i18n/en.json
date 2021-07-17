@@ -337,7 +337,7 @@
     "sorry": "Sorry for the inconvenience",
     "orderby": "Order by"
   },
-  "nonselected": "None"
+  "nonselected": "None",
   "analytics": {
     "title": "Analytics",
     "number": "No.{{rank}}",
