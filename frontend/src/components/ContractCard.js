@@ -1,4 +1,5 @@
-import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt } from '@fortawesome/free-regular-svg-icons';
+import { faCube, faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Avatar,
@@ -19,6 +20,7 @@ import {
   Close,
   Email,
   Error,
+  LocalOffer,
   Person,
   Phone,
   Subject,
@@ -34,6 +36,7 @@ import {
   contractStateDataMap,
 } from '../utils/contractState';
 import createDate from '../utils/createDate';
+import packagePriceFormatter from '../utils/packagePriceFormatter';
 import contractCardStyles from './ContractCardStyles';
 import RatingDisplay from './RatingDisplay';
 
@@ -76,7 +79,9 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenCancel(false),
       onAffirmative: () => setOpenCancel(false),
       title: t('mycontracts.modals.cancel.title'),
-      body: t('mycontracts.modals.cancel.message'),
+      body: (
+        <PlainTextBody>{t('mycontracts.modals.cancel.message')}</PlainTextBody>
+      ),
       negativeLabel: t('mycontracts.modals.cancel.negative'),
       affirmativeLabel: t('mycontracts.modals.cancel.affirmative'),
       affirmativeColor: themeUtils.colors.red,
@@ -87,7 +92,9 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenReject(false),
       onAffirmative: () => setOpenReject(false),
       title: t('mycontracts.modals.reject.title'),
-      body: t('mycontracts.modals.reject.message'),
+      body: (
+        <PlainTextBody>{t('mycontracts.modals.reject.message')}</PlainTextBody>
+      ),
       negativeLabel: t('mycontracts.modals.reject.negative'),
       affirmativeLabel: t('mycontracts.modals.reject.affirmative'),
       affirmativeColor: themeUtils.colors.red,
@@ -98,7 +105,11 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenReschedule(false),
       onAffirmative: () => setOpenReschedule(false),
       title: t('mycontracts.modals.reschedule.title'),
-      body: t('mycontracts.modals.reschedule.message'),
+      body: (
+        <PlainTextBody>
+          {t('mycontracts.modals.reschedule.message')}
+        </PlainTextBody>
+      ),
       negativeLabel: t('mycontracts.modals.reschedule.negative'),
       affirmativeLabel: t('mycontracts.modals.reschedule.affirmative'),
       affirmativeColor: themeUtils.colors.yellow,
@@ -132,6 +143,10 @@ const ContractCard = ({ contract, isOwner }) => {
       title: t('mycontracts.modals.details.title'),
       body: (
         <DetailsBody
+          packageTitle={contract.packageTitle}
+          price={contract.price}
+          rateType={contract.rateType}
+          creationDate={contract.creationDate}
           text={contract.jobContract.description}
           image={contract.jobContract.image}
         />
@@ -319,7 +334,10 @@ const HirenetModal = ({
         </div>
         <h2 className="font-semibold px-4 text-lg">{title}</h2>
       </div>
-      <DialogContent>{body}</DialogContent>
+      <Divider />
+
+      <DialogContent className="p-0">{body}</DialogContent>
+      <Divider />
       <DialogActions>
         <Button style={{ color: negativeColor }} onClick={onNegative}>
           {negativeLabel}
@@ -338,26 +356,73 @@ const HirenetModal = ({
   );
 };
 
-const DetailsBody = ({ text, image }) => {
+const PlainTextBody = ({ children }) => (
+  <div className="p-6 text-sm font-medium">{children}</div>
+);
+
+const DetailsBody = ({
+  packageTitle,
+  rateType,
+  price,
+  creationDate,
+  text,
+  image,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
   return (
     <div className={classes.detailsModalBody}>
+      {/* Package */}
+      <div className={classes.detailsHeaderContainer}>
+        <FontAwesomeIcon className="text-lg" icon={faCube} />
+        <h3 className={classes.detailsHeader}>{t('mycontracts.package')}</h3>
+      </div>
+      <div className={classes.packageContainer}>
+        <p className={classes.packageTitle}>{packageTitle}</p>
+        <div className="flex justify-end w-full">
+          <div className={classes.priceContainer}>
+            <LocalOffer />
+            <p className="text-sm ml-2">
+              {packagePriceFormatter(t, rateType, price)}
+            </p>
+          </div>
+        </div>
+      </div>
+      {/* Fecha de creación */}
+      <div className={classes.detailsHeaderContainer}>
+        <FontAwesomeIcon className="text-lg" icon={faCalendarAlt} />
+        <h3 className={classes.detailsHeader}>
+          {t('mycontracts.creationdate')}
+        </h3>
+      </div>
+      <div
+        className={clsx(
+          classes.detailsDescription,
+          'flex',
+          'justify-center',
+          'font-semibold',
+          'text-base'
+        )}
+      >
+        {t('datetime', { date: createDate(creationDate) })}
+      </div>
+      {/* Imagen */}
       {image && (
         <>
-          <div className="flex w-full mb-2 items-center">
+          <div className={classes.detailsHeaderContainer}>
             <FontAwesomeIcon className="text-lg" icon={faImage} />
-            <h3 className="ml-2 font-semibold text-base">
+            <h3 className={classes.detailsHeader}>
               {t('mycontracts.contractimage')}
             </h3>
           </div>
           <img className={classes.detailsImage} src={image} alt="" />
         </>
       )}
-      <div className="flex w-full mt-6 mb-2 items-center">
+      {/* Descripcion */}
+      <div className={classes.detailsHeaderContainer}>
         <Subject />
-        <h3 className="ml-2 font-semibold text-base">
+        <h3 className={classes.detailsHeader}>
           {t('mycontracts.contractdescription')}
         </h3>
       </div>
@@ -370,7 +435,8 @@ const ContactBody = ({ username, email, phone }) => {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className="p-4">
+      {/* Nombre */}
       <Card
         className="mb-2"
         style={{ backgroundColor: themeUtils.colors.aqua }}
@@ -380,6 +446,7 @@ const ContactBody = ({ username, email, phone }) => {
           <div className={classes.contactFieldValue}>{username}</div>
         </div>
       </Card>
+      {/* Telefono */}
       <Card
         className="mb-2"
         style={{ backgroundColor: themeUtils.colors.lightBlue }}
@@ -389,6 +456,7 @@ const ContactBody = ({ username, email, phone }) => {
           <div className={classes.contactFieldValue}>{phone}</div>
         </div>
       </Card>
+      {/* Email */}
       <Card style={{ backgroundColor: themeUtils.colors.orange }}>
         <div className={classes.contactField}>
           <Email className={classes.contactIcon} />
@@ -405,7 +473,7 @@ const RateBody = () => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <div className="p-4">
       <div className={classes.ratingContainer}>
         <h2 className="font-bold text-lg">{t('mycontracts.rate.header')}</h2>
         <WhiteRating
@@ -436,7 +504,7 @@ const RateBody = () => {
         InputProps={{ classes: { input: classes.ratingInput } }}
         placeholder={t('mycontracts.rate.summarizeplaceholder')}
       />
-    </>
+    </div>
   );
 };
 
@@ -445,17 +513,15 @@ const ReviewRescheduleBody = ({ newDate }) => {
   const { t } = useTranslation();
 
   return (
-    <>
-      <div className={classes.rescheduleContainer}>
-        <CalendarDisplay date={newDate} size={200} />
-        <div className={classes.rescheduleDisclaimer}>
-          <Error className={classes.disclaimerIcon} />
-          <p className="font-medium text-sm ml-2">
-            {t('mycontracts.reviewreschedule.disclaimer')}
-          </p>
-        </div>
+    <div className={classes.rescheduleContainer}>
+      <CalendarDisplay date={newDate} size={200} />
+      <div className={classes.rescheduleDisclaimer}>
+        <Error className={classes.disclaimerIcon} />
+        <p className="font-medium text-sm ml-2">
+          {t('mycontracts.reviewreschedule.disclaimer')}
+        </p>
       </div>
-    </>
+    </div>
   );
 };
 

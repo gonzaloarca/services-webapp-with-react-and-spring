@@ -82,6 +82,7 @@
   "price": "{{value, price, ARS}}",
   "date": "{{date, MM/DD/YYYY}}",
   "time": "{{date, h:mm A}}",
+  "datetime": "{{date, DD/MM/YYYY h:mm A}}",
   "reviewcount": "({{count}})",
   "completedcontracts": "Hired {{count}} times",
   "completedcontractsonce": "Hired once",
@@ -169,6 +170,8 @@
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
     "contractimage": "Job image",
     "contractdescription": "Job description",
+    "package": "Hired package",
+    "creationdate": "Contract creation date",
     "rate": {
       "header": "How would you rate your experience with this service?",
       "tellus": "Tell us about your experience",

@@ -19,6 +19,14 @@ export const themeUtils = {
     containerShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
     cardHoverShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
   },
+  fontSizes: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
+    h2: '1.25rem',
+    h1: '1.5rem',
+  },
 };
 
 export const LightenDarkenColor = (color, amt) => {

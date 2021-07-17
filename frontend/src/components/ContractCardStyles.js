@@ -120,9 +120,23 @@ const contractCardStyles = (theme) => ({
   detailsModalBody: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center',
     color: 'black',
+    padding: '10px 20px',
+    height: 450,
+    overflowY: 'scroll',
+    overflowX: 'none',
+  },
+  detailsHeaderContainer: {
+    display: 'flex',
+    width: '100%',
+    margin: '30px 0 10px 0',
+    alignItems: 'center',
+  },
+  detailsHeader: {
+    fontSize: themeUtils.fontSizes.base,
+    marginLeft: 10,
+    fontWeight: 600,
   },
   detailsImage: {
     height: 300,
@@ -130,6 +144,7 @@ const contractCardStyles = (theme) => ({
     objectFit: 'contain',
     borderRadius: 10,
     backgroundColor: themeUtils.colors.blue,
+    boxShadow: themeUtils.shadows.containerShadow,
   },
   detailsDescription: {
     backgroundColor: themeUtils.colors.lightGrey,
@@ -138,6 +153,7 @@ const contractCardStyles = (theme) => ({
     width: '100%',
     padding: 10,
     borderRadius: 10,
+    boxShadow: themeUtils.shadows.containerShadow,
   },
   contactField: {
     display: 'flex',
@@ -182,6 +198,7 @@ const contractCardStyles = (theme) => ({
   },
   rescheduleContainer: {
     display: 'flex',
+    padding: 20,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -222,6 +239,36 @@ const contractCardStyles = (theme) => ({
     border: '2px solid ' + themeUtils.colors.yellow,
     padding: 10,
     boxShadow: themeUtils.shadows.containerShadow,
+  },
+  packageContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: themeUtils.colors.blue,
+    borderRadius: 5,
+    color: 'white',
+    fontWeight: 600,
+    padding: 10,
+    boxShadow: themeUtils.shadows.containerShadow,
+  },
+  packageTitle: {
+    WebkitLineClamp: 3,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    overflowWrap: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '100%',
+  },
+  priceContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    color: themeUtils.colors.blue,
+    borderRadius: 10,
+    padding: 5,
   },
 });
 

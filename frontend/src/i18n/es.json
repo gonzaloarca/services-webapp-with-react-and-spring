@@ -82,6 +82,7 @@
   "price": "{{value, price, ARS}}",
   "date": "{{date, DD/MM/YYYY}}",
   "time": "{{date, H:mm}} hs",
+  "datetime": "{{date, DD/MM/YYYY H:mm}} hs",
   "reviewcount": "({{count}})",
   "completedcontracts": "Contratado {{count}} veces",
   "completedcontractsonce": "Contratado 1 vez",
@@ -173,6 +174,8 @@
     "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
     "contractimage": "Imagen del trabajo requerido",
     "contractdescription": "Descripción del trabajo requerido",
+    "package": "Paquete contratado",
+    "creationdate": "Fecha de creación del contrato",
     "rate": {
       "header": "¿Cómo calificarías tu experiencia con el servicio?",
       "tellus": "Cuente un poco sobre la experiencia",
