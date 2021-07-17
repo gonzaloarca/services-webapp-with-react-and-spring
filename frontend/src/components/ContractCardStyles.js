@@ -106,6 +106,17 @@ const contractCardStyles = (theme) => ({
     justifyContent: 'flex-end',
     padding: 7,
   },
+  timesHired: {
+    'backgroundColor': '#f5f5f5',
+    'borderRadius': '18px',
+    'color': 'gray',
+    'padding': '6px 12px',
+    'margin': '2px',
+    'marginTop': '2px',
+    'textAlign': 'center',
+    'lineHeight': '1',
+    'width': 'max-content',
+  },
 });
 
 export default contractCardStyles;

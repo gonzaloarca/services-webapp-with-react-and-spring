@@ -283,5 +283,14 @@
       "btn": "LOG OUT"
     },
     "savechanges": "Save changes"
-  }
+  },
+  "profile": {
+    "rating": "Average rating",
+    "countsingular": "Time hired",
+    "countplural": "Times hired",
+    "services": "Services ({{count}})",
+    "reviews": "Reviews ({{count}})"
+  },
+  "timesHiredSingular": "Hired 1 time",
+  "timesHiredPlural": "Hired {{times}} times"
 }

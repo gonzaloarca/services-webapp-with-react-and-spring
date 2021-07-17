@@ -22,7 +22,7 @@ const RatingDisplay = ({
   const { t } = useTranslation();
 
   return (
-    <div className={clsx('flex', className)} style={style}>
+    <div className={clsx('flex items-center', className)} style={style}>
       <Rating precision={0.5} readOnly value={avgRate} />
       <p className={classes.reviewsCount}>
         {t('reviewcount', { count: reviewsCount })}

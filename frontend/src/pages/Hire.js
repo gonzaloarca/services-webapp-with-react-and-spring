@@ -12,9 +12,9 @@ import styles from '../styles';
 import clsx from 'clsx';
 import SectionHeader from '../components/SectionHeader';
 import { useTranslation } from 'react-i18next';
-import { AttachMoney, LocationOn, Schedule } from '@material-ui/icons';
+import { LocalOffer, LocationOn, WatchLater, Work } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBoxOpen, faBriefcase } from '@fortawesome/free-solid-svg-icons';
+import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import * as Yup from 'yup';
 import {
   Formik,
@@ -27,6 +27,7 @@ import {
 import DatePicker, { registerLocale } from 'react-datepicker';
 import { es } from 'date-fns/esm/locale';
 import { themeUtils } from '../theme';
+import PriceTag from '../components/PriceTag';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -142,15 +143,6 @@ const useStyles = makeStyles((theme) => ({
     height: '40px !important',
     borderRadius: '40px !important',
     objectFit: 'cover',
-  },
-  priceTag: {
-    backgroundColor: '#485696',
-    color: 'white',
-    margin: '5px 0 5px 0',
-    fontSize: 'larger',
-    fontWeight: 'bold',
-    padding: '5px 10px 5px 10px',
-    borderRadius: '15px',
   },
   formSectionTitle: {
     margin: '5px 0 10px 0',
@@ -389,11 +381,7 @@ const PackageInfo = () => {
         src={post.images[0]}
       />
       <div className="flex flex-col px-5">
-        <DetailRow
-          text={post.title}
-          icon={<FontAwesomeIcon icon={faBriefcase} size="2x" />}
-          divider
-        />
+        <DetailRow text={post.title} icon={<Work fontSize="large" />} divider />
         <DetailRow
           text={pack.title}
           icon={<FontAwesomeIcon icon={faBoxOpen} size="2x" />}
@@ -418,12 +406,12 @@ const PackageInfo = () => {
         />
         <DetailRow
           text={post.availableHours}
-          icon={<Schedule fontSize="large" />}
+          icon={<WatchLater fontSize="large" />}
           divider
         />
         <DetailRow
-          text={<PriceTag />}
-          icon={<AttachMoney fontSize="large" />}
+          text={<PriceTag rateType={pack.rateType} price={pack.price} />}
+          icon={<LocalOffer fontSize="large" />}
         />
       </div>
     </div>
@@ -468,33 +456,6 @@ const ZonesText = () => {
   });
 
   return result;
-};
-
-const PriceTag = () => {
-  const classes = useStyles();
-  const { t } = useTranslation();
-  let priceStr;
-
-  //TODO: verificar si esta logica todavia se cumple
-  switch (pack.rateType.description) {
-    case 'HOURLY':
-      priceStr = t('ratetype.hourly', { amount: pack.price });
-      break;
-    case 'TBD':
-      priceStr = t('ratetype.tbd');
-      break;
-    case 'ONE_TIME':
-      priceStr = t('ratetype.oneTime', { amount: pack.price });
-      break;
-    default:
-      break;
-  }
-
-  return (
-    <div className="flex">
-      <div className={classes.priceTag}>{priceStr}</div>
-    </div>
-  );
 };
 
 export default Hire;

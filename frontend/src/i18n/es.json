@@ -287,5 +287,14 @@
       "btn": "CERRAR SESIÓN"
     },
     "savechanges": "Guardar cambios"
-  }
+  },
+  "profile": {
+    "rating": "Calificación promedio",
+    "countsingular": "Vez contratado",
+    "countplural": "Veces contratado",
+    "services": "Servicios ({{count}})",
+    "reviews": "Reseñas ({{count}})"
+  },
+  "timesHiredSingular": "Contratado 1 vez",
+  "timesHiredPlural": "Contratado {{times}} veces"
 }
