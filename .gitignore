@@ -58,3 +58,5 @@ logs/
 
 logback-test.xml
 
+
+frontend/node/
