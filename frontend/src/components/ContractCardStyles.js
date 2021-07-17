@@ -6,8 +6,6 @@ const contractCardStyles = (theme) => ({
   },
   contractTitle: {
     fontSize: '1.2rem',
-    lineHeight: '1.5rem',
-    height: '3rem',
     fontWeight: 700,
     width: '100%',
     WebkitLineClamp: 2,

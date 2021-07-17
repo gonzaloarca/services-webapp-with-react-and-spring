@@ -3,6 +3,11 @@ import {
   Avatar,
   Button,
   Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Grid,
   makeStyles,
@@ -40,8 +45,64 @@ const ContractStateHeader = ({ contract, isOwner }) => {
 };
 
 const ContractCard = ({ contract, isOwner }) => {
+  const [openCancel, setOpenCancel] = React.useState(false);
+  const [openReject, setOpenReject] = React.useState(false);
+  const [openReschedule, setOpenReschedule] = React.useState(false);
+  const [openReviewReschedule, setOpenReviewReschedule] = React.useState(false);
+  const [openRate, setOpenRate] = React.useState(false);
+  const [openDetails, setOpenDetails] = React.useState(false);
+  const [openContact, setOpenContact] = React.useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const modalStateMap = {
+    'cancel': {
+      open: openCancel,
+      openModal: () => setOpenCancel(true),
+      onNegative: () => setOpenCancel(false),
+      onAffirmative: () => setOpenCancel(false),
+    },
+    'reject': {
+      open: openReject,
+      openModal: () => setOpenReject(true),
+      onNegative: () => setOpenReject(false),
+      onAffirmative: () => setOpenReject(false),
+    },
+    'reschedule': {
+      open: openReschedule,
+      openModal: () => setOpenReschedule(true),
+      onNegative: () => setOpenReschedule(false),
+      onAffirmative: () => setOpenReschedule(false),
+    },
+    'reviewreschedule': {
+      open: openReviewReschedule,
+      openModal: () => setOpenReviewReschedule(true),
+      onNegative: () => setOpenReviewReschedule(false),
+      onAffirmative: () => setOpenReviewReschedule(false),
+    },
+    'rate': {
+      open: openRate,
+      openModal: () => setOpenRate(true),
+      onNegative: () => setOpenRate(false),
+      onAffirmative: () => setOpenRate(false),
+    },
+    'details': {
+      open: openDetails,
+      openModal: () => setOpenDetails(true),
+      onNegative: () => setOpenDetails(false),
+    },
+    'contact': {
+      open: openContact,
+      openModal: () => setOpenContact(true),
+      onNegative: () => setOpenContact(false),
+    },
+  };
+
+  console.log('STATE', contract.state);
+  console.log(
+    'contractActions',
+    contractActionsMap[contractStateDataMap[contract.state.description].state]
+  );
 
   return (
     <>
@@ -137,20 +198,41 @@ const ContractCard = ({ contract, isOwner }) => {
         <div className={classes.contractActions}>
           {contractActionsMap[
             contractStateDataMap[contract.state.description].state
-          ].map(({ label, onClick, icon, color, roles }, index) =>
+          ].map(({ label, onClick, icon, color, roles, action }, index) =>
             (isOwner && roles.includes('PROFESSIONAL')) ||
             (!isOwner && roles.includes('CLIENT')) ? (
-              <Button
-                className="ml-2"
-                key={index}
-                onClick={onClick}
-                style={{ color: color }}
-                startIcon={
-                  <FontAwesomeIcon icon={icon} style={{ color: color }} />
-                }
-              >
-                {t(label)}
-              </Button>
+              <>
+                <Button
+                  className="ml-2"
+                  key={index}
+                  onClick={
+                    modalStateMap[action]
+                      ? modalStateMap[action].openModal
+                      : onClick
+                  }
+                  style={{ color: color }}
+                  startIcon={
+                    <FontAwesomeIcon icon={icon} style={{ color: color }} />
+                  }
+                >
+                  {t(label)}
+                </Button>
+                {modalStateMap[action] && (
+                  <WarningModal
+                    title={t('mycontracts.modals.' + action + '.title')}
+                    body={t('mycontracts.modals.' + action + '.message')}
+                    open={modalStateMap[action].open}
+                    onNegative={modalStateMap[action].onNegative}
+                    onAffirmative={modalStateMap[action].onAffirmative}
+                    affirmativeLabel={t(
+                      'mycontracts.modals.' + action + '.affirmative'
+                    )}
+                    negativeLabel={t(
+                      'mycontracts.modals.' + action + '.negative'
+                    )}
+                  />
+                )}
+              </>
             ) : (
               <></>
             )
@@ -158,6 +240,33 @@ const ContractCard = ({ contract, isOwner }) => {
         </div>
       </Card>
     </>
+  );
+};
+
+const WarningModal = ({
+  open,
+  title,
+  body,
+  onNegative,
+  onAffirmative,
+  affirmativeLabel,
+  negativeLabel,
+}) => {
+  return (
+    <Dialog open={open} onClose={onNegative}>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>{body}</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onNegative}>{negativeLabel}</Button>
+        {onAffirmative && (
+          <Button onClick={onAffirmative} autoFocus>
+            {affirmativeLabel}
+          </Button>
+        )}
+      </DialogActions>
+    </Dialog>
   );
 };
 

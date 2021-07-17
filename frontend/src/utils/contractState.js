@@ -72,12 +72,10 @@ export const contractActionsMap = {
   'ACTIVE': [
     {
       label: 'mycontracts.contractactions.finalize',
-      onClick: () => {
-        console.log('FINALIZING CONTRACT');
-      },
       icon: faCheckCircle,
       color: themeUtils.colors.green,
       roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'finalize',
     },
     {
       label: 'mycontracts.contractactions.cancel',
@@ -87,15 +85,14 @@ export const contractActionsMap = {
       icon: faTimes,
       color: themeUtils.colors.red,
       roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'cancel',
     },
     {
       label: 'mycontracts.contractactions.reschedule',
-      onClick: () => {
-        console.log('RESCHEDULING CONTRACT');
-      },
       icon: faCalendarAlt,
       color: themeUtils.colors.yellow,
       roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'reschedule',
     },
   ],
   'PENDING': [
@@ -107,62 +104,51 @@ export const contractActionsMap = {
       icon: faCheckCircle,
       color: themeUtils.colors.green,
       roles: ['PROFESSIONAL'],
+      action: 'approve',
     },
     {
       label: 'mycontracts.contractactions.reject',
-      onClick: () => {
-        console.log('REJECTING CONTRACT');
-      },
       icon: faTimes,
       color: themeUtils.colors.red,
       roles: ['PROFESSIONAL'],
+      action: 'reject',
     },
     {
       label: 'mycontracts.contractactions.reschedule',
-      onClick: () => {
-        console.log('RESCHEDULING CONTRACT');
-      },
       icon: faCalendarAlt,
       color: themeUtils.colors.yellow,
       roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'reschedule',
     },
     {
       label: 'mycontracts.contractactions.reviewreschedule',
-      onClick: () => {
-        console.log('REVIEWING CONTRACT RESCHEDULING');
-      },
       icon: faCalendarAlt,
       color: themeUtils.colors.yellow,
       roles: ['CLIENT'],
+      action: 'reviewreschedule',
     },
   ],
   'FINALIZED': [
     {
       label: 'mycontracts.contractactions.details',
-      onClick: () => {
-        console.log('OPENING CONTRACT DETAILS');
-      },
       icon: faInfoCircle,
       color: themeUtils.colors.blue,
       roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'details',
     },
     {
       label: 'mycontracts.contractactions.contact',
-      onClick: () => {
-        console.log('OPENING USER DETAILS');
-      },
       icon: faUserCircle,
       color: themeUtils.colors.aqua,
       roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'contact',
     },
     {
       label: 'mycontracts.contractactions.rate',
-      onClick: () => {
-        console.log('RATING CONTRACT');
-      },
       icon: faStar,
       color: themeUtils.colors.yellow,
       roles: ['CLIENT'],
+      action: 'rate',
     },
   ],
 };

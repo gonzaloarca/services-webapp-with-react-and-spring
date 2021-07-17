@@ -178,6 +178,45 @@
       "reschedule": "Reschedule",
       "reviewreschedule": "Review rescheduling"
     },
+    "modals": {
+      "cancel": {
+        "title": "Are you sure that you want to cancel this contract?",
+        "message": "This action cannot be undone",
+        "affirmative": "Confirm",
+        "negative": "Dismiss"
+      },
+      "reject": {
+        "title": "Are you sure that you want to reject this contract?",
+        "message": "This action cannot be undone",
+        "affirmative": "Reject",
+        "negative": "Dismiss"
+      },
+      "reschedule": {
+        "title": "Are you sure that you want to reschedule this contract?",
+        "message": "This action may only be performed once per contract",
+        "affirmative": "Reschedule",
+        "negative": "Dismiss"
+      },
+      "reviewreschedule": {
+        "title": "Review rescheduling",
+        "message": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
+        "affirmative": "Accept",
+        "negative": "Reject"
+      },
+      "rate": {
+        "title": "Rate service",
+        "affirmative": "Submit",
+        "negative": "Dismiss"
+      },
+      "contact": {
+        "title": "Contact information",
+        "negative": "Dismiss"
+      },
+      "details": {
+        "title": "Job details",
+        "negative": "Dismiss"
+      }
+    },
     "contractstate": {
       "nocontractsheader": "No contracts to show",
       "nocontractssubtitleclient": "Hire a service to see your contracts here",

@@ -182,6 +182,45 @@
       "reschedule": "Reprogramar",
       "reviewreschedule": "Revisar reprogramación"
     },
+    "modals": {
+      "cancel": {
+        "title": "¿Desea cancelar el contrato?",
+        "message": "Esta acción no se puede deshacer",
+        "affirmative": "Confirmar",
+        "negative": "Cerrar"
+      },
+      "reject": {
+        "title": "¿Desea rechazar el contrato?",
+        "message": "Esta acción no se puede deshacer",
+        "affirmative": "Rechazar",
+        "negative": "Cerrar"
+      },
+      "reschedule": {
+        "title": "¿Desea reprogramar el contrato?",
+        "message": "Esta acción sólo puede realizarse una vez por contrato",
+        "affirmative": "Reprogramar",
+        "negative": "Cerrar"
+      },
+      "reviewreschedule": {
+        "title": "Revisar reprogramación",
+        "message": "Si acepta la reprogramación no podrá reprogramar nuevamente. Si la rechaza se cancelará el contrato.",
+        "affirmative": "Aceptar",
+        "negative": "Rechazar"
+      },
+      "rate": {
+        "title": "Calificar servicio",
+        "affirmative": "Calificar",
+        "negative": "Cancelar"
+      },
+      "contact": {
+        "title": "Información de contacto",
+        "negative": "Cerrar"
+      },
+      "details": {
+        "title": "Detalles del trabajo a realizar",
+        "negative": "Cerrar"
+      }
+    },
     "contractstate": {
       "nocontractsheader": "No hay contratos para mostrar",
       "noactivecontractsheader": "No hay contratos activos para mostrar",
