@@ -97,7 +97,7 @@ public class SimpleJobCardService implements JobCardService {
 
     @Override
     public int findAllMaxPage() {
-        return jobCardDao.findAllMaxPage();
+        return jobPostService.findAllMaxPage();
     }
 
     @Override

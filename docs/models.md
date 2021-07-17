@@ -150,6 +150,34 @@ En un form con key "file" viajara la imagen
     "zones": [ 25,20,9,10, 11, 12]
 }
 ```
+### GET all: {{baseUrl}}/job-posts
+```json
+[
+    {
+        "active": true,
+        "availableHours": "Todo los dias",
+        "creationDate": "2021-05-02T18:22:13.338478",
+        "id": 10,
+        "images": [
+            "http://localhost:8080/api/v1/job-posts/10/images/15"
+        ],
+        "jobType": {
+            "description": "Electricity",
+            "id": 1
+        },
+        "packages": "http://localhost:8080/api/v1/job-posts/packages",
+        "professional": "http://localhost:8080/api/v1/users/6",
+        "reviews": "http://localhost:8080/api/v1/reviews?postId=10",
+        "title": "Fran",
+        "zones": [
+            {
+                "description": "Retiro",
+                "id": 28
+            }
+        ]
+    }
+]
+```
 ### GET: {{baseUrl}}/job-posts/19/
 ```json
 {
@@ -280,6 +308,7 @@ En un form con key "file" viajara la imagen
             }
         ]
     }
+]
 ```
 
 ## review
@@ -329,6 +358,15 @@ En un form con key "file" viajara la imagen
     "email": "masdasdasdasdasd@itba.edu.ar"
 }
 ```
+### PUT: {{baseUrl}}/users/5
+```json
+{
+    "email": "manaaasd@gmail.com",
+    "phone": "03034560123",
+    "username": "Manuel Rodrigueaaaaa",
+    "password": "1232312323"
+}
+```
 ### GET: {{baseUrl}}/users
 ```json
 [
@@ -343,15 +381,6 @@ En un form con key "file" viajara la imagen
         "username": "amigo"
     }
 ]
-```
-### PUT: {{baseUrl}}/users/5
-```json
-{
-    "email": "manaaasd@gmail.com",
-    "phone": "03034560123",
-    "username": "Manuel Rodrigueaaaaa",
-    "password": "1232312323"
-}
 ```
 ### GET by id: {{baseUrl}}/users/5
 ### GET by email: {{baseUrl}}/users/search?email=manaaasd@gmail.com

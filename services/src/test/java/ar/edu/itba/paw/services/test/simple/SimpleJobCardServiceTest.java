@@ -241,16 +241,6 @@ public class SimpleJobCardServiceTest {
     }
 
     @Test
-    public void findMaxPageTest() {
-        Mockito.when(jobCardDao.findAllMaxPage())
-                .thenReturn(PAGE);
-
-        int result = simpleJobCardService.findAllMaxPage();
-
-        Assert.assertEquals(PAGE, result);
-    }
-
-    @Test
     public void findMaxPageByUserIdTest() {
         Mockito.when(jobCardDao.findByUserIdMaxPage(Mockito.eq(USER_ID)))
                 .thenReturn(PAGE);
