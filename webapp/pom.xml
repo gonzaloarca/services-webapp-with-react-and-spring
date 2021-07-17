@@ -143,7 +143,6 @@
             <artifactId>jboss-logging</artifactId>
         </dependency>
     </dependencies>
-    <!--
         <build>
             <finalName>app</finalName>
             <plugins>
@@ -170,5 +169,5 @@
                     <artifactId>maven-war-plugin</artifactId>
                 </plugin>
             </plugins>
-        </build>  -->
+        </build>
 </project>
