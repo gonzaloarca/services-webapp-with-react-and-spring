@@ -59,11 +59,13 @@ public class JobContractController {
                                   @QueryParam("state") final String contractState,
                                   @QueryParam("role") final String role,
                                   @QueryParam("page") @DefaultValue("1") int page) {
+        if (page < 1) page = 1;
+
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         JobContractsControllerLogger.debug("Finding contracts Max page {}", userId);
         int maxPage = jobContractService.findContractsMaxPage(userId, contractState, role);
 
-        List<JobContractCardDto> jobContractCardDtoList = jobContractService.findContracts(userId, contractState, role, page)
+        List<JobContractCardDto> jobContractCardDtoList = jobContractService.findContracts(userId, contractState, role, page - 1)
                 .stream().map(jobContractCard -> JobContractCardDto
                         .fromJobContractCardWithLocalizedMessage(jobContractCard, uriInfo, messageSource
                                 .getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(),

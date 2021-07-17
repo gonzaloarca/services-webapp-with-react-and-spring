@@ -43,7 +43,6 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
-        if (page < 1) page = 1;
 
         if (userId == null && contractState == null && role == null)
             return getJobContractCards(jobContractDao.findAll(page));
@@ -54,9 +53,9 @@ public class SimpleJobContractService implements JobContractService {
 
         List<JobContract.ContractState> states = getContractStates(contractState);
         if (role.equalsIgnoreCase("professional")) {
-            return getJobContractCards(findByProIdAndSortedByModificationDate(userId, states, page - 1));
+            return getJobContractCards(findByProIdAndSortedByModificationDate(userId, states, page));
         } else if (role.equals("client")) {
-            return getJobContractCards(findByClientIdAndSortedByModificationDate(userId, states, page - 1));
+            return getJobContractCards(findByClientIdAndSortedByModificationDate(userId, states, page));
         } else
             throw new IllegalArgumentException();
     }
