@@ -183,7 +183,7 @@ const Hire = ({ match }) => {
 
   return (
     <>
-      <NavBar />
+      <NavBar currentSection="/search" />
       <div
         className={clsx(
           classes.hireBody,
@@ -342,7 +342,7 @@ const filterPast = (date) => {
   return currentDate.getTime() < selectedDate.getTime();
 };
 
-export const DatePickerField = ({ ...props }) => {
+export const DatePickerField = (props) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -419,7 +419,7 @@ const PackageInfo = () => {
   );
 };
 
-const DetailRow = ({ icon, text, divider }) => {
+const DetailRow = ({ icon, text, divider = false }) => {
   const classes = useStyles();
 
   const renderDivider = () => {

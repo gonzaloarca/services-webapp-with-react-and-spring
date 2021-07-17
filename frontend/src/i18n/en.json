@@ -172,6 +172,7 @@
     "contractdescription": "Job description",
     "package": "Hired package",
     "creationdate": "Contract creation date",
+    "pickdate": "Select a new date and time for the appointment",
     "rate": {
       "header": "How would you rate your experience with this service?",
       "tellus": "Tell us about your experience",

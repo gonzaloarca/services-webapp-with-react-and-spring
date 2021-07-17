@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   Divider,
   Grid,
   IconButton,
@@ -39,6 +38,7 @@ import createDate from '../utils/createDate';
 import packagePriceFormatter from '../utils/packagePriceFormatter';
 import contractCardStyles from './ContractCardStyles';
 import RatingDisplay from './RatingDisplay';
+import DatePicker from 'react-datepicker';
 
 const useStyles = makeStyles(contractCardStyles);
 
@@ -105,11 +105,7 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenReschedule(false),
       onAffirmative: () => setOpenReschedule(false),
       title: t('mycontracts.modals.reschedule.title'),
-      body: (
-        <PlainTextBody>
-          {t('mycontracts.modals.reschedule.message')}
-        </PlainTextBody>
-      ),
+      body: <RescheduleBody />,
       negativeLabel: t('mycontracts.modals.reschedule.negative'),
       affirmativeLabel: t('mycontracts.modals.reschedule.affirmative'),
       affirmativeColor: themeUtils.colors.yellow,
@@ -508,12 +504,55 @@ const RateBody = () => {
   );
 };
 
+const RescheduleBody = () => {
+  // const { setFieldValue } = useFormikContext();
+  // const [field] = useField(props);
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  const filterPast = (date) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(date);
+
+    return currentDate.getTime() < selectedDate.getTime();
+  };
+
+  return (
+    <div className="p-4">
+      <div className="flex text-base font-semibold items-center mb-2">
+        <FontAwesomeIcon className="text-lg mr-2" icon={faCalendarAlt} />
+        <h2>{t('mycontracts.pickdate')}</h2>
+      </div>
+
+      <div className={classes.centerDatePicker}>
+        <DatePicker
+          showTimeSelect
+          onChange={() => {}}
+          dateFormat={t('datetimeformat')}
+          name="date"
+          inline
+          filterDate={filterPast}
+          filterTime={filterPast}
+          placeholderText={t('hirePage.form.dateplaceholder')}
+          locale={t('locale')}
+        />
+      </div>
+      <div className={classes.rescheduleDisclaimer}>
+        <Error className={classes.disclaimerIcon} />
+        <p className="font-medium text-sm ml-2">
+          {t('mycontracts.modals.reschedule.message')}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 const ReviewRescheduleBody = ({ newDate }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
   return (
-    <div className={classes.rescheduleContainer}>
+    <div className={classes.reviewRescheduleContainer}>
       <CalendarDisplay date={newDate} size={200} />
       <div className={classes.rescheduleDisclaimer}>
         <Error className={classes.disclaimerIcon} />

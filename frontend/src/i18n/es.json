@@ -176,6 +176,7 @@
     "contractdescription": "Descripción del trabajo requerido",
     "package": "Paquete contratado",
     "creationdate": "Fecha de creación del contrato",
+    "pickdate": "Seleccione una nueva fecha y horario para la realización del trabajo",
     "rate": {
       "header": "¿Cómo calificarías tu experiencia con el servicio?",
       "tellus": "Cuente un poco sobre la experiencia",

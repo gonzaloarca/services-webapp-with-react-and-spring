@@ -196,7 +196,7 @@ const contractCardStyles = (theme) => ({
     marginTop: 20,
     marginBottom: 5,
   },
-  rescheduleContainer: {
+  reviewRescheduleContainer: {
     display: 'flex',
     padding: 20,
     flexDirection: 'column',
@@ -269,6 +269,17 @@ const contractCardStyles = (theme) => ({
     color: themeUtils.colors.blue,
     borderRadius: 10,
     padding: 5,
+  },
+  fillInput: {
+    backgroundColor: 'rgba(0, 0, 0, 0.09)',
+    width: '100%',
+    padding: '5px',
+  },
+  centerDatePicker: {
+    '& > div': {
+      display: 'flex',
+      justifyContent: 'center',
+    },
   },
 });
 

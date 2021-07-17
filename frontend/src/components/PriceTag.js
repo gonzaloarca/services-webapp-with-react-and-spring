@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PriceTag = ({ rateType, price, icon }) => {
+const PriceTag = ({ rateType, price, icon = false }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   let priceStr;
