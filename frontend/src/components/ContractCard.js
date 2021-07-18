@@ -115,7 +115,7 @@ const ContractCard = ({ contract, isOwner }) => {
       open: openReschedule,
       openModal: () => setOpenReschedule(true),
       onNegative: () => setOpenReschedule(false),
-      onAffirmative: () => handleSubmit() && setOpenReschedule(false),
+      onAffirmative: () => handleSubmit(),
       title: t('mycontracts.modals.reschedule.title'),
       body: (
         <RescheduleBody
