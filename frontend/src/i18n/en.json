@@ -365,6 +365,10 @@
     "header": "Edit package",
     "submit": "Save changes"
   },
+  "categories": {
+    "header": "Service categories",
+    "filter": "Filter categories by name"
+  },
   "datetimeformat": "MMMM d, yyyy - h:mm aa",
   "locale": "en",
   "account": {

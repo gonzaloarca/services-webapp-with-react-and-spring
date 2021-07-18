@@ -366,6 +366,10 @@
     "header": "Editar paquete",
     "submit": "Guardar cambios"
   },
+  "categories": {
+    "header": "Categorías de servicios",
+    "filter": "Filtrar categorías por nombre"
+  },
   "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
   "locale": "es",
   "account": {

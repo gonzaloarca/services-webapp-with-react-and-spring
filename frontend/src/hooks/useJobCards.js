@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   getJobCardsRequest,
+  getOrderByParamByIdRequest,
   getOrderByParamsRequest,
   searchJobCardsRequest,
 } from '../api/jobCardsApi';
@@ -37,7 +38,7 @@ const useJobCardsHook = () => {
     setLinks(parse(response.headers.link) || { ...initialLinks });
     return response.data.map((jobCard) => ({
       ...jobCard,
-      imageUrl: jobCard.imageUrl || categoryImageMap(jobCard.jobType.id),
+      imageUrl: jobCard.imageUrl || categoryImageMap.get(jobCard.jobType.id),
     }));
   };
 
@@ -56,7 +57,7 @@ const useJobCardsHook = () => {
   };
 
   const getOrderByParamById = async (id) => {
-    const response = await getOrderByParamsRequest(id);
+    const response = await getOrderByParamByIdRequest(id);
     return response.data;
   };
 
