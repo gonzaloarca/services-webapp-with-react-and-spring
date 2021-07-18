@@ -36,6 +36,7 @@ import RegisterSuccess from './pages/RegisterSuccess';
 import { useTranslation } from 'react-i18next';
 import { isProfessional } from './utils/userUtils';
 import Error404 from './pages/Error404';
+import EditJobPost from './pages/EditJobPost';
 
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
@@ -176,6 +177,7 @@ const App = () => {
           )}
           <Route path="/search" exact component={Search} />
           <Route path="/job/:id" exact component={JobPost} />
+          <Route path="/job/:id/edit" exact component={EditJobPost} />
           <Route path="/job/:id/packages" exact component={Packages} />
           <Route path="/job/:id/packages/add" exact component={AddPackage} />
           <Route

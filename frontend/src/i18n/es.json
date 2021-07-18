@@ -472,5 +472,6 @@
     "number": "N°{{rank}}",
     "mosthired": "Más contratado en {{jobType}}",
     "similar": "Tus clientes también contrataron..."
-  }
+  },
+  "editjobpost": "Editar servicio"
 }
