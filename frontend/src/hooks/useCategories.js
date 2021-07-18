@@ -28,6 +28,7 @@ const useCategoriesHook = () => {
   return {
     getCategories,
     getCategoryById,
+    categoryImageMap,
   };
 };
 export default useCategoriesHook;

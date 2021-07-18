@@ -5,7 +5,9 @@ import {
   searchJobCardsRequest,
 } from '../api/jobCardsApi';
 import parse from 'parse-link-header';
+import useCategoriesHook from './useCategories';
 const useJobCardsHook = () => {
+  const { categoryImageMap } = useCategoriesHook();
   const initialLinks = {
     last: {
       page: 1,
@@ -30,20 +32,22 @@ const useJobCardsHook = () => {
   };
   const [links, setLinks] = useState({ ...initialLinks });
 
-  useEffect(() => {
-    console.log('links', links);
-  }, [links]);
-
   const getJobCards = async (page) => {
     const response = await getJobCardsRequest(page);
     setLinks(parse(response.headers.link) || { ...initialLinks });
-    return response.data;
+    return response.data.map((jobCard) => ({
+      ...jobCard,
+      imageUrl: jobCard.imageUrl || categoryImageMap(jobCard.jobType.id),
+    }));
   };
 
   const searchJobCards = async (queryParams) => {
     const response = await searchJobCardsRequest(queryParams);
     setLinks(parse(response.headers.link) || { ...initialLinks });
-    return response.data;
+    return response.data.map((jobCard) => ({
+      ...jobCard,
+      imageUrl: jobCard.imageUrl || categoryImageMap.get(jobCard.jobType.id),
+    }));
   };
 
   const getOrderByParams = async () => {
