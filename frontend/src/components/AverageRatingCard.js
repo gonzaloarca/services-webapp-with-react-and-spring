@@ -16,7 +16,7 @@ const AverageRatingCard = ({ reviewAvg, reviewsQuantity }) => {
   return (
     <Card classes={{ root: classes.card }}>
       <CardContent>
-        <div className="font-extralight flex justify-center">
+        <div className="font-semibold flex justify-center">
           {t('profile.rating')}
         </div>
         <div className="flex justify-evenly items-center">

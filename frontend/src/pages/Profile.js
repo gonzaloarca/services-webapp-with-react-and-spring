@@ -148,6 +148,25 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white',
     color: 'black',
   },
+  noContentContainer: {
+    height: 350,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  noContentImage: {
+    height: '40%',
+    width: '40%',
+    objectFit: 'contain',
+    marginBottom: 30,
+  },
+  noContentMessage: {
+    fontSize: themeUtils.fontSizes.lg,
+    fontWeight: 500,
+    textAlign: 'center',
+  },
 }));
 
 const useGlobalStyles = makeStyles(styles);
@@ -287,41 +306,69 @@ const ProfileTabs = () => {
       </AppBar>
 
       <TabPanel value={tabValue} index={0}>
-        {services.map((service, index) => {
-          return <ServiceCard jobCard={service} key={index} />;
-        })}
+        {services.length === 0 ? (
+          <div className={classes.noContentContainer}>
+            <img
+              src={process.env.PUBLIC_URL + '/img/job-1.svg'}
+              alt=""
+              className={classes.noContentImage}
+            />
+            <h3 className={classes.noContentMessage}>
+              {t('profile.noservices')}
+            </h3>
+          </div>
+        ) : (
+          services.map((service, index) => {
+            return <ServiceCard jobCard={service} key={index} />;
+          })
+        )}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        <Grid container spacing={5} className="my-1">
-          <Grid item sm={6} xs={12} className="flex justify-center">
-            <div className="flex flex-col justify-center items-end">
-              <div className="font-bold text-7xl">
-                {professional.reviewAvg.toFixed(2)}
-              </div>
-              <Rating readOnly value={professional.reviewAvg} />
-              <div>
-                {t('profile.ratecount', {
-                  count: professional.reviewsQuantity,
-                })}
-              </div>
-            </div>
-          </Grid>
-          <Grid
-            item
-            sm={6}
-            xs={12}
-            className="flex flex-col justify-center items-center"
-          >
-            <ReviewsDistribution />
-          </Grid>
-        </Grid>
-
-        <Divider />
-        {reviews.map((review) => (
-          <div key={review.jobContract.id}>
-            <ReviewCard review={review} />
+        {professional.reviewsQuantity === 0 ? (
+          <div className={classes.noContentContainer}>
+            <img
+              src={process.env.PUBLIC_URL + '/img/star-1.svg'}
+              alt=""
+              className={classes.noContentImage}
+            />
+            <h3 className={classes.noContentMessage}>
+              {t('profile.noreviews')}
+            </h3>
           </div>
-        ))}
+        ) : (
+          <>
+            <Grid container spacing={5} className="my-1">
+              <Grid item sm={6} xs={12} className="flex justify-center">
+                <div className="flex flex-col justify-center items-end">
+                  <div className="font-medium text-7xl">
+                    {professional.reviewAvg.toFixed(2)}
+                  </div>
+                  <Rating readOnly value={professional.reviewAvg} />
+                  <div>
+                    {t('profile.ratecount', {
+                      count: professional.reviewsQuantity,
+                    })}
+                  </div>
+                </div>
+              </Grid>
+              <Grid
+                item
+                sm={6}
+                xs={12}
+                className="flex flex-col justify-center items-center"
+              >
+                <ReviewsDistribution />
+              </Grid>
+            </Grid>
+
+            <Divider />
+            {reviews.map((review) => (
+              <div key={review.jobContract.id}>
+                <ReviewCard review={review} />
+              </div>
+            ))}
+          </>
+        )}
       </TabPanel>
     </>
   );

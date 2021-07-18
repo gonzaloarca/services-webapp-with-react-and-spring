@@ -71,7 +71,8 @@
     }
   },
   "jobpost": {
-    "seereviews": "See reviews"
+    "seereviews": "See reviews",
+    "noreviews": "This service does not have any reviews yet"
   },
   "jobcard": {
     "noreviews": "No reviews",
@@ -432,7 +433,9 @@
     "reviews": "Reviews ({{count}})",
     "ratecount": "Average between {{count}} reviews",
     "starsingular": "1 star",
-    "starsplural": "{{count}} stars"
+    "starsplural": "{{count}} stars",
+    "noreviews": "This user does not have any reviews yet",
+    "noservices": "This user currently does not have any active services"
   },
   "locationfilter": "Filter locations by name",
   "noresults": "No results for '{{search}}'",
