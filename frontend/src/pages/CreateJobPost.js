@@ -51,7 +51,7 @@ import FileInput, {
 import * as Yup from 'yup';
 import { ConstantDataContext } from '../context';
 import { useJobPosts } from '../hooks';
-import axios from 'axios';
+import { extractLastIdFromURL } from '../utils/urlUtils';
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -267,7 +267,7 @@ const getStepContent = (step, formRef, handleNext, data) => {
   }
 };
 
-const CreateJobPost = () => {
+const CreateJobPost = ({ history }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
@@ -302,11 +302,12 @@ const CreateJobPost = () => {
 
   const makeRequest = async (newData) => {
     try {
-      console.log(await createJobPost(newData));
+      const uri = await createJobPost(newData);
+      const id = extractLastIdFromURL(uri);
+      history.push(`/job/${id}/success`);
     } catch (e) {
       console.log(e);
     }
-    //TODO: Redirigir a una vista de "Success"
   };
 
   const formRef = React.useRef();

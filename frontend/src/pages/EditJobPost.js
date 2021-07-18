@@ -249,7 +249,7 @@ const jobTypes = [
   },
 ];
 
-const EditJobPost = () => {
+const EditJobPost = ({ match, history }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
@@ -281,7 +281,7 @@ const EditJobPost = () => {
   const makeRequest = (newData) => {
     console.log(newData);
     //TODO: Registrar con la API
-    //TODO: Redirigir a una vista de "Success"
+    history.push(`/job/${match.params.id}/success/edit`);
   };
 
   const formRef = React.useRef();

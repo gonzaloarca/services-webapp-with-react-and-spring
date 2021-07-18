@@ -472,5 +472,11 @@
     "mosthired": "Most hired in {{jobType}}",
     "similar": "Your clients have also hired..."
   },
-  "editjobpost": "Edit service"
+  "editjobpost": "Edit service",
+  "jobpostsuccess": {
+    "title": "Post created successfully!",
+    "edit": "Post modified successfully!",
+    "instruction": "Use the button below to check it out:",
+    "btn": "Go to post"
+  }
 }
