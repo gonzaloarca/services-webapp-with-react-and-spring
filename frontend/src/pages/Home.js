@@ -61,11 +61,23 @@ export const Home = (props) => {
           <h3 className={clsx(classes.header, 'mb-5')}>{t('home.newest')}</h3>
 
           <Grid container spacing={3}>
-            {jobs.map((i) => (
-              <Grid key={i.jobPost.id} item xs={12} sm={6} md={4} lg={3}>
-                <JobCard job={i} />
-              </Grid>
-            ))}
+            {jobs.length > 0 ? (
+              jobs.map((i) => (
+                <Grid key={i.jobPost.id} item xs={12} sm={6} md={4} lg={3}>
+                  <JobCard job={i} />
+                </Grid>
+              ))
+            ) : (
+              <div className={classes.noJobsContainer}>
+                <img
+                  src={process.env.PUBLIC_URL + 'img/unavailable-1.svg'}
+                  alt=""
+                  className={classes.noJobsImage}
+                />
+                <h3 className={classes.noJobsMessage}>{t('home.nojobs')}</h3>
+              </div>
+            )}
+            {}
           </Grid>
         </div>
       </div>

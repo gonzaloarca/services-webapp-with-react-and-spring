@@ -1,3 +1,5 @@
+import { themeUtils } from '../theme';
+
 const homeStyles = (theme) => ({
   header: {
     fontSize: '1.5rem',
@@ -20,6 +22,29 @@ const homeStyles = (theme) => ({
     background: `url(${process.env.PUBLIC_URL}/img/publish-landing-bg-1.svg)`,
     fontSize: '1.5rem',
     fontWeight: 600,
+  },
+
+  noJobsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 400,
+    width: '100%',
+  },
+
+  noJobsImage: {
+    width: '40%',
+    height: '40%',
+    objectFit: 'contain',
+    marginBottom: 30,
+  },
+
+  noJobsMessage: {
+    fontSize: themeUtils.fontSizes.lg,
+    fontWeight: 500,
+    width: '40%',
+    textAlign: 'center',
   },
 });
 
