@@ -22,7 +22,8 @@
     "avatarfile": {
       "size": "El tamaño del archivo debe ser menor que {{size}}MB",
       "type": "El archivo debe ser de tipo PNG o JPG"
-    }
+    },
+    "zone": "Por favor, seleccione su ubicación"
   },
   "home": {
     "herotext": "Encuentre y contrate el servicio que necesita",
@@ -71,10 +72,15 @@
   "hire": "Contratar",
   "packagedescription": "Descripción del paquete",
   "reviews": "Opiniones",
-  "ratetype": {
+  "ratetypeformat": {
     "hourly": "${{amount}}/hora",
     "tbd": "A acordar",
     "oneTime": "${{amount}}"
+  },
+  "ratetype": {
+    "hourly": "Por hora",
+    "onetime": "Por trabajo",
+    "tbd": "A acordar"
   },
   "review": {
     "jobreference": "En <semibold>{{title}}</semibold>"
@@ -262,13 +268,49 @@
     }
   },
   "createjobpost": {
+    "header": "Publicar nuevo servicio",
+    "required": "* campo obligatorio",
     "steps": {
-      "category": "Categoría del servicio",
-      "title": "Título del servicio",
-      "packages": "Paquetes",
-      "photos": "Fotos",
-      "hours": "Horarios",
-      "locations": "Ubicaciones"
+      "category": {
+        "label": "Categoría del servicio",
+        "header": "Seleccione una categoría para su servicio"
+      },
+      "jobtitle": {
+        "label": "Nombre del servicio",
+        "header": "Introduzca el nombre del servicio"
+      },
+      "packages": {
+        "label": "Paquetes",
+        "package": "Paquete",
+        "header": "Agregue paquetes al servicio",
+        "title": {
+          "label": "Ingrese un título para el paquete*",
+          "placeholder": "Título"
+        },
+        "description": {
+          "label": "Ingrese una descripción para el paquete*",
+          "placeholder": "Descripción"
+        },
+        "ratetype": {
+          "label": "¿Cómo planea cobrar el paquete?*"
+        },
+        "price": {
+          "label": "Ingrese un precio para el paquete*",
+          "placeholder": "Precio"
+        }
+      },
+      "images": {
+        "label": "Imágenes",
+        "header": "Seleccione imágenes para mostrar en la publicación"
+      },
+      "hours": {
+        "label": "Horarios",
+        "header": "Seleccione los horarios de disponibilidad del servicio"
+      },
+      "locations": {
+        "label": "Ubicaciones",
+        "header": "Seleccione las ubicaciones donde estará disponible el servicio"
+      }
     }
   },
   "hirePage": {
@@ -325,5 +367,26 @@
     "starsplural": "{{count}} estrellas"
   },
   "timesHiredSingular": "Contratado 1 vez",
-  "timesHiredPlural": "Contratado {{times}} veces"
+  "timesHiredPlural": "Contratado {{times}} veces",
+  "search": {
+    "title": "Busqueda",
+    "service": "Busque el servicio que necesita",
+    "jobType.placeholder": "Buscar un servicio...",
+    "filters": "Filtros",
+    "categories": "Categorias",
+    "noquery.results": "Resultados en {{zone}}",
+    "results": "Resultados para {{category}} en {{zone}}",
+    "badQuery": "Error en la busqueda",
+    "filteringBy": "Filtrando por:",
+    "noResults": "No hay resultados para su búsqueda en este momento",
+    "sorry": "Disculpe las molestias",
+    "orderby": "Ordenar por"
+  },
+  "nonselected": "Ninguno",
+  "analytics": {
+    "title": "Estadísticas",
+    "number": "N°{{rank}}",
+    "mosthired": "Más contratado en {{jobType}}",
+    "similar": "Tus clientes también contrataron..."
+  }
 }

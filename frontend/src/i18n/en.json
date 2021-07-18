@@ -22,7 +22,8 @@
     "avatarfile": {
       "size": "The file size must be less than {{size}}MB",
       "type": "The file type must be PNG or JPG"
-    }
+    },
+    "zone": "Please select your location"
   },
   "home": {
     "herotext": "Find and hire the service you're looking for",
@@ -71,10 +72,15 @@
   "hire": "Hire",
   "packagedescription": "Package description",
   "reviews": "Reviews",
-  "ratetype": {
+  "ratetypeformat": {
     "hourly": "${{amount}}/hour",
     "tbd": "To be determined",
-    "oneTime": "${{amount}}"
+    "onetime": "${{amount}}"
+  },
+  "ratetype": {
+    "hourly": "Per hour",
+    "onetime": "Per job",
+    "tbd": "To be determined"
   },
   "review": {
     "jobreference": "From <semibold>{{title}}</semibold>"
@@ -258,13 +264,52 @@
     }
   },
   "createjobpost": {
+    "header": "Publish new service",
+    "required": "* required field",
     "steps": {
-      "category": "Service category",
-      "title": "Service title",
-      "packages": "Packages",
-      "photos": "Photos",
-      "hours": "Available hours",
-      "locations": "Available locations"
+      "category": {
+        "label": "Service category",
+        "header": "Select a category for your service"
+      },
+      "jobheader": {
+        "label": "Service name",
+        "header": "Enter a name for your service"
+      },
+      "packages": {
+        "label": "Packages",
+        "package": "Package",
+        "header": "Add packages to your service",
+        "title": {
+          "label": "Enter a name for this package*",
+          "placeholder": "Package name"
+        },
+        "description": {
+          "label": "Enter a description for this package*",
+          "placeholder": "Package description"
+        },
+        "ratetype": {
+          "label": "How do you plan to charge this package?*",
+          "hourly": "Per hour",
+          "onetime": "Per job",
+          "tbd": "To be determined"
+        },
+        "price": {
+          "label": "Enter a price for this package*",
+          "placeholder": "Price"
+        }
+      },
+      "images": {
+        "label": "Images",
+        "header": "Add images to your post"
+      },
+      "hours": {
+        "label": "Horarios",
+        "header": "Enter "
+      },
+      "locations": {
+        "label": "Ubicaciones",
+        "header": "Seleccione las ubicaciones donde estará disponible el servicio"
+      }
     }
   },
   "hirePage": {
@@ -321,5 +366,26 @@
     "starsplural": "{{count}} stars"
   },
   "timesHiredSingular": "Hired 1 time",
-  "timesHiredPlural": "Hired {{times}} times"
+  "timesHiredPlural": "Hired {{times}} times",
+  "search": {
+    "title": "Search",
+    "service": "Search for a service",
+    "jobTypeplaceholder": "Search services...",
+    "filters": "Filters",
+    "categories": "Categories",
+    "noqueryresults": "Results in {{zone}}",
+    "results": "Results for {{query}} in {{zone}}",
+    "badquery": "Search error",
+    "filteringby": "Active filter:",
+    "noresults": "No results for your search at the moment",
+    "sorry": "Sorry for the inconvenience",
+    "orderby": "Order by"
+  },
+  "nonselected": "None",
+  "analytics": {
+    "title": "Analytics",
+    "number": "No.{{rank}}",
+    "mosthired": "Most hired in {{jobType}}",
+    "similar": "Your clients have also hired..."
+  }
 }

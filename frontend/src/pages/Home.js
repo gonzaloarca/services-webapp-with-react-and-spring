@@ -9,6 +9,8 @@ import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
+import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 const useStyles = makeStyles(homeStyles);
 const useGlobalStyles = makeStyles(styles);

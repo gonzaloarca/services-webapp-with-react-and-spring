@@ -119,6 +119,11 @@ const HeroStyles = (theme) => ({
   yellowStep: {
     backgroundColor: theme.palette.secondary.main,
   },
+  zoneErrorMessage: {
+	  fontSize: '1.25rem',
+	  color: 'white !important',
+	  fontWeight: 'bold',
+  },
 });
 
 export default HeroStyles;

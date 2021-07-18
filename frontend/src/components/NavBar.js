@@ -147,7 +147,6 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
-                inputProps={{ 'aria-label': 'search' }}
               />
             </div>
           </div>
@@ -167,7 +166,9 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
               ) : (
                 <LinkButtonRegister
                   className={
-                    currentSection === i.path ? classes.selectedRegisterSection : ''
+                    currentSection === i.path
+                      ? classes.selectedRegisterSection
+                      : ''
                   }
                   key={i.path}
                   component={Link}
@@ -199,16 +200,16 @@ const LinkButton = withStyles((theme) => ({
 }))(Button);
 
 const LinkButtonRegister = withStyles((theme) => ({
-	root: {
-	  color: themeUtils.colors.blue,
-	  transition: 'color 0.1s',
-	  backgroundColor: 'rgba(255, 255, 255, 1)',
-	  '&:hover': {
-		backgroundColor: 'rgba(255, 255, 255, 0.9)',
-		transition: 'color 0.1s',
-	  },
-	  marginLeft: 5,
-	},
-  }))(Button);
+  root: {
+    color: themeUtils.colors.blue,
+    transition: 'color 0.1s',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      transition: 'color 0.1s',
+    },
+    marginLeft: 5,
+  },
+}))(Button);
 
 export default NavBar;
