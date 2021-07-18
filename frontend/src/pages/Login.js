@@ -33,25 +33,24 @@ const Login = () => {
   const initialValues = {
     email: '',
     password: '',
-    rememberme: false,
   };
 
-  const {token,setCurrentUser,setToken} = useContext(UserContext);
+  const { token, setCurrentUser, setToken } = useContext(UserContext);
   const [rememberMe, setRememberMe] = useState(false);
+  const [badCredentials, setBadCredentials] = useState(false);
 
-  const {getUserByEmail,login} = useUser();
+  const { getUserByEmail, login } = useUser();
 
-  const setUserData = async (email) =>{
-    try{
+  const setUserData = async (email) => {
+    try {
       const user = await getUserByEmail(email);
       setCurrentUser(user);
-    }catch(e){
-      console.log(e);
+    } catch (e) {
+      console.log('e1', e);
     }
-  }
+  };
 
   useEffect(() => {
-    console.log('token', token);
     try {
       if (token) {
         if (rememberMe) {
@@ -61,11 +60,10 @@ const Login = () => {
         setUserData(jwt(token).sub);
       }
     } catch (e) {
-      console.log(e);
+      console.log('e2 ', e);
       //TODO: HANDLE ERROR
     }
   }, [token]);
-
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -81,11 +79,15 @@ const Login = () => {
   const onSubmit = async (values, props) => {
     try {
       setToken(await login(values));
-    } catch (e) {
-      console.log(e);
+      history.push('/');
+    } catch (error) {
+      if (error.response.status === 401) {
+		setBadCredentials(true);
+      } else {
+        console.log('e3', error);
+      }
       //TODO : handle error
     }
-	history.push('/');
   };
 
   return (
@@ -111,6 +113,7 @@ const Login = () => {
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={onSubmit}
+              isSubmitting
             >
               {(props) => (
                 <Form>
@@ -131,25 +134,32 @@ const Login = () => {
                     placeholder={t('register.password')}
                     variable="password"
                     fullWidth
-					onSubmit={(e) => {props.onSubmit(e.values, props)}}
+                    onSubmit={(e) => {
+                      props.onSubmit(e.values, props);
+                    }}
                   />
-                  <Field
-                    as={FormControlLabel}
-                    name="rememberme"
-                    className={'mb-2'}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    control={
-                      <BlueCheckBox
-                        id="remember-me"
-                        className={classes.rememberme}
-                      />
-                    }
-                    label={t('login.rememberme')}
-                  />
+                  <div className="flex justify-between items-center mb-3">
+                    <FormControlLabel
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      control={
+                        <BlueCheckBox
+                          id="remember-me"
+                          className={classes.rememberme}
+                        />
+                      }
+                      label={t('login.rememberme')}
+                    />
+                    {badCredentials ? (
+                      <p className={classes.badCredentials}>{t('login.badcredentials')}</p>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                   <Button
                     fullWidth
                     className={clsx(classes.submitButton, 'mb-4')}
                     type="submit"
+                    disabled={props.isSubmitting}
                   >
                     {t('login.submit')}
                   </Button>
