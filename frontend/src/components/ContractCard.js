@@ -42,6 +42,7 @@ import RatingDisplay from './RatingDisplay';
 import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { filterPastTime, filterPastDate } from '../utils/filterPast';
 
 const useStyles = makeStyles(contractCardStyles);
 
@@ -114,9 +115,14 @@ const ContractCard = ({ contract, isOwner }) => {
       open: openReschedule,
       openModal: () => setOpenReschedule(true),
       onNegative: () => setOpenReschedule(false),
-      onAffirmative: () => setOpenReschedule(false),
+      onAffirmative: () => handleSubmit() && setOpenReschedule(false),
       title: t('mycontracts.modals.reschedule.title'),
-      body: <RescheduleBody />,
+      body: (
+        <RescheduleBody
+          formRef={formRef}
+          setOpenReschedule={setOpenReschedule}
+        />
+      ),
       negativeLabel: t('mycontracts.modals.reschedule.negative'),
       affirmativeLabel: t('mycontracts.modals.reschedule.affirmative'),
       affirmativeColor: themeUtils.colors.yellow,
@@ -568,17 +574,21 @@ const RateBody = ({ formRef, setOpenRate }) => {
   );
 };
 
-const RescheduleBody = () => {
-  // const { setFieldValue } = useFormikContext();
-  // const [field] = useField(props);
+const RescheduleBody = ({ formRef, setOpenReschedule }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const filterPast = (date) => {
-    const currentDate = new Date();
-    const selectedDate = new Date(date);
+  const initialValues = {
+    date: '',
+  };
 
-    return currentDate.getTime() < selectedDate.getTime();
+  const validationSchema = Yup.object({
+    date: Yup.date().required(t('validationerror.required')).nullable(),
+  });
+
+  const onSubmit = (values, props) => {
+    console.log(values); //TODO: CAMBIAR LA FECHA
+    setOpenReschedule(false);
   };
 
   return (
@@ -588,19 +598,38 @@ const RescheduleBody = () => {
         <h2>{t('mycontracts.pickdate')}</h2>
       </div>
 
-      <div className={classes.centerDatePicker}>
-        <DatePicker
-          showTimeSelect
-          onChange={() => {}}
-          dateFormat={t('datetimeformat')}
-          name="date"
-          inline
-          filterDate={filterPast}
-          filterTime={filterPast}
-          placeholderText={t('hirePage.form.dateplaceholder')}
-          locale={t('locale')}
-        />
-      </div>
+      <Formik
+        innerRef={formRef}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        {(props) => (
+          <Form>
+            <div className={classes.centerDatePicker}>
+              <DatePicker
+                selected={
+                  (props.values.date && new Date(props.values.date)) || null
+                }
+                onChange={(val) => {
+                  props.setFieldValue('date', val);
+                }}
+                showTimeSelect
+                dateFormat={t('datetimeformat')}
+                name="date"
+                inline
+                filterDate={filterPastDate}
+                filterTime={filterPastTime}
+                placeholderText={t('hirePage.form.dateplaceholder')}
+                locale={t('locale')}
+              />
+            </div>
+            <FormHelperText className="flex justify-center">
+              <ErrorMessage name="date"></ErrorMessage>
+            </FormHelperText>
+          </Form>
+        )}
+      </Formik>
       <div className={classes.rescheduleDisclaimer}>
         <Error className={classes.disclaimerIcon} />
         <p className="font-medium text-sm ml-2">

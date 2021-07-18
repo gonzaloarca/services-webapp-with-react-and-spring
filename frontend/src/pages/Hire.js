@@ -28,6 +28,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import { es } from 'date-fns/locale';
 import { themeUtils } from '../theme';
 import PriceTag from '../components/PriceTag';
+import { filterPastTime, filterPastDate } from '../utils/filterPast';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -334,13 +335,6 @@ const HireForm = () => {
   );
 };
 
-const filterPast = (date) => {
-  const currentDate = new Date();
-  const selectedDate = new Date(date);
-
-  return currentDate.getTime() < selectedDate.getTime();
-};
-
 export const DatePickerField = (props) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -359,8 +353,8 @@ export const DatePickerField = (props) => {
       name="date"
       wrapperClassName="w-full"
       className={classes.fillInput}
-      filterDate={filterPast}
-      filterTime={filterPast}
+      filterDate={filterPastDate}
+      filterTime={filterPastTime}
       placeholderText={t('hirePage.form.dateplaceholder')}
       locale={t('locale')}
     />
