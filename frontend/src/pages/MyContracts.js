@@ -39,166 +39,191 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white',
     boxShadow: themeUtils.shadows.containerShadow,
   },
+  noContractsContainer: {
+    padding: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    width: '100%',
+    height: 350,
+  },
+  noContractsImage: {
+    width: '60%',
+    height: '60%',
+    objectFit: 'contain',
+    marginBottom: 20,
+  },
+  noContractsHeader: {
+    fontSize: themeUtils.fontSizes.lg,
+    fontWeight: 600,
+    textAlign: 'center',
+  },
+  noContractsBody: {
+    fontSize: themeUtils.fontSizes.md,
+    fontWeight: 500,
+    textAlign: 'center',
+  },
 }));
 
 const hiredServices = {
   activeContracts: [
-    {
-      avgRate: 3.6666666666666665,
-      client: {
-        id: 11,
-        username: 'El Beto (Julian Sicardi)',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-        email: 'beto@gmbeh.com',
-        phone: '03034560',
-      },
-      professional: {
-        id: 12,
-        username: 'El Beto (Julian Sicardi)',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-        email: 'betito@gmbeh.com',
-        phone: '03034560',
-      },
-      contractsCompleted: 4,
-      creationDate: '2021-06-16T16:48:40.860',
-      image: {
-        uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-      },
-      jobContract: {
-        id: 29,
-        uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
-      },
-      jobPackage: {
-        id: 8,
-        uri: 'http://localhost:8080/job-posts/8/packages/8',
-      },
-      jobPost: {
-        id: 8,
-        uri: 'http://localhost:8080/job-posts/8',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-      },
-      jobTitle: 'Niñero turno mañana',
-      jobType: {
-        description: 'BABYSITTING',
-        id: 7,
-      },
-      packageTitle: '4 dias a la semana 4 horas',
-      rateType: {
-        description: 'TBD',
-        id: 2,
-      },
-      reviewsCount: 3,
-      scheduledDate: '2021-06-16T16:48',
-      state: {
-        description: 'APPROVED',
-        id: 0,
-      },
-    },
+    // {
+    //   avgRate: 3.6666666666666665,
+    //   client: {
+    //     id: 11,
+    //     username: 'El Beto (Julian Sicardi)',
+    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //     email: 'beto@gmbeh.com',
+    //     phone: '03034560',
+    //   },
+    //   professional: {
+    //     id: 12,
+    //     username: 'El Beto (Julian Sicardi)',
+    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //     email: 'betito@gmbeh.com',
+    //     phone: '03034560',
+    //   },
+    //   contractsCompleted: 4,
+    //   creationDate: '2021-06-16T16:48:40.860',
+    //   image: {
+    //     uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //   },
+    //   jobContract: {
+    //     id: 29,
+    //     uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
+    //   },
+    //   jobPackage: {
+    //     id: 8,
+    //     uri: 'http://localhost:8080/job-posts/8/packages/8',
+    //   },
+    //   jobPost: {
+    //     id: 8,
+    //     uri: 'http://localhost:8080/job-posts/8',
+    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //   },
+    //   jobTitle: 'Niñero turno mañana',
+    //   jobType: {
+    //     description: 'BABYSITTING',
+    //     id: 7,
+    //   },
+    //   packageTitle: '4 dias a la semana 4 horas',
+    //   rateType: {
+    //     description: 'TBD',
+    //     id: 2,
+    //   },
+    //   reviewsCount: 3,
+    //   scheduledDate: '2021-06-16T16:48',
+    //   state: {
+    //     description: 'APPROVED',
+    //     id: 0,
+    //   },
+    // },
   ],
   pendingContracts: [
-    {
-      avgRate: 3.6666666666666665,
-      client: {
-        id: 11,
-        username: 'El Beto (Julian Sicardi)',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-        email: 'beto@gmbeh.com',
-        phone: '03034560',
-      },
-      professional: {
-        id: 12,
-        username: 'El Beto (Julian Sicardi)',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-        email: 'betito@gmbeh.com',
-        phone: '03034560',
-      },
-      contractsCompleted: 4,
-      creationDate: '2021-06-16T16:48:40.860',
-      image: {
-        uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-      },
-      jobContract: {
-        id: 29,
-        uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
-      },
-      jobPackage: {
-        id: 8,
-        uri: 'http://localhost:8080/job-posts/8/packages/8',
-      },
-      jobPost: {
-        id: 8,
-        uri: 'http://localhost:8080/job-posts/8',
-      },
-      jobTitle: 'Niñero turno mañana',
-      jobType: {
-        description: 'BABYSITTING',
-        id: 7,
-      },
-      packageTitle: '4 dias a la semana 4 horas',
-      rateType: {
-        description: 'TBD',
-        id: 2,
-      },
-      reviewsCount: 3,
-      scheduledDate: '2021-06-16T16:48',
-      state: {
-        description: 'PENDING_APPROVAL',
-        id: 0,
-      },
-    },
+    // {
+    //   avgRate: 3.6666666666666665,
+    //   client: {
+    //     id: 11,
+    //     username: 'El Beto (Julian Sicardi)',
+    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //     email: 'beto@gmbeh.com',
+    //     phone: '03034560',
+    //   },
+    //   professional: {
+    //     id: 12,
+    //     username: 'El Beto (Julian Sicardi)',
+    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //     email: 'betito@gmbeh.com',
+    //     phone: '03034560',
+    //   },
+    //   contractsCompleted: 4,
+    //   creationDate: '2021-06-16T16:48:40.860',
+    //   image: {
+    //     uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //   },
+    //   jobContract: {
+    //     id: 29,
+    //     uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
+    //   },
+    //   jobPackage: {
+    //     id: 8,
+    //     uri: 'http://localhost:8080/job-posts/8/packages/8',
+    //   },
+    //   jobPost: {
+    //     id: 8,
+    //     uri: 'http://localhost:8080/job-posts/8',
+    //   },
+    //   jobTitle: 'Niñero turno mañana',
+    //   jobType: {
+    //     description: 'BABYSITTING',
+    //     id: 7,
+    //   },
+    //   packageTitle: '4 dias a la semana 4 horas',
+    //   rateType: {
+    //     description: 'TBD',
+    //     id: 2,
+    //   },
+    //   reviewsCount: 3,
+    //   scheduledDate: '2021-06-16T16:48',
+    //   state: {
+    //     description: 'PENDING_APPROVAL',
+    //     id: 0,
+    //   },
+    // },
   ],
   finalizedContracts: [
-    {
-      avgRate: 3.6666666666666665,
-      client: {
-        id: 11,
-        username: 'El Beto (Julian Sicardi)',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-        email: 'beto@gmbeh.com',
-        phone: '03034560',
-      },
-      professional: {
-        id: 12,
-        username: 'El Beto (Julian Sicardi)',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-        email: 'betito@gmbeh.com',
-        phone: '03034560',
-      },
-      contractsCompleted: 4,
-      creationDate: '2021-06-16T16:48:40.860',
-      image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-      jobContract: {
-        id: 29,
-        description: 'Hava nagila Hava nagila Hava nagila Venis mecha.',
-        image: '/img/plumbing.jpeg',
-        uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
-      },
-      jobPackage: {
-        id: 8,
-        uri: 'http://localhost:8080/job-posts/8/packages/8',
-      },
-      jobPost: {
-        id: 8,
-        uri: 'http://localhost:8080/job-posts/8',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-      },
-      jobTitle: 'Niñero turno mañana',
-      jobType: {
-        description: 'BABYSITTING',
-        id: 7,
-      },
-      packageTitle: '4 dias a la semana 4 horas',
-      rateType: {
-        description: 'TBD',
-        id: 2,
-      },
-      reviewsCount: 3,
-      scheduledDate: '2021-06-16T16:48',
-      state: {
-        description: 'COMPLETED',
-        id: 0,
-      },
-    },
+    // {
+    //   avgRate: 3.6666666666666665,
+    //   client: {
+    //     id: 11,
+    //     username: 'El Beto (Julian Sicardi)',
+    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //     email: 'beto@gmbeh.com',
+    //     phone: '03034560',
+    //   },
+    //   professional: {
+    //     id: 12,
+    //     username: 'El Beto (Julian Sicardi)',
+    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //     email: 'betito@gmbeh.com',
+    //     phone: '03034560',
+    //   },
+    //   contractsCompleted: 4,
+    //   creationDate: '2021-06-16T16:48:40.860',
+    //   image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //   jobContract: {
+    //     id: 29,
+    //     description: 'Hava nagila Hava nagila Hava nagila Venis mecha.',
+    //     image: '/img/plumbing.jpeg',
+    //     uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
+    //   },
+    //   jobPackage: {
+    //     id: 8,
+    //     uri: 'http://localhost:8080/job-posts/8/packages/8',
+    //   },
+    //   jobPost: {
+    //     id: 8,
+    //     uri: 'http://localhost:8080/job-posts/8',
+    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+    //   },
+    //   jobTitle: 'Niñero turno mañana',
+    //   jobType: {
+    //     description: 'BABYSITTING',
+    //     id: 7,
+    //   },
+    //   packageTitle: '4 dias a la semana 4 horas',
+    //   rateType: {
+    //     description: 'TBD',
+    //     id: 2,
+    //   },
+    //   reviewsCount: 3,
+    //   scheduledDate: '2021-06-16T16:48',
+    //   state: {
+    //     description: 'COMPLETED',
+    //     id: 0,
+    //   },
+    // },
   ],
 };
 
@@ -236,6 +261,7 @@ const MyContracts = () => {
   let initialTab = 0;
 
   if (!activeTab) {
+    history.replace(`/my-contracts/${tabPaths[0]}`);
     tabSection = tabPaths[0];
   } else {
     tabPaths.forEach((path, index) => {
@@ -309,7 +335,7 @@ const MyContracts = () => {
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
             <div className="mt-6">
-              <ContractsDashboard contracts={myServices} />
+              <ContractsDashboard contracts={myServices} isOwner />
             </div>
           </TabPanel>
         </div>
@@ -318,7 +344,7 @@ const MyContracts = () => {
   );
 };
 
-const ContractsDashboard = ({ contracts }) => {
+const ContractsDashboard = ({ contracts, isOwner = false }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
@@ -346,6 +372,50 @@ const ContractsDashboard = ({ contracts }) => {
       path: 'finalized',
     },
   ];
+
+  const getNoContractsContent = (isOwner, index) => {
+    if (isOwner) {
+      switch (index) {
+        case 0:
+          return {
+            header: t('mycontracts.contractstate.noactivecontractsheader'),
+            body: t('mycontracts.contractstate.noactivecontractssubtitlepro'),
+          };
+        case 1:
+          return {
+            header: t('mycontracts.contractstate.nopendingcontractsheader'),
+            body: t('mycontracts.contractstate.nopendingcontractssubtitlepro'),
+          };
+        case 2:
+          return {
+            header: t('mycontracts.contractstate.nofinalizedcontractsheader'),
+            body: t('mycontracts.contractstate.nofinalizedcontractssubtitle'),
+          };
+        default:
+          return {};
+      }
+    } else {
+      switch (index) {
+        case 0:
+          return {
+            header: t('mycontracts.contractstate.noactivecontractsheader'),
+            body: t('mycontracts.contractstate.noactivecontractssubtitle'),
+          };
+        case 1:
+          return {
+            header: t('mycontracts.contractstate.nopendingcontractsheader'),
+            body: t('mycontracts.contractstate.nopendingcontractssubtitle'),
+          };
+        case 2:
+          return {
+            header: t('mycontracts.contractstate.nofinalizedcontractsheader'),
+            body: t('mycontracts.contractstate.nofinalizedcontractssubtitle'),
+          };
+        default:
+          return {};
+      }
+    }
+  };
 
   const { activeState } = useParams();
 
@@ -461,13 +531,20 @@ const ContractsDashboard = ({ contracts }) => {
               <Divider className="mb-2" />
 
               <div className="p-4">
-                {getContracts(index).map((contract) => (
-                  <ContractCard
-                    contract={contract}
-                    key={contract.id}
-                    isOwner={false}
+                {getContracts(index).length === 0 ? (
+                  <NoContracts
+                    header={getNoContractsContent(isOwner, index).header}
+                    body={getNoContractsContent(isOwner, index).body}
                   />
-                ))}
+                ) : (
+                  getContracts(index).map((contract) => (
+                    <ContractCard
+                      contract={contract}
+                      key={contract.id}
+                      isOwner={isOwner}
+                    />
+                  ))
+                )}
               </div>
             </TabPanel>
           ))}
@@ -496,4 +573,20 @@ const HirenetTab = withStyles((theme) => ({
     },
   },
 }))(Tab);
+
+const NoContracts = ({ header, body }) => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.noContractsContainer}>
+      <img
+        src={process.env.PUBLIC_URL + '/img/contract1.svg'}
+        alt=""
+        className={classes.noContractsImage}
+      />
+      <h3 className={classes.noContractsHeader}>{header}</h3>
+      <p className={classes.noContractsBody}>{body}</p>
+    </div>
+  );
+};
 export default MyContracts;
