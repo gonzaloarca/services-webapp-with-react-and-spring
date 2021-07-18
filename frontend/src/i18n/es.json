@@ -72,10 +72,15 @@
   "hire": "Contratar",
   "packagedescription": "Descripción del paquete",
   "reviews": "Opiniones",
-  "ratetype": {
+  "ratetypeformat": {
     "hourly": "${{amount}}/hora",
     "tbd": "A acordar",
     "oneTime": "${{amount}}"
+  },
+  "ratetype": {
+    "hourly": "Por hora",
+    "onetime": "Por trabajo",
+    "tbd": "A acordar"
   },
   "review": {
     "jobreference": "En <semibold>{{title}}</semibold>"
@@ -263,13 +268,49 @@
     }
   },
   "createjobpost": {
+    "header": "Publicar nuevo servicio",
+    "required": "* campo obligatorio",
     "steps": {
-      "category": "Categoría del servicio",
-      "title": "Título del servicio",
-      "packages": "Paquetes",
-      "photos": "Fotos",
-      "hours": "Horarios",
-      "locations": "Ubicaciones"
+      "category": {
+        "label": "Categoría del servicio",
+        "header": "Seleccione una categoría para su servicio"
+      },
+      "jobtitle": {
+        "label": "Nombre del servicio",
+        "header": "Introduzca el nombre del servicio"
+      },
+      "packages": {
+        "label": "Paquetes",
+        "package": "Paquete",
+        "header": "Agregue paquetes al servicio",
+        "title": {
+          "label": "Ingrese un título para el paquete*",
+          "placeholder": "Título"
+        },
+        "description": {
+          "label": "Ingrese una descripción para el paquete*",
+          "placeholder": "Descripción"
+        },
+        "ratetype": {
+          "label": "¿Cómo planea cobrar el paquete?*"
+        },
+        "price": {
+          "label": "Ingrese un precio para el paquete*",
+          "placeholder": "Precio"
+        }
+      },
+      "images": {
+        "label": "Imágenes",
+        "header": "Seleccione imágenes para mostrar en la publicación"
+      },
+      "hours": {
+        "label": "Horarios",
+        "header": "Seleccione los horarios de disponibilidad del servicio"
+      },
+      "locations": {
+        "label": "Ubicaciones",
+        "header": "Seleccione las ubicaciones donde estará disponible el servicio"
+      }
     }
   },
   "hirePage": {

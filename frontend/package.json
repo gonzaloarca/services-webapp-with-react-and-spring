@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "/paw-2021a-03",
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@craco/craco": "^6.2.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -21,6 +22,7 @@
     "i18next": "^20.3.2",
     "i18next-browser-languagedetector": "^6.1.2",
     "i18next-http-backend": "^1.2.6",
+    "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-datepicker": "^4.1.1",

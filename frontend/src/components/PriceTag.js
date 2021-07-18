@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { LocalOffer } from '@material-ui/icons';
+import packagePriceFormatter from '../utils/packagePriceFormatter';
 import clsx from 'clsx';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,27 +21,11 @@ const useStyles = makeStyles((theme) => ({
 const PriceTag = ({ rateType, price, icon = false }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  let priceStr;
-
-  //TODO: verificar si esta logica todavia se cumple
-  switch (rateType.description) {
-    case 'HOURLY':
-      priceStr = t('ratetype.hourly', { amount: price });
-      break;
-    case 'TBD':
-      priceStr = t('ratetype.tbd');
-      break;
-    case 'ONE_TIME':
-      priceStr = t('ratetype.oneTime', { amount: price });
-      break;
-    default:
-      break;
-  }
 
   return (
     <div className={clsx(classes.priceTag, 'flex items-center')}>
       {icon ? <LocalOffer className="mr-2" /> : <></>}
-      {priceStr}
+      {packagePriceFormatter(price, rateType)}
     </div>
   );
 };

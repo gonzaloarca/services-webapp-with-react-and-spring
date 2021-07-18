@@ -1,4 +1,7 @@
+import jwt from 'jwt-decode';
+
 import { Switch, Route } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
 import './App.css';
 import Analytics from './pages/Analytics';
 import Categories from './pages/Categories';
@@ -17,8 +20,52 @@ import Account from './pages/Account';
 import RecoverPass from './pages/RecoverPass';
 import ChangePass from './pages/ChangePass';
 import VerifyEmail from './pages/VerifyEmail';
-
+import { UserContext } from './context';
+import { useUser } from './hooks';
 const App = () => {
+  const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
+  const { getUserByEmail } = useUser();
+
+  const saveUserData = async (email) => {
+    try {
+      const user = await getUserByEmail(email);
+      if (user) {
+        setCurrentUser(user);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    const localStorageToken = localStorage.getItem('token');
+    const sessionStorageToken = sessionStorage.getItem('token');
+    if (localStorageToken && localStorageToken !== '') {
+      const decoded = jwt(localStorageToken);
+      console.log(decoded);
+      if (decoded.exp * 1000 <= Date.now()) {
+        localStorage.removeItem('token');
+        setToken(null);
+        setCurrentUser(null);
+      } else {
+        console.log('saving user in context', decoded.sub);
+        saveUserData(decoded.sub);
+        setToken(localStorageToken);
+      }
+    } else if (sessionStorageToken && sessionStorageToken !== '') {
+      const decoded = jwt(sessionStorageToken);
+      if (decoded.exp * 1000 <= Date.now()) {
+        sessionStorage.removeItem('token');
+        setToken(null);
+        setCurrentUser(null);
+      } else {
+        console.log('saving user in context', decoded.sub);
+        saveUserData(decoded.sub);
+        setToken(sessionStorageToken);
+      }
+    }
+  }, []);
+
   return (
     <>
       <ScrollToTop />
@@ -36,13 +83,15 @@ const App = () => {
         <Route path="/search" exact component={Search} />
         <Route path="/job/:id" exact component={JobPost} />
         <Route path="/profile/:id/:activeTab?" exact component={Profile} />
-        <Route path="/login" exact component={Login} />
+        {!currentUser && <Route path="/login" exact component={Login} />}
         <Route path="/register" exact component={Register} />
         <Route path="/hire/package/:id" exact component={Hire} />
         <Route path="/account/:activeTab?" exact component={Account} />
         <Route path="/recover" exact component={RecoverPass} />
         <Route path="/change-password" exact component={ChangePass} />
         <Route path="/token" exact component={VerifyEmail} />
+        {/* TODO: 404 not found */}
+        <Route path="/" component={Home} />
       </Switch>
       <Footer />
     </>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -8,15 +8,23 @@ import { Router, BrowserRouter } from 'react-router-dom';
 import history from './history';
 import appTheme from './theme';
 import './i18n';
+import { UserContext } from './context';
 
-ReactDOM.render(
-  <BrowserRouter history={history} basename={process.env.PUBLIC_URL}>
-    <ThemeProvider theme={appTheme}>
-      <App />
-    </ThemeProvider>
-  </BrowserRouter>,
-  document.getElementById('root')
-);
+const AppContainer = () => {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState(null);
+  return (
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <ThemeProvider theme={appTheme}>
+        <UserContext.Provider value={{currentUser,setCurrentUser,token,setToken}}>
+          <App />
+        </UserContext.Provider>
+      </ThemeProvider>
+    </BrowserRouter>)
+}
+
+
+ReactDOM.render(<AppContainer/>, document.getElementById('root'));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import InputBase from '@material-ui/core/InputBase';
@@ -19,7 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import navBarStyles from './NavBarStyles';
 import clsx from 'clsx';
 import { themeUtils } from '../theme';
-
+import { UserContext } from '../context';
 const useStyles = makeStyles(navBarStyles);
 
 const sections = [
@@ -44,7 +44,7 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
   const { t } = useTranslation();
   const [showDrawer, setShowDrawer] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
+  const {currentUser} = useContext(UserContext);
   const changeBarBackground = () => {
     if (window.scrollY >= 200) {
       setScrolled(true);
@@ -60,6 +60,10 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
 
     return () => window.removeEventListener('scroll', changeBarBackground);
   });
+
+  useEffect(()=>{
+    console.log("CURRENT USER",currentUser)
+  },[currentUser])
 
   return (
     <div className={classes.root}>
@@ -115,7 +119,7 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
             <Link to="/">
               <img
                 className={classes.hirenetIcon}
-                src={`${process.env.PUBLIC_URL}//img/hirenet-logo-nav-1.svg`}
+                src={`${process.env.PUBLIC_URL}/img/hirenet-logo-nav-1.svg`}
                 alt=""
               />
             </Link>
@@ -143,11 +147,10 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
-                inputProps={{ 'aria-label': 'search' }}
               />
             </div>
           </div>
-          <div className={clsx(classes.sectionsContainer, 'items-end', 'flex')}>
+          {!currentUser && <div className={clsx(classes.sectionsContainer, 'items-end', 'flex')}>
             {rightSections.map((i) =>
               i.path === '/login' ? (
                 <LinkButton
@@ -163,7 +166,9 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
               ) : (
                 <LinkButtonRegister
                   className={
-                    currentSection === i.path ? classes.selectedRegisterSection : ''
+                    currentSection === i.path
+                      ? classes.selectedRegisterSection
+                      : ''
                   }
                   key={i.path}
                   component={Link}
@@ -173,7 +178,7 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
                 </LinkButtonRegister>
               )
             )}
-          </div>
+          </div>}
         </Toolbar>
       </AppBar>
       {isTransparent ? <></> : <div className={classes.offset} />}
@@ -195,16 +200,16 @@ const LinkButton = withStyles((theme) => ({
 }))(Button);
 
 const LinkButtonRegister = withStyles((theme) => ({
-	root: {
-	  color: themeUtils.colors.blue,
-	  transition: 'color 0.1s',
-	  backgroundColor: 'rgba(255, 255, 255, 1)',
-	  '&:hover': {
-		backgroundColor: 'rgba(255, 255, 255, 0.9)',
-		transition: 'color 0.1s',
-	  },
-	  marginLeft: 5,
-	},
-  }))(Button);
+  root: {
+    color: themeUtils.colors.blue,
+    transition: 'color 0.1s',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      transition: 'color 0.1s',
+    },
+    marginLeft: 5,
+  },
+}))(Button);
 
 export default NavBar;
