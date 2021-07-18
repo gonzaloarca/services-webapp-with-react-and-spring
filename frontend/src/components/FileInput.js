@@ -87,4 +87,28 @@ export function checkQuantity(files) {
   return Array.from(files).length <= MAX_FILES;
 }
 
+export function checkTypeMultiple(files) {
+  if (files === undefined || files === '') return true;
+
+  let valid = true;
+
+  Array.from(files).forEach((file) => {
+    valid = valid && checkType(file);
+  });
+
+  return valid;
+}
+
+export function checkSizeMultiple(files) {
+  if (files === undefined || files === '') return true;
+
+  let valid = true;
+
+  Array.from(files).forEach((file) => {
+    valid = valid && checkSize(file);
+  });
+
+  return valid;
+}
+
 export default FileInput;

@@ -337,8 +337,8 @@ const CreateJobPost = () => {
     title: '',
     packages: [{ title: '', description: '', rateType: '', price: '' }],
     images: '',
-    availableHours: '',
-    zones: '',
+    hours: '',
+    locations: '',
   });
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -573,7 +573,6 @@ const PackagesStepBody = ({ formRef, handleNext, data }) => {
   const { t } = useTranslation();
 
   const handleSubmit = (values) => {
-    console.log(values);
     handleNext(values);
   };
 
@@ -644,36 +643,138 @@ const PackagesForm = () => {
   );
 };
 
-const ImagesStepBody = () => {
+const ImagesStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  return (
-    <div className={classes.stepContainer}>{/* <FileInput multiple /> */}</div>
-  );
-};
+  const handleSubmit = (values) => {
+    handleNext(values);
+  };
 
-const HoursStepBody = () => {
-  const classes = useStyles();
-  const { t } = useTranslation();
+  const validationSchema = Yup.object({
+    images: Yup.mixed()
+      .test(
+        'is-correct-type',
+        t('validationerror.multipleimages.type'),
+        checkTypeMultiple
+      )
+      .test(
+        'is-correct-size',
+        t('validationerror.multipleimages.size', { size: 2 }),
+        checkSizeMultiple
+      )
+      .test(
+        'is-correct-quantity',
+        t('validationerror.multipleimages.quantity', { count: 5 }),
+        checkQuantity
+      ),
+  });
 
   return (
-    <div className="py-10">
-      <TextField
-        multiline
-        rows={3}
-        variant="filled"
-        placeholder={t('createjobpost.steps.hours.label')}
-        className={classes.input}
-      />
+    <div className={classes.stepContainer}>
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {(props) => (
+          <Form>
+            <FileInput multiple fileName="images" />
+            <div className="font-thin text-sm mt-3">
+              {t('createjobpost.steps.images.disclaimer', {
+                count: 5,
+                size: 2,
+              })}
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
 
-const LocationsStepBody = () => {
+const HoursStepBody = ({ formRef, handleNext, data }) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  const handleSubmit = (values) => {
+    handleNext(values);
+  };
+
+  const validationSchema = Yup.object({
+    hours: Yup.string()
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
+  });
+
   return (
     <div className="py-10">
-      <LocationList multiple />
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <TextField
+              multiline
+              rows={3}
+              variant="filled"
+              placeholder={t('createjobpost.steps.hours.label')}
+              className={classes.input}
+              onChange={(e) => setFieldValue('hours', e.target.value)}
+              name="hours"
+              helperText={<ErrorMessage name="hours"></ErrorMessage>}
+              value={values.hours}
+            />
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+const LocationsStepBody = ({ formRef, handleNext, data }) => {
+  const { t } = useTranslation();
+
+  const handleSubmit = (values) => {
+    console.log(values);
+    handleNext(values);
+  };
+
+  const validationSchema = Yup.object({
+    locations: Yup.array()
+      .min(1, t('validationerror.locations'))
+      .of(Yup.number().required(t('validationerror.required'))),
+  });
+
+  return (
+    <div className="py-10">
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <LocationList
+              multiple
+              name="locations"
+              initial={values.locations}
+              setFieldValue={setFieldValue}
+            />
+            <FormHelperText className="flex justify-center">
+              <ErrorMessage name="locations"></ErrorMessage>
+            </FormHelperText>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

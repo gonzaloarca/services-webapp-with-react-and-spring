@@ -101,9 +101,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LocationList = ({ multiple = false }) => {
+const LocationList = ({
+  multiple = false,
+  name = '',
+  initial = [],
+  setFieldValue = null,
+}) => {
   const classes = useStyles();
-  const [checked, setChecked] = useState([]);
+  const [checked, setChecked] = useState(initial === null ? [] : initial);
   const [filter, setFilter] = useState('');
   const { t } = useTranslation();
 
@@ -118,11 +123,13 @@ const LocationList = ({ multiple = false }) => {
     }
 
     setChecked(newChecked);
+    if (setFieldValue !== null && name !== '') setFieldValue(name, newChecked);
   };
 
   const handleDelete = (id) => {
     const newChecked = [...checked].filter((v) => v !== id);
     setChecked(newChecked);
+    if (setFieldValue !== null && name !== '') setFieldValue(name, newChecked);
   };
 
   const renderList = (list) => {
@@ -138,14 +145,8 @@ const LocationList = ({ multiple = false }) => {
         const labelId = `checkbox-list-label-${id}`;
 
         return (
-          <>
-            <ListItem
-              key={id}
-              role={undefined}
-              dense
-              button
-              onClick={handleToggle(id)}
-            >
+          <div key={id}>
+            <ListItem role={undefined} dense button onClick={handleToggle(id)}>
               <ListItemIcon>
                 <Checkbox
                   edge="start"
@@ -158,7 +159,7 @@ const LocationList = ({ multiple = false }) => {
               <ListItemText id={labelId} primary={description} />
             </ListItem>
             <Divider />
-          </>
+          </div>
         );
       });
     if (renderedList.length > 0) return renderedList;
