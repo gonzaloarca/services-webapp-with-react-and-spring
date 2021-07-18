@@ -10,7 +10,7 @@ import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
-const RegisterSuccessfull = () => {
+const RegisterSuccess = () => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -58,4 +58,4 @@ const RegisterSuccessfull = () => {
   );
 };
 
-export default RegisterSuccessfull;
+export default RegisterSuccess;

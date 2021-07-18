@@ -144,7 +144,7 @@ public class JobContractController {
 
     @Path("/{contractId}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
     public Response getContractImage(@PathParam("contractId") final long contractId) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();

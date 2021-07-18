@@ -13,6 +13,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { LightenDarkenColor, themeUtils } from '../theme';
 import packagePriceFormatter from '../utils/packagePriceFormatter';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   packageContainer: {
@@ -136,7 +137,9 @@ const PackageAccordion = ({ pack, isHireable }) => {
           </Grid>
           {isHireable ? (
             <Grid className={classes.hireContainer} item xs={12} sm={12} md={3}>
-              <HireButton>{t('hire').toUpperCase()}</HireButton>
+              <HireButton component={Link} to={`/hire/package/${pack.id}`}>
+                {t('hire').toUpperCase()}
+              </HireButton>
             </Grid>
           ) : (
             <></>

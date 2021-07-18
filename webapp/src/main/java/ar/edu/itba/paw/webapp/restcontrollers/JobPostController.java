@@ -163,7 +163,7 @@ public class JobPostController {
 
     @Path("/{postId}/images/{imageId}")
     @GET
-    @Produces(value = {"image/png", "image/jpg"})
+    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
     public Response getPostImage(@PathParam("postId") final long postId,
                                  @PathParam("imageId") final long imageId) {
         JobPostImage jobPostImage = jobPostImageService.findById(imageId, postId);
