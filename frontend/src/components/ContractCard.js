@@ -9,6 +9,7 @@ import {
   DialogActions,
   DialogContent,
   Divider,
+  FormHelperText,
   Grid,
   IconButton,
   makeStyles,
@@ -26,7 +27,7 @@ import {
 } from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { themeUtils } from '../theme';
@@ -39,6 +40,8 @@ import packagePriceFormatter from '../utils/packagePriceFormatter';
 import contractCardStyles from './ContractCardStyles';
 import RatingDisplay from './RatingDisplay';
 import DatePicker from 'react-datepicker';
+import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 const useStyles = makeStyles(contractCardStyles);
 
@@ -71,6 +74,14 @@ const ContractCard = ({ contract, isOwner }) => {
   const [openContact, setOpenContact] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const formRef = useRef();
+
+  const handleSubmit = () => {
+    if (formRef.current) {
+      formRef.current.handleSubmit();
+    }
+  };
 
   const modalDataMap = {
     'cancel': {
@@ -126,8 +137,8 @@ const ContractCard = ({ contract, isOwner }) => {
       open: openRate,
       openModal: () => setOpenRate(true),
       onNegative: () => setOpenRate(false),
-      onAffirmative: () => setOpenRate(false),
-      body: <RateBody />,
+      onAffirmative: () => handleSubmit(),
+      body: <RateBody formRef={formRef} setOpenRate={setOpenRate} />,
       negativeLabel: t('mycontracts.modals.rate.negative'),
       affirmativeLabel: t('mycontracts.modals.rate.affirmative'),
       affirmativeColor: themeUtils.colors.yellow,
@@ -463,43 +474,96 @@ const ContactBody = ({ username, email, phone }) => {
   );
 };
 
-const RateBody = () => {
-  const [rating, setRating] = useState(0);
+const RateBody = ({ formRef, setOpenRate }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const initialValues = {
+    rating: '',
+    opinion: '',
+    summary: '',
+  };
+
+  const [rating, setRating] = useState(0);
+
+  const validationSchema = Yup.object({
+    rating: Yup.number().required(t('validationerror.rating')),
+    opinion: Yup.string()
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
+    summary: Yup.string().max(
+      100,
+      t('validationerror.maxlength', { length: 100 })
+    ),
+  });
+
+  const onSubmit = (values, props) => {
+    console.log(values); //TODO: Aplicar el Rating
+    setOpenRate(false);
+  };
+
   return (
     <div className="p-4">
-      <div className={classes.ratingContainer}>
-        <h2 className="font-bold text-lg">{t('mycontracts.rate.header')}</h2>
-        <WhiteRating
-          precision={0.5}
-          value={rating}
-          onChange={(event, newValue) => setRating(newValue)}
-        />
-      </div>
-      <p className={classes.ratingLabel}>{t('mycontracts.rate.tellus')}</p>
-      <TextField
-        variant="filled"
-        InputProps={{
-          classes: {
-            input: classes.ratingInput,
-          },
-        }}
-        placeholder={t('mycontracts.rate.tellusplaceholder')}
-        multiline
-        rows={3}
-        hiddenLabel
-        fullWidth
-      />
-      <p className={classes.ratingLabel}>{t('mycontracts.rate.summarize')}</p>
-      <TextField
-        fullWidth
-        hiddenLabel
-        variant="filled"
-        InputProps={{ classes: { input: classes.ratingInput } }}
-        placeholder={t('mycontracts.rate.summarizeplaceholder')}
-      />
+      <Formik
+        innerRef={formRef}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        {(props) => (
+          <Form>
+            <div className={classes.ratingContainer}>
+              <h2 className="font-bold text-lg">
+                {t('mycontracts.rate.header')}
+              </h2>
+              <WhiteRating
+                name="rating"
+                precision={0.5}
+                value={rating}
+                onChange={(event, newValue) => {
+                  setRating(newValue);
+                  props.setFieldValue('rating', newValue);
+                }}
+              />
+              <FormHelperText>
+                <ErrorMessage name="rating"></ErrorMessage>
+              </FormHelperText>
+            </div>
+            <p className={classes.ratingLabel}>
+              {t('mycontracts.rate.tellus')}
+            </p>
+            <Field
+              as={TextField}
+              variant="filled"
+              InputProps={{
+                classes: {
+                  input: classes.ratingInput,
+                },
+              }}
+              placeholder={t('mycontracts.rate.tellusplaceholder')}
+              multiline
+              rows={3}
+              hiddenLabel
+              fullWidth
+              name="opinion"
+              helperText={<ErrorMessage name="opinion"></ErrorMessage>}
+            />
+            <p className={classes.ratingLabel}>
+              {t('mycontracts.rate.summarize')}
+            </p>
+            <Field
+              as={TextField}
+              fullWidth
+              hiddenLabel
+              variant="filled"
+              InputProps={{ classes: { input: classes.ratingInput } }}
+              placeholder={t('mycontracts.rate.summarizeplaceholder')}
+              name="summary"
+              helperText={<ErrorMessage name="summary"></ErrorMessage>}
+            />
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
