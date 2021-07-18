@@ -135,7 +135,11 @@ const App = () => {
           <Route path="/" exact component={Home} />
           <Route path="/categories" exact component={Categories} />
           <Route path="/create-job-post" exact component={CreateJobPost} />
-          <Route path="/my-contracts" exact component={MyContracts} />
+          <Route
+            path="/my-contracts/:activeTab?/:activeState?"
+            exact
+            component={MyContracts}
+          />
           {isProfessional(currentUser) && (
             <Route path="/analytics" exact component={Analytics} />
           )}

@@ -79,10 +79,6 @@ const NavBar = ({
     return () => window.removeEventListener('scroll', changeBarBackground);
   });
 
-  useEffect(() => {
-    console.log('CURRENT USER', currentUser);
-  }, [currentUser]);
-
   return (
     <div className={classes.root}>
       <AppBar

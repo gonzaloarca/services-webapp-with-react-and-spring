@@ -52,49 +52,79 @@ const createJobPostStyles = (theme) => ({
     padding: 10,
     width: '100%',
   },
-  packageForm: {
-    position: 'relative',
-    padding: 30,
-    backgroundColor: themeUtils.colors.blue,
-    color: 'white',
-    borderRadius: 10,
-    width: '100%',
-    boxShadow: themeUtils.shadows.containerShadow,
-  },
-  packageLabel: {
-    color: 'white',
-    fontWeight: 600,
-    marginBottom: 10,
-    fontSize: themeUtils.fontSizes.base,
-  },
-  packageInput: {
-    color: 'white',
-    backgroundColor: themeUtils.colors.darkBlue,
-    fontSize: themeUtils.fontSizes.sm,
-    fontWeight: 500,
-  },
-  packagesRadioContainer: {
+  summaryContainer: {
     backgroundColor: 'white',
-    color: 'black',
-    borderRadius: 10,
+    padding: 15,
     boxShadow: themeUtils.shadows.containerShadow,
+    borderRadius: 5,
+  },
+  summaryFieldContainer: {
+    display: 'flex',
+    color: 'white',
     width: '100%',
+    minHeight: 70,
+    fontWeight: 500,
+    fontSize: themeUtils.fontSizes.sm,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'space-between',
+    boxShadow: themeUtils.shadows.containerShadow,
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  summaryRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  summaryIcon: {
+    height: 70,
+    width: 70,
     display: 'flex',
     justifyContent: 'center',
-    padding: 10,
-    marginBottom: 25,
+    alignItems: 'center',
   },
-  packageHeader: {
-    fontSize: themeUtils.fontSizes.h2,
+  summaryValue: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'flex-end',
     fontWeight: 600,
-    marginLeft: 10,
+    fontSize: themeUtils.fontSizes.base,
+    textAlign: 'right',
+    marginTop: 20,
   },
-  packageDescription: {
-    marginBottom: 25,
-    backgroundColor: themeUtils.colors.darkBlue,
-    '& .MuiFilledInput-root': {
-      backgroundColor: 'transparent',
-    },
+  titleSummary: {
+    backgroundColor: themeUtils.colors.aqua,
+  },
+  categorySummary: {
+    backgroundColor: themeUtils.colors.orange,
+  },
+  imagesSummary: {
+    backgroundColor: themeUtils.colors.blue,
+  },
+  packagesSummary: {
+    backgroundColor: themeUtils.colors.lightBlue,
+  },
+  hoursSummary: {
+    backgroundColor: themeUtils.colors.orange,
+  },
+  locationsSummary: {
+    backgroundColor: themeUtils.colors.aqua,
+  },
+  imageSlideshow: {
+    width: '100%',
+    padding: 10,
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    flexWrap: 'wrap',
+  },
+  image: {
+    height: 170,
+    width: 170,
+    objectFit: 'cover',
+    borderRadius: 10,
+    margin: 7,
   },
 });
 

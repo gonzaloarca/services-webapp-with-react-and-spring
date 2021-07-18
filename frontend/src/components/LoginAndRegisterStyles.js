@@ -56,9 +56,12 @@ const LoginAndRegisterStyles = (theme) => ({
     },
     fontSize: '1em',
   },
-  FieldHeight:{
-	height: '5.3rem',
-},
+  FieldHeight: {
+    height: '5.3rem',
+  },
+  badCredentials: {
+    color: 'red',
+  },
 });
 
 export default LoginAndRegisterStyles;
