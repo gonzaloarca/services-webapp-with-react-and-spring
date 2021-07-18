@@ -24,7 +24,8 @@ public class ValidationExceptionMapper
     public Response toResponse(ConstraintViolationException e) {
         return Response.status(Response.Status.BAD_REQUEST).entity(
                 new GenericEntity<>(
-                        ValidationHelper.constraintViolationToValidationErrors(e).stream().map(HirenetValidationErrorMessage::new).collect(Collectors.toList()),
+                        ValidationHelper.constraintViolationToValidationErrors(e).stream()
+                                .map(HirenetValidationErrorMessage::new).collect(Collectors.toList()),
                         new GenericType<List<HirenetValidationErrorMessage>>() {
                         }.getType()
                 )).build();

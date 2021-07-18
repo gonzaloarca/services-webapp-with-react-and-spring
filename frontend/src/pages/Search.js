@@ -8,6 +8,7 @@ import {
   Grid,
   Card,
   Divider,
+  Chip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
@@ -167,7 +168,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: '1.4em',
     fontWeight: 'bold',
-    margin: '0px 20px',
+    margin: '0px 10px',
     WebkitLineClamp: 3,
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
@@ -178,18 +179,22 @@ const useStyles = makeStyles((theme) => ({
   categoriesTitle: {
     fontSize: '1.em',
     fontWeight: 'bold',
-    margin: '5px 20px',
+    margin: '5px 10px',
     color: themeUtils.colors.darkBlue,
   },
   category: {
     fontSize: '0.9em',
-    margin: '2px 40px',
+    margin: '4px 20px',
     color: themeUtils.colors.grey,
     cursor: 'pointer',
   },
   selectedCategory: {
     color: 'black',
     fontWeight: 'bold',
+  },
+  filteringBy: {
+    fontSize: '0.9em',
+    margin: '0px 10px',
   },
 }));
 
@@ -199,7 +204,7 @@ function useQuery() {
 
 const Search = () => {
   let queryParameters = useQuery();
-  const { orderByParams, categories } = useContext(
+  const { orderByParams, categories, zones } = useContext(
     CategoriesZonesAndOrderByContext
   );
 
@@ -247,18 +252,18 @@ const Search = () => {
         <Grid container spacing={3} className={classes.searchContainer}>
           <Grid item xs={3}>
             <Filters
-              category={queryParams.category}
-              orderBy={queryParams.orderBy}
               setQueryParams={setQueryParams}
               queryParams={queryParams}
-              orderByParams={orderByParams}
               categories={categories}
             />
           </Grid>
           <Grid item xs={9}>
             <SearchResults
-              zone={queryParams.zone}
-              query={queryParams.query}
+              setQueryParams={setQueryParams}
+              queryParams={queryParams}
+              categories={categories}
+              orderByParams={orderByParams}
+              zones={zones}
               jobs={jobCards}
             />
           </Grid>
@@ -282,23 +287,92 @@ const Search = () => {
   );
 };
 
-const SearchResults = ({ zone, query, jobs }) => {
+const SearchResults = ({
+  queryParams,
+  setQueryParams,
+  categories,
+  orderByParams,
+  zones,
+  jobs,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const zoneStr = 'Boedo'; // TODO: debe ser a partir del id en zone
+  let zoneStr;
+  if (
+    queryParams.zone === '' ||
+    queryParams.zone < 0 ||
+    queryParams.zone >= zones.length
+  )
+    zoneStr = '';
+  else {
+    let zoneAux = zones.find((zone) => zone.id === parseInt(queryParams.zone));
+    console.log('zoneparam', queryParams.zone);
+    console.log('zones', zones);
+    console.log('zone', zoneAux);
+    zoneStr = !zoneAux ? '' : zoneAux.description;
+  }
+  let categoryStr;
+  if (
+    queryParams.category === '' ||
+    queryParams.category < 0 ||
+    queryParams.category >= categories.length
+  )
+    categoryStr = '';
+  else {
+    let categoryAux = categories.find(
+      (category) => category.id === parseInt(queryParams.category)
+    );
+    categoryStr = !categoryAux ? '' : categoryAux.description;
+  }
   return (
     <Card className="p-5">
       <p className={classes.title}>
-        {zone === ''
-          ? query === ''
+        {queryParams.zone === ''
+          ? queryParams.query === ''
             ? t('search.results')
-            : t('search.queryresults', { query: query })
-          : query === ''
+            : t('search.queryresults', { query: queryParams.query })
+          : queryParams.query === ''
           ? t('search.zoneresults', { zone: zoneStr })
-          : t('search.query&zoneresults', { zone: zoneStr, query: query })}
+          : t('search.query&zoneresults', {
+              zone: zoneStr,
+              query: queryParams.query,
+            })}
       </p>
       <Divider className="m-5" />
+      <div className="flex justify-between items-center mb-5">
+        {queryParams.category === '' ? (
+          <div></div>
+        ) : (
+          //   Debe ser un div para que ocupe el espacio y siga bien alineado todo
+          <div className="flex items-center">
+            <p className={classes.filteringBy}>{t('search.filteringby')}</p>
+            <Chip
+              label={categoryStr}
+              onDelete={() => setQueryParams({ ...queryParams, category: '' })}
+            />
+          </div>
+        )}
+        <FormControl variant="filled" className="w-48">
+          <InputLabel id="order-select">{t('search.orderby')}</InputLabel>
+          <Select
+            labelId="order-select"
+            value={queryParams.orderBy}
+            onChange={(event) => {
+              setQueryParams({ ...queryParams, orderBy: event.target.value });
+            }}
+          >
+            <MenuItem value="">
+              <em>{t('nonselected')}</em>
+            </MenuItem>
+            {orderByParams.map((order) => (
+              <MenuItem key={order.id} value={order.id}>
+                {order.description}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
 
       <Grid container spacing={3}>
         {jobs.length > 0 ? (
@@ -315,49 +389,22 @@ const SearchResults = ({ zone, query, jobs }) => {
   );
 };
 
-const Filters = ({
-  category,
-  orderBy,
-  queryParams,
-  setQueryParams,
-  categories,
-  orderByParams,
-}) => {
+const Filters = ({ queryParams, setQueryParams, categories }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   return (
     <Card className="p-5">
       <p className={classes.title}>{t('search.filters')}</p>
-      <Divider className="m-5" />
-      <div className="flex justify-center m-6">
-        <FormControl variant="filled" className="w-48">
-          <InputLabel id="order-select">{t('search.orderby')}</InputLabel>
-          <Select
-            labelId="order-select"
-            value={orderBy}
-            onChange={(event) => {
-              setQueryParams({ ...queryParams, orderBy: event.target.value });
-            }}
-          >
-            <MenuItem value="">
-              <em>{t('nonselected')}</em>
-            </MenuItem>
-            {orderByParams.map((order, index) => (
-              <MenuItem key={order.id} value={order.id}>
-                {order.description}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
-      <Divider className="mx-5 mb-4" />
+      <Divider className="my-5" />
       <p className={classes.categoriesTitle}>{t('search.categories')}</p>
-      {categories.map((category, index) => (
+      {categories.map((category) => (
         <p
           key={category.id}
           className={clsx(
             classes.category,
-            index === category ? classes.selectedCategory : ''
+            category.id === parseInt(queryParams.category)
+              ? classes.selectedCategory
+              : ''
           )}
           onClick={() => {
             setQueryParams({ ...queryParams, category: category.id });

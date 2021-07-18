@@ -36,22 +36,26 @@ const useJobCardsHook = () => {
 
   const getJobCards = async (page) => {
     const response = await getJobCardsRequest(page);
-    setLinks(parse(response.headers.link || { ...initialLinks }));
+    setLinks(parse(response.headers.link) || { ...initialLinks });
     return response.data;
   };
+
   const searchJobCards = async (queryParams) => {
     const response = await searchJobCardsRequest(queryParams);
-    setLinks(parse(response.headers.link || { ...initialLinks }));
+    setLinks(parse(response.headers.link) || { ...initialLinks });
     return response.data;
   };
+
   const getOrderByParams = async () => {
     const response = await getOrderByParamsRequest();
     return response.data;
   };
+
   const getOrderByParamById = async (id) => {
     const response = await getOrderByParamsRequest(id);
     return response.data;
   };
+
   return {
     getJobCards,
     searchJobCards,
