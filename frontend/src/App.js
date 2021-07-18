@@ -26,16 +26,20 @@ const App = () => {
         <Route path="/" exact component={Home} />
         <Route path="/categories" exact component={Categories} />
         <Route path="/create-job-post" exact component={CreateJobPost} />
-        <Route path="/my-contracts" exact component={MyContracts} />
+        <Route
+          path="/my-contracts/:activeTab?/:activeState?"
+          exact
+          component={MyContracts}
+        />
         <Route path="/analytics" exact component={Analytics} />
         <Route path="/search/:id" exact component={Search} />
         <Route path="/search" exact component={Search} />
         <Route path="/job/:id" exact component={JobPost} />
-        <Route path="/profile/:id" exact component={Profile} />
+        <Route path="/profile/:id/:activeTab?" exact component={Profile} />
         <Route path="/login" exact component={Login} />
         <Route path="/register" exact component={Register} />
         <Route path="/hire/package/:id" exact component={Hire} />
-        <Route path="/account" exact component={Account} />
+        <Route path="/account/:activeTab?" exact component={Account} />
         <Route path="/recover" exact component={RecoverPass} />
         <Route path="/change-password" exact component={ChangePass} />
         <Route path="/token" exact component={VerifyEmail} />

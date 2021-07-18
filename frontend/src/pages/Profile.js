@@ -22,6 +22,7 @@ import ReviewCard from '../components/ReviewCard';
 import { Rating } from '@material-ui/lab';
 import AverageRatingCard from '../components/AverageRatingCard';
 import TimesHiredCard from '../components/TimesHiredCard';
+import { useParams, useHistory } from 'react-router-dom';
 
 const professional = {
   'contractsCompleted': 3,
@@ -154,9 +155,6 @@ const Profile = ({ match }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
 
-  let id = match.params.id;
-  console.log(id);
-
   return (
     <>
       <NavBar currentSection={'/search'} />
@@ -216,10 +214,27 @@ const ProfileTabs = () => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const [tabValue, setTabValue] = React.useState(0);
+  const tabPaths = ['services', 'reviews'];
+
+  const { id, activeTab } = useParams();
+
+  const history = useHistory();
+
+  let initialTab = 0;
+
+  if (!activeTab) {
+    history.push(`/profile/${id}/${tabPaths[0]}`);
+  } else {
+    tabPaths.forEach((path, index) => {
+      if (path === activeTab) initialTab = index;
+    });
+  }
+
+  const [tabValue, setTabValue] = React.useState(initialTab);
 
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
+    history.push(`/profile/${id}/${tabPaths[newValue]}`);
   };
 
   return (
@@ -263,8 +278,8 @@ const ProfileTabs = () => {
       </AppBar>
 
       <TabPanel value={tabValue} index={0}>
-        {services.map((service) => {
-          return <ServiceCard jobCard={service} />;
+        {services.map((service, index) => {
+          return <ServiceCard jobCard={service} key={index} />;
         })}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>

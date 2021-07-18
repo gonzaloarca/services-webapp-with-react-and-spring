@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import FormControlPassword from '../components/FormControlPassword';
 import FileInput from '../components/FileInput';
 import TabPanel from '../components/TabPanel';
+import { useParams, useHistory } from 'react-router-dom';
 
 // TODO: integracion con API
 const currentUser = {
@@ -84,32 +85,50 @@ const Account = () => {
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
 
-  const [tabValue, setTabValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
   const accountSections = [
     {
       tabLabel: t('account.data.title'),
       color: themeUtils.colors.orange,
       icon: <Person className="text-white" />,
       component: <PersonalData />,
+      path: 'personal',
     },
     {
       tabLabel: t('account.security.title'),
       color: themeUtils.colors.blue,
       icon: <Lock className="text-white" />,
       component: <SecurityData />,
+      path: 'security',
     },
     {
       tabLabel: t('account.logout.title'),
       color: themeUtils.colors.red,
       icon: <ExitToApp className="text-white" />,
       component: <Logout />,
+      path: 'logout',
     },
   ];
+
+  const { activeTab } = useParams();
+
+  const history = useHistory();
+
+  let initialTab = 0;
+
+  if (!activeTab) {
+    history.push(`/account/${accountSections[0].path}`);
+  } else {
+    accountSections.forEach((section, index) => {
+      if (section.path === activeTab) initialTab = index;
+    });
+  }
+
+  const [tabValue, setTabValue] = React.useState(initialTab);
+
+  const handleChange = (event, newValue) => {
+    setTabValue(newValue);
+    history.push(`/account/${accountSections[newValue].path}`);
+  };
 
   return (
     <>

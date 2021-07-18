@@ -17,6 +17,7 @@ import { themeUtils } from '../theme';
 import { Check, Group, Person, Schedule, Work } from '@material-ui/icons';
 import clsx from 'clsx';
 import ContractCard from '../components/ContractCard';
+import { useParams, useHistory } from 'react-router-dom';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -218,14 +219,38 @@ const TabPanel = ({ children, value, index }) => {
   );
 };
 
+let tabSection;
+
 const MyContracts = () => {
-  const [tabValue, setTabValue] = React.useState(0);
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const tabPaths = ['hired', 'mine'];
+
+  const { activeTab } = useParams();
+
+  const history = useHistory();
+
+  let initialTab = 0;
+
+  if (!activeTab) {
+    tabSection = tabPaths[0];
+    history.push(`/my-contracts/${tabPaths[0]}`);
+  } else {
+    tabPaths.forEach((path, index) => {
+      if (path === activeTab) {
+        initialTab = index;
+        tabSection = activeTab;
+      }
+    });
+  }
+
+  const [tabValue, setTabValue] = React.useState(initialTab);
+
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
+    history.push(`/my-contracts/${tabPaths[newValue]}`);
   };
 
   return (
@@ -289,14 +314,9 @@ const MyContracts = () => {
 };
 
 const ContractsDashboard = ({ contracts }) => {
-  const [tabValue, setTabValue] = React.useState(0);
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
-
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
 
   const contractSections = [
     {
@@ -304,20 +324,46 @@ const ContractsDashboard = ({ contracts }) => {
       tabLabel: t('mycontracts.active'),
       color: themeUtils.colors.green,
       icon: <Work className="text-white" />,
+      path: 'active',
     },
     {
       title: t('mycontracts.pendingapprovalcontracts'),
       tabLabel: t('mycontracts.pendingapproval'),
       color: themeUtils.colors.orange,
       icon: <Schedule className="text-white" />,
+      path: 'pending',
     },
     {
       title: t('mycontracts.finalizedcontracts'),
       tabLabel: t('mycontracts.finalized'),
       color: themeUtils.colors.aqua,
       icon: <Check className="text-white" />,
+      path: 'finalized',
     },
   ];
+
+  const { activeState } = useParams();
+
+  const history = useHistory();
+
+  let initialTab = 0;
+
+  if (!activeState) {
+    history.push(`/my-contracts/${tabSection}/${contractSections[0].path}`);
+  } else {
+    contractSections.forEach((section, index) => {
+      if (section.path === activeState) initialTab = index;
+    });
+  }
+
+  const [tabValue, setTabValue] = React.useState(initialTab);
+
+  const handleChange = (event, newValue) => {
+    setTabValue(newValue);
+    history.push(
+      `/my-contracts/${tabSection}/${contractSections[newValue].path}`
+    );
+  };
 
   const getContracts = (index) => {
     switch (index) {
