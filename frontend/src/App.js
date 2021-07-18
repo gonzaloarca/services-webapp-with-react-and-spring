@@ -65,7 +65,7 @@ const App = () => {
       }
     }
   }, []);
-
+  console.log('USER:::', currentUser);
   return (
     <>
       <ScrollToTop />
@@ -78,13 +78,16 @@ const App = () => {
           exact
           component={MyContracts}
         />
-        <Route path="/analytics" exact component={Analytics} />
+        {currentUser &&
+          !currentUser.roles.find(
+            (role) => role.toUpper === 'PROFESSIONAL'
+          ) && <Route path="/analytics" exact component={Analytics} />}
         <Route path="/search/:id" exact component={Search} />
         <Route path="/search" exact component={Search} />
         <Route path="/job/:id" exact component={JobPost} />
         <Route path="/profile/:id/:activeTab?" exact component={Profile} />
         {!currentUser && <Route path="/login" exact component={Login} />}
-        <Route path="/register" exact component={Register} />
+        {!currentUser && <Route path="/register" exact component={Register} />}
         <Route path="/hire/package/:id" exact component={Hire} />
         <Route path="/account/:activeTab?" exact component={Account} />
         <Route path="/recover" exact component={RecoverPass} />

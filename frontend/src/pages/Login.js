@@ -20,14 +20,16 @@ import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
 import { UserContext } from '../context';
+
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
-const Login = (props) => {
+const Login = () => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const history = useHistory();
   const initialValues = {
     email: '',
     password: '',
@@ -83,6 +85,7 @@ const Login = (props) => {
       console.log(e);
       //TODO : handle error
     }
+	history.push('/');
   };
 
   return (
@@ -128,6 +131,7 @@ const Login = (props) => {
                     placeholder={t('register.password')}
                     variable="password"
                     fullWidth
+					onSubmit={(e) => {props.onSubmit(e.values, props)}}
                   />
                   <Field
                     as={FormControlLabel}

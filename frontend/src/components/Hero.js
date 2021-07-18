@@ -16,6 +16,7 @@ import HeroStyles from './HeroStyles';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import clsx from 'clsx';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(HeroStyles);
 
@@ -65,6 +66,7 @@ const Hero = () => {
 const HeroSearchBar = () => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const history = useHistory();
   const initialValues = {
     zone: '',
     query: '',
@@ -77,9 +79,8 @@ const HeroSearchBar = () => {
     query: Yup.string(),
   });
 
-  const onSubmit = (values, props) => {
-    console.log('SUBMITTING');
-    console.log(values); //TODO: REDIRIGIR A SEARCH CON QUERY
+  const onSubmit = (values) => {
+    history.push('/search?zone=' + values.zone + '&query=' + values.query);
   };
 
   return (

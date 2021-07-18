@@ -13,6 +13,7 @@ const FormControlPassword = ({
   variable,
   fullWidth,
   required,
+  onSubmit,
 }) => {
   const classes = useStyles();
   const [values, setValues] = React.useState({
@@ -34,6 +35,7 @@ const FormControlPassword = ({
       label={placeholder}
       name={variable}
       required={required}
+	  onSubmit={onSubmit}
       className={classes.FieldHeight}
 	  type={values.toggle ? 'text' : 'password'}
       helperText={<ErrorMessage name={variable}></ErrorMessage>}
