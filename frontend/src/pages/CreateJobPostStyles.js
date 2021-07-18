@@ -72,6 +72,7 @@ const createJobPostStyles = (theme) => ({
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
+    maxWidth: '90%',
   },
   summaryRow: {
     display: 'flex',
@@ -87,6 +88,7 @@ const createJobPostStyles = (theme) => ({
   },
   summaryValue: {
     display: 'flex',
+    flexWrap: 'wrap',
     width: '100%',
     justifyContent: 'flex-end',
     fontWeight: 600,

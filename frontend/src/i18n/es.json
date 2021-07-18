@@ -472,5 +472,12 @@
     "number": "N°{{rank}}",
     "mosthired": "Más contratado en {{jobType}}",
     "similar": "Tus clientes también contrataron..."
+  },
+  "editjobpost": "Editar servicio",
+  "jobpostsuccess": {
+    "title": "¡Publicación creada exitosamente!",
+    "edit": "¡Publicación modificada correctamente!",
+    "instruction": "Usa el siguiente botón para ir a ella:",
+    "btn": "Ir a la publicación"
   }
 }
