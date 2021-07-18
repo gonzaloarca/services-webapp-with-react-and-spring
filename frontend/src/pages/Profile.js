@@ -222,9 +222,7 @@ const ProfileTabs = () => {
 
   let initialTab = 0;
 
-  if (!activeTab) {
-    history.push(`/profile/${id}/${tabPaths[0]}`);
-  } else {
+  if (activeTab) {
     tabPaths.forEach((path, index) => {
       if (path === activeTab) initialTab = index;
     });

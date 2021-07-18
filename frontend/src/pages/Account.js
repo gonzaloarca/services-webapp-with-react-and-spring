@@ -115,9 +115,7 @@ const Account = () => {
 
   let initialTab = 0;
 
-  if (!activeTab) {
-    history.push(`/account/${accountSections[0].path}`);
-  } else {
+  if (activeTab) {
     accountSections.forEach((section, index) => {
       if (section.path === activeTab) initialTab = index;
     });

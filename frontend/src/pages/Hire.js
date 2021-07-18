@@ -46,11 +46,15 @@ const pack = {
     'description': 'TBD',
     'id': 2,
   },
+  'price': 50,
   'title': '4 dias a la semana 4 horas',
 };
 
 //TODO: como se levanta esto?
-const jobpostimages = [`${process.env.PUBLIC_URL}/img/plumbing.jpeg`, `${process.env.PUBLIC_URL}/img/carpentry.jpeg`];
+const jobpostimages = [
+  `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+  `${process.env.PUBLIC_URL}/img/carpentry.jpeg`,
+];
 
 const post = {
   'active': true,

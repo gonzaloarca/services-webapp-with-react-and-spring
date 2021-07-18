@@ -236,7 +236,6 @@ const MyContracts = () => {
 
   if (!activeTab) {
     tabSection = tabPaths[0];
-    history.push(`/my-contracts/${tabPaths[0]}`);
   } else {
     tabPaths.forEach((path, index) => {
       if (path === activeTab) {
@@ -348,9 +347,7 @@ const ContractsDashboard = ({ contracts }) => {
 
   let initialTab = 0;
 
-  if (!activeState) {
-    history.push(`/my-contracts/${tabSection}/${contractSections[0].path}`);
-  } else {
+  if (activeState) {
     contractSections.forEach((section, index) => {
       if (section.path === activeState) initialTab = index;
     });

@@ -75,7 +75,7 @@
   "ratetypeformat": {
     "hourly": "${{amount}}/hora",
     "tbd": "A acordar",
-    "oneTime": "${{amount}}"
+    "onetime": "${{amount}}"
   },
   "ratetype": {
     "hourly": "Por hora",
