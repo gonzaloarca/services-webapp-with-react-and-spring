@@ -22,6 +22,7 @@ import ChangePass from './pages/ChangePass';
 import VerifyEmail from './pages/VerifyEmail';
 import { UserContext, CategoriesZonesAndOrderByContext } from './context';
 import { useUser, useCategories, useZones, useJobCards } from './hooks';
+import Packages from './pages/Packages';
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
   const { getUserByEmail } = useUser();
@@ -145,6 +146,7 @@ const App = () => {
           )}
           <Route path="/search" exact component={Search} />
           <Route path="/job/:id" exact component={JobPost} />
+          <Route path="/job/:id/packages" exact component={Packages} />
           <Route path="/profile/:id/:activeTab?" exact component={Profile} />
           {!currentUser && <Route path="/login" exact component={Login} />}
           {!currentUser && (
