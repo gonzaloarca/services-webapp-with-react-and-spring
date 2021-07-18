@@ -26,6 +26,10 @@ export const searchJobCardsRequest = ({
   });
 };
 
+export const getJobCardByIdRequest = (id) => {
+  return hirenetApi.get(`/job-cards/${id}`);
+};
+
 export const getOrderByParamsRequest = () => {
   return hirenetApi.get('/job-cards/order-params');
 };

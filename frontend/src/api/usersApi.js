@@ -1,16 +1,20 @@
-import hireNetApi from "./hirenetApi";
+import hireNetApi from './hirenetApi';
 
-export const loginRequest = ({email,password}) =>{
-    return hireNetApi.post("/login",{
-        email: email,
-        password: password
-    });
-}
+export const loginRequest = ({ email, password }) => {
+  return hireNetApi.post('/login', {
+    email: email,
+    password: password,
+  });
+};
 
-export const getUserByEmailRequest = (email) =>{
-    return hireNetApi.get("/users",{
-      params:{
-        email: email
-      }
-    });
-}
+export const getUserByEmailRequest = (email) => {
+  return hireNetApi.get('/users', {
+    params: {
+      email: email,
+    },
+  });
+};
+
+export const getUserByIdRequest = (id) => {
+  return hireNetApi.get(`/users/${id}`);
+};

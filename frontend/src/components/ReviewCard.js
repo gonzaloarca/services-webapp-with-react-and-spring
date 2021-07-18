@@ -1,9 +1,10 @@
 import { Avatar, Card, Link, makeStyles } from '@material-ui/core';
 import { Launch } from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
+import { useUser } from '../hooks';
 import createDate from '../utils/createDate';
 
 const useStyles = makeStyles((theme) => ({
@@ -31,21 +32,42 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ReviewCard = ({ review }) => {
+  const { getUserById } = useUser();
   const classes = useStyles();
   const headerHeight = 65;
   const { t } = useTranslation();
 
-  return (
+  const [client, setClient] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const loadUser = async () => {
+    const userId = new URL(review.client).pathname.split('/').slice(-1)[0];
+    const userData = await getUserById(userId);
+    setClient(userData);
+  };
+
+  useEffect(() => {
+    loadUser();
+  }, [review]);
+
+  useEffect(() => {
+    if (client) {
+      setLoading(false);
+    }
+  }, [client]);
+
+  return loading ? (
+    <div>loading</div>
+  ) : (
     <Card className="p-4">
       <div className={classes.reviewHeader} style={{ height: headerHeight }}>
         <div className={classes.headerLeft}>
           <Avatar
-            src={review.client.image}
+            src={client.image}
             style={{ height: headerHeight * 0.8, width: headerHeight * 0.8 }}
           />
           <div className={classes.nameAndDateContainer}>
             {/* Nombre del usuario */}
-            <p className="text-sm font-semibold">{review.client.username}</p>
+            <p className="text-sm font-semibold">{client.username}</p>
             {/* Fecha de review */}
             <p className="text-gray-400 font-medium text-sm">
               {t('date', { date: createDate(review.creationDate) })}
