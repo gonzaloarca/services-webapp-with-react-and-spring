@@ -6,6 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { useUser } from '../hooks';
 import createDate from '../utils/createDate';
+import { extractIdFromUserURL } from '../utils/userUtils';
 
 const useStyles = makeStyles((theme) => ({
   reviewHeader: {
@@ -40,7 +41,7 @@ const ReviewCard = ({ review }) => {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const loadUser = async () => {
-    const userId = new URL(review.client).pathname.split('/').slice(-1)[0];
+    const userId = extractIdFromUserURL(review.client);
     const userData = await getUserById(userId);
     setClient(userData);
   };

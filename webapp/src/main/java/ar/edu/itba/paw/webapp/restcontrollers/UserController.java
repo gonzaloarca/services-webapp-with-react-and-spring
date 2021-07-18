@@ -6,10 +6,7 @@ import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditUserDto;
 import ar.edu.itba.paw.webapp.dto.input.VerifyEmailDto;
-import ar.edu.itba.paw.webapp.dto.output.AnalyticRankingDto;
-import ar.edu.itba.paw.webapp.dto.output.JobCardDto;
-import ar.edu.itba.paw.webapp.dto.output.ReviewsByExactRateDto;
-import ar.edu.itba.paw.webapp.dto.output.UserDto;
+import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.dto.input.NewUserDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
@@ -53,6 +50,9 @@ public class UserController {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private JobContractService jobContractService;
 
     @Context
     private UriInfo uriInfo;
@@ -125,7 +125,7 @@ public class UserController {
 
     @Path("/{id}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
     public Response getUserImage(@PathParam("id") final long id) {
         ByteImage byteImage = userService.findImageByUserId(id);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
@@ -265,5 +265,22 @@ public class UserController {
         return Response.ok(new GenericEntity<List<AnalyticRankingDto>>(rankingDtoList) {
         }).build();
     }
+
+    @Path("/{id}/professional-info")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getProfessionalDetails(@PathParam("id") final long id) {
+        accountControllerLogger.debug("Finding average rate for user {}", id);
+        Double avgRate = reviewService.findProfessionalAvgRate(id);
+
+        accountControllerLogger.debug("Finding rates quantity for user {}", id);
+        long rateQty = reviewService.findReviewsByProIdSize(id);
+
+        accountControllerLogger.debug("Finding contracts completed for user {}", id);
+        long contractsQty = jobContractService.findCompletedContractsByProIdQuantity(id);
+
+        return Response.ok(ProfessionalDto.fromUserAndRoles(avgRate, rateQty, contractsQty)).build();
+    }
+
 }
 

@@ -3,6 +3,8 @@ import {
   loginRequest,
   getUserByIdRequest,
   registerRequest,
+  getRankingsRequest,
+  getProfessionalInfoRequest,
 } from '../api/usersApi';
 const useUserHook = () => {
   const getUserByEmail = async (email) => {
@@ -29,11 +31,23 @@ const useUserHook = () => {
     return response.data;
   };
 
+  const getRankings = async (userId) => {
+    const response = await getRankingsRequest(userId);
+    return response.data;
+  };
+
+  const getProfessionalInfo = async (userId) => {
+    const response = await getProfessionalInfoRequest(userId);
+    return response.data;
+  };
+
   return {
     getUserByEmail,
     getUserById,
     login,
     register,
+    getRankings,
+    getProfessionalInfo,
   };
 };
 export default useUserHook;

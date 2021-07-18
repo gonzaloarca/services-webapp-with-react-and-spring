@@ -37,6 +37,7 @@ import {
 } from '../hooks';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
+import { extractIdFromUserURL } from '../utils/userUtils';
 
 // const post = {
 //   active: true,
@@ -358,7 +359,7 @@ const JobPost = ({ match }) => {
   };
 
   const loadProUser = async () => {
-    const proId = new URL(post.professional).pathname.split('/').slice(-1)[0];
+    const proId = extractIdFromUserURL(post.professional);
     const pro = await getUserById(proId);
     setProUser(pro);
   };
@@ -370,15 +371,18 @@ const JobPost = ({ match }) => {
   }, [post]);
 
   useEffect(() => {
-    console.log(proUser);
+    console.log('post', post);
+    console.log('jobcard', jobCard);
+    console.log('packages', packages);
+    console.log('proUser', proUser);
+    console.log('reviews', reviews);
     if (
       post &&
       jobCard &&
       packages &&
       packages.length > 0 &&
       proUser &&
-      reviews &&
-      reviews.length > 0
+      reviews
     )
       setLoading(false);
   }, [post, jobCard, packages, proUser, reviews]);

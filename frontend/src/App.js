@@ -26,8 +26,9 @@ import { useUser, useCategories, useZones, useJobCards } from './hooks';
 import Packages from './pages/Packages';
 import AddPackage from './pages/AddPackage';
 import EditPackage from './pages/EditPackage';
-import RegisterSuccessfull from './pages/RegisterSuccess';
+import RegisterSuccess from './pages/RegisterSuccess';
 import { useTranslation } from 'react-i18next';
+import { isProfessional } from './utils/userUtils';
 
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
@@ -168,11 +169,7 @@ const App = () => {
             <Route path="/register" exact component={Register} />
           )}
           {!currentUser && (
-            <Route
-              path="/register/success"
-              exact
-              component={RegisterSuccessfull}
-            />
+            <Route path="/register/success" exact component={RegisterSuccess} />
           )}
           <Route path="/hire/package/:id" exact component={Hire} />
           <Route path="/account/:activeTab?" exact component={Account} />
@@ -186,10 +183,6 @@ const App = () => {
       </CategoriesZonesAndOrderByContext.Provider>
     </>
   );
-};
-
-const isProfessional = (user) => {
-  return user && !user.roles.find((role) => role.toUpper === 'PROFESSIONAL');
 };
 
 export default App;

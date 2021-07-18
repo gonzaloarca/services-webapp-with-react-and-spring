@@ -17,7 +17,7 @@ export const registerRequest = ({ username, phone, email, password }) => {
 };
 
 export const uploadUserImageRequest = ({ id, image }) => {
-  return hireNetApi.put('/users/' + id + '/image', {
+  return hireNetApi.put(`/users/${id}/image`, {
     image: image,
   });
 };
@@ -32,4 +32,25 @@ export const getUserByEmailRequest = (email) => {
 
 export const getUserByIdRequest = (id) => {
   return hireNetApi.get(`/users/${id}`);
+};
+export const getRankingsRequest = (id) => {
+  return hireNetApi.get(`/users/${id}/rankings`, {
+    headers: {
+      'Authorization':
+        'Bearer ' +
+          (localStorage.getItem('token') || sessionStorage.getItem('token')) ||
+        '',
+    },
+  });
+};
+
+export const getProfessionalInfoRequest = (id) => {
+  return hireNetApi.get(`/users/${id}/professional-info`, {
+    headers: {
+      'Authorization':
+        'Bearer ' +
+          (localStorage.getItem('token') || sessionStorage.getItem('token')) ||
+        '',
+    },
+  });
 };
