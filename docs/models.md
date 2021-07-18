@@ -385,7 +385,7 @@ En un form con key "file" viajara la imagen
 ]
 ```
 ### GET by id: {{baseUrl}}/users/5
-### GET by email: {{baseUrl}}/users/search?email=manaaasd@gmail.com
+### GET by email: {{baseUrl}}/users?email=manaaasd@gmail.com
 ```json
 {
     "contracts": "http://localhost:8080/api/v1/contracts?userId=5",
@@ -422,6 +422,15 @@ En un form con key "file" viajara la imagen
     }
 ]
 ```
+### GET professional-info: {{baseUrl}}/users/11/professional-info
+```json
+{
+  "contractsCompleted": 1,
+  "reviewAvg": 0.0,
+  "reviewsQuantity": 0
+}
+```
+
 ### GET image: {{baseUrl}}/users/5/image
 Retorna imagen como body
 ### PUT image: {{baseUrl}}/users/5/image
