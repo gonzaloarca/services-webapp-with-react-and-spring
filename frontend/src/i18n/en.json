@@ -83,9 +83,7 @@
     "onetime": "Per job",
     "tbd": "To be determined"
   },
-  "review": {
-    "jobreference": "From <semibold>{{title}}</semibold>"
-  },
+  "jobreference": "From <semibold>{{title}}</semibold>",
   "price": "{{value, price, ARS}}",
   "date": "{{date, MM/DD/YYYY}}",
   "time": "{{date, h:mm A}}",
@@ -345,6 +343,13 @@
       "submit": "Hire"
     }
   },
+  "managepackages": {
+    "header": "Manage packages",
+    "servicepackages": "Service packages",
+    "add": "Add new package",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
   "datetimeformat": "MMMM d, yyyy - h:mm aa",
   "locale": "en",
   "account": {
@@ -389,9 +394,9 @@
     "jobtypeplaceholder": "Search services...",
     "filters": "Filters",
     "categories": "Categories",
-	"results": "Services found",
+    "results": "Services found",
     "zoneresults": "Results in {{zone}}",
-	"queryresults": "Results for {{query}}",
+    "queryresults": "Results for {{query}}",
     "query&zoneresults": "Results for {{query}} in {{zone}}",
     "badquery": "Search error",
     "filteringby": "Active filter:",

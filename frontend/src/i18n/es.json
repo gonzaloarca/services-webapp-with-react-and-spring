@@ -83,9 +83,7 @@
     "onetime": "Por trabajo",
     "tbd": "A acordar"
   },
-  "review": {
-    "jobreference": "En <semibold>{{title}}</semibold>"
-  },
+  "jobreference": "En <semibold>{{title}}</semibold>",
   "price": "{{value, price, ARS}}",
   "date": "{{date, DD/MM/YYYY}}",
   "time": "{{date, H:mm}} hs",
@@ -346,6 +344,13 @@
       "submit": "Contratar"
     }
   },
+  "managepackages": {
+    "header": "Administrar paquetes",
+    "servicepackages": "Paquetes del servicio",
+    "add": "Añadir nuevo paquete",
+    "edit": "Editar",
+    "delete": "Eliminar"
+  },
   "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
   "locale": "es",
   "account": {
@@ -390,9 +395,9 @@
     "jobtypeplaceholder": "Buscar un servicio...",
     "filters": "Filtros",
     "categories": "Categorias",
-	"results": "Servicios encontrados",
+    "results": "Servicios encontrados",
     "zoneresults": "Resultados en {{zone}}",
-	"queryresults": "Resultados para {{query}}",
+    "queryresults": "Resultados para {{query}}",
     "query&zoneresults": "Resultados para {{category}} en {{zone}}",
     "badquery": "Error en la busqueda",
     "filteringby": "Filtrando por:",
