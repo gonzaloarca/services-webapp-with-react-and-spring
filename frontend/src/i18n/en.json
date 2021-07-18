@@ -267,19 +267,26 @@
   "createjobpost": {
     "header": "Publish new service",
     "required": "* required field",
+    "next": "Next",
+    "back": "Back",
+    "publish": "Publish",
     "steps": {
       "category": {
         "label": "Service category",
         "header": "Select a category for your service"
       },
-      "jobheader": {
+      "jobtitle": {
         "label": "Service name",
         "header": "Enter a name for your service"
       },
       "packages": {
         "label": "Packages",
         "package": "Package",
-        "header": "Add packages to your service",
+        "header": "Add at least one package to your service",
+        "help": {
+          "question": "What is a package?",
+          "answer": "A package is a specific job offered within each service. A single service may have more than one package, and each package must have its own price."
+        },
         "title": {
           "label": "Enter a name for this package*",
           "placeholder": "Package name"
@@ -304,12 +311,18 @@
         "header": "Add images to your post"
       },
       "hours": {
-        "label": "Horarios",
-        "header": "Enter "
+        "label": "Available hours",
+        "header": "Enter the hours of availability for the service"
       },
       "locations": {
-        "label": "Ubicaciones",
-        "header": "Seleccione las ubicaciones donde estará disponible el servicio"
+        "label": "Locations",
+        "header": "Select the locations where the service will be offered",
+        "selected": "Selected locations",
+        "notselected": "You haven't selected any locations yet"
+      },
+      "summary": {
+        "label": "Summary",
+        "header": "Post summary"
       }
     }
   },
@@ -366,6 +379,8 @@
     "starsingular": "1 star",
     "starsplural": "{{count}} stars"
   },
+  "locationfilter": "Filter locations by name",
+  "nolocations": "No results for '{{location}}'",
   "timesHiredSingular": "Hired 1 time",
   "timesHiredPlural": "Hired {{times}} times",
   "search": {

@@ -1,24 +1,24 @@
-import { faImage } from '@fortawesome/free-regular-svg-icons';
+import { faClock, faImage } from '@fortawesome/free-regular-svg-icons';
 import {
   faBriefcase,
   faBusinessTime,
+  faClipboardList,
   faCube,
+  faCubes,
+  faImages,
   faEdit,
   faMapMarkerAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
+  Chip,
   Divider,
   Fab,
   FormControl,
-  FormControlLabel,
-  IconButton,
   InputLabel,
   makeStyles,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   Step,
   StepConnector,
@@ -27,18 +27,20 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
-import { Add, Close } from '@material-ui/icons';
+import { Add, Adjust, LocationOn } from '@material-ui/icons';
 import clsx from 'clsx';
 import { Form, Formik, useFormikContext } from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
+import LocationList from '../components/LocationList';
 import NavBar from '../components/NavBar';
+import PackageFormItem from '../components/PackageFormItem';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import { themeUtils } from '../theme';
-import rateTypeI18nMapper from '../i18n/mappers/rateType';
 import createJobPostStyles from './CreateJobPostStyles';
+import PackageAccordion from '../components/PackageAccordion';
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -100,6 +102,7 @@ const HirenetStepIcon = (props) => {
     4: faImage,
     5: faBusinessTime,
     6: faMapMarkerAlt,
+    7: faClipboardList,
   };
 
   return (
@@ -142,6 +145,10 @@ const getSteps = () => {
     {
       label: 'createjobpost.steps.locations.label',
       title: 'createjobpost.steps.locations.header',
+    },
+    {
+      label: 'createjobpost.steps.summary.label',
+      title: 'createjobpost.steps.summary.header',
     },
   ];
 };
@@ -210,9 +217,71 @@ const getStepContent = (step) => {
           <LocationsStepBody />
         </PublishStep>
       );
+    case 6:
+      return (
+        <PublishStep
+          step={step + 1}
+          color={themeUtils.colors.blue}
+          title={steps[step].title}
+        >
+          <JobSummary form={mockedForm} />
+        </PublishStep>
+      );
     default:
       return <div></div>;
   }
+};
+
+const mockedForm = {
+  title: 'Duis est eiusmod est ea nostrud consequat.',
+  category: {
+    id: 0,
+    description: 'Plumbing',
+  },
+  packages: [
+    {
+      title: 'Lorem ipsum',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      price: 1000,
+      rateType: {
+        id: 0,
+        description: 'HOURLY',
+      },
+    },
+  ],
+  images: [
+    process.env.PUBLIC_URL + '/img/plumbing.jpeg',
+    process.env.PUBLIC_URL + '/img/babysitting.jpeg',
+    process.env.PUBLIC_URL + '/img/carpentry.jpeg',
+  ],
+  hours:
+    'Excepteur esse in labore anim irure velit magna sit id qui. Culpa do magna officia proident.',
+  locations: [
+    {
+      id: 0,
+      description: 'Recoleta',
+    },
+    {
+      id: 1,
+      description: 'Recoleta',
+    },
+    {
+      id: 2,
+      description: 'Recoleta',
+    },
+    {
+      id: 3,
+      description: 'Recoleta',
+    },
+    {
+      id: 4,
+      description: 'Recoleta',
+    },
+    {
+      id: 5,
+      description: 'Recoleta',
+    },
+  ],
 };
 
 const CreateJobPost = () => {
@@ -256,12 +325,7 @@ const CreateJobPost = () => {
         </Stepper>
         <div>
           {activeStep === steps.length ? (
-            <div>
-              All steps completed - you&apos;re finished
-              <Button onClick={handleReset} className={classes.button}>
-                Reset
-              </Button>
-            </div>
+            <div>Submitting form...</div>
           ) : (
             <div>
               {getStepContent(activeStep)}
@@ -272,7 +336,7 @@ const CreateJobPost = () => {
                   onClick={handleBack}
                   className={classes.button}
                 >
-                  Back
+                  {t('createjobpost.back')}
                 </Button>
                 <Button
                   variant="contained"
@@ -280,7 +344,9 @@ const CreateJobPost = () => {
                   onClick={handleNext}
                   className={classes.button}
                 >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                  {activeStep === steps.length - 1
+                    ? t('createjobpost.publish')
+                    : t('createjobpost.next')}
                 </Button>
               </div>
             </div>
@@ -315,21 +381,6 @@ const jobTypes = [
   {
     id: 5,
     description: 'Other',
-  },
-];
-
-const rateTypes = [
-  {
-    id: 0,
-    description: 'HOURLY',
-  },
-  {
-    id: 1,
-    description: 'ONE_TIME',
-  },
-  {
-    id: 2,
-    description: 'TBD',
   },
 ];
 
@@ -424,7 +475,6 @@ const PackagesStepBody = () => {
 };
 
 const PackagesForm = () => {
-  const classes = useStyles();
   const { values, setFieldValue } = useFormikContext();
 
   return (
@@ -455,133 +505,6 @@ const PackagesForm = () => {
   );
 };
 
-const PackageFormItem = ({ index, withDelete }) => {
-  const classes = useStyles();
-  const { t } = useTranslation();
-  const { values, setFieldValue } = useFormikContext();
-
-  const handleDelete = () => {
-    setFieldValue('packages', [
-      ...values.packages.filter((_, i) => i !== index),
-    ]);
-  };
-
-  return (
-    <div className={classes.packageForm}>
-      <div className="flex items-center justify-between">
-        <div>
-          <FontAwesomeIcon className="text-lg" icon={faCube} />
-          <span className={classes.packageHeader}>
-            {t('createjobpost.steps.packages.package')}
-          </span>
-        </div>
-        {withDelete && (
-          <IconButton onClick={() => handleDelete()}>
-            <Close className="text-white" />
-          </IconButton>
-        )}
-      </div>
-
-      <p className="text-sm font-medium opacity-50">
-        {t('createjobpost.required')}
-      </p>
-      <Divider className="bg-white opacity-50 mb-4" />
-      <p className={classes.packageLabel}>
-        {t('createjobpost.steps.packages.title.label')}
-      </p>
-      <TextField
-        fullWidth
-        hiddenLabel
-        InputProps={{
-          classes: {
-            input: classes.packageInput,
-          },
-        }}
-        name={`packages[${index}].title`}
-        value={values.packages[index].title}
-        placeholder={t('createjobpost.steps.packages.title.placeholder')}
-        variant="filled"
-        onChange={(e) => {
-          console.log(values);
-          setFieldValue(`packages[${index}].title`, e.target.value);
-        }}
-        className="mb-6"
-      />
-      <p className={classes.packageLabel}>
-        {t('createjobpost.steps.packages.description.label')}
-      </p>
-      <TextField
-        fullWidth
-        hiddenLabel
-        multiline
-        rows={3}
-        InputProps={{
-          classes: {
-            input: classes.packageInput,
-          },
-        }}
-        name={`packages[${index}].description`}
-        value={values.packages[index].description}
-        placeholder={t('createjobpost.steps.packages.description.placeholder')}
-        variant="filled"
-        onChange={(e) =>
-          setFieldValue(`packages[${index}].description`, e.target.value)
-        }
-        className={classes.packageDescription}
-      />
-      {/* RateType */}
-      <p className={classes.packageLabel}>
-        {t('createjobpost.steps.packages.ratetype.label')}
-      </p>
-
-      <FormControl className="w-full" component="fieldset">
-        <RadioGroup
-          row
-          name={`packages[${index}].rateType`}
-          value={values.packages[index].rateType}
-          onChange={(e) =>
-            setFieldValue(`packages[${index}].rateType`, e.target.value)
-          }
-          className={classes.packagesRadioContainer}
-        >
-          {rateTypes.map(({ id }) => (
-            <FormControlLabel
-              value={`${id}`}
-              key={id}
-              label={
-                <p className="text-sm font-medium">
-                  {t(rateTypeI18nMapper[id])}
-                </p>
-              }
-              control={<Radio />}
-            />
-          ))}
-        </RadioGroup>
-      </FormControl>
-
-      <p className={classes.packageLabel}>
-        {t('createjobpost.steps.packages.price.label')}
-      </p>
-      <TextField
-        fullWidth
-        hiddenLabel
-        InputProps={{
-          classes: {
-            input: classes.packageInput,
-          },
-        }}
-        name={`packages[${index}].price`}
-        value={values.packages[index].price}
-        placeholder={t('createjobpost.steps.packages.price.placeholder')}
-        variant="filled"
-        onChange={(e) =>
-          setFieldValue(`packages[${index}].price`, e.target.value)
-        }
-      />
-    </div>
-  );
-};
-
 const ImagesStepBody = () => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -593,14 +516,147 @@ const HoursStepBody = () => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  return <div className={classes.stepContainer}></div>;
+  return (
+    <div className="py-10">
+      <TextField
+        multiline
+        rows={3}
+        variant="filled"
+        placeholder={t('createjobpost.steps.hours.label')}
+        className={classes.input}
+      />
+    </div>
+  );
 };
 
 const LocationsStepBody = () => {
+  return (
+    <div className="py-10">
+      <LocationList multiple />
+    </div>
+  );
+};
+
+const JobSummary = ({ form }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  return <div className={classes.stepContainer}></div>;
+  return (
+    <>
+      {/* Categoria */}
+      <div className={classes.summaryRow}>
+        <div className={classes.summaryIcon}>
+          <FontAwesomeIcon icon={faBriefcase} className="text-2xl" />
+        </div>
+        <div
+          className={clsx(
+            classes.summaryFieldContainer,
+            classes.categorySummary
+          )}
+        >
+          <p>{t('createjobpost.steps.category.label')}</p>
+          <div className={classes.summaryValue}>
+            {form.category.description}
+          </div>
+        </div>
+      </div>
+
+      {/* Titulo */}
+      <div className={classes.summaryRow}>
+        <div className={classes.summaryIcon}>
+          <FontAwesomeIcon icon={faEdit} className="text-2xl" />
+        </div>
+        <div
+          className={clsx(classes.summaryFieldContainer, classes.titleSummary)}
+        >
+          <p>{t('createjobpost.steps.jobtitle.label')}</p>
+          <div className={classes.summaryValue}>{form.title}</div>
+        </div>
+      </div>
+      {/* Paquetes */}
+      <div className={classes.summaryRow}>
+        <div className={classes.summaryIcon}>
+          <FontAwesomeIcon icon={faCubes} className="text-2xl" />
+        </div>
+        <div
+          className={clsx(
+            classes.summaryFieldContainer,
+            classes.packagesSummary
+          )}
+        >
+          <p>{t('createjobpost.steps.packages.label')}</p>
+          <div className="p-3">
+            {form.packages.map((pack, index) => (
+              <PackageAccordion key={index} pack={pack} isHireable={false} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Imagenes */}
+      {form.images && form.images.length > 0 && (
+        <div className={classes.summaryRow}>
+          <div className={classes.summaryIcon}>
+            <FontAwesomeIcon icon={faImages} className="text-2xl" />
+          </div>
+          <div
+            className={clsx(
+              classes.summaryFieldContainer,
+              classes.imagesSummary
+            )}
+          >
+            <p>{t('createjobpost.steps.images.label')}</p>
+            <div className={classes.imageSlideshow}>
+              {form.images.map((image, index) => (
+                <img className={classes.image} src={image} key={index} alt="" />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Horarios */}
+      <div className={classes.summaryRow}>
+        <div className={classes.summaryIcon}>
+          <FontAwesomeIcon icon={faClock} className="text-2xl" />
+        </div>
+        <div
+          className={clsx(classes.summaryFieldContainer, classes.hoursSummary)}
+        >
+          <p>{t('createjobpost.steps.hours.label')}</p>
+          <div className={clsx(classes.summaryValue, 'text-sm')}>
+            {form.hours}
+          </div>
+        </div>
+      </div>
+
+      {/* Ubicaciones */}
+      <div className={classes.summaryRow}>
+        <div className={classes.summaryIcon}>
+          <FontAwesomeIcon icon={faMapMarkerAlt} className="text-2xl" />
+        </div>
+        <div
+          className={clsx(
+            classes.summaryFieldContainer,
+            classes.locationsSummary
+          )}
+        >
+          <p>{t('createjobpost.steps.locations.label')}</p>
+          <div className={classes.summaryValue}>
+            {form.locations.map(({ description }) => (
+              <Chip
+                label={description}
+                className="m-1 bg-white"
+                icon={
+                  <FontAwesomeIcon className="text-lg" icon={faMapMarkerAlt} />
+                }
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default CreateJobPost;

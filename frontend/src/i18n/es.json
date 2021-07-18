@@ -271,6 +271,9 @@
   "createjobpost": {
     "header": "Publicar nuevo servicio",
     "required": "* campo obligatorio",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "publish": "Publicar",
     "steps": {
       "category": {
         "label": "Categoría del servicio",
@@ -283,7 +286,11 @@
       "packages": {
         "label": "Paquetes",
         "package": "Paquete",
-        "header": "Agregue paquetes al servicio",
+        "header": "Agregue al menos un paquete al servicio",
+        "help": {
+          "question": "¿Qué es un paquete?",
+          "answer": "Un paquete es un trabajo específico que se ofrece dentro de cada servicio. Un servicio puede tener varios paquetes, y cada paquete tiene su propio precio."
+        },
         "title": {
           "label": "Ingrese un título para el paquete*",
           "placeholder": "Título"
@@ -310,7 +317,13 @@
       },
       "locations": {
         "label": "Ubicaciones",
-        "header": "Seleccione las ubicaciones donde estará disponible el servicio"
+        "header": "Seleccione las ubicaciones donde estará disponible el servicio",
+        "selected": "Ubicaciones seleccionadas",
+        "notselected": "Todavía no tiene ninguna ubicación seleccionada"
+      },
+      "summary": {
+        "label": "Resumen",
+        "header": "Resumen de la publicación"
       }
     }
   },
@@ -367,6 +380,8 @@
     "starsingular": "1 estrella",
     "starsplural": "{{count}} estrellas"
   },
+  "locationfilter": "Filtrar ubicaciones por nombre",
+  "nolocations": "No hay resultados para '{{location}}'",
   "timesHiredSingular": "Contratado 1 vez",
   "timesHiredPlural": "Contratado {{times}} veces",
   "search": {
