@@ -82,11 +82,11 @@ const Login = () => {
       history.push('/');
     } catch (error) {
       if (error.response.status === 401) {
-		setBadCredentials(true);
+        setBadCredentials(true);
       } else {
         console.log('e3', error);
       }
-      //TODO : handle error
+      return;
     }
   };
 
@@ -113,7 +113,6 @@ const Login = () => {
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={onSubmit}
-              isSubmitting
             >
               {(props) => (
                 <Form>
@@ -150,7 +149,9 @@ const Login = () => {
                       label={t('login.rememberme')}
                     />
                     {badCredentials ? (
-                      <p className={classes.badCredentials}>{t('login.badcredentials')}</p>
+                      <p className={classes.badCredentials}>
+                        {t('login.badcredentials')}
+                      </p>
                     ) : (
                       <></>
                     )}

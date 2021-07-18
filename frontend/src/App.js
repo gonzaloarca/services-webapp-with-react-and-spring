@@ -25,6 +25,8 @@ import { useUser, useCategories, useZones, useJobCards } from './hooks';
 import Packages from './pages/Packages';
 import AddPackage from './pages/AddPackage';
 import EditPackage from './pages/EditPackage';
+import RegisterSuccessfull from  './pages/RegisterSuccess';
+
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
   const { getUserByEmail } = useUser();
@@ -159,6 +161,9 @@ const App = () => {
           {!currentUser && <Route path="/login" exact component={Login} />}
           {!currentUser && (
             <Route path="/register" exact component={Register} />
+          )}
+          {!currentUser && (
+            <Route path="/register/success" exact component={RegisterSuccessfull} />
           )}
           <Route path="/hire/package/:id" exact component={Hire} />
           <Route path="/account/:activeTab?" exact component={Account} />

@@ -130,8 +130,13 @@
     "filedisclaimer": "Image must be PNG or JPG and less than {{size}}MB in size",
     "goback": "Go back",
     "imagepreview": "Image preview",
-    "existingemail": "The email address is already in use",
-    "discardimage": "Discard"
+    "badcredentials": "The email address is already in use",
+    "discardimage": "Discard",
+    "success": {
+      "title": "Registered successfully!",
+      "verify": "An email has been sent to verify your identity, please check it out.",
+      "return": "Return to home"
+    }
   },
   "image": {
     "clear": "Clear",

@@ -1,4 +1,4 @@
-import { getUserByEmailRequest, loginRequest } from '../api/usersApi';
+import { getUserByEmailRequest, loginRequest, registerRequest } from '../api/usersApi';
 const useUserHook = () => {
 
   const getUserByEmail = async (email) => {
@@ -11,9 +11,15 @@ const useUserHook = () => {
     return response.headers.authorization;
   };
 
+  const register = async ({ username, phone, email, password }) => {
+	const response = await registerRequest({ username, phone, email, password });
+	return response.data;
+  };
+
   return {
     getUserByEmail,
     login,
+	register,
   };
 };
 export default useUserHook;

@@ -10,13 +10,15 @@ import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { useUser } from '../hooks';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
 const Register = () => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const history = useHistory();
 
   const [data, setData] = React.useState({
     username: '',
@@ -25,7 +27,24 @@ const Register = () => {
     password: '',
     passwordrepeat: '',
     image: '',
+    badCredentials: false,
   });
+
+  const { register } = useUser();
+
+  const makeRequest = async (newData) => {
+    try {
+      await register(newData);
+      history.push('/register/success');
+    } catch (error) {
+      console.log(error);
+      if (error.response.status === 409) {
+        handlePrevStep(newData);
+        setData({ ...newData, badCredentials: true });
+      }
+      return;
+    }
+  };
 
   const handleNextStep = (newData, final = false) => {
     if (final) {
@@ -37,20 +56,17 @@ const Register = () => {
   };
 
   const handlePrevStep = (newData) => {
-    setData((prev) => ({ ...prev, ...newData }));
-    setCurrentStep((prev) => prev - 1);
+    if (currentStep > 0) {
+      setData((prev) => ({ ...prev, ...newData }));
+      setCurrentStep((prev) => prev - 1);
+    }
   };
 
   const [currentStep, setCurrentStep] = React.useState(0);
   const steps = [
     <StepOne next={handleNextStep} data={data} />,
-    <StepTwo next={handleNextStep} prev={handlePrevStep} data={data} />,
+    // <StepTwo next={handleNextStep} prev={handlePrevStep} data={data} />
   ];
-
-  const makeRequest = (newData) => {
-    console.log(newData);
-    //TODO: IMPLEMENTAR
-  };
 
   return (
     <div>
@@ -93,7 +109,7 @@ const StepOne = (props) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const handleSubmit = (values) => {
-    props.next(values);
+    props.next(values, true); // es final por que el segundo paso se encuentra comentado
   };
 
   const validationSchema = Yup.object({
@@ -180,14 +196,21 @@ const StepOne = (props) => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className="h-28">
               <Button
                 fullWidth
                 className={clsx(classes.submitButton, 'mb-4')}
                 type="submit"
               >
-                {t('register.continue')}
+                {t('register.submit')}
               </Button>
+              {values.badCredentials ? (
+                <p className={clsx(classes.badCredentials, 'mb-2')}>
+                  {t('register.badcredentials')}
+                </p>
+              ) : (
+                <></>
+              )}
             </Grid>
           </Grid>
         </Form>
@@ -219,7 +242,7 @@ const StepTwo = (props) => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ values, setFieldValue }) => (
+      {({ values, isSubmitting }) => (
         <Form>
           <div>
             <p className={clsx(classes.subtitle, 'mb-3')}>
@@ -241,7 +264,7 @@ const StepTwo = (props) => {
             <p className={'mb-3 text-center'}>{t('register.imagepreview')}</p>
             <Grid container className={'mb-3 justify-center'}>
               <Grid item>
-                <FileInput fileName="image"/>
+                <FileInput fileName="image" />
               </Grid>
             </Grid>
             <p className={'mb-5 text-gray-500'}>
@@ -260,6 +283,7 @@ const StepTwo = (props) => {
                 fullWidth
                 className={clsx(classes.submitButton, 'mb-4')}
                 type="submit"
+                disabled={isSubmitting}
               >
                 {t('register.submit')}
               </Button>
