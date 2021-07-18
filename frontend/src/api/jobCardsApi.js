@@ -26,6 +26,16 @@ export const searchJobCardsRequest = ({
   });
 };
 
+export const relatedJobCardsRequest = (userId, page = 1) => {
+  return hirenetApi.get('/job-cards/search', {
+    params: {
+      userId: userId,
+      type: 'related',
+      page: page,
+    },
+  });
+};
+
 export const getJobCardByIdRequest = (id) => {
   return hirenetApi.get(`/job-cards/${id}`);
 };

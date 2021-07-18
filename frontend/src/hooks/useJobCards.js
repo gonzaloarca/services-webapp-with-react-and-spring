@@ -4,6 +4,7 @@ import {
   getOrderByParamByIdRequest,
   getOrderByParamsRequest,
   searchJobCardsRequest,
+  relatedJobCardsRequest,
   getJobCardByIdRequest,
 } from '../api/jobCardsApi';
 import parse from 'parse-link-header';
@@ -43,6 +44,15 @@ const useJobCardsHook = () => {
 
   const searchJobCards = async (queryParams) => {
     const response = await searchJobCardsRequest(queryParams);
+    setLinks(parse(response.headers.link) || { ...initialLinks });
+    return response.data.map((jobCard) => ({
+      ...jobCard,
+      imageUrl: jobCard.imageUrl || categoryImageMap.get(jobCard.jobType.id),
+    }));
+  };
+
+  const relatedJobCards = async (userId) => {
+    const response = await relatedJobCardsRequest(userId);
     setLinks(parse(response.headers.link) || { ...initialLinks });
     return response.data.map((jobCard) => ({
       ...jobCard,

@@ -11,114 +11,10 @@ import JobCard from '../components/JobCard';
 import { Helmet } from 'react-helmet';
 import { UserContext } from '../context';
 import { useUser } from '../hooks';
-
-// TODO: integracion con API
-
-const jobs = [
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 2000.1,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 3,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'ONE_TIME',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title: 'Niñero turno mañana',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 1500,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 7,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'HOURLY',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title:
-      'Niñero turno mañanaaaa ajofejo jaofjaeo aehfeah ofgeafg aoeifgaeof goafg oaeg efeoia',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 2000.1,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 3,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'ONE_TIME',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title: 'Niñero turno mañana',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-];
+import { useJobCards } from '../hooks';
+import BottomPagination from '../components/BottomPagination';
+import { useLocation } from 'react-router-dom';
+import { parse } from 'query-string';
 
 const useStyles = makeStyles((theme) => ({
   analyticsCard: {
@@ -155,17 +51,20 @@ const Analytics = () => {
   const { getRankings, getProfessionalInfo } = useUser();
   const { currentUser } = useContext(UserContext);
   const [details, setDetails] = React.useState({ rankings: '', info: '' });
-  const [jobCards, setJobCards] = useState([]);
 
-  const loadDetails = async (id) => {
-    setDetails({
-      rankings: await getRankings(id),
-      info: await getProfessionalInfo(id),
-    });
+  const loadData = async (id) => {
+    try {
+      setDetails({
+        rankings: await getRankings(id),
+        info: await getProfessionalInfo(id),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    loadDetails(currentUser.id);
+    loadData(currentUser.id);
   }, []);
 
   return (
@@ -225,32 +124,67 @@ const Analytics = () => {
             })}
         </Grid>
         <div className="mt-5">
-          <ClientsRecommendation />
+          <ClientsRecommendation userId={currentUser.id} />
         </div>
       </div>
     </div>
   );
 };
 
-const ClientsRecommendation = () => {
+function useQuery() {
+  return parse(useLocation().search);
+}
+
+const ClientsRecommendation = ({ userId }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  let queryParameters = useQuery();
+  const [queryParams, setQueryParams] = React.useState({
+    page: queryParameters.page || 1,
+  });
+  const { relatedJobCards, links } = useJobCards();
+  const [jobCards, setJobCards] = React.useState([]);
+  const [maxPage, setMaxPage] = useState(1);
+
+  const loadData = async (userId) => {
+    try {
+      setJobCards(await relatedJobCards(userId));
+      setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData(userId);
+  }, []);
 
   return (
-    <Card classes={{ root: classes.card }}>
-      <div className={clsx(classes.cardHeader, 'py-2 px-5 w-full')}>
-        {t('analytics.similar')}
-      </div>
-      <div className="flex flex-wrap justify-evenly content-center p-3">
-        {jobs.map((job) => {
-          return (
-            <div className="m-3 w-60">
-              {/* <JobCard key={job.id} job={job} /> */}
-            </div>
-          );
-        })}
-      </div>
-    </Card>
+    <>
+      {jobCards?.length == 0 ? (
+        <></>
+      ) : (
+        <Card classes={{ root: classes.card }}>
+          <div className={clsx(classes.cardHeader, 'py-2 px-5 w-full')}>
+            {t('analytics.similar')}
+          </div>
+          <div className="flex flex-wrap justify-evenly content-center p-3">
+            {jobCards.map((job) => {
+              return (
+                <div className="m-3 w-60">
+                  <JobCard key={job.id} job={job} />
+                </div>
+              );
+            })}
+          </div>
+          <BottomPagination
+            maxPage={maxPage}
+            setQueryParams={setQueryParams}
+            queryParams={queryParams}
+          />
+        </Card>
+      )}
+    </>
   );
 };
 
