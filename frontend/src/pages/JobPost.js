@@ -37,7 +37,8 @@ import {
 } from '../hooks';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
-import { extractIdFromUserURL } from '../utils/userUtils';
+import { extractLastIdFromURL } from '../utils/urlUtils';
+import BottomPagination from '../components/BottomPagination';
 
 // const post = {
 //   active: true,
@@ -348,38 +349,47 @@ const JobPost = ({ match }) => {
   const { getJobCardById } = useJobCards();
   const { getJobPackagesByPostId } = useJobPackages();
   const { getUserById } = useUser();
-  const { getReviewsByPostId } = useReviews();
   const [loading, setLoading] = useState(true);
   const [post, setJobPost] = useState(null);
   const [jobCard, setJobCard] = useState(null);
   const [packages, setPackages] = useState([]);
   const [proUser, setProUser] = useState(null);
-  const [reviews, setReviews] = useState([]);
-
-  const loadReviews = async () => {
-    const reviewsData = await getReviewsByPostId(postId);
-    setReviews(reviewsData);
-  };
 
   const loadJobPost = async () => {
-    const post = await getJobPostById(postId);
-    setJobPost(post);
+    try {
+      const post = await getJobPostById(postId);
+      setJobPost(post);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const loadJobCard = async () => {
-    const jobCard = await getJobCardById(postId);
-    setJobCard(jobCard);
+    try {
+      const jobCard = await getJobCardById(postId);
+      setJobCard(jobCard);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const loadPackages = async () => {
-    const jobPackages = await getJobPackagesByPostId(postId);
-    setPackages(jobPackages);
+    try {
+      const jobPackages = await getJobPackagesByPostId(postId);
+      setPackages(jobPackages);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const loadProUser = async () => {
-    const proId = extractIdFromUserURL(post.professional);
-    const pro = await getUserById(proId);
-    setProUser(pro);
+    try {
+      const proId = extractLastIdFromURL(post.professional);
+      const pro = await getUserById(proId);
+      setProUser(pro);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -389,27 +399,14 @@ const JobPost = ({ match }) => {
   }, [post]);
 
   useEffect(() => {
-    console.log('post', post);
-    console.log('jobcard', jobCard);
-    console.log('packages', packages);
-    console.log('proUser', proUser);
-    console.log('reviews', reviews);
-    if (
-      post &&
-      jobCard &&
-      packages &&
-      packages.length > 0 &&
-      proUser &&
-      reviews
-    )
+    if (post && jobCard && packages && packages.length > 0 && proUser)
       setLoading(false);
-  }, [post, jobCard, packages, proUser, reviews]);
+  }, [post, jobCard, packages, proUser]);
 
   useEffect(() => {
     loadJobPost();
     loadJobCard();
     loadPackages();
-    loadReviews();
   }, [postId]);
 
   return (
@@ -483,7 +480,7 @@ const JobPost = ({ match }) => {
             </div>
             {/* Reseñas */}
             <div id="reviews" className="mt-7">
-              <ReviewListCard reviews={reviews} />
+              <ReviewListCard postId={post.id} />
             </div>
           </div>
         </>
@@ -644,9 +641,25 @@ const PackageListCard = ({ packages }) => {
   );
 };
 
-const ReviewListCard = ({ reviews }) => {
-  const classes = useStyles();
+const ReviewListCard = ({ postId }) => {
   const { t } = useTranslation();
+  const { getReviewsByPostId, links } = useReviews();
+  const [reviews, setReviews] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [queryParams, setQueryParams] = useState({ page: '1' });
+  const classes = useStyles();
+
+  const loadReviews = async () => {
+    try {
+      const reviewsData = await getReviewsByPostId(postId, queryParams.page);
+      setReviews(reviewsData);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    loadReviews();
+  }, [queryParams]);
 
   const renderReviews = (reviews) => {
     if (reviews.length === 0) {
@@ -662,20 +675,34 @@ const ReviewListCard = ({ reviews }) => {
       );
     } else {
       return reviews.map((review) => (
-        <div key={`review_${review.jobContract.id}`} className="mb-4">
+        <div
+          key={`review_${extractLastIdFromURL(review.jobContract)}`}
+          className="mb-4"
+        >
           <ReviewCard review={review} />
         </div>
       ));
     }
   };
 
-  return (
+  useEffect(() => {
+    if (reviews) setIsLoading(false);
+  }, [reviews]);
+  return isLoading ? (
+    <div>loading</div>
+  ) : (
     <SectionCard
       labelBackgroundColor={themeUtils.colors.yellow}
       icon={<RateReview />}
       title={t('reviews')}
     >
       {renderReviews(reviews)}
+
+      <BottomPagination
+        maxPage={links.last.page}
+        setQueryParams={setQueryParams}
+        queryParams={queryParams}
+      />
     </SectionCard>
   );
 };

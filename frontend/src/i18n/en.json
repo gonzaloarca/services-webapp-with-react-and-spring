@@ -50,7 +50,13 @@
       "type": "The file type must be PNG or JPG"
     },
     "zone": "Please select your location",
-    "rating": "Please enter your rating"
+    "rating": "Please enter your rating",
+    "multipleimages": {
+      "type": "All files must be JPG or PNG",
+      "size": "Files uploaded must be {{size}}MB or less",
+      "quantity": "Upload only up to {{count}} files"
+    },
+    "locations": "Choose at least one zone"
   },
   "home": {
     "herotext": "Find and hire the service you're looking for",
@@ -339,7 +345,8 @@
       },
       "images": {
         "label": "Images",
-        "header": "Add images to your post"
+        "header": "Add images to your post",
+        "disclaimer": "Please only upload {{count}} images, only PNG and JPG, and less than {{size}}MB"
       },
       "hours": {
         "label": "Available hours",

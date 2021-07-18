@@ -45,10 +45,12 @@ const useReviewsHook = () => {
 
   const getReviewsByPostId = async (postId, page) => {
     const response = await getReviewsByPostIdRequest(postId, page);
+    setLinks(parse(response.headers.link) || { ...initialLinks });
     return response.data;
   };
   const getReviewsByProId = async (proId, page) => {
     const response = await getReviewsByProIdRequest(proId, page);
+    setLinks(parse(response.headers.link) || { ...initialLinks });
     return response.data;
   };
   const createReview = async (review) => {

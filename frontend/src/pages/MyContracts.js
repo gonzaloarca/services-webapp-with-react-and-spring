@@ -236,6 +236,7 @@ const MyContracts = () => {
   let initialTab = 0;
 
   if (!activeTab) {
+    history.replace(`/my-contracts/${tabPaths[0]}`);
     tabSection = tabPaths[0];
   } else {
     tabPaths.forEach((path, index) => {

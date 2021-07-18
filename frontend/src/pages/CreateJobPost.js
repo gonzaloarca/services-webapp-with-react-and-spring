@@ -16,6 +16,7 @@ import {
   Divider,
   Fab,
   FormControl,
+  FormHelperText,
   InputLabel,
   makeStyles,
   MenuItem,
@@ -27,9 +28,9 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
-import { Add, Adjust, LocationOn } from '@material-ui/icons';
+import { Add } from '@material-ui/icons';
 import clsx from 'clsx';
-import { Form, Formik, useFormikContext } from 'formik';
+import { Form, Formik, useFormikContext, ErrorMessage } from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
@@ -42,6 +43,12 @@ import { themeUtils } from '../theme';
 import createJobPostStyles from './CreateJobPostStyles';
 import PackageAccordion from '../components/PackageAccordion';
 import { Helmet } from 'react-helmet';
+import FileInput, {
+  checkTypeMultiple,
+  checkSizeMultiple,
+  checkQuantity,
+} from '../components/FileInput';
+import * as Yup from 'yup';
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -154,7 +161,7 @@ const getSteps = () => {
   ];
 };
 
-const getStepContent = (step) => {
+const getStepContent = (step, formRef, handleNext, data) => {
   const steps = getSteps();
 
   switch (step) {
@@ -165,7 +172,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.orange}
           title={steps[step].title}
         >
-          <CategoryStepBody />
+          <CategoryStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 1:
@@ -175,7 +186,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.lightBlue}
           title={steps[step].title}
         >
-          <TitleStepBody />
+          <TitleStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 2:
@@ -185,7 +200,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.aqua}
           title={steps[step].title}
         >
-          <PackagesStepBody />
+          <PackagesStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 3:
@@ -195,7 +214,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.blue}
           title={steps[step].title}
         >
-          <ImagesStepBody />
+          <ImagesStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 4:
@@ -205,7 +228,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.orange}
           title={steps[step].title}
         >
-          <HoursStepBody />
+          <HoursStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 5:
@@ -215,7 +242,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.aqua}
           title={steps[step].title}
         >
-          <LocationsStepBody />
+          <LocationsStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 6:
@@ -225,7 +256,7 @@ const getStepContent = (step) => {
           color={themeUtils.colors.blue}
           title={steps[step].title}
         >
-          <JobSummary form={mockedForm} />
+          <JobSummary formRef={formRef} handleNext={handleNext} data={data} />
         </PublishStep>
       );
     default:
@@ -233,76 +264,97 @@ const getStepContent = (step) => {
   }
 };
 
-const mockedForm = {
-  title: 'Duis est eiusmod est ea nostrud consequat.',
-  category: {
+// TODO: esto viene de la API?
+const jobTypes = [
+  {
     id: 0,
     description: 'Plumbing',
   },
-  packages: [
-    {
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      price: 1000,
-      rateType: {
-        id: 0,
-        description: 'HOURLY',
-      },
-    },
-  ],
-  images: [
-    process.env.PUBLIC_URL + '/img/plumbing.jpeg',
-    process.env.PUBLIC_URL + '/img/babysitting.jpeg',
-    process.env.PUBLIC_URL + '/img/carpentry.jpeg',
-  ],
-  hours:
-    'Excepteur esse in labore anim irure velit magna sit id qui. Culpa do magna officia proident.',
-  locations: [
-    {
-      id: 0,
-      description: 'Recoleta',
-    },
-    {
-      id: 1,
-      description: 'Recoleta',
-    },
-    {
-      id: 2,
-      description: 'Recoleta',
-    },
-    {
-      id: 3,
-      description: 'Recoleta',
-    },
-    {
-      id: 4,
-      description: 'Recoleta',
-    },
-    {
-      id: 5,
-      description: 'Recoleta',
-    },
-  ],
-};
+  {
+    id: 1,
+    description: 'Carpentry',
+  },
+  {
+    id: 2,
+    description: 'Painting',
+  },
+  {
+    id: 3,
+    description: 'Babysitting',
+  },
+  {
+    id: 4,
+    description: 'Electricity',
+  },
+  {
+    id: 5,
+    description: 'Other',
+  },
+];
+
+const rateTypes = [
+  {
+    id: 0,
+    description: 'HOURLY',
+  },
+  {
+    id: 1,
+    description: 'ONE_TIME',
+  },
+  {
+    id: 2,
+    description: 'TBD',
+  },
+];
 
 const CreateJobPost = () => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
+
+  const [data, setData] = React.useState({
+    category: '',
+    title: '',
+    packages: [{ title: '', description: '', rateType: '', price: '' }],
+    images: '',
+    hours: '',
+    locations: '',
+  });
+
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
-  const handleNext = () => {
+  const handleNext = (newData, final = false) => {
+    if (final) {
+      makeRequest(newData);
+      return;
+    }
+    setData((prev) => ({ ...prev, ...newData }));
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
+  const handleBack = (newData) => {
+    setData((prev) => ({ ...prev, ...newData }));
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
+  const makeRequest = (newData) => {
+    console.log(newData);
+    //TODO: Registrar con la API
+    //TODO: Redirigir a una vista de "Success"
   };
+
+  const formRef = React.useRef();
+
+  const handleSubmit = () => {
+    if (formRef.current) {
+      formRef.current.handleSubmit();
+    }
+  };
+
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
 
   return (
     <>
@@ -334,12 +386,12 @@ const CreateJobPost = () => {
             <div>Submitting form...</div>
           ) : (
             <div>
-              {getStepContent(activeStep)}
+              {getStepContent(activeStep, formRef, handleNext, data)}
 
               <div className={classes.actionsContainer}>
                 <Button
                   disabled={activeStep === 0}
-                  onClick={handleBack}
+                  onClick={() => handleBack(data)}
                   className={classes.button}
                 >
                   {t('createjobpost.back')}
@@ -347,7 +399,7 @@ const CreateJobPost = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleNext}
+                  onClick={handleSubmit}
                   className={classes.button}
                 >
                   {activeStep === steps.length - 1
@@ -362,33 +414,6 @@ const CreateJobPost = () => {
     </>
   );
 };
-
-const jobTypes = [
-  {
-    id: 0,
-    description: 'Plumbing',
-  },
-  {
-    id: 1,
-    description: 'Carpentry',
-  },
-  {
-    id: 2,
-    description: 'Painting',
-  },
-  {
-    id: 3,
-    description: 'Babysitting',
-  },
-  {
-    id: 4,
-    description: 'Electricity',
-  },
-  {
-    id: 5,
-    description: 'Other',
-  },
-];
 
 const PublishStep = ({ step, color, title, children }) => {
   const classes = useStyles();
@@ -408,73 +433,140 @@ const PublishStep = ({ step, color, title, children }) => {
   );
 };
 
-const CategoryStepBody = () => {
+const CategoryStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [category, setCategory] = React.useState('');
-  const handleChange = (newValue) => {
-    setCategory(newValue);
+
+  const handleSubmit = (values) => {
+    handleNext(values);
   };
+
+  const validationSchema = Yup.object({
+    category: Yup.number().required(t('validationerror.required')),
+  });
+
   return (
     <div className="py-10">
-      <FormControl className={classes.input} variant="filled">
-        <InputLabel id="category-select-label">
-          {t('createjobpost.steps.category.label')}
-        </InputLabel>
-        <Select
-          labelId="category-select-label"
-          value={category}
-          onChange={(e) => handleChange(e.target.value)}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          {jobTypes.map(({ id, description }) => (
-            <MenuItem key={id} value={id}>
-              {description}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <FormControl className={classes.input} variant="filled">
+              <InputLabel id="category-select-label">
+                {t('createjobpost.steps.category.label')}
+              </InputLabel>
+              <Select
+                labelId="category-select-label"
+                name="category"
+                value={values.category}
+                onChange={(e) => setFieldValue('category', e.target.value)}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {jobTypes.map(({ id, description }) => (
+                  <MenuItem key={id} value={id}>
+                    {description}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>
+                <ErrorMessage name="category"></ErrorMessage>
+              </FormHelperText>
+            </FormControl>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
 
-const TitleStepBody = () => {
+const TitleStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [title, setTitle] = React.useState('');
-  const handleChange = (newValue) => {
-    setTitle(newValue);
+
+  const handleSubmit = (values) => {
+    handleNext(values);
   };
+
+  const validationSchema = Yup.object({
+    title: Yup.string()
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
+  });
 
   return (
     <div className="py-10">
-      <TextField
-        label={t('createjobpost.steps.jobtitle.label')}
-        className={classes.input}
-        variant="filled"
-        value={title}
-        onChange={(e) => handleChange(e.target.value)}
-      />
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <TextField
+              label={t('createjobpost.steps.jobtitle.label')}
+              className={classes.input}
+              variant="filled"
+              value={values.title}
+              onChange={(e) => setFieldValue('title', e.target.value)}
+              name="title"
+              helperText={<ErrorMessage name="title"></ErrorMessage>}
+            />
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
 
-const PackagesStepBody = () => {
+const PackagesStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
+  const { t } = useTranslation();
+
+  const handleSubmit = (values) => {
+    handleNext(values);
+  };
+
+  const validationSchema = Yup.object({
+    packages: Yup.array().of(
+      Yup.object().shape({
+        title: Yup.string()
+          .required(t('validationerror.required'))
+          .max(100, t('validationerror.maxlength', { length: 100 })),
+        description: Yup.string()
+          .required(t('validationerror.required'))
+          .max(100, t('validationerror.maxlength', { length: 100 })),
+        rateType: Yup.number().required(t('validationerror.required')),
+        price: Yup.number().when('rateType', {
+          is: 2,
+          otherwise: Yup.number().required(t('validationerror.required')),
+        }),
+      })
+    ),
+  });
 
   return (
     <div className={classes.packagesContainer}>
       <Formik
-        initialValues={{
-          packages: [{ title: '', description: '', rateType: '', price: '' }],
-        }}
-        onSubmit={() => {}}
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
       >
-        <Form>
-          <PackagesForm />
-        </Form>
+        {(props) => (
+          <Form>
+            <PackagesForm />
+          </Form>
+        )}
       </Formik>
     </div>
   );
@@ -486,11 +578,10 @@ const PackagesForm = () => {
   return (
     <>
       {values.packages.map((pack, index) => (
-        <div className="mb-4">
+        <div className="mb-4" key={index}>
           <PackageFormItem
             withDelete={values.packages.length > 1}
             index={index}
-            key={index}
           />
         </div>
       ))}
@@ -511,44 +602,184 @@ const PackagesForm = () => {
   );
 };
 
-const ImagesStepBody = () => {
+const ImagesStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  return <div className={classes.stepContainer}></div>;
+  const handleSubmit = (values) => {
+    handleNext(values);
+  };
+
+  const validationSchema = Yup.object({
+    images: Yup.mixed()
+      .test(
+        'is-correct-type',
+        t('validationerror.multipleimages.type'),
+        checkTypeMultiple
+      )
+      .test(
+        'is-correct-size',
+        t('validationerror.multipleimages.size', { size: 2 }),
+        checkSizeMultiple
+      )
+      .test(
+        'is-correct-quantity',
+        t('validationerror.multipleimages.quantity', { count: 5 }),
+        checkQuantity
+      ),
+  });
+
+  return (
+    <div className={classes.stepContainer}>
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {(props) => (
+          <Form>
+            <FileInput multiple fileName="images" />
+            <div className="font-thin text-sm mt-3">
+              {t('createjobpost.steps.images.disclaimer', {
+                count: 5,
+                size: 2,
+              })}
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
 };
 
-const HoursStepBody = () => {
+const HoursStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const handleSubmit = (values) => {
+    handleNext(values);
+  };
+
+  const validationSchema = Yup.object({
+    hours: Yup.string()
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
+  });
 
   return (
     <div className="py-10">
-      <TextField
-        multiline
-        rows={3}
-        variant="filled"
-        placeholder={t('createjobpost.steps.hours.label')}
-        className={classes.input}
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <TextField
+              multiline
+              rows={3}
+              variant="filled"
+              placeholder={t('createjobpost.steps.hours.label')}
+              className={classes.input}
+              onChange={(e) => setFieldValue('hours', e.target.value)}
+              name="hours"
+              helperText={<ErrorMessage name="hours"></ErrorMessage>}
+              value={values.hours}
+            />
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+const LocationsStepBody = ({ formRef, handleNext, data }) => {
+  const { t } = useTranslation();
+
+  const handleSubmit = (values) => {
+    handleNext(values);
+  };
+
+  const validationSchema = Yup.object({
+    locations: Yup.array()
+      .min(1, t('validationerror.locations'))
+      .of(Yup.number().required(t('validationerror.required'))),
+  });
+
+  return (
+    <div className="py-10">
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <LocationList
+              multiple
+              name="locations"
+              initial={values.locations}
+              setFieldValue={setFieldValue}
+            />
+            <FormHelperText className="flex justify-center">
+              <ErrorMessage name="locations"></ErrorMessage>
+            </FormHelperText>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+const JobSummary = ({ formRef, handleNext, data }) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  const category = jobTypes[data.category]; //TODO obtener el objeto category aca
+  const packages = [];
+  const locations = [];
+
+  data.packages.forEach((pack) => {
+    // TODO: pack.rateType es solo el ID al salir del Form, ver cómo obtener el objeto de la API
+    let rateType = rateTypes[pack.rateType];
+    packages.push({
+      title: pack.title,
+      description: pack.description,
+      price: pack.price,
+      rateType: rateType,
+    });
+  });
+
+  data.locations.forEach((location) => {
+    // TODO location es solo el id de la zona, obtener el objeto de la API aca
+    locations.push({
+      id: 0,
+      description: 'Recoleta',
+    });
+  });
+
+  const handleSubmit = (values) => {
+    // Reemplazo los valores por los convertidos antes de enviarlo TODO: esta bien?
+    values.category = category;
+    values.packages = packages;
+    values.locations = locations;
+    handleNext(values, true);
+  };
+
+  return (
+    <div key={0}>
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
       />
-    </div>
-  );
-};
-
-const LocationsStepBody = () => {
-  return (
-    <div className="py-10">
-      <LocationList multiple />
-    </div>
-  );
-};
-
-const JobSummary = ({ form }) => {
-  const classes = useStyles();
-  const { t } = useTranslation();
-
-  return (
-    <>
       {/* Categoria */}
       <div className={classes.summaryRow}>
         <div className={classes.summaryIcon}>
@@ -561,9 +792,7 @@ const JobSummary = ({ form }) => {
           )}
         >
           <p>{t('createjobpost.steps.category.label')}</p>
-          <div className={classes.summaryValue}>
-            {form.category.description}
-          </div>
+          <div className={classes.summaryValue}>{category.description}</div>
         </div>
       </div>
 
@@ -576,9 +805,10 @@ const JobSummary = ({ form }) => {
           className={clsx(classes.summaryFieldContainer, classes.titleSummary)}
         >
           <p>{t('createjobpost.steps.jobtitle.label')}</p>
-          <div className={classes.summaryValue}>{form.title}</div>
+          <div className={classes.summaryValue}>{data.title}</div>
         </div>
       </div>
+
       {/* Paquetes */}
       <div className={classes.summaryRow}>
         <div className={classes.summaryIcon}>
@@ -592,7 +822,7 @@ const JobSummary = ({ form }) => {
         >
           <p>{t('createjobpost.steps.packages.label')}</p>
           <div className="p-3">
-            {form.packages.map((pack, index) => (
+            {packages.map((pack, index) => (
               <PackageAccordion key={index} pack={pack} isHireable={false} />
             ))}
           </div>
@@ -600,7 +830,7 @@ const JobSummary = ({ form }) => {
       </div>
 
       {/* Imagenes */}
-      {form.images && form.images.length > 0 && (
+      {data.images && Array.from(data.images).length > 0 && (
         <div className={classes.summaryRow}>
           <div className={classes.summaryIcon}>
             <FontAwesomeIcon icon={faImages} className="text-2xl" />
@@ -613,8 +843,17 @@ const JobSummary = ({ form }) => {
           >
             <p>{t('createjobpost.steps.images.label')}</p>
             <div className={classes.imageSlideshow}>
-              {form.images.map((image, index) => (
-                <img className={classes.image} src={image} key={index} alt="" />
+              {Array.from(data.images).map((image, index) => (
+                <img
+                  className={classes.image}
+                  src={
+                    image === ''
+                      ? `${process.env.PUBLIC_URL}/img/defaultavatar.svg`
+                      : URL.createObjectURL(image)
+                  }
+                  key={index}
+                  alt=""
+                />
               ))}
             </div>
           </div>
@@ -631,7 +870,7 @@ const JobSummary = ({ form }) => {
         >
           <p>{t('createjobpost.steps.hours.label')}</p>
           <div className={clsx(classes.summaryValue, 'text-sm')}>
-            {form.hours}
+            {data.hours}
           </div>
         </div>
       </div>
@@ -649,19 +888,20 @@ const JobSummary = ({ form }) => {
         >
           <p>{t('createjobpost.steps.locations.label')}</p>
           <div className={classes.summaryValue}>
-            {form.locations.map(({ description }) => (
+            {locations.map(({ description }, index) => (
               <Chip
                 label={description}
                 className="m-1 bg-white"
                 icon={
                   <FontAwesomeIcon className="text-lg" icon={faMapMarkerAlt} />
                 }
+                key={index}
               />
             ))}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
