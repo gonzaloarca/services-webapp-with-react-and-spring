@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import CategoryCard from '../components/CategoryCard';
 import NavBar from '../components/NavBar';
@@ -121,6 +122,11 @@ const Categories = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.categories') })}
+        </title>
+      </Helmet>
       <NavBar currentSection="/categories" />
       <div className={globalClasses.contentContainerTransparent}>
         <div className={classes.container}>

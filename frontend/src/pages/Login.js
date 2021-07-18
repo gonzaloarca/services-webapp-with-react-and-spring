@@ -23,6 +23,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
 import { UserContext } from '../context';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -92,6 +93,9 @@ const Login = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>{t('title', { section: t('navigation.sections.login') })}</title>
+      </Helmet>
       <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}

@@ -23,6 +23,7 @@ import FormControlPassword from '../components/FormControlPassword';
 import FileInput, { checkSize, checkType } from '../components/FileInput';
 import TabPanel from '../components/TabPanel';
 import { useParams, useHistory } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 // TODO: integracion con API
 const currentUser = {
@@ -130,6 +131,11 @@ const Account = () => {
 
   return (
     <>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.account') })}
+        </title>
+      </Helmet>
       <NavBar />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('account.header')} />

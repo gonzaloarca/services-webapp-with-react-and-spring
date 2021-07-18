@@ -12,6 +12,7 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -70,6 +71,11 @@ const Register = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.register') })}
+        </title>
+      </Helmet>
       <NavBar currentSection={'/register'} isTransparent />
       <div
         className={classes.background}

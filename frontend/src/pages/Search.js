@@ -21,6 +21,7 @@ import { CategoriesZonesAndOrderByContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Pagination, PaginationItem } from '@material-ui/lab';
 import BottomPagination from '../components/BottomPagination';
+import { Helmet } from 'react-helmet';
 
 const jobs = [
   {
@@ -221,6 +222,7 @@ const Search = () => {
   });
   const classes = useStyles();
   const history = useHistory();
+  const { t } = useTranslation();
 
   const loadJobCards = async () => {
     try {
@@ -249,6 +251,11 @@ const Search = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.explore') })}
+        </title>
+      </Helmet>
       <NavBar
         currentSection={'/search'}
         searchBarSetQueryParams={setQueryParams}

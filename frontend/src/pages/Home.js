@@ -11,6 +11,7 @@ import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
 import { CategoriesZonesAndOrderByContext } from '../context';
 import { useJobCards } from '../hooks';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(homeStyles);
 const useGlobalStyles = makeStyles(styles);
@@ -31,6 +32,9 @@ export const Home = (props) => {
   }, []);
   return (
     <div className="bg-white">
+      <Helmet>
+        <title>{t('title', { section: t('navigation.sections.home') })}</title>
+      </Helmet>
       <NavBar currentSection={'/'} isTransparent />
       <Hero zones={zones} />
       <HeroSteps />

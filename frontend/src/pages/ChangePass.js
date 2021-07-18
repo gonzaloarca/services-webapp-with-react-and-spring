@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { useLocation, Link } from 'react-router-dom';
 import FormControlPassword from '../components/FormControlPassword';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -47,6 +48,11 @@ const ChangePass = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.changepass') })}
+        </title>
+      </Helmet>
       <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}

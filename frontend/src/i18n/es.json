@@ -4,14 +4,26 @@
       "home": "Inicio",
       "categories": "Categorías",
       "publish": "Publicar",
-      "mycontracts": "Mis Contratos",
+      "mycontracts": "Mis contratos",
       "analytics": "Estadísticas",
       "explore": "Explorar",
       "login": "Ingresar",
-      "register": "Registrarme"
+      "register": "Registrarme",
+      "packages": "Paquetes",
+      "addpackage": "Añadir paquete",
+      "editpackage": "Editar paquete",
+      "recoverpass": "Recuperar contraseña",
+      "changepass": "Cambiar contraseña",
+      "verify": "Verificar cuenta",
+      "profile": "Perfil de {{username}}",
+      "account": "Mi cuenta",
+      "registersuccess": "Registro exitoso",
+      "hire": "Contratar servicio"
     },
     "search": "Buscar..."
   },
+  "title": "{{section}} | HireNet",
+  "defaulttitle": "HireNet",
   "validationerror": {
     "required": "Este campo es obligatorio",
     "email": "Por favor ingrese una direccion de correo electronico",

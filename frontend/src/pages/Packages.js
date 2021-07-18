@@ -13,12 +13,10 @@ import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { AddBox, Create, DeleteForever, Launch } from '@material-ui/icons';
 import { themeUtils } from '../theme';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCubes } from '@fortawesome/free-solid-svg-icons';
-import clsx from 'clsx';
 import PackageAccordion from '../components/PackageAccordion';
 import HirenetModal, { PlainTextBody } from '../components/HirenetModal';
 import PackagesHeader from '../components/PackagesHeader';
+import { Helmet } from 'react-helmet';
 
 const jobPost = {
   id: 3,
@@ -79,6 +77,11 @@ const Packages = () => {
 
   return (
     <>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.packages') })}
+        </title>
+      </Helmet>
       <NavBar currentSection="/create-job-post" />
       <div className={globalClasses.contentContainerTransparent}>
         <PackagesHeader />

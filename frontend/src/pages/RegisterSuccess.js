@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { Button, Card } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -15,6 +16,11 @@ const RegisterSuccessfull = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.registersuccess') })}
+        </title>
+      </Helmet>
       <NavBar isTransparent />
       <div
         className={classes.background}

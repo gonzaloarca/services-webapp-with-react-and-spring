@@ -8,10 +8,22 @@
       "analytics": "Analytics",
       "explore": "Explore",
       "login": "Login",
-      "register": "Register"
+      "register": "Register",
+      "packages": "Packages",
+      "addpackage": "Add package",
+      "editpackage": "Edit package",
+      "recoverpass": "Recover password",
+      "changepass": "Change password",
+      "verify": "Verify account",
+      "profile": "{{username}}'s profile",
+      "account": "My account",
+      "registersuccess": "Account created successfully",
+      "hire": "Hire service"
     },
     "search": "Search..."
   },
+  "title": "{{section}} | HireNet",
+  "defaulttitle": "HireNet",
   "validationerror": {
     "required": "This field is required",
     "email": "Please enter a valid email address",
