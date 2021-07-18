@@ -350,7 +350,13 @@
     "servicepackages": "Paquetes del servicio",
     "add": "Añadir nuevo paquete",
     "edit": "Editar",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "deletemodal": {
+      "title": "¿Está seguro que desea eliminar el paquete?",
+      "body": "Esta acción no se puede deshacer",
+      "affirmative": "Eliminar",
+      "negative": "Cerrar"
+    }
   },
   "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
   "locale": "es",

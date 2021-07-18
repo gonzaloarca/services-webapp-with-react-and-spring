@@ -7,7 +7,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
-import React from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import NavBar from '../components/NavBar';
 import styles from '../styles';
@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCubes } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import PackageAccordion from '../components/PackageAccordion';
+import HirenetModal, { PlainTextBody } from '../components/HirenetModal';
 
 const jobPost = {
   id: 10,
@@ -77,6 +78,8 @@ const Packages = () => {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const [openDelete, setOpenDelete] = useState(false);
+
   return (
     <>
       <NavBar currentSection="/create-job-post" />
@@ -130,14 +133,33 @@ const Packages = () => {
                   {t('managepackages.edit')}
                 </Button>
                 {packages.length > 1 && (
-                  <Button
-                    fullWidth
-                    startIcon={<DeleteForever />}
-                    style={{ color: themeUtils.colors.red }}
-                  >
-                    {' '}
-                    {t('managepackages.delete')}{' '}
-                  </Button>
+                  <>
+                    <Button
+                      fullWidth
+                      startIcon={<DeleteForever />}
+                      style={{ color: themeUtils.colors.red }}
+                      onClick={() => setOpenDelete(true)}
+                    >
+                      {' '}
+                      {t('managepackages.delete')}{' '}
+                    </Button>
+                    <HirenetModal
+                      open={openDelete}
+                      title={t('managepackages.deletemodal.title')}
+                      body={
+                        <PlainTextBody>
+                          {t('managepackages.deletemodal.body')}
+                        </PlainTextBody>
+                      }
+                      onNegative={() => setOpenDelete(false)}
+                      onAffirmative={() => console.log('DELETE PACKAGE')}
+                      affirmativeLabel={t(
+                        'managepackages.deletemodal.affirmative'
+                      )}
+                      negativeLabel={t('managepackages.deletemodal.negative')}
+                      affirmativeColor={themeUtils.colors.red}
+                    />
+                  </>
                 )}
               </Grid>
             </Grid>
