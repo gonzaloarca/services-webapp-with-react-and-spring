@@ -41,7 +41,7 @@ const rightSections = [
 ];
 
 const NavBar = ({
-  currentSection,
+  currentSection = '',
   isTransparent = false,
   searchBarQueryParams,
   searchBarSetQueryParams,

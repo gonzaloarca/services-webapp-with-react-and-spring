@@ -18,12 +18,26 @@
       "profile": "{{username}}'s profile",
       "account": "My account",
       "registersuccess": "Account created successfully",
-      "hire": "Hire service"
+      "hire": "Hire service",
+      "error": "Error",
+      "pagenotfound": "Page not found"
     },
     "search": "Search..."
   },
   "title": "{{section}} | HireNet",
   "defaulttitle": "HireNet",
+  "error": {
+    "404": {
+      "header": "Error 404",
+      "description": "Page not found",
+      "action": "Return to home"
+    },
+    "generic": {
+      "header": "Error",
+      "descriptión": "Something went wrong...",
+      "action": "Return to home"
+    }
+  },
   "validationerror": {
     "required": "This field is required",
     "email": "Please enter a valid email address",
