@@ -97,10 +97,9 @@ const App = () => {
       }
     }
 
-      loadCategories();
-      loadZones();
+    loadCategories();
+    loadZones();
   }, []);
-
   return (
     <>
       <CategoriesAndZonesContext.Provider
@@ -112,15 +111,18 @@ const App = () => {
           <Route path="/categories" exact component={Categories} />
           <Route path="/create-job-post" exact component={CreateJobPost} />
           <Route path="/my-contracts" exact component={MyContracts} />
-          <Route path="/analytics" exact component={Analytics} />
-          <Route path="/search/:id" exact component={Search} />
+          {isProfessional(currentUser) && (
+            <Route path="/analytics" exact component={Analytics} />
+          )}
           <Route path="/search" exact component={Search} />
           <Route path="/job/:id" exact component={JobPost} />
-          <Route path="/profile/:id" exact component={Profile} />
+          <Route path="/profile/:id/:activeTab?" exact component={Profile} />
           {!currentUser && <Route path="/login" exact component={Login} />}
-          <Route path="/register" exact component={Register} />
+          {!currentUser && (
+            <Route path="/register" exact component={Register} />
+          )}
           <Route path="/hire/package/:id" exact component={Hire} />
-          <Route path="/account" exact component={Account} />
+          <Route path="/account/:activeTab?" exact component={Account} />
           <Route path="/recover" exact component={RecoverPass} />
           <Route path="/change-password" exact component={ChangePass} />
           <Route path="/token" exact component={VerifyEmail} />
@@ -131,6 +133,10 @@ const App = () => {
       </CategoriesAndZonesContext.Provider>
     </>
   );
+};
+
+const isProfessional = (user) => {
+  return user && !user.roles.find((role) => role.toUpper === 'PROFESSIONAL');
 };
 
 export default App;

@@ -20,8 +20,9 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useTranslation } from 'react-i18next';
 import FormControlPassword from '../components/FormControlPassword';
-import FileInput from '../components/FileInput';
+import FileInput, { checkSize, checkType } from '../components/FileInput';
 import TabPanel from '../components/TabPanel';
+import { useParams, useHistory } from 'react-router-dom';
 
 // TODO: integracion con API
 const currentUser = {
@@ -84,32 +85,48 @@ const Account = () => {
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
 
-  const [tabValue, setTabValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
   const accountSections = [
     {
       tabLabel: t('account.data.title'),
       color: themeUtils.colors.orange,
       icon: <Person className="text-white" />,
       component: <PersonalData />,
+      path: 'personal',
     },
     {
       tabLabel: t('account.security.title'),
       color: themeUtils.colors.blue,
       icon: <Lock className="text-white" />,
       component: <SecurityData />,
+      path: 'security',
     },
     {
       tabLabel: t('account.logout.title'),
       color: themeUtils.colors.red,
       icon: <ExitToApp className="text-white" />,
       component: <Logout />,
+      path: 'logout',
     },
   ];
+
+  const { activeTab } = useParams();
+
+  const history = useHistory();
+
+  let initialTab = 0;
+
+  if (activeTab) {
+    accountSections.forEach((section, index) => {
+      if (section.path === activeTab) initialTab = index;
+    });
+  }
+
+  const [tabValue, setTabValue] = React.useState(initialTab);
+
+  const handleChange = (event, newValue) => {
+    setTabValue(newValue);
+    history.push(`/account/${accountSections[newValue].path}`);
+  };
 
   return (
     <>
@@ -200,16 +217,11 @@ const PersonalData = () => {
       .required(t('validationerror.required'))
       .matches(/^\+?[\d-]{7,100}$/, t('validationerror.phone', { length: 7 })),
     image: Yup.mixed()
-      .test(
-        'is-correct-type',
-        t('validationerror.avatarfile.type'),
-        (file) =>
-          file === undefined || ['image/png', 'image/jpeg'].includes(file.type)
-      )
+      .test('is-correct-type', t('validationerror.avatarfile.type'), checkType)
       .test(
         'is-correct-size',
         t('validationerror.avatarfile.size', { size: 2 }),
-        (file) => file === undefined || file.size <= 2 * 1024 * 1024
+        checkSize
       ),
   });
 

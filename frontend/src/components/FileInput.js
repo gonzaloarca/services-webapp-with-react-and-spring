@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import { withStyles } from '@material-ui/core/styles';
 
-const FileInput = ({ fileName }) => {
+const FileInput = ({ fileName, multiple = false }) => {
   const { t } = useTranslation();
 
   const { values, setFieldValue } = useFormikContext();
@@ -16,11 +16,15 @@ const FileInput = ({ fileName }) => {
           name={fileName}
           onChange={(event) =>
             event.target.files[0] !== undefined &&
-            setFieldValue(fileName, event.target.files[0])
+            setFieldValue(
+              fileName,
+              multiple ? event.target.files : event.target.files[0]
+            )
           }
           type="file"
           id="fileInput"
           className="w-full"
+          inputProps={{ multiple: multiple }}
         />
         <GreyButton
           disabled={values.image === ''}
@@ -52,5 +56,41 @@ const GreyButton = withStyles({
     fontSize: '1em',
   },
 })(Button);
+
+export function checkType(file) {
+  if (file === undefined || file === '') return true;
+
+  return ['image/png', 'image/jpeg'].includes(file.type);
+}
+
+export function checkSize(file) {
+  if (file === undefined || file === '') return true;
+
+  return file.size <= 2 * 1024 * 1024;
+}
+
+export function checkTypeMultiple(files) {
+  if (files === undefined || files === '') return true;
+
+  let valid = true;
+
+  Array.from(files).forEach((file) => {
+    valid = valid && checkType(file);
+  });
+
+  return valid;
+}
+
+export function checkSizeMultiple(files) {
+  if (files === undefined || files === '') return true;
+
+  let valid = true;
+
+  Array.from(files).forEach((file) => {
+    valid = valid && checkSize(file);
+  });
+
+  return valid;
+}
 
 export default FileInput;

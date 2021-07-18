@@ -25,7 +25,7 @@ const PriceTag = ({ rateType, price, icon = false }) => {
   return (
     <div className={clsx(classes.priceTag, 'flex items-center')}>
       {icon ? <LocalOffer className="mr-2" /> : <></>}
-      {packagePriceFormatter(price, rateType)}
+      {packagePriceFormatter(t, rateType, price)}
     </div>
   );
 };

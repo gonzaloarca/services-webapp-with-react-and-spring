@@ -20,6 +20,7 @@ import navBarStyles from './NavBarStyles';
 import clsx from 'clsx';
 import { themeUtils } from '../theme';
 import { UserContext } from '../context';
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles(navBarStyles);
 
 const sections = [
@@ -39,12 +40,18 @@ const rightSections = [
   { name: 'navigation.sections.register', path: '/register' },
 ];
 
-const NavBar = ({ currentSection, isTransparent = false }) => {
+const NavBar = ({
+  currentSection,
+  isTransparent = false,
+  searchPageValues,
+  searchPageSetValues,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [showDrawer, setShowDrawer] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const {currentUser} = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
+  const history = useHistory();
   const changeBarBackground = () => {
     if (window.scrollY >= 200) {
       setScrolled(true);
@@ -52,6 +59,9 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
       setScrolled(false);
     }
   };
+  const [values, setValues] = React.useState({
+    query: !searchPageValues ? '' : searchPageValues.query,
+  });
 
   useEffect(() => {
     if (isTransparent) {
@@ -61,9 +71,9 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
     return () => window.removeEventListener('scroll', changeBarBackground);
   });
 
-  useEffect(()=>{
-    console.log("CURRENT USER",currentUser)
-  },[currentUser])
+  useEffect(() => {
+    console.log('CURRENT USER', currentUser);
+  }, [currentUser]);
 
   return (
     <div className={classes.root}>
@@ -137,48 +147,67 @@ const NavBar = ({ currentSection, isTransparent = false }) => {
                 </LinkButton>
               ))}
             </div>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
+            {currentSection !== '/' && (
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder={t('navigation.search')}
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  value={values.query}
+				  onChange={(e) => setValues({ query: e.target.value })}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      if (!searchPageValues)
+                        history.push('/search?query=' + event.target.value);
+                      else
+                        searchPageSetValues({
+                          ...searchPageValues,
+                          query: event.target.value,
+                        });
+                    }
+                  }}
+                />
               </div>
-              <InputBase
-                placeholder={t('navigation.search')}
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </div>
-          </div>
-          {!currentUser && <div className={clsx(classes.sectionsContainer, 'items-end', 'flex')}>
-            {rightSections.map((i) =>
-              i.path === '/login' ? (
-                <LinkButton
-                  className={
-                    currentSection === i.path ? classes.selectedSection : ''
-                  }
-                  key={i.path}
-                  component={Link}
-                  to={i.path}
-                >
-                  {t(i.name)}
-                </LinkButton>
-              ) : (
-                <LinkButtonRegister
-                  className={
-                    currentSection === i.path
-                      ? classes.selectedRegisterSection
-                      : ''
-                  }
-                  key={i.path}
-                  component={Link}
-                  to={i.path}
-                >
-                  {t(i.name)}
-                </LinkButtonRegister>
-              )
             )}
-          </div>}
+          </div>
+          {!currentUser && (
+            <div
+              className={clsx(classes.sectionsContainer, 'items-end', 'flex')}
+            >
+              {rightSections.map((i) =>
+                i.path === '/login' ? (
+                  <LinkButton
+                    className={
+                      currentSection === i.path ? classes.selectedSection : ''
+                    }
+                    key={i.path}
+                    component={Link}
+                    to={i.path}
+                  >
+                    {t(i.name)}
+                  </LinkButton>
+                ) : (
+                  <LinkButtonRegister
+                    className={
+                      currentSection === i.path
+                        ? classes.selectedRegisterSection
+                        : ''
+                    }
+                    key={i.path}
+                    component={Link}
+                    to={i.path}
+                  >
+                    {t(i.name)}
+                  </LinkButtonRegister>
+                )
+              )}
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       {isTransparent ? <></> : <div className={classes.offset} />}

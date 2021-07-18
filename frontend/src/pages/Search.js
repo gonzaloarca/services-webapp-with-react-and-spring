@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import {
   FormControl,
@@ -15,7 +15,7 @@ import { themeUtils } from '../theme';
 import clsx from 'clsx';
 import JobCard from '../components/JobCard';
 import { useLocation } from 'react-router-dom';
-import { FormatColorText } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 
 const jobs = [
   {
@@ -165,6 +165,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.4em',
     fontWeight: 'bold',
     margin: '0px 20px',
+    WebkitLineClamp: 3,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    overflowWrap: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   categoriesTitle: {
     fontSize: '1.em',
@@ -176,8 +182,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.9em',
     margin: '2px 40px',
     color: themeUtils.colors.grey,
+    cursor: 'pointer',
   },
-  selectedCategorie: {
+  selectedCategory: {
     color: 'black',
     fontWeight: 'bold',
   },
@@ -190,21 +197,43 @@ function useQuery() {
 const Search = () => {
   let queryParameters = useQuery();
   const [values, setValues] = React.useState({
-    zone: queryParameters.get('zone'),
-    category: queryParameters.get('category'),
-    query: queryParameters.get('query'),
-    orderBy: queryParameters.get('orderBy'),
+    zone: !queryParameters.get('zone') ? '' : queryParameters.get('zone'),
+    category: !queryParameters.get('category')
+      ? ''
+      : queryParameters.get('category'),
+    query: !queryParameters.get('query') ? '' : queryParameters.get('query'),
+    orderBy: !queryParameters.get('orderBy')
+      ? ''
+      : queryParameters.get('orderBy'),
   });
   const classes = useStyles();
-  console.log(values);
+  const history = useHistory();
+
+  useEffect(() => {
+    history.push(
+      '/search?zone=' +
+        values.zone +
+        '&category=' +
+        values.category +
+        '&orderBy=' +
+        values.orderBy +
+        '&query=' +
+        values.query
+    );
+  }, [values]);
 
   return (
     <div>
-      <NavBar currentSection={'/search'} />
+      <NavBar currentSection={'/search'} searchPageSetValues={setValues} searchPageValues={values} />
       <div className="flex justify-center mt-10">
         <Grid container spacing={3} className={classes.searchContainer}>
           <Grid item xs={3}>
-            <Filters category={values.category} orderBy={values.orderBy} />
+            <Filters
+              category={values.category}
+              orderBy={values.orderBy}
+              setValues={setValues}
+              values={values}
+            />
           </Grid>
           <Grid item xs={9}>
             <SearchResults zone={values.zone} query={values.query} />
@@ -219,38 +248,36 @@ const SearchResults = ({ zone, query }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const zoneStr = 'Boedo'; // TODO: debe ser a partir de zone
+  const zoneStr = 'Boedo'; // TODO: debe ser a partir del id en zone
   return (
     <Card className="p-5">
       <p className={classes.title}>
-        {zone === null
-          ? t('search.badquery')
-          : query !== null && query.length > 0
-          ? t('search.results', { zone: zoneStr, query: query })
-          : t('search.noqueryresults', { zone: zoneStr })}
+        {zone === ''
+          ? query === ''
+            ? t('search.results')
+            : t('search.queryresults', { query: query })
+          : query === ''
+          ? t('search.zoneresults', { zone: zoneStr })
+          : t('search.query&zoneresults', { zone: zoneStr, query: query })}
       </p>
       <Divider className="m-5" />
 
-      {zone !== null ? (
-        <Grid container spacing={3}>
-          {jobs.length > 0 ? (
-            jobs.map((i) => (
-              <Grid key={i.jobPost.id} item xs={12} sm={6} md={4} lg={3}>
-                <JobCard job={i} />
-              </Grid>
-            ))
-          ) : (
-            <p className={clsx('text-center m-10')}>{t('search.noresults')}</p>
-          )}
-        </Grid>
-      ) : (
-        <p className={clsx('text-center m-10')}>{t('search.sorry')}</p>
-      )}
+      <Grid container spacing={3}>
+        {jobs.length > 0 ? (
+          jobs.map((i) => (
+            <Grid key={i.jobPost.id} item xs={12} sm={6} md={4} lg={3}>
+              <JobCard job={i} />
+            </Grid>
+          ))
+        ) : (
+          <p className={clsx('text-center m-10')}>{t('search.noresults')}</p>
+        )}
+      </Grid>
     </Card>
   );
 };
 
-const Filters = ({ category, orderBy }) => {
+const Filters = ({ category, orderBy, values, setValues }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const categories = [
@@ -262,15 +289,13 @@ const Filters = ({ category, orderBy }) => {
     'Teaching',
     'Cleaning',
     'Babysitting',
-  ];
+  ]; //TODO: RECIBIR DE LA API
   const possibleOrders = [
     'Most hired',
     'Least hired',
     'Highest rated',
     'Lowest rated',
   ]; //TODO: RECIBIR DE LA API
-  let categoryVal = category === null ? -1 : parseInt(category);
-  let orderByVal = orderBy === null ? '' : parseInt(orderBy);
   return (
     <Card className="p-5">
       <p className={classes.title}>{t('search.filters')}</p>
@@ -278,7 +303,13 @@ const Filters = ({ category, orderBy }) => {
       <div className="flex justify-center m-6">
         <FormControl variant="filled" className="w-48">
           <InputLabel id="order-select">{t('search.orderby')}</InputLabel>
-          <Select labelId="order-select" value={orderByVal}>
+          <Select
+            labelId="order-select"
+            value={orderBy}
+            onChange={(event) => {
+              setValues({ ...values, orderBy: event.target.value });
+            }}
+          >
             <MenuItem value="">
               <em>{t('nonselected')}</em>
             </MenuItem>
@@ -297,8 +328,11 @@ const Filters = ({ category, orderBy }) => {
           key={index}
           className={clsx(
             classes.category,
-            index === categoryVal ? classes.selectedCategorie : ''
+            index === category ? classes.selectedCategory : ''
           )}
+          onClick={() => {
+            setValues({ ...values, category: index });
+          }}
         >
           {categoryString}
         </p>
