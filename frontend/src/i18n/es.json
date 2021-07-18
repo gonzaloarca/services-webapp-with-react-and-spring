@@ -362,6 +362,10 @@
     "header": "Añadir paquete",
     "submit": "Añadir"
   },
+  "editpackage": {
+    "header": "Editar paquete",
+    "submit": "Guardar cambios"
+  },
   "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
   "locale": "es",
   "account": {

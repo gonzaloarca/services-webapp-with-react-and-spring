@@ -361,6 +361,10 @@
     "header": "Add package",
     "submit": "Add"
   },
+  "editpackage": {
+    "header": "Edit package",
+    "submit": "Save changes"
+  },
   "datetimeformat": "MMMM d, yyyy - h:mm aa",
   "locale": "en",
   "account": {

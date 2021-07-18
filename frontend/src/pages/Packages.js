@@ -121,6 +121,8 @@ const Packages = () => {
                   fullWidth
                   startIcon={<Create />}
                   style={{ color: themeUtils.colors.electricBlue }}
+                  component={RouterLink}
+                  to={`/job/${jobPost.id}/packages/${pack.id}/edit`}
                 >
                   {t('managepackages.edit')}
                 </Button>
