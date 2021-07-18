@@ -50,7 +50,7 @@
   "jobcard": {
     "noreviews": "No reviews",
     "details": "View details",
-	"onezone": "{{firstZone}}",
+    "onezone": "{{firstZone}}",
     "morezones": "{{firstZone}} and {{zoneCount}} more"
   },
   "jobtype": {
@@ -356,6 +356,10 @@
       "affirmative": "Delete",
       "negative": "Dismiss"
     }
+  },
+  "addpackage": {
+    "header": "Add package",
+    "submit": "Add"
   },
   "datetimeformat": "MMMM d, yyyy - h:mm aa",
   "locale": "en",
