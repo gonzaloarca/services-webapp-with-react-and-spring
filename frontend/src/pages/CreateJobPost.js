@@ -41,6 +41,7 @@ import styles from '../styles';
 import { themeUtils } from '../theme';
 import createJobPostStyles from './CreateJobPostStyles';
 import PackageAccordion from '../components/PackageAccordion';
+import { Helmet } from 'react-helmet';
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -305,6 +306,11 @@ const CreateJobPost = () => {
 
   return (
     <>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.publish') })}
+        </title>
+      </Helmet>
       <NavBar currentSection={'/create-job-post'} />
 
       <div className={globalClasses.contentContainerTransparent}>

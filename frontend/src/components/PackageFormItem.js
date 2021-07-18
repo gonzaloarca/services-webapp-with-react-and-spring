@@ -131,6 +131,7 @@ const PackageFormItem = ({ index, withDelete }) => {
       </p>
       <TextField
         fullWidth
+        size="small"
         hiddenLabel
         InputProps={{
           classes: {
@@ -153,6 +154,7 @@ const PackageFormItem = ({ index, withDelete }) => {
       <TextField
         fullWidth
         hiddenLabel
+        size="small"
         multiline
         rows={3}
         InputProps={{
@@ -204,6 +206,7 @@ const PackageFormItem = ({ index, withDelete }) => {
       </p>
       <TextField
         fullWidth
+        size="small"
         type="number"
         inputProps={{
           min: '0',

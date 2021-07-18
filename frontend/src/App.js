@@ -2,6 +2,7 @@ import jwt from 'jwt-decode';
 
 import { Switch, Route } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import './App.css';
 import Analytics from './pages/Analytics';
 import Categories from './pages/Categories';
@@ -25,6 +26,9 @@ import { useUser, useCategories, useZones, useJobCards } from './hooks';
 import Packages from './pages/Packages';
 import AddPackage from './pages/AddPackage';
 import EditPackage from './pages/EditPackage';
+import RegisterSuccessfull from './pages/RegisterSuccess';
+import { useTranslation } from 'react-i18next';
+
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
   const { getUserByEmail } = useUser();
@@ -34,7 +38,7 @@ const App = () => {
   const [zones, setZones] = useState([]);
   const [categories, setCategories] = useState([]);
   const [orderByParams, setOrderByParams] = useState([]);
-
+  const { t } = useTranslation();
   /*
    * This function saves the current user in the context if the user is logged in.
    */
@@ -133,6 +137,9 @@ const App = () => {
           orderByParams: orderByParams,
         }}
       >
+        <Helmet>
+          <title>{t('defaulttitle')}</title>
+        </Helmet>
         <ScrollToTop />
         <Switch>
           <Route path="/" exact component={Home} />
@@ -159,6 +166,13 @@ const App = () => {
           {!currentUser && <Route path="/login" exact component={Login} />}
           {!currentUser && (
             <Route path="/register" exact component={Register} />
+          )}
+          {!currentUser && (
+            <Route
+              path="/register/success"
+              exact
+              component={RegisterSuccessfull}
+            />
           )}
           <Route path="/hire/package/:id" exact component={Hire} />
           <Route path="/account/:activeTab?" exact component={Account} />

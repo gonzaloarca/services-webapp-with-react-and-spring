@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { Button, Card } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import { useLocation, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -28,10 +29,17 @@ const VerifyEmail = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.verify') })}
+        </title>
+      </Helmet>
       <NavBar isTransparent />
       <div
         className={classes.background}
-        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)` }}
+        style={{
+          backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+        }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>

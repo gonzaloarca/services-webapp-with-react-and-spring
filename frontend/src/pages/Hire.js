@@ -31,6 +31,7 @@ import PriceTag from '../components/PriceTag';
 import { filterPastTime, filterPastDate } from '../utils/filterPast';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { Helmet } from 'react-helmet';
 
 registerLocale('es', es);
 
@@ -188,6 +189,9 @@ const Hire = ({ match }) => {
 
   return (
     <>
+      <Helmet>
+        <title>{t('title', { section: t('navigation.sections.hire') })}</title>
+      </Helmet>
       <NavBar currentSection="/search" />
       <div
         className={clsx(

@@ -61,6 +61,7 @@ const LoginAndRegisterStyles = (theme) => ({
   },
   badCredentials: {
     color: 'red',
+	textAlign: 'center',
   },
 });
 

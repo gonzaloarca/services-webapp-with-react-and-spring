@@ -18,6 +18,7 @@ import { Check, Group, Person, Schedule, Work } from '@material-ui/icons';
 import clsx from 'clsx';
 import ContractCard from '../components/ContractCard';
 import { useParams, useHistory } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -254,6 +255,11 @@ const MyContracts = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.mycontracts') })}
+        </title>
+      </Helmet>
       <NavBar currentSection={'/my-contracts'} />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('navigation.sections.mycontracts')} />

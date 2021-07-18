@@ -14,6 +14,7 @@ import {
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -40,10 +41,17 @@ const RecoverPass = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.recoverpass') })}
+        </title>
+      </Helmet>
       <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}
-        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)` }}
+        style={{
+          backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+        }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>

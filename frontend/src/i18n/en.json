@@ -8,10 +8,22 @@
       "analytics": "Analytics",
       "explore": "Explore",
       "login": "Login",
-      "register": "Register"
+      "register": "Register",
+      "packages": "Packages",
+      "addpackage": "Add package",
+      "editpackage": "Edit package",
+      "recoverpass": "Recover password",
+      "changepass": "Change password",
+      "verify": "Verify account",
+      "profile": "{{username}}'s profile",
+      "account": "My account",
+      "registersuccess": "Account created successfully",
+      "hire": "Hire service"
     },
     "search": "Search..."
   },
+  "title": "{{section}} | HireNet",
+  "defaulttitle": "HireNet",
   "validationerror": {
     "required": "This field is required",
     "email": "Please enter a valid email address",
@@ -130,8 +142,13 @@
     "filedisclaimer": "Image must be PNG or JPG and less than {{size}}MB in size",
     "goback": "Go back",
     "imagepreview": "Image preview",
-    "existingemail": "The email address is already in use",
-    "discardimage": "Discard"
+    "badcredentials": "The email address is already in use",
+    "discardimage": "Discard",
+    "success": {
+      "title": "Registered successfully!",
+      "verify": "An email has been sent to verify your identity, please check it out.",
+      "return": "Return to home"
+    }
   },
   "image": {
     "clear": "Clear",
@@ -365,6 +382,10 @@
     "header": "Edit package",
     "submit": "Save changes"
   },
+  "categories": {
+    "header": "Service categories",
+    "filter": "Filter categories by name"
+  },
   "datetimeformat": "MMMM d, yyyy - h:mm aa",
   "locale": "en",
   "account": {
@@ -400,7 +421,7 @@
     "starsplural": "{{count}} stars"
   },
   "locationfilter": "Filter locations by name",
-  "nolocations": "No results for '{{location}}'",
+  "noresults": "No results for '{{search}}'",
   "timesHiredSingular": "Hired 1 time",
   "timesHiredPlural": "Hired {{times}} times",
   "search": {

@@ -8,6 +8,7 @@ import AverageRatingCard from '../components/AverageRatingCard';
 import TimesHiredCard from '../components/TimesHiredCard';
 import clsx from 'clsx';
 import JobCard from '../components/JobCard';
+import { Helmet } from 'react-helmet';
 
 // TODO: integracion con API
 const currentUser = {
@@ -187,6 +188,11 @@ const Analytics = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.analytics') })}
+        </title>
+      </Helmet>
       <NavBar currentSection={'/analytics'} />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('analytics.title')} />

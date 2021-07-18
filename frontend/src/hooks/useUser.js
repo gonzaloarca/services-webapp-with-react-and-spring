@@ -2,6 +2,7 @@ import {
   getUserByEmailRequest,
   loginRequest,
   getUserByIdRequest,
+  registerRequest,
 } from '../api/usersApi';
 const useUserHook = () => {
   const getUserByEmail = async (email) => {
@@ -18,11 +19,21 @@ const useUserHook = () => {
     const response = await getUserByIdRequest(id);
     return response.data;
   };
+  const register = async ({ username, phone, email, password }) => {
+    const response = await registerRequest({
+      username,
+      phone,
+      email,
+      password,
+    });
+    return response.data;
+  };
 
   return {
     getUserByEmail,
     getUserById,
     login,
+    register,
   };
 };
 export default useUserHook;

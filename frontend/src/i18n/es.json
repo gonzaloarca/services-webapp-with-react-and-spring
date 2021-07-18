@@ -4,14 +4,26 @@
       "home": "Inicio",
       "categories": "Categorías",
       "publish": "Publicar",
-      "mycontracts": "Mis Contratos",
+      "mycontracts": "Mis contratos",
       "analytics": "Estadísticas",
       "explore": "Explorar",
       "login": "Ingresar",
-      "register": "Registrarme"
+      "register": "Registrarme",
+      "packages": "Paquetes",
+      "addpackage": "Añadir paquete",
+      "editpackage": "Editar paquete",
+      "recoverpass": "Recuperar contraseña",
+      "changepass": "Cambiar contraseña",
+      "verify": "Verificar cuenta",
+      "profile": "Perfil de {{username}}",
+      "account": "Mi cuenta",
+      "registersuccess": "Registro exitoso",
+      "hire": "Contratar servicio"
     },
     "search": "Buscar..."
   },
+  "title": "{{section}} | HireNet",
+  "defaulttitle": "HireNet",
   "validationerror": {
     "required": "Este campo es obligatorio",
     "email": "Por favor ingrese una direccion de correo electronico",
@@ -132,10 +144,15 @@
     "filedisclaimer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta {{size}} MB",
     "goback": "Volver atrás",
     "imagepreview": "Vista previa",
-    "existingemail": "El email que ha ingresado ya pertenece a un usuario",
+    "badcredentials": "El email que ha ingresado ya pertenece a un usuario",
     "passwordInvalid": "La contraseña debe ser de entre 8 y 100 caracteres",
     "passwordNotMatch": "Las contraseñas deben coincidir",
-    "discardimage": "Descartar"
+    "discardimage": "Descartar",
+    "success": {
+      "title": "¡Registro exitoso!",
+      "verify": "Se ha enviado un email para verificar su identidad, por favor revíselo.",
+      "return": "Regresar a inicio"
+    }
   },
   "image": {
     "clear": "Descartar",
@@ -366,6 +383,10 @@
     "header": "Editar paquete",
     "submit": "Guardar cambios"
   },
+  "categories": {
+    "header": "Categorías de servicios",
+    "filter": "Filtrar categorías por nombre"
+  },
   "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
   "locale": "es",
   "account": {
@@ -401,7 +422,7 @@
     "starsplural": "{{count}} estrellas"
   },
   "locationfilter": "Filtrar ubicaciones por nombre",
-  "nolocations": "No hay resultados para '{{location}}'",
+  "noresults": "No hay resultados para '{{search}}'",
   "timesHiredSingular": "Contratado 1 vez",
   "timesHiredPlural": "Contratado {{times}} veces",
   "search": {

@@ -18,7 +18,7 @@ export const themeUtils = {
   },
   shadows: {
     containerShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
-    cardHoverShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+    cardHoverShadow: '0 3px 10px rgba(0, 0, 0, 0.4)',
   },
   fontSizes: {
     xs: '0.75rem',
