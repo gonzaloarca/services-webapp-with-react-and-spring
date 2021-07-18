@@ -91,7 +91,7 @@ const PackageFormItem = ({ index, withDelete }) => {
   const { t } = useTranslation();
   const { values, setFieldValue } = useFormikContext();
 
-  const [hidden, setHidden] = useState(false);
+  const [hidden, setHidden] = useState(values.packages[index].rateType === 2);
 
   const handleDelete = () => {
     setFieldValue('packages', [
@@ -200,7 +200,7 @@ const PackageFormItem = ({ index, withDelete }) => {
         <RadioGroup
           row
           name={`packages[${index}].rateType`}
-          value={values.packages[index].rateType}
+          value={`${values.packages[index].rateType}`}
           onChange={(e) => {
             setFieldValue(`packages[${index}].rateType`, e.target.value);
             if (parseInt(e.target.value) === 2) setHidden(true);

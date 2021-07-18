@@ -1,6 +1,6 @@
 import { Button, makeStyles } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
-import { Form, Formik, useFormikContext } from 'formik';
+import { Form, Formik } from 'formik';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import PackageFormItem from '../components/PackageFormItem';
 import PackagesHeader from '../components/PackagesHeader';
 import styles from '../styles';
 import { themeUtils } from '../theme';
+import * as Yup from 'yup';
 
 const useGlobalStyles = makeStyles(styles);
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +38,41 @@ const AddPackage = () => {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const initialValues = {
+    packages: [
+      {
+        title: '',
+        description: '',
+        rateType: '',
+        price: '',
+      },
+    ],
+  };
+
+  const validationSchema = Yup.object({
+    packages: Yup.array().of(
+      Yup.object().shape({
+        title: Yup.string()
+          .required(t('validationerror.required'))
+          .max(100, t('validationerror.maxlength', { length: 100 })),
+        description: Yup.string()
+          .required(t('validationerror.required'))
+          .max(100, t('validationerror.maxlength', { length: 100 })),
+        rateType: Yup.number().required(t('validationerror.required')),
+        price: Yup.number().when('rateType', {
+          is: 2,
+          otherwise: Yup.number().required(t('validationerror.required')),
+        }),
+      })
+    ),
+  });
+
+  const onSubmit = (values, props) => {
+    const pack = values.packages[0];
+    console.log(pack); //TODO: SUBMITEAR
+    //TODO: Redirect a /job/id/packages
+  };
+
   return (
     <>
       <Helmet>
@@ -50,23 +86,23 @@ const AddPackage = () => {
         <div className={classes.formContainer}>
           <h2 className={classes.subHeader}>{t('addpackage.header')}</h2>
           <Formik
-            initialValues={{
-              packages: [
-                { title: '', description: '', rateType: '', price: '' },
-              ],
-            }}
-            onSubmit={() => {}}
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
           >
-            <Form>
-              <PackageFormItem index={0} withDelete={false} />
-              <Button
-                fullWidth
-                startIcon={<AddCircle />}
-                className={classes.addButton}
-              >
-                {t('addpackage.submit')}
-              </Button>
-            </Form>
+            {(props) => (
+              <Form>
+                <PackageFormItem index={0} withDelete={false} />
+                <Button
+                  fullWidth
+                  startIcon={<AddCircle />}
+                  className={classes.addButton}
+                  type="submit"
+                >
+                  {t('addpackage.submit')}
+                </Button>
+              </Form>
+            )}
           </Formik>
         </div>
       </div>
