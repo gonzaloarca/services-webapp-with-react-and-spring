@@ -13,6 +13,7 @@ export const themeUtils = {
     green: '#7BC778',
     darkGreen: '#54AA51',
     red: '#E26767',
+    electricBlue: '#007bff',
     background: '#EFEFEF',
   },
   shadows: {

@@ -150,10 +150,14 @@ const ZonesChip = ({ zones }) => {
       <Chip
         className={classes.zoneChip}
         icon={<LocationOn />}
-        label={t('jobcard.morezones', {
-          firstZone: firstZone,
-          zoneCount: zoneCount,
-        })}
+        label={
+          zoneCount === 0
+            ? t('jobcard.onezone', {firstZone: firstZone})
+            : t('jobcard.morezones', {
+                firstZone: firstZone,
+                zoneCount: zoneCount,
+              })
+        }
       />
     </Tooltip>
   );

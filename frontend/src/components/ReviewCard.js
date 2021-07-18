@@ -59,7 +59,7 @@ const ReviewCard = ({ review }) => {
               >
                 <Launch className="text-lg mr-1" />
                 <Trans
-                  i18nKey={'review.jobreference'}
+                  i18nKey={'jobreference'}
                   values={{ title: review.jobPost.title }}
                   components={{
                     semibold: <span className="ml-1 font-semibold" />,

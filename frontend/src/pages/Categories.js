@@ -4,7 +4,7 @@ import NavBar from '../components/NavBar';
 const Categories = () => {
   return (
     <div>
-      <NavBar currentSection={'/categories'} />
+      <NavBar currentSection="/categories" />
       <h1>Categories</h1>
     </div>
   );
