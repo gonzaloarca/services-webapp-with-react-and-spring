@@ -6,7 +6,6 @@ import {
   makeStyles,
   Card,
   CardMedia,
-  CardContent,
   Tab,
   Tabs,
   AppBar,
@@ -18,10 +17,11 @@ import CircleIcon from '../components/CircleIcon';
 import { Grade, Work } from '@material-ui/icons';
 import { themeUtils } from '../theme';
 import TabPanel from '../components/TabPanel';
-import RatingDisplay from '../components/RatingDisplay';
 import ServiceCard from '../components/ServiceCard';
 import ReviewCard from '../components/ReviewCard';
 import { Rating } from '@material-ui/lab';
+import AverageRatingCard from '../components/AverageRatingCard';
+import TimesHiredCard from '../components/TimesHiredCard';
 
 const professional = {
   'contractsCompleted': 3,
@@ -142,26 +142,6 @@ const useStyles = makeStyles((theme) => ({
     height: '200px',
     objectFit: 'cover',
   },
-  completed_works: {
-    borderRadius: '50%',
-    'width': '50px',
-    'height': '50px',
-    'lineHeight': '50px',
-    'fontSize': '20px',
-    'color': 'white',
-    'textAlign': 'center',
-    'fontWeight': 'bold',
-    'background': '#485696',
-  },
-  completed_works_outline: {
-    borderRadius: '50%',
-    'width': '70px',
-    'height': '70px',
-    'background': '#fcb839',
-    'display': 'flex',
-    'justifyContent': 'center',
-    'alignItems': 'center',
-  },
   tabs: {
     backgroundColor: 'white',
     color: 'black',
@@ -220,38 +200,13 @@ const UserInfo = () => {
         </Card>
       </Grid>
       <Grid item sm={12} className="w-full">
-        <Card classes={{ root: classes.card }}>
-          <CardContent>
-            <div className="font-extralight">{t('profile.rating')}</div>
-            <div className="flex justify-evenly items-center">
-              <div className="text-4xl font-semibold">
-                {professional.reviewAvg.toFixed(1)}
-              </div>
-              <RatingDisplay
-                avgRate={professional.reviewAvg}
-                reviewsCount={professional.reviewsQuantity}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <AverageRatingCard
+          reviewAvg={professional.reviewAvg}
+          reviewsQuantity={professional.reviewsQuantity}
+        />
       </Grid>
       <Grid item sm={12} className="w-full">
-        <Card classes={{ root: classes.card }}>
-          <CardContent>
-            <div className="flex justify-center items-center">
-              <div className={classes.completed_works_outline}>
-                <div className={classes.completed_works}>
-                  {jobCard.contractsCompleted}
-                </div>
-              </div>
-              <div className="ml-3 font-semibold">
-                {jobCard.contractsCompleted === 1
-                  ? t('profile.countsingular')
-                  : t('profile.countplural')}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <TimesHiredCard count={professional.contractsCompleted} />
       </Grid>
     </Grid>
   );
@@ -385,7 +340,7 @@ const ReviewCountComponent = ({ stars, count }) => {
         />
       </Grid>
       <Grid item sm={1} xs={1} className="flex justify-start">
-        <div className="flex justify-center w-full">{count}</div>
+        <div className="text-center w-full">{count}</div>
       </Grid>
     </Grid>
   );

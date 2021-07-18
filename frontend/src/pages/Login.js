@@ -44,7 +44,7 @@ const Login = () => {
   });
 
   const onSubmit = (values, props) => {
-    console.log(props); //TODO: INICIAR SESION
+    console.log(values); //TODO: INICIAR SESION
   };
 
   return (

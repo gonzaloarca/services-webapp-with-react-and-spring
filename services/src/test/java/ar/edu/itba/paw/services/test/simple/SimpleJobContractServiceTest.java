@@ -92,6 +92,9 @@ public class SimpleJobContractServiceTest {
     @Mock
     private JobContractDao jobContractDao;
 
+    @Mock
+    private SimpleJobPackageService simpleJobPackageService;
+
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
@@ -110,6 +113,8 @@ public class SimpleJobContractServiceTest {
                 .thenReturn(new JobContractWithImage(7, CLIENT, JOB_PACKAGE,
                         CREATION_DATE, time, CREATION_DATE, CONTRACT_DESCRIPTION, BYTE_IMAGE));
         Mockito.doNothing().when(mailingService).sendContractEmail(Mockito.any(), Mockito.any(), Mockito.any());
+
+        Mockito.when(simpleJobPackageService.findByOnlyId(Mockito.eq(JOB_PACKAGE.getId()))).thenReturn(JOB_PACKAGE);
 
         JobContractWithImage maybeContract = simpleJobContractService.create(CLIENT.getId(), JOB_PACKAGE.getId(),
                 JOB_PACKAGE.getDescription(), timeStr, Locale.getDefault(), "");
@@ -133,7 +138,7 @@ public class SimpleJobContractServiceTest {
         Mockito.doReturn(states).when(mockContractService).getContractStates(Mockito.eq("pending"));
         Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService)
                 .findByProIdAndSortedByModificationDate(
-                        Mockito.eq(PROFESSIONAL.getId()), Mockito.eq(states), Mockito.eq(1-1));
+                        Mockito.eq(PROFESSIONAL.getId()), Mockito.eq(states), Mockito.eq(0));
         Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 
@@ -164,7 +169,7 @@ public class SimpleJobContractServiceTest {
         Mockito.doReturn(states).when(mockContractService).getContractStates(Mockito.eq("pending"));
         Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService)
                 .findByClientIdAndSortedByModificationDate(
-                        Mockito.eq(CLIENT.getId()), Mockito.eq(states), Mockito.eq(1-1));
+                        Mockito.eq(CLIENT.getId()), Mockito.eq(states), Mockito.eq(0));
         Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 

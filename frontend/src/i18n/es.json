@@ -22,7 +22,8 @@
     "avatarfile": {
       "size": "El tamaño del archivo debe ser menor que {{size}}MB",
       "type": "El archivo debe ser de tipo PNG o JPG"
-    }
+    },
+    "zone": "Por favor, seleccione su ubicación"
   },
   "home": {
     "herotext": "Encuentre y contrate el servicio que necesita",
@@ -366,5 +367,26 @@
     "starsplural": "{{count}} estrellas"
   },
   "timesHiredSingular": "Contratado 1 vez",
-  "timesHiredPlural": "Contratado {{times}} veces"
+  "timesHiredPlural": "Contratado {{times}} veces",
+  "search": {
+    "title": "Busqueda",
+    "service": "Busque el servicio que necesita",
+    "jobType.placeholder": "Buscar un servicio...",
+    "filters": "Filtros",
+    "categories": "Categorias",
+    "noquery.results": "Resultados en {{zone}}",
+    "results": "Resultados para {{category}} en {{zone}}",
+    "badQuery": "Error en la busqueda",
+    "filteringBy": "Filtrando por:",
+    "noResults": "No hay resultados para su búsqueda en este momento",
+    "sorry": "Disculpe las molestias",
+    "orderby": "Ordenar por"
+  },
+  "nonselected": "Ninguno",
+  "analytics": {
+    "title": "Estadísticas",
+    "number": "N°{{rank}}",
+    "mosthired": "Más contratado en {{jobType}}",
+    "similar": "Tus clientes también contrataron..."
+  }
 }
