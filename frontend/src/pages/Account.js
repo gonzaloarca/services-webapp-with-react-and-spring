@@ -20,7 +20,7 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useTranslation } from 'react-i18next';
 import FormControlPassword from '../components/FormControlPassword';
-import FileInput from '../components/FileInput';
+import FileInput, { checkSize, checkType } from '../components/FileInput';
 import TabPanel from '../components/TabPanel';
 import { useParams, useHistory } from 'react-router-dom';
 
@@ -217,16 +217,11 @@ const PersonalData = () => {
       .required(t('validationerror.required'))
       .matches(/^\+?[\d-]{7,100}$/, t('validationerror.phone', { length: 7 })),
     image: Yup.mixed()
-      .test(
-        'is-correct-type',
-        t('validationerror.avatarfile.type'),
-        (file) =>
-          file === undefined || ['image/png', 'image/jpeg'].includes(file.type)
-      )
+      .test('is-correct-type', t('validationerror.avatarfile.type'), checkType)
       .test(
         'is-correct-size',
         t('validationerror.avatarfile.size', { size: 2 }),
-        (file) => file === undefined || file.size <= 2 * 1024 * 1024
+        checkSize
       ),
   });
 

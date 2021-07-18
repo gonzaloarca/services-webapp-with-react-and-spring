@@ -1,17 +1,11 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
-import FileInput from '../components/FileInput';
+import FileInput, { checkSize, checkType } from '../components/FileInput';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { themeUtils } from '../theme';
-import {
-  Button,
-  Card,
-  Grid,
-  Link,
-  TextField,
-} from '@material-ui/core';
+import { Button, Card, Grid, Link, TextField } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
 import * as Yup from 'yup';
@@ -63,7 +57,9 @@ const Register = () => {
       <NavBar currentSection={'/register'} isTransparent />
       <div
         className={classes.background}
-        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)` }}
+        style={{
+          backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+        }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
@@ -209,16 +205,11 @@ const StepTwo = (props) => {
 
   const validationSchema = Yup.object({
     image: Yup.mixed()
-      .test(
-        'is-correct-type',
-        t('validationerror.avatarfile.type'),
-        (file) =>
-          file === undefined || ['image/png', 'image/jpeg'].includes(file.type)
-      )
+      .test('is-correct-type', t('validationerror.avatarfile.type'), checkType)
       .test(
         'is-correct-size',
         t('validationerror.avatarfile.size', { size: 2 }),
-        (file) => file === undefined || file.size <= 2 * 1024 * 1024
+        checkSize
       ),
   });
 
