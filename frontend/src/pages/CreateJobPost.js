@@ -28,16 +28,9 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
-import { Add, Adjust, LocationOn } from '@material-ui/icons';
+import { Add } from '@material-ui/icons';
 import clsx from 'clsx';
-import {
-  Form,
-  Formik,
-  useFormikContext,
-  Field,
-  ErrorMessage,
-  yupToFormErrors,
-} from 'formik';
+import { Form, Formik, useFormikContext, ErrorMessage } from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
@@ -262,12 +255,7 @@ const getStepContent = (step, formRef, handleNext, data) => {
           color={themeUtils.colors.blue}
           title={steps[step].title}
         >
-          <JobSummary
-            form={mockedForm}
-            formRef={formRef}
-            handleNext={handleNext}
-            data={data}
-          />
+          <JobSummary formRef={formRef} handleNext={handleNext} data={data} />
         </PublishStep>
       );
     default:
@@ -275,57 +263,48 @@ const getStepContent = (step, formRef, handleNext, data) => {
   }
 };
 
-const mockedForm = {
-  title: 'Duis est eiusmod est ea nostrud consequat.',
-  category: {
+// TODO: esto viene de la API?
+const jobTypes = [
+  {
     id: 0,
     description: 'Plumbing',
   },
-  packages: [
-    {
-      title: 'Lorem ipsum',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      price: 1000,
-      rateType: {
-        id: 0,
-        description: 'HOURLY',
-      },
-    },
-  ],
-  images: [
-    process.env.PUBLIC_URL + '/img/plumbing.jpeg',
-    process.env.PUBLIC_URL + '/img/babysitting.jpeg',
-    process.env.PUBLIC_URL + '/img/carpentry.jpeg',
-  ],
-  hours:
-    'Excepteur esse in labore anim irure velit magna sit id qui. Culpa do magna officia proident.',
-  locations: [
-    {
-      id: 0,
-      description: 'Recoleta',
-    },
-    {
-      id: 1,
-      description: 'Recoleta',
-    },
-    {
-      id: 2,
-      description: 'Recoleta',
-    },
-    {
-      id: 3,
-      description: 'Recoleta',
-    },
-    {
-      id: 4,
-      description: 'Recoleta',
-    },
-    {
-      id: 5,
-      description: 'Recoleta',
-    },
-  ],
-};
+  {
+    id: 1,
+    description: 'Carpentry',
+  },
+  {
+    id: 2,
+    description: 'Painting',
+  },
+  {
+    id: 3,
+    description: 'Babysitting',
+  },
+  {
+    id: 4,
+    description: 'Electricity',
+  },
+  {
+    id: 5,
+    description: 'Other',
+  },
+];
+
+const rateTypes = [
+  {
+    id: 0,
+    description: 'HOURLY',
+  },
+  {
+    id: 1,
+    description: 'ONE_TIME',
+  },
+  {
+    id: 2,
+    description: 'TBD',
+  },
+];
 
 const CreateJobPost = () => {
   const classes = useStyles();
@@ -360,7 +339,8 @@ const CreateJobPost = () => {
 
   const makeRequest = (newData) => {
     console.log(newData);
-    //TODO: IMPLEMENTAR
+    //TODO: Registrar con la API
+    //TODO: Redirigir a una vista de "Success"
   };
 
   const formRef = React.useRef();
@@ -428,33 +408,6 @@ const CreateJobPost = () => {
     </>
   );
 };
-
-const jobTypes = [
-  {
-    id: 0,
-    description: 'Plumbing',
-  },
-  {
-    id: 1,
-    description: 'Carpentry',
-  },
-  {
-    id: 2,
-    description: 'Painting',
-  },
-  {
-    id: 3,
-    description: 'Babysitting',
-  },
-  {
-    id: 4,
-    description: 'Electricity',
-  },
-  {
-    id: 5,
-    description: 'Other',
-  },
-];
 
 const PublishStep = ({ step, color, title, children }) => {
   const classes = useStyles();
@@ -742,7 +695,6 @@ const LocationsStepBody = ({ formRef, handleNext, data }) => {
   const { t } = useTranslation();
 
   const handleSubmit = (values) => {
-    console.log(values);
     handleNext(values);
   };
 
@@ -779,12 +731,49 @@ const LocationsStepBody = ({ formRef, handleNext, data }) => {
   );
 };
 
-const JobSummary = ({ form }) => {
+const JobSummary = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const category = jobTypes[data.category]; //TODO obtener el objeto category aca
+  const packages = [];
+  const locations = [];
+
+  data.packages.forEach((pack) => {
+    // TODO: pack.rateType es solo el ID al salir del Form, ver cómo obtener el objeto de la API
+    let rateType = rateTypes[pack.rateType];
+    packages.push({
+      title: pack.title,
+      description: pack.description,
+      price: pack.price,
+      rateType: rateType,
+    });
+  });
+
+  data.locations.forEach((location) => {
+    // TODO location es solo el id de la zona, obtener el objeto de la API aca
+    locations.push({
+      id: 0,
+      description: 'Recoleta',
+    });
+  });
+
+  const handleSubmit = (values) => {
+    // Reemplazo los valores por los convertidos antes de enviarlo TODO: esta bien?
+    values.category = category;
+    values.packages = packages;
+    values.locations = locations;
+    handleNext(values, true);
+  };
+
   return (
-    <>
+    <div key={0}>
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      />
       {/* Categoria */}
       <div className={classes.summaryRow}>
         <div className={classes.summaryIcon}>
@@ -797,9 +786,7 @@ const JobSummary = ({ form }) => {
           )}
         >
           <p>{t('createjobpost.steps.category.label')}</p>
-          <div className={classes.summaryValue}>
-            {form.category.description}
-          </div>
+          <div className={classes.summaryValue}>{category.description}</div>
         </div>
       </div>
 
@@ -812,9 +799,10 @@ const JobSummary = ({ form }) => {
           className={clsx(classes.summaryFieldContainer, classes.titleSummary)}
         >
           <p>{t('createjobpost.steps.jobtitle.label')}</p>
-          <div className={classes.summaryValue}>{form.title}</div>
+          <div className={classes.summaryValue}>{data.title}</div>
         </div>
       </div>
+
       {/* Paquetes */}
       <div className={classes.summaryRow}>
         <div className={classes.summaryIcon}>
@@ -828,7 +816,7 @@ const JobSummary = ({ form }) => {
         >
           <p>{t('createjobpost.steps.packages.label')}</p>
           <div className="p-3">
-            {form.packages.map((pack, index) => (
+            {packages.map((pack, index) => (
               <PackageAccordion key={index} pack={pack} isHireable={false} />
             ))}
           </div>
@@ -836,7 +824,7 @@ const JobSummary = ({ form }) => {
       </div>
 
       {/* Imagenes */}
-      {form.images && form.images.length > 0 && (
+      {data.images && Array.from(data.images).length > 0 && (
         <div className={classes.summaryRow}>
           <div className={classes.summaryIcon}>
             <FontAwesomeIcon icon={faImages} className="text-2xl" />
@@ -849,8 +837,17 @@ const JobSummary = ({ form }) => {
           >
             <p>{t('createjobpost.steps.images.label')}</p>
             <div className={classes.imageSlideshow}>
-              {form.images.map((image, index) => (
-                <img className={classes.image} src={image} key={index} alt="" />
+              {Array.from(data.images).map((image, index) => (
+                <img
+                  className={classes.image}
+                  src={
+                    image === ''
+                      ? `${process.env.PUBLIC_URL}/img/defaultavatar.svg`
+                      : URL.createObjectURL(image)
+                  }
+                  key={index}
+                  alt=""
+                />
               ))}
             </div>
           </div>
@@ -867,7 +864,7 @@ const JobSummary = ({ form }) => {
         >
           <p>{t('createjobpost.steps.hours.label')}</p>
           <div className={clsx(classes.summaryValue, 'text-sm')}>
-            {form.hours}
+            {data.hours}
           </div>
         </div>
       </div>
@@ -885,19 +882,20 @@ const JobSummary = ({ form }) => {
         >
           <p>{t('createjobpost.steps.locations.label')}</p>
           <div className={classes.summaryValue}>
-            {form.locations.map(({ description }) => (
+            {locations.map(({ description }, index) => (
               <Chip
                 label={description}
                 className="m-1 bg-white"
                 icon={
                   <FontAwesomeIcon className="text-lg" icon={faMapMarkerAlt} />
                 }
+                key={index}
               />
             ))}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
