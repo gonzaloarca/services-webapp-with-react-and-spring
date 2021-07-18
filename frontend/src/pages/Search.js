@@ -20,6 +20,7 @@ import { parse } from 'query-string';
 import { CategoriesZonesAndOrderByContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Pagination, PaginationItem } from '@material-ui/lab';
+import BottomPagination from '../components/BottomPagination';
 
 const jobs = [
   {
@@ -210,6 +211,7 @@ const Search = () => {
 
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState([]);
+  const [maxPage, setMaxPage] = useState(1);
   const [queryParams, setQueryParams] = React.useState({
     zone: queryParameters.zone || '',
     category: queryParameters.category || '',
@@ -228,6 +230,10 @@ const Search = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
+  }, [links]);
 
   useEffect(() => {
     history.push(
@@ -265,24 +271,11 @@ const Search = () => {
               orderByParams={orderByParams}
               zones={zones}
               jobs={jobCards}
+              maxPage={maxPage}
             />
           </Grid>
         </Grid>
       </div>
-      {/* <div className="flex justify-center">
-        <Pagination
-          page={queryParams.page}
-          count={parseInt(links.last && links.last.page)}
-          color="secondary"
-          renderItem={(item) => (
-            <PaginationItem
-              component={Link}
-              to={`/search${item.page === 1 ? '' : `?page=${item.page}`}`}
-              {...item}
-            />
-          )}
-        />
-      </div> */}
     </div>
   );
 };
@@ -294,6 +287,7 @@ const SearchResults = ({
   orderByParams,
   zones,
   jobs,
+  maxPage,
 }) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -307,9 +301,6 @@ const SearchResults = ({
     zoneStr = '';
   else {
     let zoneAux = zones.find((zone) => zone.id === parseInt(queryParams.zone));
-    console.log('zoneparam', queryParams.zone);
-    console.log('zones', zones);
-    console.log('zone', zoneAux);
     zoneStr = !zoneAux ? '' : zoneAux.description;
   }
   let categoryStr;
@@ -373,7 +364,6 @@ const SearchResults = ({
           </Select>
         </FormControl>
       </div>
-
       <Grid container spacing={3}>
         {jobs.length > 0 ? (
           jobs.map((i) => (
@@ -385,6 +375,11 @@ const SearchResults = ({
           <p className={clsx('text-center m-10')}>{t('search.noresults')}</p>
         )}
       </Grid>
+      <BottomPagination
+        maxPage={maxPage}
+        setQueryParams={setQueryParams}
+        queryParams={queryParams}
+      />
     </Card>
   );
 };

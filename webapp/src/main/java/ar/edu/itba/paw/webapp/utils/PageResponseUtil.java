@@ -18,7 +18,7 @@ public class PageResponseUtil {
                 builder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPage).build(), "last")
                         .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next");
             }
-            if (page > maxPage) {
+            if (page >= maxPage) {
                 builder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPage).build(), "last");
             }
         }
