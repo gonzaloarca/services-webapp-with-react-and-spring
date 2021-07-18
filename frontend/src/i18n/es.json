@@ -50,6 +50,7 @@
   "jobcard": {
     "noreviews": "Sin calificaciones",
     "details": "Ver detalles",
+	"onezone": "{{firstZone}}",
     "morezones": "{{firstZone}} y {{zoneCount}} más"
   },
   "jobtype": {
