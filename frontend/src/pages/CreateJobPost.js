@@ -16,6 +16,7 @@ import {
   Divider,
   Fab,
   FormControl,
+  FormHelperText,
   InputLabel,
   makeStyles,
   MenuItem,
@@ -29,7 +30,14 @@ import {
 } from '@material-ui/core';
 import { Add, Adjust, LocationOn } from '@material-ui/icons';
 import clsx from 'clsx';
-import { Form, Formik, useFormikContext } from 'formik';
+import {
+  Form,
+  Formik,
+  useFormikContext,
+  Field,
+  ErrorMessage,
+  yupToFormErrors,
+} from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
@@ -41,6 +49,12 @@ import styles from '../styles';
 import { themeUtils } from '../theme';
 import createJobPostStyles from './CreateJobPostStyles';
 import PackageAccordion from '../components/PackageAccordion';
+import FileInput, {
+  checkTypeMultiple,
+  checkSizeMultiple,
+  checkQuantity,
+} from '../components/FileInput';
+import * as Yup from 'yup';
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -153,7 +167,7 @@ const getSteps = () => {
   ];
 };
 
-const getStepContent = (step) => {
+const getStepContent = (step, formRef, handleNext, data) => {
   const steps = getSteps();
 
   switch (step) {
@@ -164,7 +178,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.orange}
           title={steps[step].title}
         >
-          <CategoryStepBody />
+          <CategoryStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 1:
@@ -174,7 +192,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.lightBlue}
           title={steps[step].title}
         >
-          <TitleStepBody />
+          <TitleStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 2:
@@ -184,7 +206,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.aqua}
           title={steps[step].title}
         >
-          <PackagesStepBody />
+          <PackagesStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 3:
@@ -194,7 +220,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.blue}
           title={steps[step].title}
         >
-          <ImagesStepBody />
+          <ImagesStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 4:
@@ -204,7 +234,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.orange}
           title={steps[step].title}
         >
-          <HoursStepBody />
+          <HoursStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 5:
@@ -214,7 +248,11 @@ const getStepContent = (step) => {
           color={themeUtils.colors.aqua}
           title={steps[step].title}
         >
-          <LocationsStepBody />
+          <LocationsStepBody
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     case 6:
@@ -224,7 +262,12 @@ const getStepContent = (step) => {
           color={themeUtils.colors.blue}
           title={steps[step].title}
         >
-          <JobSummary form={mockedForm} />
+          <JobSummary
+            form={mockedForm}
+            formRef={formRef}
+            handleNext={handleNext}
+            data={data}
+          />
         </PublishStep>
       );
     default:
@@ -288,20 +331,49 @@ const CreateJobPost = () => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
+
+  const [data, setData] = React.useState({
+    category: '',
+    title: '',
+    packages: [{ title: '', description: '', rateType: '', price: '' }],
+    images: '',
+    availableHours: '',
+    zones: '',
+  });
+
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
-  const handleNext = () => {
+  const handleNext = (newData, final = false) => {
+    if (final) {
+      makeRequest(newData);
+      return;
+    }
+    setData((prev) => ({ ...prev, ...newData }));
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
+  const handleBack = (newData) => {
+    setData((prev) => ({ ...prev, ...newData }));
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
+  const makeRequest = (newData) => {
+    console.log(newData);
+    //TODO: IMPLEMENTAR
   };
+
+  const formRef = React.useRef();
+
+  const handleSubmit = () => {
+    if (formRef.current) {
+      formRef.current.handleSubmit();
+    }
+  };
+
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
 
   return (
     <>
@@ -328,12 +400,12 @@ const CreateJobPost = () => {
             <div>Submitting form...</div>
           ) : (
             <div>
-              {getStepContent(activeStep)}
+              {getStepContent(activeStep, formRef, handleNext, data)}
 
               <div className={classes.actionsContainer}>
                 <Button
                   disabled={activeStep === 0}
-                  onClick={handleBack}
+                  onClick={() => handleBack(data)}
                   className={classes.button}
                 >
                   {t('createjobpost.back')}
@@ -341,7 +413,7 @@ const CreateJobPost = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleNext}
+                  onClick={handleSubmit}
                   className={classes.button}
                 >
                   {activeStep === steps.length - 1
@@ -402,73 +474,141 @@ const PublishStep = ({ step, color, title, children }) => {
   );
 };
 
-const CategoryStepBody = () => {
+const CategoryStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [category, setCategory] = React.useState('');
-  const handleChange = (newValue) => {
-    setCategory(newValue);
+
+  const handleSubmit = (values) => {
+    handleNext(values);
   };
+
+  const validationSchema = Yup.object({
+    category: Yup.number().required(t('validationerror.required')),
+  });
+
   return (
     <div className="py-10">
-      <FormControl className={classes.input} variant="filled">
-        <InputLabel id="category-select-label">
-          {t('createjobpost.steps.category.label')}
-        </InputLabel>
-        <Select
-          labelId="category-select-label"
-          value={category}
-          onChange={(e) => handleChange(e.target.value)}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          {jobTypes.map(({ id, description }) => (
-            <MenuItem key={id} value={id}>
-              {description}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <FormControl className={classes.input} variant="filled">
+              <InputLabel id="category-select-label">
+                {t('createjobpost.steps.category.label')}
+              </InputLabel>
+              <Select
+                labelId="category-select-label"
+                name="category"
+                value={values.category}
+                onChange={(e) => setFieldValue('category', e.target.value)}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {jobTypes.map(({ id, description }) => (
+                  <MenuItem key={id} value={id}>
+                    {description}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>
+                <ErrorMessage name="category"></ErrorMessage>
+              </FormHelperText>
+            </FormControl>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
 
-const TitleStepBody = () => {
+const TitleStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [title, setTitle] = React.useState('');
-  const handleChange = (newValue) => {
-    setTitle(newValue);
+
+  const handleSubmit = (values) => {
+    handleNext(values);
   };
+
+  const validationSchema = Yup.object({
+    title: Yup.string()
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 })),
+  });
 
   return (
     <div className="py-10">
-      <TextField
-        label={t('createjobpost.steps.jobtitle.label')}
-        className={classes.input}
-        variant="filled"
-        value={title}
-        onChange={(e) => handleChange(e.target.value)}
-      />
+      <Formik
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <TextField
+              label={t('createjobpost.steps.jobtitle.label')}
+              className={classes.input}
+              variant="filled"
+              value={values.title}
+              onChange={(e) => setFieldValue('title', e.target.value)}
+              name="title"
+              helperText={<ErrorMessage name="title"></ErrorMessage>}
+            />
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
 
-const PackagesStepBody = () => {
+const PackagesStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
+  const { t } = useTranslation();
+
+  const handleSubmit = (values) => {
+    console.log(values);
+    handleNext(values);
+  };
+
+  const validationSchema = Yup.object({
+    packages: Yup.array().of(
+      Yup.object().shape({
+        title: Yup.string()
+          .required(t('validationerror.required'))
+          .max(100, t('validationerror.maxlength', { length: 100 })),
+        description: Yup.string()
+          .required(t('validationerror.required'))
+          .max(100, t('validationerror.maxlength', { length: 100 })),
+        rateType: Yup.number().required(t('validationerror.required')),
+        price: Yup.number().when('rateType', {
+          is: 2,
+          otherwise: Yup.number().required(t('validationerror.required')),
+        }),
+      })
+    ),
+  });
 
   return (
     <div className={classes.packagesContainer}>
       <Formik
-        initialValues={{
-          packages: [{ title: '', description: '', rateType: '', price: '' }],
-        }}
-        onSubmit={() => {}}
+        innerRef={formRef}
+        initialValues={data}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
       >
-        <Form>
-          <PackagesForm />
-        </Form>
+        {(props) => (
+          <Form>
+            <PackagesForm />
+          </Form>
+        )}
       </Formik>
     </div>
   );
@@ -480,11 +620,10 @@ const PackagesForm = () => {
   return (
     <>
       {values.packages.map((pack, index) => (
-        <div className="mb-4">
+        <div className="mb-4" key={index}>
           <PackageFormItem
             withDelete={values.packages.length > 1}
             index={index}
-            key={index}
           />
         </div>
       ))}
@@ -509,7 +648,9 @@ const ImagesStepBody = () => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  return <div className={classes.stepContainer}></div>;
+  return (
+    <div className={classes.stepContainer}>{/* <FileInput multiple /> */}</div>
+  );
 };
 
 const HoursStepBody = () => {

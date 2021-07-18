@@ -5,6 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import { withStyles } from '@material-ui/core/styles';
 
+const MAX_SIZE = 2 * 1024 * 1024;
+
+const VALID_TYPES = ['image/png', 'image/jpeg'];
+
 const FileInput = ({ fileName, multiple = false }) => {
   const { t } = useTranslation();
 
@@ -60,13 +64,13 @@ const GreyButton = withStyles({
 export function checkType(file) {
   if (file === undefined || file === '') return true;
 
-  return ['image/png', 'image/jpeg'].includes(file.type);
+  return VALID_TYPES.includes(file.type);
 }
 
 export function checkSize(file) {
   if (file === undefined || file === '') return true;
 
-  return file.size <= 2 * 1024 * 1024;
+  return file.size <= MAX_SIZE;
 }
 
 export function checkTypeMultiple(files) {
@@ -91,6 +95,12 @@ export function checkSizeMultiple(files) {
   });
 
   return valid;
+}
+
+export function checkQuantity(files) {
+  if (files === undefined || files === '') return true;
+
+  return Array.from(files).length <= 5;
 }
 
 export default FileInput;

@@ -4,6 +4,7 @@ import {
   Divider,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   IconButton,
   makeStyles,
   Radio,
@@ -12,8 +13,8 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { Help, Close } from '@material-ui/icons';
-import { useFormikContext } from 'formik';
-import React from 'react';
+import { ErrorMessage, useFormikContext } from 'formik';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import rateTypeI18nMapper from '../i18n/mappers/rateType';
@@ -64,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     padding: 10,
-    marginBottom: 25,
   },
   packageHeader: {
     fontSize: themeUtils.fontSizes.h2,
@@ -72,11 +72,17 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 10,
   },
   packageDescription: {
-    marginBottom: 25,
     backgroundColor: themeUtils.colors.darkBlue,
     '& .MuiFilledInput-root': {
       backgroundColor: 'transparent',
     },
+  },
+  errorMessage: {
+    color: themeUtils.colors.red,
+    backgroundColor: themeUtils.colors.lightRed,
+    width: '100%',
+    borderRadius: '0.25rem',
+    padding: '0 0.5rem 0 0.5rem',
   },
 }));
 
@@ -84,6 +90,8 @@ const PackageFormItem = ({ index, withDelete }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const { values, setFieldValue } = useFormikContext();
+
+  const [hidden, setHidden] = useState(false);
 
   const handleDelete = () => {
     setFieldValue('packages', [
@@ -129,59 +137,71 @@ const PackageFormItem = ({ index, withDelete }) => {
       <p className={classes.packageLabel}>
         {t('createjobpost.steps.packages.title.label')}
       </p>
-      <TextField
-        fullWidth
-        hiddenLabel
-        InputProps={{
-          classes: {
-            input: classes.packageInput,
-          },
-        }}
-        name={`packages[${index}].title`}
-        value={values.packages[index].title}
-        placeholder={t('createjobpost.steps.packages.title.placeholder')}
-        variant="filled"
-        onChange={(e) => {
-          console.log(values);
-          setFieldValue(`packages[${index}].title`, e.target.value);
-        }}
-        className="mb-6"
-      />
+      <div className="mb-5">
+        <TextField
+          fullWidth
+          hiddenLabel
+          InputProps={{
+            classes: {
+              input: classes.packageInput,
+            },
+          }}
+          name={`packages[${index}].title`}
+          value={values.packages[index].title}
+          placeholder={t('createjobpost.steps.packages.title.placeholder')}
+          variant="filled"
+          onChange={(e) => {
+            setFieldValue(`packages[${index}].title`, e.target.value);
+          }}
+        />
+        <FormHelperText className={classes.errorMessage}>
+          <ErrorMessage name={`packages[${index}].title`}></ErrorMessage>
+        </FormHelperText>
+      </div>
       <p className={classes.packageLabel}>
         {t('createjobpost.steps.packages.description.label')}
       </p>
-      <TextField
-        fullWidth
-        hiddenLabel
-        multiline
-        rows={3}
-        InputProps={{
-          classes: {
-            input: classes.packageInput,
-          },
-        }}
-        name={`packages[${index}].description`}
-        value={values.packages[index].description}
-        placeholder={t('createjobpost.steps.packages.description.placeholder')}
-        variant="filled"
-        onChange={(e) =>
-          setFieldValue(`packages[${index}].description`, e.target.value)
-        }
-        className={classes.packageDescription}
-      />
+      <div className="mb-5">
+        <TextField
+          fullWidth
+          hiddenLabel
+          multiline
+          rows={3}
+          InputProps={{
+            classes: {
+              input: classes.packageInput,
+            },
+          }}
+          name={`packages[${index}].description`}
+          value={values.packages[index].description}
+          placeholder={t(
+            'createjobpost.steps.packages.description.placeholder'
+          )}
+          variant="filled"
+          onChange={(e) =>
+            setFieldValue(`packages[${index}].description`, e.target.value)
+          }
+          className={classes.packageDescription}
+        />
+        <FormHelperText className={classes.errorMessage}>
+          <ErrorMessage name={`packages[${index}].description`}></ErrorMessage>
+        </FormHelperText>
+      </div>
       {/* RateType */}
       <p className={classes.packageLabel}>
         {t('createjobpost.steps.packages.ratetype.label')}
       </p>
 
-      <FormControl className="w-full" component="fieldset">
+      <FormControl className="w-full mb-5" component="fieldset">
         <RadioGroup
           row
           name={`packages[${index}].rateType`}
           value={values.packages[index].rateType}
-          onChange={(e) =>
-            setFieldValue(`packages[${index}].rateType`, e.target.value)
-          }
+          onChange={(e) => {
+            setFieldValue(`packages[${index}].rateType`, e.target.value);
+            if (parseInt(e.target.value) === 2) setHidden(true);
+            else setHidden(false);
+          }}
           className={classes.packagesRadioContainer}
         >
           {rateTypes.map(({ id }) => (
@@ -197,32 +217,40 @@ const PackageFormItem = ({ index, withDelete }) => {
             />
           ))}
         </RadioGroup>
+        <FormHelperText className={classes.errorMessage}>
+          <ErrorMessage name={`packages[${index}].rateType`}></ErrorMessage>
+        </FormHelperText>
       </FormControl>
 
-      <p className={classes.packageLabel}>
-        {t('createjobpost.steps.packages.price.label')}
-      </p>
-      <TextField
-        fullWidth
-        type="number"
-        inputProps={{
-          min: '0',
-          step: 'any',
-        }}
-        hiddenLabel
-        InputProps={{
-          classes: {
-            input: classes.packageInput,
-          },
-        }}
-        name={`packages[${index}].price`}
-        value={values.packages[index].price}
-        placeholder={t('createjobpost.steps.packages.price.placeholder')}
-        variant="filled"
-        onChange={(e) =>
-          setFieldValue(`packages[${index}].price`, e.target.value)
-        }
-      />
+      <div hidden={hidden}>
+        <p className={classes.packageLabel}>
+          {t('createjobpost.steps.packages.price.label')}
+        </p>
+        <TextField
+          fullWidth
+          type="number"
+          inputProps={{
+            min: '0',
+            step: 'any',
+          }}
+          hiddenLabel
+          InputProps={{
+            classes: {
+              input: classes.packageInput,
+            },
+          }}
+          name={`packages[${index}].price`}
+          value={values.packages[index].price}
+          placeholder={t('createjobpost.steps.packages.price.placeholder')}
+          variant="filled"
+          onChange={(e) =>
+            setFieldValue(`packages[${index}].price`, e.target.value)
+          }
+        />
+        <FormHelperText className={classes.errorMessage}>
+          <ErrorMessage name={`packages[${index}].price`}></ErrorMessage>
+        </FormHelperText>
+      </div>
     </div>
   );
 };
