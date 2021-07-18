@@ -3,6 +3,7 @@ import {
   loginRequest,
   getUserByIdRequest,
   registerRequest,
+  verifyEmailRequest,
   getRankingsRequest,
   getProfessionalInfoRequest,
 } from '../api/usersApi';
@@ -21,13 +22,17 @@ const useUserHook = () => {
     const response = await getUserByIdRequest(id);
     return response.data;
   };
-  const register = async ({ username, phone, email, password }) => {
+
+  const register = async (newUser) => {
     const response = await registerRequest({
-      username,
-      phone,
-      email,
-      password,
+      ...newUser,
+      webPageUrl: process.env.REACT_APP_PAGE_URL + 'token',
     });
+    return response.data;
+  };
+
+  const verifyEmail = async (data) => {
+    const response = await verifyEmailRequest(data);
     return response.data;
   };
 
@@ -45,7 +50,7 @@ const useUserHook = () => {
     getUserByEmail,
     getUserById,
     login,
-    register,
+    register,verifyEmail,
     getRankings,
     getProfessionalInfo,
   };

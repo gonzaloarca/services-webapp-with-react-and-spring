@@ -7,13 +7,13 @@ export const loginRequest = ({ email, password }) => {
   });
 };
 
-export const registerRequest = ({ username, phone, email, password }) => {
-  return hireNetApi.post('/users', {
-    username: username,
-    phone: phone,
-    email: email,
-    password: password,
-  });
+export const registerRequest = (props) => {
+  return hireNetApi.post('/users', props);
+};
+
+export const verifyEmailRequest = ({ id, token }) => {
+	console.log("url", `/users/${id}/verify`);
+  return hireNetApi.post(`/users/${id}/verify`, { token: token });
 };
 
 export const uploadUserImageRequest = ({ id, image }) => {

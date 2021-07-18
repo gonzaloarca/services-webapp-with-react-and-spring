@@ -177,7 +177,6 @@ const App = () => {
           <Route path="/recover" exact component={RecoverPass} />
           <Route path="/change-password" exact component={ChangePass} />
           <Route path="/token" exact component={VerifyEmail} />
-          {/* TODO: 404 not found */}
           <Route path="/" component={Error404} />
         </Switch>
         <Footer />

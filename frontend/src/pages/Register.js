@@ -35,7 +35,7 @@ const Register = () => {
 
   const makeRequest = async (newData) => {
     try {
-      await register(newData);
+      await register({ ...newData });
       history.push('/register/success');
     } catch (error) {
       console.log(error);

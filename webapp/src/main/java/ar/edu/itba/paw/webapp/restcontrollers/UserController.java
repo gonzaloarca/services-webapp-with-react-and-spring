@@ -97,9 +97,9 @@ public class UserController {
             accountControllerLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}",
                     newUserDto.getEmail(), newUserDto.getPassword(), newUserDto.getUsername(), newUserDto.getPhone());
             currentUser = userService
-                    .register(newUserDto.getEmail(), newUserDto.getPassword(), newUserDto.getUsername(), newUserDto.getPhone(),
-                            null, LocaleResolverUtil
-                                    .resolveLocale(headers.getAcceptableLanguages()), uriInfo.getBaseUri().toString());
+                    .register(newUserDto.getEmail(), newUserDto.getPassword(), newUserDto.getUsername(),
+                            newUserDto.getPhone(), null, LocaleResolverUtil
+                                    .resolveLocale(headers.getAcceptableLanguages()), newUserDto.getWebPageUrl());
         } catch (UserAlreadyExistsException e) {
             accountControllerLogger.error("Register error: email already exists");
             return Response.status(Response.Status.CONFLICT).build();
