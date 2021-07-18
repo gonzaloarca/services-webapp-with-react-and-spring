@@ -13,12 +13,13 @@ export const themeUtils = {
     green: '#7BC778',
     darkGreen: '#54AA51',
     red: '#E26767',
+    electricBlue: '#007bff',
     background: '#EFEFEF',
     lightRed: '#FFEDED',
   },
   shadows: {
     containerShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
-    cardHoverShadow: '0 3px 6px rgba(0, 0, 0, 0.16)',
+    cardHoverShadow: '0 3px 10px rgba(0, 0, 0, 0.4)',
   },
   fontSizes: {
     xs: '0.75rem',

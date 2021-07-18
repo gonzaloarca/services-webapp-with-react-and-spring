@@ -14,6 +14,7 @@ import ar.edu.itba.paw.webapp.dto.output.JobContractDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
+import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -143,7 +144,7 @@ public class JobContractController {
 
     @Path("/{contractId}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
     public Response getContractImage(@PathParam("contractId") final long contractId) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
@@ -154,7 +155,7 @@ public class JobContractController {
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response uploadContractImage(@PathParam("contractId") final long contractId,
-                                        @FormDataParam("file") final FormDataBodyPart body) {
+                                        @Valid @ValidImage @FormDataParam("file") final FormDataBodyPart body) {
         try {
             if (jobContractService.addContractImage(contractId, ImageUploadUtil.fromInputStream(body)) == -1)
                 throw new RuntimeException("Couldn't save image");

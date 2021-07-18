@@ -8,9 +8,35 @@
       "analytics": "Analytics",
       "explore": "Explore",
       "login": "Login",
-      "register": "Register"
+      "register": "Register",
+      "packages": "Packages",
+      "addpackage": "Add package",
+      "editpackage": "Edit package",
+      "recoverpass": "Recover password",
+      "changepass": "Change password",
+      "verify": "Verify account",
+      "profile": "{{username}}'s profile",
+      "account": "My account",
+      "registersuccess": "Account created successfully",
+      "hire": "Hire service",
+      "error": "Error",
+      "pagenotfound": "Page not found"
     },
     "search": "Search..."
+  },
+  "title": "{{section}} | HireNet",
+  "defaulttitle": "HireNet",
+  "error": {
+    "404": {
+      "header": "Error 404",
+      "description": "Page not found",
+      "action": "Return to home"
+    },
+    "generic": {
+      "header": "Error",
+      "descriptión": "Something went wrong...",
+      "action": "Return to home"
+    }
   },
   "validationerror": {
     "required": "This field is required",
@@ -56,6 +82,7 @@
   "jobcard": {
     "noreviews": "No reviews",
     "details": "View details",
+    "onezone": "{{firstZone}}",
     "morezones": "{{firstZone}} and {{zoneCount}} more"
   },
   "jobtype": {
@@ -89,9 +116,7 @@
     "onetime": "Per job",
     "tbd": "To be determined"
   },
-  "review": {
-    "jobreference": "From <semibold>{{title}}</semibold>"
-  },
+  "jobreference": "From <semibold>{{title}}</semibold>",
   "price": "{{value, price, ARS}}",
   "date": "{{date, MM/DD/YYYY}}",
   "time": "{{date, h:mm A}}",
@@ -137,8 +162,13 @@
     "filedisclaimer": "Image must be PNG or JPG and less than {{size}}MB in size",
     "goback": "Go back",
     "imagepreview": "Image preview",
-    "existingemail": "The email address is already in use",
-    "discardimage": "Discard"
+    "badcredentials": "The email address is already in use",
+    "discardimage": "Discard",
+    "success": {
+      "title": "Registered successfully!",
+      "verify": "An email has been sent to verify your identity, please check it out.",
+      "return": "Return to home"
+    }
   },
   "image": {
     "clear": "Clear",
@@ -352,6 +382,31 @@
       "submit": "Hire"
     }
   },
+  "managepackages": {
+    "header": "Manage packages",
+    "servicepackages": "Service packages",
+    "add": "Add new package",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deletemodal": {
+      "title": "Are you sure that you want to delete this package?",
+      "body": "This action cannot be undone",
+      "affirmative": "Delete",
+      "negative": "Dismiss"
+    }
+  },
+  "addpackage": {
+    "header": "Add package",
+    "submit": "Add"
+  },
+  "editpackage": {
+    "header": "Edit package",
+    "submit": "Save changes"
+  },
+  "categories": {
+    "header": "Service categories",
+    "filter": "Filter categories by name"
+  },
   "datetimeformat": "MMMM d, yyyy - h:mm aa",
   "locale": "en",
   "account": {
@@ -387,7 +442,7 @@
     "starsplural": "{{count}} stars"
   },
   "locationfilter": "Filter locations by name",
-  "nolocations": "No results for '{{location}}'",
+  "noresults": "No results for '{{search}}'",
   "timesHiredSingular": "Hired 1 time",
   "timesHiredPlural": "Hired {{times}} times",
   "search": {
@@ -396,9 +451,9 @@
     "jobtypeplaceholder": "Search services...",
     "filters": "Filters",
     "categories": "Categories",
-	"results": "Services found",
+    "results": "Services found",
     "zoneresults": "Results in {{zone}}",
-	"queryresults": "Results for {{query}}",
+    "queryresults": "Results for {{query}}",
     "query&zoneresults": "Results for {{query}} in {{zone}}",
     "badquery": "Search error",
     "filteringby": "Active filter:",

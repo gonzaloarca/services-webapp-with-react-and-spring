@@ -4,13 +4,39 @@
       "home": "Inicio",
       "categories": "Categorías",
       "publish": "Publicar",
-      "mycontracts": "Mis Contratos",
+      "mycontracts": "Mis contratos",
       "analytics": "Estadísticas",
       "explore": "Explorar",
       "login": "Ingresar",
-      "register": "Registrarme"
+      "register": "Registrarme",
+      "packages": "Paquetes",
+      "addpackage": "Añadir paquete",
+      "editpackage": "Editar paquete",
+      "recoverpass": "Recuperar contraseña",
+      "changepass": "Cambiar contraseña",
+      "verify": "Verificar cuenta",
+      "profile": "Perfil de {{username}}",
+      "account": "Mi cuenta",
+      "registersuccess": "Registro exitoso",
+      "hire": "Contratar servicio",
+      "error": "Error",
+      "pagenotfound": "Página no encontrada"
     },
     "search": "Buscar..."
+  },
+  "title": "{{section}} | HireNet",
+  "defaulttitle": "HireNet",
+  "error": {
+    "404": {
+      "header": "Error 404",
+      "description": "Página no encontrada",
+      "action": "Regresar a inicio"
+    },
+    "generic": {
+      "header": "Error",
+      "descriptión": "Algo salió mal...",
+      "action": "Regresar a inicio"
+    }
   },
   "validationerror": {
     "required": "Este campo es obligatorio",
@@ -56,6 +82,7 @@
   "jobcard": {
     "noreviews": "Sin calificaciones",
     "details": "Ver detalles",
+    "onezone": "{{firstZone}}",
     "morezones": "{{firstZone}} y {{zoneCount}} más"
   },
   "jobtype": {
@@ -89,9 +116,7 @@
     "onetime": "Por trabajo",
     "tbd": "A acordar"
   },
-  "review": {
-    "jobreference": "En <semibold>{{title}}</semibold>"
-  },
+  "jobreference": "En <semibold>{{title}}</semibold>",
   "price": "{{value, price, ARS}}",
   "date": "{{date, DD/MM/YYYY}}",
   "time": "{{date, H:mm}} hs",
@@ -139,10 +164,15 @@
     "filedisclaimer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta {{size}} MB",
     "goback": "Volver atrás",
     "imagepreview": "Vista previa",
-    "existingemail": "El email que ha ingresado ya pertenece a un usuario",
+    "badcredentials": "El email que ha ingresado ya pertenece a un usuario",
     "passwordInvalid": "La contraseña debe ser de entre 8 y 100 caracteres",
     "passwordNotMatch": "Las contraseñas deben coincidir",
-    "discardimage": "Descartar"
+    "discardimage": "Descartar",
+    "success": {
+      "title": "¡Registro exitoso!",
+      "verify": "Se ha enviado un email para verificar su identidad, por favor revíselo.",
+      "return": "Regresar a inicio"
+    }
   },
   "image": {
     "clear": "Descartar",
@@ -353,6 +383,31 @@
       "submit": "Contratar"
     }
   },
+  "managepackages": {
+    "header": "Administrar paquetes",
+    "servicepackages": "Paquetes del servicio",
+    "add": "Añadir nuevo paquete",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deletemodal": {
+      "title": "¿Está seguro que desea eliminar el paquete?",
+      "body": "Esta acción no se puede deshacer",
+      "affirmative": "Eliminar",
+      "negative": "Cerrar"
+    }
+  },
+  "addpackage": {
+    "header": "Añadir paquete",
+    "submit": "Añadir"
+  },
+  "editpackage": {
+    "header": "Editar paquete",
+    "submit": "Guardar cambios"
+  },
+  "categories": {
+    "header": "Categorías de servicios",
+    "filter": "Filtrar categorías por nombre"
+  },
   "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
   "locale": "es",
   "account": {
@@ -388,7 +443,7 @@
     "starsplural": "{{count}} estrellas"
   },
   "locationfilter": "Filtrar ubicaciones por nombre",
-  "nolocations": "No hay resultados para '{{location}}'",
+  "noresults": "No hay resultados para '{{search}}'",
   "timesHiredSingular": "Contratado 1 vez",
   "timesHiredPlural": "Contratado {{times}} veces",
   "search": {
@@ -397,9 +452,9 @@
     "jobtypeplaceholder": "Buscar un servicio...",
     "filters": "Filtros",
     "categories": "Categorias",
-	"results": "Servicios encontrados",
+    "results": "Servicios encontrados",
     "zoneresults": "Resultados en {{zone}}",
-	"queryresults": "Resultados para {{query}}",
+    "queryresults": "Resultados para {{query}}",
     "query&zoneresults": "Resultados para {{category}} en {{zone}}",
     "badquery": "Error en la busqueda",
     "filteringby": "Filtrando por:",

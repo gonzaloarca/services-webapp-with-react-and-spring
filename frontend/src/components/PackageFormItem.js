@@ -141,6 +141,7 @@ const PackageFormItem = ({ index, withDelete }) => {
         <TextField
           fullWidth
           hiddenLabel
+          size="small"
           InputProps={{
             classes: {
               input: classes.packageInput,
@@ -158,6 +159,7 @@ const PackageFormItem = ({ index, withDelete }) => {
           <ErrorMessage name={`packages[${index}].title`}></ErrorMessage>
         </FormHelperText>
       </div>
+
       <p className={classes.packageLabel}>
         {t('createjobpost.steps.packages.description.label')}
       </p>
@@ -167,6 +169,7 @@ const PackageFormItem = ({ index, withDelete }) => {
           hiddenLabel
           multiline
           rows={3}
+          size="small"
           InputProps={{
             classes: {
               input: classes.packageInput,
@@ -187,6 +190,7 @@ const PackageFormItem = ({ index, withDelete }) => {
           <ErrorMessage name={`packages[${index}].description`}></ErrorMessage>
         </FormHelperText>
       </div>
+
       {/* RateType */}
       <p className={classes.packageLabel}>
         {t('createjobpost.steps.packages.ratetype.label')}
@@ -229,6 +233,7 @@ const PackageFormItem = ({ index, withDelete }) => {
         <TextField
           fullWidth
           type="number"
+          size="small"
           inputProps={{
             min: '0',
             step: 'any',

@@ -6,14 +6,12 @@ import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditUserDto;
 import ar.edu.itba.paw.webapp.dto.input.VerifyEmailDto;
-import ar.edu.itba.paw.webapp.dto.output.AnalyticRankingDto;
-import ar.edu.itba.paw.webapp.dto.output.JobCardDto;
-import ar.edu.itba.paw.webapp.dto.output.ReviewsByExactRateDto;
-import ar.edu.itba.paw.webapp.dto.output.UserDto;
+import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.dto.input.NewUserDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
+import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.hibernate.validator.constraints.Email;
@@ -26,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -52,6 +51,9 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private JobContractService jobContractService;
+
     @Context
     private UriInfo uriInfo;
 
@@ -62,7 +64,7 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findAll(@QueryParam("email") final String email,
                             @QueryParam("page") int page) {
-        if(email != null){
+        if (email != null) {
             accountControllerLogger.debug("Finding user with email {}", email);
             UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
             return Response.ok(getUserDto(user)).build();
@@ -123,7 +125,7 @@ public class UserController {
 
     @Path("/{id}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
     public Response getUserImage(@PathParam("id") final long id) {
         ByteImage byteImage = userService.findImageByUserId(id);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
@@ -133,7 +135,7 @@ public class UserController {
     @PUT
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response uploadUserImage(@Valid @NotNull @FormDataParam("file") final FormDataBodyPart body,
+    public Response uploadUserImage(@Valid @NotNull @ValidImage @FormDataParam("file") final FormDataBodyPart body,
                                     @PathParam("id") long id) {
 
         long result;
@@ -263,5 +265,22 @@ public class UserController {
         return Response.ok(new GenericEntity<List<AnalyticRankingDto>>(rankingDtoList) {
         }).build();
     }
+
+    @Path("/{id}/professional-info")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getProfessionalDetails(@PathParam("id") final long id) {
+        accountControllerLogger.debug("Finding average rate for user {}", id);
+        Double avgRate = reviewService.findProfessionalAvgRate(id);
+
+        accountControllerLogger.debug("Finding rates quantity for user {}", id);
+        long rateQty = reviewService.findReviewsByProIdSize(id);
+
+        accountControllerLogger.debug("Finding contracts completed for user {}", id);
+        long contractsQty = jobContractService.findCompletedContractsByProIdQuantity(id);
+
+        return Response.ok(ProfessionalDto.fromUserAndRoles(avgRate, rateQty, contractsQty)).build();
+    }
+
 }
 

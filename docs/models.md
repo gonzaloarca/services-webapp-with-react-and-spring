@@ -8,55 +8,57 @@ Tampoco lo son ciertos query params en determinadas situaciones.
 
 ## Tabla de Contenidos
 - [Modelos - DTOs](#modelos---dtos)
-	- [Tabla de Contenidos](#tabla-de-contenidos)
-	- [jobContract](#jobcontract)
-		- [POST: {{baseUrl}}/contracts](#post-baseurlcontracts)
-		- [PUT: {{baseUrl}}/contracts/40?role=professional](#put-baseurlcontracts40roleprofessional)
-		- [GET: {{baseUrl}}/contracts/40](#get-baseurlcontracts40)
-		- [GET image: {{baseUrl}}/contracts/18/image](#get-image-baseurlcontracts18image)
-		- [PUT image: {{baseUrl}}/contracts/3/image](#put-image-baseurlcontracts3image)
-		- [GET contracts by role and state:](#get-contracts-by-role-and-state)
-		- [{{baseUrl}}/contracts?userId=5&role=professional&state=finalized](#baseurlcontractsuserid5roleprofessionalstatefinalized)
-	- [jobPost](#jobpost)
-		- [POST: {{baseUrl}}/job-posts](#post-baseurljob-posts)
-		- [PUT: {{baseUrl}}/job-posts/19/](#put-baseurljob-posts19)
-		- [GET: {{baseUrl}}/job-posts/19/](#get-baseurljob-posts19)
-	- [package](#package)
-		- [POST: {{baseUrl}}/job-posts/1/packages](#post-baseurljob-posts1packages)
-		- [PUT: {{baseUrl}}/job-posts/1/packages/21](#put-baseurljob-posts1packages21)
-		- [GET all: {{baseUrl}}/job-posts/1/packages](#get-all-baseurljob-posts1packages)
-		- [GET: {{baseUrl}}/job-posts/1/packages/21](#get-baseurljob-posts1packages21)
-	- [jobCard](#jobcard)
-		- [GET all: {{baseUrl}}/job-cards/?page=1](#get-all-baseurljob-cardspage1)
-		- [GET search: {{baseUrl}}/job-cards/search?page=1&zone=1&query=plumbi](#get-search-baseurljob-cardssearchpage1zone1queryplumbi)
-		- [GET by proId: {{baseUrl}}/job-cards/?page=1&userId=5](#get-by-proid-baseurljob-cardspage1userid5)
-		- [GET related by proId: {{baseUrl}}/job-cards/?page=1&userId=5&type=related](#get-related-by-proid-baseurljob-cardspage1userid5typerelated)
-	- [review](#review)
-		- [POST: {{baseUrl}}/reviews/](#post-baseurlreviews)
-		- [GET: {{baseUrl}}/reviews/1](#get-baseurlreviews1)
-		- [GET all: {{baseUrl}}/reviews](#get-all-baseurlreviews)
-		- [GET by postId: {{baseUrl}}/reviews?page=1&postId=5](#get-by-postid-baseurlreviewspage1postid5)
-		- [GET by userId: {{baseUrl}}/reviews?page=1&userId=5&role=professional](#get-by-userid-baseurlreviewspage1userid5roleprofessional)
-	- [user](#user)
-		- [POST: {{baseUrl}}/users](#post-baseurlusers)
-		- [PUT: {{baseUrl}}/users/5](#put-baseurlusers5)
-		- [GET: {{baseUrl}}/users/5](#get-baseurlusers5)
-		- [GET: {{baseUrl}}/users/search?email=manaaasd@gmail.com](#get-baseurluserssearchemailmanaaasdgmailcom)
-		- [GET rates: {{baseUrl}}/professionals/5/reviews-by-exact-rate](#get-rates-baseurlprofessionals5reviews-by-exact-rate)
-		- [GET rankings: {{baseUrl}}/users/5/rankings](#get-rankings-baseurlusers5rankings)
-		- [GET image: {{baseUrl}}/users/5/image](#get-image-baseurlusers5image)
-		- [PUT image: {{baseUrl}}/users/5/image](#put-image-baseurlusers5image)
-		- [POST verify email: {{baseUrl}}/users/5/verify](#post-verify-email-baseurlusers5verify)
-		- [POST recover account: {{baseUrl}}/users/recover-account](#post-recover-account-baseurlusersrecover-account)
-	- [contract (Mis servicios)](#contract-mis-servicios)
-		- [POST: {{baseUrl}}/contracts](#post-baseurlcontracts-1)
-		- [PUT: {{baseUrl}}/contracts/40?role=professional](#put-baseurlcontracts40roleprofessional-1)
-		- [GET: {{baseUrl}}/contracts/40](#get-baseurlcontracts40-1)
-		- [GET contractCards: {{baseUrl}}/contracts?userId=5&role=professional&state=finalized](#get-contractcards-baseurlcontractsuserid5roleprofessionalstatefinalized)
-		- [GET image: {{baseUrl}}/contracts/3/image](#get-image-baseurlcontracts3image)
-		- [PUT image: {{baseUrl}}/contracts/3/image](#put-image-baseurlcontracts3image-1)
-	- [categories](#categories)
-		- [GET: {{baseUrl}}/categories](#get-baseurlcategories)
+  - [Tabla de Contenidos](#tabla-de-contenidos)
+  - [jobContract](#jobcontract)
+    - [POST: {{baseUrl}}/contracts](#post-baseurlcontracts)
+    - [PUT: {{baseUrl}}/contracts/40?role=professional](#put-baseurlcontracts40roleprofessional)
+    - [GET: {{baseUrl}}/contracts/40](#get-baseurlcontracts40)
+    - [GET image: {{baseUrl}}/contracts/18/image](#get-image-baseurlcontracts18image)
+    - [PUT image: {{baseUrl}}/contracts/3/image](#put-image-baseurlcontracts3image)
+    - [GET contracts by role and state:](#get-contracts-by-role-and-state)
+    - [{{baseUrl}}/contracts?userId=5&role=professional&state=finalized](#baseurlcontractsuserid5roleprofessionalstatefinalized)
+  - [jobPost](#jobpost)
+    - [POST: {{baseUrl}}/job-posts](#post-baseurljob-posts)
+    - [PUT: {{baseUrl}}/job-posts/19/](#put-baseurljob-posts19)
+    - [GET all: {{baseUrl}}/job-posts](#get-all-baseurljob-posts)
+    - [GET: {{baseUrl}}/job-posts/19/](#get-baseurljob-posts19)
+  - [package](#package)
+    - [POST: {{baseUrl}}/job-posts/1/packages](#post-baseurljob-posts1packages)
+    - [PUT: {{baseUrl}}/job-posts/1/packages/21](#put-baseurljob-posts1packages21)
+    - [GET all: {{baseUrl}}/job-posts/1/packages](#get-all-baseurljob-posts1packages)
+    - [GET: {{baseUrl}}/job-posts/1/packages/21](#get-baseurljob-posts1packages21)
+  - [jobCard](#jobcard)
+    - [GET all: {{baseUrl}}/job-cards/?page=1](#get-all-baseurljob-cardspage1)
+    - [GET search: {{baseUrl}}/job-cards/search?page=1&zone=1&query=plumbi](#get-search-baseurljob-cardssearchpage1zone1queryplumbi)
+    - [GET by proId: {{baseUrl}}/job-cards/?page=1&userId=5](#get-by-proid-baseurljob-cardspage1userid5)
+    - [GET related by proId: {{baseUrl}}/job-cards/?page=1&userId=5&type=related](#get-related-by-proid-baseurljob-cardspage1userid5typerelated)
+  - [review](#review)
+    - [POST: {{baseUrl}}/reviews/](#post-baseurlreviews)
+    - [GET: {{baseUrl}}/reviews/1](#get-baseurlreviews1)
+    - [GET all: {{baseUrl}}/reviews](#get-all-baseurlreviews)
+    - [GET by postId: {{baseUrl}}/reviews?page=1&postId=5](#get-by-postid-baseurlreviewspage1postid5)
+    - [GET by userId: {{baseUrl}}/reviews?page=1&userId=5&role=professional](#get-by-userid-baseurlreviewspage1userid5roleprofessional)
+  - [user](#user)
+    - [POST: {{baseUrl}}/users](#post-baseurlusers)
+    - [PUT: {{baseUrl}}/users/5](#put-baseurlusers5)
+    - [GET: {{baseUrl}}/users](#get-baseurlusers)
+    - [GET by id: {{baseUrl}}/users/5](#get-by-id-baseurlusers5)
+    - [GET by email: {{baseUrl}}/users/search?email=manaaasd@gmail.com](#get-by-email-baseurluserssearchemailmanaaasdgmailcom)
+    - [GET rates: {{baseUrl}}/professionals/5/reviews-by-exact-rate](#get-rates-baseurlprofessionals5reviews-by-exact-rate)
+    - [GET rankings: {{baseUrl}}/users/5/rankings](#get-rankings-baseurlusers5rankings)
+    - [GET image: {{baseUrl}}/users/5/image](#get-image-baseurlusers5image)
+    - [PUT image: {{baseUrl}}/users/5/image](#put-image-baseurlusers5image)
+    - [POST verify email: {{baseUrl}}/users/5/verify](#post-verify-email-baseurlusers5verify)
+    - [POST recover account: {{baseUrl}}/users/recover-account](#post-recover-account-baseurlusersrecover-account)
+  - [contract (Mis servicios)](#contract-mis-servicios)
+    - [POST: {{baseUrl}}/contracts](#post-baseurlcontracts-1)
+    - [PUT: {{baseUrl}}/contracts/40?role=professional](#put-baseurlcontracts40roleprofessional-1)
+    - [GET: {{baseUrl}}/contracts/40](#get-baseurlcontracts40-1)
+    - [GET contractCards: {{baseUrl}}/contracts?userId=5&role=professional&state=finalized](#get-contractcards-baseurlcontractsuserid5roleprofessionalstatefinalized)
+    - [GET image: {{baseUrl}}/contracts/3/image](#get-image-baseurlcontracts3image)
+    - [PUT image: {{baseUrl}}/contracts/3/image](#put-image-baseurlcontracts3image-1)
+  - [categories](#categories)
+    - [GET: {{baseUrl}}/categories](#get-baseurlcategories)
   
 ## jobContract
 ### POST: {{baseUrl}}/contracts
@@ -383,7 +385,7 @@ En un form con key "file" viajara la imagen
 ]
 ```
 ### GET by id: {{baseUrl}}/users/5
-### GET by email: {{baseUrl}}/users/search?email=manaaasd@gmail.com
+### GET by email: {{baseUrl}}/users?email=manaaasd@gmail.com
 ```json
 {
     "contracts": "http://localhost:8080/api/v1/contracts?userId=5",
@@ -420,6 +422,15 @@ En un form con key "file" viajara la imagen
     }
 ]
 ```
+### GET professional-info: {{baseUrl}}/users/11/professional-info
+```json
+{
+  "contractsCompleted": 1,
+  "reviewAvg": 0.0,
+  "reviewsQuantity": 0
+}
+```
+
 ### GET image: {{baseUrl}}/users/5/image
 Retorna imagen como body
 ### PUT image: {{baseUrl}}/users/5/image
@@ -501,6 +512,7 @@ En un form con key "file" viajara la imagen
 
 ## categories
 ### GET: {{baseUrl}}/categories
+```json
 [
     {
         "description": "Plumbing",
@@ -535,3 +547,4 @@ En un form con key "file" viajara la imagen
         "id": 7
     }
 ]
+```

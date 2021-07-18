@@ -79,6 +79,18 @@ public class JobCardController {
                 }));
     }
 
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response findById(@PathParam("id") long id) {
+        JobCardControllerLogger.debug("Finding card for post with id: {}", id);
+        JobCard jobCard = jobCardService.findByPostId(id);
+        JobCardDto jobCardDto = JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
+                messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages())));
+        return Response.ok(new GenericEntity<JobCardDto>(jobCardDto){}).build();
+    }
+
     @GET
     @Path("/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -120,17 +132,20 @@ public class JobCardController {
         List<JobCardOrderByDto> jobCardOrderByDtos = Arrays.stream(JobCard.OrderBy.values()).map(orderBy -> JobCardOrderByDto.fromJobCardOrderByInfo(orderBy.getValue(),
                 messageSource.getMessage(orderBy.getStringCode(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))
         )).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<JobCardOrderByDto>>(jobCardOrderByDtos){}).build();
+        return Response.ok(new GenericEntity<List<JobCardOrderByDto>>(jobCardOrderByDtos) {
+        }).build();
     }
+
     @GET
     @Path("/order-params/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response orderParams(@PathParam("id") int id) {
-        if(id < 0 || id > JobCard.OrderBy.values().length -1 )
+        if (id < 0 || id > JobCard.OrderBy.values().length - 1)
             return Response.status(Response.Status.NOT_FOUND).build();
         JobCard.OrderBy orderBy = JobCard.OrderBy.values()[id];
-      JobCardOrderByDto jobCardOrderByDto = JobCardOrderByDto.fromJobCardOrderByInfo(orderBy.getValue(),
+        JobCardOrderByDto jobCardOrderByDto = JobCardOrderByDto.fromJobCardOrderByInfo(orderBy.getValue(),
                 messageSource.getMessage(orderBy.getStringCode(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages())));
-        return Response.ok(new GenericEntity<JobCardOrderByDto>(jobCardOrderByDto){}).build();
+        return Response.ok(new GenericEntity<JobCardOrderByDto>(jobCardOrderByDto) {
+        }).build();
     }
 }

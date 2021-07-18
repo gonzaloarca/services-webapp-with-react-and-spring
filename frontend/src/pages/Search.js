@@ -20,145 +20,8 @@ import { parse } from 'query-string';
 import { CategoriesZonesAndOrderByContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Pagination, PaginationItem } from '@material-ui/lab';
-
-const jobs = [
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 2000.1,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 3,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'ONE_TIME',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title: 'Niñero turno mañana',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 1500,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 7,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'HOURLY',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title:
-      'Niñero turno mañanaaaa ajofejo jaofjaeo aehfeah ofgeafg aoeifgaeof goafg oaeg efeoia',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 8,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'TBD',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title: 'Niñero turno mañana',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 1500,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 2,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'TBD',
-      id: 2,
-    },
-    reviewsCount: 0,
-    title: 'Niñero turno mañana',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-];
+import BottomPagination from '../components/BottomPagination';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles((theme) => ({
   searchContainer: {
@@ -210,6 +73,7 @@ const Search = () => {
 
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState([]);
+  const [maxPage, setMaxPage] = useState(1);
   const [queryParams, setQueryParams] = React.useState({
     zone: queryParameters.zone || '',
     category: queryParameters.category || '',
@@ -219,11 +83,13 @@ const Search = () => {
   });
   const classes = useStyles();
   const history = useHistory();
+  const { t } = useTranslation();
 
   const loadJobCards = async () => {
     try {
       const jobCards = await searchJobCards(queryParams);
       setJobCards(jobCards);
+	  setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
     } catch (error) {
       console.error(error);
     }
@@ -243,6 +109,11 @@ const Search = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>
+          {t('title', { section: t('navigation.sections.explore') })}
+        </title>
+      </Helmet>
       <NavBar
         currentSection={'/search'}
         searchBarSetQueryParams={setQueryParams}
@@ -265,24 +136,11 @@ const Search = () => {
               orderByParams={orderByParams}
               zones={zones}
               jobs={jobCards}
+              maxPage={maxPage}
             />
           </Grid>
         </Grid>
       </div>
-      {/* <div className="flex justify-center">
-        <Pagination
-          page={queryParams.page}
-          count={parseInt(links.last && links.last.page)}
-          color="secondary"
-          renderItem={(item) => (
-            <PaginationItem
-              component={Link}
-              to={`/search${item.page === 1 ? '' : `?page=${item.page}`}`}
-              {...item}
-            />
-          )}
-        />
-      </div> */}
     </div>
   );
 };
@@ -294,6 +152,7 @@ const SearchResults = ({
   orderByParams,
   zones,
   jobs,
+  maxPage,
 }) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -307,9 +166,6 @@ const SearchResults = ({
     zoneStr = '';
   else {
     let zoneAux = zones.find((zone) => zone.id === parseInt(queryParams.zone));
-    console.log('zoneparam', queryParams.zone);
-    console.log('zones', zones);
-    console.log('zone', zoneAux);
     zoneStr = !zoneAux ? '' : zoneAux.description;
   }
   let categoryStr;
@@ -373,7 +229,6 @@ const SearchResults = ({
           </Select>
         </FormControl>
       </div>
-
       <Grid container spacing={3}>
         {jobs.length > 0 ? (
           jobs.map((i) => (
@@ -385,6 +240,11 @@ const SearchResults = ({
           <p className={clsx('text-center m-10')}>{t('search.noresults')}</p>
         )}
       </Grid>
+      <BottomPagination
+        maxPage={maxPage}
+        setQueryParams={setQueryParams}
+        queryParams={queryParams}
+      />
     </Card>
   );
 };

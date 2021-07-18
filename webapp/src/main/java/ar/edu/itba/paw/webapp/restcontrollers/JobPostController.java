@@ -12,6 +12,7 @@ import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
+import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,7 +151,7 @@ public class JobPostController {
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response uploadPostImage(@PathParam("postId") final long postId,
-                                    @Valid @NotNull @FormDataParam("file") final FormDataBodyPart body) {
+                                    @Valid @NotNull @ValidImage @FormDataParam("file") final FormDataBodyPart body) {
         JobPostImage image;
         try {
             image = jobPostImageService.addImage(postId, ImageUploadUtil.fromInputStream(body));
@@ -162,7 +163,7 @@ public class JobPostController {
 
     @Path("/{postId}/images/{imageId}")
     @GET
-    @Produces(value = {"image/png", "image/jpg"})
+    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
     public Response getPostImage(@PathParam("postId") final long postId,
                                  @PathParam("imageId") final long imageId) {
         JobPostImage jobPostImage = jobPostImageService.findById(imageId, postId);

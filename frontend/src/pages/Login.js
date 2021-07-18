@@ -23,6 +23,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
 import { UserContext } from '../context';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -82,16 +83,19 @@ const Login = () => {
       history.push('/');
     } catch (error) {
       if (error.response.status === 401) {
-		setBadCredentials(true);
+        setBadCredentials(true);
       } else {
         console.log('e3', error);
       }
-      //TODO : handle error
+      return;
     }
   };
 
   return (
     <div>
+      <Helmet>
+        <title>{t('title', { section: t('navigation.sections.login') })}</title>
+      </Helmet>
       <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}
@@ -113,7 +117,6 @@ const Login = () => {
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={onSubmit}
-              isSubmitting
             >
               {(props) => (
                 <Form>
@@ -150,7 +153,9 @@ const Login = () => {
                       label={t('login.rememberme')}
                     />
                     {badCredentials ? (
-                      <p className={classes.badCredentials}>{t('login.badcredentials')}</p>
+                      <p className={classes.badCredentials}>
+                        {t('login.badcredentials')}
+                      </p>
                     ) : (
                       <></>
                     )}

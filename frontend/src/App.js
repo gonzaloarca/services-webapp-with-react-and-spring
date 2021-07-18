@@ -2,6 +2,7 @@ import jwt from 'jwt-decode';
 
 import { Switch, Route } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import './App.css';
 import Analytics from './pages/Analytics';
 import Categories from './pages/Categories';
@@ -22,6 +23,14 @@ import ChangePass from './pages/ChangePass';
 import VerifyEmail from './pages/VerifyEmail';
 import { UserContext, CategoriesZonesAndOrderByContext } from './context';
 import { useUser, useCategories, useZones, useJobCards } from './hooks';
+import Packages from './pages/Packages';
+import AddPackage from './pages/AddPackage';
+import EditPackage from './pages/EditPackage';
+import RegisterSuccess from './pages/RegisterSuccess';
+import { useTranslation } from 'react-i18next';
+import { isProfessional } from './utils/userUtils';
+import Error404 from './pages/Error404';
+
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
   const { getUserByEmail } = useUser();
@@ -31,7 +40,7 @@ const App = () => {
   const [zones, setZones] = useState([]);
   const [categories, setCategories] = useState([]);
   const [orderByParams, setOrderByParams] = useState([]);
-
+  const { t } = useTranslation();
   /*
    * This function saves the current user in the context if the user is logged in.
    */
@@ -130,6 +139,9 @@ const App = () => {
           orderByParams: orderByParams,
         }}
       >
+        <Helmet>
+          <title>{t('defaulttitle')}</title>
+        </Helmet>
         <ScrollToTop />
         <Switch>
           <Route path="/" exact component={Home} />
@@ -145,10 +157,20 @@ const App = () => {
           )}
           <Route path="/search" exact component={Search} />
           <Route path="/job/:id" exact component={JobPost} />
+          <Route path="/job/:id/packages" exact component={Packages} />
+          <Route path="/job/:id/packages/add" exact component={AddPackage} />
+          <Route
+            path="/job/:id/packages/:packId/edit"
+            exact
+            component={EditPackage}
+          />
           <Route path="/profile/:id/:activeTab?" exact component={Profile} />
           {!currentUser && <Route path="/login" exact component={Login} />}
           {!currentUser && (
             <Route path="/register" exact component={Register} />
+          )}
+          {!currentUser && (
+            <Route path="/register/success" exact component={RegisterSuccess} />
           )}
           <Route path="/hire/package/:id" exact component={Hire} />
           <Route path="/account/:activeTab?" exact component={Account} />
@@ -156,16 +178,12 @@ const App = () => {
           <Route path="/change-password" exact component={ChangePass} />
           <Route path="/token" exact component={VerifyEmail} />
           {/* TODO: 404 not found */}
-          <Route path="/" component={Home} />
+          <Route path="/" component={Error404} />
         </Switch>
         <Footer />
       </CategoriesZonesAndOrderByContext.Provider>
     </>
   );
-};
-
-const isProfessional = (user) => {
-  return user && !user.roles.find((role) => role.toUpper === 'PROFESSIONAL');
 };
 
 export default App;

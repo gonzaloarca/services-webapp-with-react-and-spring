@@ -67,6 +67,8 @@ public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
             try {
                 switch (paths[0]) {
                     case "reviews":
+                        if(queryParams.get("postId") != null)
+                            return ACCESS_ABSTAIN;
                     case "contracts":
                         long contractId;
                         if (queryParams.get("userId") != null && queryParams.get("role") != null && queryParams.get("state") != null) {

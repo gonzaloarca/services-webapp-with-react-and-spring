@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { themeUtils } from '../theme';
 
 const useStyles = makeStyles((theme) => ({
   categoryContainer: {
@@ -11,11 +10,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    transition: 'box-shadow 0.2s',
-    '&:hover': {
-      boxShadow: themeUtils.shadows.cardHoverShadow,
-      transition: 'box-shadow 0.2s',
-    },
   },
   categoryOverlay: {
     width: '100%',
@@ -25,12 +19,16 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     position: 'absolute',
     zIndex: 2,
-    backdropFilter: 'blur(5px) brightness(70%)',
-    WebkitBackdropFilter: 'blur(5px) brightness(70%)',
     fontWeight: 500,
     fontSize: '1.3rem',
     color: 'white',
     borderRadius: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    transition: 'background-color 0.1s',
+    '&:hover': {
+      backgroundColor: 'rgba(80, 80, 80, 0.5)',
+      transition: 'background-color 0.1s',
+    },
   },
   categoryImage: {
     height: '100%',
@@ -54,7 +52,11 @@ const CategoryCard = ({ showAll = false, category = null, height = 175 }) => {
         </div>
         <img
           className={classes.categoryImage}
-          src={showAll ? `${process.env.PUBLIC_URL}/img/morecategories1.svg` :category.image}
+          src={
+            showAll
+              ? `${process.env.PUBLIC_URL}/img/morecategories1.svg`
+              : category.image
+          }
           alt=""
         />
       </div>

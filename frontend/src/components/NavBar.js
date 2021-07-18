@@ -21,18 +21,15 @@ import clsx from 'clsx';
 import { themeUtils } from '../theme';
 import { UserContext } from '../context';
 import { useHistory } from 'react-router-dom';
+import { isProfessional } from '../utils/userUtils';
+
 const useStyles = makeStyles(navBarStyles);
 
-const sections = [
+const initialSections = [
   { name: 'navigation.sections.home', path: '/' },
   { name: 'navigation.sections.explore', path: '/search' },
   { name: 'navigation.sections.publish', path: '/create-job-post' },
   { name: 'navigation.sections.categories', path: '/categories' },
-  {
-    name: 'navigation.sections.mycontracts',
-    path: '/my-contracts',
-  },
-  { name: 'navigation.sections.analytics', path: '/analytics' },
 ];
 
 const rightSections = [
@@ -41,7 +38,7 @@ const rightSections = [
 ];
 
 const NavBar = ({
-  currentSection,
+  currentSection = '',
   isTransparent = false,
   searchBarQueryParams,
   searchBarSetQueryParams,
@@ -52,6 +49,24 @@ const NavBar = ({
   const [scrolled, setScrolled] = useState(false);
   const { currentUser, setCurrentUser, setToken } = useContext(UserContext);
   const history = useHistory();
+  const [sections, setSections] = useState(initialSections);
+
+  useEffect(() => {
+    const newSections = [...initialSections];
+    if (currentUser) {
+      newSections.push({
+        name: 'navigation.sections.mycontracts',
+        path: '/my-contracts',
+      });
+      if (isProfessional(currentUser)) {
+        newSections.push({
+          name: 'navigation.sections.analytics',
+          path: '/analytics',
+        });
+      }
+    }
+    setSections(newSections);
+  }, [currentUser]);
 
   const logout = () => {
     localStorage.removeItem('token');

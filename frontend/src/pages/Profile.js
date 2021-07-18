@@ -23,6 +23,7 @@ import { Rating } from '@material-ui/lab';
 import AverageRatingCard from '../components/AverageRatingCard';
 import TimesHiredCard from '../components/TimesHiredCard';
 import { useParams, useHistory } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const professional = {
   'contractsCompleted': 3,
@@ -154,9 +155,19 @@ const useGlobalStyles = makeStyles(styles);
 const Profile = ({ match }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <>
+      <Helmet>
+        <title>
+          {t('title', {
+            section: t('navigation.sections.profile', {
+              username: user.username,
+            }),
+          })}
+        </title>
+      </Helmet>
       <NavBar currentSection={'/search'} />
       <div className={globalClasses.contentContainerTransparent}>
         <Grid container spacing={3}>
