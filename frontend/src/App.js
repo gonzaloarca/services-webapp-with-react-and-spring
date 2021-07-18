@@ -23,6 +23,8 @@ import VerifyEmail from './pages/VerifyEmail';
 import { UserContext, CategoriesZonesAndOrderByContext } from './context';
 import { useUser, useCategories, useZones, useJobCards } from './hooks';
 import Packages from './pages/Packages';
+import AddPackage from './pages/AddPackage';
+import EditPackage from './pages/EditPackage';
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
   const { getUserByEmail } = useUser();
@@ -147,6 +149,12 @@ const App = () => {
           <Route path="/search" exact component={Search} />
           <Route path="/job/:id" exact component={JobPost} />
           <Route path="/job/:id/packages" exact component={Packages} />
+          <Route path="/job/:id/packages/add" exact component={AddPackage} />
+          <Route
+            path="/job/:id/packages/:packId/edit"
+            exact
+            component={EditPackage}
+          />
           <Route path="/profile/:id/:activeTab?" exact component={Profile} />
           {!currentUser && <Route path="/login" exact component={Login} />}
           {!currentUser && (

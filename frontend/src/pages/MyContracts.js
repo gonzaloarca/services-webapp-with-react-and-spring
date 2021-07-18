@@ -226,7 +226,7 @@ const MyContracts = () => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const tabPaths = ['hired', 'mine'];
+  const tabPaths = ['hired', 'pro'];
 
   const { activeTab } = useParams();
 
