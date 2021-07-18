@@ -7,11 +7,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@MatchingFields(
-        field = "password",
-        fieldMatch = "repeatPassword",
-        message = "Passwords do not match"
-)
 public class NewUserDto {
 
     @NotBlank
@@ -31,10 +26,6 @@ public class NewUserDto {
     @Size(min = 8, max = 100)
     private String password;
 
-    @NotBlank
-    @Size(min = 8, max = 100)
-    private String repeatPassword;
-
     public String getEmail() {
         return email;
     }
@@ -53,14 +44,6 @@ public class NewUserDto {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRepeatPassword() {
-        return repeatPassword;
-    }
-
-    public void setRepeatPassword(String repeatPassword) {
-        this.repeatPassword = repeatPassword;
     }
 
     public void setPhone(String phone) {
