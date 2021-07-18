@@ -1,4 +1,5 @@
-import React from 'react';
+import jwt from 'jwt-decode';
+import React, { useContext, useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +21,11 @@ import FormControlPassword from '../components/FormControlPassword';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
-
+import { useUser } from '../hooks';
+import { UserContext } from '../context';
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
-const Login = () => {
+const Login = (props) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const initialValues = {
@@ -31,6 +33,37 @@ const Login = () => {
     password: '',
     rememberme: false,
   };
+
+  const {token,setCurrentUser,setToken} = useContext(UserContext);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const {getUserByEmail,login} = useUser();
+
+  const setUserData = async (email) =>{
+    try{
+      const user = await getUserByEmail(email);
+      setCurrentUser(user);
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    console.log('token', token);
+    try {
+      if (token) {
+        if (rememberMe) {
+          localStorage.setItem('token', token);
+        } else sessionStorage.setItem('token', token);
+        setToken(token);
+        setUserData(jwt(token).sub);
+      }
+    } catch (e) {
+      console.log(e);
+      //TODO: HANDLE ERROR
+    }
+  }, [token]);
+
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -43,8 +76,13 @@ const Login = () => {
       .min(8, t('validationerror.minlength', { length: 8 })),
   });
 
-  const onSubmit = (values, props) => {
-    console.log(props); //TODO: INICIAR SESION
+  const onSubmit = async (values, props) => {
+    try {
+      setToken(await login(values));
+    } catch (e) {
+      console.log(e);
+      //TODO : handle error
+    }
   };
 
   return (
@@ -52,11 +90,17 @@ const Login = () => {
       <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}
-        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)` }}
+        style={{
+          backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+        }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
-            <img src={`${process.env.PUBLIC_URL}/img/log-in.svg`} alt={t('login.title')} loading="lazy" />
+            <img
+              src={`${process.env.PUBLIC_URL}/img/log-in.svg`}
+              alt={t('login.title')}
+              loading="lazy"
+            />
             <p className={classes.title}>{t('login.into')}</p>
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg')}>
@@ -89,6 +133,7 @@ const Login = () => {
                     as={FormControlLabel}
                     name="rememberme"
                     className={'mb-2'}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                     control={
                       <BlueCheckBox
                         id="remember-me"
