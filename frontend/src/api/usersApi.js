@@ -12,7 +12,6 @@ export const registerRequest = (props) => {
 };
 
 export const verifyEmailRequest = ({ id, token }) => {
-	console.log("url", `/users/${id}/verify`);
   return hireNetApi.post(`/users/${id}/verify`, { token: token });
 };
 
@@ -53,4 +52,12 @@ export const getProfessionalInfoRequest = (id) => {
         '',
     },
   });
+};
+
+export const recoverAccountRequest = (data) => {
+  return hireNetApi.post('/users/recover-account', data);
+};
+
+export const recoverPassRequest = (data) => {
+  return hireNetApi.put('/users/recover-account/change-password', data);
 };

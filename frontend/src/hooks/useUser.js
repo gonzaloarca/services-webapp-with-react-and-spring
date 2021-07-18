@@ -6,6 +6,8 @@ import {
   verifyEmailRequest,
   getRankingsRequest,
   getProfessionalInfoRequest,
+  recoverAccountRequest,
+  recoverPassRequest,
 } from '../api/usersApi';
 const useUserHook = () => {
   const getUserByEmail = async (email) => {
@@ -46,13 +48,29 @@ const useUserHook = () => {
     return response.data;
   };
 
+  const recoverAccount = async (data) => {
+    const response = await recoverAccountRequest({
+      ...data,
+      webPageUrl: process.env.REACT_APP_PAGE_URL + 'change-password',
+    });
+    return response.data;
+  };
+
+  const recoverPass = async (data) => {
+    const response = await recoverPassRequest(data);
+    return response.data;
+  };
+
   return {
     getUserByEmail,
     getUserById,
     login,
-    register,verifyEmail,
+    register,
+    verifyEmail,
     getRankings,
     getProfessionalInfo,
+    recoverAccount,
+    recoverPass,
   };
 };
 export default useUserHook;

@@ -146,7 +146,7 @@ public class MailingServiceSpring implements MailingService {
     @Override
     public void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale, String webpageUrl) {
         Map<String, Object> data = new HashMap<>();
-        data.put("url", webpageUrl + "/change-password?user_id=" + user.getId() + "&token=" + token.getToken());
+        data.put("url", webpageUrl + "?user-id=" + user.getId() + "&token=" + token.getToken());
 
         sendMessageUsingThymeleafTemplate(user.getEmail(),
                 messageSource.getMessage("mail.recover.subject", new Object[]{}, locale),

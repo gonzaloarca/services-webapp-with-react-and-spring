@@ -192,7 +192,8 @@
     "wrongexplained": "El enlace al que has ingresado no es correcto. Si necesitas cambiar tu contraseña, vuelve a intentarlo desde la página de inicio de sesión.",
     "login": "Iniciar Sesión",
     "passwordChanged": "¡Contraseña cambiada correctamente!",
-    "changedinstructions": "Inicie sesión para continuar utilizando la página."
+    "changedinstructions": "Inicie sesión para continuar utilizando la página.",
+	"error": "Ocurrio un error, porfavor intente de nuevo"
   },
   "verifyemail": {
     "title": "Verificación de email",

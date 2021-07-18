@@ -18,8 +18,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Hire from './pages/Hire';
 import Account from './pages/Account';
+import RecoverAccount from './pages/RecoverAccount';
 import RecoverPass from './pages/RecoverPass';
-import ChangePass from './pages/ChangePass';
 import VerifyEmail from './pages/VerifyEmail';
 import { UserContext, ConstantDataContext } from './context';
 import {
@@ -201,8 +201,8 @@ const App = () => {
           )}
           <Route path="/hire/package/:id" exact component={Hire} />
           <Route path="/account/:activeTab?" exact component={Account} />
-          <Route path="/recover" exact component={RecoverPass} />
-          <Route path="/change-password" exact component={ChangePass} />
+          <Route path="/recover" exact component={RecoverAccount} />
+          <Route path="/change-password" exact component={RecoverPass} />
           <Route path="/token" exact component={VerifyEmail} />
           <Route path="/" component={Error404} />
         </Switch>

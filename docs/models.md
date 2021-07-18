@@ -438,7 +438,22 @@ En un form con key "file" viajara la imagen
 ### POST verify email: {{baseUrl}}/users/5/verify
 En un form con key "token" viajara el token
 ### POST recover account: {{baseUrl}}/users/recover-account
-En un form con key "token" viajara el token
+```json
+{
+  "email": "manaaasd@gmail.com"
+}
+```
+
+### POST recover password: {{baseUrl}}/recover-account/change-password
+```json
+{
+  "email": "manaaasd@gmail.com",
+  "token": "TOKEN_VALIDO",
+  "password": "12345678"
+}
+```
+
+
 ## contract (Mis servicios)
 ### POST: {{baseUrl}}/contracts
 ```json

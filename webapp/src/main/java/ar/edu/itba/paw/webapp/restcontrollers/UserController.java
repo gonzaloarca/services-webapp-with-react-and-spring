@@ -4,17 +4,14 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.dto.input.EditUserDto;
-import ar.edu.itba.paw.webapp.dto.input.VerifyEmailDto;
+import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
-import ar.edu.itba.paw.webapp.dto.input.NewUserDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -125,7 +121,7 @@ public class UserController {
 
     @Path("/{id}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
     public Response getUserImage(@PathParam("id") final long id) {
         ByteImage byteImage = userService.findImageByUserId(id);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
@@ -180,7 +176,6 @@ public class UserController {
         return Response.ok(userService.findById(id)).build();
     }
 
-
     @Path("/{id}/verify")
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -209,37 +204,32 @@ public class UserController {
     @POST
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response recoverAccount(@Valid @NotBlank @Email @FormParam("email") final String email) {
+    public Response recoverAccount(@Valid final RecoverAccountDto dto) {
 
-        accountControllerLogger.debug("Recovering password for email: {}", email);
+        accountControllerLogger.debug("Recovering password for email: {}", dto.getEmail());
 
-        userService.recoverUserAccount(email, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()), uriInfo.getBaseUri().toString());
+        userService.recoverUserAccount(dto.getEmail(),
+                LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()), dto.getWebPageUrl());
 
         return Response.ok(new GenericEntity<String>("Recovery mail sent") {
         }).build();
-
     }
 
     @Path("/recover-account/change-password")
-    @POST
+    @PUT
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response recoverAccount(@Valid @NotBlank @FormParam("token") final String token,
-                                   @Valid @NotBlank @Email @FormParam("email") final String email,
-                                   @Valid @NotBlank @FormParam("password") final String newPassword) {
+    public Response recoverPass(@Valid RecoverPasswordDto dto) {
 
-        User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        accountControllerLogger.debug("Verifying recovery token: {} for user:{}", dto.getToken(), dto.getUserId());
 
-        accountControllerLogger.debug("verifying recovery token: {} for user:{}", token, user.getId());
-
-        if (!tokenService.verifyRecoveryToken(user.getId(), token)) {
+        if (!tokenService.verifyRecoveryToken(dto.getUserId(), dto.getToken())) {
             accountControllerLogger.debug("Recovery token expired");
             throw new IllegalArgumentException("Token expired");
         }
 
-        userService.recoverUserPassword(user.getId(), newPassword);
-        return Response.ok(new GenericEntity<String>("Recovery mail sent") {
-        }).build();
+        userService.recoverUserPassword(dto.getUserId(), dto.getPassword());
+        return Response.ok().build();
     }
 
     @GET

@@ -188,7 +188,8 @@
     "wrongexplained": "This link is invalid. If you still need to change your password, try again from the login screen",
     "login": "Log In",
     "passwordChanged": "Password changed successfully!",
-    "changedinstructions": "Please log in to continue using the site."
+    "changedinstructions": "Please log in to continue using the site.",
+	"error": "An error has occurred, please try again"
   },
   "verifyemail": {
     "title": "Email verification",
