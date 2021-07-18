@@ -9,7 +9,7 @@ import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
-import { CategoriesZonesAndOrderByContext } from '../context';
+import { ConstantDataContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ export const Home = (props) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
-  const { categories, zones } = useContext(CategoriesZonesAndOrderByContext);
+  const { categories, zones } = useContext(ConstantDataContext);
   const [jobs, setJobs] = useState([]);
   const { getJobCards } = useJobCards();
   const loadJobCards = async () => {
@@ -61,11 +61,23 @@ export const Home = (props) => {
           <h3 className={clsx(classes.header, 'mb-5')}>{t('home.newest')}</h3>
 
           <Grid container spacing={3}>
-            {jobs.map((i) => (
-              <Grid key={i.jobPost.id} item xs={12} sm={6} md={4} lg={3}>
-                <JobCard job={i} />
-              </Grid>
-            ))}
+            {jobs.length > 0 ? (
+              jobs.map((i) => (
+                <Grid key={i.jobPost.id} item xs={12} sm={6} md={4} lg={3}>
+                  <JobCard job={i} />
+                </Grid>
+              ))
+            ) : (
+              <div className={classes.noJobsContainer}>
+                <img
+                  src={process.env.PUBLIC_URL + 'img/unavailable-1.svg'}
+                  alt=""
+                  className={classes.noJobsImage}
+                />
+                <h3 className={classes.noJobsMessage}>{t('home.nojobs')}</h3>
+              </div>
+            )}
+            {}
           </Grid>
         </div>
       </div>

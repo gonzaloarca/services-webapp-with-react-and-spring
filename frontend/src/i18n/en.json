@@ -74,7 +74,8 @@
       "question": "Do you wish to publish your services on our site?",
       "answer": "Start now",
       "button": "Publish"
-    }
+    },
+    "nojobs": "No hay servicios disponibles en este momento. Disculpas por las molestas"
   },
   "jobpost": {
     "seereviews": "See reviews",
