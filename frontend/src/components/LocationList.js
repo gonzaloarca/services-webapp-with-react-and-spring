@@ -171,7 +171,7 @@ const LocationList = ({ multiple = false }) => {
             alt=""
           />
           <p className={classes.noResultsText}>
-            {t('nolocations', { location: filter })}
+            {t('noresults', { search: filter })}
           </p>
         </div>
       );

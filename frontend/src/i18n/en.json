@@ -409,7 +409,7 @@
     "starsplural": "{{count}} stars"
   },
   "locationfilter": "Filter locations by name",
-  "nolocations": "No results for '{{location}}'",
+  "noresults": "No results for '{{search}}'",
   "timesHiredSingular": "Hired 1 time",
   "timesHiredPlural": "Hired {{times}} times",
   "search": {
