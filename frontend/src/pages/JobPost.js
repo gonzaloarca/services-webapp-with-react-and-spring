@@ -318,6 +318,24 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 5,
     marginBottom: 5,
   },
+  noReviewsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    maxHeight: 300,
+  },
+  noReviewsImage: {
+    height: '20%',
+    width: '20%',
+    objectFit: 'contain',
+  },
+  noReviewsMessage: {
+    fontSize: themeUtils.fontSizes.lg,
+    fontWeight: 500,
+    textAlign: 'center',
+  },
 }));
 
 const useGlobalStyles = makeStyles(styles);
@@ -460,7 +478,7 @@ const JobPost = ({ match }) => {
             <div className="mt-7">
               <PackageListCard packages={packages} />
             </div>
-            {/* Opiniones */}
+            {/* Reseñas */}
             <div id="reviews" className="mt-7">
               <ReviewListCard postId={post.id} />
             </div>
@@ -629,6 +647,7 @@ const ReviewListCard = ({ postId }) => {
   const [reviews, setReviews] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [queryParams, setQueryParams] = useState({ page: '1' });
+  const classes = useStyles();
 
   const loadReviews = async () => {
     try {
@@ -642,6 +661,30 @@ const ReviewListCard = ({ postId }) => {
     loadReviews();
   }, [queryParams]);
 
+  const renderReviews = (reviews) => {
+    if (reviews.length === 0) {
+      return (
+        <div className={classes.noReviewsContainer}>
+          <img
+            className={classes.noReviewsImage}
+            src={process.env.PUBLIC_URL + '/img/star-1.svg'}
+            alt=""
+          />
+          <p className={classes.noReviewsMessage}>{t('jobpost.noreviews')}</p>
+        </div>
+      );
+    } else {
+      return reviews.map((review) => (
+        <div
+          key={`review_${extractLastIdFromURL(review.jobContract)}`}
+          className="mb-4"
+        >
+          <ReviewCard review={review} />
+        </div>
+      ));
+    }
+  };
+
   useEffect(() => {
     if (reviews) setIsLoading(false);
   }, [reviews]);
@@ -653,14 +696,7 @@ const ReviewListCard = ({ postId }) => {
       icon={<RateReview />}
       title={t('reviews')}
     >
-      {reviews.map((review) => (
-        <div
-          key={`review_${extractLastIdFromURL(review.jobContract)}`}
-          className="mb-4"
-        >
-          <ReviewCard review={review} />
-        </div>
-      ))}
+      {renderReviews(reviews)}
 
       <BottomPagination
         maxPage={links.last.page}

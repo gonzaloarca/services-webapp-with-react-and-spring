@@ -116,6 +116,7 @@ const contractCardStyles = (theme) => ({
     'textAlign': 'center',
     'lineHeight': '1',
     'width': 'max-content',
+    'font-size': '0.9rem',
   },
   detailsModalBody: {
     display: 'flex',
