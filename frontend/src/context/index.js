@@ -1,5 +1,5 @@
-import { userContext as uc } from "./userContext";
+import userContext from './userContext';
+import categoriesAndZonesContext from './categoriesContext';
 
-
-
-export const UserContext = uc;
+export const UserContext = userContext;
+export const CategoriesAndZonesContext = categoriesAndZonesContext;

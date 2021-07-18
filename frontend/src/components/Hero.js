@@ -43,7 +43,7 @@ const steps = [
   },
 ];
 
-const Hero = () => {
+const Hero = ({ zones }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -51,7 +51,7 @@ const Hero = () => {
     <div className={classes.heroContainer}>
       <div className={classes.heroContent}>
         <h3 className={classes.heroText}>{t('home.herotext')}</h3>
-        <HeroSearchBar />
+        <HeroSearchBar zones={zones} />
       </div>
       <img
         className={classes.heroBackground}
@@ -62,7 +62,7 @@ const Hero = () => {
   );
 };
 
-const HeroSearchBar = () => {
+const HeroSearchBar = ({ zones }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const initialValues = {
@@ -117,12 +117,11 @@ const HeroSearchBar = () => {
                   disableUnderline={true}
                   value={values.zone !== undefined ? values.zone : ''}
                 >
-                  <MenuItem value="">
-                    <em>{t('nonselected')}</em>
-                  </MenuItem>
-                  <MenuItem value={0}>La Boca</MenuItem>
-                  <MenuItem value={1}>Palermo</MenuItem>
-                  <MenuItem value={2}>Recoleta</MenuItem>
+                  {zones.map((zone) => (
+                    <MenuItem key={zone.id} value={zone.id}>
+                      {zone.description}
+                    </MenuItem>
+                  ))}
                 </Field>
               </CustomFormControl>
             </div>

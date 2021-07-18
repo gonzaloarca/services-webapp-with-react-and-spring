@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JobCardDto {
+    private Long id;
     private URI jobPost;
     private String title;
     private JobTypeDto jobType;
@@ -22,6 +23,7 @@ public class JobCardDto {
     public static JobCardDto fromJobCardWithLocalizedMessage(JobCard jobCard, UriInfo uriInfo, String jobTypeMessage) {
         JobCardDto jobCardDto = new JobCardDto();
         long jobPostId = jobCard.getJobPost().getId();
+        jobCardDto.id = jobPostId;
         jobCardDto.jobPost = uriInfo.getBaseUriBuilder().path("/job-posts/")
                 .path(String.valueOf(jobPostId)).build();
         jobCardDto.title = jobCard.getJobPost().getTitle();
@@ -119,5 +121,13 @@ public class JobCardDto {
 
     public void setImageUrl(URI imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

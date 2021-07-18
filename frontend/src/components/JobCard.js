@@ -76,11 +76,10 @@ const useStyles = makeStyles({
 const JobCard = ({ job }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
   return (
     <div>
       <Card>
-        <CardActionArea component={Link} to={`/job/${job.jobPost.id}`}>
+        <CardActionArea component={Link} to={`/job/${job.id}`}>
           {/* Card image */}
           <CardMedia
             className={classes.image}
@@ -102,8 +101,8 @@ const JobCard = ({ job }) => {
             <hr className="my-4" />
             <div className="font-semibold text-sm flex items-center">
               <Check className="mr-2" />
-              {job.completedContracts > 1
-                ? t('completedcontracts', { count: job.completedContracts })
+              {job.contractsCompleted !== 1
+                ? t('completedcontracts', { count: job.contractsCompleted })
                 : t('completedcontractsonce')}
             </div>
           </CardContent>

@@ -50,11 +50,11 @@ const CategoryCard = ({ showAll = false, category = null, height = 175 }) => {
         <div className={classes.categoryOverlay}>
           {showAll
             ? t('home.morecategories').toUpperCase()
-            : category.name.toUpperCase()}
+            : category.description.toUpperCase()}
         </div>
         <img
           className={classes.categoryImage}
-          src={showAll ? `${process.env.PUBLIC_URL}/img/morecategories1.svg` : category.image}
+          src={showAll ? `${process.env.PUBLIC_URL}/img/morecategories1.svg` :category.image}
           alt=""
         />
       </div>
