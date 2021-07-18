@@ -43,15 +43,23 @@ const rightSections = [
 const NavBar = ({
   currentSection,
   isTransparent = false,
-  searchPageValues,
-  searchPageSetValues,
+  searchBarQueryParams,
+  searchBarSetQueryParams,
 }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [showDrawer, setShowDrawer] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser, setToken } = useContext(UserContext);
   const history = useHistory();
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    setCurrentUser(null);
+    setToken(null);
+  };
+
   const changeBarBackground = () => {
     if (window.scrollY >= 200) {
       setScrolled(true);
@@ -60,7 +68,7 @@ const NavBar = ({
     }
   };
   const [values, setValues] = React.useState({
-    query: !searchPageValues ? '' : searchPageValues.query,
+    query: !searchBarQueryParams ? '' : searchBarQueryParams.query,
   });
 
   useEffect(() => {
@@ -159,14 +167,14 @@ const NavBar = ({
                     input: classes.inputInput,
                   }}
                   value={values.query}
-				  onChange={(e) => setValues({ query: e.target.value })}
+                  onChange={(e) => setValues({ query: e.target.value })}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') {
-                      if (!searchPageValues)
+                      if (!searchBarQueryParams)
                         history.push('/search?query=' + event.target.value);
                       else
-                        searchPageSetValues({
-                          ...searchPageValues,
+                        searchBarSetQueryParams({
+                          ...searchBarQueryParams,
                           query: event.target.value,
                         });
                     }
@@ -175,7 +183,7 @@ const NavBar = ({
               </div>
             )}
           </div>
-          {!currentUser && (
+          {!currentUser ? (
             <div
               className={clsx(classes.sectionsContainer, 'items-end', 'flex')}
             >
@@ -207,6 +215,10 @@ const NavBar = ({
                 )
               )}
             </div>
+          ) : (
+            <>
+              <Button onClick={logout}>LOGOUT</Button>
+            </>
           )}
         </Toolbar>
       </AppBar>

@@ -3,8 +3,10 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.webapp.dto.output.JobCardDto;
+import ar.edu.itba.paw.webapp.dto.output.JobCardOrderByDto;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
+import org.hibernate.criterion.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -107,5 +110,27 @@ public class JobCardController {
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
                 Response.ok(new GenericEntity<List<JobCardDto>>(jobCardDtoList) {
                 }));
+    }
+
+
+    @GET
+    @Path("/order-params")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response orderParams() {
+        List<JobCardOrderByDto> jobCardOrderByDtos = Arrays.stream(JobCard.OrderBy.values()).map(orderBy -> JobCardOrderByDto.fromJobCardOrderByInfo(orderBy.getValue(),
+                messageSource.getMessage(orderBy.getStringCode(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))
+        )).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<JobCardOrderByDto>>(jobCardOrderByDtos){}).build();
+    }
+    @GET
+    @Path("/order-params/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response orderParams(@PathParam("id") int id) {
+        if(id < 0 || id > JobCard.OrderBy.values().length -1 )
+            return Response.status(Response.Status.NOT_FOUND).build();
+        JobCard.OrderBy orderBy = JobCard.OrderBy.values()[id];
+      JobCardOrderByDto jobCardOrderByDto = JobCardOrderByDto.fromJobCardOrderByInfo(orderBy.getValue(),
+                messageSource.getMessage(orderBy.getStringCode(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages())));
+        return Response.ok(new GenericEntity<JobCardOrderByDto>(jobCardOrderByDto){}).build();
     }
 }

@@ -54,7 +54,10 @@ public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
             for (String q :
                     query) {
                 String[] splitted = q.split("=");
-                queryParams.put(splitted[0], splitted[1]);
+                if(splitted.length < 2)
+                    queryParams.put(splitted[0], null);
+                else
+                        queryParams.put(splitted[0], splitted[1]);
             }
             User user;
             JobContract contract;

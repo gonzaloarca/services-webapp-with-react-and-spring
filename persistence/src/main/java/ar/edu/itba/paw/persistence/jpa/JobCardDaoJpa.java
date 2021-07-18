@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -69,7 +70,7 @@ public class JobCardDaoJpa implements JobCardDao {
     public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards");
 
-        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, orderBy);
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, orderBy,false);
 
         return executePageQuery(page, nativeQuery);
     }
@@ -122,11 +123,11 @@ public class JobCardDaoJpa implements JobCardDao {
     public int searchWithCategoryMaxPage(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards");
 
-        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, JobCard.OrderBy.BETTER_QUALIFIED); // no importa el orden
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, JobCard.OrderBy.BETTER_QUALIFIED,true); // no importa el orden
 
         @SuppressWarnings("unchecked")
         BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
-        return result.intValue();
+        return (int) Math.ceil((double) result.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
@@ -155,9 +156,8 @@ public class JobCardDaoJpa implements JobCardDao {
                 ).collect(Collectors.toList());
     }
 
-    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery, JobCard.OrderBy orderBy) {
+    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery, JobCard.OrderBy orderBy, boolean maxPage) {
         sqlQuery.append(" WHERE (UPPER(post_title) LIKE UPPER('%'|| :query ||'%')");
-
         if (!similarTypes.isEmpty()) {
             String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
             sqlQuery.append(" OR post_job_type in (")
@@ -169,29 +169,30 @@ public class JobCardDaoJpa implements JobCardDao {
 
         if (jobType != null)
             sqlQuery.append(" AND post_job_type = :type");
+        if(!maxPage) {
+            sqlQuery.append(" GROUP BY job_cards.rating, job_cards.post_id, job_cards.post_contract_count, job_cards.post_creation_date");
 
-        sqlQuery.append(" GROUP BY job_cards.rating, job_cards.post_id, job_cards.post_contract_count, job_cards.post_creation_date");
-
-        switch (orderBy) {
-            case BETTER_QUALIFIED:
-                sqlQuery.append(" ORDER BY job_cards.rating DESC");
-                break;
-            case WORST_QUEALIFIED:
-                sqlQuery.append(" ORDER BY job_cards.rating ASC");
-                break;
-            case MOST_HIRED:
-                sqlQuery.append(" ORDER BY job_cards.post_contract_count DESC");
-                break;
-            case LEAST_HIRED:
-                sqlQuery.append(" ORDER BY job_cards.post_contract_count ASC");
-                break;
-            case NEWEST:
-                sqlQuery.append(" ORDER BY job_cards.post_creation_date DESC");
-                break;
-            case OLDEST:
-                sqlQuery.append(" ORDER BY job_cards.post_creation_date ASC");
-                break;
-            default:
+            switch (orderBy) {
+                case BETTER_QUALIFIED:
+                    sqlQuery.append(" ORDER BY job_cards.rating DESC");
+                    break;
+                case WORST_QUEALIFIED:
+                    sqlQuery.append(" ORDER BY job_cards.rating ASC");
+                    break;
+                case MOST_HIRED:
+                    sqlQuery.append(" ORDER BY job_cards.post_contract_count DESC");
+                    break;
+                case LEAST_HIRED:
+                    sqlQuery.append(" ORDER BY job_cards.post_contract_count ASC");
+                    break;
+                case NEWEST:
+                    sqlQuery.append(" ORDER BY job_cards.post_creation_date DESC");
+                    break;
+                case OLDEST:
+                    sqlQuery.append(" ORDER BY job_cards.post_creation_date ASC");
+                    break;
+                default:
+            }
         }
 
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString())

@@ -9,7 +9,7 @@ import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
-import { CategoriesAndZonesContext } from '../context';
+import { CategoriesZonesAndOrderByContext } from '../context';
 import { useJobCards } from '../hooks';
 
 const useStyles = makeStyles(homeStyles);
@@ -19,7 +19,7 @@ export const Home = (props) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
-  const { categories, zones } = useContext(CategoriesAndZonesContext);
+  const { categories, zones } = useContext(CategoriesZonesAndOrderByContext);
   const [jobs, setJobs] = useState([]);
   const { getJobCards } = useJobCards();
   const loadJobCards = async () => {
@@ -38,11 +38,14 @@ export const Home = (props) => {
         <h3 className={clsx(classes.header, 'mb-5')}>{t('home.explore')}</h3>
 
         <Grid container justifyContent="space-evenly" spacing={3}>
-          {categories.slice(0, 4).map((i) => (
-            <Grid key={i.id} item xs={6} sm={4} md={3} lg={2}>
-              <CategoryCard category={i} />
-            </Grid>
-          ))}
+          {categories
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 4)
+            .map((i) => (
+              <Grid key={i.id} item xs={6} sm={4} md={3} lg={2}>
+                <CategoryCard category={i} />
+              </Grid>
+            ))}
           <Grid item xs={6} sm={4} md={3} lg={2}>
             <CategoryCard showAll />
           </Grid>

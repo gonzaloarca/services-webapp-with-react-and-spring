@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import NavBar from '../components/NavBar';
 import {
   FormControl,
@@ -14,8 +14,11 @@ import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import clsx from 'clsx';
 import JobCard from '../components/JobCard';
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useHistory, Link } from 'react-router-dom';
+import { parse } from 'query-string';
+import { CategoriesZonesAndOrderByContext } from '../context';
+import { useJobCards } from '../hooks';
+import { Pagination, PaginationItem } from '@material-ui/lab';
 
 const jobs = [
   {
@@ -191,60 +194,95 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function useQuery() {
-  return new URLSearchParams(useLocation().search);
+  return parse(useLocation().search);
 }
 
 const Search = () => {
   let queryParameters = useQuery();
-  const [values, setValues] = React.useState({
-    zone: !queryParameters.get('zone') ? '' : queryParameters.get('zone'),
-    category: !queryParameters.get('category')
-      ? ''
-      : queryParameters.get('category'),
-    query: !queryParameters.get('query') ? '' : queryParameters.get('query'),
-    orderBy: !queryParameters.get('orderBy')
-      ? ''
-      : queryParameters.get('orderBy'),
+  const { orderByParams, categories } = useContext(
+    CategoriesZonesAndOrderByContext
+  );
+
+  const { searchJobCards, links } = useJobCards();
+  const [jobCards, setJobCards] = useState([]);
+  const [queryParams, setQueryParams] = React.useState({
+    zone: queryParameters.zone || '',
+    category: queryParameters.category || '',
+    query: queryParameters.query || '',
+    orderBy: queryParameters.orderBy || '',
+    page: queryParameters.page || 1,
   });
   const classes = useStyles();
   const history = useHistory();
 
+  const loadJobCards = async () => {
+    try {
+      const jobCards = await searchJobCards(queryParams);
+      setJobCards(jobCards);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     history.push(
-      '/search?zone=' +
-        values.zone +
-        '&category=' +
-        values.category +
-        '&orderBy=' +
-        values.orderBy +
-        '&query=' +
-        values.query
+      '/search?' +
+        (queryParams.zone ? 'zone=' + queryParams.zone : '') +
+        (queryParams.category ? '&category=' + queryParams.category : '') +
+        (queryParams.orderBy ? '&orderBy=' + queryParams.orderBy : '') +
+        (queryParams.query ? '&query=' + queryParams.query : '') +
+        (queryParams.page ? '&page=' + queryParams.page : '')
     );
-  }, [values]);
+    loadJobCards();
+  }, [queryParams]);
 
   return (
     <div>
-      <NavBar currentSection={'/search'} searchPageSetValues={setValues} searchPageValues={values} />
+      <NavBar
+        currentSection={'/search'}
+        searchBarSetQueryParams={setQueryParams}
+        searchBarQueryParams={queryParams}
+      />
       <div className="flex justify-center mt-10">
         <Grid container spacing={3} className={classes.searchContainer}>
           <Grid item xs={3}>
             <Filters
-              category={values.category}
-              orderBy={values.orderBy}
-              setValues={setValues}
-              values={values}
+              category={queryParams.category}
+              orderBy={queryParams.orderBy}
+              setQueryParams={setQueryParams}
+              queryParams={queryParams}
+              orderByParams={orderByParams}
+              categories={categories}
             />
           </Grid>
           <Grid item xs={9}>
-            <SearchResults zone={values.zone} query={values.query} />
+            <SearchResults
+              zone={queryParams.zone}
+              query={queryParams.query}
+              jobs={jobCards}
+            />
           </Grid>
         </Grid>
       </div>
+      {/* <div className="flex justify-center">
+        <Pagination
+          page={queryParams.page}
+          count={parseInt(links.last && links.last.page)}
+          color="secondary"
+          renderItem={(item) => (
+            <PaginationItem
+              component={Link}
+              to={`/search${item.page === 1 ? '' : `?page=${item.page}`}`}
+              {...item}
+            />
+          )}
+        />
+      </div> */}
     </div>
   );
 };
 
-const SearchResults = ({ zone, query }) => {
+const SearchResults = ({ zone, query, jobs }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -277,25 +315,16 @@ const SearchResults = ({ zone, query }) => {
   );
 };
 
-const Filters = ({ category, orderBy, values, setValues }) => {
+const Filters = ({
+  category,
+  orderBy,
+  queryParams,
+  setQueryParams,
+  categories,
+  orderByParams,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const categories = [
-    'Plumbing',
-    'Plectrician',
-    'Carpentry',
-    'Catering',
-    'Painter',
-    'Teaching',
-    'Cleaning',
-    'Babysitting',
-  ]; //TODO: RECIBIR DE LA API
-  const possibleOrders = [
-    'Most hired',
-    'Least hired',
-    'Highest rated',
-    'Lowest rated',
-  ]; //TODO: RECIBIR DE LA API
   return (
     <Card className="p-5">
       <p className={classes.title}>{t('search.filters')}</p>
@@ -307,15 +336,15 @@ const Filters = ({ category, orderBy, values, setValues }) => {
             labelId="order-select"
             value={orderBy}
             onChange={(event) => {
-              setValues({ ...values, orderBy: event.target.value });
+              setQueryParams({ ...queryParams, orderBy: event.target.value });
             }}
           >
             <MenuItem value="">
               <em>{t('nonselected')}</em>
             </MenuItem>
-            {possibleOrders.map((orderStr, index) => (
-              <MenuItem key={index} value={index}>
-                {orderStr}
+            {orderByParams.map((order, index) => (
+              <MenuItem key={order.id} value={order.id}>
+                {order.description}
               </MenuItem>
             ))}
           </Select>
@@ -323,18 +352,18 @@ const Filters = ({ category, orderBy, values, setValues }) => {
       </div>
       <Divider className="mx-5 mb-4" />
       <p className={classes.categoriesTitle}>{t('search.categories')}</p>
-      {categories.map((categoryString, index) => (
+      {categories.map((category, index) => (
         <p
-          key={index}
+          key={category.id}
           className={clsx(
             classes.category,
             index === category ? classes.selectedCategory : ''
           )}
           onClick={() => {
-            setValues({ ...values, category: index });
+            setQueryParams({ ...queryParams, category: category.id });
           }}
         >
-          {categoryString}
+          {category.description}
         </p>
       ))}
     </Card>

@@ -1,5 +1,6 @@
 import userContext from './userContext';
-import categoriesAndZonesContext from './categoriesContext';
+import categoriesZonesAndOrderByContext from './categoriesContext';
 
 export const UserContext = userContext;
-export const CategoriesAndZonesContext = categoriesAndZonesContext;
+export const CategoriesZonesAndOrderByContext =
+  categoriesZonesAndOrderByContext;

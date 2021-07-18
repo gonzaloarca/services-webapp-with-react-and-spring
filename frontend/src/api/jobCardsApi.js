@@ -19,3 +19,11 @@ export const searchJobCardsRequest = ({zone,query,category,orderBy,page = 1}) =>
     }
   })
 }
+
+export const getOrderByParamsRequest = () =>{
+  return hirenetApi.get("/job-cards/order-params");
+}
+
+export const getOrderByParamByIdRequest = (id) =>{
+  return hirenetApi.get(`/job-cards/order-params/${id}`);
+}

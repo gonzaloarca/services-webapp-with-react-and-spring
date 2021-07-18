@@ -20,15 +20,18 @@ import Account from './pages/Account';
 import RecoverPass from './pages/RecoverPass';
 import ChangePass from './pages/ChangePass';
 import VerifyEmail from './pages/VerifyEmail';
-import { UserContext, CategoriesAndZonesContext } from './context';
-import { useUser, useCategories, useZones } from './hooks';
+import { UserContext, CategoriesZonesAndOrderByContext } from './context';
+import { useUser, useCategories, useZones, useJobCards } from './hooks';
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
   const { getUserByEmail } = useUser();
   const { getCategories } = useCategories();
   const { getZones } = useZones();
+  const { getOrderByParams } = useJobCards();
   const [zones, setZones] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [orderByParams, setOrderByParams] = useState([]);
+
   /*
    * This function saves the current user in the context if the user is logged in.
    */
@@ -49,7 +52,11 @@ const App = () => {
   const loadCategories = async () => {
     try {
       const categories = await getCategories();
-      setCategories(categories);
+      setCategories(
+        categories.sort((category, category2) =>
+          category.description.localeCompare(category2.description)
+        )
+      );
     } catch (e) {
       console.log(e);
     }
@@ -58,7 +65,20 @@ const App = () => {
   const loadZones = async () => {
     try {
       const zones = await getZones();
-      setZones(zones);
+      setZones(
+        zones.sort((zone1, zone2) =>
+          zone1.description.localeCompare(zone2.description)
+        )
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const loadOrderByParams = async () => {
+    try {
+      const orderByParams = await getOrderByParams();
+      setOrderByParams(orderByParams);
     } catch (e) {
       console.log(e);
     }
@@ -99,11 +119,16 @@ const App = () => {
 
     loadCategories();
     loadZones();
+    loadOrderByParams();
   }, []);
   return (
     <>
-      <CategoriesAndZonesContext.Provider
-        value={{ categories: categories, zones: zones }}
+      <CategoriesZonesAndOrderByContext.Provider
+        value={{
+          categories: categories,
+          zones: zones,
+          orderByParams: orderByParams,
+        }}
       >
         <ScrollToTop />
         <Switch>
@@ -130,7 +155,7 @@ const App = () => {
           <Route path="/" component={Home} />
         </Switch>
         <Footer />
-      </CategoriesAndZonesContext.Provider>
+      </CategoriesZonesAndOrderByContext.Provider>
     </>
   );
 };
