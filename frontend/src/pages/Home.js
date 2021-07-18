@@ -12,6 +12,7 @@ import homeStyles from './HomeStyles';
 import { CategoriesZonesAndOrderByContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(homeStyles);
 const useGlobalStyles = makeStyles(styles);
@@ -81,7 +82,7 @@ const PublishBanner = () => {
     <div className={classes.publishBannerContainer}>
       <p>{t('home.publishbanner.question')}</p>
       <p>{t('home.publishbanner.answer')}</p>
-      <PublishButton className="mt-4">
+      <PublishButton component={Link} to="/create-job-post" className="mt-4">
         {t('home.publishbanner.button')}
       </PublishButton>
     </div>

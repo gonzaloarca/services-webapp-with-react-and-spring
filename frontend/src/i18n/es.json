@@ -18,12 +18,26 @@
       "profile": "Perfil de {{username}}",
       "account": "Mi cuenta",
       "registersuccess": "Registro exitoso",
-      "hire": "Contratar servicio"
+      "hire": "Contratar servicio",
+      "error": "Error",
+      "pagenotfound": "Página no encontrada"
     },
     "search": "Buscar..."
   },
   "title": "{{section}} | HireNet",
   "defaulttitle": "HireNet",
+  "error": {
+    "404": {
+      "header": "Error 404",
+      "description": "Página no encontrada",
+      "action": "Regresar a inicio"
+    },
+    "generic": {
+      "header": "Error",
+      "descriptión": "Algo salió mal...",
+      "action": "Regresar a inicio"
+    }
+  },
   "validationerror": {
     "required": "Este campo es obligatorio",
     "email": "Por favor ingrese una direccion de correo electronico",

@@ -23,145 +23,6 @@ import { Pagination, PaginationItem } from '@material-ui/lab';
 import BottomPagination from '../components/BottomPagination';
 import { Helmet } from 'react-helmet';
 
-const jobs = [
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 2000.1,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 3,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'ONE_TIME',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title: 'Niñero turno mañana',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 1500,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 7,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'HOURLY',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title:
-      'Niñero turno mañanaaaa ajofejo jaofjaeo aehfeah ofgeafg aoeifgaeof goafg oaeg efeoia',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 8,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'TBD',
-      id: 2,
-    },
-    reviewsCount: 2,
-    title: 'Niñero turno mañana',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-  {
-    avgRate: 3,
-    contractsCompleted: 3,
-    price: 1500,
-    imageUrl: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-    jobPost: {
-      id: 2,
-      uri: 'http://localhost:8080/job-posts/8',
-    },
-    jobType: {
-      description: 'Babysitting',
-      id: 7,
-    },
-    rateType: {
-      description: 'TBD',
-      id: 2,
-    },
-    reviewsCount: 0,
-    title: 'Niñero turno mañana',
-    zones: [
-      {
-        description: 'Retiro',
-        id: 28,
-      },
-      {
-        description: 'Nuñez',
-        id: 20,
-      },
-      {
-        description: 'Colegiales',
-        id: 9,
-      },
-    ],
-  },
-];
-
 const useStyles = makeStyles((theme) => ({
   searchContainer: {
     width: '100%',
@@ -228,14 +89,11 @@ const Search = () => {
     try {
       const jobCards = await searchJobCards(queryParams);
       setJobCards(jobCards);
+	  setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
     } catch (error) {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
-  }, [links]);
 
   useEffect(() => {
     history.push(

@@ -29,6 +29,7 @@ import EditPackage from './pages/EditPackage';
 import RegisterSuccess from './pages/RegisterSuccess';
 import { useTranslation } from 'react-i18next';
 import { isProfessional } from './utils/userUtils';
+import Error404 from './pages/Error404';
 
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
@@ -177,7 +178,7 @@ const App = () => {
           <Route path="/change-password" exact component={ChangePass} />
           <Route path="/token" exact component={VerifyEmail} />
           {/* TODO: 404 not found */}
-          <Route path="/" component={Home} />
+          <Route path="/" component={Error404} />
         </Switch>
         <Footer />
       </CategoriesZonesAndOrderByContext.Provider>
