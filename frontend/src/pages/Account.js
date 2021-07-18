@@ -120,6 +120,8 @@ const Account = () => {
     accountSections.forEach((section, index) => {
       if (section.path === activeTab) initialTab = index;
     });
+  } else {
+    history.replace(`/account/${accountSections[0].path}`);
   }
 
   const [tabValue, setTabValue] = React.useState(initialTab);

@@ -237,6 +237,8 @@ const ProfileTabs = () => {
     tabPaths.forEach((path, index) => {
       if (path === activeTab) initialTab = index;
     });
+  } else {
+    history.replace(`/profile/${id}/${tabPaths[0]}`);
   }
 
   const [tabValue, setTabValue] = React.useState(initialTab);
