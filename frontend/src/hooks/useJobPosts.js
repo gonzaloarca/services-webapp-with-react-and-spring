@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import { getJobPostsRequest, getJobPostByIdRequest } from '../api/jobPostsApi';
+import {
+  getJobPostsRequest,
+  getJobPostByIdRequest,
+  createJobPostRequest,
+  addPostImageRequest,
+} from '../api/jobPostsApi';
 import categoryImageMap from '../utils/categories';
 import parse from 'parse-link-header';
+import { useJobPackages } from '.';
+import { extractLastIdFromURL } from '../utils/urlUtils';
 const useJobPostsHook = () => {
   const initialLinks = {
     last: {
@@ -26,6 +33,9 @@ const useJobPostsHook = () => {
     },
   };
   const [links, setLinks] = useState({ ...initialLinks });
+
+  const { createJobPackage } = useJobPackages();
+
   const getJobPosts = async (page) => {
     const response = await getJobPostsRequest(page);
     setLinks(parse(response.headers.link) || { ...initialLinks });
@@ -49,9 +59,34 @@ const useJobPostsHook = () => {
     };
   };
 
+  const addPostImage = async (postId, image) => {
+    const formData = new FormData();
+    formData.append('file', image);
+    return await addPostImageRequest(postId, formData);
+  };
+
+  const createJobPost = async (jobPost) => {
+    const response = await createJobPostRequest({
+      availableHours: jobPost.hours,
+      jobType: jobPost.category,
+      title: jobPost.title,
+      zones: jobPost.locations,
+    });
+    const postId = extractLastIdFromURL(response.headers.location);
+    const packagesPromises = jobPost.packages.map((pack) => {
+      return createJobPackage(postId, pack);
+    });
+    const imagePromises = Array.from(jobPost.images).map((image) => {
+      return addPostImage(postId, image);
+    });
+    await Promise.all([...packagesPromises, ...imagePromises]);
+    return response.headers.location;
+  };
+
   return {
     getJobPosts,
     getJobPostById,
+    createJobPost,
     links,
   };
 };

@@ -35,3 +35,16 @@ export const editJobPostRequest = (jobPost, id) => {
     },
   });
 };
+
+export const addPostImageRequest = (jobPostId, file) => {
+  return hirenetApi.post(`/job-posts/${jobPostId}/images`, file, {
+    headers: {
+      'Authorization':
+        'Bearer ' +
+        (localStorage.getItem('token') ||
+          sessionStorage.getItem('token') ||
+          ''),
+      'Content-type': 'multipart/form-data',
+    },
+  });
+};

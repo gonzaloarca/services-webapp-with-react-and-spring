@@ -21,8 +21,14 @@ import Account from './pages/Account';
 import RecoverPass from './pages/RecoverPass';
 import ChangePass from './pages/ChangePass';
 import VerifyEmail from './pages/VerifyEmail';
-import { UserContext, CategoriesZonesAndOrderByContext } from './context';
-import { useUser, useCategories, useZones, useJobCards } from './hooks';
+import { UserContext, ConstantDataContext } from './context';
+import {
+  useUser,
+  useCategories,
+  useZones,
+  useJobCards,
+  useRateTypes,
+} from './hooks';
 import Packages from './pages/Packages';
 import AddPackage from './pages/AddPackage';
 import EditPackage from './pages/EditPackage';
@@ -37,9 +43,11 @@ const App = () => {
   const { getCategories } = useCategories();
   const { getZones } = useZones();
   const { getOrderByParams } = useJobCards();
+  const { getRateTypes } = useRateTypes();
   const [zones, setZones] = useState([]);
   const [categories, setCategories] = useState([]);
   const [orderByParams, setOrderByParams] = useState([]);
+  const [rateTypes, setRateTypes] = useState([]);
   const { t } = useTranslation();
   /*
    * This function saves the current user in the context if the user is logged in.
@@ -56,7 +64,7 @@ const App = () => {
   };
 
   /*
-   * This functions load the categories and zones from the server.
+   * This functions load the categories, zones, order-by params and rate-types from the server.
    */
   const loadCategories = async () => {
     try {
@@ -88,6 +96,15 @@ const App = () => {
     try {
       const orderByParams = await getOrderByParams();
       setOrderByParams(orderByParams);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const loadRateTypes = async () => {
+    try {
+      const rateTypes = await getRateTypes();
+      setRateTypes(rateTypes);
     } catch (e) {
       console.log(e);
     }
@@ -129,14 +146,16 @@ const App = () => {
     loadCategories();
     loadZones();
     loadOrderByParams();
+    loadRateTypes();
   }, []);
   return (
     <>
-      <CategoriesZonesAndOrderByContext.Provider
+      <ConstantDataContext.Provider
         value={{
           categories: categories,
           zones: zones,
           orderByParams: orderByParams,
+          rateTypes: rateTypes,
         }}
       >
         <Helmet>
@@ -181,7 +200,7 @@ const App = () => {
           <Route path="/" component={Error404} />
         </Switch>
         <Footer />
-      </CategoriesZonesAndOrderByContext.Provider>
+      </ConstantDataContext.Provider>
     </>
   );
 };

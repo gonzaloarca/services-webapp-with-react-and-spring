@@ -9,7 +9,7 @@ import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
-import { CategoriesZonesAndOrderByContext } from '../context';
+import { ConstantDataContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ export const Home = (props) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
-  const { categories, zones } = useContext(CategoriesZonesAndOrderByContext);
+  const { categories, zones } = useContext(ConstantDataContext);
   const [jobs, setJobs] = useState([]);
   const { getJobCards } = useJobCards();
   const loadJobCards = async () => {

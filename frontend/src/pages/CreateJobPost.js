@@ -31,7 +31,7 @@ import {
 import { Add } from '@material-ui/icons';
 import clsx from 'clsx';
 import { Form, Formik, useFormikContext, ErrorMessage } from 'formik';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
 import LocationList from '../components/LocationList';
@@ -49,6 +49,9 @@ import FileInput, {
   checkQuantity,
 } from '../components/FileInput';
 import * as Yup from 'yup';
+import { ConstantDataContext } from '../context';
+import { useJobPosts } from '../hooks';
+import axios from 'axios';
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -264,53 +267,12 @@ const getStepContent = (step, formRef, handleNext, data) => {
   }
 };
 
-// TODO: esto viene de la API?
-const jobTypes = [
-  {
-    id: 0,
-    description: 'Plumbing',
-  },
-  {
-    id: 1,
-    description: 'Carpentry',
-  },
-  {
-    id: 2,
-    description: 'Painting',
-  },
-  {
-    id: 3,
-    description: 'Babysitting',
-  },
-  {
-    id: 4,
-    description: 'Electricity',
-  },
-  {
-    id: 5,
-    description: 'Other',
-  },
-];
-
-const rateTypes = [
-  {
-    id: 0,
-    description: 'HOURLY',
-  },
-  {
-    id: 1,
-    description: 'ONE_TIME',
-  },
-  {
-    id: 2,
-    description: 'TBD',
-  },
-];
-
 const CreateJobPost = () => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
+
+  const { createJobPost } = useJobPosts();
 
   const [data, setData] = React.useState({
     category: '',
@@ -338,9 +300,12 @@ const CreateJobPost = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const makeRequest = (newData) => {
-    console.log(newData);
-    //TODO: Registrar con la API
+  const makeRequest = async (newData) => {
+    try {
+      console.log(await createJobPost(newData));
+    } catch (e) {
+      console.log(e);
+    }
     //TODO: Redirigir a una vista de "Success"
   };
 
@@ -436,6 +401,8 @@ const PublishStep = ({ step, color, title, children }) => {
 const CategoryStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const { categories: jobTypes } = useContext(ConstantDataContext);
 
   const handleSubmit = (values) => {
     handleNext(values);
@@ -741,12 +708,17 @@ const JobSummary = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const category = jobTypes[data.category]; //TODO obtener el objeto category aca
+  const {
+    categories: jobTypes,
+    rateTypes,
+    zones,
+  } = useContext(ConstantDataContext);
+
+  const category = jobTypes[data.category];
   const packages = [];
   const locations = [];
 
   data.packages.forEach((pack) => {
-    // TODO: pack.rateType es solo el ID al salir del Form, ver cómo obtener el objeto de la API
     let rateType = rateTypes[pack.rateType];
     packages.push({
       title: pack.title,
@@ -757,18 +729,10 @@ const JobSummary = ({ formRef, handleNext, data }) => {
   });
 
   data.locations.forEach((location) => {
-    // TODO location es solo el id de la zona, obtener el objeto de la API aca
-    locations.push({
-      id: 0,
-      description: 'Recoleta',
-    });
+    locations.push(zones.find((zone) => zone.id === location));
   });
 
   const handleSubmit = (values) => {
-    // Reemplazo los valores por los convertidos antes de enviarlo TODO: esta bien?
-    values.category = category;
-    values.packages = packages;
-    values.locations = locations;
     handleNext(values, true);
   };
 

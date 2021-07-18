@@ -17,7 +17,7 @@ import clsx from 'clsx';
 import JobCard from '../components/JobCard';
 import { useLocation, useHistory, Link } from 'react-router-dom';
 import { parse } from 'query-string';
-import { CategoriesZonesAndOrderByContext } from '../context';
+import { ConstantDataContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Pagination, PaginationItem } from '@material-ui/lab';
 import BottomPagination from '../components/BottomPagination';
@@ -67,9 +67,7 @@ function useQuery() {
 
 const Search = () => {
   let queryParameters = useQuery();
-  const { orderByParams, categories, zones } = useContext(
-    CategoriesZonesAndOrderByContext
-  );
+  const { orderByParams, categories, zones } = useContext(ConstantDataContext);
 
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState([]);
@@ -89,7 +87,7 @@ const Search = () => {
     try {
       const jobCards = await searchJobCards(queryParams);
       setJobCards(jobCards);
-	  setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
+      setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
     } catch (error) {
       console.error(error);
     }

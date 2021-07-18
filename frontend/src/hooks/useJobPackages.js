@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   getJobPackageByPostIdAndPackageIdRequest,
   getJobPackagesByPostIdRequest,
+  createJobPackageRequest,
 } from '../api/packagesApi';
 import categoryImageMap from '../utils/categories';
 import parse from 'parse-link-header';
@@ -41,9 +42,14 @@ const useJobPackagesHook = () => {
     return response.data;
   };
 
+  const createJobPackage = async (postId, data) => {
+    const response = await createJobPackageRequest(postId, data);
+    return response.data;
+  };
   return {
     getJobPackagesByPostId,
     getJobPackageByPostIdAndPackageId,
+    createJobPackage,
     links,
   };
 };

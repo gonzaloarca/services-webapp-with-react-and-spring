@@ -11,52 +11,10 @@ import {
   TextField,
 } from '@material-ui/core';
 import { LocationOn, Search } from '@material-ui/icons';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ConstantDataContext } from '../context';
 import { themeUtils } from '../theme';
-
-const locationList = [
-  {
-    description: 'La Boca',
-    id: 0,
-  },
-  {
-    description: 'San Juan',
-    id: 1,
-  },
-  {
-    description: 'San Luis',
-    id: 2,
-  },
-  {
-    description: 'Recoleta',
-    id: 3,
-  },
-  {
-    description: 'Almagro',
-    id: 4,
-  },
-  {
-    description: 'Palermo',
-    id: 5,
-  },
-  {
-    description: 'San Isidro',
-    id: 6,
-  },
-  {
-    description: 'Tigre',
-    id: 7,
-  },
-  {
-    description: 'Retiro',
-    id: 8,
-  },
-  {
-    description: 'Villa Constitucion',
-    id: 9,
-  },
-];
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -111,6 +69,8 @@ const LocationList = ({
   const [checked, setChecked] = useState(initial === null ? [] : initial);
   const [filter, setFilter] = useState('');
   const { t } = useTranslation();
+
+  const { zones } = useContext(ConstantDataContext);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -190,9 +150,7 @@ const LocationList = ({
             checked.map((id) => (
               <Chip
                 className="m-1"
-                label={
-                  locationList.filter((zone) => zone.id === id)[0].description
-                }
+                label={zones.filter((zone) => zone.id === id)[0].description}
                 style={{
                   backgroundColor: themeUtils.colors.lightBlue,
                   fontWeight: 500,
@@ -228,7 +186,7 @@ const LocationList = ({
           },
         }}
       />
-      <List className={classes.list}>{renderList(locationList)}</List>
+      <List className={classes.list}>{renderList(zones)}</List>
     </div>
   );
 };
