@@ -38,7 +38,10 @@ const RegisterSuccess = () => {
             <p className={classes.title}>{t('verifyemail.title')}</p>
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg text-center')}>
-            <div className="font-bold text-3xl mb-2" style={{ color: 'green' }}>
+            <div
+              className="font-semibold text-3xl mb-2"
+              style={{ color: 'green' }}
+            >
               {t('register.success.title')}
             </div>
             <div>{t('register.success.verify')}</div>

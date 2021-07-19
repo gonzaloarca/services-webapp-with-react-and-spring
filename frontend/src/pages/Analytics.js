@@ -161,7 +161,7 @@ const ClientsRecommendation = ({ userId }) => {
 
   return (
     <>
-      {jobCards?.length == 0 ? (
+      {jobCards?.length === 0 ? (
         <></>
       ) : (
         <Card classes={{ root: classes.card }}>
