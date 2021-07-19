@@ -70,7 +70,7 @@ const CategoryCard = ({
               ? process.env.PUBLIC_URL + '/img/morecategories1.svg'
               : category.image
           }
-          alt={category.description}
+          alt=""
           loading="lazy"
         />
       </div>
