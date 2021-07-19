@@ -173,57 +173,57 @@ const hiredServices = {
     // },
   ],
   finalizedContracts: [
-    // {
-    //   avgRate: 3.6666666666666665,
-    //   client: {
-    //     id: 11,
-    //     username: 'El Beto (Julian Sicardi)',
-    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //     email: 'beto@gmbeh.com',
-    //     phone: '03034560',
-    //   },
-    //   professional: {
-    //     id: 12,
-    //     username: 'El Beto (Julian Sicardi)',
-    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //     email: 'betito@gmbeh.com',
-    //     phone: '03034560',
-    //   },
-    //   contractsCompleted: 4,
-    //   creationDate: '2021-06-16T16:48:40.860',
-    //   image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //   jobContract: {
-    //     id: 29,
-    //     description: 'Hava nagila Hava nagila Hava nagila Venis mecha.',
-    //     image: '/img/plumbing.jpeg',
-    //     uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
-    //   },
-    //   jobPackage: {
-    //     id: 8,
-    //     uri: 'http://localhost:8080/job-posts/8/packages/8',
-    //   },
-    //   jobPost: {
-    //     id: 8,
-    //     uri: 'http://localhost:8080/job-posts/8',
-    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //   },
-    //   jobTitle: 'Niñero turno mañana',
-    //   jobType: {
-    //     description: 'BABYSITTING',
-    //     id: 7,
-    //   },
-    //   packageTitle: '4 dias a la semana 4 horas',
-    //   rateType: {
-    //     description: 'TBD',
-    //     id: 2,
-    //   },
-    //   reviewsCount: 3,
-    //   scheduledDate: '2021-06-16T16:48',
-    //   state: {
-    //     description: 'COMPLETED',
-    //     id: 0,
-    //   },
-    // },
+    {
+      avgRate: 3.6666666666666665,
+      client: {
+        id: 11,
+        username: 'El Beto (Julian Sicardi)',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+        email: 'beto@gmbeh.com',
+        phone: '03034560',
+      },
+      professional: {
+        id: 12,
+        username: 'El Beto (Julian Sicardi)',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+        email: 'betito@gmbeh.com',
+        phone: '03034560',
+      },
+      contractsCompleted: 4,
+      creationDate: '2021-06-16T16:48:40.860',
+      image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+      jobContract: {
+        id: 29,
+        description: 'Hava nagila Hava nagila Hava nagila Venis mecha.',
+        image: '/img/plumbing.jpeg',
+        uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
+      },
+      jobPackage: {
+        id: 8,
+        uri: 'http://localhost:8080/job-posts/8/packages/8',
+      },
+      jobPost: {
+        id: 8,
+        uri: 'http://localhost:8080/job-posts/8',
+        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+      },
+      jobTitle: 'Niñero turno mañana',
+      jobType: {
+        description: 'BABYSITTING',
+        id: 7,
+      },
+      packageTitle: '4 dias a la semana 4 horas',
+      rateType: {
+        description: 'TBD',
+        id: 2,
+      },
+      reviewsCount: 3,
+      scheduledDate: '2021-06-16T16:48',
+      state: {
+        description: 'COMPLETED',
+        id: 0,
+      },
+    },
   ],
 };
 

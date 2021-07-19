@@ -11,7 +11,7 @@ import {
   Chip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import clsx from 'clsx';
 import JobCard from '../components/JobCard';
@@ -22,6 +22,13 @@ import { useJobCards } from '../hooks';
 import { Pagination, PaginationItem } from '@material-ui/lab';
 import BottomPagination from '../components/BottomPagination';
 import { Helmet } from 'react-helmet';
+import {
+  ClassRounded,
+  LocationOn,
+  FilterList,
+  Search as SearchIcon,
+  Sort,
+} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   searchContainer: {
@@ -30,18 +37,12 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontSize: '1.4em',
-    fontWeight: 'bold',
+    fontWeight: 600,
     margin: '0px 10px',
-    WebkitLineClamp: 3,
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    overflowWrap: 'break-word',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
   },
   categoriesTitle: {
     fontSize: '1.em',
-    fontWeight: 'bold',
+    fontWeight: 600,
     margin: '5px 10px',
     color: themeUtils.colors.darkBlue,
   },
@@ -50,14 +51,68 @@ const useStyles = makeStyles((theme) => ({
     margin: '4px 20px',
     color: themeUtils.colors.grey,
     cursor: 'pointer',
+    transition: 'color 0.1s',
+    '&:hover': {
+      transition: 'color 0.1s',
+      color: themeUtils.colors.darkBlue,
+    },
   },
   selectedCategory: {
-    color: 'black',
-    fontWeight: 'bold',
+    color: themeUtils.colors.darkBlue,
+    fontWeight: 600,
   },
   filteringBy: {
     fontSize: '0.9em',
     margin: '0px 10px',
+  },
+  queryRegular: {
+    fontSize: themeUtils.fontSizes.base,
+    fontWeight: 500,
+    opacity: 0.5,
+  },
+  queryBold: {
+    fontSize: themeUtils.fontSizes.h1,
+    fontWeight: 600,
+    WebkitLineClamp: 3,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    overflowWrap: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  zoneFilter: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  zoneContainer: {
+    fontSize: themeUtils.fontSizes.sm,
+    fontWeight: 500,
+    width: 'fit-content',
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  filterChip: {
+    backgroundColor: themeUtils.colors.aqua,
+    color: 'white',
+    fontWeight: 600,
+    marginRight: 10,
+    '&:focus': {
+      backgroundColor: themeUtils.colors.aqua,
+    },
+  },
+  noResultsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 400,
+    width: '100%',
+    fontWeight: 500,
+  },
+  noResultsIcon: {
+    width: '50%',
+    height: '50%',
   },
 }));
 
@@ -124,6 +179,7 @@ const Search = () => {
               setQueryParams={setQueryParams}
               queryParams={queryParams}
               categories={categories}
+              orderByParams={orderByParams}
             />
           </Grid>
           <Grid item xs={9}>
@@ -131,7 +187,6 @@ const Search = () => {
               setQueryParams={setQueryParams}
               queryParams={queryParams}
               categories={categories}
-              orderByParams={orderByParams}
               zones={zones}
               jobs={jobCards}
               maxPage={maxPage}
@@ -147,7 +202,6 @@ const SearchResults = ({
   queryParams,
   setQueryParams,
   categories,
-  orderByParams,
   zones,
   jobs,
   maxPage,
@@ -156,6 +210,7 @@ const SearchResults = ({
   const { t } = useTranslation();
 
   let zoneStr;
+
   if (
     queryParams.zone === '' ||
     queryParams.zone < 0 ||
@@ -179,53 +234,85 @@ const SearchResults = ({
     );
     categoryStr = !categoryAux ? '' : categoryAux.description;
   }
+
+  const getHeader = (zone, query) => {
+    if (zone === '') {
+      if (query === '') {
+        return <div className={classes.queryBold}>{t('search.results')}</div>;
+      } else {
+        return (
+          <Trans
+            i18nKey="search.queryresults"
+            components={{
+              regular: <div className={classes.queryRegular} />,
+              bold: <div className={classes.queryBold} />,
+            }}
+            values={{ query: query }}
+          />
+        );
+      }
+    }
+
+    if (query === '') {
+      return (
+        <Trans
+          i18nKey="search.zoneresults"
+          components={{
+            zonecontainer: <div className={classes.zoneContainer} />,
+            icon: <LocationOn />,
+          }}
+          values={{ zone: zone }}
+        />
+      );
+    } else
+      return (
+        <Trans
+          i18nKey="search.query&zoneresults"
+          components={{
+            regular: <div className={classes.queryRegular} />,
+            bold: <div className={classes.queryBold} />,
+            bottom: <div className={classes.zoneFilter} />,
+            zonecontainer: <div className={classes.zoneContainer} />,
+            icon: <LocationOn />,
+          }}
+          values={{ query: query, zone: zone }}
+        />
+      );
+  };
+
   return (
     <Card className="p-5">
-      <p className={classes.title}>
-        {queryParams.zone === ''
-          ? queryParams.query === ''
-            ? t('search.results')
-            : t('search.queryresults', { query: queryParams.query })
-          : queryParams.query === ''
-          ? t('search.zoneresults', { zone: zoneStr })
-          : t('search.query&zoneresults', {
-              zone: zoneStr,
-              query: queryParams.query,
-            })}
-      </p>
-      <Divider className="m-5" />
+      <div className={classes.title}>
+        {getHeader(zoneStr, queryParams.query)}
+      </div>
+      <Divider className="mt-2 mb-5" />
       <div className="flex justify-between items-center mb-5">
-        {queryParams.category === '' ? (
+        {queryParams.query === '' && queryParams.category === '' ? (
           <div></div>
         ) : (
           //   Debe ser un div para que ocupe el espacio y siga bien alineado todo
           <div className="flex items-center">
             <p className={classes.filteringBy}>{t('search.filteringby')}</p>
-            <Chip
-              label={categoryStr}
-              onDelete={() => setQueryParams({ ...queryParams, category: '' })}
-            />
+            {queryParams.category !== '' && (
+              <Chip
+                className={classes.filterChip}
+                label={categoryStr}
+                icon={<FilterList />}
+                onDelete={() =>
+                  setQueryParams({ ...queryParams, category: '' })
+                }
+              />
+            )}
+            {queryParams.query !== '' && (
+              <Chip
+                className={classes.filterChip}
+                label={queryParams.query}
+                icon={<SearchIcon />}
+                onDelete={() => setQueryParams({ ...queryParams, query: '' })}
+              />
+            )}
           </div>
         )}
-        <FormControl variant="filled" className="w-48">
-          <InputLabel id="order-select">{t('search.orderby')}</InputLabel>
-          <Select
-            labelId="order-select"
-            value={queryParams.orderBy}
-            onChange={(event) => {
-              setQueryParams({ ...queryParams, orderBy: event.target.value });
-            }}
-          >
-            <MenuItem value="">
-              <em>{t('nonselected')}</em>
-            </MenuItem>
-            {orderByParams.map((order) => (
-              <MenuItem key={order.id} value={order.id}>
-                {order.description}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
       </div>
       <Grid container spacing={3}>
         {jobs.length > 0 ? (
@@ -235,7 +322,10 @@ const SearchResults = ({
             </Grid>
           ))
         ) : (
-          <p className={clsx('text-center m-10')}>{t('search.noresults')}</p>
+          <div className={classes.noResultsContainer}>
+            <SearchIcon className={classes.noResultsIcon} />
+            <p className="text-center">{t('search.noresults')}</p>
+          </div>
         )}
       </Grid>
       <BottomPagination
@@ -247,13 +337,70 @@ const SearchResults = ({
   );
 };
 
-const Filters = ({ queryParams, setQueryParams, categories }) => {
+const Filters = ({
+  queryParams,
+  setQueryParams,
+  orderByParams,
+  categories,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const { zones } = useContext(ConstantDataContext);
+
   return (
     <Card className="p-5">
       <p className={classes.title}>{t('search.filters')}</p>
       <Divider className="my-5" />
+      <p className={classes.categoriesTitle}>{t('search.location')}</p>
+      <FormControl fullWidth size="small" variant="outlined" className="mb-5">
+        <Select
+          startAdornment={<LocationOn className="opacity-50 mr-2" />}
+          inputProps={{
+            classes: {
+              select: 'text-sm font-medium',
+            },
+          }}
+          displayEmpty
+          value={queryParams.zone}
+          onChange={(event) => {
+            setQueryParams({ ...queryParams, zone: event.target.value });
+          }}
+        >
+          <MenuItem value="">
+            <em>{t('search.alllocations')}</em>
+          </MenuItem>
+          {zones.map((zone) => (
+            <MenuItem key={zone.id} value={zone.id}>
+              {zone.description}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <p className={classes.categoriesTitle}>{t('search.orderby')}</p>
+      <FormControl fullWidth size="small" variant="outlined" className="mb-5">
+        <Select
+          startAdornment={<Sort className="opacity-50 mr-2" />}
+          inputProps={{
+            classes: {
+              select: 'text-sm font-medium',
+            },
+          }}
+          displayEmpty
+          value={queryParams.orderBy}
+          onChange={(event) => {
+            setQueryParams({ ...queryParams, orderBy: event.target.value });
+          }}
+        >
+          <MenuItem value="" disabled>
+            <em>{t('search.criteria')}</em>
+          </MenuItem>
+          {orderByParams.map((order) => (
+            <MenuItem key={order.id} value={order.id}>
+              {order.description}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <p className={classes.categoriesTitle}>{t('search.categories')}</p>
       {categories.map((category) => (
         <p

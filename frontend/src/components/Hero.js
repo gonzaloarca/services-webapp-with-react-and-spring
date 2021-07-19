@@ -8,7 +8,7 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { LocationOn, Search } from '@material-ui/icons';
+import { Error, LocationOn, Search } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
@@ -75,12 +75,17 @@ const HeroSearchBar = ({ zones }) => {
   const validationSchema = Yup.object({
     zone: Yup.string()
       .required(t('validationerror.zone'))
-      .matches(/^[0-9]+$/, t('validationerror.zone')),
+      .matches(/^-?[0-9]+$/, t('validationerror.zone')),
     query: Yup.string(),
   });
 
   const onSubmit = (values) => {
-    history.push('/search?zone=' + values.zone + '&query=' + values.query);
+    history.push(
+      '/search?zone=' +
+        (values.zone === '-1' ? '' : values.zone) +
+        '&query=' +
+        values.query
+    );
   };
 
   return (
@@ -118,6 +123,9 @@ const HeroSearchBar = ({ zones }) => {
                   disableUnderline={true}
                   value={values.zone !== undefined ? values.zone : ''}
                 >
+                  <MenuItem value="-1">
+                    <em>{t('search.alllocations')}</em>
+                  </MenuItem>
                   {zones.map((zone) => (
                     <MenuItem key={zone.id} value={zone.id}>
                       {zone.description}
@@ -147,7 +155,14 @@ const HeroSearchBar = ({ zones }) => {
             </IconButton>
           </div>
           <FormHelperText className={classes.zoneErrorMessage}>
-            <ErrorMessage name="zone" />
+            <ErrorMessage name="zone">
+              {(msg) => (
+                <div className="flex items-center mt-2">
+                  <Error className="mr-2" />
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
           </FormHelperText>
         </Form>
       )}

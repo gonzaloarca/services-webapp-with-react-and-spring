@@ -10,7 +10,6 @@ import {
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
-import { Rating } from '@material-ui/lab';
 import { Check, LocalOffer, LocationOn, Star } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import packagePriceFormatter from '../utils/packagePriceFormatter';
@@ -152,7 +151,7 @@ const ZonesChip = ({ zones }) => {
         icon={<LocationOn />}
         label={
           zoneCount === 0
-            ? t('jobcard.onezone', {firstZone: firstZone})
+            ? t('jobcard.onezone', { firstZone: firstZone })
             : t('jobcard.morezones', {
                 firstZone: firstZone,
                 zoneCount: zoneCount,
