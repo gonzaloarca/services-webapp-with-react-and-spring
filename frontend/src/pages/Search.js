@@ -142,11 +142,14 @@ const Search = () => {
     try {
       const jobCards = await searchJobCards(queryParams);
       setJobCards(jobCards);
-      setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    setMaxPage(links.last?.page || links.prev?.page || 1);
+  }, [links]);
 
   useEffect(() => {
     history.push(

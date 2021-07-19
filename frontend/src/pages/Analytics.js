@@ -155,12 +155,14 @@ const ClientsRecommendation = ({ userId }) => {
   const loadData = async (userId) => {
     try {
       setJobCards(await relatedJobCards(userId));
-      setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
+  }, [links]);
   useEffect(() => {
     loadData(userId);
   }, []);
