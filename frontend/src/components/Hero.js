@@ -8,7 +8,7 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { LocationOn, Search } from '@material-ui/icons';
+import { Error, LocationOn, Search } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
@@ -147,7 +147,14 @@ const HeroSearchBar = ({ zones }) => {
             </IconButton>
           </div>
           <FormHelperText className={classes.zoneErrorMessage}>
-            <ErrorMessage name="zone" />
+            <ErrorMessage name="zone">
+              {(msg) => (
+                <div className="flex items-center mt-2">
+                  <Error className="mr-2" />
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
           </FormHelperText>
         </Form>
       )}

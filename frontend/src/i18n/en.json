@@ -49,7 +49,7 @@
       "size": "The file size must be less than {{size}}MB",
       "type": "The file type must be PNG or JPG"
     },
-    "zone": "Please select your location",
+    "zone": "Please select your location first",
     "rating": "Please enter your rating",
     "multipleimages": {
       "type": "All files must be JPG or PNG",
@@ -189,7 +189,7 @@
     "login": "Log In",
     "passwordChanged": "Password changed successfully!",
     "changedinstructions": "Please log in to continue using the site.",
-	"error": "An error has occurred, please try again"
+    "error": "An error has occurred, please try again"
   },
   "verifyemail": {
     "title": "Email verification",
