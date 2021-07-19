@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.net.URI;
 import java.util.Properties;
 
 @ComponentScan({"ar.edu.itba.paw.services"})
@@ -21,12 +23,6 @@ public class MailConfig {
 
     @Autowired
     private MessageSource messageSource;
-
-    @Bean(name = "webpageUrl")
-    public String webpageUrl() {
-        return "http://pawserver.it.itba.edu.ar/paw-2021a-03";
-    }
-
 
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {

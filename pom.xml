@@ -32,8 +32,8 @@
         <mockito.version>2.25.1</mockito.version>
         <org.hsqldb.version>2.5.1</org.hsqldb.version>
         <commons-fileupload-version>1.4</commons-fileupload-version>
-        <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
-        <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
+        <javax.validation-api.version>1.1.0.Final</javax.validation-api.version>
+        <org.hibernate.validator>5.0.0.Final</org.hibernate.validator>
         <javax.mail.version>1.6.2</javax.mail.version>
         <org.springframework.security.version>4.0.4.RELEASE</org.springframework.security.version>
         <thymeleaf.spring4.version>3.0.12.RELEASE</thymeleaf.spring4.version>
@@ -43,10 +43,23 @@
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
         <org.hibernate.version>5.1.0.Final</org.hibernate.version>
-        <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
+        <org.hibernate.jpa.version>1.0.2.Final</org.hibernate.jpa.version>
+        <jersey.version>3.0-SNAPSHOT</jersey.version>
+        <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
         <org.jboss.logging.version>3.3.0.Final</org.jboss.logging.version>
+        <frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jersey-snapshot</id>
+            <url>https://maven.java.net/content/repositories/snapshots/</url>
+            <name>Jersey Snapshots</name>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -191,11 +204,6 @@
                 <scope>runtime</scope>
             </dependency>
             <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging</artifactId>
-                <version>${org.jboss.logging.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
                 <version>${org.springframework.version}</version>
@@ -209,6 +217,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>${org.hibernate.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.logging</groupId>
+                        <artifactId>jboss-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
@@ -219,6 +233,95 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-java8</artifactId>
                 <version>${org.hibernate.version}</version>
+            </dependency>
+            <!--  JERSEY  -->
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet-core</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-spring4</artifactId>
+                <version>${jersey.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <!--  La versión incluida requiere Java 9+  -->
+                        <groupId>org.glassfish.hk2</groupId>
+                        <artifactId>hk2</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>hk2</artifactId>
+                <version>2.5.0-b05</version>
+
+                <!--  última versión compatible con Java 8  -->
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.glassfish.hk2.external</groupId>
+                        <artifactId>bean-validator</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${jersey.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.validation</groupId>
+                        <artifactId>validation-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!--  JERSEY JSON  -->
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-moxy</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-entity-filtering</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-jaxb</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+                <version>${org.jboss.logging.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-bean-validation</artifactId>
+                <version>${jersey.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-validator</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.validation</groupId>
+                        <artifactId>validation-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${io.jsonwebtoken.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -274,18 +377,34 @@
                     <version>${maven-project-info-reports-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>${maven-war-plugin.version}</version>
-                    <configuration>
-                        <packagingExcludes>**/logback-test.xml</packagingExcludes>
-                    </configuration>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <!--  Use the latest released version:
+                                https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/  -->
+                    <version>${frontend-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
+                <configuration>
+                    <packagingExcludes>**/logback-test.xml</packagingExcludes>
+                    <packagingExcludes>**/.end.development  </packagingExcludes>
+                    <webResources>
+                        <resource>
+                            <directory>../frontend/build</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <modules>
+        <module>frontend</module>
         <module>webapp</module>
         <module>interfaces</module>
         <module>services</module>

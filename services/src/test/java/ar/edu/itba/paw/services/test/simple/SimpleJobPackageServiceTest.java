@@ -35,10 +35,10 @@ public class SimpleJobPackageServiceTest {
 
 
     @InjectMocks
-    SimpleJobPackageService simpleJobPackageService = new SimpleJobPackageService();
+    private SimpleJobPackageService simpleJobPackageService = new SimpleJobPackageService();
 
     @Mock
-    JobPackageDao jobPackageDao;
+    private JobPackageDao jobPackageDao;
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
@@ -49,7 +49,7 @@ public class SimpleJobPackageServiceTest {
                 JOB_PACKAGE.getPrice(), JOB_PACKAGE.getRateType())).thenReturn(JOB_PACKAGE);
 
         JobPackage maybePackage = simpleJobPackageService.create(JOB_PACKAGE.getPostId(), JOB_PACKAGE.getTitle(), JOB_PACKAGE.getDescription(),
-                JOB_PACKAGE.getPrice().toString(), JOB_PACKAGE.getRateType().getValue());
+                JOB_PACKAGE.getPrice().toString(), JOB_PACKAGE.getRateType().getId());
 
         Assert.assertNotNull(maybePackage);
         Assert.assertEquals(JOB_PACKAGE, maybePackage);

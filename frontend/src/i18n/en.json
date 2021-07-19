@@ -1,0 +1,497 @@
+{
+  "navigation": {
+    "sections": {
+      "home": "Home",
+      "categories": "Categories",
+      "publish": "Publish",
+      "mycontracts": "My Contracts",
+      "analytics": "Analytics",
+      "explore": "Explore",
+      "login": "Login",
+      "register": "Register",
+      "packages": "Packages",
+      "addpackage": "Add package",
+      "editpackage": "Edit package",
+      "recoverpass": "Recover password",
+      "changepass": "Change password",
+      "verify": "Verify account",
+      "profile": "{{username}}'s profile",
+      "account": "My account",
+      "registersuccess": "Account created successfully",
+      "hire": "Hire service",
+      "error": "Error",
+      "pagenotfound": "Page not found"
+    },
+    "search": "Search...",
+    "profile": "My profile",
+    "account": "My account",
+    "logout": "Log out"
+  },
+  "title": "{{section}} | HireNet",
+  "defaulttitle": "HireNet",
+  "error": {
+    "404": {
+      "header": "Error 404",
+      "description": "Page not found",
+      "action": "Return to home"
+    },
+    "generic": {
+      "header": "Error",
+      "description": "Something went wrong...",
+      "action": "Return to home"
+    }
+  },
+  "validationerror": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "phone": "Please enter a valid phone number",
+    "minlength": "Please enter at least {{length}} characters",
+    "maxlength": "Please enter less than {{length}} characters",
+    "passwordrepeat": "Passwords doesn't match",
+    "avatarfile": {
+      "size": "The file size must be less than {{size}}MB",
+      "type": "The file type must be PNG or JPG"
+    },
+    "zone": "Please select your location first",
+    "rating": "Please enter your rating",
+    "multipleimages": {
+      "type": "All files must be JPG or PNG",
+      "size": "Files uploaded must be {{size}}MB or less",
+      "quantity": "Upload only up to {{count}} files"
+    },
+    "locations": "Choose at least one zone"
+  },
+  "home": {
+    "herotext": "Find and hire the service you're looking for",
+    "location": "Location",
+    "searchJob": "Search for a service...",
+    "steps": {
+      "location": "Choose your location",
+      "search": "Search for a service",
+      "hire": "Hire it!"
+    },
+    "explore": "Explore service categories",
+    "morecategories": "See more",
+    "newest": "Newest services",
+    "viewall": "View all",
+    "publishbanner": {
+      "question": "Do you wish to publish your services on our site?",
+      "answer": "Start now",
+      "button": "Publish"
+    },
+    "nojobs": "No hay servicios disponibles en este momento. Disculpas por las molestas"
+  },
+  "jobpost": {
+    "seereviews": "See reviews",
+    "noreviews": "This service does not have any reviews yet",
+    "edit": "Edit service",
+    "delete": "Delete service",
+    "managepacks": "Manage packages",
+    "deletetitle": "Are you sure that you want to delete this service?",
+    "finalized": "This service is no longer available"
+  },
+  "jobcard": {
+    "noreviews": "No reviews",
+    "details": "View details",
+    "onezone": "{{firstZone}}",
+    "morezones": "{{firstZone}} and {{zoneCount}} more"
+  },
+  "jobtype": {
+    "plumbing": "Plumbing",
+    "electricity": "Electricity",
+    "carpentry": "Carpentry",
+    "catering": "Catering",
+    "painting": "Painting",
+    "teaching": "Teaching",
+    "cleaning": "Cleaning",
+    "babysitting": "Babysitting"
+  },
+  "professional": "Professional",
+  "client": "Client",
+  "avgrate": "Average rating",
+  "timeshired": "Times hired",
+  "workinghours": "Working hours",
+  "availablezones": "Available zones",
+  "availablepackages": "Available packages",
+  "pricelabel": "Price",
+  "hire": "Hire",
+  "packagedescription": "Package description",
+  "reviews": "Reviews",
+  "ratetypeformat": {
+    "hourly": "${{amount}}/hour",
+    "tbd": "To be determined",
+    "onetime": "${{amount}}"
+  },
+  "ratetype": {
+    "hourly": "Per hour",
+    "onetime": "Per job",
+    "tbd": "To be determined"
+  },
+  "jobreference": "From <semibold>{{title}}</semibold>",
+  "price": "{{value, price, ARS}}",
+  "date": "{{date, MM/DD/YYYY}}",
+  "time": "{{date, h:mm A}}",
+  "datetime": "{{date, DD/MM/YYYY h:mm A}}",
+  "reviewcount": "({{count}})",
+  "completedcontracts": "Hired {{count}} times",
+  "completedcontractsonce": "Hired once",
+  "footer": {
+    "creators": "Site creators",
+    "contact": "Contact us",
+    "copyright": "© 2021 HireNet"
+  },
+  "login": {
+    "title": "Login",
+    "into": "Login to Hirenet",
+    "email": "Email address",
+    "password": "Password",
+    "rememberme": "Remember me",
+    "submit": "Log in",
+    "hasaccountquestion": "No account?",
+    "getaccount": "Register now",
+    "badcredentials": "User or password invalid",
+    "usernotverified": "Your account is not verified, please check your email or register again",
+    "error": "An error has occurred, please try again",
+    "inputemail": "Enter an email.",
+    "inputpass": "Enter a password.",
+    "recoverquestion": "Forgot Password?",
+    "recover": "Recover it"
+  },
+  "register": {
+    "title": "Register",
+    "into": "Create an account in HireNet",
+    "username": "Full name",
+    "phone": "Phone number",
+    "email": "Email address",
+    "password": "Password",
+    "passwordrepeat": "Repeat password",
+    "submit": "Register",
+    "alreadyhasaccount": "Already have an account?",
+    "login": "Log in",
+    "continue": "Continue",
+    "selectimage": "Choose a profile picture (optional)",
+    "filedisclaimer": "Image must be PNG or JPG and less than {{size}}MB in size",
+    "goback": "Go back",
+    "imagepreview": "Image preview",
+    "badcredentials": "The email address is already in use",
+    "discardimage": "Discard",
+    "success": {
+      "title": "Registered successfully!",
+      "verify": "An email has been sent to verify your identity, please check it out.",
+      "return": "Return to home"
+    }
+  },
+  "image": {
+    "clear": "Clear",
+    "invalid": "Invalid file, please try again",
+    "pick": "Choose file"
+  },
+  "recover": {
+    "title": "Recover password",
+    "instructions": "Enter the email address linked to your account",
+    "disclaimer": "If the address belongs to an existing account, an email will be sent with instructions for recovering your password.",
+    "submit": "Recover",
+    "success": "Request received! If the address is valid, an email will arrive shortly.",
+    "enternewpass": "Enter your new password",
+    "wronglink": "Invalid or expired link",
+    "wrongexplained": "This link is invalid. If you still need to change your password, try again from the login screen",
+    "login": "Log In",
+    "passwordChanged": "Password changed successfully!",
+    "changedinstructions": "Please log in to continue using the site.",
+    "error": "An error has occurred, please try again"
+  },
+  "verifyemail": {
+    "title": "Email verification",
+    "success": "Email verified successfully!",
+    "pleaselogin": "Please, log in into your account to use the site.",
+    "login": "Log in",
+    "invalid": "Invalid or expired link",
+    "instructions": "This link is invalid. Please, register again if you don't have an account.",
+    "register": "Register"
+  },
+  "mycontracts": {
+    "contracts": "Contracts",
+    "hiredservices": "Hired services",
+    "myservices": "My services",
+    "activecontracts": "Active contracts",
+    "active": "Active",
+    "pendingapprovalcontracts": "Pending approval contracts",
+    "pendingapproval": "Pending approval",
+    "finalizedcontracts": "Finalized contracts",
+    "finalized": "Finalized",
+    "hiredby": "Hired by",
+    "professional": "Professional",
+    "scheduleddate": "Scheduled date",
+    "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractimage": "Job image",
+    "contractdescription": "Job description",
+    "package": "Hired package",
+    "creationdate": "Contract creation date",
+    "pickdate": "Select a new date and time for the appointment",
+    "rate": {
+      "header": "How would you rate your experience with this service?",
+      "tellus": "Tell us about your experience",
+      "tellusplaceholder": "Write about the quality of the job, how you were treated, etc.",
+      "summarize": "Summarize your experience in a short phrase (optional)",
+      "summarizeplaceholder": "Review title"
+    },
+    "reviewreschedule": {
+      "disclaimer": "If you accept the rescheduling, you won't be able to reschedule again. If you reject it, the contract will be cancelled",
+      "newdate": "New date proposal"
+    },
+    "contractactions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "finalize": "Finalize",
+      "cancel": "Cancel",
+      "rate": "Rate",
+      "contact": "Contact",
+      "details": "Details",
+      "reschedule": "Reschedule",
+      "reviewreschedule": "Review rescheduling"
+    },
+    "modals": {
+      "cancel": {
+        "title": "Are you sure that you want to cancel this contract?",
+        "message": "This action cannot be undone",
+        "affirmative": "Confirm",
+        "negative": "Dismiss"
+      },
+      "reject": {
+        "title": "Are you sure that you want to reject this contract?",
+        "message": "This action cannot be undone",
+        "affirmative": "Reject",
+        "negative": "Dismiss"
+      },
+      "reschedule": {
+        "title": "Are you sure that you want to reschedule this contract?",
+        "message": "This action may only be performed once per contract",
+        "affirmative": "Reschedule",
+        "negative": "Dismiss"
+      },
+      "reviewreschedule": {
+        "title": "Review rescheduling",
+        "affirmative": "Accept",
+        "negative": "Reject"
+      },
+      "rate": {
+        "title": "Rate service",
+        "affirmative": "Submit",
+        "negative": "Dismiss"
+      },
+      "contact": {
+        "title": "Contact information",
+        "negative": "Dismiss"
+      },
+      "details": {
+        "title": "Job details",
+        "negative": "Dismiss"
+      }
+    },
+    "contractstate": {
+      "nocontractsheader": "No contracts to show",
+      "nocontractssubtitleclient": "Hire a service to see your contracts here",
+      "nocontractssubtitlepro": "When one of your services is hired, a contract will appear here",
+      "noactivecontractsheader": "No active contracts to show",
+      "noactivecontractssubtitle": "Once a contract is approved by the professional, it will be displayed right here",
+      "noactivecontractssubtitlepro": "Once you accept a contract request, the contract will be shown right here",
+      "nopendingcontractsheader": "No pending approval contracts to show",
+      "nopendingcontractssubtitle": "All newly hired services will appear in this section, until it gets approved or rejected by the professional",
+      "nopendingcontractssubtitlepro": "Once you are hired contracts will be displayed here, waiting for your approval",
+      "nofinalizedcontractsheader": "No finalized contracts to show",
+      "nofinalizedontractssubtitle": "All finalized and cancelled contracts will appear in this section",
+      "clientcancelled": "The client cancelled the contract",
+      "procancelled": "The professional cancelled the contract",
+      "youcancelled": "You cancelled the contract",
+      "yourejected": "You rejected the contract",
+      "finalized": "The contract has concluded",
+      "prorejected": "The professional has rejected the contract request",
+      "clientrejected": "The client has rejected the contract request",
+      "clientrescheduled": "The client has requested a rescheduling of the contract",
+      "prorescheduled": "The professional has requested a rescheduling of the contract",
+      "yourescheduled": "Waiting for rescheduling approval"
+    }
+  },
+  "createjobpost": {
+    "header": "Publish new service",
+    "required": "* required field",
+    "next": "Next",
+    "back": "Back",
+    "publish": "Publish",
+    "steps": {
+      "category": {
+        "label": "Service category",
+        "header": "Select a category for your service"
+      },
+      "jobtitle": {
+        "label": "Service name",
+        "header": "Enter a name for your service"
+      },
+      "packages": {
+        "label": "Packages",
+        "package": "Package",
+        "header": "Add at least one package to your service",
+        "help": {
+          "question": "What is a package?",
+          "answer": "A package is a specific job offered within each service. A single service may have more than one package, and each package must have its own price."
+        },
+        "title": {
+          "label": "Enter a name for this package*",
+          "placeholder": "Package name"
+        },
+        "description": {
+          "label": "Enter a description for this package*",
+          "placeholder": "Package description"
+        },
+        "ratetype": {
+          "label": "How do you plan to charge this package?*",
+          "hourly": "Per hour",
+          "onetime": "Per job",
+          "tbd": "To be determined"
+        },
+        "price": {
+          "label": "Enter a price for this package*",
+          "placeholder": "Price"
+        }
+      },
+      "images": {
+        "label": "Images",
+        "header": "Add images to your post",
+        "disclaimer": "Please only upload {{count}} images, only PNG and JPG, and less than {{size}}MB"
+      },
+      "hours": {
+        "label": "Available hours",
+        "header": "Enter the hours of availability for the service"
+      },
+      "locations": {
+        "label": "Locations",
+        "header": "Select the locations where the service will be offered",
+        "selected": "Selected locations",
+        "notselected": "You haven't selected any locations yet"
+      },
+      "summary": {
+        "label": "Summary",
+        "header": "Post summary"
+      }
+    }
+  },
+  "hirePage": {
+    "title": "Hire Service",
+    "detail": {
+      "title": "Service details"
+    },
+    "form": {
+      "title": "Contact Info",
+      "required": "* required field",
+      "desctitle": "Write a description for your required work*",
+      "description": "Description",
+      "descdefault": "Work description",
+      "datetitle": "Pick a date and time for the service delivery*",
+      "datedisclamer": "Be sure to respect the professional's available hours",
+      "dateplaceholder": "Date & time",
+      "imagetitle": "Choose an image to upload",
+      "imagedisclamer": "Image must be PNG or JPG and less than 2 MB in size",
+      "submit": "Hire"
+    }
+  },
+  "managepackages": {
+    "header": "Manage packages",
+    "servicepackages": "Service packages",
+    "add": "Add new package",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deletemodal": {
+      "title": "Are you sure that you want to delete this package?",
+      "body": "This action cannot be undone",
+      "affirmative": "Delete",
+      "negative": "Dismiss"
+    }
+  },
+  "addpackage": {
+    "header": "Add package",
+    "submit": "Add"
+  },
+  "editpackage": {
+    "header": "Edit package",
+    "submit": "Save changes"
+  },
+  "categories": {
+    "header": "Service categories",
+    "filter": "Filter categories by name"
+  },
+  "datetimeformat": "MMMM d, yyyy - h:mm aa",
+  "locale": "en",
+  "account": {
+    "header": "My account",
+    "tabstitle": "Account",
+	"accepted": "Changes accepted",
+	"rejected": "Old password is incorrect",
+    "data": {
+      "title": "Personal info",
+      "imagealt": "User image",
+      "edit": "Edit information",
+      "profilepic": "Change profile picture"
+    },
+    "security": {
+      "title": "Log in info",
+      "changepass": "Change password",
+      "oldpassword": "Current password",
+      "newpassword": "New password",
+      "repeatpassword": "Repeat new password"
+    },
+    "logout": {
+      "title": "Log out",
+      "btn": "LOG OUT"
+    },
+    "savechanges": "Save changes"
+  },
+  "profile": {
+    "rating": "Average rating",
+    "countsingular": "Time hired",
+    "countplural": "Times hired",
+    "services": "Services ({{count}})",
+    "reviews": "Reviews ({{count}})",
+    "ratecount": "Average between {{count}} reviews",
+    "starsingular": "1 star",
+    "starsplural": "{{count}} stars",
+    "noreviews": "This user does not have any reviews yet",
+    "noservices": "This user currently does not have any active services"
+  },
+  "locationfilter": "Filter locations by name",
+  "noresults": "No results for '{{search}}'",
+  "timesHiredSingular": "Hired 1 time",
+  "timesHiredPlural": "Hired {{times}} times",
+  "search": {
+    "title": "Search",
+    "service": "Search for a service",
+    "jobtypeplaceholder": "Search services...",
+    "filters": "Filters",
+    "categories": "Categories",
+    "results": "Showing all services",
+    "zoneresults": "Showing services in <zonecontainer><icon></icon>{{zone}}</zonecontainer>",
+    "queryresults": "<regular>Showing reuslts for</regular> <bold>{{query}}</bold>",
+    "query&zoneresults": "<regular>Showing results for</regular> <bold>{{query}}</bold><zonecontainer>in <bottom><icon></icon> {{zone}}</bottom></zonecontainer>",
+    "badquery": "Search error",
+    "filteringby": "Active filter:",
+    "noresults": "No results for your search",
+    "sorry": "Sorry for the inconvenience",
+    "orderby": "Order by",
+    "criteria": "Criteria",
+    "location": "Search by location",
+    "alllocations": "All locations"
+  },
+  "nonselected": "None",
+  "analytics": {
+    "title": "Analytics",
+    "number": "No.{{rank}}",
+    "mosthired": "Most hired in {{jobType}}",
+    "similar": "Your clients have also hired..."
+  },
+  "editjobpost": "Edit service",
+  "jobpostsuccess": {
+    "title": "Post created successfully!",
+    "edit": "Post modified successfully!",
+    "instruction": "Use the button below to check it out:",
+    "btn": "Go to post"
+  }
+}

@@ -10,14 +10,14 @@ public interface MailingService {
 
     void sendHtmlMessageWithAttachment(String to, String subject, String html, DataSource attachment);
 
-    void sendContractEmail(JobContractWithImage jobContract, Locale locale);
+    void sendContractEmail(JobContractWithImage jobContract, Locale locale, String webpageUrl);
 
-    void sendVerificationTokenEmail(User user, VerificationToken token, Locale locale);
+    void sendVerificationTokenEmail(User user, VerificationToken token, Locale locale,String webpageUrl);
 
     void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,
                                            String templateName, DataSource attachment, Locale locale);
 
-    void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale);
+    void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale,String webpageUrl);
 
-    void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale);
+    void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale,String webpageUrl);
 }

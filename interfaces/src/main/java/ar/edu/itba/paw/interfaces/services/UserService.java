@@ -10,7 +10,11 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User register(String email, String password, String username, String phone, ByteImage image, Locale locale)
+    List<UserWithImage> findAllWithImage(int page);
+
+    int findAllWithImageMaxPage();
+
+    User register(String email, String password, String username, String phone, ByteImage image, Locale locale, String webpageUrl)
             throws UserAlreadyExistsException, UserNotVerifiedException;
 
     User findById(long id);
@@ -19,7 +23,7 @@ public interface UserService {
 
     User updateUserByEmail(String email,String phone, String name);
 
-    User updateUserById(long id, String name, String phone);
+    UserWithImage updateUserById(long id, String name, String phone);
 
     User updateUserById(long id, String name, String phone, ByteImage byteImage);
 
@@ -31,7 +35,7 @@ public interface UserService {
 
     boolean validCredentials(String email, String password);
 
-    void changeUserPassword(String email, String password);
+    void changeUserPassword(long id, String newPassword, String oldPassword);
 
     List<JobPost.JobType> findUserJobTypes(long id);
 
@@ -39,11 +43,15 @@ public interface UserService {
 
     List<AnalyticRanking> findUserAnalyticRankings(long id);
 
-    void recoverUserAccount(String email, Locale locale);
+    void recoverUserAccount(String email, Locale locale,String webpageUrl);
 
     void recoverUserPassword(long user_id, String password);
 
     UserWithImage findUserWithImage(long id);
 
     ByteImage findImageByUserId(long id);
+
+    long updateUserImage(long id, ByteImage userImage);
+
+    Optional<UserWithImage> findUserWithImageByEmail(String email);
 }

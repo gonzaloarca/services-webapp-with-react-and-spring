@@ -142,24 +142,24 @@ public class JobPackage {
     }
 
     public enum RateType {
-        HOURLY("JobPackage.RateType.HOURLY"),
-        ONE_TIME("JobPackage.RateType.ONE_TIME"),
-        TBD("JobPackage.RateType.TBD");
+        HOURLY("HOURLY"),
+        ONE_TIME("ONE_TIME"),
+        TBD("TBD");
 
-        private final String stringCode;
-        private final int value;
+        private final String description;
+        private final long id;
 
-        RateType(final String stringCode) {
-            this.stringCode = stringCode;
-            this.value = ordinal();
+        RateType(final String description) {
+            this.description = description;
+            this.id = ordinal();
         }
 
-        public String getStringCode() {
-            return stringCode;
+        public String getDescription() {
+            return description;
         }
 
-        public int getValue() {
-            return value;
+        public long getId() {
+            return id;
         }
 
     }

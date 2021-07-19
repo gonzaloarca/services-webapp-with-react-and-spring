@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -54,8 +55,11 @@ public class SimpleJobPostImageService implements JobPostImageService {
 	}
 
 	@Override
-	public JobPostImage findById(long imageId) {
-		return jobPostImageDao.findById(imageId).orElseThrow(JobPostImageNotFoundException::new);
+	public JobPostImage findById(long imageId, long postId) {
+		Optional<JobPostImage> jobPostImage = jobPostImageDao.findById(imageId);
+		if(!jobPostImage.isPresent() || jobPostImage.get().getJobPost().getId() != postId)
+			throw new JobPostImageNotFoundException();
+		return jobPostImage.get();
 	}
 
 	@Override

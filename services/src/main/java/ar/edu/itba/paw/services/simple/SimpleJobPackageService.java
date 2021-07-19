@@ -21,17 +21,17 @@ public class SimpleJobPackageService implements JobPackageService {
     private JobPackageDao jobPackageDao;
 
     @Override
-    public JobPackage create(long postId, String title, String description, String price, int rateType) {
+    public JobPackage create(long postId, String title, String description, String price, long rateType) {
 
-        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
-        Double parsedPrice = parsePrice(parsedRateType,price);
+        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[(int) rateType];
+        Double parsedPrice = parsePrice(parsedRateType, price);
 
         return jobPackageDao.create(postId, title, description, parsedPrice, parsedRateType);
     }
 
     @Override
-    public JobPackage findById(long id) {
-        return jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
+    public JobPackage findById(long packageId, long postId) {
+        return jobPackageDao.findById(packageId, postId).orElseThrow(JobPackageNotFoundException::new);
     }
 
     @Override
@@ -40,45 +40,51 @@ public class SimpleJobPackageService implements JobPackageService {
     }
 
     @Override
-    public List<JobPackage> findByPostId(long id,int page) {
-        return jobPackageDao.findByPostId(id,page);
+    public List<JobPackage> findByPostId(long id, int page) {
+        return jobPackageDao.findByPostId(id, page);
     }
 
     @Override
-    public JobPost findPostByPackageId(long id) {
-        return jobPackageDao.findPostByPackageId(id).orElseThrow(JobPostNotFoundException::new);
+    public boolean updateJobPackage(long packageId, long postId, String title, String description, String price, Integer rateType, Boolean isActive) {
+        JobPackage current = findById(packageId, postId);
+        String parsedTitle = (title == null) ? current.getTitle() : title;
+        String parsedDescription = (description == null) ? current.getDescription() : description;
+        JobPackage.RateType parsedRateType = (rateType == null) ? current.getRateType() : JobPackage.RateType.values()[rateType];
+        Double parsedPrice = (price == null) ? current.getPrice() : parsePrice(parsedRateType, price);
+        boolean parsedActive = (isActive == null) ? current.is_active() : isActive;
+
+        return jobPackageDao.updatePackage(packageId, postId, parsedTitle, parsedDescription, parsedPrice, parsedRateType, parsedActive);
     }
 
     @Override
-    public boolean updateJobPackage(long id, String title, String description, String price, int rateType){
-        JobPackage.RateType parsedRateType = JobPackage.RateType.values()[rateType];
-        Double parsedPrice = parsePrice(parsedRateType,price);
-
-        return jobPackageDao.updatePackage(id,title,description,parsedPrice,parsedRateType);
+    public int findByPostIdMaxPage(long id) {
+        return jobPackageDao.findByPostIdMaxPage(id);
     }
 
     @Override
-    public boolean deleteJobPackage(long id){
-        return jobPackageDao.deletePackage(id);
+    public List<JobPackage> findByPostIdOnlyActive(long postId, int page) {
+        return jobPackageDao.findByPostIdOnlyActive(postId,page);
     }
 
     @Override
-    public JobPackage findByIdWithJobPost(int id) {
-        JobPackage jobPackage = jobPackageDao.findById(id).orElseThrow(JobPackageNotFoundException::new);
-        jobPackage.getJobPost().getId();
-        return jobPackage;
+    public int findByPostIdOnlyActiveMaxPage(long postId) {
+        return jobPackageDao.findByPostIdOnlyActiveMaxPage(postId);
     }
 
-    private Double parsePrice(JobPackage.RateType rateType, String price){
-        if(!rateType.equals(JobPackage.RateType.TBD)) {
+    @Override
+    public JobPackage findByOnlyId(long packageId) {
+        return jobPackageDao.findByOnlyId(packageId);
+    }
+
+    private Double parsePrice(JobPackage.RateType rateType, String price) {
+        if (!rateType.equals(JobPackage.RateType.TBD)) {
             if (price != null && !price.isEmpty()) {
                 return Double.parseDouble(price);
-            }else {
+            } else {
                 throw new RuntimeException("Error loading form");
             }
         }
         return null;
     }
-
 
 }

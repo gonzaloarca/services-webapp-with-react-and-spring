@@ -9,13 +9,13 @@ import java.lang.annotation.Target;
 
 /* Esta annotation valida que el archivo es de un tipo de imagen o que no hay archivo (size = 0 es valido) */
 
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {ImageFileValidator.class})
 public @interface ValidImage {
-    String message() default "Invalid image file";
+    public String message() default "Invalid image file";
 
-    Class<?>[] groups() default {};
+    public Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+    public Class<? extends Payload>[] payload() default {};
 }

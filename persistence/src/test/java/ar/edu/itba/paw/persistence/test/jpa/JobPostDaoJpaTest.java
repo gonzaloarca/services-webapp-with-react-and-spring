@@ -493,7 +493,7 @@ public class JobPostDaoJpaTest {
         String newAvailableHours = "OTRO AVAILABLE HOURS";
 
         boolean status = jobPostDaoJpa.updateById(JOB_POST.getId(), newTitle,
-                newAvailableHours, JOB_POST.getJobType(), JOB_POST.getZones());
+                newAvailableHours, JOB_POST.getJobType(), JOB_POST.getZones(), true);
 
         Assert.assertTrue(status);
         JobPost maybeJobPost = em.find(JobPost.class, JOB_POST.getId());
@@ -505,7 +505,8 @@ public class JobPostDaoJpaTest {
     @Test
     public void testDeleteJobPost() {
 
-        boolean status = jobPostDaoJpa.deleteJobPost(JOB_POST.getId());
+        boolean status = jobPostDaoJpa.updateById(JOB_POST.getId(), JOB_POST.getTitle(),
+                JOB_POST.getAvailableHours(), JOB_POST.getJobType(), JOB_POST.getZones(), false);
 
         Assert.assertTrue(status);
         JobPost maybeJobPost = em.find(JobPost.class, JOB_POST.getId());
@@ -516,7 +517,7 @@ public class JobPostDaoJpaTest {
     public void testUpdateNonexistentPost() {
 
         boolean status = jobPostDaoJpa.updateById(NONEXISTENT_ID, "", "", JobPost.JobType.BABYSITTING,
-                Arrays.asList(JobPost.Zone.values()[0], JobPost.Zone.values()[1]));
+                Arrays.asList(JobPost.Zone.values()[0], JobPost.Zone.values()[1]), true);
 
         Assert.assertFalse(status);
     }
@@ -524,7 +525,8 @@ public class JobPostDaoJpaTest {
     @Test
     public void testDeleteNonexistentPost() {
 
-        boolean status = jobPostDaoJpa.deleteJobPost(NONEXISTENT_ID);
+        boolean status = jobPostDaoJpa.updateById(NONEXISTENT_ID, JOB_POST.getTitle(),
+                JOB_POST.getAvailableHours(), JOB_POST.getJobType(), JOB_POST.getZones(), false);
 
         Assert.assertFalse(status);
     }

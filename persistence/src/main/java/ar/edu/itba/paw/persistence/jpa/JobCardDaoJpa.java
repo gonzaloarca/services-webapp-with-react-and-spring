@@ -61,22 +61,22 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     @Override
-    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page) {
-        return searchWithCategory(query, zone, null, similarTypes, orderBy, page);
+    public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, boolean withZone, int page) {
+        return searchWithCategory(query, zone, null, similarTypes, orderBy, withZone, page);
     }
 
     @Override
-    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page) {
+    public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, boolean withZone, int page) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards");
 
-        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, orderBy);
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, orderBy, withZone, false);
 
         return executePageQuery(page, nativeQuery);
     }
 
     @Override
     public Optional<JobCard> findByPostId(long id) {
-        return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id = :id AND card.jobPost.isActive = TRUE", JobCard.class)
+        return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id = :id", JobCard.class)
                 .setParameter("id", id).getResultList().stream().findFirst();
     }
 
@@ -107,37 +107,30 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     @Override
-    public int findAllMaxPage() {
-        Long size = em.createQuery("SELECT COUNT(*) FROM JobPost jpost WHERE jpost.isActive = TRUE", Long.class)
-                .getSingleResult();
-        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
-    }
-
-    @Override
-    public int findMaxPageByUserId(long id) {
+    public int findByUserIdMaxPage(long id) {
         Long size = em.createQuery("SELECT COUNT(*) FROM JobPost jpost WHERE jpost.user.id = :id AND jpost.isActive = TRUE", Long.class)
                 .setParameter("id", id).getSingleResult();
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
-    public int findMaxPageSearch(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes) {
-        return findMaxPageSearchWithCategory(query, zone, null, similarTypes);
+    public int searchMaxPage(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, boolean withZone) {
+        return searchWithCategoryMaxPage(query, zone, null, similarTypes, withZone);
     }
 
     @Override
-    public int findMaxPageSearchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes) {
+    public int searchWithCategoryMaxPage(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, boolean withZone) {
         StringBuilder sqlQuery = new StringBuilder().append("SELECT count(*) FROM job_cards");
 
-        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, JobCard.OrderBy.BETTER_QUALIFIED); // no importa el orden
+        Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, JobCard.OrderBy.BETTER_QUALIFIED, withZone, true); // no importa el orden
 
         @SuppressWarnings("unchecked")
         BigInteger result = (BigInteger) nativeQuery.getResultList().stream().findFirst().orElse(BigInteger.valueOf(0));
-        return result.intValue();
+        return (int) Math.ceil((double) result.intValue() / HirenetUtils.PAGE_SIZE);
     }
 
     @Override
-    public int findMaxPageRelatedJobCards(long professional_id) {
+    public int findRelatedJobCardsMaxPage(long professional_id) {
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT count(*) ")
                 .append(RELATED_CARDS_QUERY);
@@ -162,51 +155,61 @@ public class JobCardDaoJpa implements JobCardDao {
                 ).collect(Collectors.toList());
     }
 
-    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery, JobCard.OrderBy orderBy) {
-        sqlQuery.append(" WHERE (UPPER(post_title) LIKE UPPER('%'|| :query ||'%')");
-
+    private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery, JobCard.OrderBy orderBy, boolean withZone, boolean maxPage) {
+        sqlQuery.append(" WHERE ( UPPER(post_title) LIKE :query ");
         if (!similarTypes.isEmpty()) {
-            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
+            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal()))
+                    .collect(Collectors.joining(","));
             sqlQuery.append(" OR post_job_type in (")
                     .append(types)
                     .append(")");
         }
 
-        sqlQuery.append(") AND :zone IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) AND post_is_active = TRUE");
+        sqlQuery.append(") AND post_is_active = TRUE ");
+
+        if (withZone)
+            sqlQuery.append(" AND :zone IN (SELECT zone_id FROM post_zone WHERE job_cards.post_id = post_zone.post_id) ");
 
         if (jobType != null)
             sqlQuery.append(" AND post_job_type = :type");
 
-        sqlQuery.append(" GROUP BY job_cards.rating, job_cards.post_id, job_cards.post_contract_count, job_cards.post_creation_date");
+        if (!maxPage) {
+            sqlQuery.append(" GROUP BY job_cards.rating, job_cards.post_id, job_cards.post_contract_count, job_cards.post_creation_date");
 
-        switch (orderBy) {
-            case BETTER_QUALIFIED:
-                sqlQuery.append(" ORDER BY job_cards.rating DESC");
-                break;
-            case WORST_QUEALIFIED:
-                sqlQuery.append(" ORDER BY job_cards.rating ASC");
-                break;
-            case MOST_HIRED:
-                sqlQuery.append(" ORDER BY job_cards.post_contract_count DESC");
-                break;
-            case LEAST_HIRED:
-                sqlQuery.append(" ORDER BY job_cards.post_contract_count ASC");
-                break;
-            case NEWEST:
-                sqlQuery.append(" ORDER BY job_cards.post_creation_date DESC");
-                break;
-            case OLDEST:
-                sqlQuery.append(" ORDER BY job_cards.post_creation_date ASC");
-                break;
-            default:
+            switch (orderBy) {
+                case BETTER_QUALIFIED:
+                    sqlQuery.append(" ORDER BY job_cards.rating DESC");
+                    break;
+                case WORST_QUEALIFIED:
+                    sqlQuery.append(" ORDER BY job_cards.rating ASC");
+                    break;
+                case MOST_HIRED:
+                    sqlQuery.append(" ORDER BY job_cards.post_contract_count DESC");
+                    break;
+                case LEAST_HIRED:
+                    sqlQuery.append(" ORDER BY job_cards.post_contract_count ASC");
+                    break;
+                case NEWEST:
+                    sqlQuery.append(" ORDER BY job_cards.post_creation_date DESC");
+                    break;
+                case OLDEST:
+                    sqlQuery.append(" ORDER BY job_cards.post_creation_date ASC");
+                    break;
+                default:
+            }
         }
-
-        Query nativeQuery = em.createNativeQuery(sqlQuery.toString())
-                .setParameter("query", query)
-                .setParameter("zone", zone.getValue());
+        if(query == null) {
+            query = "";
+        }
+        Query nativeQuery = em.createNativeQuery(sqlQuery.toString()).setParameter("query",
+                String.format("%%%s%%", query.replace("%", "\\%")
+                        .replace("_", "\\_")).toUpperCase()
+                );
 
         if (jobType != null)
             nativeQuery.setParameter("type", jobType.getValue());
+        if (withZone)
+            nativeQuery.setParameter("zone", zone.getValue());
 
         return nativeQuery;
     }

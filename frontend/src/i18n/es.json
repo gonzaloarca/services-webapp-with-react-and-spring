@@ -1,0 +1,498 @@
+{
+  "navigation": {
+    "sections": {
+      "home": "Inicio",
+      "categories": "Categorías",
+      "publish": "Publicar",
+      "mycontracts": "Mis contratos",
+      "analytics": "Estadísticas",
+      "explore": "Explorar",
+      "login": "Ingresar",
+      "register": "Registrarme",
+      "packages": "Paquetes",
+      "addpackage": "Añadir paquete",
+      "editpackage": "Editar paquete",
+      "recoverpass": "Recuperar contraseña",
+      "changepass": "Cambiar contraseña",
+      "verify": "Verificar cuenta",
+      "profile": "Perfil de {{username}}",
+      "account": "Mi cuenta",
+      "registersuccess": "Registro exitoso",
+      "hire": "Contratar servicio",
+      "error": "Error",
+      "pagenotfound": "Página no encontrada"
+    },
+    "search": "Buscar...",
+    "profile": "Mi perfil",
+    "account": "Mi cuenta",
+    "logout": "Cerrar sesión"
+  },
+  "title": "{{section}} | HireNet",
+  "defaulttitle": "HireNet",
+  "error": {
+    "404": {
+      "header": "Error 404",
+      "description": "Página no encontrada",
+      "action": "Regresar a inicio"
+    },
+    "generic": {
+      "header": "Error",
+      "description": "Algo salió mal...",
+      "action": "Regresar a inicio"
+    }
+  },
+  "validationerror": {
+    "required": "Este campo es obligatorio",
+    "email": "Por favor ingrese una direccion de correo electronico",
+    "phone": "Por favor ingrese un telefono valido",
+    "minlength": "Porfavor ingrese almenos {{length}} caracteres",
+    "maxlength": "Porfavor ingrese menos de {{length}} characters",
+    "passwordrepeat": "Las contraseña no coinciden",
+    "avatarfile": {
+      "size": "El tamaño del archivo debe ser menor que {{size}}MB",
+      "type": "El archivo debe ser de tipo PNG o JPG"
+    },
+    "zone": "Primero seleccione su ubicación",
+    "rating": "Debe ingresar un puntaje",
+    "multipleimages": {
+      "type": "Los archivos deben ser todos JPG o PNG",
+      "size": "Los tamaños de los archivos deben ser menores a {{size}}MB",
+      "quantity": "No puede haber mas de {{count}} archivos"
+    },
+    "locations": "Seleccione por lo menos una zona"
+  },
+  "home": {
+    "herotext": "Encuentre y contrate el servicio que necesita",
+    "location": "Ubicación",
+    "searchJob": "Buscar un servicio...",
+    "steps": {
+      "location": "Seleccione su ubicación",
+      "search": "Busque el servicio que necesita",
+      "hire": "Contrate el servicio"
+    },
+    "explore": "Explorar categorías de servicios",
+    "morecategories": "Ver más",
+    "newest": "Servicios más recientes",
+    "viewall": "Ver todos",
+    "publishbanner": {
+      "question": "¿Desea publicar su servicio en nuestro sitio?",
+      "answer": "Hágalo ahora mismo",
+      "button": "Publicar"
+    },
+    "nojobs": "No hay servicios disponibles en este momento. Disculpas por las molestias"
+  },
+  "jobpost": {
+    "seereviews": "Ver reseñas",
+    "noreviews": "Este servicio todavía no tiene ninguna reseña",
+    "edit": "Editar publicación",
+    "delete": "Borrar publicación",
+    "managepacks": "Administrar paquetes",
+    "deletetitle": "¿Está seguro que desea eliminar el servicio?",
+    "finalized": "Esta publicacion ha finalizado"
+  },
+  "jobcard": {
+    "noreviews": "Sin calificaciones",
+    "details": "Ver detalles",
+    "onezone": "{{firstZone}}",
+    "morezones": "{{firstZone}} y {{zoneCount}} más"
+  },
+  "jobtype": {
+    "plumbing": "Plomería",
+    "electricity": "Electricidad",
+    "carpentry": "Carpintería",
+    "catering": "Catering",
+    "painting": "Pintura",
+    "teaching": "Enseñanza",
+    "cleaning": "Limpieza",
+    "babysitting": "Niñera"
+  },
+  "professional": "Profesional",
+  "client": "Cliente",
+  "avgrate": "Calificación promedio",
+  "timeshired": "Veces contratado",
+  "workinghours": "Horarios",
+  "availablezones": "Zonas de disponibilidad",
+  "availablepackages": "Paquetes disponibles",
+  "pricelabel": "Precio",
+  "hire": "Contratar",
+  "packagedescription": "Descripción del paquete",
+  "reviews": "Reseñas",
+  "ratetypeformat": {
+    "hourly": "${{amount}}/hora",
+    "tbd": "A acordar",
+    "onetime": "${{amount}}"
+  },
+  "ratetype": {
+    "hourly": "Por hora",
+    "onetime": "Por trabajo",
+    "tbd": "A acordar"
+  },
+  "jobreference": "En <semibold>{{title}}</semibold>",
+  "price": "{{value, price, ARS}}",
+  "date": "{{date, DD/MM/YYYY}}",
+  "time": "{{date, H:mm}} hs",
+  "datetime": "{{date, DD/MM/YYYY H:mm}} hs",
+  "reviewcount": "({{count}})",
+  "completedcontracts": "Contratado {{count}} veces",
+  "completedcontractsonce": "Contratado 1 vez",
+  "footer": {
+    "creators": "Creadores del sitio",
+    "contact": "Contáctenos",
+    "copyright": "© 2021 HireNet"
+  },
+  "login": {
+    "title": "Ingresar",
+    "into": "Ingresar a HireNet",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Contraseña",
+    "rememberme": "Recordarme",
+    "submit": "Iniciar sesión",
+    "hasaccountquestion": "¿No tiene una cuenta?",
+    "getaccount": "Regístrese",
+    "badcredentials": "Usuario o contraseña incorrectos",
+    "usernotverified": "Su usuario no está verificado, por favor revise su email o realice de nuevo el registro",
+    "error": "Ha ocurrido un error, vuelva a intentarlo",
+    "inputemail": "Ingrese un email",
+    "inputpass": "Ingrese una contraseña",
+    "recoverquestion": "¿Olvidó su contraseña?",
+    "recover": "Recupérela"
+  },
+  "register": {
+    "title": "Registrarme",
+    "into": "Crear cuenta de HireNet",
+    "username": "Nombre completo",
+    "phone": "Teléfono",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordrepeat": "Repetir contraseña",
+    "submit": "Registrarme",
+    "alreadyhasaccount": "¿Ya tiene una cuenta?",
+    "login": "Inicie sesion",
+    "continue": "Continuar",
+    "selectimage": "Seleccione una imagen de perfil (opcional)",
+    "filedisclaimer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta {{size}} MB",
+    "goback": "Volver atrás",
+    "imagepreview": "Vista previa",
+    "badcredentials": "El email que ha ingresado ya pertenece a un usuario",
+    "passwordInvalid": "La contraseña debe ser de entre 8 y 100 caracteres",
+    "passwordNotMatch": "Las contraseñas deben coincidir",
+    "discardimage": "Descartar",
+    "success": {
+      "title": "¡Registro exitoso!",
+      "verify": "Se ha enviado un email para verificar su identidad, por favor revíselo.",
+      "return": "Regresar a inicio"
+    }
+  },
+  "image": {
+    "clear": "Descartar",
+    "invalid": "Archivo inválido, intente con otro archivo",
+    "pick": "Seleccionar archivo"
+  },
+  "recover": {
+    "title": "Recuperar contraseña",
+    "instructions": "Ingrese el correo electrónico asociado a su cuenta",
+    "disclaimer": "Si la dirección pertenece a una cuenta registrada, se le enviará un correo con instrucciones para cambiar su contraseña.",
+    "submit": "Recuperar",
+    "success": "¡Solicitud recibida! Si la dirección es válida, le llegará un correo pronto.",
+    "enternewpass": "Ingrese su nueva contraseña",
+    "wronglink": "Enlace inválido o caducado",
+    "wrongexplained": "El enlace al que has ingresado no es correcto. Si necesitas cambiar tu contraseña, vuelve a intentarlo desde la página de inicio de sesión.",
+    "login": "Iniciar Sesión",
+    "passwordChanged": "¡Contraseña cambiada correctamente!",
+    "changedinstructions": "Inicie sesión para continuar utilizando la página.",
+    "error": "Ocurrio un error, porfavor intente de nuevo"
+  },
+  "verifyemail": {
+    "title": "Verificación de email",
+    "success": "¡Email verificado correctamente!",
+    "pleaselogin": "Por favor, inicie sesión con su usuario para utilizar el sitio.",
+    "login": "Iniciar Sesión",
+    "invalid": "Enlace inválido o caducado",
+    "instructions": "El enlace al que has ingresado no es correcto. Por favor, realiza el registro de nuevo si todavía no tienes una cuenta.",
+    "register": "Registrarme"
+  },
+  "mycontracts": {
+    "contracts": "Contratos",
+    "hiredservices": "Servicios contratados",
+    "myservices": "Mis servicios",
+    "activecontracts": "Contratos activos",
+    "active": "Activos",
+    "pendingapprovalcontracts": "Contratos pendientes de aprobación",
+    "pendingapproval": "Pendientes de aprobación",
+    "finalizedcontracts": "Contratos finalizados",
+    "finalized": "Finalizados",
+    "hiredby": "Contratado por",
+    "professional": "Profesional",
+    "scheduleddate": "Fecha programada",
+    "scheduleddateformat": "<date>{{date}}</date><time>{{time}}</time>",
+    "contractimage": "Imagen del trabajo requerido",
+    "contractdescription": "Descripción del trabajo requerido",
+    "package": "Paquete contratado",
+    "creationdate": "Fecha de creación del contrato",
+    "pickdate": "Seleccione una nueva fecha y horario para la realización del trabajo",
+    "rate": {
+      "header": "¿Cómo calificarías tu experiencia con el servicio?",
+      "tellus": "Cuente un poco sobre la experiencia",
+      "tellusplaceholder": "Escriba sobre la calidad del trabajo, el trato con el profesional, la atencion, etc.",
+      "summarize": "Resuma su opinion en una frase (opcional)",
+      "summarizeplaceholder": "Título de la reseña"
+    },
+    "reviewreschedule": {
+      "disclaimer": "Si acepta la reprogramación no podrá reprogramar nuevamente. Si la rechaza se cancelará el contrato.",
+      "newdate": "Nueva fecha propuesta"
+    },
+    "contractactions": {
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "finalize": "Finalizar",
+      "cancel": "Cancelar",
+      "rate": "Calificar",
+      "contact": "Contactar",
+      "details": "Detalles",
+      "reschedule": "Reprogramar",
+      "reviewreschedule": "Revisar reprogramación"
+    },
+    "modals": {
+      "cancel": {
+        "title": "¿Desea cancelar el contrato?",
+        "message": "Esta acción no se puede deshacer",
+        "affirmative": "Confirmar",
+        "negative": "Cerrar"
+      },
+      "reject": {
+        "title": "¿Desea rechazar el contrato?",
+        "message": "Esta acción no se puede deshacer",
+        "affirmative": "Rechazar",
+        "negative": "Cerrar"
+      },
+      "reschedule": {
+        "title": "¿Desea reprogramar el contrato?",
+        "message": "Esta acción sólo puede realizarse una vez por contrato",
+        "affirmative": "Reprogramar",
+        "negative": "Cerrar"
+      },
+      "reviewreschedule": {
+        "title": "Revisar reprogramación",
+        "affirmative": "Aceptar",
+        "negative": "Rechazar"
+      },
+      "rate": {
+        "title": "Calificar servicio",
+        "affirmative": "Calificar",
+        "negative": "Cancelar"
+      },
+      "contact": {
+        "title": "Información de contacto",
+        "negative": "Cerrar"
+      },
+      "details": {
+        "title": "Detalles del trabajo a realizar",
+        "negative": "Cerrar"
+      }
+    },
+    "contractstate": {
+      "nocontractsheader": "No hay contratos para mostrar",
+      "noactivecontractsheader": "No hay contratos activos para mostrar",
+      "noactivecontractssubtitle": "Una vez que el profesional apruebe un contrato, se mostrará en esta sección",
+      "noactivecontractssubtitlepro": "Una vez que aceptes una petición, el contrato se mostrará en esta sección",
+      "nopendingcontractsheader": "No hay contratos pendientes de aprobación para mostrar",
+      "nopendingcontractssubtitle": "Aquí aparecerán los servicios recién contratados que requieren de la aprobación del profesional",
+      "nopendingcontractssubtitlepro": "Una vez que alguien te contrate, la petición se mostrará en esta sección",
+      "nofinalizedcontractsheader": "No hay contratos finalizados para mostrar",
+      "nofinalizedcontractssubtitle": "Aquí aparecerán los contratos que dé por finalizados o cancelados desde la sección de contratos activos",
+      "nocontractssubtitleclient": "Para tener contratos, primero solicite algún servicio",
+      "nocontractssubtitlepro": "Cuando un usuario solicite un servicio suyo, acá aparecerán los datos de la solicitud",
+      "clientcancelled": "El cliente canceló el contrato",
+      "procancelled": "El profesional canceló el contrato",
+      "youcancelled": "Usted canceló el contrato",
+      "prorejected": "El profesional rechazó la petición de contrato",
+      "clientrejected": "El cliente rechazó la petición de contrato",
+      "yourejected": "Usted rechazó la petición de contrato",
+      "finalized": "El contrato ha sido marcado como finalizado",
+      "clientrescheduled": "El cliente ha solicitado una reprogramación de la fecha del trabajo",
+      "prorescheduled": "El profesional ha solicitado una reprogramación de la fecha del trabajo",
+      "yourescheduled": "Esperando por la aprobación de la reprogramación de la fecha del trabajo"
+    }
+  },
+  "createjobpost": {
+    "header": "Publicar nuevo servicio",
+    "required": "* campo obligatorio",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "publish": "Publicar",
+    "steps": {
+      "category": {
+        "label": "Categoría del servicio",
+        "header": "Seleccione una categoría para su servicio"
+      },
+      "jobtitle": {
+        "label": "Nombre del servicio",
+        "header": "Introduzca el nombre del servicio"
+      },
+      "packages": {
+        "label": "Paquetes",
+        "package": "Paquete",
+        "header": "Agregue al menos un paquete al servicio",
+        "help": {
+          "question": "¿Qué es un paquete?",
+          "answer": "Un paquete es un trabajo específico que se ofrece dentro de cada servicio. Un servicio puede tener varios paquetes, y cada paquete tiene su propio precio."
+        },
+        "title": {
+          "label": "Ingrese un título para el paquete*",
+          "placeholder": "Título"
+        },
+        "description": {
+          "label": "Ingrese una descripción para el paquete*",
+          "placeholder": "Descripción"
+        },
+        "ratetype": {
+          "label": "¿Cómo planea cobrar el paquete?*"
+        },
+        "price": {
+          "label": "Ingrese un precio para el paquete*",
+          "placeholder": "Precio"
+        }
+      },
+      "images": {
+        "label": "Imágenes",
+        "header": "Seleccione imágenes para mostrar en la publicación",
+        "disclaimer": "Puede subir hasta {{count}} imagenes en formato PNG o JPG, de menos de {{size}}MB"
+      },
+      "hours": {
+        "label": "Horarios",
+        "header": "Seleccione los horarios de disponibilidad del servicio"
+      },
+      "locations": {
+        "label": "Ubicaciones",
+        "header": "Seleccione las ubicaciones donde estará disponible el servicio",
+        "selected": "Ubicaciones seleccionadas",
+        "notselected": "Todavía no tiene ninguna ubicación seleccionada"
+      },
+      "summary": {
+        "label": "Resumen",
+        "header": "Resumen de la publicación"
+      }
+    }
+  },
+  "hirePage": {
+    "title": "Solicitar Servicio",
+    "detail": {
+      "title": "Detalles del Servicio"
+    },
+    "form": {
+      "title": "Datos de Contacto",
+      "required": "* campo obligatorio",
+      "desctitle": "Ingrese una descripción del trabajo que precisa*",
+      "description": "Descripción",
+      "descdefault": "Descripción del trabajo",
+      "datetitle": "Seleccione una fecha y hora para la realización del servicio*",
+      "datedisclamer": "Asegúrese de respetar los horarios de disponibilidad del profesional",
+      "dateplaceholder": "Fecha y hora",
+      "imagetitle": "Seleccione una imagen para subir",
+      "imagedisclamer": "La imagen debe ser de formato PNG o JPG y puede pesar hasta 2 MB",
+      "submit": "Contratar"
+    }
+  },
+  "managepackages": {
+    "header": "Administrar paquetes",
+    "servicepackages": "Paquetes del servicio",
+    "add": "Añadir nuevo paquete",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deletemodal": {
+      "title": "¿Está seguro que desea eliminar el paquete?",
+      "body": "Esta acción no se puede deshacer",
+      "affirmative": "Eliminar",
+      "negative": "Cerrar"
+    }
+  },
+  "addpackage": {
+    "header": "Añadir paquete",
+    "submit": "Añadir"
+  },
+  "editpackage": {
+    "header": "Editar paquete",
+    "submit": "Guardar cambios"
+  },
+  "categories": {
+    "header": "Categorías de servicios",
+    "filter": "Filtrar categorías por nombre"
+  },
+  "datetimeformat": "d 'de' MMMM, yyyy - h:mm aa",
+  "locale": "es",
+  "account": {
+    "header": "Mi Cuenta",
+    "tabstitle": "Cuenta",
+	"accepted": "Cambios aceptados",
+	"rejected": "Contraseña antigua incorrecta",
+    "data": {
+      "title": "Datos personales",
+      "imagealt": "Imagen del usuario",
+      "edit": "Editar datos",
+      "profilepic": "Cambiar foto de perfil"
+    },
+    "security": {
+      "title": "Inicio de sesión y contraseña",
+      "changepass": "Cambiar contraseña",
+      "oldpassword": "Contraseña actual",
+      "newpassword": "Nueva contraseña",
+      "repeatpassword": "Repita nueva contraseña"
+    },
+    "logout": {
+      "title": "Cerrar sesión",
+      "btn": "CERRAR SESIÓN"
+    },
+    "savechanges": "Guardar cambios"
+  },
+  "profile": {
+    "rating": "Calificación promedio",
+    "countsingular": "Vez contratado",
+    "countplural": "Veces contratado",
+    "services": "Servicios ({{count}})",
+    "reviews": "Reseñas ({{count}})",
+    "ratecount": "Promedio entre {{count}} reseñas",
+    "starsingular": "1 estrella",
+    "starsplural": "{{count}} estrellas",
+    "noreviews": "Este usuario todavía no tiene calificaciones",
+    "noservices": "Este usuario no tiene servicios publicados actualmente"
+  },
+  "locationfilter": "Filtrar ubicaciones por nombre",
+  "noresults": "No hay resultados para '{{search}}'",
+  "timesHiredSingular": "Contratado 1 vez",
+  "timesHiredPlural": "Contratado {{times}} veces",
+  "search": {
+    "title": "Busqueda",
+    "service": "Busque el servicio que necesita",
+    "jobtypeplaceholder": "Buscar un servicio...",
+    "filters": "Filtros",
+    "categories": "Categorias",
+    "results": "Mostrando todos los servicios",
+    "zoneresults": "Mostrando servicios <zonecontainer>para <icon/>{{zone}}</zonecontainer>",
+    "queryresults": "<regular>Mostrando resultados para</regular> <bold>{{query}}</bold>",
+    "query&zoneresults": "<regular>Resultados para</regular> <bold>{{query}}</bold> <zonecontainer>en <bottom><icon></icon>{{zone}}</bottom></zonecontainer>",
+    "badquery": "Error en la busqueda",
+    "filteringby": "Filtrando por:",
+    "noresults": "No hay resultados para la búsqueda",
+    "sorry": "Disculpe las molestias",
+    "orderby": "Ordenar por",
+    "criteria": "Criterio",
+    "location": "Buscar por ubicación",
+    "alllocations": "Todas las ubicaciones"
+  },
+  "nonselected": "Ninguno",
+  "analytics": {
+    "title": "Estadísticas",
+    "number": "N°{{rank}}",
+    "mosthired": "Más contratado en {{jobType}}",
+    "similar": "Tus clientes también contrataron..."
+  },
+  "editjobpost": "Editar servicio",
+  "jobpostsuccess": {
+    "title": "¡Publicación creada exitosamente!",
+    "edit": "¡Publicación modificada correctamente!",
+    "instruction": "Usa el siguiente botón para ir a ella:",
+    "btn": "Ir a la publicación"
+  }
+}

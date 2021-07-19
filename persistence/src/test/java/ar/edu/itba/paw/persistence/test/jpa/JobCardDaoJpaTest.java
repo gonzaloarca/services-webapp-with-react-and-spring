@@ -200,7 +200,7 @@ public class JobCardDaoJpaTest {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.values()[1];
 
-        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, true, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(SEARCH_ELECTRICISTA_COUNT, jobCards.size());
@@ -210,7 +210,7 @@ public class JobCardDaoJpaTest {
     public void testSearchWithNullZone() {
         String title = "Electricista";
 
-        jobCardDaoJpa.search(title, null, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
+        jobCardDaoJpa.search(title, null, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, true, HirenetUtils.ALL_PAGES);
 
     }
 
@@ -219,7 +219,7 @@ public class JobCardDaoJpaTest {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.values()[1];
 
-        jobCardDaoJpa.search(title, zone, null, JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
+        jobCardDaoJpa.search(title, zone, null, JobCard.OrderBy.BETTER_QUALIFIED, true, HirenetUtils.ALL_PAGES);
     }
 
     @Test
@@ -227,7 +227,7 @@ public class JobCardDaoJpaTest {
         String title = "electr";
         JobPost.Zone zone = JobPost.Zone.values()[1];
 
-        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.search(title, zone, new ArrayList<>(Collections.singletonList(JobPost.JobType.values()[2])), JobCard.OrderBy.BETTER_QUALIFIED, true, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(ELECTRICITY_AND_CARPENTRY_POST_COUNT, jobCards.size());
@@ -239,7 +239,7 @@ public class JobCardDaoJpaTest {
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
 
-        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(), JobCard.OrderBy.BETTER_QUALIFIED, true, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
@@ -251,7 +251,7 @@ public class JobCardDaoJpaTest {
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
 
-        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), JobCard.OrderBy.BETTER_QUALIFIED, HirenetUtils.ALL_PAGES);
+        List<JobCard> jobCards = jobCardDaoJpa.searchWithCategory(title, zone, jobType, new ArrayList<>(Collections.singletonList(JobPost.JobType.ELECTRICITY)), JobCard.OrderBy.BETTER_QUALIFIED, true, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobCards.isEmpty());
         Assert.assertEquals(CATEGORY_ELECTRICITY_COUNT, jobCards.size());
@@ -301,17 +301,9 @@ public class JobCardDaoJpaTest {
     }
 
     @Test
-    public void testFindAllMaxPage() {
-
-        int maxPage = jobCardDaoJpa.findAllMaxPage();
-
-        Assert.assertEquals(Math.ceil((double) TOTAL_JOB_CARDS_ACTIVE / HirenetUtils.PAGE_SIZE), maxPage, 0.00001);
-    }
-
-    @Test
     public void testFindMaxPageByUserId1() {
 
-        int maxPage = jobCardDaoJpa.findMaxPageByUserId(USER1.getId());
+        int maxPage = jobCardDaoJpa.findByUserIdMaxPage(USER1.getId());
 
         Assert.assertEquals(Math.ceil((double) TOTAL_JOB_CARDS_USER_ID_1 / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
@@ -319,7 +311,7 @@ public class JobCardDaoJpaTest {
     @Test
     public void testFindMaxPageByUserId3() {
 
-        int maxPage = jobCardDaoJpa.findMaxPageByUserId(USER2.getId());
+        int maxPage = jobCardDaoJpa.findByUserIdMaxPage(USER2.getId());
 
         Assert.assertEquals(Math.ceil((double) TOTAL_JOB_CARDS_USER_ID_3 / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
@@ -327,7 +319,7 @@ public class JobCardDaoJpaTest {
     @Test
     public void testFindMaxPageByNonExistingUserId() {
 
-        int maxPage = jobCardDaoJpa.findMaxPageByUserId(NON_EXISTING_ID);
+        int maxPage = jobCardDaoJpa.findByUserIdMaxPage(NON_EXISTING_ID);
 
         Assert.assertEquals(0, maxPage);
     }
@@ -337,7 +329,7 @@ public class JobCardDaoJpaTest {
         String title = "Electricista";
         JobPost.Zone zone = JobPost.Zone.values()[1];
 
-        int maxPage = jobCardDaoJpa.findMaxPageSearch(title, zone, new ArrayList<>());
+        int maxPage = jobCardDaoJpa.searchMaxPage(title, zone, new ArrayList<>(), true);
 
         Assert.assertEquals(Math.ceil((double) SEARCH_ELECTRICISTA_COUNT / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
@@ -348,7 +340,7 @@ public class JobCardDaoJpaTest {
         JobPost.Zone zone = JobPost.Zone.values()[1];
         JobPost.JobType jobType = JobPost.JobType.ELECTRICITY;
 
-        int maxPage = jobCardDaoJpa.findMaxPageSearchWithCategory(title, zone, jobType, new ArrayList<>());
+        int maxPage = jobCardDaoJpa.searchWithCategoryMaxPage(title, zone, jobType, new ArrayList<>(), true);
 
         Assert.assertEquals(Math.ceil((double) SEARCH_ELECTRICISTA_COUNT / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }
@@ -356,7 +348,7 @@ public class JobCardDaoJpaTest {
     @Test
     public void testFindMaxPageRelatedJobCards() {
 
-        int maxPage = jobCardDaoJpa.findMaxPageRelatedJobCards(1);
+        int maxPage = jobCardDaoJpa.findRelatedJobCardsMaxPage(1);
 
         Assert.assertEquals(Math.ceil((double) RELATED_JOB_CARDS_COUNT / HirenetUtils.PAGE_SIZE), maxPage, 0.0000001);
     }

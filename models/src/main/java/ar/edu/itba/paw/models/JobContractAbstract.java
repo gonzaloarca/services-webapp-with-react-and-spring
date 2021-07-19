@@ -37,6 +37,9 @@ public class JobContractAbstract {
     @Column(name = "contract_state", nullable = false, columnDefinition = "INT default 6")
     protected JobContract.ContractState state;
 
+    @Column(name = "contract_was_rescheduled", nullable = false, columnDefinition = "BOOLEAN default false")
+    protected boolean wasRescheduled;
+
     public JobPackage getJobPackage() {
         return jobPackage;
     }
@@ -103,6 +106,14 @@ public class JobContractAbstract {
 
     public void setScheduledDate(LocalDateTime scheduledDate) {
         this.scheduledDate = scheduledDate;
+    }
+
+    public boolean isWasRescheduled() {
+        return wasRescheduled;
+    }
+
+    public void setWasRescheduled(boolean wasRescheduled) {
+        this.wasRescheduled = wasRescheduled;
     }
 
     @Override

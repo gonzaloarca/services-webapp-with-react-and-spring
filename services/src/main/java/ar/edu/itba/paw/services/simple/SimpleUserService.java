@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,27 +32,23 @@ public class SimpleUserService implements UserService {
     private MailingService mailingService;
 
     @Override
+    public List<UserWithImage> findAllWithImage(int page) {
+        return userDao.findAllWithImage(page);
+    }
+
+    @Override
+    public int findAllWithImageMaxPage() {
+        return userDao.findAllWithImageMaxPage();
+    }
+
+    @Override
     public User register(String email, String password, String username, String phone,
-                         ByteImage image, Locale locale) throws UserAlreadyExistsException, UserNotVerifiedException {
+                         ByteImage image, Locale locale, String webpageUrl) throws UserAlreadyExistsException {
         Optional<User> maybeUser = userDao.findByEmail(email);
 
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
-
-            if (user.isVerified())
-                throw new UserAlreadyExistsException();
-
-            //registrar usuario de nuevo
-            if (image == null)
-                userDao.updateUserById(user.getId(), username, phone);
-            else
-                userDao.updateUserById(user.getId(), username, phone, image);
-            userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
-
-            VerificationToken token = tokenService.createVerificationToken(user);
-            mailingService.sendVerificationTokenEmail(user, token, locale);
-
-            throw new UserNotVerifiedException();
+            throw new UserAlreadyExistsException();
         }
 
         User registeredUser;
@@ -63,7 +58,7 @@ public class SimpleUserService implements UserService {
             registeredUser = userDao.register(email, passwordEncoder.encode(password), username, phone, image);
 
         VerificationToken token = tokenService.createVerificationToken(registeredUser);
-        mailingService.sendVerificationTokenEmail(registeredUser, token, locale);
+        mailingService.sendVerificationTokenEmail(registeredUser, token, locale, webpageUrl);
 
         return registeredUser;
     }
@@ -84,7 +79,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public User updateUserById(long id, String name, String phone) {
+    public UserWithImage updateUserById(long id, String name, String phone) {
         return userDao.updateUserById(id, name, phone).orElseThrow(NoSuchElementException::new);
     }
 
@@ -117,9 +112,8 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void changeUserPassword(String email, String password) {
-        User user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        userDao.changeUserPassword(user.getId(), passwordEncoder.encode(password));
+    public void changeUserPassword(long id, String newPassword, String oldPassword) {
+        userDao.changeUserPassword(id, passwordEncoder.encode(newPassword));
     }
 
     @Override
@@ -142,14 +136,13 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void recoverUserAccount(String email, Locale locale){
+    public void recoverUserAccount(String email, Locale locale, String webpageUrl) {
         User user;
         RecoveryToken recoveryToken;
-
         try {
             user = userDao.findByEmail(email).orElseThrow(UserNotFoundException::new);
             recoveryToken = tokenService.createRecoveryToken(user);
-            mailingService.sendRecoverPasswordEmail(user, recoveryToken, locale);
+            mailingService.sendRecoverPasswordEmail(user, recoveryToken, locale, webpageUrl);
         } catch (UserNotFoundException e) {
             //Si el usuario no existe, no hago nada
         }
@@ -159,7 +152,7 @@ public class SimpleUserService implements UserService {
     public void recoverUserPassword(long user_id, String password) {
         boolean changed = userDao.changeUserPassword(user_id, passwordEncoder.encode(password));
 
-        if(!changed)
+        if (!changed)
             throw new UserNotFoundException();
 
         tokenService.deleteRecoveryToken(user_id);
@@ -173,5 +166,15 @@ public class SimpleUserService implements UserService {
     @Override
     public ByteImage findImageByUserId(long id) {
         return userDao.findImageByUserId(id).orElseThrow(ImageNotFoundException::new);
+    }
+
+    @Override
+    public long updateUserImage(long id, ByteImage userImage) {
+        return userDao.updateUserImage(id, userImage);
+    }
+
+    @Override
+    public Optional<UserWithImage> findUserWithImageByEmail(String email) {
+        return userDao.findUserWithImageByEmail(email);
     }
 }

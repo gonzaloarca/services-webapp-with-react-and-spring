@@ -1,24 +1,42 @@
 package ar.edu.itba.paw.persistence.jpa;
 
+import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.utils.PagingUtil;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserDaoJpa implements UserDao {
 
     @PersistenceContext
     private EntityManager em;
-    private Query  query;
+    private Query query;
+
+    @Override
+    public List<UserWithImage> findAllWithImage(int page) {
+        Query nativeQuery = em.createNativeQuery(
+                "SELECT user_id FROM users WHERE user_is_active = TRUE AND user_is_verified = TRUE"
+        );
+        return executePageQuery(page, nativeQuery);
+    }
+
+    @Override
+    public int findAllWithImageMaxPage() {
+        Long size = em.createQuery("SELECT COUNT(*) FROM User user WHERE user.isActive = TRUE AND user.isVerified = TRUE", Long.class)
+                .getSingleResult();
+        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
+    }
 
     @Override
     public User register(String email, String password, String username, String phone) {
@@ -55,8 +73,8 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public Optional<User> updateUserById(long id, String name, String phone) {
-        User aux = em.find(User.class, id);
+    public Optional<UserWithImage> updateUserById(long id, String name, String phone) {
+        UserWithImage aux = em.find(UserWithImage.class, id);
         if (aux != null) {
             aux.setUsername(name);
             aux.setPhone(phone);
@@ -69,7 +87,7 @@ public class UserDaoJpa implements UserDao {
     public Optional<User> updateUserById(long id, String name, String phone, ByteImage image) {
         UserWithImage userWithImage = em.find(UserWithImage.class, id);
 
-        if(userWithImage == null)
+        if (userWithImage == null)
             return Optional.empty();
 
         userWithImage.setUsername(name);
@@ -187,8 +205,36 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public Optional<ByteImage> findImageByUserId(long id){
+    public Optional<ByteImage> findImageByUserId(long id) {
         List<ByteImage> resultList = em.createQuery("SELECT u.byteImage FROM UserWithImage u WHERE u.id = :id", ByteImage.class).setParameter("id", id).getResultList();
         return resultList.isEmpty() ? Optional.empty() : Optional.ofNullable(resultList.get(0));
+    }
+
+    @Override
+    public long updateUserImage(long id, ByteImage userImage) {
+        UserWithImage user = em.find(UserWithImage.class, id);
+        if (user != null) {
+            user.setByteImage(userImage);
+            em.persist(user);
+            return id;
+        }
+        return -1;
+    }
+
+    @Override
+    public Optional<UserWithImage> findUserWithImageByEmail(String email) {
+        return em.createQuery("FROM UserWithImage AS u WHERE u.email = :email", UserWithImage.class)
+                .setParameter("email", email).getResultList().stream().findFirst();
+    }
+
+    private List<UserWithImage> executePageQuery(int page, Query nativeQuery) {
+        List<Long> filteredIds = PagingUtil.getFilteredIds(page, nativeQuery);
+
+        return em.createQuery("FROM UserWithImage AS user WHERE user.id IN :filteredIds", UserWithImage.class)
+                .setParameter("filteredIds", (filteredIds.isEmpty()) ? null : filteredIds)
+                .getResultList().stream().sorted(
+                        //Ordenamos los elementos segun el orden de filteredIds
+                        Comparator.comparingInt(o -> filteredIds.indexOf(o.getId()))
+                ).collect(Collectors.toList());
     }
 }

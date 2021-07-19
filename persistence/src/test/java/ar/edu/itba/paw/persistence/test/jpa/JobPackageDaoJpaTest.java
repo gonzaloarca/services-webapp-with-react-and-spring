@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence.test.jpa;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
-import ar.edu.itba.paw.models.JobContract;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.models.User;
@@ -164,15 +163,15 @@ public class JobPackageDaoJpaTest {
 
     @InjectMocks
     @Autowired
-    JobPackageDaoJpa jobPackageDaoJpa;
+    private JobPackageDaoJpa jobPackageDaoJpa;
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Before
     public void setUp() {
@@ -203,7 +202,7 @@ public class JobPackageDaoJpaTest {
     }
 
     @Test(expected = JobPostNotFoundException.class)
-    public void testCreateWithNonExistentPost(){
+    public void testCreateWithNonExistentPost() {
         String title = "Arreglo simple";
         String description = "Arreglo de instalaciones electricas";
         double price = 500.0;
@@ -220,7 +219,7 @@ public class JobPackageDaoJpaTest {
     }
 
     @Test(expected = PersistenceException.class)
-    public void testCreateWithInvalidTitle(){
+    public void testCreateWithInvalidTitle() {
         String title = null;
         String description = "Arreglo de instalaciones electricas";
         double price = 500.0;
@@ -237,7 +236,7 @@ public class JobPackageDaoJpaTest {
     }
 
     @Test(expected = PersistenceException.class)
-    public void testCreateWithInvalidDescription(){
+    public void testCreateWithInvalidDescription() {
         String title = "Arreglo simple";
         String description = null;
         double price = 500.0;
@@ -254,10 +253,10 @@ public class JobPackageDaoJpaTest {
     }
 
     @Test()
-    public void testCreateWithNullPrice(){
+    public void testCreateWithNullPrice() {
         String title = "Arreglo simple";
         String description = "Descripcion";
-        Double price =null;
+        Double price = null;
         JobPackage.RateType rateType = JobPackage.RateType.TBD;
 
         JobPackage jobPackage = jobPackageDaoJpa.create(
@@ -279,7 +278,7 @@ public class JobPackageDaoJpaTest {
     @Test
     public void testFindById() {
 
-        Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(JOB_PACKAGES[0].getId());
+        Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(JOB_PACKAGES[0].getId(), JOB_PACKAGES[0].getJobPost().getId());
 
         Assert.assertTrue(jobPackage.isPresent());
         Assert.assertEquals(jobPackage.get(), JOB_PACKAGES[0]);
@@ -288,7 +287,7 @@ public class JobPackageDaoJpaTest {
     @Test
     public void testFindByIdWithNonExistentId() {
 
-        Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(NON_EXISTENT_ID);
+        Optional<JobPackage> jobPackage = jobPackageDaoJpa.findById(NON_EXISTENT_ID, JOB_PACKAGES[0].getJobPost().getId());
 
         Assert.assertFalse(jobPackage.isPresent());
     }
@@ -347,14 +346,14 @@ public class JobPackageDaoJpaTest {
         Double newPrice = 123.4;
 
 
-        boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), newTitle, newDescription, newPrice, jobPackage.getRateType());
+        boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), jobPackage.getJobPost().getId(), newTitle, newDescription, newPrice, jobPackage.getRateType(), jobPackage.is_active());
         em.flush();
-        JobPackage dbJobPackage = em.find(JobPackage.class,JOB_PACKAGES[0].getId());
+        JobPackage dbJobPackage = em.find(JobPackage.class, JOB_PACKAGES[0].getId());
         Assert.assertTrue(ret);
         Assert.assertNotNull(dbJobPackage);
-        Assert.assertEquals(dbJobPackage.getTitle(),newTitle);
-        Assert.assertEquals(dbJobPackage.getDescription(),newDescription);
-        Assert.assertEquals(dbJobPackage.getPrice(),newPrice);
+        Assert.assertEquals(dbJobPackage.getTitle(), newTitle);
+        Assert.assertEquals(dbJobPackage.getDescription(), newDescription);
+        Assert.assertEquals(dbJobPackage.getPrice(), newPrice);
 
 
     }
@@ -363,9 +362,9 @@ public class JobPackageDaoJpaTest {
     public void testDeletePackage() {
         JobPackage jobPackage = JOB_PACKAGES[0];
 
-        boolean ret = jobPackageDaoJpa.deletePackage(jobPackage.getId());
+        boolean ret = jobPackageDaoJpa.updatePackage(jobPackage.getId(), jobPackage.getJobPost().getId(), jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(), jobPackage.getRateType(), false);
         em.flush();
-        JobPackage dbJobPackage = em.find(JobPackage.class,jobPackage.getId());
+        JobPackage dbJobPackage = em.find(JobPackage.class, jobPackage.getId());
         Assert.assertTrue(ret);
         Assert.assertNotNull(dbJobPackage);
         Assert.assertFalse(dbJobPackage.is_active());
@@ -375,23 +374,25 @@ public class JobPackageDaoJpaTest {
     public void testDeletePackageNonExistentId() {
         JobPackage jobPackage = JOB_PACKAGES[0];
 
-        boolean ret = jobPackageDaoJpa.deletePackage(NON_EXISTENT_ID);
+        boolean ret = jobPackageDaoJpa.updatePackage(NON_EXISTENT_ID, jobPackage.getJobPost().getId(),
+                jobPackage.getTitle(), jobPackage.getDescription(), jobPackage.getPrice(),
+                jobPackage.getRateType(), false);
         em.flush();
         Assert.assertFalse(ret);
     }
 
     @Test
-    public void testFindPostByPackageId(){
+    public void testFindPostByPackageId() {
         JobPackage jobPackage = JOB_PACKAGES[0];
 
         Optional<JobPost> jobPost = jobPackageDaoJpa.findPostByPackageId(jobPackage.getId());
 
         Assert.assertTrue(jobPost.isPresent());
-        Assert.assertEquals(jobPost.get(),JOB_POST);
+        Assert.assertEquals(jobPost.get(), JOB_POST);
     }
 
     @Test
-    public void testFindPostByPackageIdWithNoneExistentId(){
+    public void testFindPostByPackageIdWithNoneExistentId() {
 
         Optional<JobPost> jobPost = jobPackageDaoJpa.findPostByPackageId(NON_EXISTENT_ID);
 

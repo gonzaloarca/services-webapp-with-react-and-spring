@@ -57,7 +57,7 @@ public class VerificationTokenDaoJpaTest {
 
     @InjectMocks
     @Autowired
-    VerificationTokenDaoJpa verificationTokenDaoJpa;
+    private VerificationTokenDaoJpa verificationTokenDaoJpa;
 
     private JdbcTemplate jdbcTemplate;
 

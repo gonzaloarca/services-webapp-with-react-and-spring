@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPackage;
 import ar.edu.itba.paw.models.JobPost;
 
@@ -7,19 +8,21 @@ import java.util.List;
 
 public interface JobPackageService {
 
-    JobPackage create(long postId, String title, String description, String price, int rateType);
+    JobPackage create(long postId, String title, String description, String price, long rateType);
 
-    JobPackage findById(long id);
+    JobPackage findById(long packageId, long postId);
 
     List<JobPackage> findByPostId(long id);
 
     List<JobPackage> findByPostId(long id, int page);
 
-    JobPost findPostByPackageId(long id);
+    boolean updateJobPackage(long packageId, long postId, String title, String description, String price, Integer rateType, Boolean isActive);
 
-    boolean updateJobPackage(long id, String title, String description, String price, int rateType);
+    int findByPostIdMaxPage(long id);
 
-    boolean deleteJobPackage(long id);
+    List<JobPackage> findByPostIdOnlyActive(long postId, int page);
 
-    JobPackage findByIdWithJobPost(int id);
+    int findByPostIdOnlyActiveMaxPage(long postId);
+
+    JobPackage findByOnlyId(long packageId);
 }

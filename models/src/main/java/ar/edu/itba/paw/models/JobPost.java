@@ -43,6 +43,9 @@ public class JobPost {
     @Column(name = "post_creation_date", nullable = false)
     private LocalDateTime creationDate;
 
+    @OneToMany(mappedBy = "jobPost",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<JobPackage> jobPackages;
+
     /*default*/ JobPost() {
     }
 
@@ -144,6 +147,14 @@ public class JobPost {
         this.creationDate = creationDate;
     }
 
+    public List<JobPackage> getJobPackages() {
+        return jobPackages;
+    }
+
+    public void setJobPackages(List<JobPackage> jobPackages) {
+        this.jobPackages = jobPackages;
+    }
+
     @Override
     public String toString() {
         return "JobPost{" +
@@ -181,12 +192,12 @@ public class JobPost {
         BABYSITTING("babysitting.jpeg", "JobPost.JobType.BABYSITTING");
 
         private String imagePath;
-        private String stringCode;
+        private String description;
         private int value;
 
         JobType(String imagePath, String stringCode) {
             this.imagePath = imagePath;
-            this.stringCode = stringCode;
+            this.description = stringCode;
             this.value = ordinal();
         }
 
@@ -198,12 +209,12 @@ public class JobPost {
             this.imagePath = imagePath;
         }
 
-        public String getStringCode() {
-            return stringCode;
+        public String getDescription() {
+            return description;
         }
 
-        public void setStringCode(String stringCode) {
-            this.stringCode = stringCode;
+        public void setDescription(String stringCode) {
+            this.description = stringCode;
         }
 
         public int getValue() {
@@ -216,60 +227,60 @@ public class JobPost {
     }
 
     public enum Zone {
-        AGRONOMIA("JobPost.Zone.AGRONOMIA"),
-        ALMAGRO("JobPost.Zone.ALMAGRO"),
-        BALVANERA("JobPost.Zone.BALVANERA"),
-        BARRACAS("JobPost.Zone.BARRACAS"),
-        BELGRANO("JobPost.Zone.BELGRANO"),
-        BOEDO("JobPost.Zone.BOEDO"),
-        CABALLITO("JobPost.Zone.CABALLITO"),
-        CHACARITA("JobPost.Zone.CHACARITA"),
-        COGHLAN("JobPost.Zone.COGHLAN"),
-        COLEGIALES("JobPost.Zone.COLEGIALES"),
-        CONSTITUCION("JobPost.Zone.CONSTITUCION"),
-        FLORES("JobPost.Zone.FLORES"),
-        FLORESTA("JobPost.Zone.FLORESTA"),
-        BOCA("JobPost.Zone.BOCA"),
-        PATERNAL("JobPost.Zone.PATERNAL"),
-        LINIERS("JobPost.Zone.LINIERS"),
-        MATADEROS("JobPost.Zone.MATADEROS"),
-        MONTECASTRO("JobPost.Zone.MONTECASTRO"),
-        MONSERRAT("JobPost.Zone.MONSERRAT"),
-        NPOMPEYA("JobPost.Zone.NPOMPEYA"),
-        NUNIEZ("JobPost.Zone.NUNIEZ"),
-        PALERMO("JobPost.Zone.PALERMO"),
-        PAVELLANEDA("JobPost.Zone.PAVELLANEDA"),
-        PCHACABUCO("JobPost.Zone.PCHACABUCO"),
-        PCHAS("JobPost.Zone.PCHAS"),
-        PATRICIOS("JobPost.Zone.PATRICIOS"),
-        MADERO("JobPost.Zone.MADERO"),
-        RECOLETA("JobPost.Zone.RECOLETA"),
-        RETIRO("JobPost.Zone.RETIRO"),
-        SAAVEDRA("JobPost.Zone.SAAVEDRA"),
-        SANCRISTOBAL("JobPost.Zone.SANCRISTOBAL"),
-        SANNICOLAS("JobPost.Zone.SANNICOLAS"),
-        SANTELMO("JobPost.Zone.SANTELMO"),
-        VELEZ("JobPost.Zone.VELEZ"),
-        VERSALLES("JobPost.Zone.VERSALLES"),
-        CRESPO("JobPost.Zone.CRESPO"),
-        VPARQUE("JobPost.Zone.VPARQUE"),
-        DEVOTO("JobPost.Zone.DEVOTO"),
-        MITRE("JobPost.Zone.MITRE"),
-        LUGANO("JobPost.Zone.LUGANO"),
-        LURO("JobPost.Zone.LURO"),
-        ORTUZAR("JobPost.Zone.ORTUZAR"),
-        PUEYRREDON("JobPost.Zone.PUEYRREDON"),
-        VREAL("JobPost.Zone.VREAL"),
-        RIACHUELO("JobPost.Zone.RIACHUELO"),
-        SANTARITA("JobPost.Zone.SANTARITA"),
-        SOLDATI("JobPost.Zone.SOLDATI"),
-        URQUIZA("JobPost.Zone.URQUIZA");
+        AGRONOMIA("Agronomia"),
+        ALMAGRO("Almagro"),
+        BALVANERA("Balvanera"),
+        BARRACAS("Barracas"),
+        BELGRANO("Belgrano"),
+        BOEDO("Boedo"),
+        CABALLITO("Caballito"),
+        CHACARITA("Chacarita"),
+        COGHLAN("Coghlan"),
+        COLEGIALES("Colegiales"),
+        CONSTITUCION("Constitucion"),
+        FLORES("Flores"),
+        FLORESTA("Floresta"),
+        BOCA("Boca"),
+        PATERNAL("Paternal"),
+        LINIERS("Liniers"),
+        MATADEROS("Mataderos"),
+        MONTECASTRO("Montecastro"),
+        MONSERRAT("Monserrat"),
+        NPOMPEYA("Nueva Pompeya"),
+        NUNIEZ("Nuñez"),
+        PALERMO("Palermo"),
+        PAVELLANEDA("Parque Avellaneda"),
+        PCHACABUCO("Parque Chacabuco"),
+        PCHAS("Parque Chas"),
+        PATRICIOS("Parque Patricios"),
+        MADERO("Puerto Madero"),
+        RECOLETA("Recoleta"),
+        RETIRO("Retiro"),
+        SAAVEDRA("Saavedra"),
+        SANCRISTOBAL("San Cristobal"),
+        SANNICOLAS("San Nicolas"),
+        SANTELMO("San Telmo"),
+        VELEZ("Velez"),
+        VERSALLES("Versalles"),
+        CRESPO("Villa Crespo"),
+        VPARQUE("Villa del Parque"),
+        DEVOTO("Villa Devoto"),
+        MITRE("Villa General Mitre"),
+        LUGANO("Villa Lugano"),
+        LURO("Villa Luro"),
+        ORTUZAR("Villa Ortuzar"),
+        PUEYRREDON("Villa Pueyrredón"),
+        VREAL("Villa Real"),
+        RIACHUELO("Villa Riachuelo"),
+        SANTARITA("Villa Santa Rita"),
+        SOLDATI("Villa Soldati"),
+        URQUIZA("Villa Urquiza");
 
-        private final String stringCode;
+        private final String description;
         private final int value;
 
         Zone(final String stringCode) {
-            this.stringCode = stringCode;
+            this.description = stringCode;
             this.value = ordinal();
         }
 
@@ -277,8 +288,8 @@ public class JobPost {
             return value;
         }
 
-        public String getStringCode() {
-            return stringCode;
+        public String getDescription() {
+            return description;
         }
     }
 }

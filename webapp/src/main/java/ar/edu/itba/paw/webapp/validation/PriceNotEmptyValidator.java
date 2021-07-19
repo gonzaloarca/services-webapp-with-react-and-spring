@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.validation;
 
 import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.webapp.form.PackageForm;
 import org.springframework.beans.BeanWrapperImpl;
 
 import javax.validation.ConstraintValidator;
@@ -32,7 +31,7 @@ public class PriceNotEmptyValidator implements ConstraintValidator<PriceNotEmpty
                 .getPropertyValue(price);
 
         if (ordinal == null) {
-            return false;
+            return true; //el null de RateType se checkea desde el form
         }
 
         if (!ordinal.equals(JobPackage.RateType.TBD.ordinal()) &&

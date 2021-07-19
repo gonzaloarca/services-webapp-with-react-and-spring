@@ -322,7 +322,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void findProfessionalReviewsWithoutPagination() {
 
-        List<Review> maybeUserReviews = reviewDaoJpa.findProfessionalReviews(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
+        List<Review> maybeUserReviews = reviewDaoJpa.findReviewsByProId(PROFESSIONAL.getId(), HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(TOTAL_REVIEW_COUNT_PRO, maybeUserReviews.size());
         for (int i = 0; i < maybeUserReviews.size(); i++) {
@@ -333,7 +333,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void findNonExistingProfessionalReviewsWithoutPagination() {
 
-        List<Review> maybeUserReviews = reviewDaoJpa.findProfessionalReviews(NON_EXISTENT_ID, HirenetUtils.ALL_PAGES);
+        List<Review> maybeUserReviews = reviewDaoJpa.findReviewsByProId(NON_EXISTENT_ID, HirenetUtils.ALL_PAGES);
 
         Assert.assertEquals(0, maybeUserReviews.size());
     }
@@ -341,7 +341,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void findProfessionalReviewsWithPagination() {
 
-        List<Review> maybeUserReviews = reviewDaoJpa.findProfessionalReviews(PROFESSIONAL.getId(), 0);
+        List<Review> maybeUserReviews = reviewDaoJpa.findReviewsByProId(PROFESSIONAL.getId(), 0);
 
         Assert.assertEquals(REVIEW_POST_FIRST_PAGE_COUNT, maybeUserReviews.size());
         for (int i = 0; i < maybeUserReviews.size(); i++) {
@@ -352,7 +352,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void findNonExistingProfessionalReviewsWithPagination() {
 
-        List<Review> maybeUserReviews = reviewDaoJpa.findProfessionalReviews(NON_EXISTENT_ID, 0);
+        List<Review> maybeUserReviews = reviewDaoJpa.findReviewsByProId(NON_EXISTENT_ID, 0);
 
         Assert.assertEquals(0, maybeUserReviews.size());
     }
@@ -440,7 +440,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindMaxPageReviewsByUserId() {
 
-        int maxPage = reviewDaoJpa.findMaxPageReviewsByUserId(PROFESSIONAL.getId());
+        int maxPage = reviewDaoJpa.findReviewsByProIdMaxPage(PROFESSIONAL.getId());
 
         Assert.assertEquals(MAX_PAGE_FOR_PRO, maxPage);
     }
@@ -448,7 +448,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindMaxPageReviewsByNonExistingUserId() {
 
-        int maxPage = reviewDaoJpa.findMaxPageReviewsByUserId(NON_EXISTENT_ID);
+        int maxPage = reviewDaoJpa.findReviewsByProIdMaxPage(NON_EXISTENT_ID);
 
         Assert.assertEquals(0, maxPage);
     }
@@ -456,7 +456,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindProfessionalReviewsSize() {
 
-        int size = reviewDaoJpa.findProfessionalReviewsSize(PROFESSIONAL.getId());
+        int size = reviewDaoJpa.findReviewsByProIdSize(PROFESSIONAL.getId());
 
         Assert.assertEquals(TOTAL_REVIEW_COUNT_PRO, size);
     }
@@ -464,7 +464,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindNonExistingProfessionalReviewsSize() {
 
-        int size = reviewDaoJpa.findProfessionalReviewsSize(NON_EXISTENT_ID);
+        int size = reviewDaoJpa.findReviewsByProIdSize(NON_EXISTENT_ID);
 
         Assert.assertEquals(0, size);
     }
@@ -472,7 +472,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindMaxPageReviewsByPostId() {
 
-        int maxPage = reviewDaoJpa.findMaxPageReviewsByPostId(JOB_POST.getId());
+        int maxPage = reviewDaoJpa.findReviewsByPostIdMaxPage(JOB_POST.getId());
 
         Assert.assertEquals(MAX_PAGE_FOR_POST, maxPage);
     }
@@ -480,7 +480,7 @@ public class ReviewDaoJpaTest {
     @Test
     public void testFindMaxPageReviewsByNonExistingPostId() {
 
-        int maxPage = reviewDaoJpa.findMaxPageReviewsByPostId(NON_EXISTENT_ID);
+        int maxPage = reviewDaoJpa.findReviewsByPostIdMaxPage(NON_EXISTENT_ID);
 
         Assert.assertEquals(0, maxPage);
     }

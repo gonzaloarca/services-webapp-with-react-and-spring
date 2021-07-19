@@ -175,7 +175,7 @@ public class UserDaoJpaTest {
         String name = "pepe";
         String phone = "123123123";
 
-        Optional<User> maybeUser = userDaoJpa.updateUserById(USER1.getId(), name, phone);
+        Optional<UserWithImage> maybeUser = userDaoJpa.updateUserById(USER1.getId(), name, phone);
         em.flush();
 
         Assert.assertTrue(maybeUser.isPresent());
@@ -188,7 +188,7 @@ public class UserDaoJpaTest {
         String name = "pepe";
         String phone = "123123123";
 
-        Optional<User> maybeUser = userDaoJpa.updateUserById(NON_EXISTENT_ID, name, phone);
+        Optional<UserWithImage> maybeUser = userDaoJpa.updateUserById(NON_EXISTENT_ID, name, phone);
         em.flush();
 
         Assert.assertFalse(maybeUser.isPresent());
