@@ -108,6 +108,7 @@ const Login = () => {
               src={`${process.env.PUBLIC_URL}/img/log-in.svg`}
               alt={t('login.title')}
               loading="lazy"
+              className={classes.titleIcon}
             />
             <p className={classes.title}>{t('login.into')}</p>
           </div>
@@ -122,12 +123,15 @@ const Login = () => {
                   <Field
                     as={FormControl}
                     fullWidth
+                    size="small"
                     variant="filled"
                     name="email"
                     className={classes.FieldHeight}
                   >
-                    <InputLabel>{t('login.email')}</InputLabel>
-                    <FilledInput id="email" />
+                    <InputLabel className="text-sm">
+                      {t('login.email')}
+                    </InputLabel>
+                    <FilledInput className="text-sm font-medium" id="email" />
                     <FormHelperText>
                       <ErrorMessage name="email" />
                     </FormHelperText>
@@ -143,13 +147,12 @@ const Login = () => {
                   <div className="flex justify-between items-center mb-3">
                     <FormControlLabel
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      control={
-                        <BlueCheckBox
-                          id="remember-me"
-                          className={classes.rememberme}
-                        />
+                      control={<BlueCheckBox id="remember-me" />}
+                      label={
+                        <p className="text-sm font-medium">
+                          {t('login.rememberme')}
+                        </p>
                       }
-                      label={t('login.rememberme')}
                     />
                     {badCredentials ? (
                       <p className={classes.badCredentials}>
@@ -172,22 +175,32 @@ const Login = () => {
             </Formik>
             <div className={'flex justify-around'}>
               <span className={classes.bottomLabel}>
-                <p>{t('login.hasaccountquestion')}</p>
+                <p className="text-sm font-medium">
+                  {t('login.hasaccountquestion')}
+                </p>
                 <Link
                   component={RouterLink}
                   to="/register"
-                  className={classes.bottomLabelLink}
+                  className={clsx(
+                    classes.bottomLabelLink,
+                    'text-base font-semibold'
+                  )}
                 >
                   {t('login.getaccount')}
                 </Link>
               </span>
               <div className={classes.separator} />
               <span className={classes.bottomLabel}>
-                <p>{t('login.recoverquestion')}</p>
+                <p className="text-sm font-medium">
+                  {t('login.recoverquestion')}
+                </p>
                 <Link
                   component={RouterLink}
                   to="/recover"
-                  className={classes.bottomLabelLink}
+                  className={clsx(
+                    classes.bottomLabelLink,
+                    'text-base font-semibold'
+                  )}
                 >
                   {t('login.recover')}
                 </Link>

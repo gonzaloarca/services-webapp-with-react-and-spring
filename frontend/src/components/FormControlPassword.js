@@ -32,12 +32,13 @@ const FormControlPassword = ({
       as={TextField}
       variant="filled"
       fullWidth={fullWidth}
-      label={placeholder}
+      label={<p className="text-sm">{placeholder}</p>}
       name={variable}
+      size="small"
       required={required}
-	  onSubmit={onSubmit}
+      onSubmit={onSubmit}
       className={classes.FieldHeight}
-	  type={values.toggle ? 'text' : 'password'}
+      type={values.toggle ? 'text' : 'password'}
       helperText={<ErrorMessage name={variable}></ErrorMessage>}
       InputProps={{
         endAdornment: (
@@ -48,6 +49,9 @@ const FormControlPassword = ({
             {values.toggle ? <Visibility /> : <VisibilityOff />}
           </IconButton>
         ),
+        classes: {
+          input: 'text-sm font-medium',
+        },
       }}
     />
   );

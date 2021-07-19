@@ -4,7 +4,7 @@ const LoginAndRegisterStyles = (theme) => ({
   background: {
     width: '100%',
     height: '100vh',
-    paddingTop: '50px',
+    // paddingTop: '50px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -19,9 +19,12 @@ const LoginAndRegisterStyles = (theme) => ({
     color: 'white',
     fontWeight: 'bold',
   },
+  titleIcon: {
+    height: 25,
+  },
   title: {
     marginLeft: '15px',
-    fontSize: '1.7em',
+    fontSize: themeUtils.fontSizes.lg,
   },
   subtitle: {
     fontSize: '1.4em',
@@ -61,7 +64,11 @@ const LoginAndRegisterStyles = (theme) => ({
   },
   badCredentials: {
     color: 'red',
-	textAlign: 'center',
+    textAlign: 'center',
+  },
+  input: {
+    fontSize: themeUtils.fontSizes.sm,
+    fontWeight: 500,
   },
 });
 

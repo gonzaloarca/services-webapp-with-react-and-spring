@@ -87,6 +87,7 @@ const Register = () => {
             <img
               src={process.env.PUBLIC_URL + '/img/adduser.svg'}
               alt={t('register.title')}
+              className={classes.titleIcon}
               loading="lazy"
             />
             <p className={classes.title}>{t('register.into')}</p>
@@ -94,13 +95,15 @@ const Register = () => {
           <Card className={clsx(classes.customCard, classes.registerCard)}>
             {steps[currentStep]}
             <span className={classes.bottomLabel}>
-              <p>{t('register.alreadyhasaccount')}</p>
+              <p className="text-sm font-medium">
+                {t('register.alreadyhasaccount')}
+              </p>
               <Link
                 component={RouterLink}
                 to="/login"
                 className={classes.bottomLabelLink}
               >
-                {t('register.login')}
+                <p className="text-base font-semibold">{t('register.login')}</p>
               </Link>
             </span>
           </Card>
@@ -154,10 +157,15 @@ const StepOne = (props) => {
                 as={TextField}
                 variant="filled"
                 fullWidth
-                label={t('register.username')}
+                label={<p className="text-sm">{t('register.username')}</p>}
                 name="username"
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="username"></ErrorMessage>}
+                InputProps={{
+                  classes: {
+                    input: 'text-sm font-medium',
+                  },
+                }}
               />
             </Grid>
             <Grid item sm={5} xs={12}>
@@ -165,10 +173,15 @@ const StepOne = (props) => {
                 as={TextField}
                 variant="filled"
                 fullWidth
-                label={t('register.phone')}
+                label={<p className="text-sm">{t('register.phone')}</p>}
                 name="phone"
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="phone"></ErrorMessage>}
+                InputProps={{
+                  classes: {
+                    input: 'text-sm font-medium',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -176,10 +189,15 @@ const StepOne = (props) => {
                 as={TextField}
                 variant="filled"
                 fullWidth
-                label={t('register.email')}
+                label={<p className="text-sm">{t('register.email')}</p>}
                 name="email"
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="email"></ErrorMessage>}
+                InputProps={{
+                  classes: {
+                    input: 'text-sm font-medium',
+                  },
+                }}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
