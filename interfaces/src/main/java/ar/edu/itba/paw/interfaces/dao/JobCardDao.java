@@ -12,9 +12,9 @@ public interface JobCardDao {
 
     List<JobCard> findByUserId(long id, int page);
 
-    List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page);
+    List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, boolean withZone, int page);
 
-    List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, int page);
+    List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, boolean withZone, int page);
 
     Optional<JobCard> findByPostId(long id);
 
@@ -26,9 +26,9 @@ public interface JobCardDao {
 
     int findByUserIdMaxPage(long id);
 
-    int searchMaxPage(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes);
+    int searchMaxPage(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, boolean withZone);
 
-    int searchWithCategoryMaxPage(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes);
+    int searchWithCategoryMaxPage(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, boolean withZone);
 
     int findRelatedJobCardsMaxPage(long professional_id);
 }

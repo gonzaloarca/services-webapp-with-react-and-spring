@@ -137,13 +137,13 @@ public class SimpleJobContractServiceTest {
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
         Mockito.doReturn(states).when(mockContractService).getContractStates(Mockito.eq("pending"));
         Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService)
-                .findByProIdAndSortedByModificationDateWithImage(
-                        Mockito.eq(PROFESSIONAL.getId()), Mockito.eq(states), Mockito.eq(0));
+                .findByProIdAndSortedByModificationDate(
+                        Mockito.eq(PROFESSIONAL.getId()), Mockito.eq(states), Mockito.eq(1));
         Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 
         List<JobContractCard> jobContractCards = mockContractService
-                .findContracts(PROFESSIONAL.getId(), "pending", "professional", HirenetUtils.ALL_PAGES);
+                .findContracts(PROFESSIONAL.getId(), "pending", "professional", 1);
 
         Assert.assertFalse(jobContractCards.isEmpty());
         Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS), jobContractCards);
@@ -168,8 +168,8 @@ public class SimpleJobContractServiceTest {
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
         Mockito.doReturn(states).when(mockContractService).getContractStates(Mockito.eq("pending"));
         Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService)
-                .findByClientIdAndSortedByModificationDateWithImage(
-                        Mockito.eq(CLIENT.getId()), Mockito.eq(states), Mockito.eq(0));
+                .findByClientIdAndSortedByModificationDate(
+                        Mockito.eq(CLIENT.getId()), Mockito.eq(states), Mockito.eq(1));
         Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 

@@ -81,7 +81,7 @@ const HeroStyles = (theme) => ({
     flexWrap: 'wrap',
     [theme.breakpoints.up('sm')]: {
       height: '20vh',
-    }
+    },
   },
   stepContainer: {
     position: 'relative',
@@ -120,9 +120,9 @@ const HeroStyles = (theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   zoneErrorMessage: {
-	  fontSize: '1.25rem',
-	  color: 'white !important',
-	  fontWeight: 'bold',
+    fontSize: '1rem',
+    color: 'white !important',
+    fontWeight: 600,
   },
 });
 

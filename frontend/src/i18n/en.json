@@ -22,7 +22,10 @@
       "error": "Error",
       "pagenotfound": "Page not found"
     },
-    "search": "Search..."
+    "search": "Search...",
+    "profile": "My profile",
+    "account": "My account",
+    "logout": "Log out"
   },
   "title": "{{section}} | HireNet",
   "defaulttitle": "HireNet",
@@ -49,7 +52,7 @@
       "size": "The file size must be less than {{size}}MB",
       "type": "The file type must be PNG or JPG"
     },
-    "zone": "Please select your location",
+    "zone": "Please select your location first",
     "rating": "Please enter your rating",
     "multipleimages": {
       "type": "All files must be JPG or PNG",
@@ -70,6 +73,7 @@
     "explore": "Explore service categories",
     "morecategories": "See more",
     "newest": "Newest services",
+    "viewall": "View all",
     "publishbanner": {
       "question": "Do you wish to publish your services on our site?",
       "answer": "Start now",
@@ -79,7 +83,10 @@
   },
   "jobpost": {
     "seereviews": "See reviews",
-    "noreviews": "This service does not have any reviews yet"
+    "noreviews": "This service does not have any reviews yet",
+    "edit": "Edit service",
+    "delete": "Delete service",
+    "managepacks": "Manage packages"
   },
   "jobcard": {
     "noreviews": "No reviews",
@@ -189,7 +196,7 @@
     "login": "Log In",
     "passwordChanged": "Password changed successfully!",
     "changedinstructions": "Please log in to continue using the site.",
-	"error": "An error has occurred, please try again"
+    "error": "An error has occurred, please try again"
   },
   "verifyemail": {
     "title": "Email verification",
@@ -456,15 +463,18 @@
     "jobtypeplaceholder": "Search services...",
     "filters": "Filters",
     "categories": "Categories",
-    "results": "Services found",
-    "zoneresults": "Results in {{zone}}",
-    "queryresults": "Results for {{query}}",
-    "query&zoneresults": "Results for {{query}} in {{zone}}",
+    "results": "Showing all services",
+    "zoneresults": "Showing services in <zonecontainer><icon></icon>{{zone}}</zonecontainer>",
+    "queryresults": "<regular>Showing reuslts for</regular> <bold>{{query}}</bold>",
+    "query&zoneresults": "<regular>Showing results for</regular> <bold>{{query}}</bold><zonecontainer>in <bottom><icon></icon> {{zone}}</bottom></zonecontainer>",
     "badquery": "Search error",
     "filteringby": "Active filter:",
-    "noresults": "No results for your search at the moment",
+    "noresults": "No results for your search",
     "sorry": "Sorry for the inconvenience",
-    "orderby": "Order by"
+    "orderby": "Order by",
+    "criteria": "Criteria",
+    "location": "Search by location",
+    "alllocations": "All locations"
   },
   "nonselected": "None",
   "analytics": {

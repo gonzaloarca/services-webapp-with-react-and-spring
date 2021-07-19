@@ -5,14 +5,21 @@ import {
   registerRequest,
   verifyEmailRequest,
   getRankingsRequest,
+  getRatesRequest,
   getProfessionalInfoRequest,
   recoverAccountRequest,
   recoverPassRequest,
 } from '../api/usersApi';
+
+const fallbackAvatar = process.env.PUBLIC_URL + '/img/defaultavatar.svg';
+
 const useUserHook = () => {
   const getUserByEmail = async (email) => {
     const response = await getUserByEmailRequest(email);
-    return response.data;
+    return {
+      ...response.data,
+      image: response.data.image ? response.data.image : fallbackAvatar,
+    };
   };
 
   const login = async ({ email, password }) => {
@@ -22,7 +29,10 @@ const useUserHook = () => {
 
   const getUserById = async (id) => {
     const response = await getUserByIdRequest(id);
-    return response.data;
+    return {
+      ...response.data,
+      image: response.data.image ? response.data.image : fallbackAvatar,
+    };
   };
 
   const register = async (newUser) => {
@@ -43,9 +53,17 @@ const useUserHook = () => {
     return response.data;
   };
 
+  const getRates = async (userId) => {
+    const response = await getRatesRequest(userId);
+    return response.data;
+  };
+
   const getProfessionalInfo = async (userId) => {
     const response = await getProfessionalInfoRequest(userId);
-    return response.data;
+    return {
+      ...response.data,
+      image: response.data.image ? response.data.image : fallbackAvatar,
+    };
   };
 
   const recoverAccount = async (data) => {
@@ -68,6 +86,7 @@ const useUserHook = () => {
     register,
     verifyEmail,
     getRankings,
+    getRates,
     getProfessionalInfo,
     recoverAccount,
     recoverPass,

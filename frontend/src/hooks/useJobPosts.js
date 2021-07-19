@@ -4,6 +4,7 @@ import {
   getJobPostByIdRequest,
   createJobPostRequest,
   addPostImageRequest,
+  editJobPostRequest,
 } from '../api/jobPostsApi';
 import categoryImageMap from '../utils/categories';
 import parse from 'parse-link-header';
@@ -83,10 +84,34 @@ const useJobPostsHook = () => {
     return response.headers.location;
   };
 
+  const editJobPost = async (data, postId) => {
+    const jobPost = {
+      active: true,
+      availableHours: data.hours,
+      jobType: data.category,
+      title: data.title,
+      zones: data.locations,
+    };
+    return await editJobPostRequest(jobPost, postId);
+  };
+
+  const deleteJobPost = async (jobPost) => {
+    const jobPostOut = {
+      active: false,
+      availableHours: jobPost.availableHours,
+      jobType: jobPost.jobType.id,
+      title: jobPost.title,
+      zones: jobPost.zones.map((zone) => zone.id),
+    };
+    return await editJobPostRequest(jobPostOut, jobPost.id);
+  };
+
   return {
     getJobPosts,
     getJobPostById,
     createJobPost,
+    editJobPost,
+    deleteJobPost,
     links,
   };
 };

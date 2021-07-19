@@ -22,7 +22,10 @@
       "error": "Error",
       "pagenotfound": "Página no encontrada"
     },
-    "search": "Buscar..."
+    "search": "Buscar...",
+    "profile": "Mi perfil",
+    "account": "Mi cuenta",
+    "logout": "Cerrar sesión"
   },
   "title": "{{section}} | HireNet",
   "defaulttitle": "HireNet",
@@ -49,7 +52,7 @@
       "size": "El tamaño del archivo debe ser menor que {{size}}MB",
       "type": "El archivo debe ser de tipo PNG o JPG"
     },
-    "zone": "Por favor, seleccione su ubicación",
+    "zone": "Primero seleccione su ubicación",
     "rating": "Debe ingresar un puntaje",
     "multipleimages": {
       "type": "Los archivos deben ser todos JPG o PNG",
@@ -70,6 +73,7 @@
     "explore": "Explorar categorías de servicios",
     "morecategories": "Ver más",
     "newest": "Servicios más recientes",
+    "viewall": "Ver todos",
     "publishbanner": {
       "question": "¿Desea publicar su servicio en nuestro sitio?",
       "answer": "Hágalo ahora mismo",
@@ -79,7 +83,10 @@
   },
   "jobpost": {
     "seereviews": "Ver reseñas",
-    "noreviews": "Este servicio todavía no tiene ninguna reseña"
+    "noreviews": "Este servicio todavía no tiene ninguna reseña",
+    "edit": "Editar publicación",
+    "delete": "Borrar publicación",
+    "managepacks": "Administrar paquetes"
   },
   "jobcard": {
     "noreviews": "Sin calificaciones",
@@ -193,7 +200,7 @@
     "login": "Iniciar Sesión",
     "passwordChanged": "¡Contraseña cambiada correctamente!",
     "changedinstructions": "Inicie sesión para continuar utilizando la página.",
-	"error": "Ocurrio un error, porfavor intente de nuevo"
+    "error": "Ocurrio un error, porfavor intente de nuevo"
   },
   "verifyemail": {
     "title": "Verificación de email",
@@ -457,15 +464,18 @@
     "jobtypeplaceholder": "Buscar un servicio...",
     "filters": "Filtros",
     "categories": "Categorias",
-    "results": "Servicios encontrados",
-    "zoneresults": "Resultados en {{zone}}",
-    "queryresults": "Resultados para {{query}}",
-    "query&zoneresults": "Resultados para {{category}} en {{zone}}",
+    "results": "Mostrando todos los servicios",
+    "zoneresults": "Mostrando servicios <zonecontainer>para <icon/>{{zone}}</zonecontainer>",
+    "queryresults": "<regular>Mostrando resultados para</regular> <bold>{{query}}</bold>",
+    "query&zoneresults": "<regular>Resultados para</regular> <bold>{{query}}</bold> <zonecontainer>en <bottom><icon></icon>{{zone}}</bottom></zonecontainer>",
     "badquery": "Error en la busqueda",
     "filteringby": "Filtrando por:",
-    "noresults": "No hay resultados para su búsqueda en este momento",
+    "noresults": "No hay resultados para la búsqueda",
     "sorry": "Disculpe las molestias",
-    "orderby": "Ordenar por"
+    "orderby": "Ordenar por",
+    "criteria": "Criterio",
+    "location": "Buscar por ubicación",
+    "alllocations": "Todas las ubicaciones"
   },
   "nonselected": "Ninguno",
   "analytics": {

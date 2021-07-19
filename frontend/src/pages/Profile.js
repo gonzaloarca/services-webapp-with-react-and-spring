@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import styles from '../styles';
 import {
@@ -19,118 +19,16 @@ import { themeUtils } from '../theme';
 import TabPanel from '../components/TabPanel';
 import ServiceCard from '../components/ServiceCard';
 import ReviewCard from '../components/ReviewCard';
-import { Rating } from '@material-ui/lab';
+import { Rating, Skeleton } from '@material-ui/lab';
 import AverageRatingCard from '../components/AverageRatingCard';
 import TimesHiredCard from '../components/TimesHiredCard';
 import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-
-const professional = {
-  'contractsCompleted': 3,
-  'reviewAvg': 3.0,
-  'reviewsQuantity': 2,
-  'user': {
-    'id': 5,
-    'uri': 'http://localhost:8080/users/5',
-  },
-};
-
-const user = {
-  'email': 'manaaasd@gmail.com',
-  'id': 5,
-  'phone': '03034560',
-  'roles': ['CLIENT', 'PROFESSIONAL'],
-  'username': 'Manuel Rodriguez',
-  'image':
-    'https://i.pinimg.com/474x/ec/e4/89/ece489af93d39071a6e23bd6b93766a3.jpg',
-};
-
-const jobCard = {
-  'avgRate': 4.666666666666667,
-  'contractsCompleted': 4,
-  'imageUrl': '/img/plumbing.jpeg',
-  'jobPost': {
-    'id': 1,
-    'uri': 'http://localhost:8080/job-posts/1',
-  },
-  'jobType': {
-    'description': 'PLUMBING',
-    'id': 0,
-  },
-  'price': 160.0,
-  'rateType': {
-    'description': 'HOURLY',
-    'id': 0,
-  },
-  'reviewsCount': 3,
-  'title': 'Plomería de excelente calidad',
-  'zones': [
-    {
-      'description': 'RETIRO',
-      'id': 28,
-    },
-    {
-      'description': 'PALERMO',
-      'id': 21,
-    },
-    {
-      'description': 'NUNIEZ',
-      'id': 20,
-    },
-    {
-      'description': 'COLEGIALES',
-      'id': 9,
-    },
-    {
-      'description': 'BELGRANO',
-      'id': 4,
-    },
-  ],
-};
-
-const reviews = [
-  {
-    creationDate: '2021-05-02T18:22:21.684413',
-    description: 'EL MEJOR NIÑERO',
-    client: {
-      username: 'El Beto',
-      image: '/img/babysitting.jpeg',
-    },
-    jobPost: {
-      title: 'Niñero turno mañana',
-      id: 3,
-    },
-    jobContract: {
-      id: 1,
-      uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/1',
-    },
-    rate: 5,
-    title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
-  },
-  {
-    creationDate: '2021-10-02T18:22:21.684413',
-    description: 'EL MEJOR NIÑERO',
-    client: {
-      username: 'El Beto',
-      image: '/img/babysitting.jpeg',
-    },
-    jobPost: {
-      title: 'Niñero turno mañana',
-      id: 3,
-    },
-    jobContract: {
-      id: 2,
-      uri: 'http://localhost:8080/job-posts/3/packages/8/contracts/2',
-    },
-    rate: 3,
-    title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
-  },
-];
-
-const services = [jobCard, jobCard];
-
-//  TODO: levantar cantidad de servicios de un professional de algun dto
-const postCount = 5;
+import { useReviews, useUser } from '../hooks';
+import { isProfessional } from '../utils/userUtils.js';
+import { UserContext } from '../context';
+import { useJobCards } from '../hooks';
+import BottomPagination from '../components/BottomPagination';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -175,6 +73,30 @@ const Profile = ({ match }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
+  const history = useHistory();
+  const [loadingData, setLoadingData] = useState(true);
+  const { getProfessionalInfo, getUserById } = useUser();
+  const [values, setValues] = useState({
+    userInfo: {},
+    proInfo: {},
+  });
+
+  const loadData = async (id) => {
+    try {
+      setValues({
+        userInfo: await getUserById(id),
+        proInfo: await getProfessionalInfo(id),
+      });
+      setLoadingData(false);
+    } catch (error) {
+      console.log(error);
+      history.push('/');
+    }
+  };
+
+  useEffect(() => {
+    loadData(match.params.id);
+  }, []);
 
   return (
     <>
@@ -182,21 +104,28 @@ const Profile = ({ match }) => {
         <title>
           {t('title', {
             section: t('navigation.sections.profile', {
-              username: user.username,
+              username: values?.userInfo.username,
             }),
           })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/search'} />
+      <NavBar />
       <div className={globalClasses.contentContainerTransparent}>
         <Grid container spacing={3}>
           <Grid item sm={3} xs={12}>
-            <UserInfo />
+            <UserInfo values={values} loadingData={loadingData} />
           </Grid>
           <Grid item sm={9} xs={12}>
-            <Card classes={{ root: classes.card }}>
-              <ProfileTabs />
-            </Card>
+            {loadingData ? (
+              <Skeleton height={600} />
+            ) : (
+              <Card classes={{ root: classes.card }}>
+                <ProfileTabs
+                  details={values.proInfo}
+                  proId={values.userInfo.id}
+                />
+              </Card>
+            )}
           </Grid>
         </Grid>
       </div>
@@ -204,7 +133,7 @@ const Profile = ({ match }) => {
   );
 };
 
-const UserInfo = () => {
+const UserInfo = ({ values, loadingData }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -212,37 +141,62 @@ const UserInfo = () => {
     <Grid container spacing={3}>
       <Grid item sm={12} className="w-full">
         <Card classes={{ root: classes.card }}>
-          <CardMedia
-            className={classes.avatarImage}
-            image={user.image}
-            title="Imagen del usuario"
-          />
-          <div className="p-3">
-            <div className="font-bold text-2xl">{user.username}</div>
-            <div className="font-extralight">
-              {user.roles.includes('PROFESSIONAL')
-                ? t('professional')
-                : t('client')}
-            </div>
-          </div>
+          {loadingData ? (
+            <Skeleton variant="rect" height={300} />
+          ) : (
+            <>
+              <CardMedia
+                className={classes.avatarImage}
+                image={values.userInfo.image}
+                title="Imagen del usuario"
+              />
+              <div className="p-3">
+                <div className="font-bold text-2xl">
+                  {values.userInfo.username}
+                </div>
+                <div className="font-extralight">
+                  {isProfessional(values.userInfo)
+                    ? t('professional')
+                    : t('client')}
+                </div>
+              </div>
+            </>
+          )}
         </Card>
       </Grid>
       <Grid item sm={12} className="w-full">
-        <AverageRatingCard
-          reviewAvg={professional.reviewAvg}
-          reviewsQuantity={professional.reviewsQuantity}
-        />
+        {loadingData ? (
+          <Skeleton variant="rect" height={100} />
+        ) : (
+          <AverageRatingCard
+            reviewAvg={values.proInfo.reviewAvg}
+            reviewsQuantity={values.proInfo.reviewsQuantity}
+          />
+        )}
       </Grid>
       <Grid item sm={12} className="w-full">
-        <TimesHiredCard count={professional.contractsCompleted} />
+        {loadingData ? (
+          <Skeleton variant="rect" height={100} />
+        ) : (
+          <TimesHiredCard count={values.proInfo.contractsCompleted} />
+        )}
       </Grid>
     </Grid>
   );
 };
 
-const ProfileTabs = () => {
+const ProfileTabs = ({ details, proId }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const { getReviewsByProId, reviewsLinks } = useReviews();
+  const [reviews, setReviews] = useState();
+  const [queryParams, setQueryParams] = useState({ page: '1' });
+  const [reviewsMaxPage, setReviewsMaxPage] = useState(1);
+  const { getJobCardsByProId, jobCardsLinks } = useJobCards();
+  const [jobCards, setJobCards] = useState([]);
+  const [jobCardsMaxPage, setJobCardsMaxPage] = useState(1);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [loadingJobCards, setLoadingJobcards] = useState(true);
 
   const tabPaths = ['services', 'reviews'];
 
@@ -260,12 +214,52 @@ const ProfileTabs = () => {
     history.replace(`/profile/${id}/${tabPaths[0]}`);
   }
 
-  const [tabValue, setTabValue] = React.useState(initialTab);
+  const [tabValue, setTabValue] = useState(initialTab);
 
   const handleChange = (event, newValue) => {
+    // event es necesario para que funcione las tabs
     setTabValue(newValue);
     history.push(`/profile/${id}/${tabPaths[newValue]}`);
   };
+
+  const loadJobCards = async () => {
+    try {
+      setJobCards(
+        await getJobCardsByProId({ proId: proId, page: queryParams.page })
+      );
+      setJobCardsMaxPage(
+        parseInt(jobCardsLinks?.last?.page) ||
+          parseInt(jobCardsLinks?.prev?.page)
+      );
+      setLoadingJobcards(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadJobCards();
+  }, [queryParams]);
+
+  const loadReviews = async () => {
+    if (details.reviewsQuantity > 0) {
+      try {
+        setReviews(await getReviewsByProId(proId, queryParams.page));
+        setReviewsMaxPage(
+          parseInt(reviewsLinks?.last?.page) ||
+            parseInt(reviewsLinks?.prev?.page)
+        );
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+    }
+    setLoadingReviews(false);
+  };
+
+  useEffect(() => {
+    loadReviews();
+  }, [queryParams]);
 
   return (
     <>
@@ -278,37 +272,59 @@ const ProfileTabs = () => {
         >
           <Tab
             label={
-              <div className="flex items-center justify-center">
-                <CircleIcon
-                  className="mr-2"
-                  color={themeUtils.colors.lightBlue}
-                  size="2rem"
-                >
-                  <Work className="text-white" />
-                </CircleIcon>
-                {t('profile.services', { count: postCount })}
-              </div>
+              loadingJobCards ? (
+                <Skeleton height={100} width={300} />
+              ) : (
+                <div className="flex items-center justify-center">
+                  <CircleIcon
+                    className="mr-2"
+                    color={themeUtils.colors.lightBlue}
+                    size="2rem"
+                  >
+                    <Work className="text-white" />
+                  </CircleIcon>
+                  {t('profile.services', { count: jobCards?.length })}
+                </div>
+              )
             }
           />
           <Tab
             label={
-              <div className="flex items-center justify-center">
-                <CircleIcon
-                  className="mr-2"
-                  color={themeUtils.colors.yellow}
-                  size="2rem"
-                >
-                  <Grade className="text-white" />
-                </CircleIcon>
-                {t('profile.reviews', { count: professional.reviewsQuantity })}
-              </div>
+              loadingReviews ? (
+                <Skeleton height={100} width={300} />
+              ) : (
+                <div className="flex items-center justify-center">
+                  <CircleIcon
+                    className="mr-2"
+                    color={themeUtils.colors.yellow}
+                    size="2rem"
+                  >
+                    <Grade className="text-white" />
+                  </CircleIcon>
+                  {t('profile.reviews', {
+                    count: details.reviewsQuantity || 0,
+                  })}
+                </div>
+              )
             }
           />
         </Tabs>
       </AppBar>
 
       <TabPanel value={tabValue} index={0}>
-        {services.length === 0 ? (
+        {loadingJobCards ? (
+          <Grid container spacing={1}>
+            <Grid item sm={12} className="flex justify-center">
+              <Skeleton height={300} width={700} />
+            </Grid>
+            <Grid item sm={12} className="flex justify-center">
+              <Skeleton height={300} width={700} />
+            </Grid>
+            <Grid item sm={12} className="flex justify-center">
+              <Skeleton height={300} width={700} />
+            </Grid>
+          </Grid>
+        ) : jobCards?.length === 0 ? (
           <div className={classes.noContentContainer}>
             <img
               src={process.env.PUBLIC_URL + '/img/job-1.svg'}
@@ -320,13 +336,20 @@ const ProfileTabs = () => {
             </h3>
           </div>
         ) : (
-          services.map((service, index) => {
-            return <ServiceCard jobCard={service} key={index} />;
-          })
+          <>
+            {jobCards?.map((jobCard, index) => {
+              return <ServiceCard jobCard={jobCard} key={index} />;
+            })}
+            <BottomPagination
+              maxPage={jobCardsMaxPage}
+              setQueryParams={setQueryParams}
+              queryParams={queryParams}
+            />
+          </>
         )}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        {professional.reviewsQuantity === 0 ? (
+        {details.reviewsQuantity === 0 ? (
           <div className={classes.noContentContainer}>
             <img
               src={process.env.PUBLIC_URL + '/img/star-1.svg'}
@@ -343,12 +366,12 @@ const ProfileTabs = () => {
               <Grid item sm={6} xs={12} className="flex justify-center">
                 <div className="flex flex-col justify-center items-end">
                   <div className="font-medium text-7xl">
-                    {professional.reviewAvg.toFixed(2)}
+                    {details.reviewAvg?.toFixed(2) || 0}
                   </div>
-                  <Rating readOnly value={professional.reviewAvg} />
+                  <Rating readOnly value={details.reviewAvg || 0} />
                   <div>
                     {t('profile.ratecount', {
-                      count: professional.reviewsQuantity,
+                      count: details.reviewsQuantity || 0,
                     })}
                   </div>
                 </div>
@@ -359,16 +382,38 @@ const ProfileTabs = () => {
                 xs={12}
                 className="flex flex-col justify-center items-center"
               >
-                <ReviewsDistribution />
+                <ReviewsDistribution
+                  reviewsQuantity={details.reviewsQuantity || 0}
+                  userId={proId}
+                />
               </Grid>
             </Grid>
 
             <Divider />
-            {reviews.map((review) => (
-              <div key={review.jobContract.id}>
-                <ReviewCard review={review} />
-              </div>
-            ))}
+            {loadingReviews ? (
+              <Grid container spacing={1}>
+                <Grid sm={12} className="flex justify-center">
+                  <Skeleton height={300} width={700} />
+                </Grid>
+                <Grid sm={12} className="flex justify-center">
+                  <Skeleton height={300} width={700} />
+                </Grid>
+                <Grid sm={12} className="flex justify-center">
+                  <Skeleton height={300} width={700} />
+                </Grid>
+              </Grid>
+            ) : (
+              reviews?.map((review) => (
+                <div key={review.jobContract.id}>
+                  <ReviewCard review={review} />
+                </div>
+              ))
+            )}
+            <BottomPagination
+              maxPage={reviewsMaxPage}
+              setQueryParams={setQueryParams}
+              queryParams={queryParams}
+            />
           </>
         )}
       </TabPanel>
@@ -376,25 +421,52 @@ const ProfileTabs = () => {
   );
 };
 
-const ReviewsDistribution = () => {
-  let distribution = [0, 0, 0, 0, 0];
+const ReviewsDistribution = ({ reviewsQuantity, userId }) => {
+  const { getRates } = useUser();
+  const [distribution, setDistribution] = useState([]);
+  const [loadingData, setLoadingData] = useState(true);
 
-  reviews.forEach((review) => {
-    distribution[review.rate - 1]++;
-  });
+  const loadData = async (userId) => {
+    try {
+      const rates = await getRates(userId);
+      setDistribution([
+        rates['one'],
+        rates['two'],
+        rates['three'],
+        rates['four'],
+        rates['five'],
+      ]);
+      setLoadingData(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData(userId);
+  }, []);
 
   return (
     <>
-      <ReviewCountComponent stars={5} count={distribution[5 - 1]} />
-      <ReviewCountComponent stars={4} count={distribution[4 - 1]} />
-      <ReviewCountComponent stars={3} count={distribution[3 - 1]} />
-      <ReviewCountComponent stars={2} count={distribution[2 - 1]} />
-      <ReviewCountComponent stars={1} count={distribution[1 - 1]} />
+      {loadingData ? (
+        <Skeleton width={280} height={200} />
+      ) : (
+        [1, 2, 3, 4, 5].map((rate) => {
+          return (
+            <ReviewCountComponent
+              key={rate}
+              stars={5 - rate + 1}
+              count={distribution[5 - rate]}
+              reviewsQuantity={reviewsQuantity}
+            />
+          );
+        })
+      )}
     </>
   );
 };
 
-const ReviewCountComponent = ({ stars, count }) => {
+const ReviewCountComponent = ({ stars, count, reviewsQuantity }) => {
   const { t } = useTranslation();
 
   return (
@@ -407,7 +479,7 @@ const ReviewCountComponent = ({ stars, count }) => {
       <Grid item sm={6} xs={6} className="flex flex-col justify-center">
         <LinearProgress
           variant="determinate"
-          value={(100 * count) / professional.reviewsQuantity}
+          value={(100 * count) / reviewsQuantity}
           color="secondary"
           className="rounded"
         />

@@ -13,6 +13,7 @@ import {
   Divider,
   FormControl,
   FormHelperText,
+  Grid,
   InputLabel,
   makeStyles,
   MenuItem,
@@ -26,7 +27,7 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { Form, Formik, ErrorMessage } from 'formik';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
 import LocationList from '../components/LocationList';
@@ -37,13 +38,10 @@ import { themeUtils } from '../theme';
 import createJobPostStyles from './CreateJobPostStyles';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
-
-const jobPost = {
-  'availableHours': 'Lunes a viernes entre las 8am y 2pm',
-  'jobType': 3,
-  'title': 'Niñero turno mañana',
-  'zones': [25, 20, 9, 10, 11, 12],
-};
+import { useJobPosts, useUser } from '../hooks';
+import { extractLastIdFromURL } from '../utils/urlUtils';
+import { UserContext, ConstantDataContext } from '../context';
+import { Skeleton } from '@material-ui/lab';
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -221,45 +219,71 @@ const getStepContent = (step, formRef, handleNext, data) => {
   }
 };
 
-// TODO: esto viene de la API?
-const jobTypes = [
-  {
-    id: 0,
-    description: 'Plumbing',
-  },
-  {
-    id: 1,
-    description: 'Carpentry',
-  },
-  {
-    id: 2,
-    description: 'Painting',
-  },
-  {
-    id: 3,
-    description: 'Babysitting',
-  },
-  {
-    id: 4,
-    description: 'Electricity',
-  },
-  {
-    id: 5,
-    description: 'Other',
-  },
-];
-
 const EditJobPost = ({ match, history }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
 
+  const { getJobPostById, editJobPost } = useJobPosts();
+  const { getUserById } = useUser();
+  const { currentUser } = useContext(UserContext);
+
+  const [loading, setLoading] = useState(true);
+  const [postId, setPostId] = useState(match.params.id);
+  const [jobPost, setJobPost] = useState(null);
+  const [proUser, setProUser] = useState(null);
+
+  const loadJobPost = async () => {
+    try {
+      const jobPost = await getJobPostById(postId);
+      setJobPost(jobPost);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const loadProUser = async () => {
+    try {
+      const proId = extractLastIdFromURL(jobPost.professional);
+      const pro = await getUserById(proId);
+      setProUser(pro);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    if (jobPost) {
+      loadProUser();
+    }
+  }, [jobPost]);
+
   const [data, setData] = React.useState({
-    category: jobPost.jobType,
-    title: jobPost.title,
-    hours: jobPost.availableHours,
-    locations: jobPost.zones,
+    category: '',
+    title: '',
+    hours: '',
+    locations: '',
   });
+
+  useEffect(() => {
+    if (jobPost && proUser) {
+      if (!currentUser || currentUser.id !== proUser.id)
+        history.replace(`/job/${jobPost.id}`);
+
+      setData({
+        category: jobPost.jobType.id,
+        title: jobPost.title,
+        hours: jobPost.availableHours,
+        locations: jobPost.zones.map((zone) => zone.id),
+      });
+
+      setLoading(false);
+    }
+  }, [jobPost, proUser]);
+
+  useEffect(() => {
+    loadJobPost();
+  }, [postId]);
 
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -280,11 +304,15 @@ const EditJobPost = ({ match, history }) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const makeRequest = (newData) => {
+  const makeRequest = async (newData) => {
     setDisableSubmit(true);
-    console.log(newData);
-    //TODO: Registrar con la API
-    history.push(`/job/${match.params.id}/success/edit`);
+    try {
+      await editJobPost(newData, jobPost.id);
+      history.push(`/job/${jobPost.id}/success/edit`);
+    } catch (e) {
+      console.log(e);
+      setDisableSubmit(false);
+    }
   };
 
   const formRef = React.useRef();
@@ -295,10 +323,6 @@ const EditJobPost = ({ match, history }) => {
     }
   };
 
-  // const handleReset = () => {
-  //   setActiveStep(0);
-  // };
-
   return (
     <>
       <Helmet>
@@ -307,27 +331,33 @@ const EditJobPost = ({ match, history }) => {
         </title>
       </Helmet>
       <NavBar currentSection={'/create-job-post'} />
-
-      <div className={globalClasses.contentContainerTransparent}>
-        <SectionHeader sectionName={t('editjobpost')} />
-        <Stepper
-          className={classes.stepperContainer}
-          alternativeLabel
-          activeStep={activeStep}
-          connector={<HirenetConnector />}
-        >
-          {steps.map(({ label }) => (
-            <Step key={label}>
-              <StepLabel StepIconComponent={HirenetStepIcon}>
-                <p className="text-sm font-semibold">{t(label)}</p>
-              </StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        <div>
-          {activeStep === steps.length ? (
-            <div>Submitting form...</div>
-          ) : (
+      {loading ? (
+        <Grid container spacing={3} className="mt-10">
+          <Grid item md={12} className="flex justify-center">
+            <Skeleton item md={12} variant="rect" width={1000} height={200} />
+          </Grid>
+          <Grid item md={12} className="flex justify-center">
+            <Skeleton item md={12} variant="rect" width={1000} height={200} />
+          </Grid>
+        </Grid>
+      ) : (
+        <div className={globalClasses.contentContainerTransparent}>
+          <SectionHeader sectionName={t('editjobpost')} />
+          <Stepper
+            className={classes.stepperContainer}
+            alternativeLabel
+            activeStep={activeStep}
+            connector={<HirenetConnector />}
+          >
+            {steps.map(({ label }) => (
+              <Step key={label}>
+                <StepLabel StepIconComponent={HirenetStepIcon}>
+                  <p className="text-sm font-semibold">{t(label)}</p>
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <div>
             <div>
               {getStepContent(activeStep, formRef, handleNext, data)}
 
@@ -347,14 +377,14 @@ const EditJobPost = ({ match, history }) => {
                   disabled={disableSubmit}
                 >
                   {activeStep === steps.length - 1
-                    ? t('createjobpost.publish')
+                    ? t('editpackage.submit')
                     : t('createjobpost.next')}
                 </Button>
               </div>
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
@@ -380,6 +410,8 @@ const PublishStep = ({ step, color, title, children }) => {
 const CategoryStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const { categories: jobTypes } = useContext(ConstantDataContext);
 
   const handleSubmit = (values) => {
     handleNext(values);
@@ -558,15 +590,13 @@ const JobSummary = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const category = jobTypes[data.category]; //TODO obtener el objeto category aca
+  const { categories: jobTypes, zones } = useContext(ConstantDataContext);
+
+  const category = jobTypes[data.category];
   const locations = [];
 
   data.locations.forEach((location) => {
-    // TODO location es solo el id de la zona, obtener el objeto de la API aca
-    locations.push({
-      id: 0,
-      description: 'Recoleta',
-    });
+    locations.push(zones.find((zone) => zone.id === location));
   });
 
   const handleSubmit = (values) => {
