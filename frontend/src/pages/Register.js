@@ -36,7 +36,7 @@ const Register = () => {
       await register({ ...newData });
       history.push('/register/success');
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       if (error.response.status === 409) {
         handlePrevStep(newData);
         setData({ ...newData, badCredentials: true });

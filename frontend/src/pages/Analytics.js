@@ -13,7 +13,7 @@ import { UserContext } from '../context';
 import { useUser } from '../hooks';
 import { useJobCards } from '../hooks';
 import BottomPagination from '../components/BottomPagination';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { parse } from 'query-string';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 const useGlobalStyles = makeStyles(styles);
 
-const Analytics = () => {
+const Analytics = ({ history }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
@@ -59,7 +59,7 @@ const Analytics = () => {
         info: await getProfessionalInfo(id),
       });
     } catch (error) {
-      console.log(error);
+      history.replace('/404');
     }
   };
 
@@ -152,11 +152,13 @@ const ClientsRecommendation = ({ userId }) => {
   const [jobCards, setJobCards] = React.useState([]);
   const [maxPage, setMaxPage] = useState(1);
 
+  const history = useHistory();
+
   const loadData = async (userId) => {
     try {
       setJobCards(await relatedJobCards(userId));
     } catch (error) {
-      console.log(error);
+      history.replace('/error');
     }
   };
 

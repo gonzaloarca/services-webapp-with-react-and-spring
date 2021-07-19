@@ -47,7 +47,7 @@ const Login = () => {
       const user = await getUserByEmail(email);
       setCurrentUser(user);
     } catch (error) {
-      console.log( error);
+      history.replace('/error');
     }
   };
 
@@ -61,7 +61,7 @@ const Login = () => {
         setUserData(jwt(token).sub);
       }
     } catch (error) {
-      console.log( error);
+      history.replace('/error');
     }
   }, [token]);
 
@@ -84,7 +84,7 @@ const Login = () => {
       if (error.response.status === 401) {
         setBadCredentials(true);
       } else {
-        console.log( error);
+        history.replace('/error');
       }
       return;
     }

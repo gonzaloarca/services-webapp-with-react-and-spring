@@ -145,11 +145,11 @@ const Search = () => {
   };
 
   useEffect(() => {
-    setMaxPage(links.last?.page || links.prev?.page || 1);
+    setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page) || 1);
   }, [links]);
 
   useEffect(() => {
-    history.push(
+    history.replace(
       '/search?' +
         (queryParams.zone ? 'zone=' + queryParams.zone : '') +
         (queryParams.category ? '&category=' + queryParams.category : '') +

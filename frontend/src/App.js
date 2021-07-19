@@ -135,14 +135,13 @@ const App = () => {
     const sessionStorageToken = sessionStorage.getItem('token');
     if (localStorageToken && localStorageToken !== '') {
       const decoded = jwt(localStorageToken);
-      console.log(decoded);
       if (decoded.exp * 1000 <= Date.now()) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setToken(null);
         setCurrentUser(null);
       } else {
-        console.log('saving user in context', decoded.sub);
+        // console.log('saving user in context', decoded.sub);
         saveUserData(decoded.sub);
         setToken(localStorageToken);
       }
@@ -154,7 +153,7 @@ const App = () => {
         setToken(null);
         setCurrentUser(null);
       } else {
-        console.log('saving user in context', decoded.sub);
+        // console.log('saving user in context', decoded.sub);
         saveUserData(decoded.sub);
         setToken(sessionStorageToken);
       }

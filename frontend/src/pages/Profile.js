@@ -437,6 +437,8 @@ const ReviewsDistribution = ({ reviewsQuantity, userId }) => {
   const [distribution, setDistribution] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
+  const history = useHistory();
+
   const loadData = async (userId) => {
     try {
       const rates = await getRates(userId);
@@ -449,7 +451,7 @@ const ReviewsDistribution = ({ reviewsQuantity, userId }) => {
       ]);
       setLoadingData(false);
     } catch (error) {
-      console.log(error);
+      history.replace('/error');
     }
   };
 

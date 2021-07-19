@@ -140,7 +140,6 @@ const MyContracts = ({ history }) => {
         loadHiredContracts();
       }
     }
-    console.log('RELOAD');
   }, [activeState, activeTab, currentUser, reload, queryParams]);
 
   const handleChange = (_event, newValue) => {

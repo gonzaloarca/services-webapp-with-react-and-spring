@@ -96,7 +96,7 @@ const RecoverAccount = ({ history }) => {
                   </Field>
                   {statusCode === -1 ? (
                     <p className="text-sm mb-3">{t('recover.disclaimer')}</p>
-                  ) : statusCode < 300 ? (
+                  ) : statusCode < 400 ? (
                     <p className="text-sm mb-3" style={{ color: 'green' }}>
                       {t('recover.success')}
                     </p>
