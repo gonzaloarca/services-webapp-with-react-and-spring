@@ -12,6 +12,7 @@ import RatingDisplay from './RatingDisplay';
 import { Link } from 'react-router-dom';
 import PriceTag from './PriceTag';
 import { Check } from '@material-ui/icons';
+import { extractLastIdFromURL } from '../utils/urlUtils';
 
 const useStyles = makeStyles(contractCardStyles);
 
@@ -21,7 +22,7 @@ const ServiceCard = ({ jobCard }) => {
 
   return (
     <Card className={classes.contractCard}>
-      <Link to={`/job/${jobCard.jobPost.id}`} className={classes.contractTitle}>
+      <Link to={`/job/${extractLastIdFromURL(jobCard.jobPost)}`} className={classes.contractTitle}>
         <CardActionArea>
           <Grid className="p-4 pr-4" container spacing={3}>
             <Grid
