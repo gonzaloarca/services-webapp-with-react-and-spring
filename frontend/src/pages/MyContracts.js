@@ -80,8 +80,6 @@ const TabPanel = ({ children, value, index }) => {
   );
 };
 
-let tabSection;
-
 const MyContracts = ({ history }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
@@ -112,8 +110,13 @@ const MyContracts = ({ history }) => {
   };
   useEffect(() => {
     if (currentUser && activeTab && activeState) {
-      if (activeTab === 'pro') loadMyServicesContracts();
-      else loadHiredContracts();
+      if (activeTab === 'pro') {
+        setTabValue(1);
+        loadMyServicesContracts();
+      } else {
+        setTabValue(0);
+        loadHiredContracts();
+      }
     }
   }, [activeState, activeTab, currentUser]);
 
@@ -179,6 +182,8 @@ const MyContracts = ({ history }) => {
               <ContractsDashboard
                 contracts={hiredServices}
                 topTabSection={tabPaths[tabValue]}
+                loadHiredContracts={loadHiredContracts}
+                loadMyServicesContracts={loadMyServicesContracts}
               />
             </div>
           </TabPanel>
@@ -206,6 +211,8 @@ const ContractsDashboard = ({
   loadHiredContracts,
   loadMyServicesContracts,
 }) => {
+  console.log('loadHired', loadHiredContracts);
+  console.log('loadMyServices', loadMyServicesContracts);
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
@@ -279,10 +286,21 @@ const ContractsDashboard = ({
   };
 
   const history = useHistory();
-  console.log('active', activeState);
   const [tabValue, setTabValue] = React.useState(
     activeState === 'finalized' ? 2 : activeState === 'pending' ? 1 : 0
   );
+
+  useEffect(() => {
+    if (activeState) {
+      if (activeState === 'finalized') {
+        setTabValue(2);
+      } else if (activeState === 'pending') {
+        setTabValue(1);
+      } else {
+        setTabValue(0);
+      }
+    }
+  }, [activeState]);
 
   useEffect(() => {
     history.replace(
@@ -362,8 +380,10 @@ const ContractsDashboard = ({
                       <ContractCard
                         contract={contract}
                         isOwner={isOwner}
-                        refetch={
-                          isOwner ? loadMyServicesContracts : loadHiredContracts
+                        refetch={(section) =>
+                          history.push(
+                            `/my-contracts/${topTabSection}/${section}`
+                          )
                         }
                       />
                     </div>

@@ -20,28 +20,28 @@ export const contractStateDataMap = {
   'CLIENT_REJECTED': {
     clientMessage: 'mycontracts.contractstate.yourejected',
     proMessage: 'mycontracts.contractstate.clientrejected',
-    state: 'FINALIZED',
+    state: 'CANCELED',
     color: themeUtils.colors.red,
     icon: faTimesCircle,
   },
   'PRO_REJECTED': {
     clientMessage: 'mycontracts.contractstate.prorejected',
     proMessage: 'mycontracts.contractstate.yourejected',
-    state: 'FINALIZED',
+    state: 'CANCELED',
     color: themeUtils.colors.red,
     icon: faTimesCircle,
   },
   'CLIENT_CANCELLED': {
     clientMessage: 'mycontracts.contractstate.youcancelled',
     proMessage: 'mycontracts.contractstate.clientcancelled',
-    state: 'FINALIZED',
+    state: 'CANCELED',
     color: themeUtils.colors.red,
     icon: faTimesCircle,
   },
   'PRO_CANCELLED': {
     clientMessage: 'mycontracts.contractstate.procancelled',
     proMessage: 'mycontracts.contractstate.youcancelled',
-    state: 'FINALIZED',
+    state: 'CANCELED',
     color: themeUtils.colors.red,
     icon: faTimesCircle,
   },
@@ -60,17 +60,15 @@ export const contractStateDataMap = {
     icon: faExclamationCircle,
   },
   'PRO_MODIFIED': {
-    clientMessage: 'mycontracts.contractstate.clientrescheduled',
+    clientMessage: 'mycontracts.contractstate.prorescheduled',
     proMessage: 'mycontracts.contractstate.yourescheduled',
     state: 'PRO_MODIFIED',
     color: themeUtils.colors.yellow,
     icon: faExclamationCircle,
   },
 };
-
-export const contractActionsMap = {
-  'ACTIVE': [
-    {
+/*
+{
       label: 'mycontracts.contractactions.details',
       icon: faInfoCircle,
       color: themeUtils.colors.blue,
@@ -84,6 +82,9 @@ export const contractActionsMap = {
       roles: ['CLIENT', 'PROFESSIONAL'],
       action: 'contact',
     },
+*/
+export const contractActionsMap = {
+  'ACTIVE': [
     {
       label: 'mycontracts.contractactions.finalize',
       icon: faCheckCircle,
@@ -109,20 +110,6 @@ export const contractActionsMap = {
   ],
   'PENDING_APPROVAL': [
     {
-      label: 'mycontracts.contractactions.details',
-      icon: faInfoCircle,
-      color: themeUtils.colors.blue,
-      roles: ['CLIENT', 'PROFESSIONAL'],
-      action: 'details',
-    },
-    {
-      label: 'mycontracts.contractactions.contact',
-      icon: faUserCircle,
-      color: themeUtils.colors.aqua,
-      roles: ['CLIENT', 'PROFESSIONAL'],
-      action: 'contact',
-    },
-    {
       label: 'mycontracts.contractactions.approve',
       icon: faCheckCircle,
       color: themeUtils.colors.green,
@@ -142,6 +129,7 @@ export const contractActionsMap = {
       color: themeUtils.colors.yellow,
       roles: ['PROFESSIONAL'],
       action: 'reschedule',
+      show: 'wasRescheduled',
     },
     {
       label: 'mycontracts.contractactions.cancel',
@@ -152,20 +140,6 @@ export const contractActionsMap = {
     },
   ],
   'CLIENT_MODIFIED': [
-    {
-      label: 'mycontracts.contractactions.details',
-      icon: faInfoCircle,
-      color: themeUtils.colors.blue,
-      roles: ['CLIENT', 'PROFESSIONAL'],
-      action: 'details',
-    },
-    {
-      label: 'mycontracts.contractactions.contact',
-      icon: faUserCircle,
-      color: themeUtils.colors.aqua,
-      roles: ['CLIENT', 'PROFESSIONAL'],
-      action: 'contact',
-    },
     {
       label: 'mycontracts.contractactions.reviewreschedule',
       icon: faCalendarAlt,
@@ -184,20 +158,6 @@ export const contractActionsMap = {
   ],
   'PRO_MODIFIED': [
     {
-      label: 'mycontracts.contractactions.details',
-      icon: faInfoCircle,
-      color: themeUtils.colors.blue,
-      roles: ['CLIENT', 'PROFESSIONAL'],
-      action: 'details',
-    },
-    {
-      label: 'mycontracts.contractactions.contact',
-      icon: faUserCircle,
-      color: themeUtils.colors.aqua,
-      roles: ['CLIENT', 'PROFESSIONAL'],
-      action: 'contact',
-    },
-    {
       label: 'mycontracts.contractactions.reviewreschedule',
       icon: faCalendarAlt,
       color: themeUtils.colors.yellow,
@@ -215,6 +175,15 @@ export const contractActionsMap = {
   ],
   'FINALIZED': [
     {
+      label: 'mycontracts.contractactions.rate',
+      icon: faStar,
+      color: themeUtils.colors.yellow,
+      roles: ['CLIENT'],
+      action: 'rate',
+    },
+  ],
+  'CANCELED': [
+    {
       label: 'mycontracts.contractactions.details',
       icon: faInfoCircle,
       color: themeUtils.colors.blue,
@@ -227,13 +196,6 @@ export const contractActionsMap = {
       color: themeUtils.colors.aqua,
       roles: ['CLIENT', 'PROFESSIONAL'],
       action: 'contact',
-    },
-    {
-      label: 'mycontracts.contractactions.rate',
-      icon: faStar,
-      color: themeUtils.colors.yellow,
-      roles: ['CLIENT'],
-      action: 'rate',
     },
   ],
 };

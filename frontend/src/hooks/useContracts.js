@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   getContractsByClientIdAndStateRequest,
   getContractsByProAndStateIdRequest,
@@ -5,6 +6,7 @@ import {
   getContractStatesRequest,
 } from '../api/contractsApi';
 const useContractsHook = () => {
+  const [states, setStates] = useState(new Map());
   const getContractsByClientIdAndState = async (clientId, state, page) => {
     const response = await getContractsByClientIdAndStateRequest(
       clientId,
@@ -51,10 +53,8 @@ const useContractsHook = () => {
   };
 
   const getContractStates = async () => {
-    const states = await getContractStatesRequest();
-    const map = new Map();
-    states.forEach((state) => map.put(state.description, state.id));
-    return map;
+    const response = await getContractStatesRequest();
+    return response.data;
   };
 
   return {
@@ -63,6 +63,7 @@ const useContractsHook = () => {
     changeContractStateClient,
     changeContractStatePro,
     getContractStates,
+    states,
   };
 };
 export default useContractsHook;

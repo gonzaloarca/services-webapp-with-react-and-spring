@@ -53,7 +53,7 @@ const App = () => {
   const [categories, setCategories] = useState([]);
   const [orderByParams, setOrderByParams] = useState([]);
   const [rateTypes, setRateTypes] = useState([]);
-  const [contractStates, setContractStates] = useState(new Map());
+  const [contractStates, setContractStates] = useState([]);
   const { t } = useTranslation();
   /*
    * This function saves the current user in the context if the user is logged in.

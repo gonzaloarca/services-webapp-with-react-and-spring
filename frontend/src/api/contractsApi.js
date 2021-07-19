@@ -50,13 +50,12 @@ export const changeContractStateRequest = (
   newScheduledDate,
   role
 ) => {
+  console.log('aaaa', contractId, state, newScheduledDate);
   return hireNetApi.put(
     '/contracts/' + contractId,
     {
-      data: {
-        newState: state,
-        newScheduledDate: newScheduledDate,
-      },
+      newState: state,
+      newScheduledDate: newScheduledDate,
     },
     {
       headers: {

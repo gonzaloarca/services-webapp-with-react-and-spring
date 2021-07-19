@@ -103,7 +103,7 @@ const contractCardStyles = (theme) => ({
   contractActions: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     padding: 7,
   },
   timesHired: {

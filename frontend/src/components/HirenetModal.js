@@ -37,8 +37,8 @@ const HirenetModal = ({
       <Divider />
 
       <DialogContent className="p-0">
-        {/* {<Body showDisclaimer={showActionButtons}></Body>} */}
-        {Body}
+        {<Body showDisclaimer={showActionButtons}></Body>}
+        {/* {Body} */}
       </DialogContent>
       <Divider />
       {showActionButtons && (

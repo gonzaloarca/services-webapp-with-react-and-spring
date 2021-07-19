@@ -1,5 +1,10 @@
 import { faCalendarAlt } from '@fortawesome/free-regular-svg-icons';
-import { faCube, faImage } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCube,
+  faImage,
+  faInfoCircle,
+  faUserCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Avatar,
@@ -107,11 +112,33 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
   const formRef = useRef();
 
   const onFinalized = async () => {
-    if (isOwner)
-      await changeContractStatePro(contract.id, states.get('COMPLETED'));
-    else await changeContractStateClient(contract.id, states.get('COMPLETED'));
-    refetch();
-    setOpenReviewReschedule(false);
+    if (contract.state.description === 'APPROVED') {
+      if (isOwner)
+        await changeContractStatePro(
+          contract.id,
+          states.find((state) => state.description === 'COMPLETED').id
+        );
+      else
+        await changeContractStateClient(
+          contract.id,
+          states.find((state) => state.description === 'COMPLETED').id
+        );
+      refetch('finalized');
+      setOpenReviewReschedule(false);
+    } else if (contract.state.description === 'PENDING_APPROVAL') {
+      if (isOwner)
+        await changeContractStatePro(
+          contract.id,
+          states.find((state) => state.description === 'APPROVED').id
+        );
+      else
+        await changeContractStateClient(
+          contract.id,
+          states.find((state) => state.description === 'APPROVED').id
+        );
+      refetch('active');
+      setOpenReviewReschedule(false);
+    }
   };
 
   const modalDataMap = {
@@ -120,25 +147,24 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
       openModal: () => setOpenCancel(true),
       onNegative: () => setOpenCancel(false),
       onAffirmative: async () => {
-        console.log(contract);
         if (isOwner)
           await changeContractStatePro(
             contract.id,
-            states.get('PRO_CANCELLED')
+            states.find((state) => state.description === 'PRO_CANCELLED').id
           );
         else
           await changeContractStateClient(
             contract.id,
-            states.get('CLIENT_CANCELLED')
+            states.find((state) => state.description === 'CLIENT_CANCELLED').id
           );
-        refetch();
+        refetch('finalized');
         setOpenCancel(false);
       },
       title: t('mycontracts.modals.cancel.title'),
       body: (props) => (
         <>
           {!loading && (
-            <PlainTextBody {...props}>
+            <PlainTextBody>
               {t('mycontracts.modals.cancel.message')}
             </PlainTextBody>
           )}
@@ -154,20 +180,23 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
       onNegative: () => setOpenReject(false),
       onAffirmative: async () => {
         if (isOwner)
-          await changeContractStatePro(contract.id, states.get('PRO_REJECTED'));
+          await changeContractStatePro(
+            contract.id,
+            states.find((state) => state.description === 'PRO_REJECTED').id
+          );
         else
           await changeContractStateClient(
             contract.id,
-            states.get('CLIENT_REJECTED')
+            states.find((state) => state.description === 'CLIENT_REJECTED').id
           );
-        refetch();
+        refetch('finalized');
         setOpenReject(false);
       },
       title: t('mycontracts.modals.reject.title'),
       body: (props) => (
         <>
           {!loading && (
-            <PlainTextBody {...props}>
+            <PlainTextBody>
               {t('mycontracts.modals.reject.message')}
             </PlainTextBody>
           )}
@@ -182,19 +211,20 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
       openModal: () => setOpenReschedule(true),
       onNegative: () => setOpenReschedule(false),
       onAffirmative: async () => {
+        console.log(formRef.current.values);
         if (isOwner)
           await changeContractStatePro(
             contract.id,
-            states.get('PRO_MODIFIED'),
-            formRef.current.values
+            states.find((state) => state.description === 'PRO_MODIFIED').id,
+            formRef.current.values.date.toISOString()
           );
         else
           await changeContractStateClient(
             contract.id,
-            states.get('CLIENT_MODIFIED'),
-            formRef.current.values
+            states.find((state) => state.description === 'CLIENT_MODIFIED').id,
+            formRef.current.values.date.toISOString()
           );
-        refetch();
+        refetch('pending');
       },
       title: t('mycontracts.modals.reschedule.title'),
       body: (props) => (
@@ -218,21 +248,30 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
       onClose: () => setOpenReviewReschedule(false),
       onNegative: async () => {
         if (isOwner)
-          await changeContractStatePro(contract.id, states.get('PRO_REJECTED'));
+          await changeContractStatePro(
+            contract.id,
+            states.find((state) => state.description === 'PRO_REJECTED').id
+          );
         else
           await changeContractStateClient(
             contract.id,
-            states.get('CLIENT_REJECTED')
+            states.find((state) => state.description === 'CLIENT_REJECTED').id
           );
-        refetch();
+        refetch('finalized');
         setOpenReviewReschedule(false);
       },
       onAffirmative: async () => {
         if (isOwner)
-          await changeContractStatePro(contract.id, states.get('APPROVED'));
+          await changeContractStatePro(
+            contract.id,
+            states.find((state) => state.description === 'APPROVED').id
+          );
         else
-          await changeContractStateClient(contract.id, states.get('APPROVED'));
-        refetch();
+          await changeContractStateClient(
+            contract.id,
+            states.find((state) => state.description === 'APPROVED').id
+          );
+        refetch('finalized');
         setOpenReviewReschedule(false);
       },
       title: t('mycontracts.modals.reviewreschedule.title'),
@@ -259,7 +298,8 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
           jobContractId: contract.id,
           rate: formRef.current.values.rating,
         });
-        refetch();
+        refetch('finalized');
+        setOpenRate(false);
       },
       body: (props) => (
         <>
@@ -402,65 +442,132 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
           </Grid>
           <Divider />
           <div className={classes.contractActions}>
-            {contractActionsMap[
-              contractStateDataMap[contract.state.description].state
-            ].map(
-              (
-                {
-                  label,
-                  onClick,
-                  icon,
-                  color,
-                  roles,
-                  action,
-                  showActionButtons,
-                  show,
-                },
-                index
-              ) =>
-                ((isOwner && roles.includes('PROFESSIONAL')) ||
-                  (!isOwner && roles.includes('CLIENT'))) &&
-                (!show || !contract[show]) ? (
-                  <>
-                    <Button
-                      className="ml-2"
-                      key={index}
-                      onClick={
-                        modalDataMap[action] && modalDataMap[action].openModal
-                          ? modalDataMap[action].openModal
-                          : onFinalized
-                      }
-                      style={{ color: color }}
-                      startIcon={
-                        <FontAwesomeIcon icon={icon} style={{ color: color }} />
-                      }
-                    >
-                      {t(label)}
-                    </Button>
-                    {modalDataMap[action] && modalDataMap[action].openModal && (
-                      <HirenetModal
-                        title={modalDataMap[action].title}
-                        body={modalDataMap[action].body}
-                        open={modalDataMap[action].open}
-                        onNegative={modalDataMap[action].onNegative}
-                        onClose={modalDataMap[action].onClose}
-                        onAffirmative={modalDataMap[action].onAffirmative}
-                        affirmativeLabel={modalDataMap[action].affirmativeLabel}
-                        negativeLabel={modalDataMap[action].negativeLabel}
-                        affirmativeColor={modalDataMap[action].affirmativeColor}
-                        showActionButtons={
-                          showActionButtons &&
-                          ((showActionButtons.includes('PROFESSIONAL') &&
-                            isOwner) ||
-                            (showActionButtons.includes('CLIENT') && !isOwner))
+            <div className="flex flex-row">
+              <div>
+                <Button
+                  className="ml-2"
+                  onClick={modalDataMap['details'].openModal}
+                  style={{ color: themeUtils.colors.blue }}
+                  startIcon={
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      style={{ color: themeUtils.colors.blue }}
+                    />
+                  }
+                >
+                  {t('mycontracts.contractactions.details')}
+                </Button>
+
+                <HirenetModal
+                  title={modalDataMap['details'].title}
+                  body={modalDataMap['details'].body}
+                  open={modalDataMap['details'].open}
+                  onNegative={modalDataMap['details'].onNegative}
+                  onClose={modalDataMap['details'].onClose}
+                  onAffirmative={modalDataMap['details'].onAffirmative}
+                  affirmativeLabel={modalDataMap['details'].affirmativeLabel}
+                  negativeLabel={modalDataMap['details'].negativeLabel}
+                  affirmativeColor={modalDataMap['details'].affirmativeColor}
+                />
+              </div>
+              <div>
+                <Button
+                  className="ml-2"
+                  onClick={modalDataMap['contact'].openModal}
+                  style={{ color: themeUtils.colors.aqua }}
+                  startIcon={
+                    <FontAwesomeIcon
+                      icon={faUserCircle}
+                      style={{ color: themeUtils.colors.aqua }}
+                    />
+                  }
+                >
+                  {t('mycontracts.contractactions.contact')}
+                </Button>
+
+                <HirenetModal
+                  title={modalDataMap['contact'].title}
+                  body={modalDataMap['contact'].body}
+                  open={modalDataMap['contact'].open}
+                  onNegative={modalDataMap['contact'].onNegative}
+                  onClose={modalDataMap['contact'].onClose}
+                  onAffirmative={modalDataMap['contact'].onAffirmative}
+                  affirmativeLabel={modalDataMap['contact'].affirmativeLabel}
+                  negativeLabel={modalDataMap['contact'].negativeLabel}
+                  affirmativeColor={modalDataMap['contact'].affirmativeColor}
+                />
+              </div>
+            </div>
+            <div>
+              {contractActionsMap[
+                contractStateDataMap[contract.state.description].state
+              ].map(
+                (
+                  {
+                    label,
+                    onClick,
+                    icon,
+                    color,
+                    roles,
+                    action,
+                    showActionButtons,
+                    show,
+                  },
+                  index
+                ) =>
+                  ((isOwner && roles.includes('PROFESSIONAL')) ||
+                    (!isOwner && roles.includes('CLIENT'))) &&
+                  (!show || !contract[show]) ? (
+                    <>
+                      <Button
+                        className="ml-2"
+                        key={index}
+                        onClick={
+                          modalDataMap[action] && modalDataMap[action].openModal
+                            ? modalDataMap[action].openModal
+                            : onFinalized
                         }
-                      />
-                    )}
-                  </>
-                ) : (
-                  <></>
-                )
-            )}
+                        style={{ color: color }}
+                        startIcon={
+                          <FontAwesomeIcon
+                            icon={icon}
+                            style={{ color: color }}
+                          />
+                        }
+                      >
+                        {t(label)}
+                      </Button>
+                      {modalDataMap[action] &&
+                        modalDataMap[action].openModal && (
+                          <HirenetModal
+                            title={modalDataMap[action].title}
+                            body={modalDataMap[action].body}
+                            open={modalDataMap[action].open}
+                            onNegative={modalDataMap[action].onNegative}
+                            onClose={modalDataMap[action].onClose}
+                            onAffirmative={modalDataMap[action].onAffirmative}
+                            affirmativeLabel={
+                              modalDataMap[action].affirmativeLabel
+                            }
+                            negativeLabel={modalDataMap[action].negativeLabel}
+                            affirmativeColor={
+                              modalDataMap[action].affirmativeColor
+                            }
+                            showActionButtons={
+                              showActionButtons &&
+                              ((showActionButtons.includes('PROFESSIONAL') &&
+                                isOwner) ||
+                                (showActionButtons.includes('CLIENT') &&
+                                  !isOwner))
+                            }
+                          />
+                        )}
+                    </>
+                  ) : (
+                    <></>
+                  )
+              )}
+            </div>
           </div>
         </Card>
       )}
