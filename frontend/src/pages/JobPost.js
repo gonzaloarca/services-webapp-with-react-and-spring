@@ -304,22 +304,21 @@ const JobPost = ({ match, history }) => {
             {isOwner ? (
               <div className="flex justify-end">
                 <Button
-                  className="text-lg"
+                  className="text-sm"
                   style={{ color: themeUtils.colors.blue }}
                   component={Link}
                   to={`/job/${match.params.id}/edit`}
                 >
-                  <Edit fontSize="large" className="mr-1" />
+                  <Edit className="mr-1" />
                   {t('jobpost.edit')}
                 </Button>
                 <div className="my-2 mx-3 border-l-2 border-solid border-gray-400" />
                 <Button
-                  fontSize="large"
-                  className="text-lg"
+                  className="text-sm"
                   style={{ color: themeUtils.colors.red }}
                   onClick={() => setOpenDelete(true)}
                 >
-                  <Delete fontSize="large" className="mr-1" />
+                  <Delete className="mr-1" />
                   {t('jobpost.delete')}
                 </Button>
                 <HirenetModal
@@ -399,12 +398,12 @@ const JobPost = ({ match, history }) => {
               {isOwner ? (
                 <div className="flex justify-end">
                   <Button
-                    className="text-lg"
+                    className="text-sm"
                     style={{ color: themeUtils.colors.blue }}
                     component={Link}
                     to={`/job/${match.params.id}/packages`}
                   >
-                    <ListAlt fontSize="large" className="mr-1" />
+                    <ListAlt className="mr-1" />
                     {t('jobpost.managepacks')}
                   </Button>
                 </div>
