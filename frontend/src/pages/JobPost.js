@@ -209,7 +209,7 @@ const JobPost = ({ match, history }) => {
       const post = await getJobPostById(postId);
       setJobPost(post);
     } catch (e) {
-      history.push(`/`);
+      history.push(`/404`);
     }
   };
 
@@ -218,7 +218,7 @@ const JobPost = ({ match, history }) => {
       const jobCard = await getJobCardById(postId);
       setJobCard(jobCard);
     } catch (e) {
-      history.push(`/`);
+      history.push(`/404`);
     }
   };
 
@@ -227,7 +227,7 @@ const JobPost = ({ match, history }) => {
       const jobPackages = await getJobPackagesByPostId(postId);
       setPackages(jobPackages);
     } catch (e) {
-      history.push(`/`);
+      history.push(`/404`);
     }
   };
 
@@ -237,7 +237,7 @@ const JobPost = ({ match, history }) => {
       const pro = await getUserById(proId);
       setProUser(pro);
     } catch (e) {
-      history.push(`/`);
+      history.push(`/404`);
     }
   };
 
@@ -308,11 +308,11 @@ const JobPost = ({ match, history }) => {
                 <HirenetModal
                   open={openDelete}
                   title={t('jobpost.deletetitle')}
-                  body={
+                  body={() => (
                     <PlainTextBody>
                       {t('managepackages.deletemodal.body')}
                     </PlainTextBody>
-                  }
+                  )}
                   onNegative={() => setOpenDelete(false)}
                   onAffirmative={deletePost}
                   affirmativeLabel={t('managepackages.deletemodal.affirmative')}

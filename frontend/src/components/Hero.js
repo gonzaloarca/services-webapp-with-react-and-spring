@@ -49,17 +49,16 @@ const Hero = ({ zones }) => {
   const { t } = useTranslation();
 
   return (
-    <div className={classes.heroContainer}>
+    <div
+      className={classes.heroContainer}
+      style={{
+        backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+      }}
+    >
       <div className={classes.heroContent}>
         <h3 className={classes.heroText}>{t('home.herotext')}</h3>
         <HeroSearchBar zones={zones} />
       </div>
-      <img
-        className={classes.heroBackground}
-        src={process.env.PUBLIC_URL + 'img/landingbg1.svg'}
-        alt=""
-        loading="lazy"
-      />
     </div>
   );
 };

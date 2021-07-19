@@ -1,9 +1,9 @@
-import axios from 'axios'
+import axios from 'axios';
 
 export default axios.create({
   timeout: 5000,
-  baseURL: '/api/v1',
+  baseURL: process.env.PUBLIC_URL + '/api/v1',
   headers: {
     Accept: 'application/json',
-  }
-})
+  },
+});

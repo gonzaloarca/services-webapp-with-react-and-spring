@@ -89,9 +89,8 @@ const Account = () => {
   const { currentUser } = useContext(UserContext);
   const history = useHistory();
 
-  //TODO: SI REFRESHEO ME REDIRIGE REVISAR ESTO!
-  if (!isLoggedIn) {
-    history.push('/login');
+  if (!isLoggedIn()) {
+    history.replace('/login');
   }
 
   const accountSections = [
@@ -106,7 +105,9 @@ const Account = () => {
       tabLabel: t('account.security.title'),
       color: themeUtils.colors.blue,
       icon: <Lock className="text-white" />,
-      component: <SecurityData userId={currentUser?.id} />,
+      component: (
+        <SecurityData email={currentUser?.email} userId={currentUser?.id} />
+      ),
       path: 'security',
     },
     {
@@ -248,7 +249,6 @@ const PersonalData = ({ currentUser }) => {
   });
 
   const onSubmit = async (values) => {
-    console.log(values);
     try {
       await changeAccountData({
         userId: currentUser.id,
@@ -256,7 +256,7 @@ const PersonalData = ({ currentUser }) => {
         phone: values.phone,
         username: values.username,
       });
-      await changeAccountImage(currentUser.id, values.image);
+      if (values.image) await changeAccountImage(currentUser.id, values.image);
       setAnswer('ok');
       history.go(0);
     } catch (error) {
@@ -392,7 +392,7 @@ const PersonalData = ({ currentUser }) => {
   );
 };
 
-const SecurityData = ({ userId }) => {
+const SecurityData = ({ email, userId }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
@@ -400,17 +400,17 @@ const SecurityData = ({ userId }) => {
   const [answer, setAnswer] = useState('');
 
   const initialValues = {
-    oldpassword: '',
-    newpassword: '',
+    oldPassword: '',
+    newPassword: '',
     repeatnewpassword: '',
   };
 
   const validationSchema = Yup.object({
-    oldpassword: Yup.string()
+    oldPassword: Yup.string()
       .required(t('validationerror.required'))
       .max(100, t('validationerror.maxlength', { length: 100 }))
       .min(8, t('validationerror.minlength', { length: 8 })),
-    newpassword: Yup.string()
+    newPassword: Yup.string()
       .required(t('validationerror.required'))
       .max(100, t('validationerror.maxlength', { length: 100 }))
       .min(8, t('validationerror.minlength', { length: 8 })),
@@ -419,15 +419,19 @@ const SecurityData = ({ userId }) => {
       .max(100, t('validationerror.maxlength', { length: 100 }))
       .min(8, t('validationerror.minlength', { length: 8 }))
       .oneOf(
-        [Yup.ref('newpassword'), null],
+        [Yup.ref('newPassword'), null],
         t('validationerror.passwordrepeat')
       ),
   });
 
   const onSubmit = async (values) => {
-    console.log(values);
     try {
-      await changePassword({ userId: userId, password: values.password });
+      await changePassword({
+        userId: userId,
+        email: email,
+        newPassword: values.newPassword,
+        oldPassword: values.oldPassword,
+      });
       setAnswer('ok');
     } catch (error) {
       console.log(error);
@@ -451,16 +455,16 @@ const SecurityData = ({ userId }) => {
             validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, values }) => (
               <Form>
                 <FormControlPassword
                   placeholder={t('account.security.oldpassword')}
-                  variable="oldpassword"
+                  variable="oldPassword"
                   fullWidth
                 />
                 <FormControlPassword
                   placeholder={t('account.security.newpassword')}
-                  variable="newpassword"
+                  variable="newPassword"
                   fullWidth
                 />
                 <FormControlPassword

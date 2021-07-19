@@ -35,7 +35,7 @@ public interface UserService {
 
     boolean validCredentials(String email, String password);
 
-    void changeUserPassword(long id, String password);
+    void changeUserPassword(long id, String newPassword, String oldPassword);
 
     List<JobPost.JobType> findUserJobTypes(long id);
 

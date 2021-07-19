@@ -23,6 +23,7 @@ import { Helmet } from 'react-helmet';
 import { useContracts } from '../hooks';
 import { UserContext } from '../context';
 import BottomPagination from '../components/BottomPagination';
+import { isLoggedIn } from '../utils/userUtils';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -96,6 +97,10 @@ const MyContracts = ({ history }) => {
   const tabPaths = ['hired', 'pro'];
   const [queryParams, setQueryParams] = React.useState({ page: 1 });
   const [loading, setLoading] = useState(true);
+
+  if (!isLoggedIn()) {
+    history.replace('/login');
+  }
 
   const loadHiredContracts = async () => {
     const clientContracts = await getContractsByClientIdAndState(

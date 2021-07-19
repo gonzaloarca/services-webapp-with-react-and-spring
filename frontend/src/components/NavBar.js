@@ -285,19 +285,23 @@ const NavBar = ({
                       </div>
                     </div>
                     <List>
-                      <ListItem
-                        dense
-                        button
-                        component={Link}
-                        to={`/profile/${currentUser.id}/services`}
-                      >
-                        <ListItemIcon>
-                          <Person />
-                        </ListItemIcon>
-                        <p className="text-xs font-medium">
-                          {t('navigation.profile')}
-                        </p>
-                      </ListItem>
+                      {isProfessional(currentUser) ? (
+                        <ListItem
+                          dense
+                          button
+                          component={Link}
+                          to={`/profile/${currentUser.id}/services`}
+                        >
+                          <ListItemIcon>
+                            <Person />
+                          </ListItemIcon>
+                          <p className="text-xs font-medium">
+                            {t('navigation.profile')}
+                          </p>
+                        </ListItem>
+                      ) : (
+                        <></>
+                      )}
                       <ListItem
                         dense
                         button

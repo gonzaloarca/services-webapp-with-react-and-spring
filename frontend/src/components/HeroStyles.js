@@ -1,9 +1,4 @@
 const HeroStyles = (theme) => ({
-  heroBackground: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
   heroContainer: {
     overflowY: 'hidden',
     width: '100%',

@@ -210,7 +210,7 @@ const Hire = ({ match, history }) => {
       const jobPost = await getJobPostById(postId);
       setJobPost(jobPost);
     } catch (e) {
-      history.replace(`/error`);
+      history.replace(`/404`);
     }
   };
 
@@ -220,7 +220,7 @@ const Hire = ({ match, history }) => {
       const pro = await getUserById(proId);
       setProUser(pro);
     } catch (e) {
-      history.replace(`/error`);
+      history.replace(`/404`);
     }
   };
 
@@ -229,7 +229,7 @@ const Hire = ({ match, history }) => {
       const pack = await getJobPackageByPostIdAndPackageId(postId, packId);
       setPackage(pack);
     } catch (e) {
-      history.replace(`/error`);
+      history.replace(`/404`);
     }
   };
 
