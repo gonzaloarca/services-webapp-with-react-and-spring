@@ -322,10 +322,6 @@ const CreateJobPost = ({ history }) => {
     }
   };
 
-  // const handleReset = () => {
-  //   setActiveStep(0);
-  // };
-
   return (
     <>
       <Helmet>
@@ -352,34 +348,30 @@ const CreateJobPost = ({ history }) => {
           ))}
         </Stepper>
         <div>
-          {activeStep === steps.length ? (
-            <div>Submitting form...</div>
-          ) : (
-            <div>
-              {getStepContent(activeStep, formRef, handleNext, data)}
+          <div>
+            {getStepContent(activeStep, formRef, handleNext, data)}
 
-              <div className={classes.actionsContainer}>
-                <Button
-                  disabled={activeStep === 0 || disableSubmit}
-                  onClick={() => handleBack(data)}
-                  className={classes.button}
-                >
-                  {t('createjobpost.back')}
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSubmit}
-                  className={classes.button}
-                  disabled={disableSubmit}
-                >
-                  {activeStep === steps.length - 1
-                    ? t('createjobpost.publish')
-                    : t('createjobpost.next')}
-                </Button>
-              </div>
+            <div className={classes.actionsContainer}>
+              <Button
+                disabled={activeStep === 0 || disableSubmit}
+                onClick={() => handleBack(data)}
+                className={classes.button}
+              >
+                {t('createjobpost.back')}
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                className={classes.button}
+                disabled={disableSubmit}
+              >
+                {activeStep === steps.length - 1
+                  ? t('createjobpost.publish')
+                  : t('createjobpost.next')}
+              </Button>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </>

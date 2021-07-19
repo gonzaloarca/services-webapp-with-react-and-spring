@@ -79,7 +79,10 @@
   },
   "jobpost": {
     "seereviews": "Ver reseñas",
-    "noreviews": "Este servicio todavía no tiene ninguna reseña"
+    "noreviews": "Este servicio todavía no tiene ninguna reseña",
+    "edit": "Editar publicación",
+    "delete": "Borrar publicación",
+    "managepacks": "Administrar paquetes"
   },
   "jobcard": {
     "noreviews": "Sin calificaciones",

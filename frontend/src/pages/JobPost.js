@@ -1,25 +1,27 @@
 import {
   Avatar,
+  Button,
   Card,
   CardActionArea,
   Chip,
   Grid,
-  Link,
 } from '@material-ui/core';
 import {
   ChevronRight,
+  Delete,
+  Edit,
+  ListAlt,
   LocationOn,
   RateReview,
   Schedule,
   Work,
 } from '@material-ui/icons';
-import { Rating } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import Carousel from 'react-material-ui-carousel';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { themeUtils } from '../theme';
@@ -35,171 +37,12 @@ import {
   useJobPackages,
   useReviews,
 } from '../hooks';
-import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import BottomPagination from '../components/BottomPagination';
-
-// const post = {
-//   active: true,
-//   availableHours: 'Lunes a viernes entre las 8am y 2pm',
-//   creationDate: '2021-05-02T18:22:13.338478',
-//   id: 8,
-//   jobType: {
-//     description: 'BABYSITTING',
-//     id: 7,
-//   },
-//   images: [
-//     `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-//     `${process.env.PUBLIC_URL}/img/carpentry.jpeg`,
-//   ],
-
-//   packages: [
-//     {
-//       id: 8,
-//       uri: 'http://localhost:8080/job-posts/8/packages/8',
-//     },
-//   ],
-//   professional: {
-//     id: 5,
-//     uri: 'http://localhost:8080/users/5',
-//   },
-//   title: 'Niñero turno mañana',
-//   zones: [
-//     {
-//       description: 'RETIRO',
-//       id: 28,
-//     },
-//     {
-//       description: 'NUNIEZ',
-//       id: 20,
-//     },
-//     {
-//       description: 'COLEGIALES',
-//       id: 9,
-//     },
-//   ],
-// };
-
-// const jobCard = {
-//   avgRate: 4.666666666666667,
-//   contractsCompleted: 4,
-//   imageUrl: 'http://localhost:8080/job-posts/1/images/1',
-//   jobPost: {
-//     id: 1,
-//     uri: 'http://localhost:8080/job-posts/1',
-//   },
-//   jobType: {
-//     description: 'PLUMBING',
-//     id: 0,
-//   },
-//   price: 160.0,
-//   rateType: {
-//     description: 'HOURLY',
-//     id: 0,
-//   },
-//   reviewsCount: 3,
-//   title: 'Plomería de excelente calidad',
-//   zones: [
-//     {
-//       description: 'RETIRO',
-//       id: 28,
-//     },
-//     {
-//       description: 'PALERMO',
-//       id: 21,
-//     },
-//     {
-//       description: 'NUNIEZ',
-//       id: 20,
-//     },
-//     {
-//       description: 'COLEGIALES',
-//       id: 9,
-//     },
-//     {
-//       description: 'BELGRANO',
-//       id: 4,
-//     },
-//   ],
-// };
-
-// const packages = [
-//   {
-//     active: true,
-//     description:
-//       'Atencion constante y juego para el desarrollo de musculos como brazos y piernas.',
-//     id: 8,
-//     jobPost: {
-//       id: 8,
-//       uri: 'http://localhost:8080/job-posts/8',
-//     },
-//     rateType: {
-//       description: 'TBD',
-//       id: 2,
-//     },
-//     title: '4 dias a la semana 4 horas',
-//   },
-//   {
-//     active: true,
-//     description:
-//       'Atencion constante y juego para el desarrollo de musculos como brazos y piernas.',
-//     id: 8,
-//     jobPost: {
-//       id: 8,
-//       uri: 'http://localhost:8080/job-posts/8',
-//     },
-//     rateType: {
-//       description: 'TBD',
-//       id: 2,
-//     },
-//     title: '4 dias a la semana 4 horas',
-//   },
-// ];
-
-// const proUser = {
-//   email: 'manaaasd@gmail.com',
-//   id: 5,
-//   phone: '03034560',
-//   roles: ['CLIENT', 'PROFESSIONAL'],
-//   username: 'Manuel Rodriguez',
-//   image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-// };
-
-// const reviews = [
-//   {
-//     creationDate: '2021-05-02T18:22:21.684413',
-//     description: 'EL MEJOR NIÑERO',
-//     client: {
-//       username: 'El Beto',
-//       image: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-//     },
-//     jobContract: {
-//       id: 1,
-//       uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/1',
-//     },
-//     rate: 5,
-//     title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
-//   },
-//   {
-//     creationDate: '2021-10-02T18:22:21.684413',
-//     description: 'EL MEJOR NIÑERO',
-//     client: {
-//       username: 'El Beto',
-//       image: `${process.env.PUBLIC_URL}/img/babysitting.jpeg`,
-//     },
-//     jobPost: {
-//       title: 'Niñero turno mañana',
-//       id: 3,
-//     },
-//     jobContract: {
-//       id: 2,
-//       uri: 'http://localhost:8080/job-posts/3/packages/8/contracts/2',
-//     },
-//     rate: 5,
-//     title: 'No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹',
-//   },
-// ];
+import { Skeleton } from '@material-ui/lab';
+import { Link } from 'react-router-dom';
+import { UserContext } from '../context';
 
 const useStyles = makeStyles((theme) => ({
   carouselImage: {
@@ -349,11 +192,13 @@ const JobPost = ({ match }) => {
   const { getJobCardById } = useJobCards();
   const { getJobPackagesByPostId } = useJobPackages();
   const { getUserById } = useUser();
+  const { currentUser } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [post, setJobPost] = useState(null);
   const [jobCard, setJobCard] = useState(null);
   const [packages, setPackages] = useState([]);
   const [proUser, setProUser] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
 
   const loadJobPost = async () => {
     try {
@@ -399,8 +244,10 @@ const JobPost = ({ match }) => {
   }, [post]);
 
   useEffect(() => {
-    if (post && jobCard && packages && packages.length > 0 && proUser)
+    if (post && jobCard && packages && packages.length > 0 && proUser) {
+      if (currentUser && currentUser.id === proUser.id) setIsOwner(true);
       setLoading(false);
+    }
   }, [post, jobCard, packages, proUser]);
 
   useEffect(() => {
@@ -413,13 +260,47 @@ const JobPost = ({ match }) => {
     <>
       <NavBar currentSection={'/search'} />
       {loading ? (
-        <div>loading</div>
+        <Grid container spacing={3} className="mt-10">
+          <Grid item md={12} className="flex justify-center">
+            <Skeleton md={12} variant="rect" width={1000} height={500} />
+          </Grid>
+          <Grid item md={12} className="flex justify-center">
+            <Skeleton md={12} variant="rect" width={1000} height={200} />
+          </Grid>
+          <Grid item md={12} className="flex justify-center">
+            <Skeleton md={12} variant="rect" width={1000} height={200} />
+          </Grid>
+        </Grid>
       ) : (
         <>
           <Helmet>
             <title>{t('title', { section: post.title })}</title>
           </Helmet>
           <div className={globalClasses.contentContainerTransparent}>
+            {isOwner ? (
+              <div className="flex justify-end">
+                <Button
+                  className="text-lg"
+                  style={{ color: themeUtils.colors.blue }}
+                  component={Link}
+                  to={`/job/${match.params.id}/edit`}
+                >
+                  <Edit fontSize="large" className="mr-1" />
+                  {t('jobpost.edit')}
+                </Button>
+                <div className="my-2 mx-3 border-l-2 border-solid border-gray-400" />
+                <Button
+                  fontSize="large"
+                  className="text-lg"
+                  style={{ color: themeUtils.colors.red }}
+                >
+                  <Delete fontSize="large" className="mr-1" />
+                  {t('jobpost.delete')}
+                </Button>
+              </div>
+            ) : (
+              <></>
+            )}
             <Carousel navButtonsAlwaysVisible>
               {post.images.map((item, i) => (
                 <img
@@ -476,6 +357,17 @@ const JobPost = ({ match }) => {
             </Grid>
             {/* Paquetes */}
             <div className="mt-7">
+              <div className="flex justify-end">
+                <Button
+                  className="text-lg"
+                  style={{ color: themeUtils.colors.blue }}
+                  component={Link}
+                  to={`/job/${match.params.id}/packages`}
+                >
+                  <ListAlt fontSize="large" className="mr-1" />
+                  {t('jobpost.managepacks')}
+                </Button>
+              </div>
               <PackageListCard packages={packages} />
             </div>
             {/* Reseñas */}
@@ -597,7 +489,7 @@ const StatsCard = ({
                 <p className={classes.ratingValue}>{avgRate.toFixed(2)}</p>
                 <RatingDisplay avgRate={avgRate} reviewsCount={reviewsCount} />
               </div>
-              <Link href="#reviews">{t('jobpost.seereviews')}</Link>
+              <a href="#reviews">{t('jobpost.seereviews')}</a>
             </div>
           </DataDisplayCard>
         </Grid>

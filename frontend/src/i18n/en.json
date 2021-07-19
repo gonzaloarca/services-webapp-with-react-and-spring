@@ -79,7 +79,10 @@
   },
   "jobpost": {
     "seereviews": "See reviews",
-    "noreviews": "This service does not have any reviews yet"
+    "noreviews": "This service does not have any reviews yet",
+    "edit": "Edit service",
+    "delete": "Delete service",
+    "managepacks": "Manage packages"
   },
   "jobcard": {
     "noreviews": "No reviews",
