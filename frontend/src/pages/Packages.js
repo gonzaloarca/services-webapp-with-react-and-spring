@@ -193,11 +193,11 @@ const Packages = ({ match, history }) => {
                         <HirenetModal
                           open={openDelete}
                           title={t('managepackages.deletemodal.title')}
-                          body={
+                          body={() => (
                             <PlainTextBody>
                               {t('managepackages.deletemodal.body')}
                             </PlainTextBody>
-                          }
+                          )}
                           onNegative={() => setOpenDelete(false)}
                           onAffirmative={() => deletePackage(pack)}
                           affirmativeLabel={t(
