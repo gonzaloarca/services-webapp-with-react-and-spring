@@ -14,6 +14,7 @@ import { Check, LocalOffer, LocationOn, Star } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import packagePriceFormatter from '../utils/packagePriceFormatter';
 import RatingDisplay from './RatingDisplay';
+import { Skeleton } from '@material-ui/lab';
 
 const useStyles = makeStyles({
   image: {
@@ -72,7 +73,7 @@ const useStyles = makeStyles({
   },
 });
 
-const JobCard = ({ job }) => {
+const JobCard = ({ job, isLoading = false }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   return (
@@ -80,30 +81,66 @@ const JobCard = ({ job }) => {
       <Card>
         <CardActionArea component={Link} to={`/job/${job.id}`}>
           {/* Card image */}
-          <CardMedia
-            className={classes.image}
-            image={job.imageUrl}
-            title={job.title}
-          />
+          {isLoading ? (
+            <Skeleton variant="rect" className={classes.image} />
+          ) : (
+            <CardMedia
+              className={classes.image}
+              image={job.imageUrl}
+              title={job.title}
+            />
+          )}
+
           <CardContent>
-            <p className={classes.title}>{job.title}</p>
-            <p className={classes.jobType}>{job.jobType.description}</p>
+            {isLoading ? (
+              <>
+                <Skeleton variant="text" className={classes.title} />
+                <Skeleton variant="text" className={classes.jobType} />
+                <Skeleton variant="rect">
+                  <CardRating avgRate={0} reviewsCount={0} />
+                </Skeleton>
+                <Skeleton width={'100%'}>
+                  <div className={classes.priceContainer}>
+                    <LocalOffer className="mr-2" />
+                  </div>
+                </Skeleton>
+                <Skeleton width={'100%'} className="mt-4">
+                  <Chip className="w-100" />
+                </Skeleton>
+                <Skeleton
+                  width={'100%'}
+                  className="font-semibold text-sm flex items-center"
+                >
+                  <Check className="mr-2" />
+                  <p />
+                </Skeleton>
+              </>
+            ) : (
+              <>
+                <p className={classes.title}>{job.title}</p>
+                <p className={classes.jobType}>{job.jobType.description}</p>
+                <CardRating
+                  avgRate={job.avgRate}
+                  reviewsCount={job.reviewsCount}
+                />
+                <div className={classes.priceContainer}>
+                  <LocalOffer className="mr-2" />
+                  {packagePriceFormatter(t, job.rateType, job.price)}
+                </div>
+                <div className="mt-4">
+                  <ZonesChip zones={job.zones} />
+                </div>
+                <hr className="my-4" />
+                <div className="font-semibold text-sm flex items-center">
+                  <Check className="mr-2" />
+                  {job.contractsCompleted !== 1
+                    ? t('completedcontracts', { count: job.contractsCompleted })
+                    : t('completedcontractsonce')}
+                </div>
+              </>
+            )}
+
             {/* Rating */}
-            <CardRating avgRate={job.avgRate} reviewsCount={job.reviewsCount} />
-            <div className={classes.priceContainer}>
-              <LocalOffer className="mr-2" />
-              {packagePriceFormatter(t, job.rateType, job.price)}
-            </div>
-            <div className="mt-4">
-              <ZonesChip zones={job.zones} />
-            </div>
-            <hr className="my-4" />
-            <div className="font-semibold text-sm flex items-center">
-              <Check className="mr-2" />
-              {job.contractsCompleted !== 1
-                ? t('completedcontracts', { count: job.contractsCompleted })
-                : t('completedcontractsonce')}
-            </div>
           </CardContent>
         </CardActionArea>
       </Card>

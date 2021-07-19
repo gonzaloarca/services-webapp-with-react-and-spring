@@ -16,7 +16,7 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const VerifyEmail = () => {
+const VerifyEmail = ({ history }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const { verifyEmail } = useUser();
@@ -32,7 +32,7 @@ const VerifyEmail = () => {
       setStatusCode(200);
     } catch (e) {
       setStatusCode(e.statusCode);
-      console.log(e);
+      history.push(`/error`);
     }
   };
 
@@ -65,7 +65,7 @@ const VerifyEmail = () => {
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg ')}>
             {statusCode === -1 ? (
-              <Skeleton variant="rect" className="w-96 h-40"/>
+              <Skeleton variant="rect" className="w-96 h-40" />
             ) : statusCode === 200 ? (
               <>
                 <div

@@ -125,7 +125,7 @@ const Search = () => {
   const { orderByParams, categories, zones } = useContext(ConstantDataContext);
 
   const { searchJobCards, links } = useJobCards();
-  const [jobCards, setJobCards] = useState([]);
+  const [jobCards, setJobCards] = useState(null);
   const [maxPage, setMaxPage] = useState(1);
   const [queryParams, setQueryParams] = React.useState({
     zone: queryParameters.zone || '',
@@ -208,6 +208,11 @@ const SearchResults = ({
 }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const [loadingJobs, setLoadingJobs] = useState(true);
+
+  useEffect(() => {
+    if (jobs) setLoadingJobs(false);
+  }, [jobs]);
 
   let zoneStr;
 
@@ -315,9 +320,15 @@ const SearchResults = ({
         )}
       </div>
       <Grid container spacing={3}>
-        {jobs.length > 0 ? (
+        {loadingJobs ? (
+          [1, 2, 3, 4].map((i) => (
+            <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
+              <JobCard job={{}} isLoading />
+            </Grid>
+          ))
+        ) : jobs.length > 0 ? (
           jobs.map((i) => (
-            <Grid key={i.jobPost.id} item xs={12} sm={6} md={4} lg={3}>
+            <Grid key={i.id} item xs={12} sm={6} md={4} lg={3}>
               <JobCard job={i} />
             </Grid>
           ))

@@ -128,14 +128,14 @@ public class JobContractController {
         if (editJobContractDto.getNewScheduledDate() == null)
             JobContractsControllerLogger.debug("Updating job contract id: {} from {} with data: state: {}",
                     contractId, isPro ? "professional" : "client", editJobContractDto.getNewState());
-        else
+        else {
             JobContractsControllerLogger.debug("Updating job contract id: {} from {} with data: scheduledDate: {}, state: {}",
                     contractId, isPro ? "professional" : "client", editJobContractDto.getNewScheduledDate(),
                     editJobContractDto.getNewState());
-
-        jobContractService.changeContractScheduledDate(contractId,
-                editJobContractDto.getNewScheduledDate(), isPro,
-                locale);
+            jobContractService.changeContractScheduledDate(contractId,
+                    editJobContractDto.getNewScheduledDate(), isPro,
+                    locale);
+        }
         jobContractService.changeContractState(contractId,
                 JobContract.ContractState.values()[Math.toIntExact(editJobContractDto.getNewState())],
                 locale, webPageUrl);

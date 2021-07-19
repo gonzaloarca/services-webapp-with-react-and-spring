@@ -3,8 +3,8 @@ import {
   getJobPackageByPostIdAndPackageIdRequest,
   getJobPackagesByPostIdRequest,
   createJobPackageRequest,
+  editJobPackageRequest,
 } from '../api/packagesApi';
-import categoryImageMap from '../utils/categories';
 import parse from 'parse-link-header';
 const useJobPackagesHook = () => {
   const initialLinks = {
@@ -46,10 +46,24 @@ const useJobPackagesHook = () => {
     const response = await createJobPackageRequest(postId, data);
     return response.data;
   };
+
+  const editJobPackage = async (jobPackage, postId, packageId) => {
+    jobPackage.isActive = true;
+    return await editJobPackageRequest(jobPackage, postId, packageId);
+  };
+
+  const deleteJobPackage = async (jobPackage, postId) => {
+    jobPackage.isActive = false;
+    jobPackage.rateType = jobPackage.rateType.id;
+    return await editJobPackageRequest(jobPackage, postId, jobPackage.id);
+  };
+
   return {
     getJobPackagesByPostId,
     getJobPackageByPostIdAndPackageId,
     createJobPackage,
+    editJobPackage,
+    deleteJobPackage,
     links,
   };
 };

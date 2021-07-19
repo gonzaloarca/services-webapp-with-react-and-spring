@@ -250,7 +250,7 @@ const ProfileTabs = ({ details, proId }) => {
             parseInt(reviewsLinks?.prev?.page)
         );
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         return;
       }
     }
