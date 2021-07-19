@@ -94,6 +94,7 @@ const NavBar = ({
     sessionStorage.removeItem('token');
     setCurrentUser(null);
     setToken(null);
+    history.push('/');
   };
 
   const changeBarBackground = () => {

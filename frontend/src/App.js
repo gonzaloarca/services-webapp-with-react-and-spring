@@ -65,7 +65,7 @@ const App = () => {
         setCurrentUser(user);
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -81,7 +81,7 @@ const App = () => {
         )
       );
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -94,7 +94,7 @@ const App = () => {
         )
       );
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -103,7 +103,7 @@ const App = () => {
       const orderByParams = await getOrderByParams();
       setOrderByParams(orderByParams);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -112,7 +112,7 @@ const App = () => {
       const rateTypes = await getRateTypes();
       setRateTypes(rateTypes);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -121,7 +121,7 @@ const App = () => {
       const contractStates = await getContractStates();
       setContractStates(contractStates);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
