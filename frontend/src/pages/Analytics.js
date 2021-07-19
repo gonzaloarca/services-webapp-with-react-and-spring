@@ -86,7 +86,7 @@ const Analytics = () => {
                 src={currentUser.image}
                 alt={t('account.data.imagealt')}
               />
-              <div className="font-bold mt-2 text-center">
+              <div className="font-semibold mt-2 text-center">
                 {currentUser.username}
               </div>
             </Card>
@@ -108,7 +108,13 @@ const Analytics = () => {
           {details?.rankings &&
             details.rankings.map((rank, index) => {
               return (
-                <Grid item key={index} sm={3} xs={6} className="font-bold h-64">
+                <Grid
+                  item
+                  key={index}
+                  sm={3}
+                  xs={6}
+                  className="font-semibold h-64"
+                >
                   <Card classes={{ root: classes.analyticsCard }}>
                     <div className="text-5xl">
                       {t('analytics.number', { rank: rank.ranking })}
