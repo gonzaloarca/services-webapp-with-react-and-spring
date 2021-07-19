@@ -384,17 +384,21 @@ const JobPost = ({ match, history }) => {
             </Grid>
             {/* Paquetes */}
             <div className="mt-7">
-              <div className="flex justify-end">
-                <Button
-                  className="text-lg"
-                  style={{ color: themeUtils.colors.blue }}
-                  component={Link}
-                  to={`/job/${match.params.id}/packages`}
-                >
-                  <ListAlt fontSize="large" className="mr-1" />
-                  {t('jobpost.managepacks')}
-                </Button>
-              </div>
+              {isOwner ? (
+                <div className="flex justify-end">
+                  <Button
+                    className="text-lg"
+                    style={{ color: themeUtils.colors.blue }}
+                    component={Link}
+                    to={`/job/${match.params.id}/packages`}
+                  >
+                    <ListAlt fontSize="large" className="mr-1" />
+                    {t('jobpost.managepacks')}
+                  </Button>
+                </div>
+              ) : (
+                <></>
+              )}
               <PackageListCard packages={packages} />
             </div>
             {/* Reseñas */}
