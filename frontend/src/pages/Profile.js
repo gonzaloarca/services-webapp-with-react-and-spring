@@ -189,11 +189,11 @@ const UserInfo = ({ values, loadingData }) => {
 const ProfileTabs = ({ details, proId }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const { getReviewsByProId, reviewsLinks } = useReviews();
+  const { getReviewsByProId, links: reviewsLinks } = useReviews();
   const [reviews, setReviews] = useState();
   const [queryParams, setQueryParams] = useState({ page: '1' });
   const [reviewsMaxPage, setReviewsMaxPage] = useState(1);
-  const { getJobCardsByProId, jobCardsLinks } = useJobCards();
+  const { getJobCardsByProId, links: jobCardsLinks } = useJobCards();
   const [jobCards, setJobCards] = useState([]);
   const [jobCardsMaxPage, setJobCardsMaxPage] = useState(1);
   const [loadingReviews, setLoadingReviews] = useState(true);
@@ -228,15 +228,17 @@ const ProfileTabs = ({ details, proId }) => {
       setJobCards(
         await getJobCardsByProId({ proId: proId, page: queryParams.page })
       );
-      setJobCardsMaxPage(
-        parseInt(jobCardsLinks?.last?.page) ||
-          parseInt(jobCardsLinks?.prev?.page)
-      );
       setLoadingJobcards(false);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    setJobCardsMaxPage(
+      parseInt(jobCardsLinks.last?.page) || parseInt(jobCardsLinks.prev?.page)
+    );
+  }, [jobCardsLinks]);
 
   useEffect(() => {
     loadJobCards();
@@ -246,10 +248,6 @@ const ProfileTabs = ({ details, proId }) => {
     if (details.reviewsQuantity > 0) {
       try {
         setReviews(await getReviewsByProId(proId, queryParams.page));
-        setReviewsMaxPage(
-          parseInt(reviewsLinks?.last?.page) ||
-            parseInt(reviewsLinks?.prev?.page)
-        );
       } catch (e) {
         // console.log(e);
         return;
@@ -257,6 +255,12 @@ const ProfileTabs = ({ details, proId }) => {
     }
     setLoadingReviews(false);
   };
+
+  useEffect(() => {
+    setReviewsMaxPage(
+      parseInt(reviewsLinks.last?.page) || parseInt(reviewsLinks.prev?.page)
+    );
+  }, [reviewsLinks]);
 
   useEffect(() => {
     loadReviews();
@@ -338,16 +342,18 @@ const ProfileTabs = ({ details, proId }) => {
             </h3>
           </div>
         ) : (
-          <>
+          <div>
             {jobCards?.map((jobCard, index) => {
               return <ServiceCard jobCard={jobCard} key={index} />;
             })}
-            <BottomPagination
-              maxPage={jobCardsMaxPage}
-              setQueryParams={setQueryParams}
-              queryParams={queryParams}
-            />
-          </>
+            <div className={jobCardsMaxPage > 1 ? 'mb-4' : ''}>
+              <BottomPagination
+                maxPage={jobCardsMaxPage}
+                setQueryParams={setQueryParams}
+                queryParams={queryParams}
+              />
+            </div>
+          </div>
         )}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
@@ -412,11 +418,13 @@ const ProfileTabs = ({ details, proId }) => {
                 </div>
               ))
             )}
-            <BottomPagination
-              maxPage={reviewsMaxPage}
-              setQueryParams={setQueryParams}
-              queryParams={queryParams}
-            />
+            <div className={reviewsMaxPage > 1 ? 'mb-4' : ''}>
+              <BottomPagination
+                maxPage={reviewsMaxPage}
+                setQueryParams={setQueryParams}
+                queryParams={queryParams}
+              />
+            </div>
           </>
         )}
       </TabPanel>

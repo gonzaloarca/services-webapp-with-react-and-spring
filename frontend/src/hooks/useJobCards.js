@@ -98,6 +98,7 @@ const useJobCardsHook = () => {
     getJobCardById,
     getOrderByParams,
     getOrderByParamById,
+    relatedJobCards,
     links,
   };
 };
