@@ -6,7 +6,6 @@ import {
   getReviewByContractIdRequest,
   createReviewRequest,
 } from '../api/reviewsApi';
-import categoryImageMap from '../utils/categories';
 import parse from 'parse-link-header';
 const useReviewsHook = () => {
   const initialLinks = {

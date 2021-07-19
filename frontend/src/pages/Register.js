@@ -1,10 +1,8 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
-import FileInput, { checkSize, checkType } from '../components/FileInput';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { themeUtils } from '../theme';
 import { Button, Card, Grid, Link, TextField } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
@@ -80,13 +78,14 @@ const Register = () => {
       <div
         className={classes.background}
         style={{
-          backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+          backgroundImage:
+            'url(' + process.env.PUBLIC_URL + '/img/background.jpg)',
         }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
             <img
-              src={`${process.env.PUBLIC_URL}/img/adduser.svg`}
+              src={process.env.PUBLIC_URL + '/img/adduser.svg'}
               alt={t('register.title')}
               loading="lazy"
             />
@@ -220,96 +219,5 @@ const StepOne = (props) => {
     </Formik>
   );
 };
-
-const StepTwo = (props) => {
-  const classes = useStyles();
-  const { t } = useTranslation();
-  const handleSubmit = (values) => {
-    props.next(values, true);
-  };
-
-  const validationSchema = Yup.object({
-    image: Yup.mixed()
-      .test('is-correct-type', t('validationerror.avatarfile.type'), checkType)
-      .test(
-        'is-correct-size',
-        t('validationerror.avatarfile.size', { size: 2 }),
-        checkSize
-      ),
-  });
-
-  return (
-    <Formik
-      initialValues={props.data}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ values, isSubmitting }) => (
-        <Form>
-          <div>
-            <p className={clsx(classes.subtitle, 'mb-3')}>
-              {t('register.selectimage')}
-            </p>
-
-            <div className={clsx('flex justify-center mb-3')}>
-              <img
-                className={'rounded-full h-48 w-48 object-cover'}
-                id="img-preview"
-                src={
-                  values.image === ''
-                    ? `${process.env.PUBLIC_URL}/img/defaultavatar.svg`
-                    : URL.createObjectURL(values.image)
-                }
-                alt=""
-                loading="lazy"
-              />
-            </div>
-            <p className={'mb-3 text-center'}>{t('register.imagepreview')}</p>
-            <Grid container className={'mb-3 justify-center'}>
-              <Grid item>
-                <FileInput fileName="image" />
-              </Grid>
-            </Grid>
-            <p className={'mb-5 text-gray-500'}>
-              {t('register.filedisclaimer', { size: 2 })}
-            </p>
-            <div className="flex justify-center">
-              <GreyButton
-                className={'mb-4 align-center'}
-                onClick={() => props.prev(values)}
-              >
-                {t('register.goback')}
-              </GreyButton>
-            </div>
-            <div className="flex justify-center">
-              <Button
-                fullWidth
-                className={clsx(classes.submitButton, 'mb-4')}
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {t('register.submit')}
-              </Button>
-            </div>
-          </div>
-        </Form>
-      )}
-    </Formik>
-  );
-};
-
-const GreyButton = withStyles({
-  root: {
-    color: themeUtils.colors.grey,
-    backgroundColor: themeUtils.colors.lightGrey,
-    transition: 'color 0.1s',
-    '&:hover': {
-      color: 'white',
-      backgroundColor: themeUtils.colors.grey,
-      transition: 'color 0.1s',
-    },
-    fontSize: '1em',
-  },
-})(Button);
 
 export default Register;

@@ -2,7 +2,6 @@ import React, { useEffect, useContext, useState } from 'react';
 import NavBar from '../components/NavBar';
 import {
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Grid,
@@ -15,15 +14,13 @@ import { Trans, useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import clsx from 'clsx';
 import JobCard from '../components/JobCard';
-import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { parse } from 'query-string';
 import { ConstantDataContext } from '../context';
 import { useJobCards } from '../hooks';
-import { Pagination, PaginationItem } from '@material-ui/lab';
 import BottomPagination from '../components/BottomPagination';
 import { Helmet } from 'react-helmet';
 import {
-  ClassRounded,
   LocationOn,
   FilterList,
   Search as SearchIcon,
