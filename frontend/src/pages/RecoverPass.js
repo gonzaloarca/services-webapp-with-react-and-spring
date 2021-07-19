@@ -1,49 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  Button,
-  FilledInput,
-  InputLabel,
-  FormControl,
-  Card,
-  FormHelperText,
-} from '@material-ui/core';
+import { Button, Card } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import * as Yup from 'yup';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
+import { useLocation, Link } from 'react-router-dom';
+import FormControlPassword from '../components/FormControlPassword';
 import { Helmet } from 'react-helmet';
+import { useUser } from '../hooks';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
+
+function CheckQueryParams(query) {
+  if (query.get('user-id') && query.get('token')) return true;
+  return false;
+}
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const RecoverPass = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const initialValues = {
-    email: '',
+    password: '',
+    passwordrepeat: '',
   };
+  let query = useQuery();
+  const { recoverPass } = useUser();
+  const [statusCode, setStatusCode] = useState(-1);
 
   const validationSchema = Yup.object({
-    email: Yup.string()
+    password: Yup.string()
       .required(t('validationerror.required'))
-      .email(t('validationerror.email'))
-      .max(100, t('validationerror.maxlength', { length: 100 })),
+      .max(100, t('validationerror.maxlength', { length: 100 }))
+      .min(8, t('validationerror.minlength', { length: 8 })),
+    passwordrepeat: Yup.string()
+      .required(t('validationerror.required'))
+      .max(100, t('validationerror.maxlength', { length: 100 }))
+      .min(8, t('validationerror.minlength', { length: 8 }))
+      .oneOf([Yup.ref('password'), null], t('validationerror.passwordrepeat')),
   });
 
-  const onSubmit = (values, props) => {
-    console.log(values); //TODO: enviar mail de recuperacion de password
-    //TODO: ver si hay una mejor forma de mostrar el mensaje de submitted que esta forma
-    document.querySelector('#disclaimer').setAttribute('hidden', 'true');
-    document.querySelector('#submitted-message').removeAttribute('hidden');
+  const onSubmit = async ({ password }) => {
+    try {
+      await recoverPass({
+        userId: query.get('user-id'),
+        token: query.get('token'),
+        password: password,
+      });
+      setStatusCode(200);
+    } catch (e) {
+      setStatusCode(e.statusCode);
+      console.log(e);
+    }
   };
 
   return (
     <div>
       <Helmet>
         <title>
-          {t('title', { section: t('navigation.sections.recoverpass') })}
+          {t('title', { section: t('navigation.sections.changepass') })}
         </title>
       </Helmet>
       <NavBar currentSection={'/login'} isTransparent />
@@ -56,57 +77,87 @@ const RecoverPass = () => {
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
             <img
-              src={`${process.env.PUBLIC_URL}/img/log-in.svg`}
+              src={process.env.PUBLIC_URL + '/img/log-in.svg'}
               alt={t('recover.title')}
               loading="lazy"
             />
             <p className={classes.title}>{t('recover.title')}</p>
           </div>
           <Card className={clsx(classes.customCard, 'max-w-lg')}>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={onSubmit}
-            >
-              {(props) => (
-                <Form>
-                  <div className="font-semibold mb-2">
-                    {t('recover.instructions')}
-                  </div>
-                  <Field
-                    as={FormControl}
-                    fullWidth
-                    variant="filled"
-                    name="email"
-                    className={classes.FieldHeight}
+            <div>
+              {statusCode !== 200 ? (
+                CheckQueryParams(query) ? (
+                  //Si el URL es valido, muestro el Form
+                  <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={onSubmit}
                   >
-                    <InputLabel>{t('login.email')}</InputLabel>
-                    <FilledInput id="email" />
-                    <FormHelperText>
-                      <ErrorMessage name="email" />
-                    </FormHelperText>
-                  </Field>
-                  <div className="text-sm mb-3" id="disclaimer">
-                    {t('recover.disclaimer')}
-                  </div>
+                    {(props) => (
+                      <Form>
+                        <div className="font-semibold mb-2">
+                          {t('recover.enternewpass')}
+                        </div>
+                        <FormControlPassword
+                          placeholder={t('register.password')}
+                          variable="password"
+                          fullWidth
+                        />
+                        <FormControlPassword
+                          placeholder={t('register.passwordrepeat')}
+                          variable="passwordrepeat"
+                          fullWidth
+                        />
+                        <Button
+                          fullWidth
+                          className={clsx(classes.submitButton, 'mb-4')}
+                          type="submit"
+                          disabled={statusCode === 200 || props.isSubmitting}
+                        >
+                          {t('recover.submit')}
+                        </Button>
+                      </Form>
+                    )}
+                  </Formik>
+                ) : (
+                  //Si no es valido el URL, muestro un error
+                  <>
+                    <div className="font-bold text-3xl mb-2">
+                      {t('recover.wronglink')}
+                    </div>
+                    <div>{t('recover.wrongexplained')}</div>
+                    <div className="flex justify-center mt-3">
+                      <Button
+                        className={clsx(classes.submitButton, 'w-32')}
+                        component={Link}
+                        to="/login"
+                      >
+                        {t('recover.login')}
+                      </Button>
+                    </div>
+                  </>
+                )
+              ) : (
+                <div>
                   <div
-                    className="text-sm mb-3"
+                    className="font-bold text-3xl mb-2"
                     style={{ color: 'green' }}
-                    hidden
-                    id="submitted-message"
                   >
-                    {t('recover.success')}
+                    {t('recover.passwordChanged')}
                   </div>
-                  <Button
-                    fullWidth
-                    className={clsx(classes.submitButton, 'mb-4')}
-                    type="submit"
-                  >
-                    {t('recover.submit')}
-                  </Button>
-                </Form>
+                  <div>{t('recover.changedinstructions')}</div>
+                  <div className="flex justify-center mt-3">
+                    <Button
+                      className={clsx(classes.submitButton, 'w-32')}
+                      component={Link}
+                      to="/login"
+                    >
+                      {t('recover.login')}
+                    </Button>
+                  </div>
+                </div>
               )}
-            </Formik>
+            </div>
           </Card>
         </div>
       </div>

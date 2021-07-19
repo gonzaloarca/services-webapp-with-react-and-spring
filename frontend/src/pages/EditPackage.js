@@ -99,6 +99,7 @@ const EditPackage = () => {
                   startIcon={<Create />}
                   className={classes.editButton}
                   type="submit"
+                  disabled={props.isSubmitting}
                 >
                   {t('editpackage.submit')}
                 </Button>

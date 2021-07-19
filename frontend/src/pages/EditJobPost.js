@@ -1,11 +1,8 @@
-import { faClock, faImage } from '@fortawesome/free-regular-svg-icons';
+import { faClock } from '@fortawesome/free-regular-svg-icons';
 import {
   faBriefcase,
   faBusinessTime,
   faClipboardList,
-  faCube,
-  faCubes,
-  faImages,
   faEdit,
   faMapMarkerAlt,
 } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +11,6 @@ import {
   Button,
   Chip,
   Divider,
-  Fab,
   FormControl,
   FormHelperText,
   InputLabel,
@@ -28,30 +24,26 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
 import clsx from 'clsx';
-import { Form, Formik, useFormikContext, ErrorMessage } from 'formik';
-import React, { useContext } from 'react';
+import { Form, Formik, ErrorMessage } from 'formik';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
 import LocationList from '../components/LocationList';
 import NavBar from '../components/NavBar';
-import PackageFormItem from '../components/PackageFormItem';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import { themeUtils } from '../theme';
 import createJobPostStyles from './CreateJobPostStyles';
-import PackageAccordion from '../components/PackageAccordion';
 import { Helmet } from 'react-helmet';
-import FileInput, {
-  checkTypeMultiple,
-  checkSizeMultiple,
-  checkQuantity,
-} from '../components/FileInput';
 import * as Yup from 'yup';
-import { ConstantDataContext } from '../context';
-import { useJobPosts } from '../hooks';
-import { extractLastIdFromURL } from '../utils/urlUtils';
+
+const jobPost = {
+  'availableHours': 'Lunes a viernes entre las 8am y 2pm',
+  'jobType': 3,
+  'title': 'Niñero turno mañana',
+  'zones': [25, 20, 9, 10, 11, 12],
+};
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -109,11 +101,9 @@ const HirenetStepIcon = (props) => {
   const icons = {
     1: faBriefcase,
     2: faEdit,
-    3: faCube,
-    4: faImage,
-    5: faBusinessTime,
-    6: faMapMarkerAlt,
-    7: faClipboardList,
+    3: faBusinessTime,
+    4: faMapMarkerAlt,
+    5: faClipboardList,
   };
 
   return (
@@ -140,14 +130,6 @@ const getSteps = () => {
     {
       label: 'createjobpost.steps.jobtitle.label',
       title: 'createjobpost.steps.jobtitle.header',
-    },
-    {
-      label: 'createjobpost.steps.packages.label',
-      title: 'createjobpost.steps.packages.header',
-    },
-    {
-      label: 'createjobpost.steps.images.label',
-      title: 'createjobpost.steps.images.header',
     },
     {
       label: 'createjobpost.steps.hours.label',
@@ -200,34 +182,6 @@ const getStepContent = (step, formRef, handleNext, data) => {
       return (
         <PublishStep
           step={step + 1}
-          color={themeUtils.colors.aqua}
-          title={steps[step].title}
-        >
-          <PackagesStepBody
-            formRef={formRef}
-            handleNext={handleNext}
-            data={data}
-          />
-        </PublishStep>
-      );
-    case 3:
-      return (
-        <PublishStep
-          step={step + 1}
-          color={themeUtils.colors.blue}
-          title={steps[step].title}
-        >
-          <ImagesStepBody
-            formRef={formRef}
-            handleNext={handleNext}
-            data={data}
-          />
-        </PublishStep>
-      );
-    case 4:
-      return (
-        <PublishStep
-          step={step + 1}
           color={themeUtils.colors.orange}
           title={steps[step].title}
         >
@@ -238,7 +192,7 @@ const getStepContent = (step, formRef, handleNext, data) => {
           />
         </PublishStep>
       );
-    case 5:
+    case 3:
       return (
         <PublishStep
           step={step + 1}
@@ -252,7 +206,7 @@ const getStepContent = (step, formRef, handleNext, data) => {
           />
         </PublishStep>
       );
-    case 6:
+    case 4:
       return (
         <PublishStep
           step={step + 1}
@@ -267,20 +221,44 @@ const getStepContent = (step, formRef, handleNext, data) => {
   }
 };
 
-const CreateJobPost = ({ history }) => {
+// TODO: esto viene de la API?
+const jobTypes = [
+  {
+    id: 0,
+    description: 'Plumbing',
+  },
+  {
+    id: 1,
+    description: 'Carpentry',
+  },
+  {
+    id: 2,
+    description: 'Painting',
+  },
+  {
+    id: 3,
+    description: 'Babysitting',
+  },
+  {
+    id: 4,
+    description: 'Electricity',
+  },
+  {
+    id: 5,
+    description: 'Other',
+  },
+];
+
+const EditJobPost = ({ match, history }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
 
-  const { createJobPost } = useJobPosts();
-
   const [data, setData] = React.useState({
-    category: '',
-    title: '',
-    packages: [{ title: '', description: '', rateType: '', price: '' }],
-    images: '',
-    hours: '',
-    locations: '',
+    category: jobPost.jobType,
+    title: jobPost.title,
+    hours: jobPost.availableHours,
+    locations: jobPost.zones,
   });
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -302,16 +280,11 @@ const CreateJobPost = ({ history }) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const makeRequest = async (newData) => {
+  const makeRequest = (newData) => {
     setDisableSubmit(true);
-    try {
-      const uri = await createJobPost(newData);
-      const id = extractLastIdFromURL(uri);
-      history.push(`/job/${id}/success`);
-    } catch (e) {
-      console.log(e);
-      setDisableSubmit(false);
-    }
+    console.log(newData);
+    //TODO: Registrar con la API
+    history.push(`/job/${match.params.id}/success/edit`);
   };
 
   const formRef = React.useRef();
@@ -336,7 +309,7 @@ const CreateJobPost = ({ history }) => {
       <NavBar currentSection={'/create-job-post'} />
 
       <div className={globalClasses.contentContainerTransparent}>
-        <SectionHeader sectionName={t('createjobpost.header')} />
+        <SectionHeader sectionName={t('editjobpost')} />
         <Stepper
           className={classes.stepperContainer}
           alternativeLabel
@@ -408,8 +381,6 @@ const CategoryStepBody = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const { categories: jobTypes } = useContext(ConstantDataContext);
-
   const handleSubmit = (values) => {
     handleNext(values);
   };
@@ -436,7 +407,7 @@ const CategoryStepBody = ({ formRef, handleNext, data }) => {
               <Select
                 labelId="category-select-label"
                 name="category"
-                value={values.category}
+                value={`${values.category}`}
                 onChange={(e) => setFieldValue('category', e.target.value)}
               >
                 <MenuItem value="">
@@ -493,133 +464,6 @@ const TitleStepBody = ({ formRef, handleNext, data }) => {
               name="title"
               helperText={<ErrorMessage name="title"></ErrorMessage>}
             />
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
-};
-
-const PackagesStepBody = ({ formRef, handleNext, data }) => {
-  const classes = useStyles();
-  const { t } = useTranslation();
-
-  const handleSubmit = (values) => {
-    handleNext(values);
-  };
-
-  const validationSchema = Yup.object({
-    packages: Yup.array().of(
-      Yup.object().shape({
-        title: Yup.string()
-          .required(t('validationerror.required'))
-          .max(100, t('validationerror.maxlength', { length: 100 })),
-        description: Yup.string()
-          .required(t('validationerror.required'))
-          .max(100, t('validationerror.maxlength', { length: 100 })),
-        rateType: Yup.number().required(t('validationerror.required')),
-        price: Yup.number().when('rateType', {
-          is: 2,
-          otherwise: Yup.number().required(t('validationerror.required')),
-        }),
-      })
-    ),
-  });
-
-  return (
-    <div className={classes.packagesContainer}>
-      <Formik
-        innerRef={formRef}
-        initialValues={data}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-        enableReinitialize={true}
-      >
-        {(props) => (
-          <Form>
-            <PackagesForm />
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
-};
-
-const PackagesForm = () => {
-  const { values, setFieldValue } = useFormikContext();
-
-  return (
-    <>
-      {values.packages.map((pack, index) => (
-        <div className="mb-4" key={index}>
-          <PackageFormItem
-            withDelete={values.packages.length > 1}
-            index={index}
-          />
-        </div>
-      ))}
-      <div className="flex justify-end pt-4">
-        <Fab
-          style={{ backgroundColor: themeUtils.colors.lightBlue }}
-          onClick={() => {
-            setFieldValue('packages', [
-              ...values.packages,
-              { title: '', description: '', rateType: '', price: '' },
-            ]);
-          }}
-        >
-          <Add />
-        </Fab>
-      </div>
-    </>
-  );
-};
-
-const ImagesStepBody = ({ formRef, handleNext, data }) => {
-  const classes = useStyles();
-  const { t } = useTranslation();
-
-  const handleSubmit = (values) => {
-    handleNext(values);
-  };
-
-  const validationSchema = Yup.object({
-    images: Yup.mixed()
-      .test(
-        'is-correct-type',
-        t('validationerror.multipleimages.type'),
-        checkTypeMultiple
-      )
-      .test(
-        'is-correct-size',
-        t('validationerror.multipleimages.size', { size: 2 }),
-        checkSizeMultiple
-      )
-      .test(
-        'is-correct-quantity',
-        t('validationerror.multipleimages.quantity', { count: 5 }),
-        checkQuantity
-      ),
-  });
-
-  return (
-    <div className={classes.stepContainer}>
-      <Formik
-        innerRef={formRef}
-        initialValues={data}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-        enableReinitialize={true}
-      >
-        {(props) => (
-          <Form>
-            <FileInput multiple fileName="images" />
-            <div className="font-thin text-sm mt-3">
-              {t('createjobpost.steps.images.disclaimer', {
-                count: 5,
-                size: 2,
-              })}
-            </div>
           </Form>
         )}
       </Formik>
@@ -714,28 +558,15 @@ const JobSummary = ({ formRef, handleNext, data }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const {
-    categories: jobTypes,
-    rateTypes,
-    zones,
-  } = useContext(ConstantDataContext);
-
-  const category = jobTypes[data.category];
-  const packages = [];
+  const category = jobTypes[data.category]; //TODO obtener el objeto category aca
   const locations = [];
 
-  data.packages.forEach((pack) => {
-    let rateType = rateTypes[pack.rateType];
-    packages.push({
-      title: pack.title,
-      description: pack.description,
-      price: pack.price,
-      rateType: rateType,
-    });
-  });
-
   data.locations.forEach((location) => {
-    locations.push(zones.find((zone) => zone.id === location));
+    // TODO location es solo el id de la zona, obtener el objeto de la API aca
+    locations.push({
+      id: 0,
+      description: 'Recoleta',
+    });
   });
 
   const handleSubmit = (values) => {
@@ -778,57 +609,6 @@ const JobSummary = ({ formRef, handleNext, data }) => {
           <div className={classes.summaryValue}>{data.title}</div>
         </div>
       </div>
-
-      {/* Paquetes */}
-      <div className={classes.summaryRow}>
-        <div className={classes.summaryIcon}>
-          <FontAwesomeIcon icon={faCubes} className="text-2xl" />
-        </div>
-        <div
-          className={clsx(
-            classes.summaryFieldContainer,
-            classes.packagesSummary
-          )}
-        >
-          <p>{t('createjobpost.steps.packages.label')}</p>
-          <div className="p-3">
-            {packages.map((pack, index) => (
-              <PackageAccordion key={index} pack={pack} isHireable={false} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Imagenes */}
-      {data.images && Array.from(data.images).length > 0 && (
-        <div className={classes.summaryRow}>
-          <div className={classes.summaryIcon}>
-            <FontAwesomeIcon icon={faImages} className="text-2xl" />
-          </div>
-          <div
-            className={clsx(
-              classes.summaryFieldContainer,
-              classes.imagesSummary
-            )}
-          >
-            <p>{t('createjobpost.steps.images.label')}</p>
-            <div className={classes.imageSlideshow}>
-              {Array.from(data.images).map((image, index) => (
-                <img
-                  className={classes.image}
-                  src={
-                    image === ''
-                      ? `${process.env.PUBLIC_URL}/img/defaultavatar.svg`
-                      : URL.createObjectURL(image)
-                  }
-                  key={index}
-                  alt=""
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Horarios */}
       <div className={classes.summaryRow}>
@@ -875,4 +655,4 @@ const JobSummary = ({ formRef, handleNext, data }) => {
   );
 };
 
-export default CreateJobPost;
+export default EditJobPost;

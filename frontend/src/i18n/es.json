@@ -192,7 +192,8 @@
     "wrongexplained": "El enlace al que has ingresado no es correcto. Si necesitas cambiar tu contraseña, vuelve a intentarlo desde la página de inicio de sesión.",
     "login": "Iniciar Sesión",
     "passwordChanged": "¡Contraseña cambiada correctamente!",
-    "changedinstructions": "Inicie sesión para continuar utilizando la página."
+    "changedinstructions": "Inicie sesión para continuar utilizando la página.",
+	"error": "Ocurrio un error, porfavor intente de nuevo"
   },
   "verifyemail": {
     "title": "Verificación de email",
@@ -472,5 +473,12 @@
     "number": "N°{{rank}}",
     "mosthired": "Más contratado en {{jobType}}",
     "similar": "Tus clientes también contrataron..."
+  },
+  "editjobpost": "Editar servicio",
+  "jobpostsuccess": {
+    "title": "¡Publicación creada exitosamente!",
+    "edit": "¡Publicación modificada correctamente!",
+    "instruction": "Usa el siguiente botón para ir a ella:",
+    "btn": "Ir a la publicación"
   }
 }

@@ -188,7 +188,8 @@
     "wrongexplained": "This link is invalid. If you still need to change your password, try again from the login screen",
     "login": "Log In",
     "passwordChanged": "Password changed successfully!",
-    "changedinstructions": "Please log in to continue using the site."
+    "changedinstructions": "Please log in to continue using the site.",
+	"error": "An error has occurred, please try again"
   },
   "verifyemail": {
     "title": "Email verification",
@@ -471,5 +472,12 @@
     "number": "No.{{rank}}",
     "mosthired": "Most hired in {{jobType}}",
     "similar": "Your clients have also hired..."
+  },
+  "editjobpost": "Edit service",
+  "jobpostsuccess": {
+    "title": "Post created successfully!",
+    "edit": "Post modified successfully!",
+    "instruction": "Use the button below to check it out:",
+    "btn": "Go to post"
   }
 }

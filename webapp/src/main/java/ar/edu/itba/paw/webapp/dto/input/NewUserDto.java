@@ -26,6 +26,9 @@ public class NewUserDto {
     @Size(min = 8, max = 100)
     private String password;
 
+    @NotBlank
+    private String webPageUrl;
+
     public String getEmail() {
         return email;
     }
@@ -40,6 +43,14 @@ public class NewUserDto {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getWebPageUrl() {
+        return webPageUrl;
+    }
+
+    public void setWebPageUrl(String webPageUrl) {
+        this.webPageUrl = webPageUrl;
     }
 
     public void setPassword(String password) {

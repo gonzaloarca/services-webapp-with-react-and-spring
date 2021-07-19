@@ -7,13 +7,12 @@ export const loginRequest = ({ email, password }) => {
   });
 };
 
-export const registerRequest = ({ username, phone, email, password }) => {
-  return hireNetApi.post('/users', {
-    username: username,
-    phone: phone,
-    email: email,
-    password: password,
-  });
+export const registerRequest = (props) => {
+  return hireNetApi.post('/users', props);
+};
+
+export const verifyEmailRequest = ({ id, token }) => {
+  return hireNetApi.post(`/users/${id}/verify`, { token: token });
 };
 
 export const uploadUserImageRequest = ({ id, image }) => {
@@ -53,4 +52,12 @@ export const getProfessionalInfoRequest = (id) => {
         '',
     },
   });
+};
+
+export const recoverAccountRequest = (data) => {
+  return hireNetApi.post('/users/recover-account', data);
+};
+
+export const recoverPassRequest = (data) => {
+  return hireNetApi.put('/users/recover-account/change-password', data);
 };

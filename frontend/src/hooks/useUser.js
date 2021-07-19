@@ -3,8 +3,11 @@ import {
   loginRequest,
   getUserByIdRequest,
   registerRequest,
+  verifyEmailRequest,
   getRankingsRequest,
   getProfessionalInfoRequest,
+  recoverAccountRequest,
+  recoverPassRequest,
 } from '../api/usersApi';
 const useUserHook = () => {
   const getUserByEmail = async (email) => {
@@ -21,13 +24,17 @@ const useUserHook = () => {
     const response = await getUserByIdRequest(id);
     return response.data;
   };
-  const register = async ({ username, phone, email, password }) => {
+
+  const register = async (newUser) => {
     const response = await registerRequest({
-      username,
-      phone,
-      email,
-      password,
+      ...newUser,
+      webPageUrl: process.env.REACT_APP_PAGE_URL + 'token',
     });
+    return response.data;
+  };
+
+  const verifyEmail = async (data) => {
+    const response = await verifyEmailRequest(data);
     return response.data;
   };
 
@@ -41,13 +48,29 @@ const useUserHook = () => {
     return response.data;
   };
 
+  const recoverAccount = async (data) => {
+    const response = await recoverAccountRequest({
+      ...data,
+      webPageUrl: process.env.REACT_APP_PAGE_URL + 'change-password',
+    });
+    return response.data;
+  };
+
+  const recoverPass = async (data) => {
+    const response = await recoverPassRequest(data);
+    return response.data;
+  };
+
   return {
     getUserByEmail,
     getUserById,
     login,
     register,
+    verifyEmail,
     getRankings,
     getProfessionalInfo,
+    recoverAccount,
+    recoverPass,
   };
 };
 export default useUserHook;

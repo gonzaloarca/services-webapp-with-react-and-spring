@@ -18,8 +18,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Hire from './pages/Hire';
 import Account from './pages/Account';
+import RecoverAccount from './pages/RecoverAccount';
 import RecoverPass from './pages/RecoverPass';
-import ChangePass from './pages/ChangePass';
 import VerifyEmail from './pages/VerifyEmail';
 import { UserContext, ConstantDataContext } from './context';
 import {
@@ -36,6 +36,8 @@ import RegisterSuccess from './pages/RegisterSuccess';
 import { useTranslation } from 'react-i18next';
 import { isProfessional } from './utils/userUtils';
 import Error404 from './pages/Error404';
+import EditJobPost from './pages/EditJobPost';
+import JobPostSuccess from './pages/JobPostSuccess';
 
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
@@ -178,6 +180,12 @@ const App = () => {
           )}
           <Route path="/search" exact component={Search} />
           <Route path="/job/:id" exact component={JobPost} />
+          <Route
+            path="/job/:id/success/:edit?"
+            exact
+            component={JobPostSuccess}
+          />
+          <Route path="/job/:id/edit" exact component={EditJobPost} />
           <Route path="/job/:id/packages" exact component={Packages} />
           <Route path="/job/:id/packages/add" exact component={AddPackage} />
           <Route
@@ -195,10 +203,9 @@ const App = () => {
           )}
           <Route path="/hire/package/:id" exact component={Hire} />
           <Route path="/account/:activeTab?" exact component={Account} />
-          <Route path="/recover" exact component={RecoverPass} />
-          <Route path="/change-password" exact component={ChangePass} />
+          <Route path="/recover" exact component={RecoverAccount} />
+          <Route path="/change-password" exact component={RecoverPass} />
           <Route path="/token" exact component={VerifyEmail} />
-          {/* TODO: 404 not found */}
           <Route path="/" component={Error404} />
         </Switch>
         <Footer />
