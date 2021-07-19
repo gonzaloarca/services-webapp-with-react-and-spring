@@ -35,10 +35,10 @@ public class SimpleJobPackageServiceTest {
 
 
     @InjectMocks
-    SimpleJobPackageService simpleJobPackageService = new SimpleJobPackageService();
+    private SimpleJobPackageService simpleJobPackageService = new SimpleJobPackageService();
 
     @Mock
-    JobPackageDao jobPackageDao;
+    private JobPackageDao jobPackageDao;
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();

@@ -44,7 +44,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     @Value("classpath:key.txt")
     private Resource key;
 
-    final String BASE_URL = "/api/v1";
+    private final String BASE_URL = "/api/v1";
 
     @Autowired
     private HireNetUserDetails hireNetUserDetails;

@@ -11,13 +11,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DistinctFields {
-    String message() default "Fields values can not match!";
+    public String message() default "Fields values can not match!";
 
-    String field();
+    public String field();
 
-    String distinctField();
+    public String distinctField();
 
-    Class<?>[] groups() default {};
+    public Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+    public Class<? extends Payload>[] payload() default {};
 }

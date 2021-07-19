@@ -163,15 +163,15 @@ public class JobPackageDaoJpaTest {
 
     @InjectMocks
     @Autowired
-    JobPackageDaoJpa jobPackageDaoJpa;
+    private JobPackageDaoJpa jobPackageDaoJpa;
 
     @Autowired
-    DataSource ds;
+    private DataSource ds;
 
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Before
     public void setUp() {

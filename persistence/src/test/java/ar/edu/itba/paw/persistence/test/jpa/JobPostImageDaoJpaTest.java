@@ -36,15 +36,15 @@ public class JobPostImageDaoJpaTest {
 
 	@InjectMocks
 	@Autowired
-    JobPostImageDaoJpa jobPostImageDaoJpa;
+    private JobPostImageDaoJpa jobPostImageDaoJpa;
 
 	@Autowired
-	DataSource ds;
+	private DataSource ds;
 
-	JdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
 	@PersistenceContext
-	EntityManager em;
+	private EntityManager em;
 
 	@Before
 	public void setUp() {
