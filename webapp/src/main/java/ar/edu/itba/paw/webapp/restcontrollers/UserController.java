@@ -56,27 +56,6 @@ public class UserController {
     @Context
     private HttpHeaders headers;
 
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response findAll(@QueryParam("email") final String email,
-                            @QueryParam("page") int page) {
-        if (email != null) {
-            accountControllerLogger.debug("Finding user with email {}", email);
-            UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
-            return Response.ok(getUserDto(user)).build();
-        }
-        if (page < 1)
-            page = 1;
-
-        accountControllerLogger.debug("Finding all users for page {}", page);
-        List<UserDto> usersDto = userService.findAllWithImage(page).stream()
-                .map(this::getUserDto).collect(Collectors.toList());
-        int maxPage = userService.findAllWithImageMaxPage();
-        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
-                Response.ok(new GenericEntity<List<UserDto>>(usersDto) {
-                }));
-    }
-
     private UserDto getUserDto(UserWithImage userWithImage) {
         accountControllerLogger.debug("Finding auth info for user with email {}", userWithImage.getEmail());
         UserAuth auth = userService.getAuthInfo(userWithImage.getEmail()).orElseThrow(UserNotFoundException::new);
