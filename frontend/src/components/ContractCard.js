@@ -56,7 +56,6 @@ const ContractStateHeader = ({ contract, isOwner }) => {
   const { t } = useTranslation();
 
   const stateData = contractStateDataMap[contract.state.description];
-  console.log(stateData);
   return stateData.clientMessage ? (
     <div
       className={classes.stateContainer}

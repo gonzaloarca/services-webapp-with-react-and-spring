@@ -41,7 +41,6 @@ import {
 import { Helmet } from 'react-helmet';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import BottomPagination from '../components/BottomPagination';
-import { Skeleton } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context';
 import HirenetModal, { PlainTextBody } from '../components/HirenetModal';

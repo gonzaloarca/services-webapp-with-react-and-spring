@@ -260,7 +260,6 @@ const PersonalData = ({ currentUser }) => {
       setAnswer('ok');
       history.go(0);
     } catch (error) {
-      console.log(error);
       setAnswer('error');
     }
   };
@@ -434,7 +433,6 @@ const SecurityData = ({ email, userId }) => {
       });
       setAnswer('ok');
     } catch (error) {
-      console.log(error);
       setAnswer('error');
     }
   };

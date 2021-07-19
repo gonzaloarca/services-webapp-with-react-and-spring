@@ -56,6 +56,17 @@ public class UserController {
     @Context
     private HttpHeaders headers;
 
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response findByEmail(@QueryParam("email") final String email) {
+        if (email == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+            accountControllerLogger.debug("Finding user with email {}", email);
+            UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
+            return Response.ok(getUserDto(user)).build();
+    }
+
     private UserDto getUserDto(UserWithImage userWithImage) {
         accountControllerLogger.debug("Finding auth info for user with email {}", userWithImage.getEmail());
         UserAuth auth = userService.getAuthInfo(userWithImage.getEmail()).orElseThrow(UserNotFoundException::new);

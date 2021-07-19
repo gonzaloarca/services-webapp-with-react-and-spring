@@ -93,7 +93,6 @@ export const changePasswordRequest = (data) => {
 };
 
 export const changeAccountDataRequest = (data) => {
-  console.log(data);
   return hireNetApi.put(
     `/users/${data.userId}`,
     {
