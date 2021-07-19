@@ -64,9 +64,9 @@ public class SimpleJobContractServiceTest {
     private static final String image1Type = "image/png";
     private static final ByteImage BYTE_IMAGE = new ByteImage(image1Bytes, image1Type);
 
-    private static final JobContract[] JOB_CONTRACTS = new JobContract[]{
-            new JobContract(1, CLIENT, JOB_PACKAGE, LocalDateTime.now(), LocalDateTime.now().plusDays(5), LocalDateTime.now(), "Description"),
-            new JobContract(2, CLIENT, JOB_PACKAGE, LocalDateTime.now(), LocalDateTime.now().plusDays(10), LocalDateTime.now(), "Another description")
+    private static final JobContractWithImage[] JOB_CONTRACTS = new JobContractWithImage[]{
+            new JobContractWithImage(1, CLIENT, JOB_PACKAGE, LocalDateTime.now(), LocalDateTime.now().plusDays(5), LocalDateTime.now(), "Description",null),
+            new JobContractWithImage(2, CLIENT, JOB_PACKAGE, LocalDateTime.now(), LocalDateTime.now().plusDays(10), LocalDateTime.now(), "Another description",null)
     };
 
     private static final JobCard JOB_CARD = new JobCard(JOB_POST2, JobPackage.RateType.ONE_TIME, 500.0, 0, 0, 0.0, null);
@@ -137,7 +137,7 @@ public class SimpleJobContractServiceTest {
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
         Mockito.doReturn(states).when(mockContractService).getContractStates(Mockito.eq("pending"));
         Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService)
-                .findByProIdAndSortedByModificationDate(
+                .findByProIdAndSortedByModificationDateWithImage(
                         Mockito.eq(PROFESSIONAL.getId()), Mockito.eq(states), Mockito.eq(0));
         Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
@@ -168,7 +168,7 @@ public class SimpleJobContractServiceTest {
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
         Mockito.doReturn(states).when(mockContractService).getContractStates(Mockito.eq("pending"));
         Mockito.doReturn(Arrays.asList(JOB_CONTRACTS)).when(mockContractService)
-                .findByClientIdAndSortedByModificationDate(
+                .findByClientIdAndSortedByModificationDateWithImage(
                         Mockito.eq(CLIENT.getId()), Mockito.eq(states), Mockito.eq(0));
         Mockito.when(simpleJobCardService.findByPostIdWithInactive(Mockito.eq(JOB_POST2.getId()))).thenReturn(JOB_CARD);
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());

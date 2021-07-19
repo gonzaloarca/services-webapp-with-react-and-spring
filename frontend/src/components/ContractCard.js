@@ -27,7 +27,7 @@ import {
 } from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
 import clsx from 'clsx';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { themeUtils } from '../theme';
@@ -44,6 +44,8 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { filterPastTime, filterPastDate } from '../utils/filterPast';
 import HirenetModal, { PlainTextBody } from './HirenetModal';
+import { useUser } from '../hooks';
+import { extractLastIdFromURL } from '../utils/urlUtils';
 
 const useStyles = makeStyles(contractCardStyles);
 
@@ -67,6 +69,8 @@ const ContractStateHeader = ({ contract, isOwner }) => {
 };
 
 const ContractCard = ({ contract, isOwner }) => {
+  const { getUserById } = useUser();
+
   const [openCancel, setOpenCancel] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const [openReschedule, setOpenReschedule] = useState(false);
@@ -74,6 +78,30 @@ const ContractCard = ({ contract, isOwner }) => {
   const [openRate, setOpenRate] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const [openContact, setOpenContact] = useState(false);
+
+  const [professional, setProfessional] = useState(null);
+  const [client, setClient] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadProfessional = async () => {
+    const user = await getUserById(extractLastIdFromURL(contract.professional));
+    setProfessional(user);
+  };
+
+  const loadClient = async () => {
+    const user = await getUserById(extractLastIdFromURL(contract.client));
+    setClient(user);
+  };
+
+  useEffect(() => {
+    loadClient();
+    loadProfessional();
+  }, []);
+
+  useEffect(() => {
+    if (contract && professional && client) setLoading(false);
+  }, [professional, client]);
+
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -161,8 +189,8 @@ const ContractCard = ({ contract, isOwner }) => {
           price={contract.price}
           rateType={contract.rateType}
           creationDate={contract.creationDate}
-          text={contract.jobContract.description}
-          image={contract.jobContract.image}
+          text={contract.description}
+          image={contract.contractImage}
         />
       ),
       negativeLabel: t('mycontracts.modals.details.negative'),
@@ -173,13 +201,15 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenContact(false),
       title: t('mycontracts.modals.contact.title'),
       body: (
-        <ContactBody
-          username={
-            isOwner ? contract.client.username : contract.professional.username
-          }
-          email={isOwner ? contract.client.email : contract.professional.email}
-          phone={isOwner ? contract.client.phone : contract.professional.phone}
-        />
+        <>
+          {!loading && (
+            <ContactBody
+              username={isOwner ? client.username : professional.username}
+              email={isOwner ? client.email : professional.email}
+              phone={isOwner ? client.phone : professional.phone}
+            />
+          )}
+        </>
       ),
       negativeLabel: t('mycontracts.modals.contact.negative'),
     },
@@ -193,132 +223,132 @@ const ContractCard = ({ contract, isOwner }) => {
 
   return (
     <>
-      <Card className={classes.contractCard}>
-        <ContractStateHeader contract={contract} isOwner={isOwner} />
-        <Grid className="p-4 pr-4" container spacing={3}>
-          <Grid
-            className={classes.jobImageContainer}
-            item
-            xs={12}
-            md={4}
-            lg={3}
-          >
-            {/* Fecha programada */}
-            <div className={classes.scheduledDateContainer}>
-              {t('mycontracts.scheduleddate')}
-              <Trans
-                i18nKey="mycontracts.scheduleddateformat"
-                components={{
-                  date: <div className={classes.scheduledDate} />,
-                  time: <div className={classes.scheduledTime} />,
-                }}
-                values={{
-                  date: t('date', {
-                    date: createDate(contract.scheduledDate),
-                  }),
-                  time: t('time', {
-                    date: createDate(contract.scheduledDate),
-                  }),
-                }}
-              />
-            </div>
-            <img className={classes.jobImage} src={contract.image} alt="" />
-          </Grid>
-          <Grid
-            className="flex flex-col justify-center"
-            item
-            xs={12}
-            md={8}
-            lg={9}
-          >
-            {/* Titulo */}
-            <Link
-              to={`/job/${contract.jobPost.id}`}
-              className={classes.contractTitle}
+      {!loading && (
+        <Card className={classes.contractCard}>
+          <ContractStateHeader contract={contract} isOwner={isOwner} />
+          <Grid className="p-4 pr-4" container spacing={3}>
+            <Grid
+              className={classes.jobImageContainer}
+              item
+              xs={12}
+              md={4}
+              lg={3}
             >
-              {contract.jobTitle}
-            </Link>
-            {/* Categoria y calificacion */}
-            <Grid className="mb-1" container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <p className={classes.jobType}>
-                  {contract.jobType.description}
-                </p>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <RatingDisplay
-                  className="justify-end"
-                  avgRate={contract.avgRate}
-                  reviewsCount={contract.reviewsCount}
+              {/* Fecha programada */}
+              <div className={classes.scheduledDateContainer}>
+                {t('mycontracts.scheduleddate')}
+                <Trans
+                  i18nKey="mycontracts.scheduleddateformat"
+                  components={{
+                    date: <div className={classes.scheduledDate} />,
+                    time: <div className={classes.scheduledTime} />,
+                  }}
+                  values={{
+                    date: t('date', {
+                      date: createDate(contract.scheduledDate),
+                    }),
+                    time: t('time', {
+                      date: createDate(contract.scheduledDate),
+                    }),
+                  }}
                 />
-              </Grid>
-            </Grid>
-            <div>
-              <p className={classes.fieldLabel}>
-                {t(
-                  isOwner ? 'mycontracts.hiredby' : 'mycontracts.professional'
-                )}
-              </p>
-              <div className={classes.userContainer}>
-                <Avatar
-                  className={classes.avatarSize}
-                  src={
-                    isOwner
-                      ? contract.client.image
-                      : contract.professional.image
-                  }
-                />
-                <p className={classes.username}>
-                  {isOwner
-                    ? contract.client.username
-                    : contract.professional.username}
-                </p>
               </div>
-            </div>
-          </Grid>
-        </Grid>
-        <Divider />
-        <div className={classes.contractActions}>
-          {contractActionsMap[
-            contractStateDataMap[contract.state.description].state
-          ].map(({ label, onClick, icon, color, roles, action }, index) =>
-            (isOwner && roles.includes('PROFESSIONAL')) ||
-            (!isOwner && roles.includes('CLIENT')) ? (
-              <>
-                <Button
-                  className="ml-2"
-                  key={index}
-                  onClick={
-                    modalDataMap[action]
-                      ? modalDataMap[action].openModal
-                      : onClick
-                  }
-                  style={{ color: color }}
-                  startIcon={
-                    <FontAwesomeIcon icon={icon} style={{ color: color }} />
-                  }
-                >
-                  {t(label)}
-                </Button>
-                {modalDataMap[action] && (
-                  <HirenetModal
-                    title={modalDataMap[action].title}
-                    body={modalDataMap[action].body}
-                    open={modalDataMap[action].open}
-                    onNegative={modalDataMap[action].onNegative}
-                    onAffirmative={modalDataMap[action].onAffirmative}
-                    affirmativeLabel={modalDataMap[action].affirmativeLabel}
-                    negativeLabel={modalDataMap[action].negativeLabel}
-                    affirmativeColor={modalDataMap[action].affirmativeColor}
+              <img
+                className={classes.jobImage}
+                src={contract.postImage}
+                alt=""
+              />
+            </Grid>
+            <Grid
+              className="flex flex-col justify-center"
+              item
+              xs={12}
+              md={8}
+              lg={9}
+            >
+              {/* Titulo */}
+              <Link
+                to={`/job/${extractLastIdFromURL(contract.jobPost)}`}
+                className={classes.contractTitle}
+              >
+                {contract.jobTitle}
+              </Link>
+              {/* Categoria y calificacion */}
+              <Grid className="mb-1" container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <p className={classes.jobType}>
+                    {contract.jobType.description}
+                  </p>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <RatingDisplay
+                    className="justify-end"
+                    avgRate={contract.avgRate}
+                    reviewsCount={contract.reviewsCount}
                   />
-                )}
-              </>
-            ) : (
-              <></>
-            )
-          )}
-        </div>
-      </Card>
+                </Grid>
+              </Grid>
+              <div>
+                <p className={classes.fieldLabel}>
+                  {t(
+                    isOwner ? 'mycontracts.hiredby' : 'mycontracts.professional'
+                  )}
+                </p>
+                <div className={classes.userContainer}>
+                  <Avatar
+                    className={classes.avatarSize}
+                    src={isOwner ? client.image : professional.image}
+                  />
+                  <p className={classes.username}>
+                    {isOwner ? client.username : professional.username}
+                  </p>
+                </div>
+              </div>
+            </Grid>
+          </Grid>
+          <Divider />
+          <div className={classes.contractActions}>
+            {contractActionsMap[
+              contractStateDataMap[contract.state.description].state
+            ].map(({ label, onClick, icon, color, roles, action }, index) =>
+              (isOwner && roles.includes('PROFESSIONAL')) ||
+              (!isOwner && roles.includes('CLIENT')) ? (
+                <>
+                  <Button
+                    className="ml-2"
+                    key={index}
+                    onClick={
+                      modalDataMap[action]
+                        ? modalDataMap[action].openModal
+                        : onClick
+                    }
+                    style={{ color: color }}
+                    startIcon={
+                      <FontAwesomeIcon icon={icon} style={{ color: color }} />
+                    }
+                  >
+                    {t(label)}
+                  </Button>
+                  {modalDataMap[action] && (
+                    <HirenetModal
+                      title={modalDataMap[action].title}
+                      body={modalDataMap[action].body}
+                      open={modalDataMap[action].open}
+                      onNegative={modalDataMap[action].onNegative}
+                      onAffirmative={modalDataMap[action].onAffirmative}
+                      affirmativeLabel={modalDataMap[action].affirmativeLabel}
+                      negativeLabel={modalDataMap[action].negativeLabel}
+                      affirmativeColor={modalDataMap[action].affirmativeColor}
+                    />
+                  )}
+                </>
+              ) : (
+                <></>
+              )
+            )}
+          </div>
+        </Card>
+      )}
     </>
   );
 };

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.net.URI;
 import java.util.Objects;
 
 public class JobContractCard {
@@ -7,12 +8,16 @@ public class JobContractCard {
     private final JobCard jobCard;
     private final Review review;
     private final String scheduledDateStr;
+    private final String description;
+    private final ByteImage byteImage;
 
-    public JobContractCard(JobContract jobContract, JobCard jobCard, Review review, String scheduledDateStr) {
-        this.jobContract = jobContract;
+    public JobContractCard(JobContractWithImage jobContract, JobCard jobCard, Review review, String scheduledDateStr) {
+        this.jobContract =  new JobContract(jobContract);
         this.jobCard = jobCard;
         this.review = review;
         this.scheduledDateStr = scheduledDateStr;
+        this.description = jobContract.description;
+        byteImage = jobContract.getByteImage();
     }
 
     public JobContract getJobContract() {
@@ -29,6 +34,14 @@ public class JobContractCard {
 
     public String getScheduledDateStr() {
         return scheduledDateStr;
+    }
+
+    public ByteImage getByteImage() {
+        return byteImage;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override

@@ -123,6 +123,7 @@ const App = () => {
       console.log(decoded);
       if (decoded.exp * 1000 <= Date.now()) {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setToken(null);
         setCurrentUser(null);
       } else {
@@ -134,6 +135,7 @@ const App = () => {
       const decoded = jwt(sessionStorageToken);
       if (decoded.exp * 1000 <= Date.now()) {
         sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
         setToken(null);
         setCurrentUser(null);
       } else {

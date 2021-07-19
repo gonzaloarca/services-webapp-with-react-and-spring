@@ -45,7 +45,7 @@ public class SimpleJobContractService implements JobContractService {
     public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
 
         if (userId == null && contractState == null && role == null)
-            return getJobContractCards(jobContractDao.findAll(page));
+            return getJobContractCards(jobContractDao.findAllWithImage(page));
 
         if (userId == null || contractState == null || role == null ||
                 (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized")))
@@ -53,9 +53,9 @@ public class SimpleJobContractService implements JobContractService {
 
         List<JobContract.ContractState> states = getContractStates(contractState);
         if (role.equalsIgnoreCase("professional")) {
-            return getJobContractCards(findByProIdAndSortedByModificationDate(userId, states, page));
+            return getJobContractCards(findByProIdAndSortedByModificationDateWithImage(userId, states, page));
         } else if (role.equals("client")) {
-            return getJobContractCards(findByClientIdAndSortedByModificationDate(userId, states, page));
+            return getJobContractCards(findByClientIdAndSortedByModificationDateWithImage(userId, states, page));
         } else
             throw new IllegalArgumentException();
     }
@@ -102,15 +102,15 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
+    public List<JobContractWithImage> findByClientIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
                                                                        int page) {
-        return jobContractDao.findByClientIdAndSortedByModificationDate(id, states, page);
+        return jobContractDao.findByClientIdAndSortedByModificationDateWithImage(id, states, page);
     }
 
     @Override
-    public List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states,
+    public List<JobContractWithImage> findByProIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
                                                                     int page) {
-        return jobContractDao.findByProIdAndSortedByModificationDate(id, states, page);
+        return jobContractDao.findByProIdAndSortedByModificationDateWithImage(id, states, page);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class SimpleJobContractService implements JobContractService {
         return jobContractDao.findContractsByProIdMaxPage(id, states);
     }
 
-    private List<JobContractCard> getJobContractCards(List<JobContract> jobContracts) {
+    private List<JobContractCard> getJobContractCards(List<JobContractWithImage> jobContracts) {
         List<JobContractCard> jobContractCards = new ArrayList<>();
 
         jobContracts.

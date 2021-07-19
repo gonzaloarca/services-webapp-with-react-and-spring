@@ -6,6 +6,7 @@ import useJobPostsHook from './useJobPosts';
 import useJobPackagesHook from './useJobPackages';
 import useReviewsHook from './useReviews';
 import useRateTypesHook from './useRateTypes';
+import useContractsHook from './useContracts';
 
 export const useUser = useUserInfoHook;
 export const useZones = useZonesHook;
@@ -15,3 +16,4 @@ export const useJobPosts = useJobPostsHook;
 export const useJobPackages = useJobPackagesHook;
 export const useReviews = useReviewsHook;
 export const useRateTypes = useRateTypesHook;
+export const useContracts = useContractsHook;
