@@ -46,8 +46,8 @@ const Login = () => {
     try {
       const user = await getUserByEmail(email);
       setCurrentUser(user);
-    } catch (e) {
-      console.log('e1', e);
+    } catch (error) {
+      console.log( error);
     }
   };
 
@@ -60,9 +60,8 @@ const Login = () => {
         setToken(token);
         setUserData(jwt(token).sub);
       }
-    } catch (e) {
-      console.log('e2 ', e);
-      //TODO: HANDLE ERROR
+    } catch (error) {
+      console.log( error);
     }
   }, [token]);
 
@@ -85,7 +84,7 @@ const Login = () => {
       if (error.response.status === 401) {
         setBadCredentials(true);
       } else {
-        console.log('e3', error);
+        console.log( error);
       }
       return;
     }

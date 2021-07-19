@@ -40,6 +40,7 @@ export const Home = (props) => {
   useEffect(() => {
     loadJobCards();
   }, []);
+  
   return (
     <div className="bg-white">
       <Helmet>
