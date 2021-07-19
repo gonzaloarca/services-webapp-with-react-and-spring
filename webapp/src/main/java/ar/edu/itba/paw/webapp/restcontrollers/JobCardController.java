@@ -108,6 +108,8 @@ public class JobCardController {
             orderBy = JobCard.OrderBy.BETTER_QUALIFIED.ordinal();
         if (zone == null)
             zone = SEARCH_WITHOUT_ZONES;
+        if(query == null)
+            query = "";
         if (page < 1)
             page = 1;
 

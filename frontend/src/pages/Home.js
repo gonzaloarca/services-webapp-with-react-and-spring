@@ -27,9 +27,9 @@ export const Home = (props) => {
   const [loadingJobs, setLoadingJobs] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [showChevron, setShowChevron] = useState(false);
-  const { getJobCards } = useJobCards();
+  const { searchJobCards } = useJobCards();
   const loadJobCards = async () => {
-    setJobs(await getJobCards());
+    setJobs(await searchJobCards({ orderBy: 4 }));
     setLoadingJobs(false);
   };
 
@@ -40,7 +40,7 @@ export const Home = (props) => {
   useEffect(() => {
     loadJobCards();
   }, []);
-  
+
   return (
     <div className="bg-white">
       <Helmet>

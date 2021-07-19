@@ -198,7 +198,9 @@ public class JobCardDaoJpa implements JobCardDao {
                 default:
             }
         }
-
+        if(query == null) {
+            query = "";
+        }
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString()).setParameter("query",
                 String.format("%%%s%%", query.replace("%", "\\%")
                         .replace("_", "\\_")).toUpperCase()

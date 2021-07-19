@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.interfaces.HirenetUtils.*;
 
@@ -55,7 +56,7 @@ public class SimpleJobCardService implements JobCardService {
 
     @Override
     public List<JobCard> search(String query, int zone, int jobType, int order, int page, Locale locale) {
-        if (query == null || zone < SEARCH_WITHOUT_ZONES || zone > JobPost.Zone.values().length
+        if (zone < SEARCH_WITHOUT_ZONES || zone > JobPost.Zone.values().length
                 || jobType < SEARCH_WITHOUT_CATEGORIES ||
                 jobType > JobPost.JobType.values().length || order < 0
                 || order > JobCard.OrderBy.values().length || page < ALL_PAGES) {
