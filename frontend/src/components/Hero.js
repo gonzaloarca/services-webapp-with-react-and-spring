@@ -53,6 +53,7 @@ const Hero = ({ zones }) => {
       className={classes.heroContainer}
       style={{
         backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+        backgroundPosition: '50% 20%',
       }}
     >
       <div className={classes.heroContent}>
