@@ -11,10 +11,10 @@ public class EditJobContractDto {
 
     @Min(0)
     @Max(8)
-    int newState;
+    private int newState;
 
     @DateTimeFormat(pattern = HirenetUtils.ISO_DATE_TIME_FORMAT)
-    String newScheduledDate;
+    private String newScheduledDate;
 
     public int getNewState() {
         return newState;

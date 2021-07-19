@@ -46,8 +46,8 @@ public class JobContract extends JobContractAbstract {
         CLIENT_MODIFIED("CLIENT_MODIFIED"),
         PRO_MODIFIED("PRO_MODIFIED");
 
-        final private String description;
-        final private long id;
+        private final String description;
+        private final long id;
 
         ContractState(String description) {
             this.description = description;

@@ -58,7 +58,7 @@ public class RecoveryTokenDaoJpaTest {
 
     @InjectMocks
     @Autowired
-    RecoveryTokenDaoJpa recoveryTokenDaoJpa;
+    private RecoveryTokenDaoJpa recoveryTokenDaoJpa;
 
     private JdbcTemplate jdbcTemplate;
 

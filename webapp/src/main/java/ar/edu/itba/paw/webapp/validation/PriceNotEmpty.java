@@ -12,13 +12,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PriceNotEmpty {
 
-    String price();
+    public String price();
 
-    String rateType();
+    public String rateType();
 
-    String message() default "Price is not valid";
+    public String message() default "Price is not valid";
 
-    Class<?>[] groups() default {};
+    public Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+    public Class<? extends Payload>[] payload() default {};
 }

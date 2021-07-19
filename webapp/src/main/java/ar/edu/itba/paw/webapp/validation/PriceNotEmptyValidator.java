@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.validation;
 
 import ar.edu.itba.paw.models.JobPackage;
-import ar.edu.itba.paw.webapp.form.PackageForm;
 import org.springframework.beans.BeanWrapperImpl;
 
 import javax.validation.ConstraintValidator;
