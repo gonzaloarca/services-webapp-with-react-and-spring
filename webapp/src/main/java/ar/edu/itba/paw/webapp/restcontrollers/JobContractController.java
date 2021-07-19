@@ -106,7 +106,7 @@ public class JobContractController {
                 .build();
     }
 
-    @PATCH
+    @PUT
     @Path("/{contractId}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response updateContract(@Valid final EditJobContractDto editJobContractDto,
