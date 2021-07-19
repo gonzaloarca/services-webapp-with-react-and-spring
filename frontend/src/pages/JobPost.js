@@ -43,6 +43,7 @@ import BottomPagination from '../components/BottomPagination';
 import { Skeleton } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context';
+import HirenetModal, { PlainTextBody } from '../components/HirenetModal';
 
 const useStyles = makeStyles((theme) => ({
   carouselImage: {
@@ -199,6 +200,7 @@ const JobPost = ({ match, history }) => {
   const [packages, setPackages] = useState([]);
   const [proUser, setProUser] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const loadJobPost = async () => {
     try {
@@ -303,11 +305,25 @@ const JobPost = ({ match, history }) => {
                   fontSize="large"
                   className="text-lg"
                   style={{ color: themeUtils.colors.red }}
-                  onClick={deletePost}
+                  onClick={() => setOpenDelete(true)}
                 >
                   <Delete fontSize="large" className="mr-1" />
                   {t('jobpost.delete')}
                 </Button>
+                <HirenetModal
+                  open={openDelete}
+                  title={t('jobpost.deletetitle')}
+                  body={
+                    <PlainTextBody>
+                      {t('managepackages.deletemodal.body')}
+                    </PlainTextBody>
+                  }
+                  onNegative={() => setOpenDelete(false)}
+                  onAffirmative={deletePost}
+                  affirmativeLabel={t('managepackages.deletemodal.affirmative')}
+                  negativeLabel={t('managepackages.deletemodal.negative')}
+                  affirmativeColor={themeUtils.colors.red}
+                />
               </div>
             ) : (
               <></>
@@ -560,7 +576,7 @@ const ReviewListCard = ({ postId }) => {
       console.log(e);
     }
   };
-  
+
   useEffect(() => {
     loadReviews();
   }, [queryParams]);
