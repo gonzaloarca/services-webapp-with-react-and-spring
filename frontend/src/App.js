@@ -38,6 +38,7 @@ import { isProfessional } from './utils/userUtils';
 import Error404 from './pages/Error404';
 import EditJobPost from './pages/EditJobPost';
 import JobPostSuccess from './pages/JobPostSuccess';
+import Error from './pages/Error';
 
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
@@ -206,6 +207,7 @@ const App = () => {
           <Route path="/recover" exact component={RecoverAccount} />
           <Route path="/change-password" exact component={RecoverPass} />
           <Route path="/token" exact component={VerifyEmail} />
+          <Route path="/error" exact component={Error} />
           <Route path="/" component={Error404} />
         </Switch>
         <Footer />

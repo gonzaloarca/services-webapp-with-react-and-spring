@@ -37,7 +37,7 @@
     },
     "generic": {
       "header": "Error",
-      "descriptión": "Something went wrong...",
+      "description": "Something went wrong...",
       "action": "Return to home"
     }
   },

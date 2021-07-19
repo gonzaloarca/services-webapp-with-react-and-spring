@@ -124,7 +124,7 @@ const AddPackage = ({ match, history }) => {
       await createJobPackage(postId, pack);
       history.push(`/job/${postId}/packages`);
     } catch (e) {
-      console.log(e);
+      history.push(`/error`);
     }
   };
 

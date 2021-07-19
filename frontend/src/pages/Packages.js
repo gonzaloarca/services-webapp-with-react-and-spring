@@ -110,7 +110,7 @@ const Packages = ({ match, history }) => {
       await deleteJobPackage(pack, postId);
       history.go(0);
     } catch (e) {
-      console.log(e);
+      history.push(`/error`);
     }
   };
 

@@ -312,8 +312,7 @@ const CreateJobPost = ({ history }) => {
       const id = extractLastIdFromURL(uri);
       history.push(`/job/${id}/success`);
     } catch (e) {
-      console.log(e);
-      setDisableSubmit(false);
+      history.push('/error');
     }
   };
 

@@ -23,7 +23,7 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const RecoverPass = () => {
+const RecoverPass = ({ history }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const initialValues = {
@@ -56,7 +56,7 @@ const RecoverPass = () => {
       setStatusCode(200);
     } catch (e) {
       setStatusCode(e.statusCode);
-      console.log(e);
+      history.push(`/error`);
     }
   };
 

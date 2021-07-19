@@ -19,7 +19,7 @@ import { useUser } from '../hooks';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
-const RecoverAccount = () => {
+const RecoverAccount = ({ history }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const initialValues = {
@@ -43,7 +43,7 @@ const RecoverAccount = () => {
       setStatusCode(200);
     } catch (e) {
       setStatusCode(e.statusCode);
-      console.log(e);
+      history.push(`/error`);
     }
   };
 
@@ -95,27 +95,20 @@ const RecoverAccount = () => {
                     </FormHelperText>
                   </Field>
                   {statusCode === -1 ? (
-                    <p className="text-sm mb-3">
-                      {t('recover.disclaimer')}
-                    </p>
+                    <p className="text-sm mb-3">{t('recover.disclaimer')}</p>
                   ) : statusCode < 300 ? (
-                    <p
-                      className="text-sm mb-3"
-                      style={{ color: 'green' }}
-                    >
+                    <p className="text-sm mb-3" style={{ color: 'green' }}>
                       {t('recover.success')}
                     </p>
                   ) : (
-                    <p className="text-sm mb-3">
-                      {t('recover.error')}
-                    </p>
+                    <p className="text-sm mb-3">{t('recover.error')}</p>
                   )}
 
                   <Button
                     fullWidth
                     className={clsx(classes.submitButton, 'mb-4')}
                     type="submit"
-					disabled={statusCode === 200 || props.isSubmitting}
+                    disabled={statusCode === 200 || props.isSubmitting}
                   >
                     {t('recover.submit')}
                   </Button>

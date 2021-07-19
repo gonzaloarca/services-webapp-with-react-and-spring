@@ -201,6 +201,7 @@ const JobPost = ({ match, history }) => {
   const [packages, setPackages] = useState([]);
   const [proUser, setProUser] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
+  const [hirable, setHirable] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
   const loadJobPost = async () => {
@@ -208,7 +209,7 @@ const JobPost = ({ match, history }) => {
       const post = await getJobPostById(postId);
       setJobPost(post);
     } catch (e) {
-      console.log(e);
+      history.push(`/`);
     }
   };
 
@@ -217,7 +218,7 @@ const JobPost = ({ match, history }) => {
       const jobCard = await getJobCardById(postId);
       setJobCard(jobCard);
     } catch (e) {
-      console.log(e);
+      history.push(`/`);
     }
   };
 
@@ -226,7 +227,7 @@ const JobPost = ({ match, history }) => {
       const jobPackages = await getJobPackagesByPostId(postId);
       setPackages(jobPackages);
     } catch (e) {
-      console.log(e);
+      history.push(`/`);
     }
   };
 
@@ -236,7 +237,7 @@ const JobPost = ({ match, history }) => {
       const pro = await getUserById(proId);
       setProUser(pro);
     } catch (e) {
-      console.log(e);
+      history.push(`/`);
     }
   };
 
@@ -250,6 +251,7 @@ const JobPost = ({ match, history }) => {
     if (post && jobCard && packages && packages.length > 0 && proUser) {
       if (currentUser && currentUser.id === proUser.id && post.active)
         setIsOwner(true);
+      if (!isOwner && post.active) setHirable(true);
       setLoading(false);
     }
   }, [post, jobCard, packages, proUser]);
@@ -265,7 +267,7 @@ const JobPost = ({ match, history }) => {
       await deleteJobPost(post);
       history.push(`/`);
     } catch (e) {
-      console.log(e);
+      history.push(`/error`);
     }
   };
 
@@ -392,7 +394,7 @@ const JobPost = ({ match, history }) => {
               ) : (
                 <></>
               )}
-              <PackageListCard packages={packages} />
+              <PackageListCard packages={packages} hireable={hirable} />
             </div>
             {/* Reseñas */}
             <div id="reviews" className="mt-7">
@@ -541,7 +543,7 @@ const StatsCard = ({
   );
 };
 
-const PackageListCard = ({ packages }) => {
+const PackageListCard = ({ packages, hireable }) => {
   const { t } = useTranslation();
 
   return (
@@ -551,7 +553,11 @@ const PackageListCard = ({ packages }) => {
       title={t('availablepackages')}
     >
       {packages.map((pack) => (
-        <PackageAccordion key={`package_${pack.id}`} pack={pack} isHireable />
+        <PackageAccordion
+          key={`package_${pack.id}`}
+          pack={pack}
+          isHireable={hireable}
+        />
       ))}
     </SectionCard>
   );
@@ -570,7 +576,7 @@ const ReviewListCard = ({ postId }) => {
       const reviewsData = await getReviewsByPostId(postId, queryParams.page);
       setReviews(reviewsData);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 

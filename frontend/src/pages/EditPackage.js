@@ -150,7 +150,7 @@ const EditPackage = ({ match, history }) => {
       await editJobPackage(pack, postId, packId);
       history.push(`/job/${postId}/packages`);
     } catch (e) {
-      console.log(e);
+      history.push(`/error`);
     }
   };
 

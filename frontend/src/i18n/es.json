@@ -37,7 +37,7 @@
     },
     "generic": {
       "header": "Error",
-      "descriptión": "Algo salió mal...",
+      "description": "Algo salió mal...",
       "action": "Regresar a inicio"
     }
   },

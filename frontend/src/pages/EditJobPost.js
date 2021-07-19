@@ -238,7 +238,7 @@ const EditJobPost = ({ match, history }) => {
       const jobPost = await getJobPostById(postId);
       setJobPost(jobPost);
     } catch (e) {
-      console.log(e);
+      history.push('/error');
     }
   };
 
@@ -248,7 +248,7 @@ const EditJobPost = ({ match, history }) => {
       const pro = await getUserById(proId);
       setProUser(pro);
     } catch (e) {
-      console.log(e);
+      history.push('/error');
     }
   };
 
@@ -310,8 +310,7 @@ const EditJobPost = ({ match, history }) => {
       await editJobPost(newData, jobPost.id);
       history.push(`/job/${jobPost.id}/success/edit`);
     } catch (e) {
-      console.log(e);
-      setDisableSubmit(false);
+      history.push('/error');
     }
   };
 
