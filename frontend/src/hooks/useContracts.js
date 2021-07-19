@@ -1,6 +1,8 @@
 import {
   getContractsByClientIdAndStateRequest,
   getContractsByProAndStateIdRequest,
+  changeContractStateRequest,
+  getContractStatesRequest,
   createContractRequest,
   putContractImage,
 } from '../api/contractsApi';
@@ -25,6 +27,42 @@ const useContractsHook = () => {
     return response.data;
   };
 
+  const changeContractStatePro = async (
+    contractId,
+    state,
+    newScheduledDate
+  ) => {
+    const response = await changeContractStateRequest(
+      contractId,
+      state,
+      newScheduledDate,
+      'professional'
+    );
+    return response.data;
+  };
+
+  const changeContractStateClient = async (
+    contractId,
+    state,
+    newScheduledDate
+  ) => {
+    const response = await changeContractStateRequest(
+      contractId,
+      state,
+      newScheduledDate,
+      'client'
+    );
+    return response.data;
+  };
+
+  const getContractStates = async () => {
+    const states = await getContractStatesRequest();
+    const map = new Map();
+    states.forEach((state) => map.put(state.description, state.id));
+    return map;
+  };
+
+
   const createContract = async (clientId, jobPackageId, data) => {
     const contractInfo = {
       clientId: clientId,
@@ -46,6 +84,9 @@ const useContractsHook = () => {
   return {
     getContractsByClientIdAndState,
     getContractsByProAndStateId,
+    changeContractStateClient,
+    changeContractStatePro,
+    getContractStates,
     createContract,
   };
 };

@@ -28,6 +28,7 @@ import {
   useZones,
   useJobCards,
   useRateTypes,
+  useContracts,
 } from './hooks';
 import Packages from './pages/Packages';
 import AddPackage from './pages/AddPackage';
@@ -47,10 +48,12 @@ const App = () => {
   const { getZones } = useZones();
   const { getOrderByParams } = useJobCards();
   const { getRateTypes } = useRateTypes();
+  const { getContractStates } = useContracts();
   const [zones, setZones] = useState([]);
   const [categories, setCategories] = useState([]);
   const [orderByParams, setOrderByParams] = useState([]);
   const [rateTypes, setRateTypes] = useState([]);
+  const [contractStates, setContractStates] = useState(new Map());
   const { t } = useTranslation();
   /*
    * This function saves the current user in the context if the user is logged in.
@@ -113,6 +116,15 @@ const App = () => {
     }
   };
 
+  const loadContractStates = async () => {
+    try {
+      const contractStates = await getContractStates();
+      setContractStates(contractStates);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   /*
    * This effect will be called when the page it's first loaded
    * It will check if the user is logged in and if so it will set the token and user data in the context.
@@ -152,6 +164,7 @@ const App = () => {
     loadZones();
     loadOrderByParams();
     loadRateTypes();
+    loadContractStates();
   }, []);
   return (
     <>
@@ -161,6 +174,7 @@ const App = () => {
           zones: zones,
           orderByParams: orderByParams,
           rateTypes: rateTypes,
+          states: contractStates,
         }}
       >
         <Helmet>

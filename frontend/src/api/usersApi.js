@@ -66,3 +66,40 @@ export const recoverAccountRequest = (data) => {
 export const recoverPassRequest = (data) => {
   return hireNetApi.put('/users/recover-account/change-password', data);
 };
+
+export const changePasswordRequest = (data) => {
+  return hireNetApi.put(
+    `/users/${data.userId}/security`,
+    {
+      password: data.password,
+    },
+    {
+      headers: {
+        'Authorization':
+          'Bearer ' +
+            (localStorage.getItem('token') ||
+              sessionStorage.getItem('token')) || '',
+      },
+    }
+  );
+};
+
+export const changeAccountDataRequest = (data) => {
+  console.log(data);
+  return hireNetApi.put(
+    `/users/${data.userId}`,
+    {
+      email: data.email,
+      phone: data.phone,
+      username: data.username,
+    },
+    {
+      headers: {
+        'Authorization':
+          'Bearer ' +
+            (localStorage.getItem('token') ||
+              sessionStorage.getItem('token')) || '',
+      },
+    }
+  );
+};
