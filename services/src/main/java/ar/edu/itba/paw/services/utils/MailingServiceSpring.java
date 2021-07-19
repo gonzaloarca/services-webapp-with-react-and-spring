@@ -204,7 +204,7 @@ public class MailingServiceSpring implements MailingService {
         sendMessageUsingThymeleafTemplate(updatedByClient ? professional.getEmail() : client.getEmail(),
                 messageSource.getMessage("mail.updateContract.subject." + jobContract.getState().toString(),
                         new Object[]{
-                                messageSource.getMessage(jobContract.getState().getDescription(), new Object[]{}, locale)
+                                messageSource.getMessage("JobContract.ContractState."+jobContract.getState().getDescription(), new Object[]{}, locale)
                         }, locale),
                 data, "updateContractStatus", attachment, locale);
     }
