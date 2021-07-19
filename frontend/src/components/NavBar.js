@@ -14,6 +14,9 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  Avatar,
+  Popover,
+  ListItemIcon,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import navBarStyles from './NavBarStyles';
@@ -22,6 +25,12 @@ import { themeUtils } from '../theme';
 import { UserContext } from '../context';
 import { useHistory } from 'react-router-dom';
 import { isProfessional } from '../utils/userUtils';
+import {
+  ExitToApp,
+  Person,
+  Settings,
+  SettingsApplications,
+} from '@material-ui/icons';
 
 const useStyles = makeStyles(navBarStyles);
 
@@ -50,6 +59,19 @@ const NavBar = ({
   const { currentUser, setCurrentUser, setToken } = useContext(UserContext);
   const history = useHistory();
   const [sections, setSections] = useState(initialSections);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   useEffect(() => {
     const newSections = [...initialSections];
@@ -64,7 +86,9 @@ const NavBar = ({
           path: '/analytics',
         });
       }
+      setIsLoading(false);
     }
+
     setSections(newSections);
   }, [currentUser]);
 
@@ -96,110 +120,70 @@ const NavBar = ({
 
   return (
     <div className={classes.root}>
-      <AppBar
-        className={
-          !isTransparent
-            ? classes.solidBar
-            : scrolled
-            ? classes.solidBar
-            : classes.transparentBar
-        }
-        position="fixed"
-      >
-        <Toolbar className="flex justify-between">
-          <div className="flex items-center">
-            <div className={classes.drawerButton}>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                onClick={() => setShowDrawer(true)}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Drawer
-                anchor="left"
-                open={showDrawer}
-                onClose={() => setShowDrawer(false)}
-              >
-                <List className={classes.drawerContainer} component="nav">
-                  {sections.map((i) => (
-                    <ListItem key={i.path} button component={Link} to={i.path}>
-                      <ListItemText
-                        disableTypography
-                        primary={
-                          <Typography
-                            type="body2"
-                            className={
-                              i.path === currentSection
-                                ? classes.selectedDrawerSection
-                                : ''
-                            }
-                          >
-                            {t(i.name)}
-                          </Typography>
-                        }
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Drawer>
-            </div>
-            <Link to="/">
-              <img
-                className={classes.hirenetIcon}
-                src={`${process.env.PUBLIC_URL}/img/hirenet-logo-nav-1.svg`}
-                alt=""
-              />
-            </Link>
-            <div className={classes.sectionsContainer}>
-              {sections.map((i) => (
-                <LinkButton
-                  className={
-                    currentSection === i.path ? classes.selectedSection : ''
-                  }
-                  key={i.path}
-                  component={Link}
-                  to={i.path}
+      {!isLoading && (
+        <AppBar
+          className={
+            !isTransparent
+              ? classes.solidBar
+              : scrolled
+              ? classes.solidBar
+              : classes.transparentBar
+          }
+          position="fixed"
+        >
+          <Toolbar className="flex justify-between">
+            <div className="flex items-center">
+              <div className={classes.drawerButton}>
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  onClick={() => setShowDrawer(true)}
+                  color="inherit"
                 >
-                  {t(i.name)}
-                </LinkButton>
-              ))}
-            </div>
-            {currentSection !== '/' && (
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <InputBase
-                  placeholder={t('navigation.search')}
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  value={values.query}
-                  onChange={(e) => setValues({ query: e.target.value })}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      if (!searchBarQueryParams)
-                        history.push('/search?query=' + event.target.value);
-                      else
-                        searchBarSetQueryParams({
-                          ...searchBarQueryParams,
-                          query: event.target.value,
-                        });
-                    }
-                  }}
-                />
+                  <MenuIcon />
+                </IconButton>
+                <Drawer
+                  anchor="left"
+                  open={showDrawer}
+                  onClose={() => setShowDrawer(false)}
+                >
+                  <List className={classes.drawerContainer} component="nav">
+                    {sections.map((i) => (
+                      <ListItem
+                        key={i.path}
+                        button
+                        component={Link}
+                        to={i.path}
+                      >
+                        <ListItemText
+                          disableTypography
+                          primary={
+                            <Typography
+                              type="body2"
+                              className={
+                                i.path === currentSection
+                                  ? classes.selectedDrawerSection
+                                  : ''
+                              }
+                            >
+                              {t(i.name)}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Drawer>
               </div>
-            )}
-          </div>
-          {!currentUser ? (
-            <div
-              className={clsx(classes.sectionsContainer, 'items-end', 'flex')}
-            >
-              {rightSections.map((i) =>
-                i.path === '/login' ? (
+              <Link to="/">
+                <img
+                  className={classes.hirenetIcon}
+                  src={process.env.PUBLIC_URL + '/img/hirenet-logo-nav-1.svg'}
+                  alt=""
+                />
+              </Link>
+              <div className={classes.sectionsContainer}>
+                {sections.map((i) => (
                   <LinkButton
                     className={
                       currentSection === i.path ? classes.selectedSection : ''
@@ -210,29 +194,141 @@ const NavBar = ({
                   >
                     {t(i.name)}
                   </LinkButton>
-                ) : (
-                  <LinkButtonRegister
-                    className={
-                      currentSection === i.path
-                        ? classes.selectedRegisterSection
-                        : ''
-                    }
-                    key={i.path}
-                    component={Link}
-                    to={i.path}
-                  >
-                    {t(i.name)}
-                  </LinkButtonRegister>
-                )
+                ))}
+              </div>
+              {currentSection !== '/' && (
+                <div className={classes.search}>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon />
+                  </div>
+                  <InputBase
+                    placeholder={t('navigation.search')}
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    value={values.query}
+                    onChange={(e) => setValues({ query: e.target.value })}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        if (!searchBarQueryParams)
+                          history.push('/search?query=' + event.target.value);
+                        else
+                          searchBarSetQueryParams({
+                            ...searchBarQueryParams,
+                            query: event.target.value,
+                          });
+                      }
+                    }}
+                  />
+                </div>
               )}
             </div>
-          ) : (
-            <>
-              <Button onClick={logout}>LOGOUT</Button>
-            </>
-          )}
-        </Toolbar>
-      </AppBar>
+            {!currentUser ? (
+              <div
+                className={clsx(classes.sectionsContainer, 'items-end', 'flex')}
+              >
+                {rightSections.map((i) =>
+                  i.path === '/login' ? (
+                    <LinkButton
+                      className={
+                        currentSection === i.path ? classes.selectedSection : ''
+                      }
+                      key={i.path}
+                      component={Link}
+                      to={i.path}
+                    >
+                      {t(i.name)}
+                    </LinkButton>
+                  ) : (
+                    <LinkButtonRegister
+                      className={
+                        currentSection === i.path
+                          ? classes.selectedRegisterSection
+                          : ''
+                      }
+                      key={i.path}
+                      component={Link}
+                      to={i.path}
+                    >
+                      {t(i.name)}
+                    </LinkButtonRegister>
+                  )
+                )}
+              </div>
+            ) : (
+              <>
+                <IconButton onClick={handleAvatarClick}>
+                  <Avatar src={currentUser.image} />
+                </IconButton>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleMenuClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                >
+                  <div className={classes.userMenu}>
+                    <div className="flex items-center p-2">
+                      <Avatar src={currentUser.image} className="mr-2" />
+                      <div>
+                        <p className={classes.menuName}>
+                          {currentUser.username}
+                        </p>
+                        <p className={classes.menuEmail}>{currentUser.email}</p>
+                      </div>
+                    </div>
+                    <List>
+                      <ListItem
+                        dense
+                        button
+                        component={Link}
+                        to={`/profile/${currentUser.id}/services`}
+                      >
+                        <ListItemIcon>
+                          <Person />
+                        </ListItemIcon>
+                        <p className="text-xs font-medium">
+                          {t('navigation.profile')}
+                        </p>
+                      </ListItem>
+                      <ListItem
+                        dense
+                        button
+                        component={Link}
+                        to="/account/personal"
+                      >
+                        <ListItemIcon>
+                          <Settings />
+                        </ListItemIcon>
+                        <p className="text-xs font-medium">
+                          {t('navigation.account')}
+                        </p>
+                      </ListItem>
+                      <ListItem dense button onClick={logout}>
+                        <ListItemIcon>
+                          <ExitToApp />
+                        </ListItemIcon>
+                        <p className="text-xs font-medium">
+                          {t('navigation.logout')}
+                        </p>
+                      </ListItem>
+                    </List>
+                  </div>
+                </Popover>
+                {/* <Button >LOGOUT</Button> */}
+              </>
+            )}
+          </Toolbar>
+        </AppBar>
+      )}
       {isTransparent ? <></> : <div className={classes.offset} />}
     </div>
   );

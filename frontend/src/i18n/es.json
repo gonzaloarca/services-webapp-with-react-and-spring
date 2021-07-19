@@ -22,7 +22,10 @@
       "error": "Error",
       "pagenotfound": "Página no encontrada"
     },
-    "search": "Buscar..."
+    "search": "Buscar...",
+    "profile": "Mi perfil",
+    "account": "Mi cuenta",
+    "logout": "Cerrar sesión"
   },
   "title": "{{section}} | HireNet",
   "defaulttitle": "HireNet",

@@ -1,4 +1,5 @@
 import { alpha } from '@material-ui/core/styles';
+import { themeUtils } from '../theme';
 
 const navBarStyles = (theme) => ({
   root: {
@@ -93,6 +94,33 @@ const navBarStyles = (theme) => ({
   },
   selectedDrawerSection: {
     fontWeight: 600,
+  },
+  userMenu: {
+    backgroundColor: '#f1f1f1',
+    width: 300,
+  },
+  menuName: {
+    fontWeight: 600,
+    width: '100%',
+    fontSize: themeUtils.fontSizes.sm,
+    WebkitLineClamp: 2,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    overflowWrap: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  menuEmail: {
+    fontWeight: 500,
+    width: '100%',
+    fontSize: themeUtils.fontSizes.xs,
+    WebkitLineClamp: 2,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    overflowWrap: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    opacity: 0.5,
   },
 });
 
