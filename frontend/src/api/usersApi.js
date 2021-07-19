@@ -15,9 +15,15 @@ export const verifyEmailRequest = ({ id, token }) => {
   return hireNetApi.post(`/users/${id}/verify`, { token: token });
 };
 
-export const uploadUserImageRequest = ({ id, image }) => {
-  return hireNetApi.put(`/users/${id}/image`, {
-    image: image,
+export const uploadUserImageRequest = (id, formData) => {
+  return hireNetApi.put(`/users/${id}/image`, formData, {
+    headers: {
+      'Authorization':
+        'Bearer ' +
+        (localStorage.getItem('token') ||
+          sessionStorage.getItem('token') ||
+          ''),
+    },
   });
 };
 

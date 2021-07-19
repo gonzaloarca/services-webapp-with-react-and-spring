@@ -26,7 +26,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { UserContext } from '../context';
 import { useUser } from '../hooks';
-import { isLoggedIn, logout } from '../utils/userUtils';
+import { isLoggedIn } from '../utils/userUtils';
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -220,8 +220,10 @@ const PersonalData = ({ currentUser }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
-  const { changeAccountData } = useUser();
+  const { changeAccountData, changeAccountImage } = useUser();
   const [answer, setAnswer] = useState('');
+
+  const history = useHistory();
 
   const initialValues = {
     username: currentUser.username,
@@ -254,7 +256,9 @@ const PersonalData = ({ currentUser }) => {
         phone: values.phone,
         username: values.username,
       });
+      await changeAccountImage(currentUser.id, values.image);
       setAnswer('ok');
+      history.go(0);
     } catch (error) {
       console.log(error);
       setAnswer('error');

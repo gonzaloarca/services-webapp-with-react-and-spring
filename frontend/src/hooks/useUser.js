@@ -11,6 +11,7 @@ import {
   recoverPassRequest,
   changePasswordRequest,
   changeAccountDataRequest,
+  uploadUserImageRequest,
 } from '../api/usersApi';
 
 const fallbackAvatar = process.env.PUBLIC_URL + '/img/defaultavatar.svg';
@@ -91,6 +92,13 @@ const useUserHook = () => {
     return response.data;
   };
 
+  const changeAccountImage = async (userId, image) => {
+    const formData = new FormData();
+    formData.append('file', image);
+    const response = await uploadUserImageRequest(userId, formData);
+    return response.data;
+  };
+
   return {
     getUserByEmail,
     getUserById,
@@ -104,6 +112,7 @@ const useUserHook = () => {
     recoverPass,
     changePassword,
     changeAccountData,
+    changeAccountImage,
   };
 };
 
