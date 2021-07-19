@@ -12,7 +12,7 @@ public class NewReviewDto {
     private String description;
 
     @NotNull
-    private int rateValue;
+    private int rate;
 
     @Size(max = 100)
     private String title;
@@ -29,12 +29,12 @@ public class NewReviewDto {
         this.description = description;
     }
 
-    public int getRateValue() {
-        return rateValue;
+    public int getRate() {
+        return rate;
     }
 
-    public void setRateValue(int rate) {
-        this.rateValue = rate;
+    public void setRate(int rate) {
+        this.rate = rate;
     }
 
     public String getTitle() {

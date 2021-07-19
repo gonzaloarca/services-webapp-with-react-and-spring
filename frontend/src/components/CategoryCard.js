@@ -47,7 +47,6 @@ const CategoryCard = ({
 }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
   return isLoading ? (
     <Skeleton
       className={classes.categoryContainer}
@@ -70,7 +69,7 @@ const CategoryCard = ({
               ? process.env.PUBLIC_URL + '/img/morecategories1.svg'
               : category.image
           }
-          alt=""
+          alt={(!showAll && category.description) || '  '}
           loading="lazy"
         />
       </div>

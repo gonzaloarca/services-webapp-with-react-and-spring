@@ -10,6 +10,7 @@ import {
   Avatar,
   Button,
   Card,
+  CircularProgress,
   Divider,
   FormHelperText,
   Grid,
@@ -69,7 +70,7 @@ const ContractStateHeader = ({ contract, isOwner }) => {
   );
 };
 
-const ContractCard = ({ contract, isOwner, refetch }) => {
+const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
   const { getUserById } = useUser();
 
   const [openCancel, setOpenCancel] = useState(false);
@@ -79,12 +80,12 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
   const [openRate, setOpenRate] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const [openContact, setOpenContact] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { changeContractStateClient, changeContractStatePro } = useContracts();
   const { states } = useContext(ConstantDataContext);
   const [professional, setProfessional] = useState(null);
   const [client, setClient] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const loadProfessional = async () => {
     const user = await getUserById(extractLastIdFromURL(contract.professional));
@@ -102,7 +103,9 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
   }, []);
 
   useEffect(() => {
-    if (contract && professional && client) setLoading(false);
+    if (contract && professional && client) {
+      setLoading(false);
+    }
   }, [professional, client]);
 
   const classes = useStyles();
@@ -297,6 +300,7 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
               setOpenRate={setOpenRate}
               contract={contract}
               refetch={refetch}
+              setReload={setReload}
               {...props}
             />
           )}
@@ -351,7 +355,7 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
 
   return (
     <>
-      {!loading && (
+      {!loading ? (
         <Card className={classes.contractCard}>
           <ContractStateHeader contract={contract} isOwner={isOwner} />
           <Grid className="p-4 pr-4" container spacing={3}>
@@ -565,6 +569,10 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
             </div>
           </div>
         </Card>
+      ) : (
+        <div className="flex justify-center items-center w-full h-96">
+          <CircularProgress />
+        </div>
       )}
     </>
   );
@@ -580,7 +588,6 @@ const DetailsBody = ({
 }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
   return (
     <div className={classes.detailsModalBody}>
       {/* Package */}
@@ -677,7 +684,7 @@ const ContactBody = ({ username, email, phone }) => {
   );
 };
 
-const RateBody = ({ formRef, setOpenRate, contract, refetch }) => {
+const RateBody = ({ formRef, setOpenRate, contract, refetch, setReload }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -711,6 +718,7 @@ const RateBody = ({ formRef, setOpenRate, contract, refetch }) => {
     });
     refetch('finalized');
     setOpenRate(false);
+    setReload(true);
   };
 
   return (

@@ -6,15 +6,41 @@ import {
   createContractRequest,
   putContractImage,
 } from '../api/contractsApi';
+import { useState } from 'react';
 import { extractLastIdFromURL } from '../utils/urlUtils';
+import parse from 'parse-link-header';
 
 const useContractsHook = () => {
+  const initialLinks = {
+    last: {
+      page: 1,
+      rel: 'last',
+      url: null,
+    },
+    next: {
+      page: 1,
+      rel: 'next',
+      url: null,
+    },
+    prev: {
+      page: 1,
+      rel: 'prev',
+      url: null,
+    },
+    first: {
+      page: 1,
+      rel: 'first',
+      url: null,
+    },
+  };
+  const [links, setLinks] = useState(initialLinks);
   const getContractsByClientIdAndState = async (clientId, state, page) => {
     const response = await getContractsByClientIdAndStateRequest(
       clientId,
       state,
       page
     );
+    setLinks(parse(response.headers.link) || { ...initialLinks });
     return response.data;
   };
 
@@ -24,6 +50,7 @@ const useContractsHook = () => {
       state,
       page
     );
+    setLinks(parse(response.headers.link) || { ...initialLinks });
     return response.data;
   };
 
@@ -86,6 +113,7 @@ const useContractsHook = () => {
     changeContractStatePro,
     getContractStates,
     createContract,
+    links,
   };
 };
 export default useContractsHook;
