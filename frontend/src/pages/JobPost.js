@@ -183,12 +183,12 @@ const useStyles = makeStyles((theme) => ({
 
 const useGlobalStyles = makeStyles(styles);
 
-const JobPost = ({ match }) => {
+const JobPost = ({ match, history }) => {
   const [postId, setPostId] = useState(match.params.id);
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
-  const { getJobPostById } = useJobPosts();
+  const { getJobPostById, deleteJobPost } = useJobPosts();
   const { getJobCardById } = useJobCards();
   const { getJobPackagesByPostId } = useJobPackages();
   const { getUserById } = useUser();
@@ -245,7 +245,8 @@ const JobPost = ({ match }) => {
 
   useEffect(() => {
     if (post && jobCard && packages && packages.length > 0 && proUser) {
-      if (currentUser && currentUser.id === proUser.id) setIsOwner(true);
+      if (currentUser && currentUser.id === proUser.id && post.active)
+        setIsOwner(true);
       setLoading(false);
     }
   }, [post, jobCard, packages, proUser]);
@@ -255,6 +256,15 @@ const JobPost = ({ match }) => {
     loadJobCard();
     loadPackages();
   }, [postId]);
+
+  const deletePost = async () => {
+    try {
+      await deleteJobPost(post);
+      history.push(`/`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
@@ -293,6 +303,7 @@ const JobPost = ({ match }) => {
                   fontSize="large"
                   className="text-lg"
                   style={{ color: themeUtils.colors.red }}
+                  onClick={deletePost}
                 >
                   <Delete fontSize="large" className="mr-1" />
                   {t('jobpost.delete')}

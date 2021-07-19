@@ -95,11 +95,23 @@ const useJobPostsHook = () => {
     return await editJobPostRequest(jobPost, postId);
   };
 
+  const deleteJobPost = async (jobPost) => {
+    const jobPostOut = {
+      active: false,
+      availableHours: jobPost.availableHours,
+      jobType: jobPost.jobType.id,
+      title: jobPost.title,
+      zones: jobPost.zones.map((zone) => zone.id),
+    };
+    return await editJobPostRequest(jobPostOut, jobPost.id);
+  };
+
   return {
     getJobPosts,
     getJobPostById,
     createJobPost,
     editJobPost,
+    deleteJobPost,
     links,
   };
 };
