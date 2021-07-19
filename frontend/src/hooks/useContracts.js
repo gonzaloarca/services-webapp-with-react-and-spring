@@ -9,6 +9,7 @@ import {
 import { useState } from 'react';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import parse from 'parse-link-header';
+import categoryImageMap from '../utils/categories';
 
 const useContractsHook = () => {
   const initialLinks = {
@@ -41,7 +42,12 @@ const useContractsHook = () => {
       page
     );
     setLinks(parse(response.headers.link) || { ...initialLinks });
-    return response.data;
+    return response.data.map((contract) => ({
+      ...contract,
+      postImage: contract.postImage
+        ? contract.postImage
+        : categoryImageMap.get(contract.jobType.id),
+    }));
   };
 
   const getContractsByProAndStateId = async (proId, state, page) => {
