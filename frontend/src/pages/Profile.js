@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import styles from '../styles';
 import {
@@ -26,7 +26,6 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useReviews, useUser } from '../hooks';
 import { isProfessional } from '../utils/userUtils.js';
-import { UserContext } from '../context';
 import { useJobCards } from '../hooks';
 import BottomPagination from '../components/BottomPagination';
 
@@ -83,14 +82,16 @@ const Profile = ({ match }) => {
 
   const loadData = async (id) => {
     try {
+      const userInfo = await getUserById(id);
+      if (!isProfessional(userInfo)) history.replace('/404');
+      const proInfo = await getProfessionalInfo(id);
       setValues({
-        userInfo: await getUserById(id),
-        proInfo: await getProfessionalInfo(id),
+        userInfo: userInfo,
+        proInfo: proInfo,
       });
       setLoadingData(false);
     } catch (error) {
-      console.log(error);
-      history.push('/');
+      history.replace('/404');
     }
   };
 

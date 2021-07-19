@@ -21,6 +21,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useContracts } from '../hooks';
 import { UserContext } from '../context';
+import { isLoggedIn } from '../utils/userUtils';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -92,6 +93,11 @@ const MyContracts = ({ history }) => {
   const [myServices, setMyServices] = useState([]);
   const [tabValue, setTabValue] = React.useState(activeTab === 'pro' ? 1 : 0);
   const tabPaths = ['hired', 'pro'];
+
+  if (!isLoggedIn()) {
+    history.replace('/login');
+  }
+
   const loadHiredContracts = async () => {
     const clientContracts = await getContractsByClientIdAndState(
       currentUser.id,

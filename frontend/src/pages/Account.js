@@ -89,9 +89,8 @@ const Account = () => {
   const { currentUser } = useContext(UserContext);
   const history = useHistory();
 
-  //TODO: SI REFRESHEO ME REDIRIGE REVISAR ESTO!
-  if (!isLoggedIn) {
-    history.push('/login');
+  if (!isLoggedIn()) {
+    history.replace('/login');
   }
 
   const accountSections = [
@@ -256,7 +255,7 @@ const PersonalData = ({ currentUser }) => {
         phone: values.phone,
         username: values.username,
       });
-      await changeAccountImage(currentUser.id, values.image);
+      if (values.image) await changeAccountImage(currentUser.id, values.image);
       setAnswer('ok');
       history.go(0);
     } catch (error) {
