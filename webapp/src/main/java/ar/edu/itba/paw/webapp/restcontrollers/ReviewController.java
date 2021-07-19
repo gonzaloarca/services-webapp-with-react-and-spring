@@ -40,8 +40,8 @@ public class ReviewController {
         if (!reviewService.findContractReview(newReviewDto.getJobContractId()).isPresent()) {
             reviewControllerLogger.debug(
                     "Creating review for contract {} with data: rate value: {}, title: {}, description: {}",
-                    contractId, newReviewDto.getRateValue(), newReviewDto.getTitle(), newReviewDto.getDescription());
-            reviewService.create(contractId, newReviewDto.getRateValue(), newReviewDto.getTitle(), newReviewDto.getDescription());
+                    contractId, newReviewDto.getRate(), newReviewDto.getTitle(), newReviewDto.getDescription());
+            reviewService.create(contractId, newReviewDto.getRate(), newReviewDto.getTitle(), newReviewDto.getDescription());
             final URI contractUri = uriInfo.getAbsolutePathBuilder()
                     .path(String.valueOf(newReviewDto.getJobContractId())).build();
             return Response.created(contractUri).build();

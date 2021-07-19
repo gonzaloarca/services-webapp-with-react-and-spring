@@ -183,20 +183,5 @@ export const contractActionsMap = {
       show: 'rate',
     },
   ],
-  'CANCELED': [
-    {
-      label: 'mycontracts.contractactions.details',
-      icon: faInfoCircle,
-      color: themeUtils.colors.blue,
-      roles: ['CLIENT', 'PROFESSIONAL'],
-      action: 'details',
-    },
-    {
-      label: 'mycontracts.contractactions.contact',
-      icon: faUserCircle,
-      color: themeUtils.colors.aqua,
-      roles: ['CLIENT', 'PROFESSIONAL'],
-      action: 'contact',
-    },
-  ],
+  'CANCELED': [],
 };

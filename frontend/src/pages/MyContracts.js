@@ -1,5 +1,6 @@
 import {
   AppBar,
+  CircularProgress,
   Divider,
   Grid,
   makeStyles,
@@ -21,6 +22,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useContracts } from '../hooks';
 import { UserContext } from '../context';
+import BottomPagination from '../components/BottomPagination';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -86,30 +88,45 @@ const MyContracts = ({ history }) => {
   const { t } = useTranslation();
   const { activeTab, activeState } = useParams();
   const { currentUser } = useContext(UserContext);
-  const { getContractsByClientIdAndState, getContractsByProAndStateId } =
+  const { getContractsByClientIdAndState, getContractsByProAndStateId, links } =
     useContracts();
-  const [hiredServices, setHiredServices] = useState([]);
-  const [myServices, setMyServices] = useState([]);
+  const [hiredServices, setHiredServices] = useState(null);
+  const [myServices, setMyServices] = useState(null);
   const [tabValue, setTabValue] = React.useState(activeTab === 'pro' ? 1 : 0);
   const tabPaths = ['hired', 'pro'];
+  const [queryParams, setQueryParams] = React.useState({ page: 1 });
+  const [loading, setLoading] = useState(true);
+
   const loadHiredContracts = async () => {
     const clientContracts = await getContractsByClientIdAndState(
       currentUser.id,
       activeState,
-      1
+      queryParams.page
     );
-    setHiredServices(clientContracts);
+    setHiredServices([...clientContracts]);
+    setLoading(false);
   };
   const loadMyServicesContracts = async () => {
     const proServices = await getContractsByProAndStateId(
       currentUser.id,
       activeState,
-      1
+      queryParams.page
     );
-    setMyServices(proServices);
+    setMyServices([...proServices]);
+    setLoading(false);
   };
+
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+    if (hiredServices && myServices) {
+      setLoading(false);
+    }
+  }, [hiredServices, myServices]);
+
   useEffect(() => {
     if (currentUser && activeTab && activeState) {
+      setLoading(true);
       if (activeTab === 'pro') {
         setTabValue(1);
         loadMyServicesContracts();
@@ -118,7 +135,8 @@ const MyContracts = ({ history }) => {
         loadHiredContracts();
       }
     }
-  }, [activeState, activeTab, currentUser]);
+    console.log('RELOAD');
+  }, [activeState, activeTab, currentUser, reload, queryParams]);
 
   const handleChange = (_event, newValue) => {
     setTabValue(newValue);
@@ -184,6 +202,12 @@ const MyContracts = ({ history }) => {
                 topTabSection={tabPaths[tabValue]}
                 loadHiredContracts={loadHiredContracts}
                 loadMyServicesContracts={loadMyServicesContracts}
+                setReload={setReload}
+                loading={loading}
+                setLoading={setLoading}
+                links={links}
+                queryParams={queryParams}
+                setQueryParams={setQueryParams}
               />
             </div>
           </TabPanel>
@@ -195,6 +219,12 @@ const MyContracts = ({ history }) => {
                 topTabSection={tabPaths[tabValue]}
                 loadHiredContracts={loadHiredContracts}
                 loadMyServicesContracts={loadMyServicesContracts}
+                setReload={setReload}
+                loading={loading}
+                setLoading={setLoading}
+                links={links}
+                queryParams={queryParams}
+                setQueryParams={setQueryParams}
               />
             </div>
           </TabPanel>
@@ -210,13 +240,24 @@ const ContractsDashboard = ({
   topTabSection,
   loadHiredContracts,
   loadMyServicesContracts,
+  reload,
+  setReload,
+  loading,
+  setLoading,
+  links,
+  queryParams,
+  setQueryParams,
 }) => {
-  console.log('loadHired', loadHiredContracts);
-  console.log('loadMyServices', loadMyServicesContracts);
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
   const { activeState } = useParams();
+
+  useEffect(() => {
+    if (contracts) setLoading(false);
+    else setLoading(true);
+  }, [contracts]);
+
   const contractSections = [
     {
       title: t('mycontracts.activecontracts'),
@@ -367,29 +408,45 @@ const ContractsDashboard = ({
             <TabPanel key={index} value={tabValue} index={index}>
               <h2 className={globalClasses.sectionTitle}>{section.title}</h2>
               <Divider className="mb-2" />
-
-              <div className="p-4">
-                {contracts.length === 0 ? (
-                  <NoContracts
-                    header={getNoContractsContent(isOwner, index).header}
-                    body={getNoContractsContent(isOwner, index).body}
-                  />
-                ) : (
-                  contracts.map((contract) => (
-                    <div key={contract.id} className="mb-6">
-                      <ContractCard
-                        contract={contract}
-                        isOwner={isOwner}
-                        refetch={(section) =>
-                          history.push(
-                            `/my-contracts/${topTabSection}/${section}`
-                          )
-                        }
-                      />
+              {!loading && contracts ? (
+                <div className="p-4">
+                  {contracts.length === 0 ? (
+                    <NoContracts
+                      header={getNoContractsContent(isOwner, index).header}
+                      body={getNoContractsContent(isOwner, index).body}
+                    />
+                  ) : (
+                    <div>
+                      <>
+                        {contracts.map((contract) => (
+                          <div key={contract.id} className="mb-6">
+                            <ContractCard
+                              contract={contract}
+                              isOwner={isOwner}
+                              refetch={(section) =>
+                                history.push(
+                                  `/my-contracts/${topTabSection}/${section}`
+                                )
+                              }
+                              reload={reload}
+                              setReload={setReload}
+                            />
+                          </div>
+                        ))}{' '}
+                        <BottomPagination
+                          maxPage={links.last.page}
+                          queryParams={queryParams}
+                          setQueryParams={setQueryParams}
+                        />
+                      </>
                     </div>
-                  ))
-                )}
-              </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex justify-center items-center w-full h-96">
+                  <CircularProgress />
+                </div>
+              )}
             </TabPanel>
           ))}
         </div>

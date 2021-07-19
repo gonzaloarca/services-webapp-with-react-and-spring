@@ -71,7 +71,7 @@ public class JobContractCardDto {
         dto.description = card.getDescription();
         dto.wasRescheduled = card.getWasRescheduled();
         dto.id = card.getJobContract().getId();
-        dto.rate = card.getReview().getRate();
+        dto.rate = card.getReview() != null ? card.getReview().getRate():0  ;
         dto.contractImage = card.getByteImage() != null ? uriInfo.getBaseUriBuilder()
                 .path("/contracts").path(String.valueOf(card.getJobContract().getId())).path("/image").build() : null;;
         return dto;
