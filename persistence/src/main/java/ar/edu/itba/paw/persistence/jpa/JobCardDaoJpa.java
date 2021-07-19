@@ -156,9 +156,10 @@ public class JobCardDaoJpa implements JobCardDao {
     }
 
     private Query buildSearchQuery(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, StringBuilder sqlQuery, JobCard.OrderBy orderBy, boolean withZone, boolean maxPage) {
-        sqlQuery.append(" WHERE ( UPPER(post_title) LIKE UPPER('%'|| :query ||'%') ");
+        sqlQuery.append(" WHERE ( UPPER(post_title) LIKE :query ");
         if (!similarTypes.isEmpty()) {
-            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal())).collect(Collectors.joining(","));
+            String types = similarTypes.stream().map(type -> String.valueOf(type.ordinal()))
+                    .collect(Collectors.joining(","));
             sqlQuery.append(" OR post_job_type in (")
                     .append(types)
                     .append(")");
@@ -198,7 +199,10 @@ public class JobCardDaoJpa implements JobCardDao {
             }
         }
 
-        Query nativeQuery = em.createNativeQuery(sqlQuery.toString()).setParameter("query", query);
+        Query nativeQuery = em.createNativeQuery(sqlQuery.toString()).setParameter("query",
+                String.format("%%%s%%", query.replace("%", "\\%")
+                        .replace("_", "\\_".toUpperCase()))
+                );
 
         if (jobType != null)
             nativeQuery.setParameter("type", jobType.getValue());
