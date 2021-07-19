@@ -8,6 +8,15 @@ export const getJobCardsRequest = (page = 1) => {
   });
 };
 
+export const getJobCardsByProIdRequest = ({ proId, page = 1 }) => {
+  return hirenetApi.get('/job-cards', {
+    params: {
+      userId: proId,
+      page: page,
+    },
+  });
+};
+
 export const searchJobCardsRequest = ({
   zone,
   query,

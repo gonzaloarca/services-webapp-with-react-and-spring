@@ -50,7 +50,7 @@ const Analytics = () => {
   const { t } = useTranslation();
   const { getRankings, getProfessionalInfo } = useUser();
   const { currentUser } = useContext(UserContext);
-  const [details, setDetails] = React.useState({ rankings: '', info: '' });
+  const [details, setDetails] = useState({ rankings: '', info: '' });
 
   const loadData = async (id) => {
     try {

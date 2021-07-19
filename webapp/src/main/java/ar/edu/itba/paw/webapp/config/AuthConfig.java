@@ -90,11 +90,11 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT,"/api/v1/job-posts/**").hasRole("PROFESSIONAL")
                 .antMatchers("/api/v1/reviews").permitAll()
                 .antMatchers("/api/v1/contracts/**","/api/v1/reviews/**","/api/v1/users/security").hasRole("CLIENT")
-                .antMatchers(HttpMethod.GET,"/api/v1/job-posts/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/job-posts/**","/api/v1/users/*/rates").permitAll()
                 .antMatchers("/api/v1/login", "/api/v1/categories/**","/api/v1/job-cards/**","/api/v1/zones/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/users","/api/v1/users/*/verify","/api/v1/users/recover-account/**").anonymous()
                 .antMatchers(HttpMethod.PUT,"/api/v1/users/recover-account/**").anonymous()
-                .antMatchers(HttpMethod.GET,"/api/v1/users/*/rates","/api/v1/users/*/rankings").hasRole("PROFESSIONAL")
+                .antMatchers(HttpMethod.GET,"/api/v1/users/*/rankings").hasRole("PROFESSIONAL")
                 .antMatchers(HttpMethod.PUT,"/api/v1/users/**").hasRole("CLIENT")
                 .anyRequest().permitAll();
 

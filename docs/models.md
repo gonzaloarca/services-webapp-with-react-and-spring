@@ -446,9 +446,7 @@ En un form con key "file" viajara la imagen
   "username": "Manuel Rodrigueaaaaa"
 }
 ```
-
-### GET rates: {{baseUrl}}/professionals/5/reviews-by-exact-rate
-
+### GET rates: {{baseUrl}}/users/5/rates
 ```json
 {
   "five": 2,

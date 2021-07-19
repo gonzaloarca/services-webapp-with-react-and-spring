@@ -560,6 +560,7 @@ const ReviewListCard = ({ postId }) => {
       console.log(e);
     }
   };
+  
   useEffect(() => {
     loadReviews();
   }, [queryParams]);

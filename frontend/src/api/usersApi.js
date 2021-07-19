@@ -32,6 +32,7 @@ export const getUserByEmailRequest = (email) => {
 export const getUserByIdRequest = (id) => {
   return hireNetApi.get(`/users/${id}`);
 };
+
 export const getRankingsRequest = (id) => {
   return hireNetApi.get(`/users/${id}/rankings`, {
     headers: {
@@ -41,6 +42,10 @@ export const getRankingsRequest = (id) => {
         '',
     },
   });
+};
+
+export const getRatesRequest = (id) => {
+  return hireNetApi.get(`/users/${id}/rates`);
 };
 
 export const getProfessionalInfoRequest = (id) => {
