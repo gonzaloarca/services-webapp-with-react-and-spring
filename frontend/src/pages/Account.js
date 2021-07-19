@@ -527,7 +527,6 @@ const Logout = () => {
       </h1>
       <Divider />
       <div className="p-5 flex justify-center">
-        {/* TODO: llamar a cerrar sesión */}
         <Button type="button" className={classes.logoutBtn} onClick={logout}>
           {t('account.logout.btn')}
         </Button>

@@ -32,7 +32,7 @@ public class JobContractDto {
         jobContractDto.description = jobContract.getDescription();
         jobContractDto.state = JobContractStateDto.fromJobContractState(jobContract.getState());
         jobContractDto.image = jobContract.getByteImage() != null ? uriInfo.getBaseUriBuilder().path("/contracts")
-                .path(String.valueOf(jobContractDto.id)).path("/image").build() : null;//TODO: FIX VALIDACION CONTRA NULL
+                .path(String.valueOf(jobContractDto.id)).path("/image").build() : null;
         jobContractDto.wasRescheduled = jobContract.isWasRescheduled();
         return jobContractDto;
     }
