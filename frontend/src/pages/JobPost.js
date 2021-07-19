@@ -180,6 +180,17 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     textAlign: 'center',
   },
+  finalizedMessage: {
+    color: themeUtils.colors.red,
+    backgroundColor: themeUtils.colors.lightRed,
+    width: '100%',
+    borderRadius: '0.25rem',
+    border: '1px solid ' + themeUtils.colors.red,
+    fontWeight: 500,
+    padding: '10px',
+    marginBottom: '10px',
+    fontSize: themeUtils.fontSizes.sm,
+  },
 }));
 
 const useGlobalStyles = makeStyles(styles);
@@ -201,6 +212,7 @@ const JobPost = ({ match, history }) => {
   const [proUser, setProUser] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   const [hirable, setHirable] = useState(false);
+  const [finalized, setFinalized] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
   const loadJobPost = async () => {
@@ -251,6 +263,7 @@ const JobPost = ({ match, history }) => {
       if (currentUser && currentUser.id === proUser.id && post.active)
         setIsOwner(true);
       else if (post.active) setHirable(true);
+      if (!post.active) setFinalized(true);
       setLoading(false);
     }
   }, [post, jobCard, packages, proUser]);
@@ -264,7 +277,7 @@ const JobPost = ({ match, history }) => {
   const deletePost = async () => {
     try {
       await deleteJobPost(post);
-      history.push(`/`);
+      history.go(0);
     } catch (e) {
       history.push(`/error`);
     }
@@ -283,6 +296,11 @@ const JobPost = ({ match, history }) => {
             <title>{t('title', { section: post.title })}</title>
           </Helmet>
           <div className={globalClasses.contentContainerTransparent}>
+            {finalized && (
+              <div className={classes.finalizedMessage}>
+                {t('jobpost.finalized')}
+              </div>
+            )}
             {isOwner ? (
               <div className="flex justify-end">
                 <Button

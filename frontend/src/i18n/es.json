@@ -87,7 +87,8 @@
     "edit": "Editar publicación",
     "delete": "Borrar publicación",
     "managepacks": "Administrar paquetes",
-    "deletetitle": "¿Está seguro que desea eliminar el servicio?"
+    "deletetitle": "¿Está seguro que desea eliminar el servicio?",
+    "finalized": "Esta publicacion ha finalizado"
   },
   "jobcard": {
     "noreviews": "Sin calificaciones",

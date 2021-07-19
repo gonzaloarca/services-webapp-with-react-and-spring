@@ -55,7 +55,7 @@ const CategoryCard = ({
       width={'100%'}
     />
   ) : (
-    <Link to={showAll ? '/search' : `/search?&category=${category.id}`}>
+    <Link to={showAll ? '/categories' : `/search?&category=${category.id}`}>
       <div className={classes.categoryContainer} style={{ height: height }}>
         <div className={classes.categoryOverlay}>
           {showAll
