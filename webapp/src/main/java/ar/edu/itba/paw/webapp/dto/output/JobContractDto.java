@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.JobContract;
+import ar.edu.itba.paw.models.JobContractWithImage;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -16,8 +17,9 @@ public class JobContractDto {
     private String description;
     private JobContractStateDto state;
     private URI image;
+    private boolean wasRescheduled;
 
-    public static JobContractDto fromJobContract(JobContract jobContract, UriInfo uriInfo) {
+    public static JobContractDto fromJobContract(JobContractWithImage jobContract, UriInfo uriInfo) {
         JobContractDto jobContractDto = new JobContractDto();
         jobContractDto.id = jobContract.getId();
         jobContractDto.clientId = jobContract.getClient().getId();
@@ -29,8 +31,9 @@ public class JobContractDto {
         jobContractDto.scheduledDate = jobContract.getScheduledDate();
         jobContractDto.description = jobContract.getDescription();
         jobContractDto.state = JobContractStateDto.fromJobContractState(jobContract.getState());
-        jobContractDto.image = uriInfo.getBaseUriBuilder().path("/contracts")
-                .path(String.valueOf(jobContractDto.id)).path("/image").build();//TODO: FIX VALIDACION CONTRA NULL
+        jobContractDto.image = jobContract.getByteImage() != null ? uriInfo.getBaseUriBuilder().path("/contracts")
+                .path(String.valueOf(jobContractDto.id)).path("/image").build() : null;//TODO: FIX VALIDACION CONTRA NULL
+        jobContractDto.wasRescheduled = jobContract.isWasRescheduled();
         return jobContractDto;
     }
 
@@ -104,5 +107,13 @@ public class JobContractDto {
 
     public void setImage(URI image) {
         this.image = image;
+    }
+
+    public boolean isWasRescheduled() {
+        return wasRescheduled;
+    }
+
+    public void setWasRescheduled(boolean wasRescheduled) {
+        this.wasRescheduled = wasRescheduled;
     }
 }

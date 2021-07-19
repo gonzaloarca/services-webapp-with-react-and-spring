@@ -16,11 +16,11 @@ public interface JobContractDao {
 
     List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContract> findByClientIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page);
+    List<JobContractWithImage> findByClientIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states, int page);
 
     List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContract> findByProIdAndSortedByModificationDate(long id, List<JobContract.ContractState> states, int page);
+    List<JobContractWithImage> findByProIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states, int page);
 
     List<JobContract> findByPostId(long id, int page);
 
@@ -51,4 +51,8 @@ public interface JobContractDao {
     int findByPackageIdMaxPage(long packageId, long postId);
 
     long addContractImage(long contractId,ByteImage contractImage);
+
+    List<JobContractWithImage> findAllWithImage(int page);
+
+    void setWasRescheduled(long id);
 }

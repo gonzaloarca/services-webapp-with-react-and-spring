@@ -7,7 +7,7 @@ import {
   Tabs,
   withStyles,
 } from '@material-ui/core';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
 import NavBar from '../components/NavBar';
@@ -19,6 +19,8 @@ import clsx from 'clsx';
 import ContractCard from '../components/ContractCard';
 import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { useContracts } from '../hooks';
+import { UserContext } from '../context';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -66,173 +68,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const hiredServices = {
-  activeContracts: [
-    // {
-    //   avgRate: 3.6666666666666665,
-    //   client: {
-    //     id: 11,
-    //     username: 'El Beto (Julian Sicardi)',
-    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //     email: 'beto@gmbeh.com',
-    //     phone: '03034560',
-    //   },
-    //   professional: {
-    //     id: 12,
-    //     username: 'El Beto (Julian Sicardi)',
-    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //     email: 'betito@gmbeh.com',
-    //     phone: '03034560',
-    //   },
-    //   contractsCompleted: 4,
-    //   creationDate: '2021-06-16T16:48:40.860',
-    //   image: {
-    //     uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //   },
-    //   jobContract: {
-    //     id: 29,
-    //     uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
-    //   },
-    //   jobPackage: {
-    //     id: 8,
-    //     uri: 'http://localhost:8080/job-posts/8/packages/8',
-    //   },
-    //   jobPost: {
-    //     id: 8,
-    //     uri: 'http://localhost:8080/job-posts/8',
-    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //   },
-    //   jobTitle: 'Niñero turno mañana',
-    //   jobType: {
-    //     description: 'BABYSITTING',
-    //     id: 7,
-    //   },
-    //   packageTitle: '4 dias a la semana 4 horas',
-    //   rateType: {
-    //     description: 'TBD',
-    //     id: 2,
-    //   },
-    //   reviewsCount: 3,
-    //   scheduledDate: '2021-06-16T16:48',
-    //   state: {
-    //     description: 'APPROVED',
-    //     id: 0,
-    //   },
-    // },
-  ],
-  pendingContracts: [
-    // {
-    //   avgRate: 3.6666666666666665,
-    //   client: {
-    //     id: 11,
-    //     username: 'El Beto (Julian Sicardi)',
-    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //     email: 'beto@gmbeh.com',
-    //     phone: '03034560',
-    //   },
-    //   professional: {
-    //     id: 12,
-    //     username: 'El Beto (Julian Sicardi)',
-    //     image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //     email: 'betito@gmbeh.com',
-    //     phone: '03034560',
-    //   },
-    //   contractsCompleted: 4,
-    //   creationDate: '2021-06-16T16:48:40.860',
-    //   image: {
-    //     uri: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-    //   },
-    //   jobContract: {
-    //     id: 29,
-    //     uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
-    //   },
-    //   jobPackage: {
-    //     id: 8,
-    //     uri: 'http://localhost:8080/job-posts/8/packages/8',
-    //   },
-    //   jobPost: {
-    //     id: 8,
-    //     uri: 'http://localhost:8080/job-posts/8',
-    //   },
-    //   jobTitle: 'Niñero turno mañana',
-    //   jobType: {
-    //     description: 'BABYSITTING',
-    //     id: 7,
-    //   },
-    //   packageTitle: '4 dias a la semana 4 horas',
-    //   rateType: {
-    //     description: 'TBD',
-    //     id: 2,
-    //   },
-    //   reviewsCount: 3,
-    //   scheduledDate: '2021-06-16T16:48',
-    //   state: {
-    //     description: 'PENDING_APPROVAL',
-    //     id: 0,
-    //   },
-    // },
-  ],
-  finalizedContracts: [
-    {
-      avgRate: 3.6666666666666665,
-      client: {
-        id: 11,
-        username: 'El Beto (Julian Sicardi)',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-        email: 'beto@gmbeh.com',
-        phone: '03034560',
-      },
-      professional: {
-        id: 12,
-        username: 'El Beto (Julian Sicardi)',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-        email: 'betito@gmbeh.com',
-        phone: '03034560',
-      },
-      contractsCompleted: 4,
-      creationDate: '2021-06-16T16:48:40.860',
-      image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-      jobContract: {
-        id: 29,
-        description: 'Hava nagila Hava nagila Hava nagila Venis mecha.',
-        image: '/img/plumbing.jpeg',
-        uri: 'http://localhost:8080/job-posts/8/packages/8/contracts/29',
-      },
-      jobPackage: {
-        id: 8,
-        uri: 'http://localhost:8080/job-posts/8/packages/8',
-      },
-      jobPost: {
-        id: 8,
-        uri: 'http://localhost:8080/job-posts/8',
-        image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-      },
-      jobTitle: 'Niñero turno mañana',
-      jobType: {
-        description: 'BABYSITTING',
-        id: 7,
-      },
-      packageTitle: '4 dias a la semana 4 horas',
-      rateType: {
-        description: 'TBD',
-        id: 2,
-      },
-      reviewsCount: 3,
-      scheduledDate: '2021-06-16T16:48',
-      state: {
-        description: 'COMPLETED',
-        id: 0,
-      },
-    },
-  ],
-};
-
-const myServices = {
-  activeContracts: [],
-  pendingContracts: [],
-  finalizedContracts: [],
-};
-
 const TabPanel = ({ children, value, index }) => {
   return (
     <div
@@ -247,36 +82,47 @@ const TabPanel = ({ children, value, index }) => {
 
 let tabSection;
 
-const MyContracts = () => {
+const MyContracts = ({ history }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
-
+  const { activeTab, activeState } = useParams();
+  const { currentUser } = useContext(UserContext);
+  const { getContractsByClientIdAndState, getContractsByProAndStateId } =
+    useContracts();
+  const [hiredServices, setHiredServices] = useState([]);
+  const [myServices, setMyServices] = useState([]);
+  const [tabValue, setTabValue] = React.useState(activeTab === 'pro' ? 1 : 0);
   const tabPaths = ['hired', 'pro'];
+  const loadHiredContracts = async () => {
+    const clientContracts = await getContractsByClientIdAndState(
+      currentUser.id,
+      activeState,
+      1
+    );
+    setHiredServices(clientContracts);
+  };
+  const loadMyServicesContracts = async () => {
+    const proServices = await getContractsByProAndStateId(
+      currentUser.id,
+      activeState,
+      1
+    );
+    setMyServices(proServices);
+  };
+  useEffect(() => {
+    if (currentUser && activeTab && activeState) {
+      if (activeTab === 'pro') loadMyServicesContracts();
+      else loadHiredContracts();
+    }
+  }, [activeState, activeTab, currentUser]);
 
-  const { activeTab } = useParams();
-
-  const history = useHistory();
-
-  let initialTab = 0;
-
-  if (!activeTab) {
-    history.replace(`/my-contracts/${tabPaths[0]}`);
-    tabSection = tabPaths[0];
-  } else {
-    tabPaths.forEach((path, index) => {
-      if (path === activeTab) {
-        initialTab = index;
-        tabSection = activeTab;
-      }
-    });
-  }
-
-  const [tabValue, setTabValue] = React.useState(initialTab);
-
-  const handleChange = (event, newValue) => {
+  const handleChange = (_event, newValue) => {
     setTabValue(newValue);
-    history.push(`/my-contracts/${tabPaths[newValue]}`);
+    history.push(
+      `/my-contracts/${tabPaths[newValue]}` +
+        (activeState ? `/${activeState}` : '')
+    );
   };
 
   return (
@@ -330,12 +176,19 @@ const MyContracts = () => {
 
           <TabPanel value={tabValue} index={0}>
             <div className="mt-6">
-              <ContractsDashboard contracts={hiredServices} />
+              <ContractsDashboard
+                contracts={hiredServices}
+                topTabSection={tabPaths[tabValue]}
+              />
             </div>
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
             <div className="mt-6">
-              <ContractsDashboard contracts={myServices} isOwner />
+              <ContractsDashboard
+                contracts={myServices}
+                isOwner
+                topTabSection={tabPaths[tabValue]}
+              />
             </div>
           </TabPanel>
         </div>
@@ -344,11 +197,11 @@ const MyContracts = () => {
   );
 };
 
-const ContractsDashboard = ({ contracts, isOwner = false }) => {
+const ContractsDashboard = ({ contracts, isOwner = false, topTabSection }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
-
+  const { activeState } = useParams();
   const contractSections = [
     {
       title: t('mycontracts.activecontracts'),
@@ -417,65 +270,24 @@ const ContractsDashboard = ({ contracts, isOwner = false }) => {
     }
   };
 
-  const { activeState } = useParams();
-
   const history = useHistory();
+  console.log('active', activeState);
+  const [tabValue, setTabValue] = React.useState(
+    activeState === 'finalized' ? 2 : activeState === 'pending' ? 1 : 0
+  );
 
-  let initialTab = 0;
-
-  if (activeState) {
-    contractSections.forEach((section, index) => {
-      if (section.path === activeState) initialTab = index;
-    });
-  }
-
-  const [tabValue, setTabValue] = React.useState(initialTab);
+  useEffect(() => {
+    history.replace(
+      `/my-contracts/${topTabSection}/${contractSections[tabValue].path}`
+    );
+  }, []);
 
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
     history.push(
-      `/my-contracts/${tabSection}/${contractSections[newValue].path}`
+      `/my-contracts/${topTabSection}/${contractSections[newValue].path}`
     );
   };
-
-  const getContracts = (index) => {
-    switch (index) {
-      case 0:
-        return contracts.activeContracts;
-      case 1:
-        return contracts.pendingContracts;
-      case 2:
-        return contracts.finalizedContracts;
-      default:
-        return [];
-    }
-  };
-
-  // const getSectionTitle = (index) => {
-  //   switch (index) {
-  //     case 0:
-  //       return t('mycontracts.activecontracts');
-  //     case 1:
-  //       return t('mycontracts.pendingapprovalcontracts');
-  //     case 2:
-  //       return t('mycontracts.finalizedcontracts');
-  //     default:
-  //       return '';
-  //   }
-  // };
-
-  // const getTabTitle = (index) => {
-  //   switch (index) {
-  //     case 0:
-  //       return t('mycontracts.active');
-  //     case 1:
-  //       return t('mycontracts.pendingapproval');
-  //     case 2:
-  //       return t('mycontracts.finalized');
-  //     default:
-  //       return '';
-  //   }
-  // };
 
   return (
     <Grid container spacing={4}>
@@ -531,18 +343,16 @@ const ContractsDashboard = ({ contracts, isOwner = false }) => {
               <Divider className="mb-2" />
 
               <div className="p-4">
-                {getContracts(index).length === 0 ? (
+                {contracts.length === 0 ? (
                   <NoContracts
                     header={getNoContractsContent(isOwner, index).header}
                     body={getNoContractsContent(isOwner, index).body}
                   />
                 ) : (
-                  getContracts(index).map((contract) => (
-                    <ContractCard
-                      contract={contract}
-                      key={contract.id}
-                      isOwner={isOwner}
-                    />
+                  contracts.map((contract) => (
+                    <div key={contract.id} className="mb-6">
+                      <ContractCard contract={contract} isOwner={isOwner} />
+                    </div>
                   ))
                 )}
               </div>
@@ -564,9 +374,6 @@ const HirenetTab = withStyles((theme) => ({
       opacity: 1,
       transition: '0.1s opacity',
     },
-    // '& .MuiTab-root': {
-    //   p
-    // },
     '& .MuiTab-wrapper': {
       flexDirection: 'row',
       justifyContent: 'start',

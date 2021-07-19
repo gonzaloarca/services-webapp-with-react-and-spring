@@ -684,7 +684,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByClientIdAndSortedByModificationDate() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientIdAndSortedByModificationDate(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
+        List<JobContract> jobContracts = jobContractDaoJpa.findByClientIdAndSortedByModificationDateWithImage(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
 
@@ -694,7 +694,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByClientIdAndSortedByModificationDateComparingToNonSortedFails() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientIdAndSortedByModificationDate(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
+        List<JobContract> jobContracts = jobContractDaoJpa.findByClientIdAndSortedByModificationDateWithImage(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
 
@@ -703,7 +703,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByProIdAndSortedByModificationDate() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProIdAndSortedByModificationDate(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
+        List<JobContract> jobContracts = jobContractDaoJpa.findByProIdAndSortedByModificationDateWithImage(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
 
@@ -713,7 +713,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByProIdAndSortedByModificationDateComparingToNonSortedFails() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProIdAndSortedByModificationDate(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
+        List<JobContract> jobContracts = jobContractDaoJpa.findByProIdAndSortedByModificationDateWithImage(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
 

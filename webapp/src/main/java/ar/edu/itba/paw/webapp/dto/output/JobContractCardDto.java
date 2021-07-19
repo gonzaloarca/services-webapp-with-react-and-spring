@@ -11,8 +11,10 @@ public class JobContractCardDto {
     private URI client;
     private URI professional;
 
-    private URI jobContractDto;
+    private URI jobContract;
     private JobContractStateDto state;
+    private String description;
+    private URI contractImage;
     private LocalDateTime creationDate;
     private LocalDateTime scheduledDate;
 
@@ -24,10 +26,10 @@ public class JobContractCardDto {
     private String packageTitle;
     private Double price;
     private JobPackageRateTypeDto rateType;
-    private URI imageUrl;
-
+    private URI postImage;
     private URI jobPost;
-    private URI jobPackageDto;
+    private URI jobPackage;
+    private Boolean wasRescheduled;
 
     public static JobContractCardDto fromJobContractCardWithLocalizedMessage(JobContractCard card, UriInfo uriInfo, String message) {
         JobContractCardDto dto = new JobContractCardDto();
@@ -36,7 +38,7 @@ public class JobContractCardDto {
         dto.client = uriInfo.getBaseUriBuilder().path("/users")
                 .path(String.valueOf(card.getJobContract().getClient().getId())).build();
 
-        dto.jobContractDto = uriInfo.getBaseUriBuilder()
+        dto.jobContract = uriInfo.getBaseUriBuilder()
                         .path("/contracts").path(String.valueOf(card.getJobContract().getId())).build();
 
         dto.state = JobContractStateDto.fromJobContractState(card.getJobContract().getState());
@@ -51,20 +53,24 @@ public class JobContractCardDto {
         dto.packageTitle = card.getJobContract().getJobPackage().getTitle();
         dto.price = card.getJobContract().getJobPackage().getPrice();
         dto.rateType = JobPackageRateTypeDto.fromJobPackageRateType(card.getJobContract().getJobPackage().getRateType());
-        dto.imageUrl = uriInfo.getBaseUriBuilder().path("/job-posts")
+        dto.postImage = card.getJobCard().getPostImageId() != null? uriInfo.getBaseUriBuilder().path("/job-posts")
                 .path(String.valueOf(card.getJobCard().getJobPost().getId()))
                 .path("/images")
                 .path(String.valueOf(card.getJobCard().getPostImageId()))
-                .build();
+                .build() : null;
         long jobPostId = card.getJobCard().getJobPost().getId();
         dto.jobPost = uriInfo.getBaseUriBuilder().path("/job-posts/")
                 .path(String.valueOf(jobPostId)).build();
         JobPackage pack = card.getJobContract().getJobPackage();
-        dto.jobPackageDto = uriInfo.getBaseUriBuilder()
+        dto.jobPackage = uriInfo.getBaseUriBuilder()
                 .path("/job-posts/")
                 .path(String.valueOf(pack.getJobPost().getId()))
                 .path("/packages")
                 .path(String.valueOf(pack.getId())).build();
+        dto.description = card.getDescription();
+        dto.wasRescheduled = card.getWasRescheduled();
+        dto.contractImage = card.getByteImage() != null ? uriInfo.getBaseUriBuilder()
+                .path("/contracts").path(String.valueOf(card.getJobContract().getId())).path("/image").build() : null;;
         return dto;
     }
 
@@ -82,14 +88,6 @@ public class JobContractCardDto {
 
     public void setProfessional(URI professional) {
         this.professional = professional;
-    }
-
-    public URI getJobContractDto() {
-        return jobContractDto;
-    }
-
-    public void setJobContractDto(URI jobContractDto) {
-        this.jobContractDto = jobContractDto;
     }
 
     public JobContractStateDto getState() {
@@ -180,14 +178,6 @@ public class JobContractCardDto {
         this.rateType = rateType;
     }
 
-    public URI getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(URI imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public URI getJobPost() {
         return jobPost;
     }
@@ -196,11 +186,51 @@ public class JobContractCardDto {
         this.jobPost = jobPost;
     }
 
-    public URI getJobPackageDto() {
-        return jobPackageDto;
+    public URI getJobContract() {
+        return jobContract;
     }
 
-    public void setJobPackageDto(URI jobPackageDto) {
-        this.jobPackageDto = jobPackageDto;
+    public void setJobContract(URI jobContract) {
+        this.jobContract = jobContract;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public URI getContractImage() {
+        return contractImage;
+    }
+
+    public void setContractImage(URI contractImage) {
+        this.contractImage = contractImage;
+    }
+
+    public URI getPostImage() {
+        return postImage;
+    }
+
+    public void setPostImage(URI postImage) {
+        this.postImage = postImage;
+    }
+
+    public URI getJobPackage() {
+        return jobPackage;
+    }
+
+    public void setJobPackage(URI jobPackage) {
+        this.jobPackage = jobPackage;
+    }
+
+    public Boolean getWasRescheduled() {
+        return wasRescheduled;
+    }
+
+    public void setWasRescheduled(Boolean wasRescheduled) {
+        this.wasRescheduled = wasRescheduled;
     }
 }

@@ -5,6 +5,7 @@ import {
   registerRequest,
   verifyEmailRequest,
   getRankingsRequest,
+  getRatesRequest,
   getProfessionalInfoRequest,
   recoverAccountRequest,
   recoverPassRequest,
@@ -52,6 +53,11 @@ const useUserHook = () => {
     return response.data;
   };
 
+  const getRates = async (userId) => {
+    const response = await getRatesRequest(userId);
+    return response.data;
+  };
+
   const getProfessionalInfo = async (userId) => {
     const response = await getProfessionalInfoRequest(userId);
     return {
@@ -80,6 +86,7 @@ const useUserHook = () => {
     register,
     verifyEmail,
     getRankings,
+    getRates,
     getProfessionalInfo,
     recoverAccount,
     recoverPass,

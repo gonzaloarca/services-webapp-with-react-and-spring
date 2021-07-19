@@ -103,7 +103,7 @@ const NavBar = ({
       setScrolled(false);
     }
   };
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     query: !searchBarQueryParams ? '' : searchBarQueryParams.query,
   });
 

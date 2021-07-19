@@ -76,7 +76,7 @@ public class JobCardDaoJpa implements JobCardDao {
 
     @Override
     public Optional<JobCard> findByPostId(long id) {
-        return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id = :id AND card.jobPost.isActive = TRUE", JobCard.class)
+        return em.createQuery("FROM JobCard AS card WHERE card.jobPost.id = :id", JobCard.class)
                 .setParameter("id", id).getResultList().stream().findFirst();
     }
 
