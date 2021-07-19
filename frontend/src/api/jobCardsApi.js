@@ -36,7 +36,7 @@ export const searchJobCardsRequest = ({
 };
 
 export const relatedJobCardsRequest = (userId, page = 1) => {
-  return hirenetApi.get('/job-cards/search', {
+  return hirenetApi.get('/job-cards', {
     params: {
       userId: userId,
       type: 'related',
