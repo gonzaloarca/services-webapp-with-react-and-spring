@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -38,11 +39,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CategoryCard = ({ showAll = false, category = null, height = 175 }) => {
+const CategoryCard = ({
+  showAll = false,
+  category = null,
+  height = 175,
+  isLoading = false,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  return (
+  return isLoading ? (
+    <Skeleton
+      className={classes.categoryContainer}
+      variant="rect"
+      height={height}
+      width={'100%'}
+    />
+  ) : (
     <Link to={showAll ? '/search' : `/search/${category.id}`}>
       <div className={classes.categoryContainer} style={{ height: height }}>
         <div className={classes.categoryOverlay}>
@@ -54,7 +67,7 @@ const CategoryCard = ({ showAll = false, category = null, height = 175 }) => {
           className={classes.categoryImage}
           src={
             showAll
-              ? `${process.env.PUBLIC_URL}/img/morecategories1.svg`
+              ? process.env.PUBLIC_URL + '/img/morecategories1.svg'
               : category.image
           }
           alt=""

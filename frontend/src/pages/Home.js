@@ -25,12 +25,17 @@ export const Home = (props) => {
   const { categories, zones } = useContext(ConstantDataContext);
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
   const [showChevron, setShowChevron] = useState(false);
   const { getJobCards } = useJobCards();
   const loadJobCards = async () => {
     setJobs(await getJobCards());
     setLoadingJobs(false);
   };
+
+  useEffect(() => {
+    if (categories && categories.length > 0) setLoadingCategories(false);
+  }, [categories]);
 
   useEffect(() => {
     loadJobCards();
@@ -47,17 +52,27 @@ export const Home = (props) => {
         <h3 className={clsx(classes.header, 'mb-5')}>{t('home.explore')}</h3>
 
         <Grid container justifyContent="space-evenly" spacing={3}>
-          {categories
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 4)
-            .map((i) => (
-              <Grid key={i.id} item xs={6} sm={4} md={3} lg={2}>
-                <CategoryCard category={i} />
+          {loadingCategories ? (
+            [1, 2, 3, 4, 5].map((i) => (
+              <Grid key={i} item xs={6} sm={4} md={3} lg={2}>
+                <CategoryCard category={{}} isLoading />
               </Grid>
-            ))}
-          <Grid item xs={6} sm={4} md={3} lg={2}>
-            <CategoryCard showAll />
-          </Grid>
+            ))
+          ) : (
+            <>
+              {categories
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 4)
+                .map((i) => (
+                  <Grid key={i.id} item xs={6} sm={4} md={3} lg={2}>
+                    <CategoryCard category={i} />
+                  </Grid>
+                ))}
+              <Grid item xs={6} sm={4} md={3} lg={2}>
+                <CategoryCard showAll />
+              </Grid>
+            </>
+          )}
         </Grid>
       </div>
       <div className={classes.sectionShadow}>
@@ -88,7 +103,7 @@ export const Home = (props) => {
               ))
             ) : jobs.length > 0 ? (
               jobs.map((i) => (
-                <Grid key={i.jobPost.id} item xs={12} sm={6} md={4} lg={3}>
+                <Grid key={i.id} item xs={12} sm={6} md={4} lg={3}>
                   <JobCard job={i} />
                 </Grid>
               ))

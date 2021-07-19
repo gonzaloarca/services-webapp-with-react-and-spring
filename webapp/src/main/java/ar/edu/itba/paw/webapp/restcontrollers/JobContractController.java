@@ -126,14 +126,14 @@ public class JobContractController {
         if (editJobContractDto.getNewScheduledDate() == null)
             JobContractsControllerLogger.debug("Updating job contract id: {} from {} with data: state: {}",
                     contractId, isPro ? "professional" : "client", editJobContractDto.getNewState());
-        else
+        else {
             JobContractsControllerLogger.debug("Updating job contract id: {} from {} with data: scheduledDate: {}, state: {}",
                     contractId, isPro ? "professional" : "client", editJobContractDto.getNewScheduledDate(),
                     editJobContractDto.getNewState());
-
-        jobContractService.changeContractScheduledDate(contractId,
-                editJobContractDto.getNewScheduledDate(), isPro,
-                locale);
+            jobContractService.changeContractScheduledDate(contractId,
+                    editJobContractDto.getNewScheduledDate(), isPro,
+                    locale);
+        }
         jobContractService.changeContractState(contractId,
                 JobContract.ContractState.values()[Math.toIntExact(editJobContractDto.getNewState())],
                 locale, webPageUrl);
@@ -144,7 +144,7 @@ public class JobContractController {
 
     @Path("/{contractId}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
     public Response getContractImage(@PathParam("contractId") final long contractId) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
