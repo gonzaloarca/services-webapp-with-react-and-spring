@@ -613,7 +613,9 @@ const ReviewListCard = ({ postId }) => {
     if (reviews) setIsLoading(false);
   }, [reviews]);
   return isLoading ? (
-    <div>loading</div>
+    <div className="flex justify-center items-center w-full h-52">
+      <CircularProgress />
+    </div>
   ) : (
     <SectionCard
       labelBackgroundColor={themeUtils.colors.yellow}

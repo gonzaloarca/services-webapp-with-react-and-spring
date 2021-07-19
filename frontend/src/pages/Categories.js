@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     fontSize: themeUtils.fontSizes.h1,
-    fontWeight: 700,
+    fontWeight: 600,
   },
   searchInput: {
     fontSize: themeUtils.fontSizes.sm,
