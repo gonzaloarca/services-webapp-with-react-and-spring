@@ -341,6 +341,7 @@ const PersonalData = ({ currentUser }) => {
                             : URL.createObjectURL(values.image)
                         }
                         alt=""
+                        loading="lazy"
                       />
                     </div>
                     <p className={'mb-3 text-center'}>

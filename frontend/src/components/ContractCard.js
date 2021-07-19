@@ -351,6 +351,7 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
                 className={classes.jobImage}
                 src={contract.postImage}
                 alt=""
+                loading="lazy"
               />
             </Grid>
             <Grid

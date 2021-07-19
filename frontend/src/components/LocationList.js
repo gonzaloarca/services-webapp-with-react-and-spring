@@ -130,6 +130,7 @@ const LocationList = ({
             className={classes.filterImage}
             src={process.env.PUBLIC_URL + '/img/location-search.svg'}
             alt=""
+            loading="lazy"
           />
           <p className={classes.noResultsText}>
             {t('noresults', { search: filter })}

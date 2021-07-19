@@ -330,7 +330,7 @@ const JobPost = ({ match, history }) => {
                   src={item}
                   className={classes.carouselImage}
                   alt=""
-                  loading="eager"
+                  loading="lazy"
                 />
               ))}
             </Carousel>
@@ -592,6 +592,7 @@ const ReviewListCard = ({ postId }) => {
             className={classes.noReviewsImage}
             src={process.env.PUBLIC_URL + '/img/star-1.svg'}
             alt=""
+            loading="lazy"
           />
           <p className={classes.noReviewsMessage}>{t('jobpost.noreviews')}</p>
         </div>
