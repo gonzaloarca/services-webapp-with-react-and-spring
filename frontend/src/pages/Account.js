@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import NavBar from '../components/NavBar';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
@@ -24,16 +24,9 @@ import FileInput, { checkSize, checkType } from '../components/FileInput';
 import TabPanel from '../components/TabPanel';
 import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-
-// TODO: integracion con API
-const currentUser = {
-  email: 'manaaasd@gmail.com',
-  id: 5,
-  phone: '03034560',
-  roles: ['CLIENT', 'PROFESSIONAL'],
-  username: 'Manuel Rodriguez',
-  image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-};
+import { UserContext } from '../context';
+import { useUser } from '../hooks';
+import { isLoggedIn, logout } from '../utils/userUtils';
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -63,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#485696',
     border: 'transparent',
     color: 'white',
+    '&:hover': {
+      backgroundColor: themeUtils.colors.darkBlue,
+    },
   },
   logoutBtn: {
     fontWeight: 'bold',
@@ -77,6 +73,11 @@ const useStyles = makeStyles((theme) => ({
     height: '100px',
     objectFit: 'cover',
   },
+  answerMessage: {
+    marginRight: '20px',
+    alignSelf: 'center',
+    fontSize: '0.9em',
+  },
 }));
 
 const useGlobalStyles = makeStyles(styles);
@@ -85,20 +86,27 @@ const Account = () => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
+  const { currentUser } = useContext(UserContext);
+  const history = useHistory();
+
+  //TODO: SI REFRESHEO ME REDIRIGE REVISAR ESTO!
+  if (!isLoggedIn) {
+    history.push('/login');
+  }
 
   const accountSections = [
     {
       tabLabel: t('account.data.title'),
       color: themeUtils.colors.orange,
       icon: <Person className="text-white" />,
-      component: <PersonalData />,
+      component: <PersonalData currentUser={currentUser} />,
       path: 'personal',
     },
     {
       tabLabel: t('account.security.title'),
       color: themeUtils.colors.blue,
       icon: <Lock className="text-white" />,
-      component: <SecurityData />,
+      component: <SecurityData userId={currentUser?.id} />,
       path: 'security',
     },
     {
@@ -111,8 +119,6 @@ const Account = () => {
   ];
 
   const { activeTab } = useParams();
-
-  const history = useHistory();
 
   let initialTab = 0;
 
@@ -183,11 +189,15 @@ const Account = () => {
           </Grid>
           <Grid item sm={12} md={9}>
             <div className={classes.accountSection}>
-              {accountSections.map((section, index) => (
-                <TabPanel value={tabValue} index={index} key={index}>
-                  {section.component}
-                </TabPanel>
-              ))}
+              {currentUser ? (
+                accountSections.map((section, index) => (
+                  <TabPanel value={tabValue} index={index} key={index}>
+                    {section.component}
+                  </TabPanel>
+                ))
+              ) : (
+                <></>
+              )}
             </div>
           </Grid>
         </Grid>
@@ -206,10 +216,12 @@ const HirenetTab = withStyles((theme) => ({
   },
 }))(Tab);
 
-const PersonalData = () => {
+const PersonalData = ({ currentUser }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
+  const { changeAccountData } = useUser();
+  const [answer, setAnswer] = useState('');
 
   const initialValues = {
     username: currentUser.username,
@@ -233,8 +245,20 @@ const PersonalData = () => {
       ),
   });
 
-  const onSubmit = (values, props) => {
-    console.log(values); //TODO: GUARDAR CAMBIOS
+  const onSubmit = async (values) => {
+    console.log(values);
+    try {
+      await changeAccountData({
+        userId: currentUser.id,
+        email: currentUser.email,
+        phone: values.phone,
+        username: values.username,
+      });
+      setAnswer('ok');
+    } catch (error) {
+      console.log(error);
+      setAnswer('error');
+    }
   };
 
   return (
@@ -333,6 +357,20 @@ const PersonalData = () => {
                 </Grid>
               </div>
               <div className="flex justify-end">
+                {answer === '' ? (
+                  <></>
+                ) : answer === 'ok' ? (
+                  <p
+                    style={{ color: 'green' }}
+                    className={classes.answerMessage}
+                  >
+                    {t('account.accepted')}
+                  </p>
+                ) : (
+                  <p style={{ color: 'red' }} className={classes.answerMessage}>
+                    {t('account.rejected')}{' '}
+                  </p>
+                )}
                 <Button
                   type="submit"
                   className={classes.submitBtn}
@@ -349,10 +387,12 @@ const PersonalData = () => {
   );
 };
 
-const SecurityData = () => {
+const SecurityData = ({ userId }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
+  const { changePassword } = useUser();
+  const [answer, setAnswer] = useState('');
 
   const initialValues = {
     oldpassword: '',
@@ -360,7 +400,6 @@ const SecurityData = () => {
     repeatnewpassword: '',
   };
 
-  //TODO: encontrar si hay una forma de verificar que oldpassword !== newpassword (?)
   const validationSchema = Yup.object({
     oldpassword: Yup.string()
       .required(t('validationerror.required'))
@@ -380,8 +419,15 @@ const SecurityData = () => {
       ),
   });
 
-  const onSubmit = (values, props) => {
-    console.log(values); //TODO: CAMBIAR CONTRASEÑA
+  const onSubmit = async (values) => {
+    console.log(values);
+    try {
+      await changePassword({ userId: userId, password: values.password });
+      setAnswer('ok');
+    } catch (error) {
+      console.log(error);
+      setAnswer('error');
+    }
   };
 
   return (
@@ -418,6 +464,23 @@ const SecurityData = () => {
                   fullWidth
                 />
                 <div className="flex justify-end">
+                  {answer === '' ? (
+                    <></>
+                  ) : answer === 'ok' ? (
+                    <p
+                      style={{ color: 'green' }}
+                      className={classes.answerMessage}
+                    >
+                      {t('account.accepted')}
+                    </p>
+                  ) : (
+                    <p
+                      style={{ color: 'red' }}
+                      className={classes.answerMessage}
+                    >
+                      {t('account.rejected')}{' '}
+                    </p>
+                  )}
                   <Button
                     type="submit"
                     className={classes.submitBtn}
@@ -439,6 +502,15 @@ const Logout = () => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
+  const { setCurrentUser, setToken } = useContext(UserContext);
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    setCurrentUser(null);
+    setToken(null);
+	useHistory().push('/');
+  };
 
   return (
     <>
@@ -448,7 +520,7 @@ const Logout = () => {
       <Divider />
       <div className="p-5 flex justify-center">
         {/* TODO: llamar a cerrar sesión */}
-        <Button type="button" className={classes.logoutBtn}>
+        <Button type="button" className={classes.logoutBtn} onClick={logout}>
           {t('account.logout.btn')}
         </Button>
       </div>

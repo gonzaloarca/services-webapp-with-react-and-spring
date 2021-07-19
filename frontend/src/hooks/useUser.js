@@ -9,6 +9,8 @@ import {
   getProfessionalInfoRequest,
   recoverAccountRequest,
   recoverPassRequest,
+  changePasswordRequest,
+  changeAccountDataRequest,
 } from '../api/usersApi';
 
 const fallbackAvatar = process.env.PUBLIC_URL + '/img/defaultavatar.svg';
@@ -79,6 +81,16 @@ const useUserHook = () => {
     return response.data;
   };
 
+  const changePassword = async (data) => {
+    const response = await changePasswordRequest(data);
+    return response.data;
+  };
+
+  const changeAccountData = async (data) => {
+    const response = await changeAccountDataRequest(data);
+    return response.data;
+  };
+
   return {
     getUserByEmail,
     getUserById,
@@ -90,6 +102,9 @@ const useUserHook = () => {
     getProfessionalInfo,
     recoverAccount,
     recoverPass,
+    changePassword,
+    changeAccountData,
   };
 };
+
 export default useUserHook;
