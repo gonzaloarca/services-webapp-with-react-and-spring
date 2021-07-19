@@ -24,7 +24,7 @@ import clsx from 'clsx';
 import { themeUtils } from '../theme';
 import { UserContext } from '../context';
 import { useHistory } from 'react-router-dom';
-import { isProfessional } from '../utils/userUtils';
+import { isProfessional, isLoggedIn } from '../utils/userUtils';
 import {
   ExitToApp,
   Person,
@@ -86,6 +86,8 @@ const NavBar = ({
           path: '/analytics',
         });
       }
+      setIsLoading(false);
+    } else if (isLoggedIn()) {
       setIsLoading(false);
     }
 
