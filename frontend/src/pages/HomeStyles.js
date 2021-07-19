@@ -46,6 +46,13 @@ const homeStyles = (theme) => ({
     width: '40%',
     textAlign: 'center',
   },
+
+  viewAll: {
+    color: themeUtils.colors.blue,
+    fontSize: themeUtils.fontSizes.sm,
+    fontWeight: 500,
+    textTransform: 'uppercase',
+  },
 });
 
 export default homeStyles;

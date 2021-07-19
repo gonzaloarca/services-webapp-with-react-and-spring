@@ -1,4 +1,4 @@
-import { Button, Grid, makeStyles, withStyles } from '@material-ui/core';
+import { Button, Fade, Grid, makeStyles, withStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ import { ConstantDataContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
+import { ChevronRight } from '@material-ui/icons';
 
 const useStyles = makeStyles(homeStyles);
 const useGlobalStyles = makeStyles(styles);
@@ -23,6 +24,7 @@ export const Home = (props) => {
   const { t } = useTranslation();
   const { categories, zones } = useContext(ConstantDataContext);
   const [jobs, setJobs] = useState([]);
+  const [showChevron, setShowChevron] = useState(false);
   const { getJobCards } = useJobCards();
   const loadJobCards = async () => {
     setJobs(await getJobCards());
@@ -58,7 +60,22 @@ export const Home = (props) => {
       </div>
       <div className={classes.sectionShadow}>
         <div className={globalClasses.contentContainerTransparent}>
-          <h3 className={clsx(classes.header, 'mb-5')}>{t('home.newest')}</h3>
+          <div className="flex items-start justify-between">
+            <h3 className={clsx(classes.header, 'mb-5')}>{t('home.newest')}</h3>
+            <div className="flex items-center h-full pt-2">
+              <Link
+                className={classes.viewAll}
+                onMouseEnter={() => setShowChevron(true)}
+                onMouseLeave={() => setShowChevron(false)}
+                to="/search"
+              >
+                {t('home.viewall')}
+              </Link>
+              <Fade in={showChevron}>
+                <ChevronRight className={clsx(classes.viewAll, 'text-2xl')} />
+              </Fade>
+            </div>
+          </div>
 
           <Grid container spacing={3}>
             {jobs.length > 0 ? (
