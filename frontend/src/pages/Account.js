@@ -503,13 +503,14 @@ const Logout = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const { setCurrentUser, setToken } = useContext(UserContext);
+  const history = useHistory();
 
   const logout = () => {
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
     setCurrentUser(null);
     setToken(null);
-	useHistory().push('/');
+    history.push('/');
   };
 
   return (
