@@ -70,10 +70,11 @@ const useContractsHook = () => {
     const response = await createContractRequest(contractInfo);
     const contractId = extractLastIdFromURL(response.headers.location);
 
-    const formData = new FormData();
-    formData.append('file', data.image);
-
-    await putContractImage(contractId, formData);
+    if (data.image) {
+      const formData = new FormData();
+      formData.append('file', data.image);
+      await putContractImage(contractId, formData);
+    }
 
     return response.data;
   };

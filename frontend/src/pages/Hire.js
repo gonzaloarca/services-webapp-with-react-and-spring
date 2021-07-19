@@ -258,7 +258,7 @@ const Hire = ({ match, history }) => {
   const tryCreate = async (values) => {
     try {
       await createContract(currentUser.id, pack.id, values);
-      history.push(`/my-contracts`);
+      history.push(`/my-contracts/hired/pending`);
     } catch (e) {
       history.push(`/error`);
     }

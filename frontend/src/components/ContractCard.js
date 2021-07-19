@@ -81,7 +81,6 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
   const [openContact, setOpenContact] = useState(false);
 
   const { changeContractStateClient, changeContractStatePro } = useContracts();
-  const { createReview } = useReviews();
   const { states } = useContext(ConstantDataContext);
   const [professional, setProfessional] = useState(null);
   const [client, setClient] = useState(null);
@@ -110,6 +109,12 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
   const { t } = useTranslation();
 
   const formRef = useRef();
+
+  const handleSubmit = () => {
+    if (formRef.current) {
+      formRef.current.handleSubmit();
+    }
+  };
 
   const onFinalized = async () => {
     if (contract.state.description === 'APPROVED') {
@@ -211,20 +216,7 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
       openModal: () => setOpenReschedule(true),
       onNegative: () => setOpenReschedule(false),
       onAffirmative: async () => {
-        console.log(formRef.current.values);
-        if (isOwner)
-          await changeContractStatePro(
-            contract.id,
-            states.find((state) => state.description === 'PRO_MODIFIED').id,
-            formRef.current.values.date.toISOString()
-          );
-        else
-          await changeContractStateClient(
-            contract.id,
-            states.find((state) => state.description === 'CLIENT_MODIFIED').id,
-            formRef.current.values.date.toISOString()
-          );
-        refetch('pending');
+        handleSubmit();
       },
       title: t('mycontracts.modals.reschedule.title'),
       body: (props) => (
@@ -233,6 +225,9 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
             <RescheduleBody
               formRef={formRef}
               setOpenReschedule={setOpenReschedule}
+              refetch={refetch}
+              contract={contract}
+              isOwner={isOwner}
               {...props}
             />
           )}
@@ -292,19 +287,18 @@ const ContractCard = ({ contract, isOwner, refetch }) => {
       openModal: () => setOpenRate(true),
       onNegative: () => setOpenRate(false),
       onAffirmative: async () => {
-        await createReview({
-          title: formRef.current.values.summary,
-          description: formRef.current.values.opinion,
-          jobContractId: contract.id,
-          rate: formRef.current.values.rating,
-        });
-        refetch('finalized');
-        setOpenRate(false);
+        handleSubmit();
       },
       body: (props) => (
         <>
           {!loading && (
-            <RateBody formRef={formRef} setOpenRate={setOpenRate} {...props} />
+            <RateBody
+              formRef={formRef}
+              setOpenRate={setOpenRate}
+              contract={contract}
+              refetch={refetch}
+              {...props}
+            />
           )}
         </>
       ),
@@ -683,9 +677,11 @@ const ContactBody = ({ username, email, phone }) => {
   );
 };
 
-const RateBody = ({ formRef, setOpenRate }) => {
+const RateBody = ({ formRef, setOpenRate, contract, refetch }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const { createReview } = useReviews();
 
   const initialValues = {
     rating: '',
@@ -706,8 +702,14 @@ const RateBody = ({ formRef, setOpenRate }) => {
     ),
   });
 
-  const onSubmit = (values, props) => {
-    console.log(values); //TODO: Aplicar el Rating
+  const onSubmit = async (values, props) => {
+    await createReview({
+      title: values.summary,
+      description: values.opinion,
+      jobContractId: contract.id,
+      rate: values.rating,
+    });
+    refetch('finalized');
     setOpenRate(false);
   };
 
@@ -727,7 +729,7 @@ const RateBody = ({ formRef, setOpenRate }) => {
               </h2>
               <WhiteRating
                 name="rating"
-                precision={0.5}
+                precision={1}
                 value={rating}
                 onChange={(event, newValue) => {
                   setRating(newValue);
@@ -777,9 +779,18 @@ const RateBody = ({ formRef, setOpenRate }) => {
   );
 };
 
-const RescheduleBody = ({ formRef, setOpenReschedule }) => {
+const RescheduleBody = ({
+  formRef,
+  setOpenReschedule,
+  refetch,
+  contract,
+  isOwner,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const { changeContractStateClient, changeContractStatePro } = useContracts();
+  const { states } = useContext(ConstantDataContext);
 
   const initialValues = {
     date: '',
@@ -789,7 +800,21 @@ const RescheduleBody = ({ formRef, setOpenReschedule }) => {
     date: Yup.date().required(t('validationerror.required')).nullable(),
   });
 
-  const onSubmit = (values, props) => {
+  const onSubmit = async (values, props) => {
+    // console.log(formRef.current.values);
+    if (isOwner)
+      await changeContractStatePro(
+        contract.id,
+        states.find((state) => state.description === 'PRO_MODIFIED').id,
+        values.date.toISOString()
+      );
+    else
+      await changeContractStateClient(
+        contract.id,
+        states.find((state) => state.description === 'CLIENT_MODIFIED').id,
+        values.date.toISOString()
+      );
+    refetch('pending');
     setOpenReschedule(false);
   };
 
