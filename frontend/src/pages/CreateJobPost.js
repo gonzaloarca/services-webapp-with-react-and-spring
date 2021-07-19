@@ -52,6 +52,7 @@ import * as Yup from 'yup';
 import { ConstantDataContext } from '../context';
 import { useJobPosts } from '../hooks';
 import { extractLastIdFromURL } from '../utils/urlUtils';
+import { isLoggedIn } from '../utils/userUtils';
 
 const HirenetConnector = withStyles({
   alternativeLabel: {
@@ -271,6 +272,8 @@ const CreateJobPost = ({ history }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
+
+  if (!isLoggedIn()) history.replace('/login');
 
   const { createJobPost } = useJobPosts();
 
