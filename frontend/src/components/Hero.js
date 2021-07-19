@@ -58,6 +58,7 @@ const Hero = ({ zones }) => {
         className={classes.heroBackground}
         src={process.env.PUBLIC_URL + 'img/landingbg1.svg'}
         alt=""
+        loading="lazy"
       />
     </div>
   );

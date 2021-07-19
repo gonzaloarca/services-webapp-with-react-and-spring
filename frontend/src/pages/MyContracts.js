@@ -424,6 +424,7 @@ const NoContracts = ({ header, body }) => {
         src={process.env.PUBLIC_URL + '/img/contract1.svg'}
         alt=""
         className={classes.noContractsImage}
+        loading="lazy"
       />
       <h3 className={classes.noContractsHeader}>{header}</h3>
       <p className={classes.noContractsBody}>{body}</p>

@@ -424,6 +424,8 @@
   "account": {
     "header": "Mi Cuenta",
     "tabstitle": "Cuenta",
+	"accepted": "Cambios aceptados",
+	"rejected": "Cambios rechazados, porfavor intente de nuevo",
     "data": {
       "title": "Datos personales",
       "imagealt": "Imagen del usuario",

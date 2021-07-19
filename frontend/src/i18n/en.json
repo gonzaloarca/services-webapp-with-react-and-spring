@@ -423,6 +423,8 @@
   "account": {
     "header": "My account",
     "tabstitle": "Account",
+	"accepted": "Changes accepted",
+	"rejected": "Changes rejected, please try again",
     "data": {
       "title": "Personal info",
       "imagealt": "User image",

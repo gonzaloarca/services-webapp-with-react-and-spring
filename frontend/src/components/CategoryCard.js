@@ -56,7 +56,7 @@ const CategoryCard = ({
       width={'100%'}
     />
   ) : (
-    <Link to={showAll ? '/search' : `/search/${category.id}`}>
+    <Link to={showAll ? '/search' : `/search?&category=${category.id}`}>
       <div className={classes.categoryContainer} style={{ height: height }}>
         <div className={classes.categoryOverlay}>
           {showAll
@@ -70,7 +70,8 @@ const CategoryCard = ({
               ? process.env.PUBLIC_URL + '/img/morecategories1.svg'
               : category.image
           }
-          alt=""
+          alt={category.description}
+          loading="lazy"
         />
       </div>
     </Link>

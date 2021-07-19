@@ -261,6 +261,7 @@ const StepTwo = (props) => {
                     : URL.createObjectURL(values.image)
                 }
                 alt=""
+                loading="lazy"
               />
             </div>
             <p className={'mb-3 text-center'}>{t('register.imagepreview')}</p>

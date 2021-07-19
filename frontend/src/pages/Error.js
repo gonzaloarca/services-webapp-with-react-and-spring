@@ -65,6 +65,7 @@ const Error = () => {
             className={classes.image}
             src={process.env.PUBLIC_URL + '/img/broken-link.png'}
             alt=""
+            loading="lazy"
           />
           <h1 className={classes.header}>{t('error.generic.header')}</h1>
           <p className={classes.description}>

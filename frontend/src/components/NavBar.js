@@ -94,6 +94,7 @@ const NavBar = ({
     sessionStorage.removeItem('token');
     setCurrentUser(null);
     setToken(null);
+    history.push('/');
   };
 
   const changeBarBackground = () => {
@@ -177,6 +178,7 @@ const NavBar = ({
                   className={classes.hirenetIcon}
                   src={process.env.PUBLIC_URL + '/img/hirenet-logo-nav-1.svg'}
                   alt=""
+                  loading="lazy"
                 />
               </Link>
               <div className={classes.sectionsContainer}>

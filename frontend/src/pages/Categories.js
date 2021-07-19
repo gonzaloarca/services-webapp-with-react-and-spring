@@ -6,11 +6,12 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import CategoryCard from '../components/CategoryCard';
 import NavBar from '../components/NavBar';
+import { ConstantDataContext } from '../context';
 import styles from '../styles';
 import { themeUtils } from '../theme';
 
@@ -52,46 +53,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const categories = [
-  {
-    'description': 'Plumbing',
-    'id': 0,
-  },
-  {
-    'description': 'Electricity',
-    'id': 1,
-  },
-  {
-    'description': 'Carpentry',
-    'id': 2,
-  },
-  {
-    'description': 'Catering',
-    'id': 3,
-  },
-  {
-    'description': 'Painting',
-    'id': 4,
-  },
-  {
-    'description': 'Teaching',
-    'id': 5,
-  },
-  {
-    'description': 'Cleaning',
-    'id': 6,
-  },
-  {
-    'description': 'Babysitting',
-    'id': 7,
-  },
-];
-
 const Categories = () => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
   const [filter, setFilter] = useState('');
+
+  const { categories } = useContext(ConstantDataContext);
 
   const renderList = (list) => {
     const renderedList = list

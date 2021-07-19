@@ -817,6 +817,7 @@ const JobSummary = ({ formRef, handleNext, data }) => {
                   }
                   key={index}
                   alt=""
+                  loading="lazy"
                 />
               ))}
             </div>

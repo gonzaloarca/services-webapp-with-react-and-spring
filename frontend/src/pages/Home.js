@@ -113,6 +113,7 @@ export const Home = (props) => {
                   src={process.env.PUBLIC_URL + 'img/unavailable-1.svg'}
                   alt=""
                   className={classes.noJobsImage}
+                  loading="lazy"
                 />
                 <h3 className={classes.noJobsMessage}>{t('home.nojobs')}</h3>
               </div>

@@ -39,7 +39,7 @@ const SectionHeader = ({
     <div className={classes.siteHeader}>
       <div className={filterClass} />
       <h1 className={classes.title}>{sectionName}</h1>
-      <img src={imageSrc} alt="" className={classes.headerImg} />
+      <img src={imageSrc} alt="" className={classes.headerImg} loading="lazy" />
     </div>
   );
 };

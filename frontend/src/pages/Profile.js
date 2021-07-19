@@ -330,6 +330,7 @@ const ProfileTabs = ({ details, proId }) => {
               src={process.env.PUBLIC_URL + '/img/job-1.svg'}
               alt=""
               className={classes.noContentImage}
+              loading="lazy"
             />
             <h3 className={classes.noContentMessage}>
               {t('profile.noservices')}
@@ -355,6 +356,7 @@ const ProfileTabs = ({ details, proId }) => {
               src={process.env.PUBLIC_URL + '/img/star-1.svg'}
               alt=""
               className={classes.noContentImage}
+              loading="lazy"
             />
             <h3 className={classes.noContentMessage}>
               {t('profile.noreviews')}
