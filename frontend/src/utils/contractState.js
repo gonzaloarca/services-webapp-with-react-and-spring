@@ -180,6 +180,7 @@ export const contractActionsMap = {
       color: themeUtils.colors.yellow,
       roles: ['CLIENT'],
       action: 'rate',
+      show: 'rate',
     },
   ],
   'CANCELED': [

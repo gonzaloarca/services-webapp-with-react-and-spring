@@ -30,6 +30,7 @@ public class JobContractCardDto {
     private URI jobPost;
     private URI jobPackage;
     private Boolean wasRescheduled;
+    private Integer rate;
 
     public static JobContractCardDto fromJobContractCardWithLocalizedMessage(JobContractCard card, UriInfo uriInfo, String message) {
         JobContractCardDto dto = new JobContractCardDto();
@@ -70,6 +71,7 @@ public class JobContractCardDto {
         dto.description = card.getDescription();
         dto.wasRescheduled = card.getWasRescheduled();
         dto.id = card.getJobContract().getId();
+        dto.rate = card.getReview().getRate();
         dto.contractImage = card.getByteImage() != null ? uriInfo.getBaseUriBuilder()
                 .path("/contracts").path(String.valueOf(card.getJobContract().getId())).path("/image").build() : null;;
         return dto;
@@ -233,6 +235,14 @@ public class JobContractCardDto {
 
     public void setWasRescheduled(Boolean wasRescheduled) {
         this.wasRescheduled = wasRescheduled;
+    }
+
+    public Integer getRate() {
+        return rate;
+    }
+
+    public void setRate(Integer rate) {
+        this.rate = rate;
     }
 
     public Long getId() {
