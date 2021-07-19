@@ -120,17 +120,19 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
 
   const onFinalized = async () => {
     if (contract.state.description === 'APPROVED') {
-      if (isOwner)
+      if (isOwner) {
         await changeContractStatePro(
           contract.id,
-          states.find((state) => state.description === 'COMPLETED').id
+          states.find((state) => state.description === 'ACTIVE').id
         );
-      else
+        refetch('active');
+      } else {
         await changeContractStateClient(
           contract.id,
           states.find((state) => state.description === 'COMPLETED').id
         );
-      refetch('finalized');
+        refetch('finalized');
+      }
       setOpenReviewReschedule(false);
     } else if (contract.state.description === 'PENDING_APPROVAL') {
       if (isOwner)
@@ -230,6 +232,7 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
               refetch={refetch}
               contract={contract}
               isOwner={isOwner}
+              setReload={setReload}
               {...props}
             />
           )}
@@ -792,6 +795,7 @@ const RescheduleBody = ({
   refetch,
   contract,
   isOwner,
+  setReload,
 }) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -822,6 +826,7 @@ const RescheduleBody = ({
         values.date.toISOString()
       );
     refetch('pending');
+    setReload(true);
     setOpenReschedule(false);
   };
 
