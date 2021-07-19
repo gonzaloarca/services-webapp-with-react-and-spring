@@ -1,7 +1,7 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { Button, Grid, makeStyles } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 import { Form, Formik } from 'formik';
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import NavBar from '../components/NavBar';
@@ -10,6 +10,10 @@ import PackagesHeader from '../components/PackagesHeader';
 import styles from '../styles';
 import { themeUtils } from '../theme';
 import * as Yup from 'yup';
+import { useJobPosts, useUser, useJobPackages } from '../hooks';
+import { extractLastIdFromURL } from '../utils/urlUtils';
+import { UserContext } from '../context';
+import { Skeleton } from '@material-ui/lab';
 
 const useGlobalStyles = makeStyles(styles);
 const useStyles = makeStyles((theme) => ({
@@ -33,10 +37,57 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddPackage = () => {
+const AddPackage = ({ match, history }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
+  const postId = match.params.id;
+
+  const { getJobPostById } = useJobPosts();
+  const { getUserById } = useUser();
+  const { createJobPackage } = useJobPackages();
+  const { currentUser } = useContext(UserContext);
+
+  const [loading, setLoading] = useState(true);
+  const [jobPost, setJobPost] = useState(null);
+  const [proUser, setProUser] = useState(null);
+
+  const loadJobPost = async () => {
+    try {
+      const jobPost = await getJobPostById(postId);
+      setJobPost(jobPost);
+    } catch (e) {
+      history.replace(`/error`);
+    }
+  };
+
+  const loadProUser = async () => {
+    try {
+      const proId = extractLastIdFromURL(jobPost.professional);
+      const pro = await getUserById(proId);
+      setProUser(pro);
+    } catch (e) {
+      history.replace(`/error`);
+    }
+  };
+
+  useEffect(() => {
+    if (jobPost) {
+      loadProUser();
+    }
+  }, [jobPost]);
+
+  useEffect(() => {
+    if (jobPost && proUser) {
+      if (!(currentUser && currentUser.id === proUser.id && jobPost.active))
+        history.replace(`/job/${postId}`);
+      else setLoading(false);
+    }
+  }, [jobPost, proUser]);
+
+  useEffect(() => {
+    loadJobPost();
+  }, [postId]);
 
   const initialValues = {
     packages: [
@@ -67,10 +118,14 @@ const AddPackage = () => {
     ),
   });
 
-  const onSubmit = (values, props) => {
+  const onSubmit = async (values, props) => {
     const pack = values.packages[0];
-    console.log(pack); //TODO: SUBMITEAR
-    //TODO: Redirect a /job/id/packages
+    try {
+      await createJobPackage(postId, pack);
+      history.push(`/job/${postId}/packages`);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -82,30 +137,43 @@ const AddPackage = () => {
       </Helmet>
       <NavBar currentSection="/create-job-post" />
       <div className={globalClasses.contentContainerTransparent}>
-        <PackagesHeader />
-        <div className={classes.formContainer}>
-          <h2 className={classes.subHeader}>{t('addpackage.header')}</h2>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-          >
-            {(props) => (
-              <Form>
-                <PackageFormItem index={0} withDelete={false} />
-                <Button
-                  fullWidth
-                  startIcon={<AddCircle />}
-                  className={classes.addButton}
-                  type="submit"
-                  disabled={props.isSubmitting}
-                >
-                  {t('addpackage.submit')}
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </div>
+        {loading ? (
+          <Grid container spacing={3} className="mt-3">
+            <Grid item md={12} className="flex justify-center">
+              <Skeleton variant="text" width={1000} />
+            </Grid>
+            <Grid item md={12} className="flex justify-center">
+              <Skeleton md={12} variant="rect" width={1000} height={700} />
+            </Grid>
+          </Grid>
+        ) : (
+          <>
+            <PackagesHeader />
+            <div className={classes.formContainer}>
+              <h2 className={classes.subHeader}>{t('addpackage.header')}</h2>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+              >
+                {(props) => (
+                  <Form>
+                    <PackageFormItem index={0} withDelete={false} />
+                    <Button
+                      fullWidth
+                      startIcon={<AddCircle />}
+                      className={classes.addButton}
+                      type="submit"
+                      disabled={props.isSubmitting}
+                    >
+                      {t('addpackage.submit')}
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

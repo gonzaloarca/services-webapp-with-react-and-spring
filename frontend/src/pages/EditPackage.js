@@ -1,7 +1,7 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { Button, Grid, makeStyles } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import { Form, Formik } from 'formik';
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import NavBar from '../components/NavBar';
@@ -10,6 +10,10 @@ import PackagesHeader from '../components/PackagesHeader';
 import styles from '../styles';
 import { themeUtils } from '../theme';
 import * as Yup from 'yup';
+import { useJobPosts, useUser, useJobPackages } from '../hooks';
+import { extractLastIdFromURL } from '../utils/urlUtils';
+import { UserContext } from '../context';
+import { Skeleton } from '@material-ui/lab';
 
 const useGlobalStyles = makeStyles(styles);
 const useStyles = makeStyles((theme) => ({
@@ -33,22 +37,94 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const packageForm = {
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit,',
-  id: 10,
-  price: 1000,
-  rateType: 1,
-  title: 'Lorem ipsum dolor sit amet',
-};
+// const packageForm = {
+//   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit,',
+//   id: 10,
+//   price: 1000,
+//   rateType: 1,
+//   title: 'Lorem ipsum dolor sit amet',
+// };
 
-const EditPackage = () => {
+const EditPackage = ({ match, history }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const initialValues = {
-    packages: [packageForm],
+  const postId = match.params.id;
+  const packId = match.params.packId;
+
+  const { getJobPostById } = useJobPosts();
+  const { getUserById } = useUser();
+  const { getJobPackageByPostIdAndPackageId, editJobPackage } =
+    useJobPackages();
+  const { currentUser } = useContext(UserContext);
+
+  const [loading, setLoading] = useState(true);
+  const [jobPost, setJobPost] = useState(null);
+  const [proUser, setProUser] = useState(null);
+  const [pack, setPackage] = useState(null);
+  const [initialValues, setInitialValues] = useState({
+    packages: [],
+  });
+
+  const loadJobPost = async () => {
+    try {
+      const jobPost = await getJobPostById(postId);
+      setJobPost(jobPost);
+    } catch (e) {
+      history.replace(`/error`);
+    }
   };
+
+  const loadProUser = async () => {
+    try {
+      const proId = extractLastIdFromURL(jobPost.professional);
+      const pro = await getUserById(proId);
+      setProUser(pro);
+    } catch (e) {
+      history.replace(`/error`);
+    }
+  };
+
+  const loadPackage = async () => {
+    try {
+      const pack = await getJobPackageByPostIdAndPackageId(postId, packId);
+      setPackage(pack);
+    } catch (e) {
+      history.replace(`/error`);
+    }
+  };
+
+  useEffect(() => {
+    if (jobPost) {
+      loadProUser();
+    }
+  }, [jobPost]);
+
+  useEffect(() => {
+    if (jobPost && proUser && pack) {
+      if (!(currentUser && currentUser.id === proUser.id && jobPost.active))
+        history.replace(`/job/${postId}`);
+      else {
+        setInitialValues({
+          packages: [
+            {
+              description: pack.description,
+              price: pack.price,
+              rateType: pack.rateType.id,
+              title: pack.title,
+            },
+          ],
+        });
+        setLoading(false);
+      }
+    }
+  }, [jobPost, proUser, pack]);
+
+  useEffect(() => {
+    loadJobPost();
+    loadPackage();
+  }, [postId]);
 
   const validationSchema = Yup.object({
     packages: Yup.array().of(
@@ -68,10 +144,14 @@ const EditPackage = () => {
     ),
   });
 
-  const onSubmit = (values, props) => {
+  const onSubmit = async (values, props) => {
     const pack = values.packages[0];
-    console.log(pack); //TODO: SUBMITEAR
-    //TODO: Redirect a /job/id/packages
+    try {
+      await editJobPackage(pack, postId, packId);
+      history.push(`/job/${postId}/packages`);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -83,30 +163,43 @@ const EditPackage = () => {
       </Helmet>
       <NavBar currentSection="/create-job-post" />
       <div className={globalClasses.contentContainerTransparent}>
-        <PackagesHeader />
-        <div className={classes.formContainer}>
-          <h2 className={classes.subHeader}>{t('editpackage.header')}</h2>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-          >
-            {(props) => (
-              <Form>
-                <PackageFormItem index={0} withDelete={false} />
-                <Button
-                  fullWidth
-                  startIcon={<Create />}
-                  className={classes.editButton}
-                  type="submit"
-                  disabled={props.isSubmitting}
-                >
-                  {t('editpackage.submit')}
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </div>
+        {loading ? (
+          <Grid container spacing={3} className="mt-3">
+            <Grid item md={12} className="flex justify-center">
+              <Skeleton variant="text" width={1000} />
+            </Grid>
+            <Grid item md={12} className="flex justify-center">
+              <Skeleton md={12} variant="rect" width={1000} height={700} />
+            </Grid>
+          </Grid>
+        ) : (
+          <>
+            <PackagesHeader />
+            <div className={classes.formContainer}>
+              <h2 className={classes.subHeader}>{t('editpackage.header')}</h2>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+              >
+                {(props) => (
+                  <Form>
+                    <PackageFormItem index={0} withDelete={false} />
+                    <Button
+                      fullWidth
+                      startIcon={<Create />}
+                      className={classes.editButton}
+                      type="submit"
+                      disabled={props.isSubmitting}
+                    >
+                      {t('editpackage.submit')}
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
