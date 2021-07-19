@@ -86,7 +86,8 @@
     "noreviews": "This service does not have any reviews yet",
     "edit": "Edit service",
     "delete": "Delete service",
-    "managepacks": "Manage packages"
+    "managepacks": "Manage packages",
+    "deletetitle": "Are you sure that you want to delete this service?"
   },
   "jobcard": {
     "noreviews": "No reviews",

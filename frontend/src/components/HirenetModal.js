@@ -21,7 +21,6 @@ const HirenetModal = ({
   negativeColor = 'black',
   showActionButtons = true,
 }) => {
-  console.log(showActionButtons);
   return (
     <Dialog open={open} onClose={onClose ? onClose : onNegative}>
       <div className="p-2">
@@ -38,7 +37,8 @@ const HirenetModal = ({
       <Divider />
 
       <DialogContent className="p-0">
-        {<Body showDisclaimer={showActionButtons}></Body>}
+        {/* {<Body showDisclaimer={showActionButtons}></Body>} */}
+        {Body}
       </DialogContent>
       <Divider />
       {showActionButtons && (

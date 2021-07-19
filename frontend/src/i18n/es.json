@@ -86,7 +86,8 @@
     "noreviews": "Este servicio todavía no tiene ninguna reseña",
     "edit": "Editar publicación",
     "delete": "Borrar publicación",
-    "managepacks": "Administrar paquetes"
+    "managepacks": "Administrar paquetes",
+    "deletetitle": "¿Está seguro que desea eliminar el servicio?"
   },
   "jobcard": {
     "noreviews": "Sin calificaciones",
