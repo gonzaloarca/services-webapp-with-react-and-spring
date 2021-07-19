@@ -151,14 +151,42 @@ const Search = () => {
   useEffect(() => {
     history.replace(
       '/search?' +
-        (queryParams.zone ? 'zone=' + queryParams.zone : '') +
-        (queryParams.category ? '&category=' + queryParams.category : '') +
-        (queryParams.orderBy ? '&orderBy=' + queryParams.orderBy : '') +
-        (queryParams.query ? '&query=' + queryParams.query : '') +
-        (queryParams.page ? '&page=' + queryParams.page : '')
+        'zone=' +
+        queryParams.zone +
+        '&category=' +
+        queryParams.category +
+        '&orderBy=' +
+        queryParams.orderBy +
+        '&page=1' +
+        '&query=' +
+        queryParams.query
     );
     loadJobCards();
-  }, [queryParams]);
+    setQueryParams({ ...queryParams, page: 1 });
+  }, [
+    // Si cambia alguno de los filtros, debo llevarlo a la pagina 1
+    queryParams.zone,
+    queryParams.category,
+    queryParams.query,
+    queryParams.orderBy,
+  ]);
+
+  useEffect(() => {
+    history.replace(
+      '/search?' +
+        'zone=' +
+        queryParams.zone +
+        '&category=' +
+        queryParams.category +
+        '&orderBy=' +
+        queryParams.orderBy +
+        '&page=' +
+        queryParams.page +
+        '&query=' +
+        queryParams.query
+    );
+    loadJobCards();
+  }, [queryParams.page]);
 
   return (
     <div>
