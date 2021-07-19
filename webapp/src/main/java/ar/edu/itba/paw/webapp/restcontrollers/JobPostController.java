@@ -9,7 +9,7 @@ import ar.edu.itba.paw.webapp.dto.input.EditJobPostDto;
 import ar.edu.itba.paw.webapp.dto.input.NewJobPackageDto;
 import ar.edu.itba.paw.webapp.dto.input.NewJobPostDto;
 import ar.edu.itba.paw.webapp.dto.output.*;
-import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
+import ar.edu.itba.paw.webapp.utils.ImagesUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.validation.ValidImage;
@@ -32,7 +32,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -154,7 +153,7 @@ public class JobPostController {
                                     @Valid @NotNull @ValidImage @FormDataParam("file") final FormDataBodyPart body) {
         JobPostImage image;
         try {
-            image = jobPostImageService.addImage(postId, ImageUploadUtil.fromInputStream(body));
+            image = jobPostImageService.addImage(postId, ImagesUtil.fromInputStream(body));
         } catch (IOException e) {
             throw new RuntimeException("Upload failed");
         }
@@ -165,9 +164,10 @@ public class JobPostController {
     @GET
     @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
     public Response getPostImage(@PathParam("postId") final long postId,
-                                 @PathParam("imageId") final long imageId) {
+                                 @PathParam("imageId") final long imageId,
+                                 @Context Request request) {
         JobPostImage jobPostImage = jobPostImageService.findById(imageId, postId);
-        return Response.ok(new ByteArrayInputStream(jobPostImage.getByteImage().getData())).build();
+        return ImagesUtil.sendCachableImageResponse(jobPostImage.getByteImage(),request);
     }
 
     @Path("/{postId}/packages")

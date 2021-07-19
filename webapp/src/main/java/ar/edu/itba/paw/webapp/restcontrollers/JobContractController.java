@@ -12,7 +12,7 @@ import ar.edu.itba.paw.webapp.dto.input.NewJobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractCardDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractStateDto;
-import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
+import ar.edu.itba.paw.webapp.utils.ImagesUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.validation.ValidImage;
@@ -147,9 +147,9 @@ public class JobContractController {
     @Path("/{contractId}/image")
     @GET
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
-    public Response getContractImage(@PathParam("contractId") final long contractId) {
+    public Response getContractImage(@PathParam("contractId") final long contractId,@Context Request request) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId);
-        return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
+        return ImagesUtil.sendCachableImageResponse(byteImage,request);
     }
 
     @Path("/{contractId}/image")
@@ -159,7 +159,7 @@ public class JobContractController {
     public Response uploadContractImage(@PathParam("contractId") final long contractId,
                                         @Valid @ValidImage @FormDataParam("file") final FormDataBodyPart body) {
         try {
-            if (jobContractService.addContractImage(contractId, ImageUploadUtil.fromInputStream(body)) == -1)
+            if (jobContractService.addContractImage(contractId, ImagesUtil.fromInputStream(body)) == -1)
                 throw new RuntimeException("Couldn't save image");
         } catch (IOException e) {
             throw new RuntimeException("Upload failed");

@@ -6,13 +6,11 @@ import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
-import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
+import ar.edu.itba.paw.webapp.utils.ImagesUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
-import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -114,15 +111,7 @@ public class UserController {
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
     public Response getUserImage(@PathParam("id") final long id,@Context Request request) {
         ByteImage byteImage = userService.findImageByUserId(id);
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(86400);
-        EntityTag etag = new EntityTag(Integer.toString(byteImage.hashCode()));
-        Response.ResponseBuilder builder = request.evaluatePreconditions(etag);
-        if(builder == null){
-            builder = Response.ok(new ByteArrayInputStream(byteImage.getData()));
-            builder.tag(etag);
-        }
-        return builder.cacheControl(cacheControl).build();
+        return ImagesUtil.sendCachableImageResponse(byteImage,request);
     }
 
     @Path("/{id}/image")
@@ -134,7 +123,7 @@ public class UserController {
 
         long result;
         try {
-            result = userService.updateUserImage(id, ImageUploadUtil.fromInputStream(body));
+            result = userService.updateUserImage(id, ImagesUtil.fromInputStream(body));
         } catch (IOException e) {
             throw new RuntimeException("Upload failed");
         }

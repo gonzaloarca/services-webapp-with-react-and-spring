@@ -33,12 +33,13 @@ public class ByteImage {
 		this.type = type;
 	}
 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ByteImage byteImage = (ByteImage) o;
-		return Arrays.equals(data, byteImage.data) && type.equals(byteImage.type);
+		return Arrays.equals(data, byteImage.data) && Objects.equals(type, byteImage.type);
 	}
 
 	@Override
