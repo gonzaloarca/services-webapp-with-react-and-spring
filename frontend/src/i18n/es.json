@@ -460,7 +460,7 @@
     "jobtypeplaceholder": "Buscar un servicio...",
     "filters": "Filtros",
     "categories": "Categorias",
-    "results": "Explorar servicios",
+    "results": "Mostrando todos los servicios",
     "zoneresults": "Mostrando servicios <zonecontainer>para <icon/>{{zone}}</zonecontainer>",
     "queryresults": "<regular>Mostrando resultados para</regular> <bold>{{query}}</bold>",
     "query&zoneresults": "<regular>Resultados para</regular> <bold>{{query}}</bold> <zonecontainer>en <bottom><icon></icon>{{zone}}</bottom></zonecontainer>",
@@ -468,7 +468,10 @@
     "filteringby": "Filtrando por:",
     "noresults": "No hay resultados para la búsqueda",
     "sorry": "Disculpe las molestias",
-    "orderby": "Ordenar por"
+    "orderby": "Ordenar por",
+    "criteria": "Criterio",
+    "location": "Buscar por ubicación",
+    "alllocations": "Todas las ubicaciones"
   },
   "nonselected": "Ninguno",
   "analytics": {

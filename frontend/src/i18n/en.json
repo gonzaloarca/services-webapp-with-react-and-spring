@@ -459,7 +459,7 @@
     "jobtypeplaceholder": "Search services...",
     "filters": "Filters",
     "categories": "Categories",
-    "results": "Explore services",
+    "results": "Showing all services",
     "zoneresults": "Showing services in <zonecontainer><icon></icon>{{zone}}</zonecontainer>",
     "queryresults": "<regular>Showing reuslts for</regular> <bold>{{query}}</bold>",
     "query&zoneresults": "<regular>Showing results for</regular> <bold>{{query}}</bold><zonecontainer>in <bottom><icon></icon> {{zone}}</bottom></zonecontainer>",
@@ -467,7 +467,10 @@
     "filteringby": "Active filter:",
     "noresults": "No results for your search",
     "sorry": "Sorry for the inconvenience",
-    "orderby": "Order by"
+    "orderby": "Order by",
+    "criteria": "Criteria",
+    "location": "Search by location",
+    "alllocations": "All locations"
   },
   "nonselected": "None",
   "analytics": {

@@ -27,6 +27,7 @@ import {
   LocationOn,
   FilterList,
   Search as SearchIcon,
+  Sort,
 } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   categoriesTitle: {
     fontSize: '1.em',
-    fontWeight: 'bold',
+    fontWeight: 600,
     margin: '5px 10px',
     color: themeUtils.colors.darkBlue,
   },
@@ -178,6 +179,7 @@ const Search = () => {
               setQueryParams={setQueryParams}
               queryParams={queryParams}
               categories={categories}
+              orderByParams={orderByParams}
             />
           </Grid>
           <Grid item xs={9}>
@@ -185,7 +187,6 @@ const Search = () => {
               setQueryParams={setQueryParams}
               queryParams={queryParams}
               categories={categories}
-              orderByParams={orderByParams}
               zones={zones}
               jobs={jobCards}
               maxPage={maxPage}
@@ -201,7 +202,6 @@ const SearchResults = ({
   queryParams,
   setQueryParams,
   categories,
-  orderByParams,
   zones,
   jobs,
   maxPage,
@@ -313,34 +313,6 @@ const SearchResults = ({
             )}
           </div>
         )}
-
-        <FormControl size="small" variant="outlined" className="w-48">
-          <InputLabel className="text-sm font-medium" id="order-select">
-            {t('search.orderby')}
-          </InputLabel>
-          <Select
-            inputProps={{
-              classes: {
-                select: 'text-sm font-medium',
-              },
-            }}
-            label={t('search.orderby')}
-            labelId="order-select"
-            value={queryParams.orderBy}
-            onChange={(event) => {
-              setQueryParams({ ...queryParams, orderBy: event.target.value });
-            }}
-          >
-            <MenuItem value="">
-              <em>{t('nonselected')}</em>
-            </MenuItem>
-            {orderByParams.map((order) => (
-              <MenuItem key={order.id} value={order.id}>
-                {order.description}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
       </div>
       <Grid container spacing={3}>
         {jobs.length > 0 ? (
@@ -365,13 +337,70 @@ const SearchResults = ({
   );
 };
 
-const Filters = ({ queryParams, setQueryParams, categories }) => {
+const Filters = ({
+  queryParams,
+  setQueryParams,
+  orderByParams,
+  categories,
+}) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const { zones } = useContext(ConstantDataContext);
+
   return (
     <Card className="p-5">
       <p className={classes.title}>{t('search.filters')}</p>
       <Divider className="my-5" />
+      <p className={classes.categoriesTitle}>{t('search.location')}</p>
+      <FormControl fullWidth size="small" variant="outlined" className="mb-5">
+        <Select
+          startAdornment={<LocationOn className="opacity-50 mr-2" />}
+          inputProps={{
+            classes: {
+              select: 'text-sm font-medium',
+            },
+          }}
+          displayEmpty
+          value={queryParams.zone}
+          onChange={(event) => {
+            setQueryParams({ ...queryParams, zone: event.target.value });
+          }}
+        >
+          <MenuItem value="">
+            <em>{t('search.alllocations')}</em>
+          </MenuItem>
+          {zones.map((zone) => (
+            <MenuItem key={zone.id} value={zone.id}>
+              {zone.description}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <p className={classes.categoriesTitle}>{t('search.orderby')}</p>
+      <FormControl fullWidth size="small" variant="outlined" className="mb-5">
+        <Select
+          startAdornment={<Sort className="opacity-50 mr-2" />}
+          inputProps={{
+            classes: {
+              select: 'text-sm font-medium',
+            },
+          }}
+          displayEmpty
+          value={queryParams.orderBy}
+          onChange={(event) => {
+            setQueryParams({ ...queryParams, orderBy: event.target.value });
+          }}
+        >
+          <MenuItem value="" disabled>
+            <em>{t('search.criteria')}</em>
+          </MenuItem>
+          {orderByParams.map((order) => (
+            <MenuItem key={order.id} value={order.id}>
+              {order.description}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <p className={classes.categoriesTitle}>{t('search.categories')}</p>
       {categories.map((category) => (
         <p

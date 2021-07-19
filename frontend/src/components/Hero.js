@@ -75,12 +75,17 @@ const HeroSearchBar = ({ zones }) => {
   const validationSchema = Yup.object({
     zone: Yup.string()
       .required(t('validationerror.zone'))
-      .matches(/^[0-9]+$/, t('validationerror.zone')),
+      .matches(/^-?[0-9]+$/, t('validationerror.zone')),
     query: Yup.string(),
   });
 
   const onSubmit = (values) => {
-    history.push('/search?zone=' + values.zone + '&query=' + values.query);
+    history.push(
+      '/search?zone=' +
+        (values.zone === '-1' ? '' : values.zone) +
+        '&query=' +
+        values.query
+    );
   };
 
   return (
@@ -118,6 +123,9 @@ const HeroSearchBar = ({ zones }) => {
                   disableUnderline={true}
                   value={values.zone !== undefined ? values.zone : ''}
                 >
+                  <MenuItem value="-1">
+                    <em>{t('search.alllocations')}</em>
+                  </MenuItem>
                   {zones.map((zone) => (
                     <MenuItem key={zone.id} value={zone.id}>
                       {zone.description}
