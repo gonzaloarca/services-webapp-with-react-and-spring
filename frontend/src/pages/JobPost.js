@@ -251,7 +251,7 @@ const JobPost = ({ match, history }) => {
     if (post && jobCard && packages && packages.length > 0 && proUser) {
       if (currentUser && currentUser.id === proUser.id && post.active)
         setIsOwner(true);
-      if (!isOwner && post.active) setHirable(true);
+      else if (post.active) setHirable(true);
       setLoading(false);
     }
   }, [post, jobCard, packages, proUser]);

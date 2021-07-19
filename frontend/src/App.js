@@ -202,7 +202,7 @@ const App = () => {
           {!currentUser && (
             <Route path="/register/success" exact component={RegisterSuccess} />
           )}
-          <Route path="/hire/package/:id" exact component={Hire} />
+          <Route path="/hire/:postId/package/:id" exact component={Hire} />
           <Route path="/account/:activeTab?" exact component={Account} />
           <Route path="/recover" exact component={RecoverAccount} />
           <Route path="/change-password" exact component={RecoverPass} />

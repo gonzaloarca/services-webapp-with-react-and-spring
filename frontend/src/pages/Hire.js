@@ -28,79 +28,83 @@ import { es } from 'date-fns/locale';
 import { themeUtils } from '../theme';
 import PriceTag from '../components/PriceTag';
 import { filterPastTime, filterPastDate } from '../utils/filterPast';
-
+import { UserContext } from '../context';
+import { useJobPosts, useUser, useJobPackages, useContracts } from '../hooks';
+import React, { useEffect, useState, useContext } from 'react';
+import { extractLastIdFromURL } from '../utils/urlUtils';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Helmet } from 'react-helmet';
+import { isLoggedIn } from '../utils/userUtils';
 
 registerLocale('es', es);
 
-const pack = {
-  'active': true,
-  'description':
-    'Atencion constante y juego para el desarrollo de musculos como brazos y piernas.',
-  'id': 8,
-  'jobPost': {
-    'id': 8,
-    'uri': 'http://localhost:8080/job-posts/8',
-  },
-  'rateType': {
-    'description': 'TBD',
-    'id': 2,
-  },
-  'price': 50,
-  'title': '4 dias a la semana 4 horas',
-};
+// const pack = {
+//   'active': true,
+//   'description':
+//     'Atencion constante y juego para el desarrollo de musculos como brazos y piernas.',
+//   'id': 8,
+//   'jobPost': {
+//     'id': 8,
+//     'uri': 'http://localhost:8080/job-posts/8',
+//   },
+//   'rateType': {
+//     'description': 'TBD',
+//     'id': 2,
+//   },
+//   'price': 50,
+//   'title': '4 dias a la semana 4 horas',
+// };
 
-//TODO: como se levanta esto?
-const jobpostimages = [
-  `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-  `${process.env.PUBLIC_URL}/img/carpentry.jpeg`,
-];
+// //TODO: como se levanta esto?
+// const jobpostimages = [
+//   `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+//   `${process.env.PUBLIC_URL}/img/carpentry.jpeg`,
+// ];
 
-const post = {
-  'active': true,
-  'availableHours': 'Lunes a viernes entre las 8am y 2pm',
-  'creationDate': '2021-05-02T18:22:13.338478',
-  'id': 8,
-  'jobType': {
-    'description': 'BABYSITTING',
-    'id': 7,
-  },
-  'packages': [
-    {
-      'id': 8,
-      'uri': 'http://localhost:8080/job-posts/8/packages/8',
-    },
-  ],
-  'professional': {
-    'id': 5,
-    'uri': 'http://localhost:8080/users/5',
-  },
-  'title': 'Niñero turno mañana',
-  'zones': [
-    {
-      'description': 'RETIRO',
-      'id': 28,
-    },
-    {
-      'description': 'NUNIEZ',
-      'id': 20,
-    },
-    {
-      'description': 'COLEGIALES',
-      'id': 9,
-    },
-  ],
-};
+// const post = {
+//   'active': true,
+//   'availableHours': 'Lunes a viernes entre las 8am y 2pm',
+//   'creationDate': '2021-05-02T18:22:13.338478',
+//   'id': 8,
+//   'jobType': {
+//     'description': 'BABYSITTING',
+//     'id': 7,
+//   },
+//   'packages': [
+//     {
+//       'id': 8,
+//       'uri': 'http://localhost:8080/job-posts/8/packages/8',
+//     },
+//   ],
+//   'professional': {
+//     'id': 5,
+//     'uri': 'http://localhost:8080/users/5',
+//   },
+//   'title': 'Niñero turno mañana',
+//   'zones': [
+//     {
+//       'description': 'RETIRO',
+//       'id': 28,
+//     },
+//     {
+//       'description': 'NUNIEZ',
+//       'id': 20,
+//     },
+//     {
+//       'description': 'COLEGIALES',
+//       'id': 9,
+//     },
+//   ],
+// };
 
-const proUser = {
-  email: 'manaaasd@gmail.com',
-  id: 5,
-  phone: '03034560',
-  roles: ['CLIENT', 'PROFESSIONAL'],
-  username: 'Manuel Rodriguez',
-  image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-};
+// const proUser = {
+//   email: 'manaaasd@gmail.com',
+//   id: 5,
+//   phone: '03034560',
+//   roles: ['CLIENT', 'PROFESSIONAL'],
+//   username: 'Manuel Rodriguez',
+//   image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
+// };
 
 const useStyles = makeStyles((theme) => ({
   hireBody: {
@@ -181,10 +185,83 @@ const useStyles = makeStyles((theme) => ({
 
 const useGlobalStyles = makeStyles(styles);
 
-const Hire = ({ match }) => {
+const Hire = ({ match, history }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const packId = match.params.id;
+  const postId = match.params.postId;
+
+  const { getJobPostById } = useJobPosts();
+  const { getUserById } = useUser();
+  const { getJobPackageByPostIdAndPackageId } = useJobPackages();
+  const { createContract } = useContracts();
+  const { currentUser } = useContext(UserContext);
+
+  const [loading, setLoading] = useState(true);
+  const [jobPost, setJobPost] = useState(null);
+  const [proUser, setProUser] = useState(null);
+  const [pack, setPackage] = useState(null);
+
+  const loadJobPost = async () => {
+    try {
+      const jobPost = await getJobPostById(postId);
+      setJobPost(jobPost);
+    } catch (e) {
+      history.replace(`/error`);
+    }
+  };
+
+  const loadProUser = async () => {
+    try {
+      const proId = extractLastIdFromURL(jobPost.professional);
+      const pro = await getUserById(proId);
+      setProUser(pro);
+    } catch (e) {
+      history.replace(`/error`);
+    }
+  };
+
+  const loadPackage = async () => {
+    try {
+      const pack = await getJobPackageByPostIdAndPackageId(postId, packId);
+      setPackage(pack);
+    } catch (e) {
+      history.replace(`/error`);
+    }
+  };
+
+  useEffect(() => {
+    if (jobPost) {
+      loadProUser();
+    }
+  }, [jobPost]);
+
+  useEffect(() => {
+    if (jobPost && proUser && pack) {
+      if (!isLoggedIn()) history.replace(`/login`);
+      else if (
+        !(currentUser && currentUser.id !== proUser.id && jobPost.active)
+      )
+        history.replace(`/error`);
+      else setLoading(false);
+    }
+  }, [jobPost, proUser, pack]);
+
+  useEffect(() => {
+    loadJobPost();
+    loadPackage();
+  }, [postId]);
+
+  const tryCreate = async (values) => {
+    try {
+      await createContract(currentUser.id, pack.id, values);
+      history.push(`/my-contracts`);
+    } catch (e) {
+      history.push(`/error`);
+    }
+  };
 
   return (
     <>
@@ -192,31 +269,35 @@ const Hire = ({ match }) => {
         <title>{t('title', { section: t('navigation.sections.hire') })}</title>
       </Helmet>
       <NavBar currentSection="/search" />
-      <div
-        className={clsx(
-          classes.hireBody,
-          globalClasses.contentContainerTransparent
-        )}
-      >
-        <SectionHeader
-          sectionName={t('hirePage.title')}
-          imageSrc={jobpostimages[0]}
-          filterClass={classes.headerFilter}
-        />
-        <Grid className="mt-4" container spacing={3}>
-          <Grid item sm={7} xs={12}>
-            <HireForm />
+      {loading ? (
+        <></>
+      ) : (
+        <div
+          className={clsx(
+            classes.hireBody,
+            globalClasses.contentContainerTransparent
+          )}
+        >
+          <SectionHeader
+            sectionName={t('hirePage.title')}
+            imageSrc={jobPost.images[0]}
+            filterClass={classes.headerFilter}
+          />
+          <Grid className="mt-4" container spacing={3}>
+            <Grid item sm={7} xs={12}>
+              <HireForm tryCreate={tryCreate} />
+            </Grid>
+            <Grid item sm={5} xs={12}>
+              <PackageInfo jobPost={jobPost} pack={pack} proUser={proUser} />
+            </Grid>
           </Grid>
-          <Grid item sm={5} xs={12}>
-            <PackageInfo />
-          </Grid>
-        </Grid>
-      </div>
+        </div>
+      )}
     </>
   );
 };
 
-const HireForm = () => {
+const HireForm = ({ tryCreate }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
@@ -241,8 +322,8 @@ const HireForm = () => {
       ),
   });
 
-  const onSubmit = (values, props) => {
-    console.log(values); //TODO: SUBMITEAR
+  const onSubmit = async (values, props) => {
+    tryCreate(values);
   };
 
   return (
@@ -365,7 +446,7 @@ export const DatePickerField = (props) => {
   );
 };
 
-const PackageInfo = () => {
+const PackageInfo = ({ jobPost, pack, proUser }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -376,17 +457,21 @@ const PackageInfo = () => {
         loading="lazy"
         className={classes.detailImg}
         alt=""
-        src={jobpostimages[0]}
+        src={jobPost.images[0]}
       />
       <div className="flex flex-col px-5">
-        <DetailRow text={post.title} icon={<Work fontSize="large" />} divider />
+        <DetailRow
+          text={jobPost.title}
+          icon={<Work fontSize="large" />}
+          divider
+        />
         <DetailRow
           text={pack.title}
           icon={<FontAwesomeIcon icon={faBoxOpen} size="2x" />}
           divider
         />
         <DetailRow
-          text={ZonesText()}
+          text={ZonesText(jobPost)}
           icon={<LocationOn fontSize="large" />}
           divider
         />
@@ -403,7 +488,7 @@ const PackageInfo = () => {
           divider
         />
         <DetailRow
-          text={post.availableHours}
+          text={jobPost.availableHours}
           icon={<WatchLater fontSize="large" />}
           divider
         />
@@ -443,7 +528,7 @@ const DetailRow = ({ icon, text, divider = false }) => {
   );
 };
 
-const ZonesText = () => {
+const ZonesText = (post) => {
   let result = '',
     size = 0;
 
