@@ -6,7 +6,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import CategoryCard from '../components/CategoryCard';
@@ -57,25 +57,45 @@ const Categories = () => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
 
   const { categories } = useContext(ConstantDataContext);
 
-  const renderList = (list) => {
-    const renderedList = list
-      .filter(
+  useEffect(() => {
+    if (categories) {
+      setLoading(false);
+    }
+  }, [categories]);
+
+  const renderList = (isLoading, list) => {
+    if (isLoading) {
+      list = [1, 2, 3, 4, 5, 6, 7, 8];
+    } else {
+      list = list.filter(
         ({ description }) =>
           description
             .toLowerCase()
             .startsWith(filter.trimStart().trimEnd().toLowerCase()) ||
           filter === ''
-      )
-      .map((category) => (
-        <Grid item key={category.id} xs={12} sm={6} md={4} lg={3}>
-          <CategoryCard category={category} />
-        </Grid>
-      ));
-    if (renderedList.length === 0) {
+      );
+    }
+
+    const renderedList = list.map((category) => (
+      <Grid
+        item
+        key={isLoading ? category : category.id}
+        xs={12}
+        sm={6}
+        md={4}
+        lg={3}
+      >
+        <CategoryCard isLoading={isLoading} category={category} />
+      </Grid>
+    ));
+
+    if (renderedList.length > 0) return renderedList;
+    else
       return (
         <Grid item xs={12}>
           <p className={classes.noResults}>
@@ -83,9 +103,6 @@ const Categories = () => {
           </p>
         </Grid>
       );
-    } else {
-      return renderedList;
-    }
   };
 
   return (
@@ -121,7 +138,7 @@ const Categories = () => {
           />
           <div className={classes.categoriesContainer}>
             <Grid container spacing={3}>
-              {renderList(categories)}
+              {renderList(loading, categories)}
             </Grid>
           </div>
         </div>
