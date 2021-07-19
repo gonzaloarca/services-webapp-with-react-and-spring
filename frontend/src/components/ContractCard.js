@@ -22,7 +22,7 @@ import {
 } from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
 import clsx from 'clsx';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { themeUtils } from '../theme';
@@ -39,8 +39,9 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { filterPastTime, filterPastDate } from '../utils/filterPast';
 import HirenetModal, { PlainTextBody } from './HirenetModal';
-import { useUser } from '../hooks';
+import { useContracts, useReviews, useUser } from '../hooks';
 import { extractLastIdFromURL } from '../utils/urlUtils';
+import { ConstantDataContext } from '../context';
 
 const useStyles = makeStyles(contractCardStyles);
 
@@ -63,7 +64,7 @@ const ContractStateHeader = ({ contract, isOwner }) => {
   );
 };
 
-const ContractCard = ({ contract, isOwner }) => {
+const ContractCard = ({ contract, isOwner, refetch }) => {
   const { getUserById } = useUser();
 
   const [openCancel, setOpenCancel] = useState(false);
@@ -74,6 +75,9 @@ const ContractCard = ({ contract, isOwner }) => {
   const [openDetails, setOpenDetails] = useState(false);
   const [openContact, setOpenContact] = useState(false);
 
+  const { changeContractStateClient, changeContractStatePro } = useContracts();
+  const { createReview } = useReviews();
+  const { states } = useContext(ConstantDataContext);
   const [professional, setProfessional] = useState(null);
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -102,10 +106,12 @@ const ContractCard = ({ contract, isOwner }) => {
 
   const formRef = useRef();
 
-  const handleSubmit = () => {
-    if (formRef.current) {
-      formRef.current.handleSubmit();
-    }
+  const onFinalized = async () => {
+    if (isOwner)
+      await changeContractStatePro(contract.id, states.get('COMPLETED'));
+    else await changeContractStateClient(contract.id, states.get('COMPLETED'));
+    refetch();
+    setOpenReviewReschedule(false);
   };
 
   const modalDataMap = {
@@ -113,7 +119,21 @@ const ContractCard = ({ contract, isOwner }) => {
       open: openCancel,
       openModal: () => setOpenCancel(true),
       onNegative: () => setOpenCancel(false),
-      onAffirmative: () => setOpenCancel(false),
+      onAffirmative: async () => {
+        console.log(contract);
+        if (isOwner)
+          await changeContractStatePro(
+            contract.id,
+            states.get('PRO_CANCELLED')
+          );
+        else
+          await changeContractStateClient(
+            contract.id,
+            states.get('CLIENT_CANCELLED')
+          );
+        refetch();
+        setOpenCancel(false);
+      },
       title: t('mycontracts.modals.cancel.title'),
       body: (props) => (
         <>
@@ -132,7 +152,17 @@ const ContractCard = ({ contract, isOwner }) => {
       open: openReject,
       openModal: () => setOpenReject(true),
       onNegative: () => setOpenReject(false),
-      onAffirmative: () => setOpenReject(false),
+      onAffirmative: async () => {
+        if (isOwner)
+          await changeContractStatePro(contract.id, states.get('PRO_REJECTED'));
+        else
+          await changeContractStateClient(
+            contract.id,
+            states.get('CLIENT_REJECTED')
+          );
+        refetch();
+        setOpenReject(false);
+      },
       title: t('mycontracts.modals.reject.title'),
       body: (props) => (
         <>
@@ -151,7 +181,21 @@ const ContractCard = ({ contract, isOwner }) => {
       open: openReschedule,
       openModal: () => setOpenReschedule(true),
       onNegative: () => setOpenReschedule(false),
-      onAffirmative: () => handleSubmit(),
+      onAffirmative: async () => {
+        if (isOwner)
+          await changeContractStatePro(
+            contract.id,
+            states.get('PRO_MODIFIED'),
+            formRef.current.values
+          );
+        else
+          await changeContractStateClient(
+            contract.id,
+            states.get('CLIENT_MODIFIED'),
+            formRef.current.values
+          );
+        refetch();
+      },
       title: t('mycontracts.modals.reschedule.title'),
       body: (props) => (
         <>
@@ -171,8 +215,26 @@ const ContractCard = ({ contract, isOwner }) => {
     'reviewreschedule': {
       open: openReviewReschedule,
       openModal: () => setOpenReviewReschedule(true),
-      onNegative: () => setOpenReviewReschedule(false),
-      onAffirmative: () => setOpenReviewReschedule(false),
+      onClose: () => setOpenReviewReschedule(false),
+      onNegative: async () => {
+        if (isOwner)
+          await changeContractStatePro(contract.id, states.get('PRO_REJECTED'));
+        else
+          await changeContractStateClient(
+            contract.id,
+            states.get('CLIENT_REJECTED')
+          );
+        refetch();
+        setOpenReviewReschedule(false);
+      },
+      onAffirmative: async () => {
+        if (isOwner)
+          await changeContractStatePro(contract.id, states.get('APPROVED'));
+        else
+          await changeContractStateClient(contract.id, states.get('APPROVED'));
+        refetch();
+        setOpenReviewReschedule(false);
+      },
       title: t('mycontracts.modals.reviewreschedule.title'),
       body: (props) => (
         <>
@@ -190,7 +252,15 @@ const ContractCard = ({ contract, isOwner }) => {
       open: openRate,
       openModal: () => setOpenRate(true),
       onNegative: () => setOpenRate(false),
-      onAffirmative: () => handleSubmit(),
+      onAffirmative: async () => {
+        await createReview({
+          title: formRef.current.values.summary,
+          description: formRef.current.values.opinion,
+          jobContractId: contract.id,
+          rate: formRef.current.values.rating,
+        });
+        refetch();
+      },
       body: (props) => (
         <>
           {!loading && (
@@ -356,9 +426,9 @@ const ContractCard = ({ contract, isOwner }) => {
                       className="ml-2"
                       key={index}
                       onClick={
-                        modalDataMap[action]
+                        modalDataMap[action] && modalDataMap[action].openModal
                           ? modalDataMap[action].openModal
-                          : onClick
+                          : onFinalized
                       }
                       style={{ color: color }}
                       startIcon={
@@ -367,12 +437,13 @@ const ContractCard = ({ contract, isOwner }) => {
                     >
                       {t(label)}
                     </Button>
-                    {modalDataMap[action] && (
+                    {modalDataMap[action] && modalDataMap[action].openModal && (
                       <HirenetModal
                         title={modalDataMap[action].title}
                         body={modalDataMap[action].body}
                         open={modalDataMap[action].open}
                         onNegative={modalDataMap[action].onNegative}
+                        onClose={modalDataMap[action].onClose}
                         onAffirmative={modalDataMap[action].onAffirmative}
                         affirmativeLabel={modalDataMap[action].affirmativeLabel}
                         negativeLabel={modalDataMap[action].negativeLabel}
@@ -611,7 +682,6 @@ const RescheduleBody = ({ formRef, setOpenReschedule }) => {
   });
 
   const onSubmit = (values, props) => {
-    console.log(values); //TODO: CAMBIAR LA FECHA
     setOpenReschedule(false);
   };
 

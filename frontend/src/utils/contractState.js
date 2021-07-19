@@ -93,9 +93,6 @@ export const contractActionsMap = {
     },
     {
       label: 'mycontracts.contractactions.cancel',
-      onClick: () => {
-        console.log('CANCELLING CONTRACT');
-      },
       icon: faTimes,
       color: themeUtils.colors.red,
       roles: ['CLIENT', 'PROFESSIONAL'],
@@ -127,9 +124,6 @@ export const contractActionsMap = {
     },
     {
       label: 'mycontracts.contractactions.approve',
-      onClick: () => {
-        console.log('APPROVING CONTRACT');
-      },
       icon: faCheckCircle,
       color: themeUtils.colors.green,
       roles: ['PROFESSIONAL'],
@@ -151,9 +145,6 @@ export const contractActionsMap = {
     },
     {
       label: 'mycontracts.contractactions.cancel',
-      onClick: () => {
-        console.log('CANCELLING CONTRACT');
-      },
       icon: faTimes,
       color: themeUtils.colors.red,
       roles: ['CLIENT'],
@@ -185,9 +176,6 @@ export const contractActionsMap = {
     },
     {
       label: 'mycontracts.contractactions.cancel',
-      onClick: () => {
-        console.log('CANCELLING CONTRACT');
-      },
       icon: faTimes,
       color: themeUtils.colors.red,
       roles: ['CLIENT'],
@@ -219,9 +207,6 @@ export const contractActionsMap = {
     },
     {
       label: 'mycontracts.contractactions.cancel',
-      onClick: () => {
-        console.log('CANCELLING CONTRACT');
-      },
       icon: faTimes,
       color: themeUtils.colors.red,
       roles: ['PROFESSIONAL'],

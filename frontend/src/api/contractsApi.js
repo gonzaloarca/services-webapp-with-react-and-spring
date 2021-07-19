@@ -22,6 +22,10 @@ export const getContractsByClientIdAndStateRequest = (
   });
 };
 
+export const getContractStatesRequest = () => {
+  return hireNetApi.get('/contracts/states');
+};
+
 export const getContractsByProAndStateIdRequest = (proId, state, page = 1) => {
   return hireNetApi.get('/contracts', {
     params: {
@@ -38,4 +42,33 @@ export const getContractsByProAndStateIdRequest = (proId, state, page = 1) => {
           ''),
     },
   });
+};
+
+export const changeContractStateRequest = (
+  contractId,
+  state,
+  newScheduledDate,
+  role
+) => {
+  return hireNetApi.put(
+    '/contracts/' + contractId,
+    {
+      data: {
+        newState: state,
+        newScheduledDate: newScheduledDate,
+      },
+    },
+    {
+      headers: {
+        'Authorization':
+          'Bearer ' +
+          (localStorage.getItem('token') ||
+            sessionStorage.getItem('token') ||
+            ''),
+      },
+      params: {
+        role: role,
+      },
+    }
+  );
 };

@@ -188,6 +188,8 @@ const MyContracts = ({ history }) => {
                 contracts={myServices}
                 isOwner
                 topTabSection={tabPaths[tabValue]}
+                loadHiredContracts={loadHiredContracts}
+                loadMyServicesContracts={loadMyServicesContracts}
               />
             </div>
           </TabPanel>
@@ -197,7 +199,13 @@ const MyContracts = ({ history }) => {
   );
 };
 
-const ContractsDashboard = ({ contracts, isOwner = false, topTabSection }) => {
+const ContractsDashboard = ({
+  contracts,
+  isOwner = false,
+  topTabSection,
+  loadHiredContracts,
+  loadMyServicesContracts,
+}) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
@@ -351,7 +359,13 @@ const ContractsDashboard = ({ contracts, isOwner = false, topTabSection }) => {
                 ) : (
                   contracts.map((contract) => (
                     <div key={contract.id} className="mb-6">
-                      <ContractCard contract={contract} isOwner={isOwner} />
+                      <ContractCard
+                        contract={contract}
+                        isOwner={isOwner}
+                        refetch={
+                          isOwner ? loadMyServicesContracts : loadHiredContracts
+                        }
+                      />
                     </div>
                   ))
                 )}

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class JobContractCardDto {
     private URI client;
     private URI professional;
-
+    private Long id;
     private URI jobContract;
     private JobContractStateDto state;
     private String description;
@@ -69,6 +69,7 @@ public class JobContractCardDto {
                 .path(String.valueOf(pack.getId())).build();
         dto.description = card.getDescription();
         dto.wasRescheduled = card.getWasRescheduled();
+        dto.id = card.getJobContract().getId();
         dto.contractImage = card.getByteImage() != null ? uriInfo.getBaseUriBuilder()
                 .path("/contracts").path(String.valueOf(card.getJobContract().getId())).path("/image").build() : null;;
         return dto;
@@ -232,5 +233,13 @@ public class JobContractCardDto {
 
     public void setWasRescheduled(Boolean wasRescheduled) {
         this.wasRescheduled = wasRescheduled;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

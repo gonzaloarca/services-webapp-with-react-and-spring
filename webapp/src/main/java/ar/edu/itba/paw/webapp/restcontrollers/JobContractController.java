@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.dto.input.EditJobContractDto;
 import ar.edu.itba.paw.webapp.dto.input.NewJobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractCardDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractDto;
+import ar.edu.itba.paw.webapp.dto.output.JobContractStateDto;
 import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
@@ -30,6 +31,7 @@ import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -144,7 +146,7 @@ public class JobContractController {
 
     @Path("/{contractId}/image")
     @GET
-    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
     public Response getContractImage(@PathParam("contractId") final long contractId) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId);
         return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
@@ -165,5 +167,21 @@ public class JobContractController {
         return Response.created(uriInfo.getBaseUriBuilder()
                 .path("/contracts").path(String.valueOf(contractId))
                 .path("/image").build()).build();
+    }
+
+    @Path("/states")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getStates() {
+        List<JobContractStateDto> contractStateDtos = Arrays.stream(JobContract.ContractState.values())
+                .map(JobContractStateDto::fromJobContractState).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<JobContractStateDto>>(contractStateDtos){}).build();
+    }
+    @Path("/states/{id}")
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getStateById(@PathParam("id") int id) {
+        JobContractStateDto contractStateDto = JobContractStateDto.fromJobContractState(JobContract.ContractState.values()[id]);
+        return Response.ok(new GenericEntity<JobContractStateDto>(contractStateDto){}).build();
     }
 }
