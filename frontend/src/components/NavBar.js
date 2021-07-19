@@ -25,12 +25,7 @@ import { themeUtils } from '../theme';
 import { UserContext } from '../context';
 import { useHistory } from 'react-router-dom';
 import { isProfessional, isLoggedIn } from '../utils/userUtils';
-import {
-  ExitToApp,
-  Person,
-  Settings,
-  SettingsApplications,
-} from '@material-ui/icons';
+import { ExitToApp, Person, Settings } from '@material-ui/icons';
 
 const useStyles = makeStyles(navBarStyles);
 
@@ -87,7 +82,7 @@ const NavBar = ({
         });
       }
       setIsLoading(false);
-    } else if (isLoggedIn()) {
+    } else if (!isLoggedIn()) {
       setIsLoading(false);
     }
 

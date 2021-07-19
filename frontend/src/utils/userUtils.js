@@ -5,5 +5,5 @@ export const isProfessional = (user) => {
 };
 
 export const isLoggedIn = () => {
-  return !localStorage.getItem('token') && !sessionStorage.getItem('token');
+  return localStorage.getItem('token') || sessionStorage.getItem('token');
 };
