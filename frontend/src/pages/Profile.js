@@ -401,13 +401,13 @@ const ProfileTabs = ({ details, proId }) => {
             <Divider />
             {loadingReviews ? (
               <Grid container spacing={1}>
-                <Grid sm={12} className="flex justify-center">
+                <Grid item sm={12} className="flex justify-center">
                   <Skeleton height={300} width={700} />
                 </Grid>
-                <Grid sm={12} className="flex justify-center">
+                <Grid item sm={12} className="flex justify-center">
                   <Skeleton height={300} width={700} />
                 </Grid>
-                <Grid sm={12} className="flex justify-center">
+                <Grid item sm={12} className="flex justify-center">
                   <Skeleton height={300} width={700} />
                 </Grid>
               </Grid>
