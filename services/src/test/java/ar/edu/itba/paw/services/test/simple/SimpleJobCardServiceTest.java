@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services.test.simple;
 
 import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobCardDao;
-import ar.edu.itba.paw.interfaces.services.JobCardService;
 import ar.edu.itba.paw.interfaces.services.JobPostService;
 import ar.edu.itba.paw.models.JobCard;
 import ar.edu.itba.paw.models.JobPackage;
@@ -74,7 +73,7 @@ public class SimpleJobCardServiceTest {
         spy.search(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, 0, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).search(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(new ArrayList<>()), Mockito.eq(JobCard.OrderBy.MOST_HIRED), Mockito.eq(HirenetUtils.ALL_PAGES));
+                Mockito.eq(new ArrayList<>()), Mockito.eq(JobCard.OrderBy.MOST_HIRED), Mockito.eq(true), Mockito.eq(HirenetUtils.ALL_PAGES));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class SimpleJobCardServiceTest {
         spy.search(QUERY, ZONE.ordinal(), JobPost.JobType.BABYSITTING.ordinal(), 0, HirenetUtils.ALL_PAGES, Locale.getDefault());
 
         Mockito.verify(jobCardDao).searchWithCategory(Mockito.eq(QUERY), Mockito.eq(ZONE),
-                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(JobCard.OrderBy.MOST_HIRED), Mockito.eq(HirenetUtils.ALL_PAGES));
+                Mockito.eq(JobPost.JobType.BABYSITTING), Mockito.eq(new ArrayList<>()), Mockito.eq(JobCard.OrderBy.MOST_HIRED), Mockito.eq(true), Mockito.eq(HirenetUtils.ALL_PAGES));
     }
 
     @Test
@@ -259,7 +258,7 @@ public class SimpleJobCardServiceTest {
 
         Mockito.doReturn(jobTypeList).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
-        Mockito.when(jobCardDao.searchMaxPage(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(jobTypeList)))
+        Mockito.when(jobCardDao.searchMaxPage(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(jobTypeList), Mockito.eq(true)))
                 .thenReturn(PAGE);
 
         int result = spy.searchMaxPage(QUERY, ZONE.ordinal(), HirenetUtils.SEARCH_WITHOUT_CATEGORIES, Locale.getDefault());
@@ -276,7 +275,7 @@ public class SimpleJobCardServiceTest {
         Mockito.doReturn(jobTypeList).when(spy).getSimilarTypes(QUERY, Locale.getDefault());
 
         Mockito.when(jobCardDao.searchWithCategoryMaxPage(Mockito.eq(QUERY), Mockito.eq(ZONE), Mockito.eq(TYPE),
-                Mockito.eq(jobTypeList)))
+                Mockito.eq(jobTypeList), Mockito.eq(true)))
                 .thenReturn(PAGE);
 
         int result = spy.searchMaxPage(QUERY, ZONE.ordinal(), TYPE.ordinal(), Locale.getDefault());

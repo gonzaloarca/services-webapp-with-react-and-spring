@@ -24,6 +24,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
+import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_ZONES;
 
 @Component
 @Path("/job-cards")
@@ -88,13 +89,14 @@ public class JobCardController {
         JobCard jobCard = jobCardService.findByPostId(id);
         JobCardDto jobCardDto = JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
                 messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages())));
-        return Response.ok(new GenericEntity<JobCardDto>(jobCardDto){}).build();
+        return Response.ok(new GenericEntity<JobCardDto>(jobCardDto) {
+        }).build();
     }
 
     @GET
     @Path("/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response search(@Valid @NotNull @QueryParam("zone") final int zone,
+    public Response search(@QueryParam("zone") Integer zone,
                            @Valid @Size(max = 100) @QueryParam("query") String query,
                            @QueryParam("category") Integer category,
                            @QueryParam("orderBy") Integer orderBy,
@@ -104,9 +106,10 @@ public class JobCardController {
             category = SEARCH_WITHOUT_CATEGORIES;
         if (orderBy == null)
             orderBy = JobCard.OrderBy.BETTER_QUALIFIED.ordinal();
-        if (page < 1) {
+        if (zone == null)
+            zone = SEARCH_WITHOUT_ZONES;
+        if (page < 1)
             page = 1;
-        }
 
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
 
