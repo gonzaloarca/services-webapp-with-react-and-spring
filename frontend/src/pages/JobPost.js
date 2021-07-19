@@ -4,6 +4,7 @@ import {
   Card,
   CardActionArea,
   Chip,
+  CircularProgress,
   Grid,
 } from '@material-ui/core';
 import {
@@ -272,17 +273,9 @@ const JobPost = ({ match, history }) => {
     <>
       <NavBar currentSection={'/search'} />
       {loading ? (
-        <Grid container spacing={3} className="mt-10">
-          <Grid item md={12} className="flex justify-center">
-            <Skeleton md={12} variant="rect" width={1000} height={500} />
-          </Grid>
-          <Grid item md={12} className="flex justify-center">
-            <Skeleton md={12} variant="rect" width={1000} height={200} />
-          </Grid>
-          <Grid item md={12} className="flex justify-center">
-            <Skeleton md={12} variant="rect" width={1000} height={200} />
-          </Grid>
-        </Grid>
+        <div className="flex justify-center items-center w-screen h-screen">
+          <CircularProgress />
+        </div>
       ) : (
         <>
           <Helmet>
