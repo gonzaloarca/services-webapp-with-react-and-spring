@@ -1,4 +1,10 @@
-import { Avatar, Card, Link, makeStyles } from '@material-ui/core';
+import {
+  Avatar,
+  Card,
+  Link,
+  makeStyles,
+  CircularProgress,
+} from '@material-ui/core';
 import { Launch } from '@material-ui/icons';
 import { Rating } from '@material-ui/lab';
 import React, { useEffect, useState } from 'react';
@@ -57,7 +63,9 @@ const ReviewCard = ({ review }) => {
   }, [client]);
 
   return loading ? (
-    <div>loading</div>
+    <div className="flex justify-center items-center w-full h-52">
+      <CircularProgress />
+    </div>
   ) : (
     <Card className="p-4">
       <div className={classes.reviewHeader} style={{ height: headerHeight }}>

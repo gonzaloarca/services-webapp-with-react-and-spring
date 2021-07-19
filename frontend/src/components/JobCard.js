@@ -79,7 +79,11 @@ const JobCard = ({ job, isLoading = false }) => {
   return (
     <div>
       <Card>
-        <CardActionArea component={Link} to={`/job/${job.id}`}>
+        <CardActionArea
+          disabled={isLoading}
+          component={Link}
+          to={`/job/${job.id}`}
+        >
           {/* Card image */}
           {isLoading ? (
             <Skeleton variant="rect" className={classes.image} />
