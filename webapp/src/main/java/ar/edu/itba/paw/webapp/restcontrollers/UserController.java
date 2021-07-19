@@ -101,9 +101,17 @@ public class UserController {
     @Path("/{id}/image")
     @GET
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
-    public Response getUserImage(@PathParam("id") final long id) {
+    public Response getUserImage(@PathParam("id") final long id,@Context Request request) {
         ByteImage byteImage = userService.findImageByUserId(id);
-        return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(86400);
+        EntityTag etag = new EntityTag(Integer.toString(byteImage.hashCode()));
+        Response.ResponseBuilder builder = request.evaluatePreconditions(etag);
+        if(builder == null){
+            builder = Response.ok(new ByteArrayInputStream(byteImage.getData()));
+            builder.tag(etag);
+        }
+        return builder.cacheControl(cacheControl).build();
     }
 
     @Path("/{id}/image")
