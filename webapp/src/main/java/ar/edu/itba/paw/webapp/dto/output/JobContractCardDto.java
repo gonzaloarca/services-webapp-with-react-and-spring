@@ -27,9 +27,9 @@ public class JobContractCardDto {
     private Double price;
     private JobPackageRateTypeDto rateType;
     private URI postImage;
-
     private URI jobPost;
     private URI jobPackage;
+    private Boolean wasRescheduled;
 
     public static JobContractCardDto fromJobContractCardWithLocalizedMessage(JobContractCard card, UriInfo uriInfo, String message) {
         JobContractCardDto dto = new JobContractCardDto();
@@ -53,11 +53,11 @@ public class JobContractCardDto {
         dto.packageTitle = card.getJobContract().getJobPackage().getTitle();
         dto.price = card.getJobContract().getJobPackage().getPrice();
         dto.rateType = JobPackageRateTypeDto.fromJobPackageRateType(card.getJobContract().getJobPackage().getRateType());
-        dto.postImage = uriInfo.getBaseUriBuilder().path("/job-posts")
+        dto.postImage = card.getJobCard().getPostImageId() != null? uriInfo.getBaseUriBuilder().path("/job-posts")
                 .path(String.valueOf(card.getJobCard().getJobPost().getId()))
                 .path("/images")
                 .path(String.valueOf(card.getJobCard().getPostImageId()))
-                .build();
+                .build() : null;
         long jobPostId = card.getJobCard().getJobPost().getId();
         dto.jobPost = uriInfo.getBaseUriBuilder().path("/job-posts/")
                 .path(String.valueOf(jobPostId)).build();
@@ -68,8 +68,9 @@ public class JobContractCardDto {
                 .path("/packages")
                 .path(String.valueOf(pack.getId())).build();
         dto.description = card.getDescription();
-        dto.contractImage = uriInfo.getBaseUriBuilder()
-                .path("/contracts").path(String.valueOf(card.getJobContract().getId())).path("/image").build();;
+        dto.wasRescheduled = card.getWasRescheduled();
+        dto.contractImage = card.getByteImage() != null ? uriInfo.getBaseUriBuilder()
+                .path("/contracts").path(String.valueOf(card.getJobContract().getId())).path("/image").build() : null;;
         return dto;
     }
 
@@ -223,5 +224,13 @@ public class JobContractCardDto {
 
     public void setJobPackage(URI jobPackage) {
         this.jobPackage = jobPackage;
+    }
+
+    public Boolean getWasRescheduled() {
+        return wasRescheduled;
+    }
+
+    public void setWasRescheduled(Boolean wasRescheduled) {
+        this.wasRescheduled = wasRescheduled;
     }
 }

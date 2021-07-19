@@ -11,7 +11,7 @@ import { Close } from '@material-ui/icons';
 const HirenetModal = ({
   open,
   title,
-  body,
+  body: Body,
   onClose = null,
   onNegative,
   onAffirmative,
@@ -19,7 +19,9 @@ const HirenetModal = ({
   negativeLabel,
   affirmativeColor,
   negativeColor = 'black',
+  showActionButtons = true,
 }) => {
+  console.log(showActionButtons);
   return (
     <Dialog open={open} onClose={onClose ? onClose : onNegative}>
       <div className="p-2">
@@ -35,22 +37,26 @@ const HirenetModal = ({
       </div>
       <Divider />
 
-      <DialogContent className="p-0">{body}</DialogContent>
+      <DialogContent className="p-0">
+        {<Body showDisclaimer={showActionButtons}></Body>}
+      </DialogContent>
       <Divider />
-      <DialogActions>
-        <Button style={{ color: negativeColor }} onClick={onNegative}>
-          {negativeLabel}
-        </Button>
-        {onAffirmative && (
-          <Button
-            style={{ color: affirmativeColor }}
-            onClick={onAffirmative}
-            autoFocus
-          >
-            {affirmativeLabel}
+      {showActionButtons && (
+        <DialogActions>
+          <Button style={{ color: negativeColor }} onClick={onNegative}>
+            {negativeLabel}
           </Button>
-        )}
-      </DialogActions>
+          {onAffirmative && (
+            <Button
+              style={{ color: affirmativeColor }}
+              onClick={onAffirmative}
+              autoFocus
+            >
+              {affirmativeLabel}
+            </Button>
+          )}
+        </DialogActions>
+      )}
     </Dialog>
   );
 };

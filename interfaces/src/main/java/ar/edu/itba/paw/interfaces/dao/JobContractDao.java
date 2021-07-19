@@ -53,4 +53,6 @@ public interface JobContractDao {
     long addContractImage(long contractId,ByteImage contractImage);
 
     List<JobContractWithImage> findAllWithImage(int page);
+
+    void setWasRescheduled(long id);
 }

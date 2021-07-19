@@ -86,7 +86,7 @@ public class SimpleJobContractService implements JobContractService {
     @Override
     public JobContractWithImage create(long clientId, long packageId, String description, String scheduledDate, Locale locale, String webpageUrl) {
         LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
-        if(jobPackageService.findByOnlyId(packageId).getJobPost().getUser().getId() == clientId)
+        if (jobPackageService.findByOnlyId(packageId).getJobPost().getUser().getId() == clientId)
             throw new IllegalArgumentException("Cannot create contract to self");
         JobContractWithImage jobContract = jobContractDao.create(clientId, packageId, description, parsedDate);
         mailingService.sendContractEmail(jobContract, locale, webpageUrl);
@@ -103,13 +103,13 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public List<JobContractWithImage> findByClientIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
-                                                                       int page) {
+                                                                                         int page) {
         return jobContractDao.findByClientIdAndSortedByModificationDateWithImage(id, states, page);
     }
 
     @Override
     public List<JobContractWithImage> findByProIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
-                                                                    int page) {
+                                                                                      int page) {
         return jobContractDao.findByProIdAndSortedByModificationDateWithImage(id, states, page);
     }
 
@@ -178,7 +178,13 @@ public class SimpleJobContractService implements JobContractService {
                 || currentState == JobContract.ContractState.CLIENT_REJECTED || currentState == JobContract.ContractState.PRO_REJECTED ||
                 currentState == JobContract.ContractState.COMPLETED)
             throw new IllegalStateException();
-
+        boolean modifiedState = state.equals(JobContract.ContractState.PRO_MODIFIED)
+                || state.equals(JobContract.ContractState.CLIENT_MODIFIED);
+        if (!maybeContract.get().isWasRescheduled()
+                && modifiedState)
+            jobContractDao.setWasRescheduled(id);
+        else if (maybeContract.get().isWasRescheduled() && modifiedState)
+            throw new IllegalArgumentException("Cannot reschedule more than once");
         jobContractDao.changeContractState(id, state);
         JobContractWithImage jobContract = findJobContractWithImage(id);
         JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId(), jobContract.getJobPackage().getJobPost().getId());

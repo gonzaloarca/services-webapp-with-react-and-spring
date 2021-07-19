@@ -12,7 +12,7 @@ import { themeUtils } from '../theme';
 
 export const contractStateDataMap = {
   'PENDING_APPROVAL': {
-    state: 'PENDING',
+    state: 'PENDING_APPROVAL',
   },
   'APPROVED': {
     state: 'ACTIVE',
@@ -55,14 +55,14 @@ export const contractStateDataMap = {
   'CLIENT_MODIFIED': {
     clientMessage: 'mycontracts.contractstate.yourescheduled',
     proMessage: 'mycontracts.contractstate.prorescheduled',
-    state: 'PENDING',
+    state: 'CLIENT_MODIFIED',
     color: themeUtils.colors.yellow,
     icon: faExclamationCircle,
   },
   'PRO_MODIFIED': {
     clientMessage: 'mycontracts.contractstate.clientrescheduled',
-    proMessage: 'mycontracts.contractstate.',
-    state: 'PENDING',
+    proMessage: 'mycontracts.contractstate.yourescheduled',
+    state: 'PRO_MODIFIED',
     color: themeUtils.colors.yellow,
     icon: faExclamationCircle,
   },
@@ -70,6 +70,20 @@ export const contractStateDataMap = {
 
 export const contractActionsMap = {
   'ACTIVE': [
+    {
+      label: 'mycontracts.contractactions.details',
+      icon: faInfoCircle,
+      color: themeUtils.colors.blue,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'details',
+    },
+    {
+      label: 'mycontracts.contractactions.contact',
+      icon: faUserCircle,
+      color: themeUtils.colors.aqua,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'contact',
+    },
     {
       label: 'mycontracts.contractactions.finalize',
       icon: faCheckCircle,
@@ -93,9 +107,24 @@ export const contractActionsMap = {
       color: themeUtils.colors.yellow,
       roles: ['CLIENT', 'PROFESSIONAL'],
       action: 'reschedule',
+      show: 'wasRescheduled',
     },
   ],
-  'PENDING': [
+  'PENDING_APPROVAL': [
+    {
+      label: 'mycontracts.contractactions.details',
+      icon: faInfoCircle,
+      color: themeUtils.colors.blue,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'details',
+    },
+    {
+      label: 'mycontracts.contractactions.contact',
+      icon: faUserCircle,
+      color: themeUtils.colors.aqua,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'contact',
+    },
     {
       label: 'mycontracts.contractactions.approve',
       onClick: () => {
@@ -117,15 +146,86 @@ export const contractActionsMap = {
       label: 'mycontracts.contractactions.reschedule',
       icon: faCalendarAlt,
       color: themeUtils.colors.yellow,
-      roles: ['CLIENT', 'PROFESSIONAL'],
+      roles: ['PROFESSIONAL'],
       action: 'reschedule',
+    },
+    {
+      label: 'mycontracts.contractactions.cancel',
+      onClick: () => {
+        console.log('CANCELLING CONTRACT');
+      },
+      icon: faTimes,
+      color: themeUtils.colors.red,
+      roles: ['CLIENT'],
+      action: 'cancel',
+    },
+  ],
+  'CLIENT_MODIFIED': [
+    {
+      label: 'mycontracts.contractactions.details',
+      icon: faInfoCircle,
+      color: themeUtils.colors.blue,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'details',
+    },
+    {
+      label: 'mycontracts.contractactions.contact',
+      icon: faUserCircle,
+      color: themeUtils.colors.aqua,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'contact',
     },
     {
       label: 'mycontracts.contractactions.reviewreschedule',
       icon: faCalendarAlt,
       color: themeUtils.colors.yellow,
-      roles: ['CLIENT'],
+      roles: ['CLIENT', 'PROFESSIONAL'],
       action: 'reviewreschedule',
+      showActionButtons: ['PROFESSIONAL'],
+    },
+    {
+      label: 'mycontracts.contractactions.cancel',
+      onClick: () => {
+        console.log('CANCELLING CONTRACT');
+      },
+      icon: faTimes,
+      color: themeUtils.colors.red,
+      roles: ['CLIENT'],
+      action: 'cancel',
+    },
+  ],
+  'PRO_MODIFIED': [
+    {
+      label: 'mycontracts.contractactions.details',
+      icon: faInfoCircle,
+      color: themeUtils.colors.blue,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'details',
+    },
+    {
+      label: 'mycontracts.contractactions.contact',
+      icon: faUserCircle,
+      color: themeUtils.colors.aqua,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'contact',
+    },
+    {
+      label: 'mycontracts.contractactions.reviewreschedule',
+      icon: faCalendarAlt,
+      color: themeUtils.colors.yellow,
+      roles: ['CLIENT', 'PROFESSIONAL'],
+      action: 'reviewreschedule',
+      showActionButtons: ['CLIENT'],
+    },
+    {
+      label: 'mycontracts.contractactions.cancel',
+      onClick: () => {
+        console.log('CANCELLING CONTRACT');
+      },
+      icon: faTimes,
+      color: themeUtils.colors.red,
+      roles: ['PROFESSIONAL'],
+      action: 'cancel',
     },
   ],
   'FINALIZED': [

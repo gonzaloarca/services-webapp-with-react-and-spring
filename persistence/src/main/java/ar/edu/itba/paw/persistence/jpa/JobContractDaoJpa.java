@@ -162,6 +162,15 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
+    public void setWasRescheduled(long id) {
+        JobContract  contract= em.find(JobContract.class,id);
+        if(contract != null){
+            contract.setWasRescheduled(true);
+            em.persist(contract);
+        }
+    }
+
+    @Override
     public Optional<User> findClientByContractId(long id) {
         return em.createQuery(
                 "SELECT jc.client FROM JobContract jc WHERE jc.id = :id", User.class

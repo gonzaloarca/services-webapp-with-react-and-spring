@@ -10,6 +10,7 @@ public class JobContractCard {
     private final String scheduledDateStr;
     private final String description;
     private final ByteImage byteImage;
+    private Boolean wasRescheduled;
 
     public JobContractCard(JobContractWithImage jobContract, JobCard jobCard, Review review, String scheduledDateStr) {
         this.jobContract =  new JobContract(jobContract);
@@ -17,6 +18,7 @@ public class JobContractCard {
         this.review = review;
         this.scheduledDateStr = scheduledDateStr;
         this.description = jobContract.description;
+        this.wasRescheduled = jobContract.wasRescheduled;
         byteImage = jobContract.getByteImage();
     }
 
@@ -42,6 +44,14 @@ public class JobContractCard {
 
     public String getDescription() {
         return description;
+    }
+
+    public Boolean getWasRescheduled() {
+        return wasRescheduled;
+    }
+
+    public void setWasRescheduled(Boolean wasRescheduled) {
+        this.wasRescheduled = wasRescheduled;
     }
 
     @Override

@@ -235,7 +235,7 @@
       "newdate": "Nueva fecha propuesta"
     },
     "contractactions": {
-      "approve": "Aprovar",
+      "approve": "Aprobar",
       "reject": "Rechazar",
       "finalize": "Finalizar",
       "cancel": "Cancelar",

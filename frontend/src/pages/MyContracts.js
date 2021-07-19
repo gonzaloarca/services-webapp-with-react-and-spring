@@ -117,9 +117,12 @@ const MyContracts = ({ history }) => {
     }
   }, [activeState, activeTab, currentUser]);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (_event, newValue) => {
     setTabValue(newValue);
-    history.push(`/my-contracts/${tabPaths[newValue]}`);
+    history.push(
+      `/my-contracts/${tabPaths[newValue]}` +
+        (activeState ? `/${activeState}` : '')
+    );
   };
 
   return (
@@ -268,7 +271,7 @@ const ContractsDashboard = ({ contracts, isOwner = false, topTabSection }) => {
   };
 
   const history = useHistory();
-
+  console.log('active', activeState);
   const [tabValue, setTabValue] = React.useState(
     activeState === 'finalized' ? 2 : activeState === 'pending' ? 1 : 0
   );

@@ -102,7 +102,7 @@ public class JobContractController {
     public Response getById(@PathParam("contractId") final long contractId) {
         JobContractsControllerLogger.debug("Finding job contract by id: {}", contractId);
         return Response.ok(JobContractDto
-                .fromJobContract(jobContractService.findById(contractId), uriInfo))
+                .fromJobContract(jobContractService.findJobContractWithImage(contractId), uriInfo))
                 .build();
     }
 

@@ -120,8 +120,14 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenCancel(false),
       onAffirmative: () => setOpenCancel(false),
       title: t('mycontracts.modals.cancel.title'),
-      body: (
-        <PlainTextBody>{t('mycontracts.modals.cancel.message')}</PlainTextBody>
+      body: (props) => (
+        <>
+          {!loading && (
+            <PlainTextBody {...props}>
+              {t('mycontracts.modals.cancel.message')}
+            </PlainTextBody>
+          )}
+        </>
       ),
       negativeLabel: t('mycontracts.modals.cancel.negative'),
       affirmativeLabel: t('mycontracts.modals.cancel.affirmative'),
@@ -133,8 +139,14 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenReject(false),
       onAffirmative: () => setOpenReject(false),
       title: t('mycontracts.modals.reject.title'),
-      body: (
-        <PlainTextBody>{t('mycontracts.modals.reject.message')}</PlainTextBody>
+      body: (props) => (
+        <>
+          {!loading && (
+            <PlainTextBody {...props}>
+              {t('mycontracts.modals.reject.message')}
+            </PlainTextBody>
+          )}
+        </>
       ),
       negativeLabel: t('mycontracts.modals.reject.negative'),
       affirmativeLabel: t('mycontracts.modals.reject.affirmative'),
@@ -146,11 +158,16 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenReschedule(false),
       onAffirmative: () => handleSubmit(),
       title: t('mycontracts.modals.reschedule.title'),
-      body: (
-        <RescheduleBody
-          formRef={formRef}
-          setOpenReschedule={setOpenReschedule}
-        />
+      body: (props) => (
+        <>
+          {!loading && (
+            <RescheduleBody
+              formRef={formRef}
+              setOpenReschedule={setOpenReschedule}
+              {...props}
+            />
+          )}
+        </>
       ),
       negativeLabel: t('mycontracts.modals.reschedule.negative'),
       affirmativeLabel: t('mycontracts.modals.reschedule.affirmative'),
@@ -162,7 +179,13 @@ const ContractCard = ({ contract, isOwner }) => {
       onNegative: () => setOpenReviewReschedule(false),
       onAffirmative: () => setOpenReviewReschedule(false),
       title: t('mycontracts.modals.reviewreschedule.title'),
-      body: <ReviewRescheduleBody newDate={contract.scheduledDate} />,
+      body: (props) => (
+        <>
+          {!loading && (
+            <ReviewRescheduleBody newDate={contract.scheduledDate} {...props} />
+          )}{' '}
+        </>
+      ),
       negativeLabel: t('mycontracts.modals.reviewreschedule.negative'),
       affirmativeLabel: t('mycontracts.modals.reviewreschedule.affirmative'),
       affirmativeColor: themeUtils.colors.yellow,
@@ -173,7 +196,13 @@ const ContractCard = ({ contract, isOwner }) => {
       openModal: () => setOpenRate(true),
       onNegative: () => setOpenRate(false),
       onAffirmative: () => handleSubmit(),
-      body: <RateBody formRef={formRef} setOpenRate={setOpenRate} />,
+      body: (props) => (
+        <>
+          {!loading && (
+            <RateBody formRef={formRef} setOpenRate={setOpenRate} {...props} />
+          )}
+        </>
+      ),
       negativeLabel: t('mycontracts.modals.rate.negative'),
       affirmativeLabel: t('mycontracts.modals.rate.affirmative'),
       affirmativeColor: themeUtils.colors.yellow,
@@ -183,15 +212,20 @@ const ContractCard = ({ contract, isOwner }) => {
       openModal: () => setOpenDetails(true),
       onNegative: () => setOpenDetails(false),
       title: t('mycontracts.modals.details.title'),
-      body: (
-        <DetailsBody
-          packageTitle={contract.packageTitle}
-          price={contract.price}
-          rateType={contract.rateType}
-          creationDate={contract.creationDate}
-          text={contract.description}
-          image={contract.contractImage}
-        />
+      body: (props) => (
+        <>
+          {!loading && (
+            <DetailsBody
+              packageTitle={contract.packageTitle}
+              price={contract.price}
+              rateType={contract.rateType}
+              creationDate={contract.creationDate}
+              text={contract.description}
+              image={contract.contractImage}
+              {...props}
+            />
+          )}
+        </>
       ),
       negativeLabel: t('mycontracts.modals.details.negative'),
     },
@@ -200,13 +234,14 @@ const ContractCard = ({ contract, isOwner }) => {
       openModal: () => setOpenContact(true),
       onNegative: () => setOpenContact(false),
       title: t('mycontracts.modals.contact.title'),
-      body: (
+      body: (props) => (
         <>
           {!loading && (
             <ContactBody
               username={isOwner ? client.username : professional.username}
               email={isOwner ? client.email : professional.email}
               phone={isOwner ? client.phone : professional.phone}
+              {...props}
             />
           )}
         </>
@@ -214,12 +249,6 @@ const ContractCard = ({ contract, isOwner }) => {
       negativeLabel: t('mycontracts.modals.contact.negative'),
     },
   };
-
-  console.log('STATE', contract.state);
-  console.log(
-    'contractActions',
-    contractActionsMap[contractStateDataMap[contract.state.description].state]
-  );
 
   return (
     <>
@@ -310,41 +339,61 @@ const ContractCard = ({ contract, isOwner }) => {
           <div className={classes.contractActions}>
             {contractActionsMap[
               contractStateDataMap[contract.state.description].state
-            ].map(({ label, onClick, icon, color, roles, action }, index) =>
-              (isOwner && roles.includes('PROFESSIONAL')) ||
-              (!isOwner && roles.includes('CLIENT')) ? (
-                <>
-                  <Button
-                    className="ml-2"
-                    key={index}
-                    onClick={
-                      modalDataMap[action]
-                        ? modalDataMap[action].openModal
-                        : onClick
-                    }
-                    style={{ color: color }}
-                    startIcon={
-                      <FontAwesomeIcon icon={icon} style={{ color: color }} />
-                    }
-                  >
-                    {t(label)}
-                  </Button>
-                  {modalDataMap[action] && (
-                    <HirenetModal
-                      title={modalDataMap[action].title}
-                      body={modalDataMap[action].body}
-                      open={modalDataMap[action].open}
-                      onNegative={modalDataMap[action].onNegative}
-                      onAffirmative={modalDataMap[action].onAffirmative}
-                      affirmativeLabel={modalDataMap[action].affirmativeLabel}
-                      negativeLabel={modalDataMap[action].negativeLabel}
-                      affirmativeColor={modalDataMap[action].affirmativeColor}
-                    />
-                  )}
-                </>
-              ) : (
-                <></>
-              )
+            ].map(
+              (
+                {
+                  label,
+                  onClick,
+                  icon,
+                  color,
+                  roles,
+                  action,
+                  showActionButtons,
+                  show,
+                },
+                index
+              ) =>
+                ((isOwner && roles.includes('PROFESSIONAL')) ||
+                  (!isOwner && roles.includes('CLIENT'))) &&
+                (!show || !contract[show]) ? (
+                  <>
+                    <Button
+                      className="ml-2"
+                      key={index}
+                      onClick={
+                        modalDataMap[action]
+                          ? modalDataMap[action].openModal
+                          : onClick
+                      }
+                      style={{ color: color }}
+                      startIcon={
+                        <FontAwesomeIcon icon={icon} style={{ color: color }} />
+                      }
+                    >
+                      {t(label)}
+                    </Button>
+                    {modalDataMap[action] && (
+                      <HirenetModal
+                        title={modalDataMap[action].title}
+                        body={modalDataMap[action].body}
+                        open={modalDataMap[action].open}
+                        onNegative={modalDataMap[action].onNegative}
+                        onAffirmative={modalDataMap[action].onAffirmative}
+                        affirmativeLabel={modalDataMap[action].affirmativeLabel}
+                        negativeLabel={modalDataMap[action].negativeLabel}
+                        affirmativeColor={modalDataMap[action].affirmativeColor}
+                        showActionButtons={
+                          showActionButtons &&
+                          ((showActionButtons.includes('PROFESSIONAL') &&
+                            isOwner) ||
+                            (showActionButtons.includes('CLIENT') && !isOwner))
+                        }
+                      />
+                    )}
+                  </>
+                ) : (
+                  <></>
+                )
             )}
           </div>
         </Card>
@@ -620,19 +669,23 @@ const RescheduleBody = ({ formRef, setOpenReschedule }) => {
   );
 };
 
-const ReviewRescheduleBody = ({ newDate }) => {
+const ReviewRescheduleBody = ({ newDate, showDisclaimer }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
   return (
     <div className={classes.reviewRescheduleContainer}>
       <CalendarDisplay date={newDate} size={200} />
-      <div className={classes.rescheduleDisclaimer}>
-        <Error className={classes.disclaimerIcon} />
-        <p className="font-medium text-sm ml-2">
-          {t('mycontracts.reviewreschedule.disclaimer')}
-        </p>
-      </div>
+      <>
+        {showDisclaimer && (
+          <div className={classes.rescheduleDisclaimer}>
+            <Error className={classes.disclaimerIcon} />
+            <p className="font-medium text-sm ml-2">
+              {t('mycontracts.reviewreschedule.disclaimer')}
+            </p>
+          </div>
+        )}
+      </>
     </div>
   );
 };

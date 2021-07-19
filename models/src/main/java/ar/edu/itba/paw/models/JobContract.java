@@ -32,7 +32,7 @@ public class JobContract extends JobContractAbstract {
         this.scheduledDate = jobContractWithImage.scheduledDate;
         this.lastModifiedDate = jobContractWithImage.lastModifiedDate;
         this.description = jobContractWithImage.description;
-        this.state = ContractState.PENDING_APPROVAL;
+        this.state = jobContractWithImage.state;
     }
 
     public enum ContractState {
