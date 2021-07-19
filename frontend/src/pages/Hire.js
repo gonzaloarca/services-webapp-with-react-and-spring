@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   FormHelperText,
   Grid,
   makeStyles,
@@ -270,7 +271,9 @@ const Hire = ({ match, history }) => {
       </Helmet>
       <NavBar currentSection="/search" />
       {loading ? (
-        <></>
+        <div className="flex justify-center items-center w-screen h-screen">
+          <CircularProgress />
+        </div>
       ) : (
         <div
           className={clsx(
