@@ -147,7 +147,7 @@ const StepOne = (props) => {
       onSubmit={handleSubmit}
       enableReinitialize={true}
     >
-      {({ values }) => (
+      {({ values, isSubmitting }) => (
         <Form>
           <Grid container spacing={3}>
             <Grid item sm={7} xs={12}>
@@ -157,7 +157,6 @@ const StepOne = (props) => {
                 fullWidth
                 label={t('register.username')}
                 name="username"
-                required
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="username"></ErrorMessage>}
               />
@@ -169,7 +168,6 @@ const StepOne = (props) => {
                 fullWidth
                 label={t('register.phone')}
                 name="phone"
-                required
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="phone"></ErrorMessage>}
               />
@@ -181,14 +179,12 @@ const StepOne = (props) => {
                 fullWidth
                 label={t('register.email')}
                 name="email"
-                required
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="email"></ErrorMessage>}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
               <FormControlPassword
-                required
                 placeholder={t('register.password')}
                 variable="password"
                 fullWidth
@@ -196,7 +192,6 @@ const StepOne = (props) => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <FormControlPassword
-                required
                 placeholder={t('register.passwordrepeat')}
                 variable="passwordrepeat"
                 fullWidth
@@ -207,6 +202,7 @@ const StepOne = (props) => {
                 fullWidth
                 className={clsx(classes.submitButton, 'mb-4')}
                 type="submit"
+                disabled={isSubmitting}
               >
                 {t('register.submit')}
               </Button>

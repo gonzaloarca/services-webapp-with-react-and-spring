@@ -98,6 +98,7 @@ const AddPackage = () => {
                   startIcon={<AddCircle />}
                   className={classes.addButton}
                   type="submit"
+                  disabled={props.isSubmitting}
                 >
                   {t('addpackage.submit')}
                 </Button>

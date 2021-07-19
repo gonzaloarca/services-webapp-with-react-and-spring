@@ -5,7 +5,6 @@ import {
   makeStyles,
   TextField,
 } from '@material-ui/core';
-import React from 'react';
 import NavBar from '../components/NavBar';
 import FileInput, { checkType, checkSize } from '../components/FileInput';
 import styles from '../styles';
@@ -327,6 +326,7 @@ const HireForm = () => {
                   variant="contained"
                   disableElevation
                   className={classes.submitButton}
+                  disabled={props.isSubmitting}
                 >
                   {t('hirePage.form.submit')}
                 </Button>

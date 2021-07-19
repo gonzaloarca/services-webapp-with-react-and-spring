@@ -271,7 +271,7 @@ const PersonalData = () => {
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          {({ values }) => (
+          {({ values, isSubmitting }) => (
             <Form>
               <Grid container spacing={3} className="my-3">
                 <Grid item sm={8} xs={12}>
@@ -333,7 +333,11 @@ const PersonalData = () => {
                 </Grid>
               </div>
               <div className="flex justify-end">
-                <Button type="submit" className={classes.submitBtn}>
+                <Button
+                  type="submit"
+                  className={classes.submitBtn}
+                  disabled={isSubmitting}
+                >
                   {t('account.savechanges')}
                 </Button>
               </div>
@@ -396,7 +400,7 @@ const SecurityData = () => {
             validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
-            {(props) => (
+            {({ isSubmitting }) => (
               <Form>
                 <FormControlPassword
                   placeholder={t('account.security.oldpassword')}
@@ -414,7 +418,11 @@ const SecurityData = () => {
                   fullWidth
                 />
                 <div className="flex justify-end">
-                  <Button type="submit" className={classes.submitBtn}>
+                  <Button
+                    type="submit"
+                    className={classes.submitBtn}
+                    disabled={isSubmitting}
+                  >
                     {t('account.savechanges')}
                   </Button>
                 </div>

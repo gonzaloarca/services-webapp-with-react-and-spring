@@ -264,6 +264,8 @@ const EditJobPost = ({ match, history }) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
+  const [disableSubmit, setDisableSubmit] = React.useState(false);
+
   const handleNext = (newData, final = false) => {
     if (final) {
       makeRequest(newData);
@@ -279,6 +281,7 @@ const EditJobPost = ({ match, history }) => {
   };
 
   const makeRequest = (newData) => {
+    setDisableSubmit(true);
     console.log(newData);
     //TODO: Registrar con la API
     history.push(`/job/${match.params.id}/success/edit`);
@@ -330,7 +333,7 @@ const EditJobPost = ({ match, history }) => {
 
               <div className={classes.actionsContainer}>
                 <Button
-                  disabled={activeStep === 0}
+                  disabled={activeStep === 0 || disableSubmit}
                   onClick={() => handleBack(data)}
                   className={classes.button}
                 >
@@ -341,6 +344,7 @@ const EditJobPost = ({ match, history }) => {
                   color="primary"
                   onClick={handleSubmit}
                   className={classes.button}
+                  disabled={disableSubmit}
                 >
                   {activeStep === steps.length - 1
                     ? t('createjobpost.publish')
