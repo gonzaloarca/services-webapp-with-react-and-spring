@@ -112,8 +112,8 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void changeUserPassword(long id, String password) {
-        userDao.changeUserPassword(id, passwordEncoder.encode(password));
+    public void changeUserPassword(long id, String newPassword, String oldPassword) {
+        userDao.changeUserPassword(id, passwordEncoder.encode(newPassword));
     }
 
     @Override

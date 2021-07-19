@@ -77,7 +77,9 @@ export const changePasswordRequest = (data) => {
   return hireNetApi.put(
     `/users/${data.userId}/security`,
     {
-      password: data.password,
+      email: data.email,
+      newPassword: data.newPassword,
+      oldPassword: data.oldPassword,
     },
     {
       headers: {

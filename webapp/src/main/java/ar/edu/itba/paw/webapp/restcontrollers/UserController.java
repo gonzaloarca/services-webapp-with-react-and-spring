@@ -169,10 +169,13 @@ public class UserController {
     @PUT
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response changePassword(@Valid @NotBlank @Size(min = 8, max = 100) String password,
+    public Response changePassword(@Valid EditPasswordDto editPasswordDto,
                                    @PathParam("id") final long id) {
         accountControllerLogger.debug("Updating user password with id {}", id);
-        userService.changeUserPassword(id, password);
+        if(!userService.validCredentials(editPasswordDto.getEmail(), editPasswordDto.getOldPassword()))
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        userService.changeUserPassword(id, editPasswordDto.getNewPassword(), editPasswordDto.getOldPassword());
         return Response.ok(userService.findById(id)).build();
     }
 
