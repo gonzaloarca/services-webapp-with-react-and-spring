@@ -90,7 +90,8 @@ public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
                             else
                                 return ACCESS_DENIED;
                         } else if(paths.length > 2) {
-
+                            if(paths[paths.length-1].equals("image"))
+                                return ACCESS_ABSTAIN;
                             contractId = Integer.parseInt(paths[1]);
                             contract = jobContractService.findByIdWithUser(contractId);
                             if (authentication == null)
