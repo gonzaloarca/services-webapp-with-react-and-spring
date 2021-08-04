@@ -271,7 +271,7 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
             contract.id,
             states.find((state) => state.description === 'APPROVED').id
           );
-        refetch('finalized');
+        refetch('active');
         setOpenReviewReschedule(false);
       },
       title: t('mycontracts.modals.reviewreschedule.title'),
