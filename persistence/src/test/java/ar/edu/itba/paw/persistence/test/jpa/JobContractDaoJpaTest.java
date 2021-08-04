@@ -632,7 +632,8 @@ public class JobContractDaoJpaTest {
     @Test
     public void testChangeContractState() {
         JobContract.ContractState state = JobContract.ContractState.PRO_REJECTED;
-        jobContractDaoJpa.changeContractState(JOB_CONTRACTS_PACKAGE1[0].getId(), state);
+        jobContractDaoJpa.changeContractState(JOB_CONTRACTS_PACKAGE1[0].getId(),
+                JOB_CONTRACTS_PACKAGE1[0].getJobPackage().getJobPost().getUser().getId(), state);
         em.flush();
         JobContract dbContract = em.find(JobContract.class, JOB_CONTRACTS_PACKAGE1[0].getId());
 

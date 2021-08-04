@@ -111,7 +111,7 @@ public class JobPostController {
         int maxPage = jobPostService.findAllMaxPage();
         List<JobPostDto> jobPostDtoList = jobPostService.findAll(page).stream()
                 .map(jobPost -> JobPostDto.fromJobPostWithLocalizedMessage(jobPost,
-                        jobPostImageService.getImagesIdsByPostId(jobPost.getId()),uriInfo,
+                        jobPostImageService.getImagesIdsByPostId(jobPost.getId()), uriInfo,
                         messageSource.getMessage(jobPost.getJobType().getDescription(), null, locale)))
                 .collect(Collectors.toList());
 
@@ -128,8 +128,8 @@ public class JobPostController {
         JobPost jobPost = jobPostService.findByIdWithInactive(id);
         List<Long> images = jobPostImageService.getImagesIdsByPostId(id);
         return Response.ok(JobPostDto.fromJobPostWithLocalizedMessage(
-                jobPost, images, uriInfo,
-                messageSource.getMessage(jobPost.getJobType().getDescription(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))))
+                        jobPost, images, uriInfo,
+                        messageSource.getMessage(jobPost.getJobType().getDescription(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))))
                 .build();
     }
 
@@ -138,7 +138,7 @@ public class JobPostController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response jobPostImages(@PathParam("postId") final long postId) {
         List<URI> uris = jobPostImageService.getImagesIdsByPostId(postId).stream().map(id -> uriInfo.getBaseUriBuilder()
-                .path("/job-posts").path(String.valueOf(postId)).path("/images").path(String.valueOf(id)).build())
+                        .path("/job-posts").path(String.valueOf(postId)).path("/images").path(String.valueOf(id)).build())
                 .collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<URI>>(uris) {
         }).build();
@@ -162,32 +162,31 @@ public class JobPostController {
 
     @Path("/{postId}/images/{imageId}")
     @GET
-    @Produces(value = {"image/png", "image/jpg","image/jpeg", MediaType.APPLICATION_JSON})
+    @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
     public Response getPostImage(@PathParam("postId") final long postId,
                                  @PathParam("imageId") final long imageId,
                                  @Context Request request) {
         JobPostImage jobPostImage = jobPostImageService.findById(imageId, postId);
-        return ImagesUtil.sendCachableImageResponse(jobPostImage.getByteImage(),request);
+        return ImagesUtil.sendCachableImageResponse(jobPostImage.getByteImage(), request);
     }
 
     @Path("/{postId}/packages")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response packagesByPostId(@PathParam("postId") final long postId,
-                                     @QueryParam("role") final String role,
+                                     @QueryParam("type") final String type,
                                      @QueryParam("page") @DefaultValue("1") int page) {
-        if (page < 1)
-            page = 1;
+        if (page < 1) page = 1;
 
         jobPostControllerLogger.debug("Finding packages for post: {}", postId);
         int maxPage;
         List<JobPackage> jobPackages;
-        if (role != null && role.equalsIgnoreCase("PROFESSIONAL")) {
+        if (type != null && type.equalsIgnoreCase("active")) {
+            jobPackages = jobPackageService.findByPostIdOnlyActive(postId, page - 1);
+            maxPage = jobPackageService.findByPostIdOnlyActiveMaxPage(postId);
+        } else {
             jobPackages = jobPackageService.findByPostId(postId, page - 1);
             maxPage = jobPackageService.findByPostIdMaxPage(postId);
-        }else{
-            jobPackages = jobPackageService.findByPostIdOnlyActive(postId,page - 1);
-            maxPage = jobPackageService.findByPostIdOnlyActiveMaxPage(postId);
         }
         final List<JobPackageDto> packageDtoList = jobPackages
                 .stream().map(pack -> JobPackageDto.fromJobPackage(pack, uriInfo))

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.ReviewDao;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Review;
+import ar.edu.itba.paw.models.exceptions.ReviewNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,8 @@ import java.util.Optional;
 @Transactional
 @Service
 public class SimpleReviewService implements ReviewService {
+    private static final String TYPE_OFFERED_STRING = "offered";
+    private static final String TYPE_HIRED_STRING = "hired";
 
     @Autowired
     private ReviewDao reviewDao;
@@ -92,47 +95,48 @@ public class SimpleReviewService implements ReviewService {
     }
 
     @Override
-    public int findReviewsMaxPage(Long userId,Long postId, String role) {
-        validateParameters(userId,role,postId);
+    public int findReviewsMaxPage(Long userId, Long postId, String type) {
+        validateParameters(userId, type, postId);
 
-        if(userId != null){
-            if(role.equalsIgnoreCase("professional"))
+        if (userId != null) {
+            if (type.equalsIgnoreCase(TYPE_OFFERED_STRING))
                 return reviewDao.findReviewsByProIdMaxPage(userId);
-            else
+            else if (type.equalsIgnoreCase(TYPE_HIRED_STRING))
                 return reviewDao.findReviewsByClientIdMaxPage(userId);
+            else return -1;
         }
-        if(postId != null){
+        if (postId != null) {
             return reviewDao.findReviewsByPostIdMaxPage(postId);
         }
         return reviewDao.findReviewsMaxPage();
     }
 
     @Override
-    public List<Review> findReviews(Long userId, String role, Long postId, int page) {
-        validateParameters(userId,role,postId);
+    public List<Review> findReviews(Long userId, String type, Long postId, int page) {
+        validateParameters(userId, type, postId);
 
-        if(userId != null){
-            if(role.equalsIgnoreCase("professional"))
-                return reviewDao.findReviewsByProId(userId,page);
-            else
-                return reviewDao.findReviewsByClientId(userId,page);
+        if (userId != null) {
+            if (type.equalsIgnoreCase(TYPE_OFFERED_STRING))
+                return reviewDao.findReviewsByProId(userId, page);
+            else if (type.equalsIgnoreCase(TYPE_HIRED_STRING))
+                return reviewDao.findReviewsByClientId(userId, page);
+            else throw new ReviewNotFoundException();
         }
-        if(postId != null){
-            return reviewDao.findReviewsByPostId(postId,page);
+        if (postId != null) {
+            return reviewDao.findReviewsByPostId(postId, page);
         }
         return reviewDao.findAllReviews(page);
     }
 
-    private void validateParameters(Long userId, String role, Long postId){
-        if((userId != null || role != null) && postId != null )
+    private void validateParameters(Long userId, String type, Long postId) {
+        if ((userId != null || type != null) && postId != null)
             throw new IllegalArgumentException("Incompatible Query Parameters");
 
-        if(userId != null && role == null)
-            throw new IllegalArgumentException("Must set Query parameter role for userId");
+        if (userId != null && type == null)
+            throw new IllegalArgumentException("Must set Query parameter type for userId");
 
-        if(role != null && !role.equalsIgnoreCase("professional") && !role.equalsIgnoreCase("client"))
-            throw new IllegalArgumentException("Invalid role value");
-        return;
+        if (type != null && !type.equalsIgnoreCase(TYPE_OFFERED_STRING) && !type.equalsIgnoreCase("client"))
+            throw new IllegalArgumentException("Invalid type value");
     }
 
 }

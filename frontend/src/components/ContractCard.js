@@ -81,7 +81,7 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
   const [openContact, setOpenContact] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const { changeContractStateClient, changeContractStatePro } = useContracts();
+  const { changeContractState } = useContracts();
   const { states } = useContext(ConstantDataContext);
   const [professional, setProfessional] = useState(null);
   const [client, setClient] = useState(null);
@@ -121,13 +121,13 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
   const onFinalized = async () => {
     if (contract.state.description === 'APPROVED') {
       if (isOwner) {
-        await changeContractStatePro(
+        await changeContractState(
           contract.id,
           states.find((state) => state.description === 'ACTIVE').id
         );
         refetch('active');
       } else {
-        await changeContractStateClient(
+        await changeContractState(
           contract.id,
           states.find((state) => state.description === 'COMPLETED').id
         );
@@ -136,12 +136,12 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
       setOpenReviewReschedule(false);
     } else if (contract.state.description === 'PENDING_APPROVAL') {
       if (isOwner)
-        await changeContractStatePro(
+        await changeContractState(
           contract.id,
           states.find((state) => state.description === 'APPROVED').id
         );
       else
-        await changeContractStateClient(
+        await changeContractState(
           contract.id,
           states.find((state) => state.description === 'APPROVED').id
         );
@@ -157,12 +157,12 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
       onNegative: () => setOpenCancel(false),
       onAffirmative: async () => {
         if (isOwner)
-          await changeContractStatePro(
+          await changeContractState(
             contract.id,
             states.find((state) => state.description === 'PRO_CANCELLED').id
           );
         else
-          await changeContractStateClient(
+          await changeContractState(
             contract.id,
             states.find((state) => state.description === 'CLIENT_CANCELLED').id
           );
@@ -189,12 +189,12 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
       onNegative: () => setOpenReject(false),
       onAffirmative: async () => {
         if (isOwner)
-          await changeContractStatePro(
+          await changeContractState(
             contract.id,
             states.find((state) => state.description === 'PRO_REJECTED').id
           );
         else
-          await changeContractStateClient(
+          await changeContractState(
             contract.id,
             states.find((state) => state.description === 'CLIENT_REJECTED').id
           );
@@ -248,12 +248,12 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
       onClose: () => setOpenReviewReschedule(false),
       onNegative: async () => {
         if (isOwner)
-          await changeContractStatePro(
+          await changeContractState(
             contract.id,
             states.find((state) => state.description === 'PRO_REJECTED').id
           );
         else
-          await changeContractStateClient(
+          await changeContractState(
             contract.id,
             states.find((state) => state.description === 'CLIENT_REJECTED').id
           );
@@ -262,12 +262,12 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
       },
       onAffirmative: async () => {
         if (isOwner)
-          await changeContractStatePro(
+          await changeContractState(
             contract.id,
             states.find((state) => state.description === 'APPROVED').id
           );
         else
-          await changeContractStateClient(
+          await changeContractState(
             contract.id,
             states.find((state) => state.description === 'APPROVED').id
           );
@@ -800,7 +800,7 @@ const RescheduleBody = ({
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const { changeContractStateClient, changeContractStatePro } = useContracts();
+  const { changeContractState } = useContracts();
   const { states } = useContext(ConstantDataContext);
 
   const initialValues = {
@@ -812,15 +812,14 @@ const RescheduleBody = ({
   });
 
   const onSubmit = async (values, props) => {
-    // console.log(formRef.current.values);
     if (isOwner)
-      await changeContractStatePro(
+      await changeContractState(
         contract.id,
         states.find((state) => state.description === 'PRO_MODIFIED').id,
         values.date.toISOString()
       );
     else
-      await changeContractStateClient(
+      await changeContractState(
         contract.id,
         states.find((state) => state.description === 'CLIENT_MODIFIED').id,
         values.date.toISOString()

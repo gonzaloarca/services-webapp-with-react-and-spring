@@ -74,7 +74,7 @@ Tampoco lo son ciertos query params en determinadas situaciones.
 }
 ```
 
-### PUT: {{baseUrl}}/contracts/40?role=professional
+### PUT: {{baseUrl}}/contracts/40
 
 ```json
 {
@@ -110,9 +110,9 @@ Retorna imagen como body
 
 En un form con key "file" viajara la imagen
 
-### GET contracts by role and state:
+### GET contracts by type and state:
 
-### {{baseUrl}}/contracts?userId=5&role=professional&state=finalized
+### {{baseUrl}}/contracts?userId=5&type=offered&state=finalized
 
 ```json
 [
@@ -274,6 +274,7 @@ En un form con key "file" viajara la imagen
 ```
 
 ### GET all: {{baseUrl}}/job-posts/1/packages
+### GET active: {{baseUrl}}/job-posts/1/packages?type=active
 
 ```json
 [
@@ -377,7 +378,7 @@ En un form con key "file" viajara la imagen
 
 ### GET by postId: {{baseUrl}}/reviews?page=1&postId=5
 
-### GET by userId: {{baseUrl}}/reviews?page=1&userId=5&role=professional
+### GET by userId: {{baseUrl}}/reviews?page=1&userId=5&type=offered
 
 ```json
 [
@@ -524,7 +525,7 @@ En un form con key "token" viajara el token
 }
 ```
 
-### PUT: {{baseUrl}}/contracts/40?role=professional
+### PUT: {{baseUrl}}/contracts/40
 
 ```json
 {
@@ -550,40 +551,6 @@ En un form con key "token" viajara el token
     "id": 2
   }
 }
-```
-
-### GET contractCards: {{baseUrl}}/contracts?userId=5&role=professional&state=finalized
-
-```json
-[
-  {
-    "avgRate": 3.6666666666666665,
-    "client": "http://localhost:8080/api/users/3",
-    "contractsCompleted": 5,
-    "creationDate": "2021-07-15T21:50:22.663",
-    "imageUrl": "http://localhost:8080/api/job-posts/8/images/12",
-    "jobContractDto": "http://localhost:8080/api/contracts/34",
-    "jobPackageDto": "http://localhost:8080/api/job-posts/8/packages/8",
-    "jobPost": "http://localhost:8080/api/job-posts/8",
-    "jobTitle": "Niñero turno mañana",
-    "jobType": {
-      "description": "Babysitting",
-      "id": 7
-    },
-    "packageTitle": "4 dias a la semana 4 horas",
-    "professional": "http://localhost:8080/api/users/5",
-    "rateType": {
-      "description": "TBD",
-      "id": 2
-    },
-    "reviewsCount": 3,
-    "scheduledDate": "2021-06-16T14:25:28.028799",
-    "state": {
-      "description": "CLIENT_REJECTED",
-      "id": 2
-    }
-  }
-]
 ```
 
 ### GET image: {{baseUrl}}/contracts/3/image

@@ -51,13 +51,13 @@ public class ReviewController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getReviews(@QueryParam("userId") final Long userId,
-                               @QueryParam("role") final String role,
+                               @QueryParam("type") final String type,
                                @QueryParam("postId") final Long postId,
                                @QueryParam("page") @DefaultValue("1") int page) {
         reviewControllerLogger.debug("Finding reviews Max page {}", userId);
-        int maxPage = reviewService.findReviewsMaxPage(userId, postId, role);
+        int maxPage = reviewService.findReviewsMaxPage(userId, postId, type);
 
-        List<ReviewDto> jobContractCardDtoList = reviewService.findReviews(userId, role, postId, page - 1)
+        List<ReviewDto> jobContractCardDtoList = reviewService.findReviews(userId, type, postId, page - 1)
                 .stream().map(review -> ReviewDto.fromReview(review, uriInfo)).collect(Collectors.toList());
 
         return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,

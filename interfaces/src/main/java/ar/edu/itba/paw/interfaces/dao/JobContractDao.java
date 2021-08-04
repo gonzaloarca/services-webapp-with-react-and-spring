@@ -38,7 +38,7 @@ public interface JobContractDao {
 
     int findContractsByProIdMaxPage(long id, List<JobContract.ContractState> states);
 
-    void changeContractState(long id, JobContract.ContractState state);
+    void changeContractState(long id, long userId, JobContract.ContractState state);
 
     void changeContractScheduledDate(long id, LocalDateTime dateTime);
 

@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +18,14 @@ import java.util.*;
 @Transactional
 @Service
 public class SimpleJobContractService implements JobContractService {
+    private static final String TYPE_OFFERED_STRING = "offered";
+    private static final String TYPE_HIRED_STRING = "hired";
+    private static final String STATE_ACTIVE_STRING = "active";
+    private static final String STATE_PENDING_STRING = "pending";
+    private static final String STATE_FINALIZED_STRING = "finalized";
 
     @Autowired
     private JobContractDao jobContractDao;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private JobCardService jobCardService;
@@ -42,37 +43,38 @@ public class SimpleJobContractService implements JobContractService {
     private MailingService mailingService;
 
     @Override
-    public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
+    public List<JobContractCard> findContracts(Long userId, String contractState, String type, int page) {
 
-        if (userId == null && contractState == null && role == null)
+        if (userId == null && contractState == null && type == null)
             return getJobContractCards(jobContractDao.findAllWithImage(page));
 
-        if (userId == null || contractState == null || role == null ||
-                (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized")))
+        if (userId == null || contractState == null || type == null ||
+                (!contractState.equalsIgnoreCase(STATE_ACTIVE_STRING) && !contractState.equalsIgnoreCase(STATE_PENDING_STRING)
+                        && !contractState.equalsIgnoreCase(STATE_FINALIZED_STRING)))
             throw new IllegalArgumentException();
 
         List<JobContract.ContractState> states = getContractStates(contractState);
-        if (role.equalsIgnoreCase("professional")) {
+        if (type.equalsIgnoreCase(TYPE_OFFERED_STRING)) {
             return getJobContractCards(findByProIdAndSortedByModificationDateWithImage(userId, states, page));
-        } else if (role.equals("client")) {
+        } else if (type.equalsIgnoreCase(TYPE_HIRED_STRING)) {
             return getJobContractCards(findByClientIdAndSortedByModificationDateWithImage(userId, states, page));
         } else
             throw new IllegalArgumentException();
     }
 
     @Override
-    public int findContractsMaxPage(Long userId, String contractState, String role) {
+    public int findContractsMaxPage(Long userId, String contractState, String type) {
 
-        if (userId == null && contractState == null && role == null)
+        if (userId == null && contractState == null && type == null)
             return jobContractDao.findAllMaxPage();
 
-        if (userId == null || contractState == null || role == null ||
-                (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized")))
+        if (userId == null || contractState == null || type == null ||
+                (!contractState.equalsIgnoreCase(STATE_ACTIVE_STRING) && !contractState.equalsIgnoreCase(STATE_PENDING_STRING) && !contractState.equalsIgnoreCase(STATE_FINALIZED_STRING)))
             throw new IllegalArgumentException();
 
-        if (role.equals("professional")) {
+        if (type.equalsIgnoreCase(TYPE_OFFERED_STRING)) {
             return findContractsByProIdMaxPage(userId, getContractStates(contractState));
-        } else if (role.equals("client")) {
+        } else if (type.equalsIgnoreCase(TYPE_HIRED_STRING)) {
             return findContractsByClientIdMaxPage(userId, getContractStates(contractState));
         } else
             throw new IllegalArgumentException();
@@ -163,9 +165,8 @@ public class SimpleJobContractService implements JobContractService {
         return jobContractCards;
     }
 
-
     @Override
-    public void changeContractState(long id, JobContract.ContractState state, Locale locale, String webPageUrl) {
+    public void changeContractState(long id, long userId, JobContract.ContractState state, Locale locale, String webPageUrl) {
         Optional<JobContract> maybeContract = jobContractDao.findById(id);
 
         if (!maybeContract.isPresent())
@@ -185,7 +186,7 @@ public class SimpleJobContractService implements JobContractService {
             jobContractDao.setWasRescheduled(id);
         else if (maybeContract.get().isWasRescheduled() && modifiedState)
             throw new IllegalArgumentException("Cannot reschedule more than once");
-        jobContractDao.changeContractState(id, state);
+        jobContractDao.changeContractState(id, userId, state);
         JobContractWithImage jobContract = findJobContractWithImage(id);
         JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId(), jobContract.getJobPackage().getJobPost().getId());
         JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
@@ -194,9 +195,8 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public void changeContractScheduledDate(long id, String scheduledDate, boolean isServiceOwner, Locale locale) {
+    public void changeContractScheduledDate(long id, String scheduledDate, Locale locale) {
         LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
-
         jobContractDao.changeContractScheduledDate(id, parsedDate);
     }
 
@@ -215,15 +215,15 @@ public class SimpleJobContractService implements JobContractService {
         List<JobContract.ContractState> states = new ArrayList<>();
 
         switch (contractState) {
-            case "active":
+            case STATE_ACTIVE_STRING:
                 states.add(JobContract.ContractState.APPROVED);
                 break;
-            case "pending":
+            case STATE_PENDING_STRING:
                 states.add(JobContract.ContractState.PENDING_APPROVAL);
                 states.add(JobContract.ContractState.PRO_MODIFIED);
                 states.add(JobContract.ContractState.CLIENT_MODIFIED);
                 break;
-            case "finalized":
+            case STATE_FINALIZED_STRING:
                 states.add(JobContract.ContractState.COMPLETED);
                 states.add(JobContract.ContractState.PRO_CANCELLED);
                 states.add(JobContract.ContractState.PRO_REJECTED);

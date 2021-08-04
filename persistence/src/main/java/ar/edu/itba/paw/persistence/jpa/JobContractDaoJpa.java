@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new IllegalArgumentException();
 
         Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id " +
-                "AND contract_state IN :states ORDER BY contract_creation_date DESC")
+                        "AND contract_state IN :states ORDER BY contract_creation_date DESC")
                 .setParameter("id", id)
                 .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
                         .collect(Collectors.toList()));
@@ -70,12 +71,12 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public List<JobContractWithImage> findByClientIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
-                                                                       int page) {
+                                                                                         int page) {
         if (states == null)
             throw new IllegalArgumentException();
 
         Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id " +
-                "AND contract_state IN :states ORDER BY contract_last_modified_date DESC")
+                        "AND contract_state IN :states ORDER BY contract_last_modified_date DESC")
                 .setParameter("id", id)
                 .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
                         .collect(Collectors.toList()));
@@ -89,8 +90,8 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new IllegalArgumentException();
 
         Query nativeQuery = em.createNativeQuery(
-                "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_creation_date DESC")
+                        "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
+                                "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_creation_date DESC")
                 .setParameter("id", id)
                 .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
                         .collect(Collectors.toList()));
@@ -105,8 +106,8 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new IllegalArgumentException();
 
         Query nativeQuery = em.createNativeQuery(
-                "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                        "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_last_modified_date DESC")
+                        "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
+                                "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_last_modified_date DESC")
                 .setParameter("id", id)
                 .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
                         .collect(Collectors.toList()));
@@ -117,8 +118,8 @@ public class JobContractDaoJpa implements JobContractDao {
     @Override
     public List<JobContract> findByPostId(long id, int page) {
         Query nativeQuery = em.createNativeQuery(
-                "SELECT contract_id FROM contract NATURAL JOIN job_package " +
-                        "WHERE post_id = :id ORDER BY contract_creation_date DESC")
+                        "SELECT contract_id FROM contract NATURAL JOIN job_package " +
+                                "WHERE post_id = :id ORDER BY contract_creation_date DESC")
                 .setParameter("id", id);
 
         return executePageQuery(page, nativeQuery);
@@ -127,8 +128,8 @@ public class JobContractDaoJpa implements JobContractDao {
     @Override
     public List<JobContract> findByPackageId(long packageId, long postId, int page) {
         Query nativeQuery = em.createNativeQuery(
-                "SELECT contract_id FROM contract NATURAL JOIN job_package " +
-                        "WHERE package_id = :packageId AND post_id = :postId ORDER BY contract_creation_date DESC")
+                        "SELECT contract_id FROM contract NATURAL JOIN job_package " +
+                                "WHERE package_id = :packageId AND post_id = :postId ORDER BY contract_creation_date DESC")
                 .setParameter("packageId", packageId).setParameter("postId", postId);
 
         return executePageQuery(page, nativeQuery);
@@ -163,8 +164,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public void setWasRescheduled(long id) {
-        JobContract  contract= em.find(JobContract.class,id);
-        if(contract != null){
+        JobContract contract = em.find(JobContract.class, id);
+        if (contract != null) {
             contract.setWasRescheduled(true);
             em.persist(contract);
         }
@@ -214,7 +215,7 @@ public class JobContractDaoJpa implements JobContractDao {
             throw new IllegalArgumentException();
 
         Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.jobPost.user.id = :id AND " +
-                "jc.state IN :states", Long.class)
+                        "jc.state IN :states", Long.class)
                 .setParameter("id", id).setParameter("states", states.isEmpty() ? null : states).getSingleResult();
 
         return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
@@ -241,10 +242,18 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public void changeContractState(long id, JobContract.ContractState state) {
+    public void changeContractState(long id, long userId, JobContract.ContractState state) {
         JobContract contract = em.find(JobContract.class, id);
+        List<JobContract.ContractState> clientStates = Arrays.asList(
+                JobContract.ContractState.CLIENT_CANCELLED, JobContract.ContractState.CLIENT_MODIFIED, JobContract.ContractState.CLIENT_REJECTED);
 
         if (contract == null)
+            throw new JobContractNotFoundException();
+        if (clientStates.contains(state)) {
+            // Si esta modificando como un cliente verifico que lo sea
+            if (contract.getClient().getId() != userId)
+                throw new JobContractNotFoundException();
+        } else if (contract.getJobPackage().getJobPost().getUser().getId() != userId)
             throw new JobContractNotFoundException();
 
         contract.setState(state);

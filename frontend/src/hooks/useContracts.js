@@ -60,7 +60,7 @@ const useContractsHook = () => {
     return response.data;
   };
 
-  const changeContractStatePro = async (
+  const changeContractState = async (
     contractId,
     state,
     newScheduledDate
@@ -68,22 +68,7 @@ const useContractsHook = () => {
     const response = await changeContractStateRequest(
       contractId,
       state,
-      newScheduledDate,
-      'professional'
-    );
-    return response.data;
-  };
-
-  const changeContractStateClient = async (
-    contractId,
-    state,
-    newScheduledDate
-  ) => {
-    const response = await changeContractStateRequest(
-      contractId,
-      state,
-      newScheduledDate,
-      'client'
+      newScheduledDate
     );
     return response.data;
   };
@@ -115,8 +100,7 @@ const useContractsHook = () => {
   return {
     getContractsByClientIdAndState,
     getContractsByProAndStateId,
-    changeContractStateClient,
-    changeContractStatePro,
+    changeContractState,
     getContractStates,
     createContract,
     links,
