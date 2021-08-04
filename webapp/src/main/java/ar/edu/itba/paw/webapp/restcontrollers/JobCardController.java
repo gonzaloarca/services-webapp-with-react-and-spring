@@ -45,10 +45,15 @@ public class JobCardController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response findAll(
+    public Response search(
             @QueryParam("userId") final Long userId,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("type") final String type) {
+            @QueryParam("type") final String type,
+            @QueryParam("zone") Integer zone,
+            @Valid @Size(max = 100) @QueryParam("query") String query,
+            @QueryParam("category") Integer jobType,
+            @QueryParam("orderBy") Integer orderBy,
+            @QueryParam("page") @DefaultValue("1") int page
+    ) {
         if (page < 1)
             page = 1;
 
@@ -56,18 +61,22 @@ public class JobCardController {
         int maxPage;
         List<JobCard> jobCards;
 
-        if (userId == null) {
-            JobCardControllerLogger.debug("Finding all jobcards for page: {}", page);
-            maxPage = jobCardService.findAllMaxPage();
-            jobCards = jobCardService.findAll(page - 1);
-        } else if (type != null && type.equalsIgnoreCase("related")) {
-            JobCardControllerLogger.debug("Finding relatedJobCards for pro with id: {}", userId);
-            maxPage = jobCardService.findRelatedJobCardsMaxPage(userId);
-            jobCards = jobCardService.findRelatedJobCards(userId, page - 1);
+        if (userId != null) {
+            if (type != null && type.equalsIgnoreCase("related")) {
+                JobCardControllerLogger.debug("Finding relatedJobCards for pro with id: {}", userId);
+                maxPage = jobCardService.findRelatedJobCardsMaxPage(userId);
+                jobCards = jobCardService.findRelatedJobCards(userId, page - 1);
+            } else {
+                JobCardControllerLogger.debug("Finding jobCards for pro with id: {}", userId);
+                maxPage = jobCardService.findByUserIdMaxPage(userId);
+                jobCards = jobCardService.findByUserId(userId, page - 1);
+            }
         } else {
-            JobCardControllerLogger.debug("Finding jobCards for pro with id: {}", userId);
-            maxPage = jobCardService.findByUserIdMaxPage(userId);
-            jobCards = jobCardService.findByUserId(userId, page - 1);
+            JobCardControllerLogger.debug("Searching jobcards with data: zone: {}, query: {}, category: {}, orderby: {}, page: {}",
+                    zone, query, jobType, orderBy, page);
+            maxPage = jobCardService.searchMaxPage(query, zone, jobType, locale);
+            jobCards = jobCardService.search(query, zone, jobType,
+                    orderBy, page - 1, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()));
         }
 
         List<JobCardDto> jobCardDtoList = jobCards.stream()
@@ -80,7 +89,6 @@ public class JobCardController {
                 }));
     }
 
-
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -92,43 +100,6 @@ public class JobCardController {
         return Response.ok(new GenericEntity<JobCardDto>(jobCardDto) {
         }).build();
     }
-
-    @GET
-    @Path("/search")
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response search(@QueryParam("zone") Integer zone,
-                           @Valid @Size(max = 100) @QueryParam("query") String query,
-                           @QueryParam("category") Integer category,
-                           @QueryParam("orderBy") Integer orderBy,
-                           @QueryParam("page") @DefaultValue("1") int page) {
-
-        if (category == null)
-            category = SEARCH_WITHOUT_CATEGORIES;
-        if (orderBy == null)
-            orderBy = JobCard.OrderBy.BETTER_QUALIFIED.ordinal();
-        if (zone == null)
-            zone = SEARCH_WITHOUT_ZONES;
-        if(query == null)
-            query = "";
-        if (page < 1)
-            page = 1;
-
-        Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
-
-        JobCardControllerLogger.debug("searching jobcards with data: zone: {}, query: {}, category: {}, orderby: {}, page: {}", zone, query, category, orderBy, page);
-        int maxPage = jobCardService.searchMaxPage(query, zone, category, locale);
-
-        final List<JobCardDto> jobCardDtoList = jobCardService.search(query, zone, category,
-                orderBy, page - 1, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages()))
-                .stream().map(jobCard -> JobCardDto.fromJobCardWithLocalizedMessage(jobCard, uriInfo,
-                        messageSource.getMessage(jobCard.getJobPost().getJobType().getDescription(), null, locale)))
-                .collect(Collectors.toList());
-
-        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
-                Response.ok(new GenericEntity<List<JobCardDto>>(jobCardDtoList) {
-                }));
-    }
-
 
     @GET
     @Path("/order-params")
