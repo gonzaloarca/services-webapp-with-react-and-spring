@@ -38,13 +38,13 @@ import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
 @Configuration
-@ComponentScan({"ar.edu.itba.paw.webapp.auth","ar.edu.itba.paw.webapp.restcontrollers"})
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.restcontrollers"})
 public class AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Value("classpath:key.txt")
     private Resource key;
 
-    private final String BASE_URL = "/api/v1";
+    private final String BASE_URL = "/api";
 
     @Autowired
     private HireNetUserDetails hireNetUserDetails;
@@ -78,24 +78,28 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
         http = http
                 .exceptionHandling()
-                .authenticationEntryPoint((request,response,ex)->response.sendError(HttpServletResponse.SC_UNAUTHORIZED,ex.getMessage()))
+                .authenticationEntryPoint((request, response, ex) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage()))
                 .and();
 
-
+        String relativePath = BASE_URL;
         http.authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
-                .antMatchers("/api/v1/users/*/rankings").hasRole("PROFESSIONAL")
-                .antMatchers(HttpMethod.POST,"/api/v1/job-posts").hasRole("CLIENT")
-                .antMatchers(HttpMethod.POST,"/api/v1/job-posts/**").hasRole("PROFESSIONAL")
-                .antMatchers(HttpMethod.PUT,"/api/v1/job-posts/**").hasRole("PROFESSIONAL")
-                .antMatchers("/api/v1/reviews","/api/v1/contracts/states/**","/api/v1/contracts/*/image").permitAll()
-                .antMatchers("/api/v1/contracts/**","/api/v1/reviews/**","/api/v1/users/security").hasRole("CLIENT")
-                .antMatchers(HttpMethod.GET,"/api/v1/job-posts/**","/api/v1/users/*/rates").permitAll()
-                .antMatchers("/api/v1/login", "/api/v1/categories/**","/api/v1/job-cards/**","/api/v1/zones/**").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/v1/users","/api/v1/users/*/verify","/api/v1/users/recover-account/**").anonymous()
-                .antMatchers(HttpMethod.PUT,"/api/v1/users/recover-account/**").anonymous()
-                .antMatchers(HttpMethod.GET,"/api/v1/users/*/rankings").hasRole("PROFESSIONAL")
-                .antMatchers(HttpMethod.PUT,"/api/v1/users/**").hasRole("CLIENT")
+                .antMatchers(relativePath.concat("/users/*/rankings")).hasRole("PROFESSIONAL")
+                .antMatchers(HttpMethod.POST, relativePath.concat("/job-posts")).hasRole("CLIENT")
+                .antMatchers(HttpMethod.POST, relativePath.concat("/job-posts/**")).hasRole("PROFESSIONAL")
+                .antMatchers(HttpMethod.PUT, relativePath.concat("/job-posts/**")).hasRole("PROFESSIONAL")
+                .antMatchers(relativePath.concat("/reviews"), relativePath.concat("/contracts/states/**"),
+                        relativePath.concat("/contracts/*/image")).permitAll()
+                .antMatchers(relativePath.concat("/contracts/**"), relativePath.concat("/reviews/**"),
+                        relativePath.concat("/users/security")).hasRole("CLIENT")
+                .antMatchers(HttpMethod.GET, relativePath.concat("/job-posts/**"), relativePath.concat("/users/*/rates")).permitAll()
+                .antMatchers(relativePath.concat("/login"), relativePath.concat("/categories/**"),
+                        relativePath.concat("/job-cards/**"), relativePath.concat("/zones/**")).permitAll()
+                .antMatchers(HttpMethod.POST, relativePath.concat("/users"), relativePath.concat("/users/*/verify"),
+                        relativePath.concat("/uses/recover-account/**")).anonymous()
+                .antMatchers(HttpMethod.PUT, relativePath.concat("/users/recover-account/**")).anonymous()
+                .antMatchers(HttpMethod.GET, relativePath.concat("/users/*/rankings")).hasRole("PROFESSIONAL")
+                .antMatchers(HttpMethod.PUT, relativePath.concat("/users/**")).hasRole("CLIENT")
                 .anyRequest().permitAll();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -117,8 +121,9 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Override @Bean
-    public AuthenticationManager authenticationManagerBean()throws Exception{
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
