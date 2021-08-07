@@ -21,7 +21,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -111,7 +110,7 @@ public class UserController {
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
     public Response getUserImage(@PathParam("id") final long id,@Context Request request) {
         ByteImage byteImage = userService.findImageByUserId(id);
-        return ImagesUtil.sendCachableImageResponse(byteImage,request);
+        return ImagesUtil.sendCacheableImageResponse(byteImage,request);
     }
 
     @Path("/{id}/image")

@@ -28,7 +28,6 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -164,10 +163,9 @@ public class JobPostController {
     @GET
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
     public Response getPostImage(@PathParam("postId") final long postId,
-                                 @PathParam("imageId") final long imageId,
-                                 @Context Request request) {
+                                 @PathParam("imageId") final long imageId) {
         JobPostImage jobPostImage = jobPostImageService.findById(imageId, postId);
-        return ImagesUtil.sendCachableImageResponse(jobPostImage.getByteImage(), request);
+        return ImagesUtil.sendUnconditionalCacheImageResponse(jobPostImage.getByteImage());
     }
 
     @Path("/{postId}/packages")

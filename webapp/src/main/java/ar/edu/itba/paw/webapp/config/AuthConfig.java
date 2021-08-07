@@ -62,7 +62,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/resources/**", "/css/**", "/images/**");
+        web.ignoring().antMatchers("/static/**","/img/**");
     }
 
     @Override
@@ -70,6 +70,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
         http = http.csrf().disable();
 
+        http = http.headers().cacheControl().disable().and();
 
         http = http
                 .sessionManagement()

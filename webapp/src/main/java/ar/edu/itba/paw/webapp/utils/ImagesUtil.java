@@ -12,6 +12,8 @@ import java.io.InputStream;
 
 public class ImagesUtil {
 
+    private static final int MAX_TIME = 31536000;
+
     public static ByteImage fromInputStream(FormDataBodyPart body) throws IOException {
         String mediaType = "image/" + body.getMediaType().getSubtype();
         if(!mediaType.equals("image/png") && !mediaType.equals("image/jpg") && !mediaType.equals("image/jpeg"))
@@ -20,7 +22,7 @@ public class ImagesUtil {
         return new ByteImage(data,mediaType);
     }
 
-    public static Response sendCachableImageResponse(ByteImage byteImage,Request request){
+    public static Response sendCacheableImageResponse(ByteImage byteImage, Request request){
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(86400);
         EntityTag etag = new EntityTag(Integer.toString(byteImage.hashCode()));
@@ -30,5 +32,9 @@ public class ImagesUtil {
             builder.tag(etag);
         }
         return builder.cacheControl(cacheControl).build();
+    }
+    public static Response sendUnconditionalCacheImageResponse(ByteImage byteImage){
+        CacheControl cacheControl = CacheControl.valueOf("public, max-age="+ MAX_TIME +", immutable");
+        return Response.ok(new ByteArrayInputStream(byteImage.getData())).cacheControl(cacheControl).build();
     }
 }

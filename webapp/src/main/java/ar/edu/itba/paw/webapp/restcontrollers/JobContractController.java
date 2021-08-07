@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
@@ -143,7 +142,7 @@ public class JobContractController {
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
     public Response getContractImage(@PathParam("contractId") final long contractId, @Context Request request) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId);
-        return ImagesUtil.sendCachableImageResponse(byteImage, request);
+        return ImagesUtil.sendCacheableImageResponse(byteImage, request);
     }
 
     @Path("/{contractId}/image")
