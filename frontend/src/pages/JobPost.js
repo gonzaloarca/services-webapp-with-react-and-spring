@@ -277,7 +277,10 @@ const JobPost = ({ match, history }) => {
   const deletePost = async () => {
     try {
       await deleteJobPost(post);
-      history.go(0);
+      setIsOwner(false);
+      setHirable(false);
+      setFinalized(true);
+      setOpenDelete(false);
     } catch (e) {
       history.push(`/error`);
     }
