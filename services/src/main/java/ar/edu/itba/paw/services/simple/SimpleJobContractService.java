@@ -51,7 +51,7 @@ public class SimpleJobContractService implements JobContractService {
         if (userId == null || contractState == null || type == null ||
                 (!contractState.equalsIgnoreCase(STATE_ACTIVE_STRING) && !contractState.equalsIgnoreCase(STATE_PENDING_STRING)
                         && !contractState.equalsIgnoreCase(STATE_FINALIZED_STRING)))
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Bad parameters");
 
         List<JobContract.ContractState> states = getContractStates(contractState);
         if (type.equalsIgnoreCase(TYPE_OFFERED_STRING)) {
@@ -59,7 +59,7 @@ public class SimpleJobContractService implements JobContractService {
         } else if (type.equalsIgnoreCase(TYPE_HIRED_STRING)) {
             return getJobContractCards(findByClientIdAndSortedByModificationDateWithImage(userId, states, page));
         } else
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid type param");
     }
 
     @Override
@@ -77,7 +77,7 @@ public class SimpleJobContractService implements JobContractService {
         } else if (type.equalsIgnoreCase(TYPE_HIRED_STRING)) {
             return findContractsByClientIdMaxPage(userId, getContractStates(contractState));
         } else
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid type param");
     }
 
     @Override
