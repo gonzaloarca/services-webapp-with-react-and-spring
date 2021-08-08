@@ -108,7 +108,9 @@ const Packages = ({ match, history }) => {
   const deletePackage = async (pack) => {
     try {
       await deleteJobPackage(pack, postId);
-      history.go(0);
+      setLoading(true);
+      await loadPackages();
+      setLoading(false);
     } catch (e) {
       history.push(`/error`);
     }
