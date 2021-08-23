@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,8 @@ public class JobPostDaoJpa implements JobPostDao {
 
     @Override
     public List<JobPost> findByUserId(long id, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery("SELECT post_id FROM job_post WHERE user_id = :id AND post_is_active = TRUE")
                 .setParameter("id", id);
 
@@ -61,6 +64,8 @@ public class JobPostDaoJpa implements JobPostDao {
 
     @Override
     public List<JobPost> findByJobType(JobPost.JobType jobType, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery(
                 "SELECT post_id FROM job_post WHERE post_job_type = :jobType AND post_is_active = TRUE"
         ).setParameter("jobType", jobType.getValue());
@@ -70,6 +75,8 @@ public class JobPostDaoJpa implements JobPostDao {
 
     @Override
     public List<JobPost> findByZone(JobPost.Zone zone, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery(
                 "SELECT post_id FROM job_post NATURAL JOIN post_zone" +
                         " WHERE zone_id = :zone AND post_is_active = TRUE"
@@ -81,6 +88,8 @@ public class JobPostDaoJpa implements JobPostDao {
 
     @Override
     public List<JobPost> findAll(int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery(
                 "SELECT post_id FROM job_post WHERE post_is_active = TRUE"
         );

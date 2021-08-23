@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,8 @@ public class JobPackageDaoJpa implements JobPackageDao {
 
     @Override
     public List<JobPackage> findByPostId(long id, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery("SELECT package_id FROM job_package WHERE post_id = :id")
                 .setParameter("id", id);
 
@@ -85,6 +88,8 @@ public class JobPackageDaoJpa implements JobPackageDao {
 
     @Override
     public List<JobPackage> findByPostIdOnlyActive(long postId, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery("SELECT package_id FROM job_package WHERE post_id = :id")
                 .setParameter("id", postId);
 

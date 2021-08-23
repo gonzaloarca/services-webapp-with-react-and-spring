@@ -101,10 +101,7 @@ public class JobPostController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response findAll(@QueryParam("page") @DefaultValue("1") int page) {
-        if (page < 1)
-            page = 1;
-
+    public Response findAll(@QueryParam("page") @DefaultValue("1") final int page) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         jobPostControllerLogger.debug("Finding al jobPosts for page {}", page);
         int maxPage = jobPostService.findAllMaxPage();
@@ -173,9 +170,7 @@ public class JobPostController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response packagesByPostId(@PathParam("postId") final long postId,
                                      @QueryParam("type") final String type,
-                                     @QueryParam("page") @DefaultValue("1") int page) {
-        if (page < 1) page = 1;
-
+                                     @QueryParam("page") @DefaultValue("1") final int page) {
         jobPostControllerLogger.debug("Finding packages for post: {}", postId);
         int maxPage;
         List<JobPackage> jobPackages;

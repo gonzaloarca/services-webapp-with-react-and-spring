@@ -13,10 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -48,8 +45,9 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public List<JobContractWithImage> findByClientId(long id, List<JobContract.ContractState> states,
-                                                     int page) {
+    public List<JobContractWithImage> findByClientId(long id, List<JobContract.ContractState> states, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         if (states == null)
             throw new IllegalArgumentException();
 
@@ -65,6 +63,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public List<JobContractWithImage> findByProId(long id, List<JobContract.ContractState> states, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         if (states == null)
             throw new IllegalArgumentException();
 
@@ -80,6 +80,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public List<JobContract> findByPostId(long id, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery(
                         "SELECT contract_id FROM contract NATURAL JOIN job_package " +
                                 "WHERE post_id = :id ORDER BY contract_creation_date DESC")
@@ -90,6 +92,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public List<JobContract> findByPackageId(long packageId, long postId, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery(
                         "SELECT contract_id FROM contract NATURAL JOIN job_package " +
                                 "WHERE package_id = :packageId AND post_id = :postId ORDER BY contract_creation_date DESC")
@@ -112,6 +116,8 @@ public class JobContractDaoJpa implements JobContractDao {
 
     @Override
     public List<JobContractWithImage> findAll(int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery(
                 "SELECT contract_id FROM contract"
         );

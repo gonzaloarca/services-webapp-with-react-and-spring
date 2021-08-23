@@ -56,9 +56,7 @@ public class JobContractController {
     public Response findContracts(@QueryParam("userId") final Long userId,
                                   @QueryParam("state") final String contractState,
                                   @QueryParam("type") final String type,
-                                  @QueryParam("page") @DefaultValue("1") int page) {
-        if (page < 1) page = 1;
-
+                                  @QueryParam("page") @DefaultValue("1") final int page) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         JobContractsControllerLogger.debug("Finding contracts Max page {}", userId);
         int maxPage = jobContractService.findContractsMaxPage(userId, contractState, type);

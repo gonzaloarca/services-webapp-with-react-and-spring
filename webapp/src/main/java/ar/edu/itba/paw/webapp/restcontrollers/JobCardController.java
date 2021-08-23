@@ -18,9 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.interfaces.HirenetUtils.SEARCH_WITHOUT_CATEGORIES;
@@ -52,11 +50,8 @@ public class JobCardController {
             @Valid @Size(max = 100) @QueryParam("query") String query,
             @QueryParam("category") Integer jobType,
             @QueryParam("orderBy") Integer orderBy,
-            @QueryParam("page") @DefaultValue("1") int page
+            @QueryParam("page") @DefaultValue("1") final int page
     ) {
-        if (page < 1)
-            page = 1;
-
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         int maxPage;
         List<JobCard> jobCards;

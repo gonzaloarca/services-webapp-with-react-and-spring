@@ -53,7 +53,7 @@ public class ReviewController {
     public Response getReviews(@QueryParam("userId") final Long userId,
                                @QueryParam("type") final String type,
                                @QueryParam("postId") final Long postId,
-                               @QueryParam("page") @DefaultValue("1") int page) {
+                               @QueryParam("page") @DefaultValue("1") final int page) {
         reviewControllerLogger.debug("Finding reviews Max page {}", userId);
         int maxPage = reviewService.findReviewsMaxPage(userId, postId, type);
 
