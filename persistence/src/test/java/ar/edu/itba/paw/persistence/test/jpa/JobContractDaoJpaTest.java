@@ -266,7 +266,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindById() {
 
-        Optional<JobContract> jobContract = jobContractDaoJpa.findById(JOB_CONTRACTS_PACKAGE1[0].getId());
+        Optional<JobContractWithImage> jobContract = jobContractDaoJpa.findById(JOB_CONTRACTS_PACKAGE1[0].getId());
 
         Assert.assertTrue(jobContract.isPresent());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1[0].getId(), jobContract.get().getId());
@@ -275,7 +275,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByIdNotExists() {
 
-        Optional<JobContract> jobContract = jobContractDaoJpa.findById(NON_EXISTENT_ID);
+        Optional<JobContractWithImage> jobContract = jobContractDaoJpa.findById(NON_EXISTENT_ID);
 
         Assert.assertFalse(jobContract.isPresent());
     }
@@ -285,7 +285,7 @@ public class JobContractDaoJpaTest {
 
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "contract", "client_id = " + CLIENT.getId() + " AND contract_state = " + JobContract.ContractState.PENDING_APPROVAL.ordinal());
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL), HirenetUtils.ALL_PAGES);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(realQty, jobContracts.size());
@@ -297,7 +297,7 @@ public class JobContractDaoJpaTest {
 
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "contract", "client_id = " + CLIENT.getId() + " AND contract_state = " + JobContract.ContractState.APPROVED.ordinal());
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.APPROVED), HirenetUtils.ALL_PAGES);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.APPROVED), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(realQty, jobContracts.size());
@@ -308,7 +308,7 @@ public class JobContractDaoJpaTest {
     public void testFindByClientIdWherePendingAndWithPagination() {
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "contract", "client_id = " + CLIENT.getId() + " AND contract_state = " + JobContract.ContractState.PENDING_APPROVAL.ordinal());
         realQty = Math.min(realQty, HirenetUtils.PAGE_SIZE);
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL), 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL), 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(realQty, jobContracts.size());
@@ -319,7 +319,7 @@ public class JobContractDaoJpaTest {
     public void testFindByClientIdWhereApprovedAndWithPagination() {
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "contract", "client_id = " + CLIENT.getId() + " AND contract_state = " + JobContract.ContractState.APPROVED.ordinal());
         realQty = Math.min(realQty, HirenetUtils.PAGE_SIZE);
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.APPROVED), 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Collections.singletonList(JobContract.ContractState.APPROVED), 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(realQty, jobContracts.size());
@@ -329,7 +329,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByClientIdWhereApprovedAndPendingAndWithoutPagination() {
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "contract", "client_id = " + CLIENT.getId() + " AND (contract_state = " + JobContract.ContractState.APPROVED.ordinal() + " OR contract_state = " + JobContract.ContractState.PENDING_APPROVAL.ordinal() + ")");
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Arrays.asList(JobContract.ContractState.APPROVED, JobContract.ContractState.PENDING_APPROVAL), HirenetUtils.ALL_PAGES);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Arrays.asList(JobContract.ContractState.APPROVED, JobContract.ContractState.PENDING_APPROVAL), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(realQty, jobContracts.size());
@@ -339,7 +339,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByClientIdWhereApprovedAndPendingAndWithPagination() {
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "contract", "client_id = " + CLIENT.getId() + " AND (contract_state = " + JobContract.ContractState.APPROVED.ordinal() + " OR contract_state = " + JobContract.ContractState.PENDING_APPROVAL.ordinal() + ")");
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Arrays.asList(JobContract.ContractState.APPROVED, JobContract.ContractState.PENDING_APPROVAL), 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), Arrays.asList(JobContract.ContractState.APPROVED, JobContract.ContractState.PENDING_APPROVAL), 0);
         realQty = Math.min(realQty, HirenetUtils.PAGE_SIZE);
 
         Assert.assertFalse(jobContracts.isEmpty());
@@ -352,7 +352,7 @@ public class JobContractDaoJpaTest {
 
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "contract", "client_id  = " + CLIENT.getId());
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(realQty, jobContracts.size());
@@ -365,7 +365,7 @@ public class JobContractDaoJpaTest {
         int realQty = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "contract", "client_id  = " + CLIENT.getId());
         realQty = Math.min(realQty, HirenetUtils.PAGE_SIZE);
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), ALL_STATES, 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), ALL_STATES, 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(realQty, jobContracts.size());
@@ -376,7 +376,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByClientIdWithInvalidId() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(NON_EXISTENT_ID, ALL_STATES, 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByClientId(NON_EXISTENT_ID, ALL_STATES, 0);
 
         Assert.assertTrue(jobContracts.isEmpty());
     }
@@ -384,7 +384,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByProIdWherePendingAndWithoutPagination() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL), HirenetUtils.ALL_PAGES);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PRO1_COUNT_PENDING, jobContracts.size());
@@ -394,7 +394,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByProIdWhereApprovedAndWithoutPagination() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.APPROVED), HirenetUtils.ALL_PAGES);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.APPROVED), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PRO1_COUNT_APPROVED, jobContracts.size());
@@ -404,7 +404,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByProIdWherePendingAndWithPagination() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL), 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.PENDING_APPROVAL), 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
@@ -414,7 +414,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByProIdWhereApprovedAndWithPagination() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.APPROVED), 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.APPROVED), 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PRO1_COUNT_APPROVED, jobContracts.size());
@@ -423,7 +423,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByProIdWhereApprovedAndPendingAndWithoutPagination() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Arrays.asList(JobContract.ContractState.APPROVED, JobContract.ContractState.PENDING_APPROVAL), HirenetUtils.ALL_PAGES);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Arrays.asList(JobContract.ContractState.APPROVED, JobContract.ContractState.PENDING_APPROVAL), HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PRO1_COUNT, jobContracts.size());
@@ -432,7 +432,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByProIdWhereApprovedAndPendingAndWithPagination() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Arrays.asList(JobContract.ContractState.APPROVED, JobContract.ContractState.PENDING_APPROVAL), 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), Arrays.asList(JobContract.ContractState.APPROVED, JobContract.ContractState.PENDING_APPROVAL), 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
@@ -442,7 +442,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByProIdWithoutPagination() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PRO1_COUNT, jobContracts.size());
@@ -452,7 +452,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByProIdWithPagination() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), ALL_STATES, 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), ALL_STATES, 0);
 
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CARDS_PAGE_1, jobContracts.size());
@@ -462,7 +462,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindByProIdWithInvalidId() {
 
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(NON_EXISTENT_ID, ALL_STATES, 0);
+        List<JobContractWithImage> jobContracts = jobContractDaoJpa.findByProId(NON_EXISTENT_ID, ALL_STATES, 0);
 
         Assert.assertTrue(jobContracts.isEmpty());
     }
@@ -622,9 +622,7 @@ public class JobContractDaoJpaTest {
     @Test
     public void testFindCMaxPageContractsByProIdWithApprovedState() {
 
-
         int qty = jobContractDaoJpa.findContractsByProIdMaxPage(PROFESSIONAL.getId(), Collections.singletonList(JobContract.ContractState.APPROVED));
-
 
         Assert.assertEquals((int) Math.ceil((double) JOB_CONTRACTS_PRO1_COUNT_APPROVED / HirenetUtils.PAGE_SIZE), qty);
     }
@@ -645,15 +643,14 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindJobContractWithImage() {
-        Optional<JobContractWithImage> jobContract = jobContractDaoJpa.findJobContractWithImage(JOB_CONTRACTS_PACKAGE1[0].getId());
+        Optional<JobContractWithImage> jobContract = jobContractDaoJpa.findById(JOB_CONTRACTS_PACKAGE1[0].getId());
         Assert.assertTrue(jobContract.isPresent());
         Assert.assertEquals(CONTRACT1_IMAGE, jobContract.get().getByteImage());
-
     }
 
     @Test
     public void testFindJobContractWithImageWithNonExistentId() {
-        Optional<JobContractWithImage> jobContract = jobContractDaoJpa.findJobContractWithImage(NON_EXISTENT_ID);
+        Optional<JobContractWithImage> jobContract = jobContractDaoJpa.findById(NON_EXISTENT_ID);
         Assert.assertFalse(jobContract.isPresent());
     }
 
@@ -685,7 +682,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByClientIdAndSortedByModificationDate() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientIdAndSortedByModificationDateWithImage(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
+        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
 
@@ -695,7 +692,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByClientIdAndSortedByModificationDateComparingToNonSortedFails() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByClientIdAndSortedByModificationDateWithImage(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
+        List<JobContract> jobContracts = jobContractDaoJpa.findByClientId(CLIENT.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
 
@@ -704,7 +701,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByProIdAndSortedByModificationDate() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProIdAndSortedByModificationDateWithImage(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
+        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
 
@@ -714,7 +711,7 @@ public class JobContractDaoJpaTest {
 
     @Test
     public void testFindByProIdAndSortedByModificationDateComparingToNonSortedFails() {
-        List<JobContract> jobContracts = jobContractDaoJpa.findByProIdAndSortedByModificationDateWithImage(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
+        List<JobContract> jobContracts = jobContractDaoJpa.findByProId(PROFESSIONAL.getId(), ALL_STATES, HirenetUtils.ALL_PAGES).stream().map(JobContract::new).collect(Collectors.toList());
         Assert.assertFalse(jobContracts.isEmpty());
         Assert.assertEquals(JOB_CONTRACTS_PACKAGE1.length, jobContracts.size());
 

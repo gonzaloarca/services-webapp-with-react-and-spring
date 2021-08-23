@@ -2,15 +2,11 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractWithImage;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditJobContractDto;
 import ar.edu.itba.paw.webapp.dto.input.NewJobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractCardDto;
-import ar.edu.itba.paw.webapp.dto.output.JobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractStateDto;
 import ar.edu.itba.paw.webapp.utils.ImagesUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
@@ -101,10 +97,15 @@ public class JobContractController {
     @Path("/{contractId}/")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getById(@PathParam("contractId") final long contractId) {
+        Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         JobContractsControllerLogger.debug("Finding job contract by id: {}", contractId);
-        return Response.ok(JobContractDto
-                        .fromJobContract(jobContractService.findJobContractWithImage(contractId), uriInfo))
-                .build();
+        JobContractCard jobContractCard = jobContractService.findContractCardById(contractId);
+        JobContractCardDto jobContractCardDto = JobContractCardDto
+                .fromJobContractCardWithLocalizedMessage(jobContractCard, uriInfo, messageSource
+                        .getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(),
+                                null, locale));
+        return Response.ok(new GenericEntity<JobContractCardDto>(jobContractCardDto) {
+        }).build();
     }
 
     @PUT

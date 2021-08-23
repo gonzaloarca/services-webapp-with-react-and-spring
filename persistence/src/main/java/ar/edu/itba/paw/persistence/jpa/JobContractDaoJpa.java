@@ -27,14 +27,6 @@ public class JobContractDaoJpa implements JobContractDao {
     private String s;
 
     @Override
-    public List<JobContract> findAll(int page) {
-        Query nativeQuery = em.createNativeQuery(
-                "SELECT contract_id FROM contract"
-        );
-        return executePageQuery(page, nativeQuery);
-    }
-
-    @Override
     public JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate) {
         User client = em.find(User.class, clientId);
         if (client == null)
@@ -51,27 +43,13 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public Optional<JobContract> findById(long id) {
-        return Optional.ofNullable(em.find(JobContract.class, id));
+    public Optional<JobContractWithImage> findById(long id) {
+        return Optional.ofNullable(em.find(JobContractWithImage.class, id));
     }
 
     @Override
-    public List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page) {
-        if (states == null)
-            throw new IllegalArgumentException();
-
-        Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM contract WHERE client_id = :id " +
-                        "AND contract_state IN :states ORDER BY contract_creation_date DESC")
-                .setParameter("id", id)
-                .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
-                        .collect(Collectors.toList()));
-
-        return executePageQuery(page, nativeQuery);
-    }
-
-    @Override
-    public List<JobContractWithImage> findByClientIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
-                                                                                         int page) {
+    public List<JobContractWithImage> findByClientId(long id, List<JobContract.ContractState> states,
+                                                     int page) {
         if (states == null)
             throw new IllegalArgumentException();
 
@@ -84,24 +62,9 @@ public class JobContractDaoJpa implements JobContractDao {
         return executePageQueryWithImage(page, nativeQuery);
     }
 
-    @Override
-    public List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page) {
-        if (states == null)
-            throw new IllegalArgumentException();
-
-        Query nativeQuery = em.createNativeQuery(
-                        "SELECT contract_id FROM contract NATURAL JOIN job_package NATURAL JOIN job_post " +
-                                "WHERE user_id = :id AND contract_state IN :states ORDER BY contract_creation_date DESC")
-                .setParameter("id", id)
-                .setParameter("states", states.isEmpty() ? null : states.stream().map(Enum::ordinal)
-                        .collect(Collectors.toList()));
-
-        return executePageQuery(page, nativeQuery);
-    }
-
 
     @Override
-    public List<JobContractWithImage> findByProIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states, int page) {
+    public List<JobContractWithImage> findByProId(long id, List<JobContract.ContractState> states, int page) {
         if (states == null)
             throw new IllegalArgumentException();
 
@@ -136,13 +99,6 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public int findByPackageIdMaxPage(long packageId, long postId) {
-        Long size = em.createQuery("SELECT COUNT(*) FROM JobContract jc WHERE jc.jobPackage.id = :packageId AND jc.jobPackage.jobPost.id = :postId", Long.class)
-                .setParameter("packageId", packageId).setParameter("postId", postId).getSingleResult();
-        return (int) Math.ceil((double) size.intValue() / HirenetUtils.PAGE_SIZE);
-    }
-
-    @Override
     public long addContractImage(long contractId, ByteImage contractImage) {
         JobContractWithImage contract = em.find(JobContractWithImage.class, contractId);
         if (contract != null) {
@@ -155,7 +111,7 @@ public class JobContractDaoJpa implements JobContractDao {
     }
 
     @Override
-    public List<JobContractWithImage> findAllWithImage(int page) {
+    public List<JobContractWithImage> findAll(int page) {
         Query nativeQuery = em.createNativeQuery(
                 "SELECT contract_id FROM contract"
         );
@@ -272,11 +228,6 @@ public class JobContractDaoJpa implements JobContractDao {
         contract.setScheduledDate(dateTime);
 
         em.persist(contract);
-    }
-
-    @Override
-    public Optional<JobContractWithImage> findJobContractWithImage(long id) {
-        return Optional.ofNullable(em.find(JobContractWithImage.class, id));
     }
 
     @Override

@@ -87,18 +87,35 @@ Tampoco lo son ciertos query params en determinadas situaciones.
 
 ```json
 {
-  "clientId": 1,
-  "creationDate": "2021-07-16T16:24:36.055",
-  "description": "Necesito que cuides a 4 nenes de 4 años",
-  "id": 40,
-  "image": "http://localhost:8080/api/contracts/40/image",
-  "jobPackage": "http://localhost:8080/api/job-posts/13/packages/13",
-  "lastModifiedDate": "2021-07-16T16:35:40.292",
+  "avgRate": 3.6666666666666665,
+  "client": "http://localhost:8080/api/users/40",
+  "contractsCompleted": 5,
+  "creationDate": "2021-08-23T13:39:08.596",
+  "description": "necesitooooooooo",
+  "id": 46,
+  "jobContract": "http://localhost:8080/api/contracts/46",
+  "jobPackage": "http://localhost:8080/api/job-posts/8/packages/8",
+  "jobPost": "http://localhost:8080/api/job-posts/8",
+  "jobTitle": "Niñero turno mañana",
+  "jobType": {
+    "description": "Babysitting",
+    "id": 7
+  },
+  "packageTitle": "4 dias a la semana 4 horas",
+  "postImage": "http://localhost:8080/api/job-posts/8/images/12",
+  "professional": "http://localhost:8080/api/users/5",
+  "rate": 0,
+  "rateType": {
+    "description": "TBD",
+    "id": 2
+  },
+  "reviewsCount": 3,
   "scheduledDate": "2021-06-16T14:20:20.028799",
   "state": {
     "description": "CLIENT_REJECTED",
     "id": 2
-  }
+  },
+  "wasRescheduled": false
 }
 ```
 

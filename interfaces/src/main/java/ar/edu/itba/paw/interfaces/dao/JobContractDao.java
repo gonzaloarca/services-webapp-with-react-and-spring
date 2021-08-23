@@ -8,19 +8,15 @@ import java.util.Optional;
 
 public interface JobContractDao {
 
-    List<JobContract> findAll(int page);
+    List<JobContractWithImage> findAll(int page);
 
     JobContractWithImage create(long clientId, long packageId, String description, LocalDateTime scheduledDate);
 
-    Optional<JobContract> findById(long id);
+    Optional<JobContractWithImage> findById(long id);
 
-    List<JobContract> findByClientId(long id, List<JobContract.ContractState> states, int page);
+    List<JobContractWithImage> findByClientId(long id, List<JobContract.ContractState> states, int page);
 
-    List<JobContractWithImage> findByClientIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states, int page);
-
-    List<JobContract> findByProId(long id, List<JobContract.ContractState> states, int page);
-
-    List<JobContractWithImage> findByProIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states, int page);
+    List<JobContractWithImage> findByProId(long id, List<JobContract.ContractState> states, int page);
 
     List<JobContract> findByPostId(long id, int page);
 
@@ -42,17 +38,11 @@ public interface JobContractDao {
 
     void changeContractScheduledDate(long id, LocalDateTime dateTime);
 
-    Optional<JobContractWithImage> findJobContractWithImage(long id);
-
     Optional<ByteImage> findImageByContractId(long contractId);
 
     Optional<JobContract> findByIdWithUser(long id);
 
-    int findByPackageIdMaxPage(long packageId, long postId);
-
     long addContractImage(long contractId,ByteImage contractImage);
-
-    List<JobContractWithImage> findAllWithImage(int page);
 
     void setWasRescheduled(long id);
 }

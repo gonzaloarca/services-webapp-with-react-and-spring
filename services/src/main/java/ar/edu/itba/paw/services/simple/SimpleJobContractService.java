@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.services.simple;
 
-import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +44,7 @@ public class SimpleJobContractService implements JobContractService {
     public List<JobContractCard> findContracts(Long userId, String contractState, String type, int page) {
 
         if (userId == null && contractState == null && type == null)
-            return getJobContractCards(jobContractDao.findAllWithImage(page));
+            return getJobContractCards(jobContractDao.findAll(page));
 
         if (userId == null || contractState == null || type == null ||
                 (!contractState.equalsIgnoreCase(STATE_ACTIVE_STRING) && !contractState.equalsIgnoreCase(STATE_PENDING_STRING)
@@ -81,11 +79,6 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public List<JobContract> findAll(int page) {
-        return jobContractDao.findAll(page);
-    }
-
-    @Override
     public JobContractWithImage create(long clientId, long packageId, String description, String scheduledDate, Locale locale, String webpageUrl) {
         LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
         if (jobPackageService.findByOnlyId(packageId).getJobPost().getUser().getId() == clientId)
@@ -96,48 +89,28 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public JobContract findById(long contractId) {
-        Optional<JobContract> jobContract = jobContractDao.findById(contractId);
-        if (!jobContract.isPresent())
-            throw new JobContractNotFoundException();
-        return jobContract.get();
+    public JobContractCard findContractCardById(long contractId) {
+        JobContractWithImage jobContract = jobContractDao.findById(contractId).orElseThrow(JobContractNotFoundException::new);
+        return new JobContractCard(jobContract,
+                jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getJobPost().getId()),
+                reviewService.findContractReview(jobContract.getId()).orElse(null), jobContract.getScheduledDate().toString());
     }
 
     @Override
     public List<JobContractWithImage> findByClientIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
                                                                                          int page) {
-        return jobContractDao.findByClientIdAndSortedByModificationDateWithImage(id, states, page);
+        return jobContractDao.findByClientId(id, states, page);
     }
 
     @Override
     public List<JobContractWithImage> findByProIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
                                                                                       int page) {
-        return jobContractDao.findByProIdAndSortedByModificationDateWithImage(id, states, page);
-    }
-
-    @Override
-    public List<JobContract> findByPostId(long id) {
-        return jobContractDao.findByPostId(id, HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobContract> findByPostId(long id, int page) {
-        return jobContractDao.findByPostId(id, page);
-    }
-
-    @Override
-    public User findClientByContractId(long id) {
-        return jobContractDao.findClientByContractId(id).orElseThrow(UserNotFoundException::new);
+        return jobContractDao.findByProId(id, states, page);
     }
 
     @Override
     public int findCompletedContractsByProIdQuantity(long id) {
         return jobContractDao.findCompletedContractsByProIdQuantity(id);
-    }
-
-    @Override
-    public int findAllMaxPage() {
-        return jobContractDao.findAllMaxPage();
     }
 
     @Override
@@ -167,12 +140,9 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public void changeContractState(long id, long userId, JobContract.ContractState state, Locale locale, String webPageUrl) {
-        Optional<JobContract> maybeContract = jobContractDao.findById(id);
+        JobContractWithImage maybeContract = jobContractDao.findById(id).orElseThrow(JobContractNotFoundException::new);
 
-        if (!maybeContract.isPresent())
-            throw new JobContractNotFoundException();
-
-        JobContract.ContractState currentState = maybeContract.get().getState();
+        JobContract.ContractState currentState = maybeContract.getState();
 
         // No debería ser modificado si ya habia finalizado
         if (currentState == JobContract.ContractState.CLIENT_CANCELLED || currentState == JobContract.ContractState.PRO_CANCELLED
@@ -181,10 +151,10 @@ public class SimpleJobContractService implements JobContractService {
             throw new IllegalStateException();
         boolean modifiedState = state.equals(JobContract.ContractState.PRO_MODIFIED)
                 || state.equals(JobContract.ContractState.CLIENT_MODIFIED);
-        if (!maybeContract.get().isWasRescheduled()
+        if (!maybeContract.wasRescheduled()
                 && modifiedState)
             jobContractDao.setWasRescheduled(id);
-        else if (maybeContract.get().isWasRescheduled() && modifiedState)
+        else if (maybeContract.wasRescheduled() && modifiedState)
             throw new IllegalArgumentException("Cannot reschedule more than once");
         jobContractDao.changeContractState(id, userId, state);
         JobContractWithImage jobContract = findJobContractWithImage(id);
@@ -202,7 +172,7 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public JobContractWithImage findJobContractWithImage(long id) {
-        return jobContractDao.findJobContractWithImage(id).orElseThrow(JobContractNotFoundException::new);
+        return jobContractDao.findById(id).orElseThrow(JobContractNotFoundException::new);
     }
 
     @Override
