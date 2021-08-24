@@ -166,7 +166,6 @@ public class SimpleJobContractService implements JobContractService {
 
     @Override
     public void changeContractScheduledDate(long id, String scheduledDate, Locale locale) {
-        // TODO: ENVIAR MAIL
         LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
         jobContractDao.changeContractScheduledDate(id, parsedDate);
     }
