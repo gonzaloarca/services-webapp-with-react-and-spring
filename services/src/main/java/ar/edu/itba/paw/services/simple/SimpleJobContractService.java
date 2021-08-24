@@ -161,11 +161,12 @@ public class SimpleJobContractService implements JobContractService {
         JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId(), jobContract.getJobPackage().getJobPost().getId());
         JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
 
-        mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, locale, webPageUrl);
+        mailingService.sendUpdateContractStatusEmail(state, jobContract, jobPackage, jobPost, locale, webPageUrl);
     }
 
     @Override
     public void changeContractScheduledDate(long id, String scheduledDate, Locale locale) {
+        // TODO: ENVIAR MAIL
         LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
         jobContractDao.changeContractScheduledDate(id, parsedDate);
     }
