@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import NavBar from '../components/NavBar';
 import {
   FormControl,
@@ -120,6 +120,7 @@ function useQuery() {
 const Search = () => {
   let queryParameters = useQuery();
   const { orderByParams, categories, zones } = useContext(ConstantDataContext);
+  const startedFlag = useRef(false);
 
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState(null);
@@ -172,6 +173,10 @@ const Search = () => {
   ]);
 
   useEffect(() => {
+	if(!startedFlag.current) {
+		startedFlag.current = true;
+		return;
+	}
     history.replace(
       '/search?' +
         'zone=' +
