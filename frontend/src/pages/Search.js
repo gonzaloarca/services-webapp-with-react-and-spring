@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   FormControl,
   MenuItem,
@@ -114,6 +114,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Search = () => {
   const { orderByParams, categories, zones } = useContext(ConstantDataContext);
+  const startedFlag = useRef(false);
+
   const {
     searchBarQueryParams: queryParams,
     setSearchBarQueryParams: setQueryParams,
@@ -126,8 +128,6 @@ const Search = () => {
   const classes = useStyles();
   const history = useHistory();
   const { t } = useTranslation();
-
-  console.log("render2")
 
   useEffect(() => {
     setNavBarProps({currentSection:'/search',isTransparent:false});
@@ -147,7 +147,6 @@ const Search = () => {
   }, [links]);
 
   useEffect(() => {
-    console.log("values2",queryParams)
     history.replace(
       '/search?' +
         'zone=' +
@@ -171,6 +170,10 @@ const Search = () => {
   ]);
 
   useEffect(() => {
+	if(!startedFlag.current) {
+		startedFlag.current = true;
+		return;
+	}
     history.replace(
       '/search?' +
         'zone=' +
