@@ -54,8 +54,8 @@ const Analytics = ({ history }) => {
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({currentSection:'/analytics',isTransparent:false});
-  },[])
+    setNavBarProps({ currentSection: '/analytics', isTransparent: false });
+  }, []);
 
   const loadData = async (id) => {
     try {
@@ -154,7 +154,7 @@ const ClientsRecommendation = ({ userId }) => {
   });
   const { relatedJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = React.useState([]);
-  const [maxPage, setMaxPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(null);
 
   const history = useHistory();
 
@@ -167,7 +167,7 @@ const ClientsRecommendation = ({ userId }) => {
   };
 
   useEffect(() => {
-    setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
+    setMaxPage(parseInt(links.last?.page));
   }, [links]);
   useEffect(() => {
     loadData(userId);
@@ -192,7 +192,7 @@ const ClientsRecommendation = ({ userId }) => {
             })}
           </div>
           <BottomPagination
-            maxPage={maxPage}
+            maxPage={maxPage || queryParams.page}
             setQueryParams={setQueryParams}
             queryParams={queryParams}
           />

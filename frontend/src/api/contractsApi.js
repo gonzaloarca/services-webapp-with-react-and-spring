@@ -8,7 +8,7 @@ export const getContractsByClientIdAndStateRequest = (
   return hireNetApi.get('/contracts', {
     params: {
       userId: clientId,
-      role: 'hired',
+      type: 'hired',
       state: state,
       page: page,
     },
@@ -30,7 +30,7 @@ export const getContractsByProAndStateIdRequest = (proId, state, page = 1) => {
   return hireNetApi.get('/contracts', {
     params: {
       userId: proId,
-      role: 'offered',
+      type: 'offered',
       state: state,
       page: page,
     },

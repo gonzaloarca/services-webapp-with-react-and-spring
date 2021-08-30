@@ -42,7 +42,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     private static final int MAX_TIME = 31536000;
     // FIXME Cambiar para produccion
-    private final boolean PRODUCTION = false;
+    private final boolean PRODUCTION = true;
 
     private final Logger webConfigLogger = LoggerFactory.getLogger(WebConfig.class);
 

@@ -16,6 +16,8 @@ const BottomPagination = ({ maxPage, queryParams, setQueryParams }) => {
             boundaryCount={1}
             page={page}
             onChange={handlePageChange}
+            hidePrevButton={page < 1 || page > maxPage}
+            hideNextButton={page < 1 || page > maxPage}
           />
         </div>
       )}

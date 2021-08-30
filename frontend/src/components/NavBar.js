@@ -119,13 +119,11 @@ const NavBar = ({}) => {
   } , [searchBarValue]);
   
   
-  console.log("values",values);
 
   useEffect(() => {
     if (isTransparent) {
       window.addEventListener('scroll', changeBarBackground);
     }
-    console.log('render');
 
     return () => window.removeEventListener('scroll', changeBarBackground);
   });

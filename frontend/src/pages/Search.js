@@ -123,14 +123,14 @@ const Search = () => {
   } = useContext(NavBarContext);
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState(null);
-  const [maxPage, setMaxPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(null);
 
   const classes = useStyles();
   const history = useHistory();
   const { t } = useTranslation();
 
   useEffect(() => {
-    setNavBarProps({currentSection:'/search',isTransparent:false});
+    setNavBarProps({ currentSection: '/search', isTransparent: false });
   }, []);
 
   const loadJobCards = async () => {
@@ -143,10 +143,15 @@ const Search = () => {
   };
 
   useEffect(() => {
-    setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page) || 1);
+    setMaxPage(links.last?.page);
   }, [links]);
 
   useEffect(() => {
+    if (!startedFlag.current) {
+      // Este request solo se hace cuando se cambia alguno de los filtros, no en el primer renderizado
+      startedFlag.current = true;
+      return;
+    }
     history.replace(
       '/search?' +
         'zone=' +
@@ -170,10 +175,6 @@ const Search = () => {
   ]);
 
   useEffect(() => {
-	if(!startedFlag.current) {
-		startedFlag.current = true;
-		return;
-	}
     history.replace(
       '/search?' +
         'zone=' +
@@ -234,9 +235,7 @@ const SearchResults = ({
   const classes = useStyles();
   const { t } = useTranslation();
   const [loadingJobs, setLoadingJobs] = useState(true);
-  const {
-    setSearchBarValue,
-  } = useContext(NavBarContext);
+  const { setSearchBarValue } = useContext(NavBarContext);
 
   useEffect(() => {
     if (jobs) setLoadingJobs(false);
@@ -341,7 +340,10 @@ const SearchResults = ({
                 className={classes.filterChip}
                 label={queryParams.query}
                 icon={<SearchIcon />}
-                onDelete={() => {setQueryParams({ ...queryParams, query: '' }); setSearchBarValue('')}}
+                onDelete={() => {
+                  setQueryParams({ ...queryParams, query: '' });
+                  setSearchBarValue('');
+                }}
               />
             )}
           </div>
@@ -368,7 +370,7 @@ const SearchResults = ({
         )}
       </Grid>
       <BottomPagination
-        maxPage={maxPage}
+        maxPage={maxPage || queryParams.page}
         setQueryParams={setQueryParams}
         queryParams={queryParams}
       />

@@ -213,12 +213,12 @@ const JobPost = ({ match, history }) => {
   const [hirable, setHirable] = useState(false);
   const [finalized, setFinalized] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  
+
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({currentSection:'/search',isTransparent:false});
-  },[])
+    setNavBarProps({ currentSection: '/search', isTransparent: false });
+  }, []);
 
   const loadJobPost = async () => {
     try {
@@ -648,7 +648,7 @@ const ReviewListCard = ({ postId }) => {
       {renderReviews(reviews)}
 
       <BottomPagination
-        maxPage={links.last.page}
+        maxPage={links.last?.page || queryParams.page}
         setQueryParams={setQueryParams}
         queryParams={queryParams}
       />

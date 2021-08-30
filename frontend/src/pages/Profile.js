@@ -344,9 +344,9 @@ const ProfileTabs = ({ details, proId }) => {
             {jobCards?.map((jobCard, index) => {
               return <ServiceCard jobCard={jobCard} key={index} />;
             })}
-            <div className={jobCardsMaxPage > 1 ? 'mb-4' : ''}>
+            <div className="mb-4">
               <BottomPagination
-                maxPage={jobCardsMaxPage}
+                maxPage={jobCardsMaxPage || queryParams.page}
                 setQueryParams={setQueryParams}
                 queryParams={queryParams}
               />
@@ -416,9 +416,9 @@ const ProfileTabs = ({ details, proId }) => {
                 </div>
               ))
             )}
-            <div className={reviewsMaxPage > 1 ? 'mb-4' : ''}>
+            <div className="mb-4">
               <BottomPagination
-                maxPage={reviewsMaxPage}
+                maxPage={jobCardsMaxPage || queryParams.page}
                 setQueryParams={setQueryParams}
                 queryParams={queryParams}
               />

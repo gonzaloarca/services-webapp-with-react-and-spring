@@ -100,8 +100,8 @@ const MyContracts = ({ history }) => {
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({currentSection:'/my-contracts',isTransparent:false});
-  },[])
+    setNavBarProps({ currentSection: '/my-contracts', isTransparent: false });
+  }, []);
 
   if (!isLoggedIn()) {
     history.replace('/login');
@@ -442,7 +442,7 @@ const ContractsDashboard = ({
                           </div>
                         ))}{' '}
                         <BottomPagination
-                          maxPage={links.last.page}
+                          maxPage={links.last?.page || queryParams.page}
                           queryParams={queryParams}
                           setQueryParams={setQueryParams}
                         />
