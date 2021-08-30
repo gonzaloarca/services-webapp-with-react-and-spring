@@ -1,6 +1,5 @@
 import jwt from 'jwt-decode';
 import React, { useContext, useEffect, useState } from 'react';
-import NavBar from '../components/NavBar';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -22,7 +21,7 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
@@ -41,6 +40,12 @@ const Login = () => {
   const [badCredentials, setBadCredentials] = useState(false);
 
   const { getUserByEmail, login } = useUser();
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/login',isTransparent:true});
+  },[])
 
   const setUserData = async (email) => {
     try {
@@ -95,7 +100,6 @@ const Login = () => {
       <Helmet>
         <title>{t('title', { section: t('navigation.sections.login') })}</title>
       </Helmet>
-      <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}
         style={{

@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from 'react';
-import NavBar from '../components/NavBar';
 import {
   FormControl,
   MenuItem,
@@ -16,7 +15,7 @@ import clsx from 'clsx';
 import JobCard from '../components/JobCard';
 import { useLocation, useHistory } from 'react-router-dom';
 import { parse } from 'query-string';
-import { ConstantDataContext } from '../context';
+import { ConstantDataContext, NavBarContext } from '../context';
 import { useJobCards } from '../hooks';
 import BottomPagination from '../components/BottomPagination';
 import { Helmet } from 'react-helmet';
@@ -113,27 +112,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function useQuery() {
-  return parse(useLocation().search);
-}
-
 const Search = () => {
-  let queryParameters = useQuery();
   const { orderByParams, categories, zones } = useContext(ConstantDataContext);
-
+  const {
+    searchBarQueryParams: queryParams,
+    setSearchBarQueryParams: setQueryParams,
+    setNavBarProps,
+  } = useContext(NavBarContext);
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState(null);
   const [maxPage, setMaxPage] = useState(1);
-  const [queryParams, setQueryParams] = React.useState({
-    zone: queryParameters.zone || '',
-    category: queryParameters.category || '',
-    query: queryParameters.query || '',
-    orderBy: queryParameters.orderBy || '',
-    page: queryParameters.page || 1,
-  });
+
   const classes = useStyles();
   const history = useHistory();
   const { t } = useTranslation();
+
+  console.log("render2")
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/search',isTransparent:false});
+  }, []);
 
   const loadJobCards = async () => {
     try {
@@ -149,6 +147,7 @@ const Search = () => {
   }, [links]);
 
   useEffect(() => {
+    console.log("values2",queryParams)
     history.replace(
       '/search?' +
         'zone=' +
@@ -195,11 +194,6 @@ const Search = () => {
           {t('title', { section: t('navigation.sections.explore') })}
         </title>
       </Helmet>
-      <NavBar
-        currentSection={'/search'}
-        searchBarSetQueryParams={setQueryParams}
-        searchBarQueryParams={queryParams}
-      />
       <div className="flex justify-center mt-10">
         <Grid container spacing={3} className={classes.searchContainer}>
           <Grid item xs={3}>
@@ -237,6 +231,9 @@ const SearchResults = ({
   const classes = useStyles();
   const { t } = useTranslation();
   const [loadingJobs, setLoadingJobs] = useState(true);
+  const {
+    setSearchBarValue,
+  } = useContext(NavBarContext);
 
   useEffect(() => {
     if (jobs) setLoadingJobs(false);
@@ -341,7 +338,7 @@ const SearchResults = ({
                 className={classes.filterChip}
                 label={queryParams.query}
                 icon={<SearchIcon />}
-                onDelete={() => setQueryParams({ ...queryParams, query: '' })}
+                onDelete={() => {setQueryParams({ ...queryParams, query: '' }); setSearchBarValue('')}}
               />
             )}
           </div>

@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import NavBar from '../components/NavBar';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import {
@@ -145,7 +144,6 @@ const Account = () => {
           {t('title', { section: t('navigation.sections.account') })}
         </title>
       </Helmet>
-      <NavBar />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('account.header')} />
         <Grid container spacing={4}>

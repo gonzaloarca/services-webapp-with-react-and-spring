@@ -11,7 +11,6 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
-import NavBar from '../components/NavBar';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import { themeUtils } from '../theme';
@@ -21,7 +20,7 @@ import ContractCard from '../components/ContractCard';
 import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useContracts } from '../hooks';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import BottomPagination from '../components/BottomPagination';
 import { isLoggedIn } from '../utils/userUtils';
 
@@ -98,6 +97,12 @@ const MyContracts = ({ history }) => {
   const [queryParams, setQueryParams] = React.useState({ page: 1 });
   const [loading, setLoading] = useState(true);
 
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/my-contracts',isTransparent:false});
+  },[])
+
   if (!isLoggedIn()) {
     history.replace('/login');
   }
@@ -157,7 +162,6 @@ const MyContracts = ({ history }) => {
           {t('title', { section: t('navigation.sections.mycontracts') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/my-contracts'} />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('navigation.sections.mycontracts')} />
         <div>

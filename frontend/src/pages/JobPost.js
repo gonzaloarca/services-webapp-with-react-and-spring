@@ -23,7 +23,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import Carousel from 'react-material-ui-carousel';
 import { Link as RouterLink } from 'react-router-dom';
-import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { themeUtils } from '../theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -42,7 +41,7 @@ import { Helmet } from 'react-helmet';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import BottomPagination from '../components/BottomPagination';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import HirenetModal, { PlainTextBody } from '../components/HirenetModal';
 
 const useStyles = makeStyles((theme) => ({
@@ -214,6 +213,12 @@ const JobPost = ({ match, history }) => {
   const [hirable, setHirable] = useState(false);
   const [finalized, setFinalized] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/search',isTransparent:false});
+  },[])
 
   const loadJobPost = async () => {
     try {
@@ -288,7 +293,6 @@ const JobPost = ({ match, history }) => {
 
   return (
     <>
-      <NavBar currentSection={'/search'} />
       {loading ? (
         <div className="flex justify-center items-center w-screen h-screen">
           <CircularProgress />

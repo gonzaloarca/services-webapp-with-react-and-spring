@@ -10,8 +10,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import CategoryCard from '../components/CategoryCard';
-import NavBar from '../components/NavBar';
-import { ConstantDataContext } from '../context';
+import { ConstantDataContext, NavBarContext } from '../context';
 import styles from '../styles';
 import { themeUtils } from '../theme';
 
@@ -59,6 +58,12 @@ const Categories = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/categories',isTransparent:false});
+  },[])
 
   const { categories } = useContext(ConstantDataContext);
 
@@ -112,7 +117,6 @@ const Categories = () => {
           {t('title', { section: t('navigation.sections.categories') })}
         </title>
       </Helmet>
-      <NavBar currentSection="/categories" />
       <div className={globalClasses.contentContainerTransparent}>
         <div className={classes.container}>
           <h1 className={classes.header}>{t('categories.header')}</h1>

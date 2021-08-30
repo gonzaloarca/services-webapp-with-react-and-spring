@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -7,17 +7,20 @@ import { ThemeProvider } from '@material-ui/core';
 import { BrowserRouter } from 'react-router-dom';
 import appTheme from './theme';
 import './i18n';
-import { UserContext } from './context';
+import { UserContextProvider,ConstantDataProvider } from './context';
+import { NavBarContextProvider } from './context/navBarContext';
 
 const AppContainer = () => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [token, setToken] = useState(null);
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <ThemeProvider theme={appTheme}>
-        <UserContext.Provider value={{currentUser,setCurrentUser,token,setToken}}>
-          <App />
-        </UserContext.Provider>
+        <UserContextProvider>
+          <ConstantDataProvider>
+            <NavBarContextProvider>
+              <App />
+            </NavBarContextProvider>
+          </ConstantDataProvider>
+        </UserContextProvider>
       </ThemeProvider>
     </BrowserRouter>)
 }

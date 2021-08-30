@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import NavBar from '../components/NavBar';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import { Card, Grid, makeStyles } from '@material-ui/core';
@@ -9,7 +8,7 @@ import TimesHiredCard from '../components/TimesHiredCard';
 import clsx from 'clsx';
 import JobCard from '../components/JobCard';
 import { Helmet } from 'react-helmet';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import { useUser } from '../hooks';
 import { useJobCards } from '../hooks';
 import BottomPagination from '../components/BottomPagination';
@@ -52,6 +51,12 @@ const Analytics = ({ history }) => {
   const { currentUser } = useContext(UserContext);
   const [details, setDetails] = useState({ rankings: '', info: '' });
 
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/analytics',isTransparent:false});
+  },[])
+
   const loadData = async (id) => {
     try {
       setDetails({
@@ -74,7 +79,6 @@ const Analytics = ({ history }) => {
           {t('title', { section: t('navigation.sections.analytics') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/analytics'} />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('analytics.title')} />
         <Grid container spacing={3}>

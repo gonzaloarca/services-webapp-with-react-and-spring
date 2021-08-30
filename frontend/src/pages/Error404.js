@@ -4,7 +4,6 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import NavBar from '../components/NavBar';
 import { themeUtils } from '../theme';
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +59,6 @@ const Error404 = () => {
           {t('title', { section: t('navigation.sections.pagenotfound') })}
         </title>
       </Helmet>
-      <NavBar />
       <div className={classes.centerContainer}>
         <div className={classes.container}>
           <img

@@ -22,7 +22,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import navBarStyles from './NavBarStyles';
 import clsx from 'clsx';
 import { themeUtils } from '../theme';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import { useHistory } from 'react-router-dom';
 import { isProfessional, isLoggedIn } from '../utils/userUtils';
 import { ExitToApp, Person, Settings } from '@material-ui/icons';
@@ -41,12 +41,7 @@ const rightSections = [
   { name: 'navigation.sections.register', path: '/register' },
 ];
 
-const NavBar = ({
-  currentSection = '',
-  isTransparent = false,
-  searchBarQueryParams,
-  searchBarSetQueryParams,
-}) => {
+const NavBar = ({}) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [showDrawer, setShowDrawer] = useState(false);
@@ -56,6 +51,13 @@ const NavBar = ({
   const [sections, setSections] = useState(initialSections);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const {
+    navBarProps: { currentSection, isTransparent },
+    searchBarQueryParams,
+    setSearchBarQueryParams,
+    searchBarValue
+  } = useContext(NavBarContext);
 
   const handleAvatarClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -109,9 +111,21 @@ const NavBar = ({
   });
 
   useEffect(() => {
+    setValues({...values, query: searchBarQueryParams.query});
+  } , [searchBarQueryParams]);
+
+  useEffect(() => {
+    setValues({...values, query: searchBarValue});
+  } , [searchBarValue]);
+  
+  
+  console.log("values",values);
+
+  useEffect(() => {
     if (isTransparent) {
       window.addEventListener('scroll', changeBarBackground);
     }
+    console.log('render');
 
     return () => window.removeEventListener('scroll', changeBarBackground);
   });
@@ -207,13 +221,15 @@ const NavBar = ({
                       input: classes.inputInput,
                     }}
                     value={values.query}
-                    onChange={(e) => setValues({ query: e.target.value })}
+                    onChange={(e) => {
+                      setValues({ query: e.target.value });
+                    }}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
                         if (!searchBarQueryParams)
                           history.push('/search?query=' + event.target.value);
                         else
-                          searchBarSetQueryParams({
+                          setSearchBarQueryParams({
                             ...searchBarQueryParams,
                             query: event.target.value,
                           });

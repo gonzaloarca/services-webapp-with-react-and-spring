@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 import CategoryCard from '../components/CategoryCard';
 import Hero, { HeroSteps } from '../components/Hero';
 import JobCard from '../components/JobCard';
-import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
-import { ConstantDataContext } from '../context';
+import { ConstantDataContext, NavBarContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
@@ -28,6 +27,13 @@ export const Home = (props) => {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [showChevron, setShowChevron] = useState(false);
   const { searchJobCards } = useJobCards();
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/',isTransparent:true});
+  },[])
+
   const loadJobCards = async () => {
     setJobs(await searchJobCards({ orderBy: 4 }));
     setLoadingJobs(false);
@@ -46,7 +52,6 @@ export const Home = (props) => {
       <Helmet>
         <title>{t('title', { section: t('navigation.sections.home') })}</title>
       </Helmet>
-      <NavBar currentSection={'/'} isTransparent />
       <Hero zones={zones} />
       <HeroSteps />
       <div className={globalClasses.contentContainerTransparent}>

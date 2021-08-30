@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../components/NavBar';
 import styles from '../styles';
 import {
   Grid,
@@ -110,7 +109,6 @@ const Profile = ({ match }) => {
           })}
         </title>
       </Helmet>
-      <NavBar />
       <div className={globalClasses.contentContainerTransparent}>
         <Grid container spacing={3}>
           <Grid item sm={3} xs={12}>

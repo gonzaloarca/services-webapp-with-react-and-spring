@@ -1,7 +1,7 @@
 import jwt from 'jwt-decode';
 
 import { Switch, Route } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import './App.css';
 import Analytics from './pages/Analytics';
@@ -21,14 +21,9 @@ import Account from './pages/Account';
 import RecoverAccount from './pages/RecoverAccount';
 import RecoverPass from './pages/RecoverPass';
 import VerifyEmail from './pages/VerifyEmail';
-import { UserContext, ConstantDataContext } from './context';
+import { UserContext } from './context';
 import {
   useUser,
-  useCategories,
-  useZones,
-  useJobCards,
-  useRateTypes,
-  useContracts,
 } from './hooks';
 import Packages from './pages/Packages';
 import AddPackage from './pages/AddPackage';
@@ -40,20 +35,12 @@ import Error404 from './pages/Error404';
 import EditJobPost from './pages/EditJobPost';
 import JobPostSuccess from './pages/JobPostSuccess';
 import Error from './pages/Error';
+import NavBar from './components/NavBar';
 
 const App = () => {
   const { setCurrentUser, setToken, currentUser } = useContext(UserContext);
   const { getUserByEmail } = useUser();
-  const { getCategories } = useCategories();
-  const { getZones } = useZones();
-  const { getOrderByParams } = useJobCards();
-  const { getRateTypes } = useRateTypes();
-  const { getContractStates } = useContracts();
-  const [zones, setZones] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [orderByParams, setOrderByParams] = useState([]);
-  const [rateTypes, setRateTypes] = useState([]);
-  const [contractStates, setContractStates] = useState([]);
+  
   const { t } = useTranslation();
   /*
    * This function saves the current user in the context if the user is logged in.
@@ -64,62 +51,6 @@ const App = () => {
       if (user) {
         setCurrentUser(user);
       }
-    } catch (e) {
-      // console.log(e);
-    }
-  };
-
-  /*
-   * This functions load the categories, zones, order-by params and rate-types from the server.
-   */
-  const loadCategories = async () => {
-    try {
-      const categories = await getCategories();
-      setCategories(
-        categories.sort((category, category2) =>
-          category.description.localeCompare(category2.description)
-        )
-      );
-    } catch (e) {
-      // console.log(e);
-    }
-  };
-
-  const loadZones = async () => {
-    try {
-      const zones = await getZones();
-      setZones(
-        zones.sort((zone1, zone2) =>
-          zone1.description.localeCompare(zone2.description)
-        )
-      );
-    } catch (e) {
-      // console.log(e);
-    }
-  };
-
-  const loadOrderByParams = async () => {
-    try {
-      const orderByParams = await getOrderByParams();
-      setOrderByParams(orderByParams);
-    } catch (e) {
-      // console.log(e);
-    }
-  };
-
-  const loadRateTypes = async () => {
-    try {
-      const rateTypes = await getRateTypes();
-      setRateTypes(rateTypes);
-    } catch (e) {
-      // console.log(e);
-    }
-  };
-
-  const loadContractStates = async () => {
-    try {
-      const contractStates = await getContractStates();
-      setContractStates(contractStates);
     } catch (e) {
       // console.log(e);
     }
@@ -158,27 +89,14 @@ const App = () => {
         setToken(sessionStorageToken);
       }
     }
-
-    loadCategories();
-    loadZones();
-    loadOrderByParams();
-    loadRateTypes();
-    loadContractStates();
   }, []);
+
   return (
     <>
-      <ConstantDataContext.Provider
-        value={{
-          categories: categories,
-          zones: zones,
-          orderByParams: orderByParams,
-          rateTypes: rateTypes,
-          states: contractStates,
-        }}
-      >
         <Helmet>
           <title>{t('defaulttitle')}</title>
         </Helmet>
+        <NavBar />
         <ScrollToTop />
         <Switch>
           <Route path="/" exact component={Home} />
@@ -224,7 +142,6 @@ const App = () => {
           <Route path="/" component={Error404} />
         </Switch>
         <Footer />
-      </ConstantDataContext.Provider>
     </>
   );
 };

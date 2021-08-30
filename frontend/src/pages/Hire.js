@@ -6,7 +6,6 @@ import {
   makeStyles,
   TextField,
 } from '@material-ui/core';
-import NavBar from '../components/NavBar';
 import FileInput, { checkType, checkSize } from '../components/FileInput';
 import styles from '../styles';
 import clsx from 'clsx';
@@ -36,6 +35,7 @@ import { extractLastIdFromURL } from '../utils/urlUtils';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Helmet } from 'react-helmet';
 import { isLoggedIn } from '../utils/userUtils';
+import NavBarContext from '../context/navBarContext';
 
 registerLocale('es', es);
 
@@ -137,6 +137,12 @@ const Hire = ({ match, history }) => {
   const [proUser, setProUser] = useState(null);
   const [pack, setPackage] = useState(null);
 
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/categories',isTransparent:false});
+  },[])
+
   const loadJobPost = async () => {
     try {
       const jobPost = await getJobPostById(postId);
@@ -201,7 +207,6 @@ const Hire = ({ match, history }) => {
       <Helmet>
         <title>{t('title', { section: t('navigation.sections.hire') })}</title>
       </Helmet>
-      <NavBar currentSection="/search" />
       {loading ? (
         <div className="flex justify-center items-center w-screen h-screen">
           <CircularProgress />

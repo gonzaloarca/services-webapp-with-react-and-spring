@@ -1,5 +1,4 @@
-import React from 'react';
-import NavBar from '../components/NavBar';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -7,12 +6,19 @@ import { Button, Card } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { NavBarContext } from '../context';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
 const RegisterSuccess = () => {
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/',isTransparent:true});
+  },[])
 
   return (
     <div>
@@ -21,7 +27,6 @@ const RegisterSuccess = () => {
           {t('title', { section: t('navigation.sections.registersuccess') })}
         </title>
       </Helmet>
-      <NavBar isTransparent />
       <div
         className={classes.background}
         style={{
