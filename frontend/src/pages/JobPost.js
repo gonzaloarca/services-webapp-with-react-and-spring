@@ -23,7 +23,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import Carousel from 'react-material-ui-carousel';
 import { Link as RouterLink } from 'react-router-dom';
-import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { themeUtils } from '../theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -41,9 +40,8 @@ import {
 import { Helmet } from 'react-helmet';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import BottomPagination from '../components/BottomPagination';
-import { Skeleton } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import HirenetModal, { PlainTextBody } from '../components/HirenetModal';
 
 const useStyles = makeStyles((theme) => ({
@@ -181,6 +179,17 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     textAlign: 'center',
   },
+  finalizedMessage: {
+    color: themeUtils.colors.red,
+    backgroundColor: themeUtils.colors.lightRed,
+    width: '100%',
+    borderRadius: '0.25rem',
+    border: '1px solid ' + themeUtils.colors.red,
+    fontWeight: 500,
+    padding: '10px',
+    marginBottom: '10px',
+    fontSize: themeUtils.fontSizes.sm,
+  },
 }));
 
 const useGlobalStyles = makeStyles(styles);
@@ -202,7 +211,14 @@ const JobPost = ({ match, history }) => {
   const [proUser, setProUser] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   const [hirable, setHirable] = useState(false);
+  const [finalized, setFinalized] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/search', isTransparent: false });
+  }, []);
 
   const loadJobPost = async () => {
     try {
@@ -252,6 +268,7 @@ const JobPost = ({ match, history }) => {
       if (currentUser && currentUser.id === proUser.id && post.active)
         setIsOwner(true);
       else if (post.active) setHirable(true);
+      if (!post.active) setFinalized(true);
       setLoading(false);
     }
   }, [post, jobCard, packages, proUser]);
@@ -265,7 +282,10 @@ const JobPost = ({ match, history }) => {
   const deletePost = async () => {
     try {
       await deleteJobPost(post);
-      history.push(`/`);
+      setIsOwner(false);
+      setHirable(false);
+      setFinalized(true);
+      setOpenDelete(false);
     } catch (e) {
       history.push(`/error`);
     }
@@ -273,7 +293,6 @@ const JobPost = ({ match, history }) => {
 
   return (
     <>
-      <NavBar currentSection={'/search'} />
       {loading ? (
         <div className="flex justify-center items-center w-screen h-screen">
           <CircularProgress />
@@ -284,25 +303,29 @@ const JobPost = ({ match, history }) => {
             <title>{t('title', { section: post.title })}</title>
           </Helmet>
           <div className={globalClasses.contentContainerTransparent}>
+            {finalized && (
+              <div className={classes.finalizedMessage}>
+                {t('jobpost.finalized')}
+              </div>
+            )}
             {isOwner ? (
               <div className="flex justify-end">
                 <Button
-                  className="text-lg"
+                  className="text-sm"
                   style={{ color: themeUtils.colors.blue }}
                   component={Link}
                   to={`/job/${match.params.id}/edit`}
                 >
-                  <Edit fontSize="large" className="mr-1" />
+                  <Edit className="mr-1" />
                   {t('jobpost.edit')}
                 </Button>
                 <div className="my-2 mx-3 border-l-2 border-solid border-gray-400" />
                 <Button
-                  fontSize="large"
-                  className="text-lg"
+                  className="text-sm"
                   style={{ color: themeUtils.colors.red }}
                   onClick={() => setOpenDelete(true)}
                 >
-                  <Delete fontSize="large" className="mr-1" />
+                  <Delete className="mr-1" />
                   {t('jobpost.delete')}
                 </Button>
                 <HirenetModal
@@ -382,12 +405,12 @@ const JobPost = ({ match, history }) => {
               {isOwner ? (
                 <div className="flex justify-end">
                   <Button
-                    className="text-lg"
+                    className="text-sm"
                     style={{ color: themeUtils.colors.blue }}
                     component={Link}
                     to={`/job/${match.params.id}/packages`}
                   >
-                    <ListAlt fontSize="large" className="mr-1" />
+                    <ListAlt className="mr-1" />
                     {t('jobpost.managepacks')}
                   </Button>
                 </div>
@@ -625,7 +648,7 @@ const ReviewListCard = ({ postId }) => {
       {renderReviews(reviews)}
 
       <BottomPagination
-        maxPage={links.last.page}
+        maxPage={links.last?.page || queryParams.page}
         setQueryParams={setQueryParams}
         queryParams={queryParams}
       />

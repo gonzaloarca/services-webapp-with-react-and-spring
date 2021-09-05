@@ -27,7 +27,7 @@ const useUserHook = () => {
 
   const login = async ({ email, password }) => {
     const response = await loginRequest({ email, password });
-    return response.headers.authorization;
+    return response.headers.authorization.split(' ')[1];
   };
 
   const getUserById = async (id) => {

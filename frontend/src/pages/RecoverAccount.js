@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import NavBar from '../components/NavBar';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -16,6 +15,7 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Helmet } from 'react-helmet';
 import { useUser } from '../hooks';
+import { NavBarContext } from '../context';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -27,6 +27,12 @@ const RecoverAccount = ({ history }) => {
   };
   const { recoverAccount } = useUser();
   const [statusCode, setStatusCode] = useState(-1);
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/login',isTransparent:true});
+  },[])
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -54,7 +60,6 @@ const RecoverAccount = ({ history }) => {
           {t('title', { section: t('navigation.sections.recoverpass') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}
         style={{
@@ -96,7 +101,7 @@ const RecoverAccount = ({ history }) => {
                   </Field>
                   {statusCode === -1 ? (
                     <p className="text-sm mb-3">{t('recover.disclaimer')}</p>
-                  ) : statusCode < 300 ? (
+                  ) : statusCode < 400 ? (
                     <p className="text-sm mb-3" style={{ color: 'green' }}>
                       {t('recover.success')}
                     </p>

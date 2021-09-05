@@ -13,6 +13,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useUser } from '../hooks';
 import createDate from '../utils/createDate';
 import { extractLastIdFromURL } from '../utils/urlUtils';
+import { themeUtils } from '../theme';
 
 const useStyles = makeStyles((theme) => ({
   reviewHeader: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 5,
     alignItems: 'center',
     justifyContent: 'start',
+    width: '50%',
   },
   nameAndDateContainer: {
     display: 'flex',
@@ -34,6 +36,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'start',
     height: '100%',
     marginLeft: '0.5rem',
+    width: '50%',
+  },
+  nameContainer: {
+    WebkitLineClamp: 1,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    overflowWrap: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '100%',
+    fontSize: themeUtils.fontSizes.sm,
+    fontWeight: 600,
   },
   reviewBody: {},
 }));
@@ -76,7 +90,7 @@ const ReviewCard = ({ review }) => {
           />
           <div className={classes.nameAndDateContainer}>
             {/* Nombre del usuario */}
-            <p className="text-sm font-semibold">{client.username}</p>
+            <p className={classes.nameContainer}>{client.username}</p>
             {/* Fecha de review */}
             <p className="text-gray-400 font-medium text-sm">
               {t('date', { date: createDate(review.creationDate) })}

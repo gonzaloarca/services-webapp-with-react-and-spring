@@ -9,6 +9,7 @@ import {
 import { useState } from 'react';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import parse from 'parse-link-header';
+import categoryImageMap from '../utils/categories';
 
 const useContractsHook = () => {
   const initialLinks = {
@@ -41,7 +42,12 @@ const useContractsHook = () => {
       page
     );
     setLinks(parse(response.headers.link) || { ...initialLinks });
-    return response.data;
+    return response.data.map((contract) => ({
+      ...contract,
+      postImage: contract.postImage
+        ? contract.postImage
+        : categoryImageMap.get(contract.jobType.id),
+    }));
   };
 
   const getContractsByProAndStateId = async (proId, state, page) => {
@@ -54,7 +60,7 @@ const useContractsHook = () => {
     return response.data;
   };
 
-  const changeContractStatePro = async (
+  const changeContractState = async (
     contractId,
     state,
     newScheduledDate
@@ -62,22 +68,7 @@ const useContractsHook = () => {
     const response = await changeContractStateRequest(
       contractId,
       state,
-      newScheduledDate,
-      'professional'
-    );
-    return response.data;
-  };
-
-  const changeContractStateClient = async (
-    contractId,
-    state,
-    newScheduledDate
-  ) => {
-    const response = await changeContractStateRequest(
-      contractId,
-      state,
-      newScheduledDate,
-      'client'
+      newScheduledDate
     );
     return response.data;
   };
@@ -109,8 +100,7 @@ const useContractsHook = () => {
   return {
     getContractsByClientIdAndState,
     getContractsByProAndStateId,
-    changeContractStateClient,
-    changeContractStatePro,
+    changeContractState,
     getContractStates,
     createContract,
     links,

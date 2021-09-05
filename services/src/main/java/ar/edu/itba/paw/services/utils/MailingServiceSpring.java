@@ -89,32 +89,14 @@ public class MailingServiceSpring implements MailingService {
         JobPackage jobPack = jobContract.getJobPackage();
         JobPost jobPost = jobPack.getJobPost();
 
-        if (imageService.isValidImage(image)) {
+        if (imageService.isValidImage(image))
             attachment = new ByteArrayDataSource(image.getData(), image.getType());
-        }
 
         User professional = jobPostDao.findUserByPostId(jobPost.getId()).orElseThrow(UserNotFoundException::new);
         User client = jobContractDao.findClientByContractId(jobContract.getId()).orElseThrow(UserNotFoundException::new);
 
         Map<String, Object> data = new HashMap<>();
-        data.put("professional", professional.getUsername());
-        data.put("jobPackageTitle", jobPack.getTitle());
-        Double price = jobPack.getPrice();
-        if (price == null)
-            price = (double) 0;
-
-        data.put("jobPackagePrice", String.valueOf(Math.round(price * 100 / 100)));
-        data.put("jobPackageRateType", "JobPackage.RateType." + jobPack.getRateType().getDescription());
-        data.put("jobPostTitle", jobPost.getTitle());
-        data.put("client", client.getUsername());
-        data.put("clientEmail", client.getEmail());
-        data.put("clientPhone", client.getPhone());
-        data.put("professionalEmail", professional.getEmail());
-        data.put("professionalPhone", professional.getPhone());
-        data.put("contractDescription", jobContract.getDescription());
-        data.put("hasAttachment", attachment != null);
-        data.put("contractDate", jobContract.getCreationDate().format(DateTimeFormatter.ofPattern(messageSource.getMessage("date.format", new Object[]{}, locale))));
-        data.put("scheduledDate", jobContract.getScheduledDate().toLocalDate().toString());
+        setContractBasicData(jobContract, jobPack, locale, attachment != null, professional, client, data);
         data.put("scheduledTime", jobContract.getScheduledDate().toLocalTime().toString().split("\\.")[0]);
 
         sendMessageUsingThymeleafTemplate(professional.getEmail(),
@@ -135,7 +117,7 @@ public class MailingServiceSpring implements MailingService {
         data.put("username", user.getUsername());
         data.put("email", user.getEmail());
         data.put("phone", user.getPhone());
-        data.put("url", webpageUrl + "?user-id="+user.getId()+"&token="+token.getToken());
+        data.put("url", webpageUrl + "?user-id=" + user.getId() + "&token=" + token.getToken());
         sendMessageUsingThymeleafTemplate(user.getEmail(),
                 messageSource.getMessage("mail.token.subject",
                         new Object[]{user.getUsername()}, locale),
@@ -155,57 +137,64 @@ public class MailingServiceSpring implements MailingService {
 
     @Async
     @Override
-    public void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale, String webpageUrl) {
+    public void sendUpdateContractStatusEmail(JobContract.ContractState newState, JobContractWithImage jobContract,
+                                              JobPackage jobPack, JobPost jobPost, Locale locale, String webpageUrl) {
         DataSource attachment = null;
         ByteImage image = jobContract.getByteImage();
 
-        if (imageService.isValidImage(image)) {
+        if (imageService.isValidImage(image))
             attachment = new ByteArrayDataSource(image.getData(), image.getType());
-        }
 
         User professional = jobPostDao.findUserByPostId(jobPost.getId()).orElseThrow(UserNotFoundException::new);
         User client = jobContractDao.findClientByContractId(jobContract.getId()).orElseThrow(UserNotFoundException::new);
 
         Map<String, Object> data = new HashMap<>();
+        setContractBasicData(jobContract, jobPack, locale, attachment != null, professional, client, data);
+        data.put("scheduledTime", jobContract.getScheduledDate().toLocalTime().toString());
+        data.put("status", newState.getDescription());
+        data.put("modifiedState", newState == JobContract.ContractState.CLIENT_MODIFIED ||
+                newState == JobContract.ContractState.PRO_MODIFIED);
+
+        List<JobContract.ContractState> clientStates = Arrays.asList(
+                JobContract.ContractState.CLIENT_CANCELLED, JobContract.ContractState.CLIENT_MODIFIED, JobContract.ContractState.CLIENT_REJECTED);
+
+        boolean updatedByClient = clientStates.contains(newState);
+        data.put("updatedByClient", updatedByClient);
+        if (updatedByClient) {
+            data.put("title", "mail.updateContract.newStatusByClient." + newState);
+        } else {
+            data.put("title", "mail.updateContract.newStatusByProfessional." + newState);
+        }
+
+        sendMessageUsingThymeleafTemplate(updatedByClient ? professional.getEmail() : client.getEmail(),
+                messageSource.getMessage("mail.updateContract.subject." + newState,
+                        new Object[]{
+                                messageSource.getMessage("JobContract.ContractState." + newState.getDescription(), new Object[]{}, locale)
+                        }, locale),
+                data, "updateContractStatus", attachment, locale);
+    }
+
+    private void setContractBasicData(JobContractWithImage jobContract, JobPackage jobPack,
+                                      Locale locale, Boolean hasAttachment, User professional, User client,
+                                      Map<String, Object> data) {
         data.put("jobPackageTitle", jobPack.getTitle());
         Double price = jobPack.getPrice();
         if (price == null)
             price = (double) 0;
 
         data.put("jobPackagePrice", String.valueOf(Math.round(price * 100 / 100)));
-        data.put("jobPackageRateType", jobPack.getRateType().getDescription());
-        data.put("jobPostTitle", jobPost.getTitle());
+        data.put("jobPackageRateType", "JobPackage.RateType." + jobPack.getRateType().getDescription());
+        data.put("jobPostTitle", jobPack.getJobPost().getTitle());
         data.put("client", client.getUsername());
         data.put("clientEmail", client.getEmail());
         data.put("clientPhone", client.getPhone());
-        data.put("contractDescription", jobContract.getDescription());
-        data.put("contractDate", jobContract.getCreationDate().format(DateTimeFormatter.ofPattern(messageSource.getMessage("date.format", new Object[]{}, locale))));
-        data.put("scheduledDate", jobContract.getScheduledDate().toLocalDate().toString());
-        data.put("scheduledTime", jobContract.getScheduledDate().toLocalTime().toString());
-        data.put("status", jobContract.getState().getDescription());
         data.put("professional", professional.getUsername());
         data.put("professionalEmail", professional.getEmail());
         data.put("professionalPhone", professional.getPhone());
-        data.put("hasAttachment", attachment != null);
-        data.put("modifiedState", jobContract.getState() == JobContract.ContractState.CLIENT_MODIFIED ||
-                jobContract.getState() == JobContract.ContractState.PRO_MODIFIED);
-
-        List<JobContract.ContractState> clientStates = Arrays.asList(
-                JobContract.ContractState.CLIENT_CANCELLED, JobContract.ContractState.CLIENT_MODIFIED, JobContract.ContractState.CLIENT_REJECTED);
-
-        boolean updatedByClient = clientStates.contains(jobContract.getState());
-        data.put("updatedByClient", updatedByClient);
-        if (updatedByClient) {
-            data.put("title", "mail.updateContract.newStatusByClient." + jobContract.getState().toString());
-        } else {
-            data.put("title", "mail.updateContract.newStatusByProfessional." + jobContract.getState().toString());
-        }
-
-        sendMessageUsingThymeleafTemplate(updatedByClient ? professional.getEmail() : client.getEmail(),
-                messageSource.getMessage("mail.updateContract.subject." + jobContract.getState().toString(),
-                        new Object[]{
-                                messageSource.getMessage(jobContract.getState().getDescription(), new Object[]{}, locale)
-                        }, locale),
-                data, "updateContractStatus", attachment, locale);
+        data.put("contractDescription", jobContract.getDescription());
+        data.put("hasAttachment", hasAttachment);
+        data.put("contractDate", jobContract.getCreationDate().format(
+                DateTimeFormatter.ofPattern(messageSource.getMessage("date.format", new Object[]{}, locale))));
+        data.put("scheduledDate", jobContract.getScheduledDate().toLocalDate().toString());
     }
 }

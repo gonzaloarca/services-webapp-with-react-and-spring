@@ -4,7 +4,6 @@ import { Form, Formik } from 'formik';
 import React, { useEffect, useState, useContext } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import NavBar from '../components/NavBar';
 import PackageFormItem from '../components/PackageFormItem';
 import PackagesHeader from '../components/PackagesHeader';
 import styles from '../styles';
@@ -12,7 +11,7 @@ import { themeUtils } from '../theme';
 import * as Yup from 'yup';
 import { useJobPosts, useUser, useJobPackages } from '../hooks';
 import { extractLastIdFromURL } from '../utils/urlUtils';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import { Skeleton } from '@material-ui/lab';
 
 const useGlobalStyles = makeStyles(styles);
@@ -51,6 +50,12 @@ const AddPackage = ({ match, history }) => {
   const [loading, setLoading] = useState(true);
   const [jobPost, setJobPost] = useState(null);
   const [proUser, setProUser] = useState(null);
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/create-job-post',isTransparent:false});
+  },[])
 
   const loadJobPost = async () => {
     try {
@@ -135,7 +140,6 @@ const AddPackage = ({ match, history }) => {
           {t('title', { section: t('navigation.sections.addpackage') })}
         </title>
       </Helmet>
-      <NavBar currentSection="/create-job-post" />
       <div className={globalClasses.contentContainerTransparent}>
         {loading ? (
           <Grid container spacing={3} className="mt-3">

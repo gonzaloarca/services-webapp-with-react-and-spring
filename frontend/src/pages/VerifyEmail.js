@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import NavBar from '../components/NavBar';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -9,6 +8,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useUser } from '../hooks';
 import { Skeleton } from '@material-ui/lab';
+import { NavBarContext } from '../context';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -22,6 +22,14 @@ const VerifyEmail = ({ history }) => {
   const { verifyEmail } = useUser();
   let query = useQuery();
   const [statusCode, setStatusCode] = React.useState(-1);
+
+  const {
+    setNavBarProps,
+  } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/search',isTransparent:true});
+  }, []);
 
   const tryVerification = async () => {
     try {
@@ -47,7 +55,6 @@ const VerifyEmail = ({ history }) => {
           {t('title', { section: t('navigation.sections.verify') })}
         </title>
       </Helmet>
-      <NavBar isTransparent />
       <div
         className={classes.background}
         style={{

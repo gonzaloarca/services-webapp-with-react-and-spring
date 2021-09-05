@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,8 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> findReviewsByPostId(long id, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract NATURAL JOIN job_package WHERE job_package.post_id = :id ORDER BY review_creation_date DESC").setParameter("id", id);
         return executePageQuery(page, nativeQuery);
     }
@@ -54,6 +57,8 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> findReviewsByPackageId(long id, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract WHERE package_id = :id ORDER BY review_creation_date DESC")
                 .setParameter("id", id);
         return executePageQuery(page, nativeQuery);
@@ -67,6 +72,8 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> findReviewsByProId(long id, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract NATURAL JOIN job_package NATURAL JOIN job_post WHERE user_id = :id ORDER BY review_creation_date DESC")
                 .setParameter("id", id);
 
@@ -116,6 +123,8 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> findReviewsByClientId(long userId, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review NATURAL JOIN contract WHERE client_id = :id ORDER BY review_creation_date DESC")
                 .setParameter("id", userId);
 
@@ -124,6 +133,8 @@ public class ReviewDaoJpa implements ReviewDao {
 
     @Override
     public List<Review> findAllReviews(int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery("SELECT contract_id FROM review ORDER BY contract_id ASC");
 
         return executePageQuery(page, nativeQuery);

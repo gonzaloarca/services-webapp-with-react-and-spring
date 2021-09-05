@@ -1,10 +1,7 @@
-import React from 'react';
-import NavBar from '../components/NavBar';
-import FileInput, { checkSize, checkType } from '../components/FileInput';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import React, { useContext, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { themeUtils } from '../theme';
 import { Button, Card, Grid, Link, TextField } from '@material-ui/core';
 import LoginAndRegisterStyles from '../components/LoginAndRegisterStyles';
 import FormControlPassword from '../components/FormControlPassword';
@@ -13,6 +10,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
 import { Helmet } from 'react-helmet';
+import NavBarContext from '../context/navBarContext';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -33,12 +31,18 @@ const Register = () => {
 
   const { register } = useUser();
 
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/register',isTransparent:true});
+  },[])
+
   const makeRequest = async (newData) => {
     try {
       await register({ ...newData });
       history.push('/register/success');
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       if (error.response.status === 409) {
         handlePrevStep(newData);
         setData({ ...newData, badCredentials: true });
@@ -76,18 +80,19 @@ const Register = () => {
           {t('title', { section: t('navigation.sections.register') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/register'} isTransparent />
       <div
         className={classes.background}
         style={{
-          backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+          backgroundImage:
+            'url(' + process.env.PUBLIC_URL + '/img/background.jpg)',
         }}
       >
         <div className={classes.cardContainer}>
           <div className={classes.titleContainer}>
             <img
-              src={`${process.env.PUBLIC_URL}/img/adduser.svg`}
+              src={process.env.PUBLIC_URL + '/img/adduser.svg'}
               alt={t('register.title')}
+              className={classes.titleIcon}
               loading="lazy"
             />
             <p className={classes.title}>{t('register.into')}</p>
@@ -95,13 +100,15 @@ const Register = () => {
           <Card className={clsx(classes.customCard, classes.registerCard)}>
             {steps[currentStep]}
             <span className={classes.bottomLabel}>
-              <p>{t('register.alreadyhasaccount')}</p>
+              <p className="text-sm font-medium">
+                {t('register.alreadyhasaccount')}
+              </p>
               <Link
                 component={RouterLink}
                 to="/login"
                 className={classes.bottomLabelLink}
               >
-                {t('register.login')}
+                <p className="text-base font-semibold">{t('register.login')}</p>
               </Link>
             </span>
           </Card>
@@ -155,10 +162,15 @@ const StepOne = (props) => {
                 as={TextField}
                 variant="filled"
                 fullWidth
-                label={t('register.username')}
+                label={<p className="text-sm">{t('register.username')}</p>}
                 name="username"
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="username"></ErrorMessage>}
+                InputProps={{
+                  classes: {
+                    input: 'text-sm font-medium',
+                  },
+                }}
               />
             </Grid>
             <Grid item sm={5} xs={12}>
@@ -166,10 +178,15 @@ const StepOne = (props) => {
                 as={TextField}
                 variant="filled"
                 fullWidth
-                label={t('register.phone')}
+                label={<p className="text-sm">{t('register.phone')}</p>}
                 name="phone"
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="phone"></ErrorMessage>}
+                InputProps={{
+                  classes: {
+                    input: 'text-sm font-medium',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -177,10 +194,15 @@ const StepOne = (props) => {
                 as={TextField}
                 variant="filled"
                 fullWidth
-                label={t('register.email')}
+                label={<p className="text-sm">{t('register.email')}</p>}
                 name="email"
                 className={classes.FieldHeight}
                 helperText={<ErrorMessage name="email"></ErrorMessage>}
+                InputProps={{
+                  classes: {
+                    input: 'text-sm font-medium',
+                  },
+                }}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -220,96 +242,5 @@ const StepOne = (props) => {
     </Formik>
   );
 };
-
-const StepTwo = (props) => {
-  const classes = useStyles();
-  const { t } = useTranslation();
-  const handleSubmit = (values) => {
-    props.next(values, true);
-  };
-
-  const validationSchema = Yup.object({
-    image: Yup.mixed()
-      .test('is-correct-type', t('validationerror.avatarfile.type'), checkType)
-      .test(
-        'is-correct-size',
-        t('validationerror.avatarfile.size', { size: 2 }),
-        checkSize
-      ),
-  });
-
-  return (
-    <Formik
-      initialValues={props.data}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ values, isSubmitting }) => (
-        <Form>
-          <div>
-            <p className={clsx(classes.subtitle, 'mb-3')}>
-              {t('register.selectimage')}
-            </p>
-
-            <div className={clsx('flex justify-center mb-3')}>
-              <img
-                className={'rounded-full h-48 w-48 object-cover'}
-                id="img-preview"
-                src={
-                  values.image === ''
-                    ? `${process.env.PUBLIC_URL}/img/defaultavatar.svg`
-                    : URL.createObjectURL(values.image)
-                }
-                alt=""
-                loading="lazy"
-              />
-            </div>
-            <p className={'mb-3 text-center'}>{t('register.imagepreview')}</p>
-            <Grid container className={'mb-3 justify-center'}>
-              <Grid item>
-                <FileInput fileName="image" />
-              </Grid>
-            </Grid>
-            <p className={'mb-5 text-gray-500'}>
-              {t('register.filedisclaimer', { size: 2 })}
-            </p>
-            <div className="flex justify-center">
-              <GreyButton
-                className={'mb-4 align-center'}
-                onClick={() => props.prev(values)}
-              >
-                {t('register.goback')}
-              </GreyButton>
-            </div>
-            <div className="flex justify-center">
-              <Button
-                fullWidth
-                className={clsx(classes.submitButton, 'mb-4')}
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {t('register.submit')}
-              </Button>
-            </div>
-          </div>
-        </Form>
-      )}
-    </Formik>
-  );
-};
-
-const GreyButton = withStyles({
-  root: {
-    color: themeUtils.colors.grey,
-    backgroundColor: themeUtils.colors.lightGrey,
-    transition: 'color 0.1s',
-    '&:hover': {
-      color: 'white',
-      backgroundColor: themeUtils.colors.grey,
-      transition: 'color 0.1s',
-    },
-    fontSize: '1em',
-  },
-})(Button);
 
 export default Register;

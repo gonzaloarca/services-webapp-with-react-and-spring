@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import NavBar from '../components/NavBar';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, Grid, makeStyles } from '@material-ui/core';
 import styles from '../styles';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { themeUtils } from '../theme';
+import { NavBarContext } from '../context';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -28,12 +28,17 @@ const JobPostSuccess = ({ match }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/create-job-post',isTransparent:false});
+  },[])
+
   return (
     <>
       <Helmet>
         <title>{t('title', { section: 'Servicio creado' })}</title>
       </Helmet>
-      <NavBar currentSection="/create-job-post" />
       <Grid
         container
         className={clsx(

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../components/NavBar';
 import styles from '../styles';
 import {
   Grid,
@@ -110,7 +109,6 @@ const Profile = ({ match }) => {
           })}
         </title>
       </Helmet>
-      <NavBar />
       <div className={globalClasses.contentContainerTransparent}>
         <Grid container spacing={3}>
           <Grid item sm={3} xs={12}>
@@ -189,11 +187,11 @@ const UserInfo = ({ values, loadingData }) => {
 const ProfileTabs = ({ details, proId }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const { getReviewsByProId, reviewsLinks } = useReviews();
+  const { getReviewsByProId, links: reviewsLinks } = useReviews();
   const [reviews, setReviews] = useState();
   const [queryParams, setQueryParams] = useState({ page: '1' });
   const [reviewsMaxPage, setReviewsMaxPage] = useState(1);
-  const { getJobCardsByProId, jobCardsLinks } = useJobCards();
+  const { getJobCardsByProId, links: jobCardsLinks } = useJobCards();
   const [jobCards, setJobCards] = useState([]);
   const [jobCardsMaxPage, setJobCardsMaxPage] = useState(1);
   const [loadingReviews, setLoadingReviews] = useState(true);
@@ -228,15 +226,17 @@ const ProfileTabs = ({ details, proId }) => {
       setJobCards(
         await getJobCardsByProId({ proId: proId, page: queryParams.page })
       );
-      setJobCardsMaxPage(
-        parseInt(jobCardsLinks?.last?.page) ||
-          parseInt(jobCardsLinks?.prev?.page)
-      );
       setLoadingJobcards(false);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    setJobCardsMaxPage(
+      parseInt(jobCardsLinks.last?.page) || parseInt(jobCardsLinks.prev?.page)
+    );
+  }, [jobCardsLinks]);
 
   useEffect(() => {
     loadJobCards();
@@ -246,10 +246,6 @@ const ProfileTabs = ({ details, proId }) => {
     if (details.reviewsQuantity > 0) {
       try {
         setReviews(await getReviewsByProId(proId, queryParams.page));
-        setReviewsMaxPage(
-          parseInt(reviewsLinks?.last?.page) ||
-            parseInt(reviewsLinks?.prev?.page)
-        );
       } catch (e) {
         // console.log(e);
         return;
@@ -257,6 +253,12 @@ const ProfileTabs = ({ details, proId }) => {
     }
     setLoadingReviews(false);
   };
+
+  useEffect(() => {
+    setReviewsMaxPage(
+      parseInt(reviewsLinks.last?.page) || parseInt(reviewsLinks.prev?.page)
+    );
+  }, [reviewsLinks]);
 
   useEffect(() => {
     loadReviews();
@@ -338,16 +340,18 @@ const ProfileTabs = ({ details, proId }) => {
             </h3>
           </div>
         ) : (
-          <>
+          <div>
             {jobCards?.map((jobCard, index) => {
               return <ServiceCard jobCard={jobCard} key={index} />;
             })}
-            <BottomPagination
-              maxPage={jobCardsMaxPage}
-              setQueryParams={setQueryParams}
-              queryParams={queryParams}
-            />
-          </>
+            <div className="mb-4">
+              <BottomPagination
+                maxPage={jobCardsMaxPage || queryParams.page}
+                setQueryParams={setQueryParams}
+                queryParams={queryParams}
+              />
+            </div>
+          </div>
         )}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
@@ -395,13 +399,13 @@ const ProfileTabs = ({ details, proId }) => {
             <Divider />
             {loadingReviews ? (
               <Grid container spacing={1}>
-                <Grid sm={12} className="flex justify-center">
+                <Grid item sm={12} className="flex justify-center">
                   <Skeleton height={300} width={700} />
                 </Grid>
-                <Grid sm={12} className="flex justify-center">
+                <Grid item sm={12} className="flex justify-center">
                   <Skeleton height={300} width={700} />
                 </Grid>
-                <Grid sm={12} className="flex justify-center">
+                <Grid item sm={12} className="flex justify-center">
                   <Skeleton height={300} width={700} />
                 </Grid>
               </Grid>
@@ -412,11 +416,13 @@ const ProfileTabs = ({ details, proId }) => {
                 </div>
               ))
             )}
-            <BottomPagination
-              maxPage={reviewsMaxPage}
-              setQueryParams={setQueryParams}
-              queryParams={queryParams}
-            />
+            <div className="mb-4">
+              <BottomPagination
+                maxPage={jobCardsMaxPage || queryParams.page}
+                setQueryParams={setQueryParams}
+                queryParams={queryParams}
+              />
+            </div>
           </>
         )}
       </TabPanel>
@@ -428,6 +434,8 @@ const ReviewsDistribution = ({ reviewsQuantity, userId }) => {
   const { getRates } = useUser();
   const [distribution, setDistribution] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
+
+  const history = useHistory();
 
   const loadData = async (userId) => {
     try {
@@ -441,7 +449,7 @@ const ReviewsDistribution = ({ reviewsQuantity, userId }) => {
       ]);
       setLoadingData(false);
     } catch (error) {
-      console.log(error);
+      history.replace('/error');
     }
   };
 

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import NavBar from '../components/NavBar';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -11,6 +10,7 @@ import { useLocation, Link } from 'react-router-dom';
 import FormControlPassword from '../components/FormControlPassword';
 import { Helmet } from 'react-helmet';
 import { useUser } from '../hooks';
+import { NavBarContext } from '../context';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -33,6 +33,12 @@ const RecoverPass = ({ history }) => {
   let query = useQuery();
   const { recoverPass } = useUser();
   const [statusCode, setStatusCode] = useState(-1);
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/login',isTransparent:true});
+  },[])
 
   const validationSchema = Yup.object({
     password: Yup.string()
@@ -67,7 +73,6 @@ const RecoverPass = ({ history }) => {
           {t('title', { section: t('navigation.sections.changepass') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}
         style={{

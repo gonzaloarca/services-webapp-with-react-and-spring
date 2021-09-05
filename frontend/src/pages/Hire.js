@@ -6,7 +6,6 @@ import {
   makeStyles,
   TextField,
 } from '@material-ui/core';
-import NavBar from '../components/NavBar';
 import FileInput, { checkType, checkSize } from '../components/FileInput';
 import styles from '../styles';
 import clsx from 'clsx';
@@ -36,76 +35,9 @@ import { extractLastIdFromURL } from '../utils/urlUtils';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Helmet } from 'react-helmet';
 import { isLoggedIn } from '../utils/userUtils';
+import NavBarContext from '../context/navBarContext';
 
 registerLocale('es', es);
-
-// const pack = {
-//   'active': true,
-//   'description':
-//     'Atencion constante y juego para el desarrollo de musculos como brazos y piernas.',
-//   'id': 8,
-//   'jobPost': {
-//     'id': 8,
-//     'uri': 'http://localhost:8080/job-posts/8',
-//   },
-//   'rateType': {
-//     'description': 'TBD',
-//     'id': 2,
-//   },
-//   'price': 50,
-//   'title': '4 dias a la semana 4 horas',
-// };
-
-// //TODO: como se levanta esto?
-// const jobpostimages = [
-//   `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-//   `${process.env.PUBLIC_URL}/img/carpentry.jpeg`,
-// ];
-
-// const post = {
-//   'active': true,
-//   'availableHours': 'Lunes a viernes entre las 8am y 2pm',
-//   'creationDate': '2021-05-02T18:22:13.338478',
-//   'id': 8,
-//   'jobType': {
-//     'description': 'BABYSITTING',
-//     'id': 7,
-//   },
-//   'packages': [
-//     {
-//       'id': 8,
-//       'uri': 'http://localhost:8080/job-posts/8/packages/8',
-//     },
-//   ],
-//   'professional': {
-//     'id': 5,
-//     'uri': 'http://localhost:8080/users/5',
-//   },
-//   'title': 'Niñero turno mañana',
-//   'zones': [
-//     {
-//       'description': 'RETIRO',
-//       'id': 28,
-//     },
-//     {
-//       'description': 'NUNIEZ',
-//       'id': 20,
-//     },
-//     {
-//       'description': 'COLEGIALES',
-//       'id': 9,
-//     },
-//   ],
-// };
-
-// const proUser = {
-//   email: 'manaaasd@gmail.com',
-//   id: 5,
-//   phone: '03034560',
-//   roles: ['CLIENT', 'PROFESSIONAL'],
-//   username: 'Manuel Rodriguez',
-//   image: `${process.env.PUBLIC_URL}/img/plumbing.jpeg`,
-// };
 
 const useStyles = makeStyles((theme) => ({
   hireBody: {
@@ -205,6 +137,12 @@ const Hire = ({ match, history }) => {
   const [proUser, setProUser] = useState(null);
   const [pack, setPackage] = useState(null);
 
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/categories',isTransparent:false});
+  },[])
+
   const loadJobPost = async () => {
     try {
       const jobPost = await getJobPostById(postId);
@@ -269,7 +207,6 @@ const Hire = ({ match, history }) => {
       <Helmet>
         <title>{t('title', { section: t('navigation.sections.hire') })}</title>
       </Helmet>
-      <NavBar currentSection="/search" />
       {loading ? (
         <div className="flex justify-center items-center w-screen h-screen">
           <CircularProgress />

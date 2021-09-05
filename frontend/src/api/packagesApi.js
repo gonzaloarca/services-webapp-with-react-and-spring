@@ -4,6 +4,7 @@ export const getJobPackagesByPostIdRequest = (postId, page = 1) => {
   return hirenetApi.get(`/job-posts/${postId}/packages`, {
     params: {
       page: page,
+	  type: 'active',
     },
   });
 };

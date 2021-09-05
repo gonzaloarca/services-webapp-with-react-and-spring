@@ -3,10 +3,8 @@ import {
   faTimesCircle,
   faCalendarAlt,
   faExclamationCircle,
-  faInfoCircle,
   faStar,
   faTimes,
-  faUserCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { themeUtils } from '../theme';
 

@@ -31,7 +31,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
 import LocationList from '../components/LocationList';
-import NavBar from '../components/NavBar';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import { themeUtils } from '../theme';
@@ -40,7 +39,7 @@ import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { useJobPosts, useUser } from '../hooks';
 import { extractLastIdFromURL } from '../utils/urlUtils';
-import { UserContext, ConstantDataContext } from '../context';
+import { UserContext, ConstantDataContext, NavBarContext } from '../context';
 import { Skeleton } from '@material-ui/lab';
 
 const HirenetConnector = withStyles({
@@ -232,6 +231,12 @@ const EditJobPost = ({ match, history }) => {
   const [postId, setPostId] = useState(match.params.id);
   const [jobPost, setJobPost] = useState(null);
   const [proUser, setProUser] = useState(null);
+  
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/create-job-post',isTransparent:false});
+  },[])
 
   const loadJobPost = async () => {
     try {
@@ -329,7 +334,6 @@ const EditJobPost = ({ match, history }) => {
           {t('title', { section: t('navigation.sections.publish') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/create-job-post'} />
       {loading ? (
         <Grid container spacing={3} className="mt-10">
           <Grid item md={12} className="flex justify-center">

@@ -1,8 +1,6 @@
-import React, { useEffect, useContext, useState } from 'react';
-import NavBar from '../components/NavBar';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Grid,
@@ -15,15 +13,13 @@ import { Trans, useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import clsx from 'clsx';
 import JobCard from '../components/JobCard';
-import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { parse } from 'query-string';
-import { ConstantDataContext } from '../context';
+import { ConstantDataContext, NavBarContext } from '../context';
 import { useJobCards } from '../hooks';
-import { Pagination, PaginationItem } from '@material-ui/lab';
 import BottomPagination from '../components/BottomPagination';
 import { Helmet } from 'react-helmet';
 import {
-  ClassRounded,
   LocationOn,
   FilterList,
   Search as SearchIcon,
@@ -116,49 +112,84 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function useQuery() {
-  return parse(useLocation().search);
-}
-
 const Search = () => {
-  let queryParameters = useQuery();
   const { orderByParams, categories, zones } = useContext(ConstantDataContext);
+  const startedFlag = useRef(false);
 
+  const {
+    searchBarQueryParams: queryParams,
+    setSearchBarQueryParams: setQueryParams,
+    setNavBarProps,
+  } = useContext(NavBarContext);
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState(null);
-  const [maxPage, setMaxPage] = useState(1);
-  const [queryParams, setQueryParams] = React.useState({
-    zone: queryParameters.zone || '',
-    category: queryParameters.category || '',
-    query: queryParameters.query || '',
-    orderBy: queryParameters.orderBy || '',
-    page: queryParameters.page || 1,
-  });
+  const [maxPage, setMaxPage] = useState(null);
+
   const classes = useStyles();
   const history = useHistory();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/search', isTransparent: false });
+  }, []);
 
   const loadJobCards = async () => {
     try {
       const jobCards = await searchJobCards(queryParams);
       setJobCards(jobCards);
-      setMaxPage(parseInt(links.last?.page) || parseInt(links.prev?.page));
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    history.push(
+    setMaxPage(links.last?.page);
+  }, [links]);
+
+  useEffect(() => {
+    if (!startedFlag.current) {
+      // Este request solo se hace cuando se cambia alguno de los filtros, no en el primer renderizado
+      startedFlag.current = true;
+      return;
+    }
+    history.replace(
       '/search?' +
-        (queryParams.zone ? 'zone=' + queryParams.zone : '') +
-        (queryParams.category ? '&category=' + queryParams.category : '') +
-        (queryParams.orderBy ? '&orderBy=' + queryParams.orderBy : '') +
-        (queryParams.query ? '&query=' + queryParams.query : '') +
-        (queryParams.page ? '&page=' + queryParams.page : '')
+        'zone=' +
+        queryParams.zone +
+        '&category=' +
+        queryParams.category +
+        '&orderBy=' +
+        queryParams.orderBy +
+        '&page=1' +
+        '&query=' +
+        queryParams.query
     );
     loadJobCards();
-  }, [queryParams]);
+    setQueryParams({ ...queryParams, page: 1 });
+  }, [
+    // Si cambia alguno de los filtros, debo llevarlo a la pagina 1
+    queryParams.zone,
+    queryParams.category,
+    queryParams.query,
+    queryParams.orderBy,
+  ]);
+
+  useEffect(() => {
+    history.replace(
+      '/search?' +
+        'zone=' +
+        queryParams.zone +
+        '&category=' +
+        queryParams.category +
+        '&orderBy=' +
+        queryParams.orderBy +
+        '&page=' +
+        queryParams.page +
+        '&query=' +
+        queryParams.query
+    );
+    loadJobCards();
+  }, [queryParams.page]);
 
   return (
     <div>
@@ -167,11 +198,6 @@ const Search = () => {
           {t('title', { section: t('navigation.sections.explore') })}
         </title>
       </Helmet>
-      <NavBar
-        currentSection={'/search'}
-        searchBarSetQueryParams={setQueryParams}
-        searchBarQueryParams={queryParams}
-      />
       <div className="flex justify-center mt-10">
         <Grid container spacing={3} className={classes.searchContainer}>
           <Grid item xs={3}>
@@ -209,6 +235,7 @@ const SearchResults = ({
   const classes = useStyles();
   const { t } = useTranslation();
   const [loadingJobs, setLoadingJobs] = useState(true);
+  const { setSearchBarValue } = useContext(NavBarContext);
 
   useEffect(() => {
     if (jobs) setLoadingJobs(false);
@@ -313,7 +340,10 @@ const SearchResults = ({
                 className={classes.filterChip}
                 label={queryParams.query}
                 icon={<SearchIcon />}
-                onDelete={() => setQueryParams({ ...queryParams, query: '' })}
+                onDelete={() => {
+                  setQueryParams({ ...queryParams, query: '' });
+                  setSearchBarValue('');
+                }}
               />
             )}
           </div>
@@ -340,7 +370,7 @@ const SearchResults = ({
         )}
       </Grid>
       <BottomPagination
-        maxPage={maxPage}
+        maxPage={maxPage || queryParams.page}
         setQueryParams={setQueryParams}
         queryParams={queryParams}
       />

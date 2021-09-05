@@ -108,7 +108,7 @@ public class JobContractAbstract {
         this.scheduledDate = scheduledDate;
     }
 
-    public boolean isWasRescheduled() {
+    public boolean wasRescheduled() {
         return wasRescheduled;
     }
 

@@ -23,14 +23,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
+import org.springframework.web.servlet.resource.PathResourceResolver;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
@@ -41,12 +38,22 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableAsync
-public class WebConfig {
+public class WebConfig extends WebMvcConfigurerAdapter {
 
+    private static final int MAX_TIME = 31536000;
     // FIXME Cambiar para produccion
-    private final boolean PRODUCTION = false;
+    private final boolean PRODUCTION = true;
 
     private final Logger webConfigLogger = LoggerFactory.getLogger(WebConfig.class);
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/img/**")
+                .addResourceLocations("/img/")
+                .setCachePeriod(MAX_TIME)
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver());
+    }
 
     @Bean
     public DataSource dataSource() {
@@ -152,4 +159,6 @@ public class WebConfig {
 
         return entityFactory;
     }
+
+
 }

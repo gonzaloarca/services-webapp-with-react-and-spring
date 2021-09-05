@@ -6,13 +6,11 @@ import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
-import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
+import ar.edu.itba.paw.webapp.utils.ImagesUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
-import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.validation.ValidImage;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +19,8 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -58,23 +54,13 @@ public class UserController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response findAll(@QueryParam("email") final String email,
-                            @QueryParam("page") int page) {
-        if (email != null) {
+    public Response findByEmail(@QueryParam("email") final String email) {
+        if (email == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
             accountControllerLogger.debug("Finding user with email {}", email);
             UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
             return Response.ok(getUserDto(user)).build();
-        }
-        if (page < 1)
-            page = 1;
-
-        accountControllerLogger.debug("Finding all users for page {}", page);
-        List<UserDto> usersDto = userService.findAllWithImage(page).stream()
-                .map(this::getUserDto).collect(Collectors.toList());
-        int maxPage = userService.findAllWithImageMaxPage();
-        return PageResponseUtil.getGenericListResponse(page, maxPage, uriInfo,
-                Response.ok(new GenericEntity<List<UserDto>>(usersDto) {
-                }));
     }
 
     private UserDto getUserDto(UserWithImage userWithImage) {
@@ -122,9 +108,9 @@ public class UserController {
     @Path("/{id}/image")
     @GET
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
-    public Response getUserImage(@PathParam("id") final long id) {
+    public Response getUserImage(@PathParam("id") final long id,@Context Request request) {
         ByteImage byteImage = userService.findImageByUserId(id);
-        return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
+        return ImagesUtil.sendCacheableImageResponse(byteImage,request);
     }
 
     @Path("/{id}/image")
@@ -136,7 +122,7 @@ public class UserController {
 
         long result;
         try {
-            result = userService.updateUserImage(id, ImageUploadUtil.fromInputStream(body));
+            result = userService.updateUserImage(id, ImagesUtil.fromInputStream(body));
         } catch (IOException e) {
             throw new RuntimeException("Upload failed");
         }

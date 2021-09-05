@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import NavBar from '../components/NavBar';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import {
@@ -145,7 +144,6 @@ const Account = () => {
           {t('title', { section: t('navigation.sections.account') })}
         </title>
       </Helmet>
-      <NavBar />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('account.header')} />
         <Grid container spacing={4}>
@@ -223,6 +221,9 @@ const PersonalData = ({ currentUser }) => {
   const { t } = useTranslation();
   const { changeAccountData, changeAccountImage } = useUser();
   const [answer, setAnswer] = useState('');
+  const [image, setImage] = useState(currentUser.image);
+  const [username, setUsername] = useState(currentUser.username);
+  const [phone, setPhone] = useState(currentUser.phone);
 
   const history = useHistory();
 
@@ -250,17 +251,21 @@ const PersonalData = ({ currentUser }) => {
 
   const onSubmit = async (values) => {
     try {
+      setAnswer('');
       await changeAccountData({
         userId: currentUser.id,
         email: currentUser.email,
         phone: values.phone,
         username: values.username,
       });
-      if (values.image) await changeAccountImage(currentUser.id, values.image);
+      setUsername(values.username);
+      setPhone(values.phone);
+      if (values.image) {
+        await changeAccountImage(currentUser.id, values.image);
+        setImage(URL.createObjectURL(values.image));
+      }
       setAnswer('ok');
-      history.go(0);
     } catch (error) {
-      console.log(error);
       setAnswer('error');
     }
   };
@@ -278,16 +283,19 @@ const PersonalData = ({ currentUser }) => {
               <img
                 loading="lazy"
                 className={classes.profileImg}
-                src={currentUser.image}
+                src={image}
                 alt={t('account.data.imagealt')}
               />
             </Grid>
             <Grid item sm={10} xs={12} className="flex flex-col justify-center">
-              <div className="font-bold text-lg">{currentUser.username}</div>
+              <div className="font-bold text-lg">{username}</div>
               <div>
                 {currentUser.roles.includes('PROFESSIONAL')
                   ? t('professional')
                   : t('client')}
+              </div>
+              <div>
+                {t('register.phone')}: {phone}
               </div>
             </Grid>
           </Grid>
@@ -434,7 +442,6 @@ const SecurityData = ({ email, userId }) => {
       });
       setAnswer('ok');
     } catch (error) {
-      console.log(error);
       setAnswer('error');
     }
   };
@@ -529,7 +536,6 @@ const Logout = () => {
       </h1>
       <Divider />
       <div className="p-5 flex justify-center">
-        {/* TODO: llamar a cerrar sesión */}
         <Button type="button" className={classes.logoutBtn} onClick={logout}>
           {t('account.logout.btn')}
         </Button>

@@ -16,7 +16,7 @@ public interface JobCardService {
 
     List<JobCard> findByUserId(long id, int page);
 
-    List<JobCard> search(String query, int zone, int jobType, int order, int page, Locale locale);
+    List<JobCard> search(String query, Integer zone, Integer jobType, Integer orderBy, int page, Locale locale);
 
     JobCard findByPostId(long id);
 
@@ -32,7 +32,7 @@ public interface JobCardService {
 
     int findByUserIdMaxPage(long id);
 
-    int searchMaxPage(String query, int zone, int jobType, Locale locale) ;
+    int searchMaxPage(String query, Integer zone, Integer jobType, Locale locale) ;
 
     int findRelatedJobCardsMaxPage(long professional_id);
 

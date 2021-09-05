@@ -19,5 +19,6 @@ public interface MailingService {
 
     void sendRecoverPasswordEmail(User user, RecoveryToken token, Locale locale,String webpageUrl);
 
-    void sendUpdateContractStatusEmail(JobContractWithImage jobContract, JobPackage jobPack, JobPost jobPost, Locale locale,String webpageUrl);
+    void sendUpdateContractStatusEmail(JobContract.ContractState newState, JobContractWithImage jobContract,
+                                       JobPackage jobPack, JobPost jobPost, Locale locale,String webpageUrl);
 }

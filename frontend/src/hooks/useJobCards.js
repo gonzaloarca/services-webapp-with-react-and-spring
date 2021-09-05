@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   getJobCardsRequest,
   getJobCardsByProIdRequest,
@@ -98,6 +98,7 @@ const useJobCardsHook = () => {
     getJobCardById,
     getOrderByParams,
     getOrderByParamById,
+    relatedJobCards,
     links,
   };
 };

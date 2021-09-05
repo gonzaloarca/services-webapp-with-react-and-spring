@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Error, LocationOn, Search } from '@material-ui/icons';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { themeUtils } from '../theme';
 import HeroStyles from './HeroStyles';
@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import clsx from 'clsx';
 import { useHistory } from 'react-router-dom';
+import { NavBarContext } from '../context';
 
 const useStyles = makeStyles(HeroStyles);
 
@@ -53,6 +54,7 @@ const Hero = ({ zones }) => {
       className={classes.heroContainer}
       style={{
         backgroundImage: `url(${process.env.PUBLIC_URL}/img/background.jpg)`,
+        backgroundPosition: '50% 20%',
       }}
     >
       <div className={classes.heroContent}>
@@ -71,7 +73,7 @@ const HeroSearchBar = ({ zones }) => {
     zone: '',
     query: '',
   };
-
+  const { setSearchBarQueryParams,searchBarQueryParams,setSearchBarValue } = useContext(NavBarContext)
   const validationSchema = Yup.object({
     zone: Yup.string()
       .required(t('validationerror.zone'))
@@ -79,13 +81,10 @@ const HeroSearchBar = ({ zones }) => {
     query: Yup.string(),
   });
 
-  const onSubmit = (values) => {
-    history.push(
-      '/search?zone=' +
-        (values.zone === '-1' ? '' : values.zone) +
-        '&query=' +
-        values.query
-    );
+  const onSubmit = ({zone,query}) => {
+    setSearchBarQueryParams({...searchBarQueryParams,query,zone})
+    setSearchBarValue(query)  
+    history.push('/search')
   };
 
   return (

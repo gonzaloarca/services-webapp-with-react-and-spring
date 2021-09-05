@@ -2,17 +2,13 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.JobContractService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.ByteImage;
-import ar.edu.itba.paw.models.JobContract;
-import ar.edu.itba.paw.models.JobContractWithImage;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditJobContractDto;
 import ar.edu.itba.paw.webapp.dto.input.NewJobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractCardDto;
-import ar.edu.itba.paw.webapp.dto.output.JobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractStateDto;
-import ar.edu.itba.paw.webapp.utils.ImageUploadUtil;
+import ar.edu.itba.paw.webapp.utils.ImagesUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.validation.ValidImage;
@@ -28,7 +24,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
@@ -60,15 +55,13 @@ public class JobContractController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findContracts(@QueryParam("userId") final Long userId,
                                   @QueryParam("state") final String contractState,
-                                  @QueryParam("role") final String role,
-                                  @QueryParam("page") @DefaultValue("1") int page) {
-        if (page < 1) page = 1;
-
+                                  @QueryParam("type") final String type,
+                                  @QueryParam("page") @DefaultValue("1") final int page) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         JobContractsControllerLogger.debug("Finding contracts Max page {}", userId);
-        int maxPage = jobContractService.findContractsMaxPage(userId, contractState, role);
+        int maxPage = jobContractService.findContractsMaxPage(userId, contractState, type);
 
-        List<JobContractCardDto> jobContractCardDtoList = jobContractService.findContracts(userId, contractState, role, page - 1)
+        List<JobContractCardDto> jobContractCardDtoList = jobContractService.findContracts(userId, contractState, type, page - 1)
                 .stream().map(jobContractCard -> JobContractCardDto
                         .fromJobContractCardWithLocalizedMessage(jobContractCard, uriInfo, messageSource
                                 .getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(),
@@ -102,41 +95,40 @@ public class JobContractController {
     @Path("/{contractId}/")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getById(@PathParam("contractId") final long contractId) {
+        Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         JobContractsControllerLogger.debug("Finding job contract by id: {}", contractId);
-        return Response.ok(JobContractDto
-                .fromJobContract(jobContractService.findJobContractWithImage(contractId), uriInfo))
-                .build();
+        JobContractCard jobContractCard = jobContractService.findContractCardById(contractId);
+        JobContractCardDto jobContractCardDto = JobContractCardDto
+                .fromJobContractCardWithLocalizedMessage(jobContractCard, uriInfo, messageSource
+                        .getMessage(jobContractCard.getJobCard().getJobPost().getJobType().getDescription(),
+                                null, locale));
+        return Response.ok(new GenericEntity<JobContractCardDto>(jobContractCardDto) {
+        }).build();
     }
 
     @PUT
     @Path("/{contractId}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public Response updateContract(@Valid final EditJobContractDto editJobContractDto,
-                                   @PathParam("contractId") final long contractId,
-                                   @QueryParam("role") final String role) {
+                                   @PathParam("contractId") final long contractId) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
         String webPageUrl = uriInfo.getAbsolutePathBuilder().replacePath(null)
                 .build().toString();
 
-        boolean isPro;
-        if (role.equals("professional"))
-            isPro = true;
-        else if (role.equals("client"))
-            isPro = false;
-        else throw new IllegalArgumentException("Invalid role type in query param");
-
-        if (editJobContractDto.getNewScheduledDate() == null)
-            JobContractsControllerLogger.debug("Updating job contract id: {} from {} with data: state: {}",
-                    contractId, isPro ? "professional" : "client", editJobContractDto.getNewState());
-        else {
-            JobContractsControllerLogger.debug("Updating job contract id: {} from {} with data: scheduledDate: {}, state: {}",
-                    contractId, isPro ? "professional" : "client", editJobContractDto.getNewScheduledDate(),
-                    editJobContractDto.getNewState());
+        if (editJobContractDto.getNewScheduledDate() != null) {
+            JobContractsControllerLogger.debug("Updating job contract with id: {} scheduledDate to: {}",
+                    contractId, editJobContractDto.getNewScheduledDate());
             jobContractService.changeContractScheduledDate(contractId,
-                    editJobContractDto.getNewScheduledDate(), isPro,
+                    editJobContractDto.getNewScheduledDate(),
                     locale);
         }
+        JobContractsControllerLogger.debug("Updating job contract with id: {} state to: {}",
+                contractId, editJobContractDto.getNewState());
+
+        long userId = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(UserNotFoundException::new).getId();
         jobContractService.changeContractState(contractId,
+                userId,
                 JobContract.ContractState.values()[Math.toIntExact(editJobContractDto.getNewState())],
                 locale, webPageUrl);
 
@@ -147,9 +139,9 @@ public class JobContractController {
     @Path("/{contractId}/image")
     @GET
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
-    public Response getContractImage(@PathParam("contractId") final long contractId) {
+    public Response getContractImage(@PathParam("contractId") final long contractId, @Context Request request) {
         ByteImage byteImage = jobContractService.findImageByContractId(contractId);
-        return Response.ok(new ByteArrayInputStream(byteImage.getData())).build();
+        return ImagesUtil.sendCacheableImageResponse(byteImage, request);
     }
 
     @Path("/{contractId}/image")
@@ -159,7 +151,7 @@ public class JobContractController {
     public Response uploadContractImage(@PathParam("contractId") final long contractId,
                                         @Valid @ValidImage @FormDataParam("file") final FormDataBodyPart body) {
         try {
-            if (jobContractService.addContractImage(contractId, ImageUploadUtil.fromInputStream(body)) == -1)
+            if (jobContractService.addContractImage(contractId, ImagesUtil.fromInputStream(body)) == -1)
                 throw new RuntimeException("Couldn't save image");
         } catch (IOException e) {
             throw new RuntimeException("Upload failed");
@@ -175,13 +167,16 @@ public class JobContractController {
     public Response getStates() {
         List<JobContractStateDto> contractStateDtos = Arrays.stream(JobContract.ContractState.values())
                 .map(JobContractStateDto::fromJobContractState).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<JobContractStateDto>>(contractStateDtos){}).build();
+        return Response.ok(new GenericEntity<List<JobContractStateDto>>(contractStateDtos) {
+        }).build();
     }
+
     @Path("/states/{id}")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getStateById(@PathParam("id") int id) {
         JobContractStateDto contractStateDto = JobContractStateDto.fromJobContractState(JobContract.ContractState.values()[id]);
-        return Response.ok(new GenericEntity<JobContractStateDto>(contractStateDto){}).build();
+        return Response.ok(new GenericEntity<JobContractStateDto>(contractStateDto) {
+        }).build();
     }
 }

@@ -1,14 +1,11 @@
 package ar.edu.itba.paw.services.simple;
 
-import ar.edu.itba.paw.interfaces.HirenetUtils;
 import ar.edu.itba.paw.interfaces.dao.JobContractDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobContractNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +16,14 @@ import java.util.*;
 @Transactional
 @Service
 public class SimpleJobContractService implements JobContractService {
+    private static final String TYPE_OFFERED_STRING = "offered";
+    private static final String TYPE_HIRED_STRING = "hired";
+    private static final String STATE_ACTIVE_STRING = "active";
+    private static final String STATE_PENDING_STRING = "pending";
+    private static final String STATE_FINALIZED_STRING = "finalized";
 
     @Autowired
     private JobContractDao jobContractDao;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private JobCardService jobCardService;
@@ -42,45 +41,41 @@ public class SimpleJobContractService implements JobContractService {
     private MailingService mailingService;
 
     @Override
-    public List<JobContractCard> findContracts(Long userId, String contractState, String role, int page) {
+    public List<JobContractCard> findContracts(Long userId, String contractState, String type, int page) {
 
-        if (userId == null && contractState == null && role == null)
-            return getJobContractCards(jobContractDao.findAllWithImage(page));
+        if (userId == null && contractState == null && type == null)
+            return getJobContractCards(jobContractDao.findAll(page));
 
-        if (userId == null || contractState == null || role == null ||
-                (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized")))
-            throw new IllegalArgumentException();
+        if (userId == null || contractState == null || type == null ||
+                (!contractState.equalsIgnoreCase(STATE_ACTIVE_STRING) && !contractState.equalsIgnoreCase(STATE_PENDING_STRING)
+                        && !contractState.equalsIgnoreCase(STATE_FINALIZED_STRING)))
+            throw new IllegalArgumentException("Bad parameters");
 
         List<JobContract.ContractState> states = getContractStates(contractState);
-        if (role.equalsIgnoreCase("professional")) {
+        if (type.equalsIgnoreCase(TYPE_OFFERED_STRING)) {
             return getJobContractCards(findByProIdAndSortedByModificationDateWithImage(userId, states, page));
-        } else if (role.equals("client")) {
+        } else if (type.equalsIgnoreCase(TYPE_HIRED_STRING)) {
             return getJobContractCards(findByClientIdAndSortedByModificationDateWithImage(userId, states, page));
         } else
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid type param");
     }
 
     @Override
-    public int findContractsMaxPage(Long userId, String contractState, String role) {
+    public int findContractsMaxPage(Long userId, String contractState, String type) {
 
-        if (userId == null && contractState == null && role == null)
+        if (userId == null && contractState == null && type == null)
             return jobContractDao.findAllMaxPage();
 
-        if (userId == null || contractState == null || role == null ||
-                (!contractState.equals("active") && !contractState.equals("pending") && !contractState.equals("finalized")))
+        if (userId == null || contractState == null || type == null ||
+                (!contractState.equalsIgnoreCase(STATE_ACTIVE_STRING) && !contractState.equalsIgnoreCase(STATE_PENDING_STRING) && !contractState.equalsIgnoreCase(STATE_FINALIZED_STRING)))
             throw new IllegalArgumentException();
 
-        if (role.equals("professional")) {
+        if (type.equalsIgnoreCase(TYPE_OFFERED_STRING)) {
             return findContractsByProIdMaxPage(userId, getContractStates(contractState));
-        } else if (role.equals("client")) {
+        } else if (type.equalsIgnoreCase(TYPE_HIRED_STRING)) {
             return findContractsByClientIdMaxPage(userId, getContractStates(contractState));
         } else
-            throw new IllegalArgumentException();
-    }
-
-    @Override
-    public List<JobContract> findAll(int page) {
-        return jobContractDao.findAll(page);
+            throw new IllegalArgumentException("Invalid type param");
     }
 
     @Override
@@ -94,48 +89,28 @@ public class SimpleJobContractService implements JobContractService {
     }
 
     @Override
-    public JobContract findById(long contractId) {
-        Optional<JobContract> jobContract = jobContractDao.findById(contractId);
-        if (!jobContract.isPresent())
-            throw new JobContractNotFoundException();
-        return jobContract.get();
+    public JobContractCard findContractCardById(long contractId) {
+        JobContractWithImage jobContract = jobContractDao.findById(contractId).orElseThrow(JobContractNotFoundException::new);
+        return new JobContractCard(jobContract,
+                jobCardService.findByPostIdWithInactive(jobContract.getJobPackage().getJobPost().getId()),
+                reviewService.findContractReview(jobContract.getId()).orElse(null), jobContract.getScheduledDate().toString());
     }
 
     @Override
     public List<JobContractWithImage> findByClientIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
                                                                                          int page) {
-        return jobContractDao.findByClientIdAndSortedByModificationDateWithImage(id, states, page);
+        return jobContractDao.findByClientId(id, states, page);
     }
 
     @Override
     public List<JobContractWithImage> findByProIdAndSortedByModificationDateWithImage(long id, List<JobContract.ContractState> states,
                                                                                       int page) {
-        return jobContractDao.findByProIdAndSortedByModificationDateWithImage(id, states, page);
-    }
-
-    @Override
-    public List<JobContract> findByPostId(long id) {
-        return jobContractDao.findByPostId(id, HirenetUtils.ALL_PAGES);
-    }
-
-    @Override
-    public List<JobContract> findByPostId(long id, int page) {
-        return jobContractDao.findByPostId(id, page);
-    }
-
-    @Override
-    public User findClientByContractId(long id) {
-        return jobContractDao.findClientByContractId(id).orElseThrow(UserNotFoundException::new);
+        return jobContractDao.findByProId(id, states, page);
     }
 
     @Override
     public int findCompletedContractsByProIdQuantity(long id) {
         return jobContractDao.findCompletedContractsByProIdQuantity(id);
-    }
-
-    @Override
-    public int findAllMaxPage() {
-        return jobContractDao.findAllMaxPage();
     }
 
     @Override
@@ -163,15 +138,11 @@ public class SimpleJobContractService implements JobContractService {
         return jobContractCards;
     }
 
-
     @Override
-    public void changeContractState(long id, JobContract.ContractState state, Locale locale, String webPageUrl) {
-        Optional<JobContract> maybeContract = jobContractDao.findById(id);
+    public void changeContractState(long id, long userId, JobContract.ContractState state, Locale locale, String webPageUrl) {
+        JobContractWithImage maybeContract = jobContractDao.findById(id).orElseThrow(JobContractNotFoundException::new);
 
-        if (!maybeContract.isPresent())
-            throw new JobContractNotFoundException();
-
-        JobContract.ContractState currentState = maybeContract.get().getState();
+        JobContract.ContractState currentState = maybeContract.getState();
 
         // No debería ser modificado si ya habia finalizado
         if (currentState == JobContract.ContractState.CLIENT_CANCELLED || currentState == JobContract.ContractState.PRO_CANCELLED
@@ -180,29 +151,28 @@ public class SimpleJobContractService implements JobContractService {
             throw new IllegalStateException();
         boolean modifiedState = state.equals(JobContract.ContractState.PRO_MODIFIED)
                 || state.equals(JobContract.ContractState.CLIENT_MODIFIED);
-        if (!maybeContract.get().isWasRescheduled()
+        if (!maybeContract.wasRescheduled()
                 && modifiedState)
             jobContractDao.setWasRescheduled(id);
-        else if (maybeContract.get().isWasRescheduled() && modifiedState)
+        else if (maybeContract.wasRescheduled() && modifiedState)
             throw new IllegalArgumentException("Cannot reschedule more than once");
-        jobContractDao.changeContractState(id, state);
+        jobContractDao.changeContractState(id, userId, state);
         JobContractWithImage jobContract = findJobContractWithImage(id);
         JobPackage jobPackage = jobPackageService.findById(jobContract.getJobPackage().getId(), jobContract.getJobPackage().getJobPost().getId());
         JobPost jobPost = jobPostService.findById(jobPackage.getPostId());
 
-        mailingService.sendUpdateContractStatusEmail(jobContract, jobPackage, jobPost, locale, webPageUrl);
+        mailingService.sendUpdateContractStatusEmail(state, jobContract, jobPackage, jobPost, locale, webPageUrl);
     }
 
     @Override
-    public void changeContractScheduledDate(long id, String scheduledDate, boolean isServiceOwner, Locale locale) {
+    public void changeContractScheduledDate(long id, String scheduledDate, Locale locale) {
         LocalDateTime parsedDate = LocalDateTime.parse(scheduledDate, DateTimeFormatter.ISO_DATE_TIME);
-
         jobContractDao.changeContractScheduledDate(id, parsedDate);
     }
 
     @Override
     public JobContractWithImage findJobContractWithImage(long id) {
-        return jobContractDao.findJobContractWithImage(id).orElseThrow(JobContractNotFoundException::new);
+        return jobContractDao.findById(id).orElseThrow(JobContractNotFoundException::new);
     }
 
     @Override
@@ -215,15 +185,15 @@ public class SimpleJobContractService implements JobContractService {
         List<JobContract.ContractState> states = new ArrayList<>();
 
         switch (contractState) {
-            case "active":
+            case STATE_ACTIVE_STRING:
                 states.add(JobContract.ContractState.APPROVED);
                 break;
-            case "pending":
+            case STATE_PENDING_STRING:
                 states.add(JobContract.ContractState.PENDING_APPROVAL);
                 states.add(JobContract.ContractState.PRO_MODIFIED);
                 states.add(JobContract.ContractState.CLIENT_MODIFIED);
                 break;
-            case "finalized":
+            case STATE_FINALIZED_STRING:
                 states.add(JobContract.ContractState.COMPLETED);
                 states.add(JobContract.ContractState.PRO_CANCELLED);
                 states.add(JobContract.ContractState.PRO_REJECTED);

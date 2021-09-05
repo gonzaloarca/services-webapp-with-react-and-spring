@@ -9,7 +9,6 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import React, { useEffect, useState, useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { AddBox, Create, DeleteForever, Launch } from '@material-ui/icons';
 import { themeUtils } from '../theme';
@@ -19,7 +18,7 @@ import PackagesHeader from '../components/PackagesHeader';
 import { Helmet } from 'react-helmet';
 import { useJobPosts, useUser, useJobPackages } from '../hooks';
 import { extractLastIdFromURL } from '../utils/urlUtils';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import { Skeleton } from '@material-ui/lab';
 
 const useGlobalStyles = makeStyles(styles);
@@ -57,6 +56,12 @@ const Packages = ({ match, history }) => {
   const [jobPost, setJobPost] = useState(null);
   const [packages, setPackages] = useState([]);
   const [proUser, setProUser] = useState(null);
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/create-job-post',isTransparent:false});
+  },[])
 
   const loadJobPost = async () => {
     try {
@@ -108,7 +113,9 @@ const Packages = ({ match, history }) => {
   const deletePackage = async (pack) => {
     try {
       await deleteJobPackage(pack, postId);
-      history.go(0);
+      setLoading(true);
+      await loadPackages();
+      setLoading(false);
     } catch (e) {
       history.push(`/error`);
     }
@@ -121,7 +128,6 @@ const Packages = ({ match, history }) => {
           {t('title', { section: t('navigation.sections.packages') })}
         </title>
       </Helmet>
-      <NavBar currentSection="/create-job-post" />
       <div className={globalClasses.contentContainerTransparent}>
         {loading ? (
           <Grid container spacing={3} className="mt-3">
