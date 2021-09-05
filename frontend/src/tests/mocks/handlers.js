@@ -9,5 +9,10 @@ export const handlers = [
       ctx.status(200)
     );
   }),
-  rest.get('/zones', null),
+  rest.get('/api/zones', null),
+  rest.get('/api/contracts/states', null),
+  rest.get('/api/job-cards', null),
+  rest.get('/api/categories', null),
+  rest.get('/api/job-cards/order-params', null),
+  rest.get('/api/rate-types', null),
 ];
