@@ -13,7 +13,7 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
         return Response.status(Response.Status.BAD_GATEWAY).entity(
                 new GenericEntity<HirenetRuntimeExceptionMessage>(
                         new HirenetRuntimeExceptionMessage(e)) {
-        }).build();
+                }).build();
     }
 
     private static class HirenetRuntimeExceptionMessage {

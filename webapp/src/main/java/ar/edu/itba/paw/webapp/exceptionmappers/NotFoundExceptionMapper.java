@@ -11,13 +11,16 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NoSuchElementExc
 
     @Override
     public Response toResponse(NoSuchElementException e) {
-        return Response.status(Response.Status.NOT_FOUND).entity(new GenericEntity<HirenetNotFoundErrorMessage>(new HirenetNotFoundErrorMessage(e)){}).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(
+                new GenericEntity<HirenetNotFoundErrorMessage>(
+                        new HirenetNotFoundErrorMessage(e)) {
+                }).build();
     }
 
-    private static class HirenetNotFoundErrorMessage{
+    private static class HirenetNotFoundErrorMessage {
         private String message;
 
-        public HirenetNotFoundErrorMessage(NoSuchElementException e){
+        public HirenetNotFoundErrorMessage(NoSuchElementException e) {
             this.message = e.getMessage();
         }
 

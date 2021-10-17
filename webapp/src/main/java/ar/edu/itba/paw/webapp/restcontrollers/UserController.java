@@ -56,7 +56,7 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findByEmail(@QueryParam("email") final String email) {
         if (email == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            throw new IllegalArgumentException("Email must have a value");
         }
             accountControllerLogger.debug("Finding user with email {}", email);
             UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
@@ -84,7 +84,7 @@ public class UserController {
                                     .resolveLocale(headers.getAcceptableLanguages()), newUserDto.getWebPageUrl());
         } catch (UserAlreadyExistsException e) {
             accountControllerLogger.error("Register error: email already exists");
-            return Response.status(Response.Status.CONFLICT).build();
+            throw new UserAlreadyExistsException();
         }
         final URI userUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(currentUser.getId()))
@@ -159,7 +159,7 @@ public class UserController {
                                    @PathParam("id") final long id) {
         accountControllerLogger.debug("Updating user password with id {}", id);
         if(!userService.validCredentials(editPasswordDto.getEmail(), editPasswordDto.getOldPassword()))
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            throw new IllegalArgumentException("Bad credentials");
 
         userService.changeUserPassword(id, editPasswordDto.getNewPassword(), editPasswordDto.getOldPassword());
         return Response.ok(userService.findById(id)).build();

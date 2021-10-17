@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.exceptions.JobPackageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UpdateFailException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.dto.input.EditJobPackageDto;
@@ -230,7 +231,7 @@ public class JobPostController {
                 packageId, title, description, price, rateType, isActive);
         if (!jobPackageService.updateJobPackage(packageId, postId, title, description, price, rateType, isActive)) {
             jobPostControllerLogger.debug("Package not found {}", packageId);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new JobPackageNotFoundException();
         }
         final URI packageUri = uriInfo.getAbsolutePathBuilder().build();
         return Response.ok(packageUri).build();

@@ -112,7 +112,7 @@ public class JobCardController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response orderParams(@PathParam("id") int id) {
         if (id < 0 || id > JobCard.OrderBy.values().length - 1)
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new NoSuchElementException();
         JobCard.OrderBy orderBy = JobCard.OrderBy.values()[id];
         JobCardOrderByDto jobCardOrderByDto = JobCardOrderByDto.fromJobCardOrderByInfo(orderBy.getValue(),
                 messageSource.getMessage(orderBy.getStringCode(), null, LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages())));
