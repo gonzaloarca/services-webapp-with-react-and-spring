@@ -72,13 +72,13 @@ const useStyles = makeStyles((theme) => ({
 
 const TabPanel = ({ children, value, index }) => {
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-    >
-      {value === index && children}
-    </div>
+      <div
+          role="tabpanel"
+          hidden={value !== index}
+          id={`simple-tabpanel-${index}`}
+      >
+        {value === index && children}
+      </div>
   );
 };
 
@@ -89,7 +89,7 @@ const MyContracts = ({ history }) => {
   const { activeTab, activeState } = useParams();
   const { currentUser } = useContext(UserContext);
   const { getContractsByClientIdAndState, getContractsByProAndStateId, links } =
-    useContracts();
+      useContracts();
   const [hiredServices, setHiredServices] = useState(null);
   const [myServices, setMyServices] = useState(null);
   const [tabValue, setTabValue] = React.useState(activeTab === 'pro' ? 1 : 0);
@@ -109,18 +109,18 @@ const MyContracts = ({ history }) => {
 
   const loadHiredContracts = async () => {
     const clientContracts = await getContractsByClientIdAndState(
-      currentUser.id,
-      activeState,
-      queryParams.page
+        currentUser.id,
+        activeState,
+        queryParams.page
     );
     setHiredServices([...clientContracts]);
     setLoading(false);
   };
   const loadMyServicesContracts = async () => {
     const proServices = await getContractsByProAndStateId(
-      currentUser.id,
-      activeState,
-      queryParams.page
+        currentUser.id,
+        activeState,
+        queryParams.page
     );
     setMyServices([...proServices]);
     setLoading(false);
@@ -150,112 +150,110 @@ const MyContracts = ({ history }) => {
   const handleChange = (_event, newValue) => {
     setTabValue(newValue);
     history.push(
-      `/my-contracts/${tabPaths[newValue]}` +
+        `/my-contracts/${tabPaths[newValue]}` +
         (activeState ? `/${activeState}` : '')
     );
   };
 
   return (
-    <div>
-      <Helmet>
-        <title>
-          {t('title', { section: t('navigation.sections.mycontracts') })}
-        </title>
-      </Helmet>
-      <div className={globalClasses.contentContainerTransparent}>
-        <SectionHeader sectionName={t('navigation.sections.mycontracts')} />
-        <div>
-          <AppBar position="static">
-            <Tabs
-              variant="fullWidth"
-              className={classes.tabs}
-              value={tabValue}
-              onChange={handleChange}
-            >
-              <Tab
-                label={
-                  <div className="flex items-center justify-center">
-                    <CircleIcon
-                      className="mr-2"
-                      color={themeUtils.colors.yellow}
-                      size="2rem"
-                    >
-                      <Group className="text-white" />
-                    </CircleIcon>
-                    {t('mycontracts.hiredservices')}
-                  </div>
-                }
-              />
-              <Tab
-                label={
-                  <div className="flex items-center justify-center">
-                    <CircleIcon
-                      className="mr-2"
-                      color={themeUtils.colors.lightBlue}
-                      size="2rem"
-                    >
-                      <Person className="text-white" />
-                    </CircleIcon>
-                    {t('mycontracts.myservices')}
-                  </div>
-                }
-              />
-            </Tabs>
-          </AppBar>
+      <div>
+        <Helmet>
+          <title>
+            {t('title', { section: t('navigation.sections.mycontracts') })}
+          </title>
+        </Helmet>
+        <div className={globalClasses.contentContainerTransparent}>
+          <SectionHeader sectionName={t('navigation.sections.mycontracts')} />
+          <div>
+            <AppBar position="static">
+              <Tabs
+                  variant="fullWidth"
+                  className={classes.tabs}
+                  value={tabValue}
+                  onChange={handleChange}
+              >
+                <Tab
+                    label={
+                      <div className="flex items-center justify-center">
+                        <CircleIcon
+                            className="mr-2"
+                            color={themeUtils.colors.yellow}
+                            size="2rem"
+                        >
+                          <Group className="text-white" />
+                        </CircleIcon>
+                        {t('mycontracts.hiredservices')}
+                      </div>
+                    }
+                />
+                <Tab
+                    label={
+                      <div className="flex items-center justify-center">
+                        <CircleIcon
+                            className="mr-2"
+                            color={themeUtils.colors.lightBlue}
+                            size="2rem"
+                        >
+                          <Person className="text-white" />
+                        </CircleIcon>
+                        {t('mycontracts.myservices')}
+                      </div>
+                    }
+                />
+              </Tabs>
+            </AppBar>
 
-          <TabPanel value={tabValue} index={0}>
-            <div className="mt-6">
-              <ContractsDashboard
-                contracts={hiredServices}
-                topTabSection={tabPaths[tabValue]}
-                loadHiredContracts={loadHiredContracts}
-                loadMyServicesContracts={loadMyServicesContracts}
-                setReload={setReload}
-                loading={loading}
-                setLoading={setLoading}
-                links={links}
-                queryParams={queryParams}
-                setQueryParams={setQueryParams}
-              />
-            </div>
-          </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            <div className="mt-6">
-              <ContractsDashboard
-                contracts={myServices}
-                isOwner
-                topTabSection={tabPaths[tabValue]}
-                loadHiredContracts={loadHiredContracts}
-                loadMyServicesContracts={loadMyServicesContracts}
-                setReload={setReload}
-                loading={loading}
-                setLoading={setLoading}
-                links={links}
-                queryParams={queryParams}
-                setQueryParams={setQueryParams}
-              />
-            </div>
-          </TabPanel>
+            <TabPanel value={tabValue} index={0}>
+              <div className="mt-6">
+                <ContractsDashboard
+                    contracts={hiredServices}
+                    topTabSection={tabPaths[tabValue]}
+                    loadHiredContracts={loadHiredContracts}
+                    loadMyServicesContracts={loadMyServicesContracts}
+                    setReload={setReload}
+                    loading={loading}
+                    setLoading={setLoading}
+                    links={links}
+                    queryParams={queryParams}
+                    setQueryParams={setQueryParams}
+                />
+              </div>
+            </TabPanel>
+            <TabPanel value={tabValue} index={1}>
+              <div className="mt-6">
+                <ContractsDashboard
+                    contracts={myServices}
+                    isOwner
+                    topTabSection={tabPaths[tabValue]}
+                    loadHiredContracts={loadHiredContracts}
+                    loadMyServicesContracts={loadMyServicesContracts}
+                    setReload={setReload}
+                    loading={loading}
+                    setLoading={setLoading}
+                    links={links}
+                    queryParams={queryParams}
+                    setQueryParams={setQueryParams}
+                />
+              </div>
+            </TabPanel>
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 
 const ContractsDashboard = ({
-  contracts,
-  isOwner = false,
-  topTabSection,
-  loadHiredContracts,
-  loadMyServicesContracts,
-  reload,
-  setReload,
-  loading,
-  setLoading,
-  links,
-  queryParams,
-  setQueryParams,
-}) => {
+                              contracts,
+                              isOwner = false,
+                              topTabSection,
+                              reload,
+                              setReload,
+                              loading,
+                              setLoading,
+                              links,
+                              queryParams,
+                              setQueryParams,
+                            }) => {
   const globalClasses = useGlobalStyles();
   const classes = useStyles();
   const { t } = useTranslation();
@@ -336,7 +334,7 @@ const ContractsDashboard = ({
 
   const history = useHistory();
   const [tabValue, setTabValue] = React.useState(
-    activeState === 'finalized' ? 2 : activeState === 'pending' ? 1 : 0
+      activeState === 'finalized' ? 2 : activeState === 'pending' ? 1 : 0
   );
 
   useEffect(() => {
@@ -353,113 +351,113 @@ const ContractsDashboard = ({
 
   useEffect(() => {
     history.replace(
-      `/my-contracts/${topTabSection}/${contractSections[tabValue].path}`
+        `/my-contracts/${topTabSection}/${contractSections[tabValue].path}`
     );
   }, []);
 
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
     history.push(
-      `/my-contracts/${topTabSection}/${contractSections[newValue].path}`
+        `/my-contracts/${topTabSection}/${contractSections[newValue].path}`
     );
   };
 
   return (
-    <Grid container spacing={4}>
-      {/* Sección con selector de tipo de contrato */}
-      <Grid item sm={12} md={3}>
-        <div className={classes.contractTypeSection}>
-          <h2 className={clsx(globalClasses.sectionTitle)}>
-            {t('mycontracts.contracts')}
-          </h2>
-          <Divider className="mb-2" />
-          <Tabs
-            orientation="vertical"
-            value={tabValue}
-            indicatorColor="primary"
-            onChange={handleChange}
-            className={classes.tabs}
-          >
-            {contractSections.map((section, index) => (
-              <HirenetTab
-                fullWidth
-                key={index}
-                className="items-start"
-                label={
-                  <div
-                    className={clsx(
-                      classes.tabContent,
-                      index === tabValue ? 'font-semibold' : 'font-medium',
-                      'w-full'
-                    )}
-                  >
-                    <CircleIcon
-                      className="mr-2"
-                      color={section.color}
-                      size="2rem"
-                    >
-                      {section.icon}
-                    </CircleIcon>
-                    <div className="text-left">{section.tabLabel}</div>
-                  </div>
-                }
-              />
-            ))}
-          </Tabs>
-        </div>
-      </Grid>
+      <Grid container spacing={4}>
+        {/* Sección con selector de tipo de contrato */}
+        <Grid item sm={12} md={3}>
+          <div className={classes.contractTypeSection}>
+            <h2 className={clsx(globalClasses.sectionTitle)}>
+              {t('mycontracts.contracts')}
+            </h2>
+            <Divider className="mb-2" />
+            <Tabs
+                orientation="vertical"
+                value={tabValue}
+                indicatorColor="primary"
+                onChange={handleChange}
+                className={classes.tabs}
+            >
+              {contractSections.map((section, index) => (
+                  <HirenetTab
+                      fullWidth
+                      key={index}
+                      className="items-start"
+                      label={
+                        <div
+                            className={clsx(
+                                classes.tabContent,
+                                index === tabValue ? 'font-semibold' : 'font-medium',
+                                'w-full'
+                            )}
+                        >
+                          <CircleIcon
+                              className="mr-2"
+                              color={section.color}
+                              size="2rem"
+                          >
+                            {section.icon}
+                          </CircleIcon>
+                          <div className="text-left">{section.tabLabel}</div>
+                        </div>
+                      }
+                  />
+              ))}
+            </Tabs>
+          </div>
+        </Grid>
 
-      {/* Sección con lista de contratos */}
-      <Grid item sm={12} md={9}>
-        <div className={classes.contractSection}>
-          {contractSections.map((section, index) => (
-            <TabPanel key={index} value={tabValue} index={index}>
-              <h2 className={globalClasses.sectionTitle}>{section.title}</h2>
-              <Divider className="mb-2" />
-              {!loading && contracts ? (
-                <div className="p-4">
-                  {contracts.length === 0 ? (
-                    <NoContracts
-                      header={getNoContractsContent(isOwner, index).header}
-                      body={getNoContractsContent(isOwner, index).body}
-                    />
-                  ) : (
-                    <div>
-                      <>
-                        {contracts.map((contract) => (
-                          <div key={contract.id} className="mb-6">
-                            <ContractCard
-                              contract={contract}
-                              isOwner={isOwner}
-                              refetch={(section) =>
-                                history.push(
-                                  `/my-contracts/${topTabSection}/${section}`
-                                )
-                              }
-                              reload={reload}
-                              setReload={setReload}
+        {/* Sección con lista de contratos */}
+        <Grid item sm={12} md={9}>
+          <div className={classes.contractSection}>
+            {contractSections.map((section, index) => (
+                <TabPanel key={index} value={tabValue} index={index}>
+                  <h2 className={globalClasses.sectionTitle}>{section.title}</h2>
+                  <Divider className="mb-2" />
+                  {!loading && contracts ? (
+                      <div className="p-4">
+                        {contracts.length === 0 ? (
+                            <NoContracts
+                                header={getNoContractsContent(isOwner, index).header}
+                                body={getNoContractsContent(isOwner, index).body}
                             />
-                          </div>
-                        ))}{' '}
-                        <BottomPagination
-                          maxPage={links.last?.page || queryParams.page}
-                          queryParams={queryParams}
-                          setQueryParams={setQueryParams}
-                        />
-                      </>
-                    </div>
+                        ) : (
+                            <div>
+                              <>
+                                {contracts.map((contract) => (
+                                    <div key={contract.id} className="mb-6">
+                                      <ContractCard
+                                          contract={contract}
+                                          isOwner={isOwner}
+                                          refetch={(section) =>
+                                              history.push(
+                                                  `/my-contracts/${topTabSection}/${section}`
+                                              )
+                                          }
+                                          reload={reload}
+                                          setReload={setReload}
+                                      />
+                                    </div>
+                                ))}{' '}
+                                <BottomPagination
+                                    maxPage={links.last?.page || queryParams.page}
+                                    queryParams={queryParams}
+                                    setQueryParams={setQueryParams}
+                                />
+                              </>
+                            </div>
+                        )}
+                      </div>
+                  ) : (
+                      <div className="flex justify-center items-center w-full h-96">
+                        <CircularProgress />
+                      </div>
                   )}
-                </div>
-              ) : (
-                <div className="flex justify-center items-center w-full h-96">
-                  <CircularProgress />
-                </div>
-              )}
-            </TabPanel>
-          ))}
-        </div>
+                </TabPanel>
+            ))}
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
   );
 };
 
@@ -484,16 +482,16 @@ const NoContracts = ({ header, body }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.noContractsContainer}>
-      <img
-        src={process.env.PUBLIC_URL + '/img/contract1.svg'}
-        alt=""
-        className={classes.noContractsImage}
-        loading="lazy"
-      />
-      <h3 className={classes.noContractsHeader}>{header}</h3>
-      <p className={classes.noContractsBody}>{body}</p>
-    </div>
+      <div className={classes.noContractsContainer}>
+        <img
+            src={process.env.PUBLIC_URL + '/img/contract1.svg'}
+            alt=""
+            className={classes.noContractsImage}
+            loading="lazy"
+        />
+        <h3 className={classes.noContractsHeader}>{header}</h3>
+        <p className={classes.noContractsBody}>{body}</p>
+      </div>
   );
 };
 export default MyContracts;

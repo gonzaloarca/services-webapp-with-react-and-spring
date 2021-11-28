@@ -208,15 +208,16 @@ public class JobContractDaoJpa implements JobContractDao {
         JobContract contract = em.find(JobContract.class, id);
         List<JobContract.ContractState> clientStates = Arrays.asList(
                 JobContract.ContractState.CLIENT_CANCELLED, JobContract.ContractState.CLIENT_MODIFIED, JobContract.ContractState.CLIENT_REJECTED);
+        List<JobContract.ContractState> professionalStates = Arrays.asList(
+                JobContract.ContractState.PRO_CANCELLED, JobContract.ContractState.PRO_MODIFIED, JobContract.ContractState.PRO_REJECTED);
 
         if (contract == null)
             throw new JobContractNotFoundException();
-        if (clientStates.contains(state)) {
-            // Si esta modificando como un cliente verifico que lo sea
-            if (contract.getClient().getId() != userId)
-                throw new JobContractNotFoundException();
-        } else if (contract.getJobPackage().getJobPost().getUser().getId() != userId)
+        if ((clientStates.contains(state) && contract.getClient().getId() != userId) ||
+                (professionalStates.contains(state) && contract.getProfessional().getId() != userId)) {
+            // Si quiere modificar a un nuevo estado como un cliente, verifico que realmente lo sea. Idem con profesional
             throw new JobContractNotFoundException();
+        }
 
         contract.setState(state);
         contract.setLastModifiedDate(LocalDateTime.now());
