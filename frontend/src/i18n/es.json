@@ -207,7 +207,7 @@
   "verifyemail": {
     "title": "Verificación de email",
     "success": "¡Email verificado correctamente!",
-    "pleaselogin": "Por favor, inicie sesión con su usuario para utilizar el sitio.",
+    "redirecting":"Redirigiendolo a la pantalla de inicio en {{time}}",
     "login": "Iniciar Sesión",
     "invalid": "Enlace inválido o caducado",
     "instructions": "El enlace al que has ingresado no es correcto. Por favor, realiza el registro de nuevo si todavía no tienes una cuenta.",

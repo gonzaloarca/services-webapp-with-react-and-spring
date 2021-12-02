@@ -205,7 +205,7 @@ const JobPost = ({ match, history }) => {
   const { getUserById } = useUser();
   const { currentUser } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
-  const [post, setJobPost] = useState(null);
+  const [jobPost, setJobPost] = useState(null);
   const [jobCard, setJobCard] = useState(null);
   const [packages, setPackages] = useState([]);
   const [proUser, setProUser] = useState(null);
@@ -249,7 +249,7 @@ const JobPost = ({ match, history }) => {
 
   const loadProUser = async () => {
     try {
-      const proId = extractLastIdFromURL(post.professional);
+      const proId = extractLastIdFromURL(jobPost.professional);
       const pro = await getUserById(proId);
       setProUser(pro);
     } catch (e) {
@@ -258,20 +258,20 @@ const JobPost = ({ match, history }) => {
   };
 
   useEffect(() => {
-    if (post) {
+    if (jobPost) {
       loadProUser();
     }
-  }, [post]);
+  }, [jobPost]);
 
   useEffect(() => {
-    if (post && jobCard && packages && packages.length > 0 && proUser) {
-      if (currentUser && currentUser.id === proUser.id && post.active)
+    if (jobPost && jobCard && packages && packages.length > 0 && proUser) {
+      if (currentUser && currentUser.id === proUser.id && jobPost.active)
         setIsOwner(true);
-      else if (post.active) setHirable(true);
-      if (!post.active) setFinalized(true);
+      else if (jobPost.active) setHirable(true);
+      if (!jobPost.active) setFinalized(true);
       setLoading(false);
     }
-  }, [post, jobCard, packages, proUser]);
+  }, [jobPost, jobCard, packages, proUser]);
 
   useEffect(() => {
     loadJobPost();
@@ -281,7 +281,7 @@ const JobPost = ({ match, history }) => {
 
   const deletePost = async () => {
     try {
-      await deleteJobPost(post);
+      await deleteJobPost(jobPost);
       setIsOwner(false);
       setHirable(false);
       setFinalized(true);
@@ -300,7 +300,7 @@ const JobPost = ({ match, history }) => {
       ) : (
         <>
           <Helmet>
-            <title>{t('title', { section: post.title })}</title>
+            <title>{t('title', { section: jobPost.title })}</title>
           </Helmet>
           <div className={globalClasses.contentContainerTransparent}>
             {finalized && (
@@ -347,7 +347,7 @@ const JobPost = ({ match, history }) => {
               <></>
             )}
             <Carousel navButtonsAlwaysVisible>
-              {post.images.map((item, i) => (
+              {jobPost.images.map((item, i) => (
                 <img
                   key={`image_${i}`}
                   src={item}
@@ -377,7 +377,7 @@ const JobPost = ({ match, history }) => {
                   labelBackgroundColor={themeUtils.colors.aqua}
                 >
                   <div className={classes.workingHoursContainer}>
-                    {post.availableHours}
+                    {jobPost.availableHours}
                   </div>
                 </SectionCard>
               </Grid>
@@ -389,7 +389,7 @@ const JobPost = ({ match, history }) => {
                   labelBackgroundColor={themeUtils.colors.orange}
                 >
                   <div className={classes.locationsContainer}>
-                    {post.zones.map((zone) => (
+                    {jobPost.zones.map((zone) => (
                       <Chip
                         className={classes.locationChip}
                         key={`zone_${zone.id}`}
@@ -421,7 +421,7 @@ const JobPost = ({ match, history }) => {
             </div>
             {/* Reseñas */}
             <div id="reviews" className="mt-7">
-              <ReviewListCard postId={post.id} />
+              <ReviewListCard postId={jobPost.id} />
             </div>
           </div>
         </>

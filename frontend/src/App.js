@@ -72,7 +72,6 @@ const App = () => {
         setToken(null);
         setCurrentUser(null);
       } else {
-        // console.log('saving user in context', decoded.sub);
         saveUserData(decoded.sub);
         setToken(localStorageToken);
       }
@@ -84,7 +83,6 @@ const App = () => {
         setToken(null);
         setCurrentUser(null);
       } else {
-        // console.log('saving user in context', decoded.sub);
         saveUserData(decoded.sub);
         setToken(sessionStorageToken);
       }

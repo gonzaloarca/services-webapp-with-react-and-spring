@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.auth.JwtUtils;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.utils.ImagesUtil;
@@ -46,6 +47,9 @@ public class UserController {
     @Autowired
     private JobContractService jobContractService;
 
+    @Autowired
+    private JwtUtils jwtUtil;
+
     @Context
     private UriInfo uriInfo;
 
@@ -58,9 +62,9 @@ public class UserController {
         if (email == null) {
             throw new IllegalArgumentException("Email must have a value");
         }
-            accountControllerLogger.debug("Finding user with email {}", email);
-            UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
-            return Response.ok(getUserDto(user)).build();
+        accountControllerLogger.debug("Finding user with email {}", email);
+        UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
+        return Response.ok(getUserDto(user)).build();
     }
 
     private UserDto getUserDto(UserWithImage userWithImage) {
@@ -108,9 +112,9 @@ public class UserController {
     @Path("/{id}/image")
     @GET
     @Produces(value = {"image/png", "image/jpg", "image/jpeg", MediaType.APPLICATION_JSON})
-    public Response getUserImage(@PathParam("id") final long id,@Context Request request) {
+    public Response getUserImage(@PathParam("id") final long id, @Context Request request) {
         ByteImage byteImage = userService.findImageByUserId(id);
-        return ImagesUtil.sendCacheableImageResponse(byteImage,request);
+        return ImagesUtil.sendCacheableImageResponse(byteImage, request);
     }
 
     @Path("/{id}/image")
@@ -158,8 +162,8 @@ public class UserController {
     public Response changePassword(@Valid EditPasswordDto editPasswordDto,
                                    @PathParam("id") final long id) {
         accountControllerLogger.debug("Updating user password with id {}", id);
-        if(!userService.validCredentials(editPasswordDto.getEmail(), editPasswordDto.getOldPassword()))
-            throw new IllegalArgumentException("Bad credentials");
+        if (!userService.validCredentials(editPasswordDto.getEmail(), editPasswordDto.getOldPassword()))
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         userService.changeUserPassword(id, editPasswordDto.getNewPassword(), editPasswordDto.getOldPassword());
         return Response.ok(userService.findById(id)).build();
@@ -184,8 +188,22 @@ public class UserController {
             accountControllerLogger.debug("Verification token expired");
             throw new IllegalArgumentException("Token expired");
         }
+
+        StringBuilder bearerToken = new StringBuilder("Bearer ");
+
+        String jwtToken;
+        try {
+            jwtToken = jwtUtil.generateAccessToken(user);
+        } catch (IOException e) {
+            accountControllerLogger.debug("Error generating JWT");
+            throw new RuntimeException("Error generating JWT");
+        }
+
+        bearerToken.append(jwtToken);
+
+
         return Response.ok(new GenericEntity<String>("User verified") {
-        }).build();
+        }).header("Authorization", bearerToken.toString()).build();
 
     }
 

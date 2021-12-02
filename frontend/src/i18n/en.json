@@ -203,7 +203,7 @@
   "verifyemail": {
     "title": "Email verification",
     "success": "Email verified successfully!",
-    "pleaselogin": "Please, log in into your account to use the site.",
+    "redirecting":"Redirecting to homepage in {{time}}",
     "login": "Log in",
     "invalid": "Invalid or expired link",
     "instructions": "This link is invalid. Please, register again if you don't have an account.",

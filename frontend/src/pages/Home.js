@@ -116,7 +116,7 @@ export const Home = (props) => {
             ) : (
               <div className={classes.noJobsContainer}>
                 <img
-                  src={process.env.PUBLIC_URL + 'img/unavailable-1.svg'}
+                  src={process.env.PUBLIC_URL + '/img/unavailable-1.svg'}
                   alt=""
                   className={classes.noJobsImage}
                   loading="lazy"

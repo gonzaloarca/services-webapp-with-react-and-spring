@@ -36,6 +36,6 @@ public interface JobCardService {
 
     int findRelatedJobCardsMaxPage(long professional_id);
 
-    public List<JobPost.JobType> getSimilarTypes(String query, Locale locale);
+    List<JobPost.JobType> getSimilarTypes(String query, Locale locale);
 
 }

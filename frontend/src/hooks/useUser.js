@@ -48,7 +48,7 @@ const useUserHook = () => {
 
   const verifyEmail = async (data) => {
     const response = await verifyEmailRequest(data);
-    return response.data;
+    return response.headers.authorization.split(' ')[1];
   };
 
   const getRankings = async (userId) => {
