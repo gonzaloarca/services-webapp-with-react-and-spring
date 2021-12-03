@@ -44,8 +44,8 @@ const Login = () => {
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({currentSection:'/login',isTransparent:true});
-  },[])
+    setNavBarProps({ currentSection: '/login', isTransparent: true });
+  }, []);
 
   const setUserData = async (email) => {
     try {
@@ -132,10 +132,17 @@ const Login = () => {
                     name="email"
                     className={classes.FieldHeight}
                   >
-                    <InputLabel className="text-sm">
+                    <InputLabel
+                      aria-label={t('login.email')}
+                      className="text-sm"
+                    >
                       {t('login.email')}
                     </InputLabel>
-                    <FilledInput className="text-sm font-medium" id="email" />
+                    <FilledInput
+                      inputProps={{ 'data-testid': 'email-login-input' }}
+                      className="text-sm font-medium"
+                      id="email"
+                    />
                     <FormHelperText>
                       <ErrorMessage name="email" />
                     </FormHelperText>

@@ -5,10 +5,12 @@
 import '@testing-library/jest-dom';
 // src/setupTests.js
 import { server } from './tests/mocks/server.js';
+import i18n from './i18n';
 // Establish API mocking before all tests.
 beforeAll(() => {
   server.listen();
 });
+
 // Reset any request handlers that we may add during the tests,
 // so they don't affect other tests.
 afterEach(() => server.resetHandlers());

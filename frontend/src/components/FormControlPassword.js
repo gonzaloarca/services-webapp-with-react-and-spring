@@ -40,6 +40,7 @@ const FormControlPassword = ({
       className={classes.FieldHeight}
       type={values.toggle ? 'text' : 'password'}
       helperText={<ErrorMessage name={variable}></ErrorMessage>}
+      inputProps={{ 'data-testid': 'password-login-input' }}
       InputProps={{
         endAdornment: (
           <IconButton
