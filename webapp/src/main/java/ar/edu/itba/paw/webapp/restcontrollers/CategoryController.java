@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.restcontrollers;
 
 import ar.edu.itba.paw.models.JobPost;
 import ar.edu.itba.paw.webapp.dto.output.JobTypeDto;
+import ar.edu.itba.paw.webapp.utils.CacheUtils;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -32,29 +33,36 @@ public class CategoryController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getCategories() {
+    public Response getCategories(@Context Request request) {
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
-        List<JobTypeDto> jobTypeDtoList = Arrays.stream(JobPost.JobType.values())
+        List<JobPost.JobType> jobTypes = Arrays.asList(JobPost.JobType.values());
+        List<JobTypeDto> jobTypeDtoList = jobTypes.stream()
                 .map(jobType -> JobTypeDto
                         .fromJobTypeWithLocalizedMessage(jobType,
                                 messageSource.getMessage(jobType.getDescription(),
                                         null, locale))).collect(Collectors.toList()
                 );
-        return Response.ok(new GenericEntity<List<JobTypeDto>>(jobTypeDtoList) {
-        }).build();
+
+        GenericEntity<List<JobTypeDto>> entity = new GenericEntity<List<JobTypeDto>>(jobTypeDtoList) {
+        };
+        return CacheUtils.sendConditionalCacheResponse(request, entity, new EntityTag(Integer.toString(jobTypes.hashCode())));
+
+
     }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/{id}")
-    public Response getCategory(@PathParam("id") int id) {
+    public Response getCategory(@PathParam("id") int id, @Context Request request) {
         if (id < 0 || id > JobPost.JobType.values().length - 1)
             throw new IllegalArgumentException();
         Locale locale = LocaleResolverUtil.resolveLocale(headers.getAcceptableLanguages());
-        JobTypeDto jobTypeDto = JobTypeDto.fromJobTypeWithLocalizedMessage(JobPost.JobType.values()[id],
+        JobPost.JobType jobType = JobPost.JobType.values()[id];
+        JobTypeDto jobTypeDto = JobTypeDto.fromJobTypeWithLocalizedMessage(jobType,
                 messageSource.getMessage(JobPost.JobType.values()[id].getDescription(), null, locale));
-        return Response.ok(new GenericEntity<JobTypeDto>(jobTypeDto) {
-        }).build();
+        GenericEntity<JobTypeDto> entity = new GenericEntity<JobTypeDto>(jobTypeDto) {
+        };
+        return CacheUtils.sendConditionalCacheResponse(request, entity, new EntityTag(Integer.toString(jobType.hashCode())));
     }
 
 }

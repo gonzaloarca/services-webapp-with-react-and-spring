@@ -23,18 +23,9 @@ public class ImagesUtil {
     }
 
     public static Response sendCacheableImageResponse(ByteImage byteImage, Request request){
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(86400);
-        EntityTag etag = new EntityTag(Integer.toString(byteImage.hashCode()));
-        Response.ResponseBuilder builder = request.evaluatePreconditions(etag);
-        if(builder == null){
-            builder = Response.ok(new ByteArrayInputStream(byteImage.getData()));
-            builder.tag(etag);
-        }
-        return builder.cacheControl(cacheControl).build();
+        return CacheUtils.sendConditionalCacheResponse(request,new ByteArrayInputStream(byteImage.getData()));
     }
     public static Response sendUnconditionalCacheImageResponse(ByteImage byteImage){
-        CacheControl cacheControl = CacheControl.valueOf("public, max-age="+ MAX_TIME +", immutable");
-        return Response.ok(new ByteArrayInputStream(byteImage.getData())).cacheControl(cacheControl).build();
+        return CacheUtils.sendUnconditionalCacheResponse(new ByteArrayInputStream(byteImage.getData()));
     }
 }

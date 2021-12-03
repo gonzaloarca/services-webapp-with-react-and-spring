@@ -42,14 +42,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     private static final int MAX_TIME = 31536000;
     // FIXME Cambiar para produccion
-    private final boolean PRODUCTION = true;
+    private final boolean PRODUCTION = false;
 
     private final Logger webConfigLogger = LoggerFactory.getLogger(WebConfig.class);
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/img/**")
-                .addResourceLocations("/img/")
+        registry.addResourceHandler("/img/**","/static/**")
+                .addResourceLocations("/img/","/static/**")
                 .setCachePeriod(MAX_TIME)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());
