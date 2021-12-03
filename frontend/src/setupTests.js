@@ -8,6 +8,8 @@ import { server } from './tests/mocks/server.js';
 import i18n from './i18n';
 // Establish API mocking before all tests.
 beforeAll(() => {
+  const noop = () => {};
+  Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
   server.listen();
 });
 
