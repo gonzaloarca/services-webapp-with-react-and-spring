@@ -425,6 +425,7 @@
     "header": "My account",
     "tabstitle": "Account",
 	"accepted": "Changes accepted",
+	"rejectedchanges": "Changes not accepted",
 	"rejected": "Old password is incorrect",
     "data": {
       "title": "Personal info",
