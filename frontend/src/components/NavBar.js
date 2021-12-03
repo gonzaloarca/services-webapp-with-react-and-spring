@@ -52,6 +52,9 @@ const NavBar = ({}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Ajustar este valor para marcar cuando se aparece el background de la navbar
+  const backgroundDistance = 50;
+
   const {
     navBarProps: { currentSection, isTransparent },
     searchBarQueryParams,
@@ -96,11 +99,12 @@ const NavBar = ({}) => {
     sessionStorage.removeItem('token');
     setCurrentUser(null);
     setToken(null);
+    setAnchorEl(null);
     history.push('/');
   };
 
   const changeBarBackground = () => {
-    if (window.scrollY >= 200) {
+    if (window.scrollY >= backgroundDistance) {
       setScrolled(true);
     } else {
       setScrolled(false);

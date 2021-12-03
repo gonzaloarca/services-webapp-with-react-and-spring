@@ -121,6 +121,7 @@ const Search = () => {
     setSearchBarQueryParams: setQueryParams,
     setNavBarProps,
   } = useContext(NavBarContext);
+
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState(null);
   const [maxPage, setMaxPage] = useState(null);
@@ -143,7 +144,7 @@ const Search = () => {
   };
 
   useEffect(() => {
-    setMaxPage(links.last?.page);
+    setMaxPage(parseInt(links.last?.page));
   }, [links]);
 
   useEffect(() => {

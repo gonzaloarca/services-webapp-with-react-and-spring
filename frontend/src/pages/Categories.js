@@ -62,8 +62,8 @@ const Categories = () => {
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({currentSection:'/categories',isTransparent:false});
-  },[])
+    setNavBarProps({ currentSection: '/categories', isTransparent: false });
+  }, [])
 
   const { categories } = useContext(ConstantDataContext);
 
