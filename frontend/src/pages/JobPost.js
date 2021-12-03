@@ -213,6 +213,7 @@ const JobPost = ({ match, history }) => {
   const [hirable, setHirable] = useState(false);
   const [finalized, setFinalized] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [showArrows, setArrows] = useState(false);
 
   const { setNavBarProps } = useContext(NavBarContext);
 
@@ -269,6 +270,7 @@ const JobPost = ({ match, history }) => {
         setIsOwner(true);
       else if (jobPost.active) setHirable(true);
       if (!jobPost.active) setFinalized(true);
+      if (jobPost.images.length > 1) setArrows(true);
       setLoading(false);
     }
   }, [jobPost, jobCard, packages, proUser]);
@@ -346,7 +348,8 @@ const JobPost = ({ match, history }) => {
             ) : (
               <></>
             )}
-            <Carousel navButtonsAlwaysVisible>
+            <Carousel navButtonsAlwaysVisible={showArrows}
+                      navButtonsAlwaysInvisible={!showArrows}>
               {jobPost.images.map((item, i) => (
                 <img
                   key={`image_${i}`}
