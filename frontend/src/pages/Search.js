@@ -121,6 +121,7 @@ const Search = () => {
     setSearchBarQueryParams: setQueryParams,
     setNavBarProps,
   } = useContext(NavBarContext);
+  
   const { searchJobCards, links } = useJobCards();
   const [jobCards, setJobCards] = useState(null);
   const [maxPage, setMaxPage] = useState(null);
