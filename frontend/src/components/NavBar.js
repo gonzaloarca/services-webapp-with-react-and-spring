@@ -96,6 +96,7 @@ const NavBar = ({}) => {
     sessionStorage.removeItem('token');
     setCurrentUser(null);
     setToken(null);
+    setAnchorEl(null);
     history.push('/');
   };
 
