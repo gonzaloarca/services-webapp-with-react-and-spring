@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import {
@@ -26,6 +26,7 @@ import { Helmet } from 'react-helmet';
 import { UserContext } from '../context';
 import { useUser } from '../hooks';
 import { isLoggedIn } from '../utils/userUtils';
+import {NavBarContext} from '../context';
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -87,6 +88,7 @@ const Account = () => {
   const { t } = useTranslation();
   const { currentUser } = useContext(UserContext);
   const history = useHistory();
+  const { setNavBarProps } = useContext(NavBarContext);
 
   if (!isLoggedIn()) {
     history.replace('/login');
@@ -136,6 +138,10 @@ const Account = () => {
     setTabValue(newValue);
     history.push(`/account/${accountSections[newValue].path}`);
   };
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/create-job-post', isTransparent: false });
+  }, []);
 
   return (
     <>
