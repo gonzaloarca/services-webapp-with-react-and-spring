@@ -171,6 +171,7 @@ const StepOne = (props) => {
                     input: 'text-sm font-medium',
                   },
                 }}
+                inputProps={{ 'data-testid': 'username-register-input' }}
               />
             </Grid>
             <Grid item sm={5} xs={12}>
@@ -187,6 +188,7 @@ const StepOne = (props) => {
                     input: 'text-sm font-medium',
                   },
                 }}
+                inputProps={{ 'data-testid': 'phone-register-input' }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -203,6 +205,7 @@ const StepOne = (props) => {
                     input: 'text-sm font-medium',
                   },
                 }}
+                inputProps={{ 'data-testid': 'email-register-input' }}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -210,6 +213,7 @@ const StepOne = (props) => {
                 placeholder={t('register.password')}
                 variable="password"
                 fullWidth
+                inputProps={{ 'data-testid': 'password-register-input' }}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -217,6 +221,7 @@ const StepOne = (props) => {
                 placeholder={t('register.passwordrepeat')}
                 variable="passwordrepeat"
                 fullWidth
+                inputProps={{ 'data-testid': 'passrepeat-register-input' }}
               />
             </Grid>
             <Grid item xs={12} className="h-28">
@@ -225,6 +230,7 @@ const StepOne = (props) => {
                 className={clsx(classes.submitButton, 'mb-4')}
                 type="submit"
                 disabled={isSubmitting}
+                data-testid='submit-register-input'
               >
                 {t('register.submit')}
               </Button>

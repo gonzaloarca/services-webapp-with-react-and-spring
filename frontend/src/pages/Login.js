@@ -154,6 +154,7 @@ const Login = () => {
                     onSubmit={(e) => {
                       props.onSubmit(e.values, props);
                     }}
+                    inputProps={{ 'data-testid': 'password-login-input' }}
                   />
                   <div className="flex justify-between items-center mb-3">
                     <FormControlLabel

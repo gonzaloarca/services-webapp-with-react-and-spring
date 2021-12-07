@@ -336,7 +336,6 @@ const CreateJobPost = ({ history }) => {
           {t('title', { section: t('navigation.sections.publish') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/create-job-post'} />
 
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('createjobpost.header')} />

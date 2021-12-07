@@ -90,6 +90,13 @@ export const ConstantDataContextProvider  = ({children}) => {
     loadOrderByParams();
     loadRateTypes();
     loadContractStates();
+    return () => {
+      setContractStates([]);
+      setRateTypes([]);
+      setOrderByParams([]);
+      setZones([]);
+      setCategories([]);
+    };
   },[]);
 
 
