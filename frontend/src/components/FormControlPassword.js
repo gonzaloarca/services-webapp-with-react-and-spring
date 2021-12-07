@@ -14,6 +14,7 @@ const FormControlPassword = ({
   fullWidth,
   required,
   onSubmit,
+  inputProps
 }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -40,7 +41,7 @@ const FormControlPassword = ({
       className={classes.FieldHeight}
       type={values.toggle ? 'text' : 'password'}
       helperText={<ErrorMessage name={variable}></ErrorMessage>}
-      inputProps={{ 'data-testid': 'password-login-input' }}
+      inputProps={inputProps}
       InputProps={{
         endAdornment: (
           <IconButton

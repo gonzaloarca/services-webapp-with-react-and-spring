@@ -10,11 +10,17 @@ const loginHandlersMsw = [
         return res;
       });
     } else {
-      return res(ctx.status(400), ctx.json({}));
+      return res(ctx.status(401), ctx.json({}));
     }
   }),
   rest.get(`/api/users`, (req, res, ctx) => {
     return res(ctx.json(LOGIN_MOCKED_DATA.USER));
+  }),
+  rest.post('/api/users', (req, res, ctx) => {
+    return res((res) => {
+        res.status = 201;
+        return res;
+      });
   }),
   rest.get('/api/zones', (_, res, ctx) =>
     res(ctx.json(GENERIC_MOCKED_DATA.ZONES))
