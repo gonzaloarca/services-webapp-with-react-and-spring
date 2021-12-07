@@ -73,11 +73,12 @@ const Profile = ({ match }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [loadingData, setLoadingData] = useState(true);
-  const { getProfessionalInfo, getUserById } = useUser();
+  const { getProfessionalInfo, getUserById, getRates } = useUser();
   const [values, setValues] = useState({
     userInfo: {},
     proInfo: {},
   });
+  const [rates, setRates] = useState({ "five": 3, "four": 0, "one": 0, "three": 1, "two": 0 });
 
   const loadData = async (id) => {
     try {
@@ -88,6 +89,8 @@ const Profile = ({ match }) => {
         userInfo: userInfo,
         proInfo: proInfo,
       });
+      setRates(await getRates(id));
+
       setLoadingData(false);
     } catch (error) {
       history.replace('/404');
@@ -122,6 +125,7 @@ const Profile = ({ match }) => {
                 <ProfileTabs
                   details={values.proInfo}
                   proId={values.userInfo.id}
+                  rates={rates}
                 />
               </Card>
             )}
@@ -184,7 +188,7 @@ const UserInfo = ({ values, loadingData }) => {
   );
 };
 
-const ProfileTabs = ({ details, proId }) => {
+const ProfileTabs = ({ details, proId, rates }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const { getReviewsByProId, links: reviewsLinks } = useReviews();
@@ -246,12 +250,12 @@ const ProfileTabs = ({ details, proId }) => {
     if (details.reviewsQuantity > 0) {
       try {
         setReviews(await getReviewsByProId(proId, queryParams.page));
+        setLoadingReviews(false);
       } catch (e) {
         // console.log(e);
         return;
       }
     }
-    setLoadingReviews(false);
   };
 
   useEffect(() => {
@@ -392,6 +396,7 @@ const ProfileTabs = ({ details, proId }) => {
                 <ReviewsDistribution
                   reviewsQuantity={details.reviewsQuantity || 0}
                   userId={proId}
+                  rates={rates}
                 />
               </Grid>
             </Grid>
@@ -430,50 +435,32 @@ const ProfileTabs = ({ details, proId }) => {
   );
 };
 
-const ReviewsDistribution = ({ reviewsQuantity, userId }) => {
-  const { getRates } = useUser();
+const ReviewsDistribution = ({ reviewsQuantity, userId, rates }) => {
   const [distribution, setDistribution] = useState([]);
-  const [loadingData, setLoadingData] = useState(true);
 
   const history = useHistory();
 
-  const loadData = async (userId) => {
-    try {
-      const rates = await getRates(userId);
-      setDistribution([
-        rates['one'],
-        rates['two'],
-        rates['three'],
-        rates['four'],
-        rates['five'],
-      ]);
-      setLoadingData(false);
-    } catch (error) {
-      history.replace('/error');
-    }
-  };
-
   useEffect(() => {
-    loadData(userId);
-  }, []);
+    setDistribution([
+      rates['one'],
+      rates['two'],
+      rates['three'],
+      rates['four'],
+      rates['five'],
+    ]);
+  }, [rates]);
 
   return (
-    <>
-      {loadingData ? (
-        <Skeleton width={280} height={200} />
-      ) : (
-        [1, 2, 3, 4, 5].map((rate) => {
-          return (
-            <ReviewCountComponent
-              key={rate}
-              stars={5 - rate + 1}
-              count={distribution[5 - rate]}
-              reviewsQuantity={reviewsQuantity}
-            />
-          );
-        })
-      )}
-    </>
+    [1, 2, 3, 4, 5].map((rate) => {
+      return (
+        <ReviewCountComponent
+          key={rate}
+          stars={5 - rate + 1}
+          count={distribution[5 - rate]}
+          reviewsQuantity={reviewsQuantity}
+        />
+      );
+    })
   );
 };
 
