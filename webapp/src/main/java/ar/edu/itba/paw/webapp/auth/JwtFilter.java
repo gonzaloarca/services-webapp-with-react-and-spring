@@ -45,8 +45,13 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        final String[] headerSplit = header.split(" ");
+        if(headerSplit.length <= 1){
+            chain.doFilter(request,response);
+            return;
+        }
         // Get jwt token and validate
-        final String token = header.split(" ")[1].trim();
+        final String token = headerSplit[1].trim();
         if (!jwtUtil.validate(token)) {
             chain.doFilter(request, response);
             return;

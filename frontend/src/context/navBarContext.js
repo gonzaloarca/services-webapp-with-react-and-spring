@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react';
 import { parse } from 'query-string';
 import { useLocation } from 'react-router';
+import { useEffect } from 'react';
 
 const NavBarContext = createContext(null);
 
@@ -19,7 +20,7 @@ export const NavBarContextProvider = ({ children }) => {
     page: queryParameters.page || 1,
   });
 
-  const [navBarProps,setNavBarProps] = useState({currentSection: '', isTransparent: false});
+  const [navBarProps, setNavBarProps] = useState({ currentSection: '', isTransparent: false });
   const [searchBarValue, setSearchBarValue] = useState('');
   return (
     <NavBarContext.Provider

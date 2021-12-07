@@ -381,7 +381,7 @@ const PersonalData = ({ currentUser }) => {
                   </p>
                 ) : (
                   <p style={{ color: 'red' }} className={classes.answerMessage}>
-                    {t('account.rejected')}{' '}
+                    {t('account.rejectedchanges')}{' '}
                   </p>
                 )}
                 <Button

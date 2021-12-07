@@ -651,7 +651,7 @@ const ReviewListCard = ({ postId }) => {
       {renderReviews(reviews)}
 
       <BottomPagination
-        maxPage={links.last?.page || queryParams.page}
+        maxPage={parseInt(links.last?.page || queryParams.page)}
         setQueryParams={setQueryParams}
         queryParams={queryParams}
       />

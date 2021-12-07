@@ -48,8 +48,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/img/**")
-                .addResourceLocations("/img/")
+        registry.addResourceHandler("/img/**","/static/**")
+                .addResourceLocations("/img/","/static/**")
                 .setCachePeriod(MAX_TIME)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());

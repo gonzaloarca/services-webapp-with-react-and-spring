@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.dto.input.EditJobContractDto;
 import ar.edu.itba.paw.webapp.dto.input.NewJobContractDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractCardDto;
 import ar.edu.itba.paw.webapp.dto.output.JobContractStateDto;
+import ar.edu.itba.paw.webapp.utils.CacheUtils;
 import ar.edu.itba.paw.webapp.utils.ImagesUtil;
 import ar.edu.itba.paw.webapp.utils.LocaleResolverUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
@@ -164,19 +165,21 @@ public class JobContractController {
     @Path("/states")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getStates() {
-        List<JobContractStateDto> contractStateDtos = Arrays.stream(JobContract.ContractState.values())
+    public Response getStates(@Context Request request) {
+        List<JobContract.ContractState> contractStates = Arrays.asList(JobContract.ContractState.values());
+        List<JobContractStateDto> contractStateDtos = contractStates.stream()
                 .map(JobContractStateDto::fromJobContractState).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<JobContractStateDto>>(contractStateDtos) {
-        }).build();
+        GenericEntity<List<JobContractStateDto>> entity = new GenericEntity<List<JobContractStateDto>>(contractStateDtos) {};
+        return CacheUtils.sendConditionalCacheResponse(request, entity, new EntityTag(Integer.toString(contractStates.hashCode())));
     }
 
     @Path("/states/{id}")
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getStateById(@PathParam("id") int id) {
+    public Response getStateById(@PathParam("id") int id,@Context Request request) {
+        JobContract.ContractState contractState = JobContract.ContractState.values()[id];
         JobContractStateDto contractStateDto = JobContractStateDto.fromJobContractState(JobContract.ContractState.values()[id]);
-        return Response.ok(new GenericEntity<JobContractStateDto>(contractStateDto) {
-        }).build();
+        GenericEntity<JobContractStateDto> entity = new GenericEntity<JobContractStateDto>(contractStateDto) {};
+        return CacheUtils.sendConditionalCacheResponse(request, entity, new EntityTag(Integer.toString(contractState.hashCode())));
     }
 }

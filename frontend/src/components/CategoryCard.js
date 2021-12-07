@@ -1,8 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { Skeleton } from '@material-ui/lab';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { NavBarContext } from '../context';
 
 const useStyles = makeStyles((theme) => ({
   categoryContainer: {
@@ -47,6 +48,10 @@ const CategoryCard = ({
 }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const {
+    searchBarQueryParams: queryParams,
+    setSearchBarQueryParams: setQueryParams,
+  } = useContext(NavBarContext);
   return isLoading ? (
     <Skeleton
       className={classes.categoryContainer}
@@ -55,7 +60,9 @@ const CategoryCard = ({
       width={'100%'}
     />
   ) : (
-    <Link to={showAll ? '/categories' : `/search?&category=${category.id}`}>
+    <Link
+      onClick={() => { if (!showAll) setQueryParams({ ...queryParams, category: category.id }) }}
+      to={showAll ? '/categories' : { pathname: `/search`, search: `category=${category.id}` }}>
       <div className={classes.categoryContainer} style={{ height: height }}>
         <div className={classes.categoryOverlay}>
           {showAll

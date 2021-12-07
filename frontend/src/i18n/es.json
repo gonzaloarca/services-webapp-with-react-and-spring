@@ -426,6 +426,7 @@
     "header": "Mi Cuenta",
     "tabstitle": "Cuenta",
 	"accepted": "Cambios aceptados",
+	"rejectedchanges": "Cambios no aceptados",
 	"rejected": "Contraseña antigua incorrecta",
     "data": {
       "title": "Datos personales",
