@@ -31,7 +31,7 @@ import {
 import { Add } from '@material-ui/icons';
 import clsx from 'clsx';
 import { Form, Formik, useFormikContext, ErrorMessage } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext,useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
 import LocationList from '../components/LocationList';
@@ -53,7 +53,7 @@ import { ConstantDataContext } from '../context';
 import { useJobPosts } from '../hooks';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import { isLoggedIn } from '../utils/userUtils';
-
+import {NavBarContext} from '../context';
 const HirenetConnector = withStyles({
   alternativeLabel: {
     top: 22,
@@ -276,6 +276,7 @@ const CreateJobPost = ({ history }) => {
   if (!isLoggedIn()) history.replace('/login');
 
   const { createJobPost } = useJobPosts();
+  const { setNavBarProps } = useContext(NavBarContext);
 
   const [data, setData] = React.useState({
     category: '',
@@ -315,6 +316,10 @@ const CreateJobPost = ({ history }) => {
       history.push('/error');
     }
   };
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/create-job-post', isTransparent: false });
+  }, []);
 
   const formRef = React.useRef();
 
