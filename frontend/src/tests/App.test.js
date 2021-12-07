@@ -1,25 +1,13 @@
-import { render } from '@testing-library/react';
-import App from '../App';
-import { BrowserRouter } from 'react-router-dom';
-import appTheme from '../theme';
-import { ThemeProvider } from '@material-ui/core';
 import '../i18n';
-import { ConstantDataProvider, UserContextProvider } from '../context';
-import React from 'react';
-import { NavBarContextProvider } from '../context/navBarContext';
+import { appHandlers } from './mocks/handlers';
+import { setupTests } from './utils/setupTestUtils';
+import { setupServer } from 'msw/node';
+import renderFromRoute from './utils/renderFromRoute';
+
+const server = setupServer(...appHandlers);
+
+setupTests(server);
 
 test('render without crashing', () => {
-  render(
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <ThemeProvider theme={appTheme}>
-        <UserContextProvider>
-          <ConstantDataProvider>
-            <NavBarContextProvider>
-              <App />
-            </NavBarContextProvider>
-          </ConstantDataProvider>
-        </UserContextProvider>
-      </ThemeProvider>
-    </BrowserRouter>
-  );
+  renderFromRoute('/');
 });

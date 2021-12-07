@@ -3,18 +3,4 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
-// src/setupTests.js
-import { server } from './tests/mocks/server.js';
 import i18n from './i18n';
-// Establish API mocking before all tests.
-beforeAll(() => {
-  const noop = () => {};
-  Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
-  server.listen();
-});
-
-// Reset any request handlers that we may add during the tests,
-// so they don't affect other tests.
-afterEach(() => server.resetHandlers());
-// Clean up after the tests are finished.
-afterAll(() => server.close());
