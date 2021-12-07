@@ -1,13 +1,6 @@
-import { ThemeProvider } from '@material-ui/styles';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
-import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import App from '../App';
-import { ConstantDataProvider, UserContextProvider } from '../context';
-import { NavBarContextProvider } from '../context/navBarContext';
-import appTheme from '../theme';
 import { loginHandlers } from './mocks/handlers';
 import renderFromRoute from './utils/renderFromRoute';
 import { setupTests } from './utils/setupTestUtils';
