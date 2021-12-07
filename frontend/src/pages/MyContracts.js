@@ -101,6 +101,10 @@ const MyContracts = ({ history }) => {
 
   useEffect(() => {
     setNavBarProps({ currentSection: '/my-contracts', isTransparent: false });
+
+	return () => {
+		setNavBarProps({currentSection: '', isTransparent: false});
+	}
   }, []);
 
   if (!isLoggedIn()) {
@@ -425,7 +429,7 @@ const ContractsDashboard = ({
                     <div>
                       <>
                         {contracts.map((contract) => (
-                          <div key={contract.id} className="mb-6">
+                          <div key={contract.id} className="mb-6" data-testid={`contract-card-${contract.id}`}>
                             <ContractCard
                               contract={contract}
                               isOwner={isOwner}
