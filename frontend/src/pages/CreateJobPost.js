@@ -369,6 +369,7 @@ const CreateJobPost = ({ history }) => {
               <Button
                 variant="contained"
                 color="primary"
+                data-testid="submit-button"
                 onClick={handleSubmit}
                 className={classes.button}
                 disabled={disableSubmit}
@@ -437,7 +438,7 @@ const CategoryStepBody = ({ formRef, handleNext, data }) => {
                 name="category"
                 value={values.category}
                 onChange={(e) => setFieldValue('category', e.target.value)}
-              >
+                inputProps={{'data-testid': 'category-select'}}>
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
@@ -490,6 +491,7 @@ const TitleStepBody = ({ formRef, handleNext, data }) => {
               value={values.title}
               onChange={(e) => setFieldValue('title', e.target.value)}
               name="title"
+              inputProps={{'data-testid': 'title-input'}}
               helperText={<ErrorMessage name="title"></ErrorMessage>}
             />
           </Form>

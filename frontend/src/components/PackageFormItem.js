@@ -217,7 +217,7 @@ const PackageFormItem = ({ index, withDelete }) => {
                   {t(rateTypeI18nMapper[id])}
                 </p>
               }
-              control={<Radio />}
+              control={<Radio inputProps={{'data-testid':`radio-${id}`}}/>}
             />
           ))}
         </RadioGroup>
