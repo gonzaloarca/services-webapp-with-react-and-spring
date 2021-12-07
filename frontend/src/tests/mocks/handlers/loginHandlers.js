@@ -6,7 +6,7 @@ const loginHandlersMsw = [
     if (req.body.email === LOGIN_MOCKED_DATA.EMAIL) {
       return res((res) => {
         res.status = 200;
-        res.headers.set('Authorization', LOGIN_MOCKED_DATA.TOKEN);
+        res.headers.set('Authorization', `Bearer ${LOGIN_MOCKED_DATA.TOKEN}`);
         return res;
       });
     } else {
