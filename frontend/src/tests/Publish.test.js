@@ -27,14 +27,16 @@ test('publish new service successfully', async () => {
   userEvent.click(await screen.findByText('Carpentry'));
 
   //Expect category to be selected
-  await screen.findByText('Carpentry');
+  expect(await screen.findByText('Carpentry')).toBeInTheDocument();
 
   //Next step
   userEvent.click(screen.getByTestId('submit-button'));
 
   //Step: Title
   //Expect to be on step 2
-  await screen.findByText('Enter a name for your service');
+  expect(
+    await screen.findByText('Enter a name for your service')
+  ).toBeInTheDocument();
 
   //Enter title
   fireEvent.change(screen.getByTestId('title-input'), {
@@ -46,7 +48,9 @@ test('publish new service successfully', async () => {
 
   //Step: Packages
   //Expect to be on step 3
-  await screen.findByText('Add at least one package to your service');
+  expect(
+    await screen.findByText('Add at least one package to your service')
+  ).toBeInTheDocument();
 
   //Add package name
   fireEvent.change(screen.getByPlaceholderText('Package name'), {
@@ -71,13 +75,17 @@ test('publish new service successfully', async () => {
 
   //Step: Images
   //Expect to be on step 4
-  await screen.findByText('Add images to your post');
+  expect(
+    await screen.findByText('Add images to your post')
+  ).toBeInTheDocument();
 
   //Next step
   userEvent.click(screen.getByTestId('submit-button'));
 
   //Expect to be on step 5
-  await screen.findByText('Enter the hours of availability for the service');
+  expect(
+    await screen.findByText('Enter the hours of availability for the service')
+  ).toBeInTheDocument();
 
   //Set available hours
   fireEvent.change(screen.getByPlaceholderText('Available hours'), {
@@ -121,10 +129,12 @@ test('publish new service successfully', async () => {
   userEvent.click(screen.getByTestId('submit-button'));
 
   //Expect to be on step 7
-  await screen.findByText('Post summary');
+  expect(await screen.findByText('Post summary')).toBeInTheDocument();
 
   //Submit
   userEvent.click(screen.getByTestId('submit-button'));
 
-  await screen.findByText('Post created successfully!');
+  expect(
+    await screen.findByText('Post created successfully!')
+  ).toBeInTheDocument();
 });
