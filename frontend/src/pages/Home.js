@@ -32,6 +32,7 @@ export const Home = (props) => {
 
   useEffect(() => {
     setNavBarProps({currentSection:'/',isTransparent:true});
+    return () => setNavBarProps({currentSection:'',isTransparent:false});
   },[])
 
   const loadJobCards = async () => {
@@ -45,6 +46,7 @@ export const Home = (props) => {
 
   useEffect(() => {
     loadJobCards();
+    return () => setJobs([]);
   }, []);
 
   return (
