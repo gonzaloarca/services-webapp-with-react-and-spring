@@ -78,6 +78,7 @@ test('contract without reschedules shows reschedule button', async () => {
     sessionStorage.setItem('token', 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyb2RyaWd1ZXptYW51ZWxqb2FxdWluQGdtYWlsLmNvbSIsImlzcyI6ImhpcmVuZXQuY29tIiwiaWF0IjoxNjM4OTA3MjYwLCJleHAiOjE2Mzk1MTIwNjB9.5Y63h98K00L-bdE0VEif80OBvD1mpYpyf5OHF0FRO9E0U_yWPBB4mIAULV466Jai6EmQAfJMPShBXhydC887qw');
     renderFromRoute('/my-contracts/pro/pending');
   });
+  
   await waitFor(async () => {
     expect(screen.queryByTestId('contract-card-60')).toBeTruthy();
   });
@@ -88,16 +89,19 @@ test('contract without reschedules shows reschedule button', async () => {
   )
 });
 
-// test('contract already rescheduled doesnt show reschedule button', async () => {
+test('contract already rescheduled doesnt show reschedule button', async () => {
 
-  //   await waitFor(async () =>{
-  //   sessionStorage.setItem('token', 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyb2RyaWd1ZXptYW51ZWxqb2FxdWluQGdtYWlsLmNvbSIsImlzcyI6ImhpcmVuZXQuY29tIiwiaWF0IjoxNjM4OTA3MjYwLCJleHAiOjE2Mzk1MTIwNjB9.5Y63h98K00L-bdE0VEif80OBvD1mpYpyf5OHF0FRO9E0U_yWPBB4mIAULV466Jai6EmQAfJMPShBXhydC887qw');
-  //   renderFromRoute('/my-contracts/pro/pending');
-//     expect(screen.queryByTestId('contract-card-36')).toBeTruthy();
-//   });
+  await act(async () => {
+    sessionStorage.setItem('token', 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyb2RyaWd1ZXptYW51ZWxqb2FxdWluQGdtYWlsLmNvbSIsImlzcyI6ImhpcmVuZXQuY29tIiwiaWF0IjoxNjM4OTA3MjYwLCJleHAiOjE2Mzk1MTIwNjB9.5Y63h98K00L-bdE0VEif80OBvD1mpYpyf5OHF0FRO9E0U_yWPBB4mIAULV466Jai6EmQAfJMPShBXhydC887qw');
+    renderFromRoute('/my-contracts/pro/pending');
+  });
 
-//   const card = screen.getByTestId('contract-card-36');
-//   await waitFor(async () =>
-//     expect(within(card).queryByText('Reschedule')).not.toBeInTheDocument()
-//   )
-// });
+  await waitFor(async () => {
+    expect(screen.queryByTestId('contract-card-36')).toBeTruthy();
+  });
+
+  const card = screen.getByTestId('contract-card-36');
+  await waitFor(async () =>
+    expect(within(card).queryByText('Reschedule')).not.toBeInTheDocument()
+  )
+});

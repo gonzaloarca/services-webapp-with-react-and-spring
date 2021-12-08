@@ -88,13 +88,13 @@ const MyContracts = ({ history }) => {
   const { t } = useTranslation();
   const { activeTab, activeState } = useParams();
   const { currentUser } = useContext(UserContext);
-  const { getContractsByClientIdAndState, getContractsByProAndStateId, links } =
+  const { getContractsByClientIdAndState, getContractsByProAndStateId, links, freeLinks } =
     useContracts();
   const [hiredServices, setHiredServices] = useState(null);
   const [myServices, setMyServices] = useState(null);
-  const [tabValue, setTabValue] = React.useState(activeTab === 'pro' ? 1 : 0);
+  const [tabValue, setTabValue] = useState(activeTab === 'pro' ? 1 : 0);
   const tabPaths = ['hired', 'pro'];
-  const [queryParams, setQueryParams] = React.useState({ page: 1 });
+  const [queryParams, setQueryParams] = useState({ page: 1 });
   const [loading, setLoading] = useState(true);
 
   const { setNavBarProps } = useContext(NavBarContext);
@@ -149,6 +149,8 @@ const MyContracts = ({ history }) => {
         loadHiredContracts();
       }
     }
+
+	return () => freeLinks();
   }, [activeState, activeTab, currentUser, reload, queryParams]);
 
   const handleChange = (_event, newValue) => {
