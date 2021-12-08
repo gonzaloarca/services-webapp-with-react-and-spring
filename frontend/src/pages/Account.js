@@ -26,7 +26,7 @@ import { Helmet } from 'react-helmet';
 import { UserContext } from '../context';
 import { useUser } from '../hooks';
 import { isLoggedIn } from '../utils/userUtils';
-
+import { uniqueId } from 'lodash';
 const useStyles = makeStyles((theme) => ({
   tabs: {
     backgroundColor: 'white',
@@ -85,7 +85,7 @@ const Account = () => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   const history = useHistory();
 
   if (!isLoggedIn()) {
@@ -97,7 +97,12 @@ const Account = () => {
       tabLabel: t('account.data.title'),
       color: themeUtils.colors.orange,
       icon: <Person className="text-white" />,
-      component: <PersonalData currentUser={currentUser} />,
+      component: (
+        <PersonalData
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+        />
+      ),
       path: 'personal',
     },
     {
@@ -215,7 +220,7 @@ const HirenetTab = withStyles((theme) => ({
   },
 }))(Tab);
 
-const PersonalData = ({ currentUser }) => {
+const PersonalData = ({ currentUser, setCurrentUser }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
@@ -224,8 +229,6 @@ const PersonalData = ({ currentUser }) => {
   const [image, setImage] = useState(currentUser.image);
   const [username, setUsername] = useState(currentUser.username);
   const [phone, setPhone] = useState(currentUser.phone);
-
-  const history = useHistory();
 
   const initialValues = {
     username: currentUser.username,
@@ -260,11 +263,18 @@ const PersonalData = ({ currentUser }) => {
       });
       setUsername(values.username);
       setPhone(values.phone);
+      let imageUrl;
       if (values.image) {
-        await changeAccountImage(currentUser.id, values.image);
+        imageUrl = await changeAccountImage(currentUser.id, values.image);
         setImage(URL.createObjectURL(values.image));
       }
       setAnswer('ok');
+      setCurrentUser((prevState) => ({
+        ...prevState,
+        username: values.username,
+        phone: values.phone,
+        image: imageUrl ? `${imageUrl}?${uniqueId()}` : prevState.image,
+      }));
     } catch (error) {
       setAnswer('error');
     }

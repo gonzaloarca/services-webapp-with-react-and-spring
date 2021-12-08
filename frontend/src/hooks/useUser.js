@@ -96,7 +96,7 @@ const useUserHook = () => {
     const formData = new FormData();
     formData.append('file', image);
     const response = await uploadUserImageRequest(userId, formData);
-    return response.data;
+    return response.headers.location;
   };
 
   return {
