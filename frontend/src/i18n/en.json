@@ -47,7 +47,7 @@
     "phone": "Please enter a valid phone number",
     "minlength": "Please enter at least {{length}} characters",
     "maxlength": "Please enter less than {{length}} characters",
-    "passwordrepeat": "Passwords doesn't match",
+    "passwordrepeat": "Passwords don't match",
     "avatarfile": {
       "size": "The file size must be less than {{size}}MB",
       "type": "The file type must be PNG or JPG"
@@ -79,7 +79,7 @@
       "answer": "Start now",
       "button": "Publish"
     },
-    "nojobs": "No hay servicios disponibles en este momento. Disculpas por las molestas"
+    "nojobs": "There are no services currently available. Sorry for the inconvenience."
   },
   "jobpost": {
     "seereviews": "See reviews",
@@ -149,7 +149,7 @@
     "submit": "Log in",
     "hasaccountquestion": "No account?",
     "getaccount": "Register now",
-    "badcredentials": "User or password invalid",
+    "badcredentials": "Invalid email and/or password",
     "usernotverified": "Your account is not verified, please check your email or register again",
     "error": "An error has occurred, please try again",
     "inputemail": "Enter an email.",
@@ -159,7 +159,7 @@
   },
   "register": {
     "title": "Register",
-    "into": "Create an account in HireNet",
+    "into": "Create a HireNet account",
     "username": "Full name",
     "phone": "Phone number",
     "email": "Email address",
@@ -203,7 +203,7 @@
   "verifyemail": {
     "title": "Email verification",
     "success": "Email verified successfully!",
-    "redirecting":"Redirecting to homepage in {{time}}",
+    "redirecting": "Redirecting to homepage in {{time}}",
     "login": "Log in",
     "invalid": "Invalid or expired link",
     "instructions": "This link is invalid. Please, register again if you don't have an account.",
@@ -424,9 +424,9 @@
   "account": {
     "header": "My account",
     "tabstitle": "Account",
-	"accepted": "Changes accepted",
-	"rejectedchanges": "Changes not accepted",
-	"rejected": "Old password is incorrect",
+    "accepted": "Changes accepted",
+    "rejectedchanges": "Changes not accepted",
+    "rejected": "Old password is incorrect",
     "data": {
       "title": "Personal info",
       "imagealt": "User image",
