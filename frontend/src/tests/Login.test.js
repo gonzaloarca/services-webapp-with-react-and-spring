@@ -16,11 +16,13 @@ setupTests(server);
 test('login updates the navbar for non-professional user', async () => {
   renderFromRoute('/login');
 
-  fireEvent.change(screen.getByTestId('email-login-input'), {
-    target: { value: EMAIL },
-  });
-  fireEvent.change(screen.getByTestId('password-login-input'), {
-    target: { value: '12341234' },
+  act(() => {
+    fireEvent.change(screen.getByTestId('email-login-input'), {
+      target: { value: EMAIL },
+    });
+    fireEvent.change(screen.getByTestId('password-login-input'), {
+      target: { value: '12341234' },
+    });
   });
 
   userEvent.click(screen.getByText('Log in'));
@@ -31,11 +33,13 @@ test('login updates the navbar for non-professional user', async () => {
 test('login with wrong user', async () => {
   renderFromRoute('/login');
 
-  fireEvent.change(screen.getByTestId('email-login-input'), {
-    target: { value: 'hijitus@gmail.com' },
-  });
-  fireEvent.change(screen.getByTestId('password-login-input'), {
-    target: { value: '12341234' },
+  act(() => {
+    fireEvent.change(screen.getByTestId('email-login-input'), {
+      target: { value: 'hijitus@gmail.com' },
+    });
+    fireEvent.change(screen.getByTestId('password-login-input'), {
+      target: { value: '12341234' },
+    });
   });
 
   userEvent.click(screen.getByText('Log in'));
@@ -46,8 +50,10 @@ test('login with wrong user', async () => {
 test('login with invalid email format', async () => {
   renderFromRoute('/login');
 
-  fireEvent.change(screen.getByTestId('email-login-input'), {
-    target: { value: 'abcdefg' },
+  act(() => {
+    fireEvent.change(screen.getByTestId('email-login-input'), {
+      target: { value: 'abcdefg' },
+    });
   });
 
   userEvent.click(screen.getByText('Log in'));
@@ -66,15 +72,23 @@ test('login with no fields filled', async () => {
 test('go to register', async () => {
   renderFromRoute('/login');
 
-  userEvent.click(screen.getByText('Register now'));
+  await act(async () => {
+    userEvent.click(screen.getByText('Register now'));
+  });
 
-  expect(await screen.findByText('Create an account in HireNet')).toBeInTheDocument();
+  await waitFor(async () => {
+    expect(await screen.findByText('Create an account in HireNet')).toBeInTheDocument();
+  });
 });
 
 test('go to recover password', async () => {
   renderFromRoute('/login');
 
-  userEvent.click(screen.getByText('Recover it'));
+  await act(async () => {
+    userEvent.click(screen.getByText('Recover it'));
+  });
 
-  expect(await screen.findByText('Recover password')).toBeInTheDocument();
+  await waitFor(async () => {
+    expect(await screen.findByText('Recover password')).toBeInTheDocument();
+  });
 });

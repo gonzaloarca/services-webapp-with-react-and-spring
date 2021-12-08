@@ -18,21 +18,23 @@ setupTests(server);
 
 test('register success', async () => {
     renderFromRoute('/register');
-
-    fireEvent.change(screen.getByTestId('username-register-input'), {
-        target: { value: USERNAME },
-    });
-    fireEvent.change(screen.getByTestId('phone-register-input'), {
-        target: { value: PHONE },
-    });
-    fireEvent.change(screen.getByTestId('email-register-input'), {
-        target: { value: EMAIL },
-    });
-    fireEvent.change(screen.getByTestId('password-register-input'), {
-        target: { value: PASSWORD },
-    });
-    fireEvent.change(screen.getByTestId('passrepeat-register-input'), {
-        target: { value: PASSWORD },
+    
+    act(() => {        
+        fireEvent.change(screen.getByTestId('username-register-input'), {
+            target: { value: USERNAME },
+        });
+        fireEvent.change(screen.getByTestId('phone-register-input'), {
+            target: { value: PHONE },
+        });
+        fireEvent.change(screen.getByTestId('email-register-input'), {
+            target: { value: EMAIL },
+        });
+        fireEvent.change(screen.getByTestId('password-register-input'), {
+            target: { value: PASSWORD },
+        });
+        fireEvent.change(screen.getByTestId('passrepeat-register-input'), {
+            target: { value: PASSWORD },
+        });
     });
 
     userEvent.click(screen.getByTestId('submit-register-input'));
@@ -50,19 +52,21 @@ test('register with no fields filled', async () => {
 
 test('register with invalid data', async () => {
     renderFromRoute('/register');
-  
-    fireEvent.change(screen.getByTestId('phone-register-input'), {
-        target: { value: 'asdfghjkl' },
-    });
-    fireEvent.change(screen.getByTestId('email-register-input'), {
-        target: { value: 'asdfghjkl' },
-    });
-    fireEvent.change(screen.getByTestId('password-register-input'), {
-        target: { value: 'aaaa' },
-    });
-    fireEvent.change(screen.getByTestId('passrepeat-register-input'), {
-        target: { value: 'bbbb' },
-    });
+
+    act(() => {
+        fireEvent.change(screen.getByTestId('phone-register-input'), {
+            target: { value: 'asdfghjkl' },
+        });
+        fireEvent.change(screen.getByTestId('email-register-input'), {
+            target: { value: 'asdfghjkl' },
+        });
+        fireEvent.change(screen.getByTestId('password-register-input'), {
+            target: { value: 'aaaa' },
+        });
+        fireEvent.change(screen.getByTestId('passrepeat-register-input'), {
+            target: { value: 'bbbb' },
+        });
+    }); 
 
     userEvent.click(screen.getByTestId('submit-register-input'));
 
