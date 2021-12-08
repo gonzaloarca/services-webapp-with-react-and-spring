@@ -15,144 +15,129 @@ test('publish new service successfully', async () => {
   await act(async () =>
     sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN)
   );
+
   //Render page
   await act(async () => renderFromRoute('/create-job-post'));
+
   //Step: Category
   //Click on category select
-  await act(async () =>
-    fireEvent.mouseDown(screen.getByLabelText('Service category'))
-  );
+  fireEvent.mouseDown(screen.getByLabelText('Service category'));
+
   //Select category
-  await act(async () => userEvent.click(screen.getByText('Carpentry')));
+  userEvent.click(screen.getByText('Carpentry'));
+
   //Expect category to be selected
-  await waitFor(async () => {
-    expect(screen.getByText('Carpentry')).toBeInTheDocument();
-  });
+  expect(await screen.findByText('Carpentry')).toBeInTheDocument();
+
   //Next step
-  await act(async () => userEvent.click(screen.getByTestId('submit-button')));
+  userEvent.click(screen.getByTestId('submit-button'));
+
   //Step: Title
   //Expect to be on step 2
-  await waitFor(async () => {
-    expect(
-      screen.getByText('Enter a name for your service')
-    ).toBeInTheDocument();
-  });
+  expect(
+    await screen.findByText('Enter a name for your service')
+  ).toBeInTheDocument();
+
   //Enter title
-  await act(async () =>
-    fireEvent.change(screen.getByTestId('title-input'), {
-      target: { value: 'My Carpentry Job' },
-    })
-  );
+  fireEvent.change(screen.getByTestId('title-input'), {
+    target: { value: 'My Carpentry Job' },
+  });
+
   //Next step
-  await act(async () => userEvent.click(screen.getByTestId('submit-button')));
+  userEvent.click(screen.getByTestId('submit-button'));
+
   //Step: Packages
   //Expect to be on step 3
-  await waitFor(async () => {
-    expect(
-      screen.getByText('Add at least one package to your service')
-    ).toBeInTheDocument();
-  });
+  expect(
+    await screen.findByText('Add at least one package to your service')
+  ).toBeInTheDocument();
+
   //Add package name
-  await act(async () =>
-    fireEvent.change(screen.getByPlaceholderText('Package name'), {
-      target: { value: 'My Package' },
-    })
-  );
+  fireEvent.change(screen.getByPlaceholderText('Package name'), {
+    target: { value: 'My Package' },
+  });
+
   //Add package description
-  await act(async () =>
-    fireEvent.change(screen.getByPlaceholderText('Package description'), {
-      target: { value: 'My Package description' },
-    })
-  );
+  fireEvent.change(screen.getByPlaceholderText('Package description'), {
+    target: { value: 'My Package description' },
+  });
+
   //Select rate type
-  await act(async () =>
-    userEvent.click(screen.getByTestId('radio-0'))
-  );
+  userEvent.click(screen.getByTestId('radio-0'));
+
   //Add package price
-  await act(async () =>
-    fireEvent.change(screen.getByPlaceholderText('Price'), {
-      target: { value: '12'},
-    })
-  );
+
+  fireEvent.change(screen.getByPlaceholderText('Price'), {
+    target: { value: '12' },
+  });
+
   //Next step
-  await act(async () => userEvent.click(screen.getByTestId('submit-button')));
+  userEvent.click(screen.getByTestId('submit-button'));
+
   //Step: Images
   //Expect to be on step 4
-  await waitFor(async () => {
-    expect(
-      screen.getByText('Add images to your post')
-    ).toBeInTheDocument();
-  });
+  expect(
+    await screen.findByText('Add images to your post')
+  ).toBeInTheDocument();
+
   //Next step
-  await act(async () => userEvent.click(screen.getByTestId('submit-button')));
+  userEvent.click(screen.getByTestId('submit-button'));
+
   //Expect to be on step 5
-  await waitFor(async () => {
-    expect(
-      screen.getByText('Enter the hours of availability for the service')
-    ).toBeInTheDocument();
-  });
+  expect(
+    await screen.findByText('Enter the hours of availability for the service')
+  ).toBeInTheDocument();
+
   //Set available hours
-  await act(async () =>
-    fireEvent.change(screen.getByPlaceholderText('Available hours'), {
-      target: { value: 'Monday - Friday' },
-    })
-  );
+  fireEvent.change(screen.getByPlaceholderText('Available hours'), {
+    target: { value: 'Monday - Friday' },
+  });
+
   //Next step
-  await act(async () => userEvent.click(screen.getByTestId('submit-button')));
+  userEvent.click(screen.getByTestId('submit-button'));
+
   //Expect to be on step 6
-  await waitFor(async () => {
-    expect(
-      screen.getByText('Select the locations where the service will be offered')
-    ).toBeInTheDocument();
-  });
+  expect(
+    await screen.findByText(
+      'Select the locations where the service will be offered'
+    )
+  ).toBeInTheDocument();
+
   //Neighborhood should only appear on the select
-  await waitFor(async () => {
-    expect(screen.getAllByText('Agronomia')).toHaveLength(1);
-  });
+  expect(await screen.findAllByText('Agronomia')).toHaveLength(1);
+
   //Click on neighborhood select
-  await act(async () =>
-    userEvent.click(screen.getByText('Agronomia'))
-  );
+  userEvent.click(screen.getByText('Agronomia'));
+
   //Neighborhood should now appear in the tags and in the select
-  await waitFor(async () => {
-    expect(screen.getAllByText('Agronomia')).toHaveLength(2);
-  });
+  expect(await screen.findAllByText('Agronomia')).toHaveLength(2);
+
   //Add another neighborhood
-  await waitFor(async () => {
-    expect(screen.getAllByText('Almagro')).toHaveLength(1);
-  });
-  await act(async () =>
-    userEvent.click(screen.getByText('Almagro'))
-  );
-  await waitFor(async () => {
-    expect(screen.getAllByText('Almagro')).toHaveLength(2);
-  });
-  await waitFor(async () => {
-    expect(document.getElementsByClassName('MuiChip-deleteIcon')).toHaveLength(2);
-  });
+  expect(await screen.findAllByText('Almagro')).toHaveLength(1);
+
+  userEvent.click(screen.getByText('Almagro'));
+
+  expect(await screen.findAllByText('Almagro')).toHaveLength(2);
+
+  expect(document.getElementsByClassName('MuiChip-deleteIcon')).toHaveLength(2);
+
   //Remove neighborhood
-  await act(async () =>
-    userEvent.click(document.getElementsByClassName('MuiChip-deleteIcon')[1])
-  );
-  await waitFor(async () => {
-    expect(document.getElementsByClassName('MuiChip-deleteIcon')).toHaveLength(1);
-  });
-  await waitFor(async () => {
-    expect(screen.getAllByText('Almagro')).toHaveLength(1);
-  });
+  userEvent.click(document.getElementsByClassName('MuiChip-deleteIcon')[1]);
+
+  expect(document.getElementsByClassName('MuiChip-deleteIcon')).toHaveLength(1);
+
+  expect(screen.getAllByText('Almagro')).toHaveLength(1);
+
   //Next step
-  await act(async () => userEvent.click(screen.getByTestId('submit-button')));
+  userEvent.click(screen.getByTestId('submit-button'));
+
   //Expect to be on step 7
-  await waitFor(async () => {
-    expect(
-      screen.getByText('Post summary')
-    ).toBeInTheDocument();
-  });
+  expect(await screen.findByText('Post summary')).toBeInTheDocument();
+
   //Submit
-  await act(async () => userEvent.click(screen.getByTestId('submit-button')));
-  await waitFor(async () => {
-    expect(
-      screen.getByText('Post created successfully!')
-    ).toBeInTheDocument();
-  });
+  userEvent.click(screen.getByTestId('submit-button'));
+
+  expect(
+    await screen.findByText('Post created successfully!')
+  ).toBeInTheDocument();
 });
