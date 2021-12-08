@@ -83,9 +83,7 @@ const Categories = () => {
     if (isLoading) {
       list = [1, 2, 3, 4, 5, 6, 7, 8];
     } else if(filter){
-      // console.log(fuse.current.search(filter).map(item => item.item.description))
       list = fuse.current.search(filter).map(item => item.item);
-      console.log(list);
     }
 
     const renderedList = list.map((category) => (
