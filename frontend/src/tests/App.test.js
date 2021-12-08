@@ -4,7 +4,6 @@ import { setupTests } from './utils/setupTestUtils';
 import { setupServer } from 'msw/node';
 import renderFromRoute from './utils/renderFromRoute';
 import { act, waitFor } from '@testing-library/react';
-import { screen } from '@testing-library/react';
 
 const server = setupServer(...appHandlers);
 

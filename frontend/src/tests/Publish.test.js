@@ -137,7 +137,9 @@ test('publish new service successfully', async () => {
   //Submit
   userEvent.click(screen.getByTestId('submit-button'));
 
-  expect(
-    await screen.findByText('Post created successfully!')
-  ).toBeInTheDocument();
+  await waitFor(async () => {
+    expect(
+      await screen.findByText('Post created successfully!')
+    ).toBeInTheDocument();
+  });
 });

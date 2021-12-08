@@ -29,7 +29,7 @@ const publishHandlersMsw = [
       req.body.jobType &&
       req.body.title &&
       req.body.zones &&
-      req.body.zones > 0
+      req.body.zones.length > 0
     ) {
       return res((res) => {
         res.status = 201;
