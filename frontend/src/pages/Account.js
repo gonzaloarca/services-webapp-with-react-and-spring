@@ -146,7 +146,7 @@ const Account = () => {
   };
 
   useEffect(() => {
-    setNavBarProps({ currentSection: '/create-job-post', isTransparent: false });
+    setNavBarProps({ currentSection: '/account', isTransparent: false });
   }, []);
 
   return (
