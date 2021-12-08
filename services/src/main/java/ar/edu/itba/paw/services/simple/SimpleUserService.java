@@ -46,11 +46,8 @@ public class SimpleUserService implements UserService {
                          ByteImage image, Locale locale, String webpageUrl) throws UserAlreadyExistsException {
         Optional<User> maybeUser = userDao.findByEmail(email);
 
-        if (maybeUser.isPresent()) {
-            Optional<UserAuth> auth = getAuthInfo(email);
-            if(auth.isPresent() && auth.get().isVerified()){
-                throw new UserAlreadyExistsException();
-            }
+        if (maybeUser.isPresent() && maybeUser.get().isVerified()) {
+            throw new UserAlreadyExistsException();
         }
 
         User registeredUser;

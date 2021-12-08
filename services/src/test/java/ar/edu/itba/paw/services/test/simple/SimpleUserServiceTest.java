@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
@@ -36,6 +37,14 @@ public class SimpleUserServiceTest {
             "11-4578-9087",
             true,
             true,
+            LocalDateTime.now());
+    private static final User EXISTING_UNVERIFIED_USER = new User(
+            1,
+            "fquesada@gmail.com",
+            "Francisco Quesada",
+            "11-4578-9087",
+            true,
+            false,
             LocalDateTime.now());
     private static final User NEW_USER = new User(
             1,
@@ -82,25 +91,26 @@ public class SimpleUserServiceTest {
     }
 
     @Test(expected = UserAlreadyExistsException.class)
-    public void testRegisterUserAlreadyCreated() {
+    public void testRegisterUserAlreadyCreatedAndVerified() {
         Mockito.when(userDaoJpa.findByEmail(Mockito.eq(EXISTING_USER.getEmail())))
                 .thenReturn(Optional.of(EXISTING_USER));
-
-        EXISTING_USER.setVerified(true);
 
         userService.register(EXISTING_USER.getEmail(), PASSWORD, EXISTING_USER.getUsername(), EXISTING_USER.getPhone(),
                 byteImage, Locale.getDefault(),"");
     }
 
-    @Test(expected = UserAlreadyExistsException.class)
+    @Test()
     public void testRegisterUserNotVerified() {
-        Mockito.when(userDaoJpa.findByEmail(Mockito.eq(EXISTING_USER.getEmail())))
-                .thenReturn(Optional.of(EXISTING_USER));
+        Mockito.when(userDaoJpa.findByEmail(Mockito.eq(EXISTING_UNVERIFIED_USER.getEmail())))
+                .thenReturn(Optional.of(EXISTING_UNVERIFIED_USER));
+        Mockito.when(userDaoJpa.register(Mockito.eq(EXISTING_UNVERIFIED_USER.getEmail()), Mockito.eq(""), Mockito.eq(EXISTING_UNVERIFIED_USER.getUsername()),
+                Mockito.eq(EXISTING_UNVERIFIED_USER.getPhone()))).thenReturn(EXISTING_UNVERIFIED_USER);
+        Mockito.when(passwordEncoder.encode(Mockito.eq(""))).thenReturn("");
+        Mockito.when(verificationTokenService.createVerificationToken(Mockito.eq(EXISTING_UNVERIFIED_USER))).thenReturn(TOKEN);
 
-        EXISTING_USER.setVerified(false);
-
-        userService.register(EXISTING_USER.getEmail(), PASSWORD, EXISTING_USER.getUsername(), EXISTING_USER.getPhone(),
-                byteImage, Locale.getDefault(),"");
+        User createdUser = userService.register(EXISTING_UNVERIFIED_USER.getEmail(), "", EXISTING_UNVERIFIED_USER.getUsername(), EXISTING_UNVERIFIED_USER.getPhone(), null, Locale.getDefault(),"");
+        Assert.assertNotNull(createdUser);
+        Assert.assertEquals(EXISTING_UNVERIFIED_USER, createdUser);
     }
 
     @Test
