@@ -99,6 +99,11 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
   useEffect(() => {
     loadClient();
     loadProfessional();
+
+	return () => {
+		setClient(null);
+		setProfessional(null);
+	}
   }, []);
 
   useEffect(() => {

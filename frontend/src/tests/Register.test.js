@@ -19,7 +19,7 @@ setupTests(server);
 test('register success', async () => {
     renderFromRoute('/register');
     
-    act(() => {        
+    await act(async () => {        
         fireEvent.change(screen.getByTestId('username-register-input'), {
             target: { value: USERNAME },
         });
@@ -53,7 +53,7 @@ test('register with no fields filled', async () => {
 test('register with invalid data', async () => {
     renderFromRoute('/register');
 
-    act(() => {
+    await act(async () => {
         fireEvent.change(screen.getByTestId('phone-register-input'), {
             target: { value: 'asdfghjkl' },
         });

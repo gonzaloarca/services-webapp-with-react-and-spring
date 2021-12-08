@@ -24,19 +24,17 @@ test('publish new service successfully', async () => {
   fireEvent.mouseDown(screen.getByLabelText('Service category'));
 
   //Select category
-  userEvent.click(screen.getByText('Carpentry'));
+  userEvent.click(await screen.findByText('Carpentry'));
 
   //Expect category to be selected
-  expect(await screen.findByText('Carpentry')).toBeInTheDocument();
+  await screen.findByText('Carpentry');
 
   //Next step
   userEvent.click(screen.getByTestId('submit-button'));
 
   //Step: Title
   //Expect to be on step 2
-  expect(
-    await screen.findByText('Enter a name for your service')
-  ).toBeInTheDocument();
+  await screen.findByText('Enter a name for your service');
 
   //Enter title
   fireEvent.change(screen.getByTestId('title-input'), {
@@ -48,9 +46,7 @@ test('publish new service successfully', async () => {
 
   //Step: Packages
   //Expect to be on step 3
-  expect(
-    await screen.findByText('Add at least one package to your service')
-  ).toBeInTheDocument();
+  await screen.findByText('Add at least one package to your service');
 
   //Add package name
   fireEvent.change(screen.getByPlaceholderText('Package name'), {
@@ -66,7 +62,6 @@ test('publish new service successfully', async () => {
   userEvent.click(screen.getByTestId('radio-0'));
 
   //Add package price
-
   fireEvent.change(screen.getByPlaceholderText('Price'), {
     target: { value: '12' },
   });
@@ -76,17 +71,13 @@ test('publish new service successfully', async () => {
 
   //Step: Images
   //Expect to be on step 4
-  expect(
-    await screen.findByText('Add images to your post')
-  ).toBeInTheDocument();
+  await screen.findByText('Add images to your post');
 
   //Next step
   userEvent.click(screen.getByTestId('submit-button'));
 
   //Expect to be on step 5
-  expect(
-    await screen.findByText('Enter the hours of availability for the service')
-  ).toBeInTheDocument();
+  await screen.findByText('Enter the hours of availability for the service');
 
   //Set available hours
   fireEvent.change(screen.getByPlaceholderText('Available hours'), {
@@ -97,17 +88,15 @@ test('publish new service successfully', async () => {
   userEvent.click(screen.getByTestId('submit-button'));
 
   //Expect to be on step 6
-  expect(
-    await screen.findByText(
-      'Select the locations where the service will be offered'
-    )
-  ).toBeInTheDocument();
+  await screen.findByText(
+    'Select the locations where the service will be offered'
+  );
 
   //Neighborhood should only appear on the select
   expect(await screen.findAllByText('Agronomia')).toHaveLength(1);
 
   //Click on neighborhood select
-  userEvent.click(screen.getByText('Agronomia'));
+  userEvent.click(await screen.findByText('Agronomia'));
 
   //Neighborhood should now appear in the tags and in the select
   expect(await screen.findAllByText('Agronomia')).toHaveLength(2);
@@ -115,7 +104,7 @@ test('publish new service successfully', async () => {
   //Add another neighborhood
   expect(await screen.findAllByText('Almagro')).toHaveLength(1);
 
-  userEvent.click(screen.getByText('Almagro'));
+  userEvent.click(await screen.findByText('Almagro'));
 
   expect(await screen.findAllByText('Almagro')).toHaveLength(2);
 
@@ -126,20 +115,16 @@ test('publish new service successfully', async () => {
 
   expect(document.getElementsByClassName('MuiChip-deleteIcon')).toHaveLength(1);
 
-  expect(screen.getAllByText('Almagro')).toHaveLength(1);
+  expect(await screen.findAllByText('Almagro')).toHaveLength(1);
 
   //Next step
   userEvent.click(screen.getByTestId('submit-button'));
 
   //Expect to be on step 7
-  expect(await screen.findByText('Post summary')).toBeInTheDocument();
+  await screen.findByText('Post summary');
 
   //Submit
   userEvent.click(screen.getByTestId('submit-button'));
 
-  await waitFor(async () => {
-    expect(
-      await screen.findByText('Post created successfully!')
-    ).toBeInTheDocument();
-  });
+  await screen.findByText('Post created successfully!');
 });

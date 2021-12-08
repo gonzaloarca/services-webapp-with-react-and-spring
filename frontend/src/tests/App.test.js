@@ -13,6 +13,8 @@ test('render without crashing and helmet sets metadata title correctly', async (
   await act(async () => renderFromRoute('/'));
 
   await waitFor(async () => {
-    expect(document.title).toBe('Home | HireNet');
+    expect(document.title).toBeTruthy();
   });
+  
+  expect(document.title).toBe('Home | HireNet');
 });
