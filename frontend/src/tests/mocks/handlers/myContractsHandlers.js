@@ -23,9 +23,20 @@ const myContractsHandlersMsw = [
   rest.get('/api/rate-types', (_, res, ctx) =>
     res(ctx.json(GENERIC_MOCKED_DATA.RATE_TYPES))
   ),
-  rest.get('/api/contracts', (_, res, ctx) => 
- 	res(ctx.json(MY_CONTRACTS_MOCKED_DATA)) 
-  ),
+  rest.get('/api/contracts', (req, res, ctx) => {
+    switch (req.url.searchParams.get('state')) {
+      case 'pending':
+        return res(ctx.json(MY_CONTRACTS_MOCKED_DATA.PENDING));
+      case 'active':
+        return res(ctx.json(MY_CONTRACTS_MOCKED_DATA.ACTIVE));
+      case 'finalized':
+      default:
+        return res(ctx.json(MY_CONTRACTS_MOCKED_DATA.FINALIZED));
+    }
+  }),
+  rest.put('/api/contracts/:id', (req, res, ctx) => {
+    return res(ctx.json(MY_CONTRACTS_MOCKED_DATA.UPDATE_DATA));
+  }),
 ];
 
 export default myContractsHandlersMsw;

@@ -729,7 +729,7 @@ const RateBody = ({ formRef, setOpenRate, contract, refetch, setReload }) => {
                         setRating(newValue);
                         props.setFieldValue('rating', newValue);
                       }}
-                  />
+                   />
                   <FormHelperText>
                     <ErrorMessage name="rating"></ErrorMessage>
                   </FormHelperText>
@@ -745,6 +745,7 @@ const RateBody = ({ formRef, setOpenRate, contract, refetch, setReload }) => {
                         input: classes.ratingInput,
                       },
                     }}
+					          inputProps={{ 'data-testid': 'opinion-input' }}
                     placeholder={t('mycontracts.rate.tellusplaceholder')}
                     multiline
                     rows={3}
@@ -762,6 +763,7 @@ const RateBody = ({ formRef, setOpenRate, contract, refetch, setReload }) => {
                     hiddenLabel
                     variant="filled"
                     InputProps={{ classes: { input: classes.ratingInput } }}
+					          inputProps={{ 'data-testid': 'summary-input' }}
                     placeholder={t('mycontracts.rate.summarizeplaceholder')}
                     name="summary"
                     helperText={<ErrorMessage name="summary"></ErrorMessage>}
