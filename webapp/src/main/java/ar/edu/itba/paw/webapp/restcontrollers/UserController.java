@@ -85,7 +85,7 @@ public class UserController {
                 .register(newUserDto.getEmail(), newUserDto.getPassword(), newUserDto.getUsername(),
                         newUserDto.getPhone(), null, LocaleResolverUtil
                                 .resolveLocale(headers.getAcceptableLanguages()), newUserDto.getWebPageUrl());
-
+        userService.assignRole(currentUser.getId(), UserAuth.Role.CLIENT.ordinal());
         final URI userUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(currentUser.getId()))
                 .build();

@@ -20,6 +20,7 @@ import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -48,13 +49,7 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.restcontrollers"})
 public class AuthConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("classpath:key.txt")
-    private Resource key;
-
     private final String BASE_URL = "/api";
-
-    @Autowired
-    private HireNetUserDetails hireNetUserDetails;
 
     @Autowired
     private AccessDecisionVoter ownershipVoter;
@@ -62,9 +57,12 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Autowired
+    private HireNetAuthenticationManager hireNetAuthenticationManager;
+
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(hireNetUserDetails).passwordEncoder(passwordEncoder());
+    protected AuthenticationManager authenticationManager() {
+        return hireNetAuthenticationManager;
     }
 
     @Override

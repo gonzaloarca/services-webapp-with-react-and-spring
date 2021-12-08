@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -36,19 +38,30 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken;
+        LoginDto credentials = null;
+        Exception ex;
         try {
             jwtAuthenticationFilterLogger.debug("Trying login...");
-            LoginDto credentials = new ObjectMapper().readValue(request.getInputStream(),LoginDto.class);
-            return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
-                    credentials.getEmail(),credentials.getPassword()
-            ));
-        }catch (IOException e){
+            credentials = new ObjectMapper().readValue(request.getInputStream(), LoginDto.class);
+            usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword());
+            return getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
+        } catch (IOException e) {
             throw new RuntimeException("Cannot read credentials");
-        }catch (BadCredentialsException e){
+        } catch (BadCredentialsException e) {
             jwtAuthenticationFilterLogger.debug("Bad credentials");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return null;
+            ex = e;
+        } catch (DisabledException e) {
+            jwtAuthenticationFilterLogger.debug("User not verified");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            ex = e;
         }
+        try {
+            response.getWriter().write("{ \"message\": \"" + ex.getMessage() + "\"");
+        } catch (IOException ignored) {
+        }
+        return null;
     }
 
     @Override
@@ -56,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         jwtAuthenticationFilterLogger.debug("Successful authentication creating token");
         User user = userService.findByEmail(authResult.getName()).orElseThrow(UserNotFoundException::new);
         String token = jwtUtil.generateAccessToken(user);
-        response.setHeader(HttpHeaders.AUTHORIZATION,"Bearer " + token);
+        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
