@@ -92,8 +92,8 @@ const MyContracts = ({ history }) => {
     useContracts();
   const [hiredServices, setHiredServices] = useState(null);
   const [myServices, setMyServices] = useState(null);
-  const [tabValue, setTabValue] = useState(activeTab === 'pro' ? 1 : 0);
-  const tabPaths = ['hired', 'pro'];
+  const [tabValue, setTabValue] = useState(activeTab === 'offered' ? 1 : 0);
+  const tabPaths = ['hired', 'offered'];
   const [queryParams, setQueryParams] = useState({ page: 1 });
   const [loading, setLoading] = useState(true);
 
@@ -141,7 +141,7 @@ const MyContracts = ({ history }) => {
   useEffect(() => {
     if (currentUser && activeTab && activeState) {
       setLoading(true);
-      if (activeTab === 'pro') {
+      if (activeTab === 'offered') {
         setTabValue(1);
         loadMyServicesContracts();
       } else {
