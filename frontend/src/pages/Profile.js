@@ -27,7 +27,7 @@ import { useReviews, useUser } from '../hooks';
 import { isProfessional } from '../utils/userUtils.js';
 import { useJobCards } from '../hooks';
 import BottomPagination from '../components/BottomPagination';
-import {NavBarContext} from '../context';
+import { NavBarContext } from '../context';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -253,14 +253,12 @@ const ProfileTabs = ({ details, proId, rates }) => {
   }, [queryParams]);
 
   const loadReviews = async () => {
-    if (details.reviewsQuantity > 0) {
-      try {
-        setReviews(await getReviewsByProId(proId, queryParams.page));
-        setLoadingReviews(false);
-      } catch (e) {
-        // console.log(e);
-        return;
-      }
+    try {
+      setReviews(await getReviewsByProId(proId, queryParams.page));
+      setLoadingReviews(false);
+    } catch (e) {
+      // console.log(e);
+      return;
     }
   };
 
@@ -429,7 +427,7 @@ const ProfileTabs = ({ details, proId, rates }) => {
             )}
             <div className="mb-4">
               <BottomPagination
-                maxPage={jobCardsMaxPage || queryParams.page}
+                maxPage={reviewsMaxPage || queryParams.page}
                 setQueryParams={setQueryParams}
                 queryParams={queryParams}
               />
