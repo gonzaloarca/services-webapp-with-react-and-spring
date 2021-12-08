@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.*;
+import ar.edu.itba.paw.webapp.dto.ErrorDto;
+import jdk.jfr.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
@@ -33,6 +36,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
@@ -81,7 +86,11 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
         http = http
                 .exceptionHandling()
-                .authenticationEntryPoint((request, response, ex) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage()))
+                .authenticationEntryPoint((request, response, ex) -> {
+                    response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
+                    response.setContentType(MediaType.APPLICATION_JSON);
+                    response.getWriter().write(String.valueOf(new ErrorDto(new Exception("You don't have access to this resource"))));
+                })
                 .and();
 
         String relativePath = BASE_URL;

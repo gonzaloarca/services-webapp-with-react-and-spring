@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.exceptionmappers;
 
+import ar.edu.itba.paw.models.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.webapp.dto.ErrorDto;
 
 import javax.ws.rs.core.GenericEntity;
@@ -8,10 +9,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class IllegalArgumentExceptionMapper implements ExceptionMapper<IllegalArgumentException> {
+public class ConflictExceptionMapper implements ExceptionMapper<UserAlreadyExistsException> {
     @Override
-    public Response toResponse(IllegalArgumentException e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(
+    public Response toResponse(UserAlreadyExistsException e) {
+        return Response.status(Response.Status.CONFLICT).entity(
                 new GenericEntity<ErrorDto>(
                         new ErrorDto(e)) {
                 }).build();

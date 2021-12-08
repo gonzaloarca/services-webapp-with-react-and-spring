@@ -39,7 +39,7 @@ public class ValidationExceptionMapper
         public HirenetValidationErrorMessage(ValidationError e){
             String[] path = e.getPath().split("\\.");
             this.error = e.getMessage();
-            this.value = path[path.length-1];
+            this.value = e.getInvalidValue();
         }
 
         public HirenetValidationErrorMessage() {
