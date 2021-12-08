@@ -34,9 +34,17 @@ const hireHandlersMsw = [
   rest.get('/api/users/:id', (_, res, ctx) =>
     res(ctx.json(HIRE_MOCKED_DATA.PRO_USER))
   ),
-  rest.get('/api/contracts', (_, res, ctx) =>
-    res(ctx.json(MY_CONTRACTS_MOCKED_DATA))
-  ),
+  rest.get('/api/contracts', (req, res, ctx) => {
+    switch (req.url.searchParams.get('state')) {
+      case 'pending':
+        return res(ctx.json(MY_CONTRACTS_MOCKED_DATA.PENDING));
+      case 'active':
+        return res(ctx.json(MY_CONTRACTS_MOCKED_DATA.ACTIVE));
+      case 'finalized':
+      default:
+        return res(ctx.json(MY_CONTRACTS_MOCKED_DATA.FINALIZED));
+    }
+  }),
   rest.post('/api/contracts', (req, res, ctx) => {
     if (
       req.body.clientId &&
