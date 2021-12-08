@@ -16,54 +16,46 @@ setupTests(server);
 test('login updates the navbar for non-professional user', async () => {
   renderFromRoute('/login');
 
-  await act(async () => {
-    fireEvent.change(screen.getByTestId('email-login-input'), {
-      target: { value: EMAIL },
-    });
-    fireEvent.change(screen.getByTestId('password-login-input'), {
-      target: { value: '12341234' },
-    });
-    userEvent.click(await screen.findByText('Log in'));
+  fireEvent.change(screen.getByTestId('email-login-input'), {
+    target: { value: EMAIL },
   });
+  fireEvent.change(screen.getByTestId('password-login-input'), {
+    target: { value: '12341234' },
+  });
+  userEvent.click(await screen.findByText('Log in'));
   
-  await screen.findByText('My Contracts');
+  expect(await screen.findByText('My Contracts')).toBeInTheDocument();
 });
 
 test('login with wrong user', async () => {
   renderFromRoute('/login');
 
-  await act(async () => {
-    fireEvent.change(screen.getByTestId('email-login-input'), {
-      target: { value: 'hijitus@gmail.com' },
-    });
-    fireEvent.change(screen.getByTestId('password-login-input'), {
-      target: { value: '12341234' },
-    });
-    userEvent.click(await screen.findByText('Log in'));
+  fireEvent.change(screen.getByTestId('email-login-input'), {
+    target: { value: 'hijitus@gmail.com' },
   });
+  fireEvent.change(screen.getByTestId('password-login-input'), {
+    target: { value: '12341234' },
+  });
+  userEvent.click(await screen.findByText('Log in'));
   
-  await screen.findByText('User or password invalid');
+  expect(await screen.findByText('Invalid email and/or password')).toBeInTheDocument();
 });
 
 test('login with invalid email format', async () => {
   renderFromRoute('/login');
 
-  await act(async () => {
-    fireEvent.change(screen.getByTestId('email-login-input'), {
-      target: { value: 'abcdefg' },
-    });
-    userEvent.click(await screen.findByText('Log in'));
+  fireEvent.change(screen.getByTestId('email-login-input'), {
+    target: { value: 'abcdefg' },
   });
+  userEvent.click(await screen.findByText('Log in'));
 
-  await screen.findByText('Please enter a valid email address');
+  expect(await screen.findByText('Please enter a valid email address')).toBeInTheDocument();
 });
 
 test('login with no fields filled', async () => {
   renderFromRoute('/login');
 
-  await act(async () => {
-    userEvent.click(await screen.findByText('Log in'));
-  });
+  userEvent.click(await screen.findByText('Log in'));
 
   expect(await screen.findAllByText('This field is required')).toHaveLength(2);
 });
@@ -71,19 +63,15 @@ test('login with no fields filled', async () => {
 test('go to register', async () => {
   renderFromRoute('/login');
 
-  await act(async () => {
-    userEvent.click(await screen.findByText('Register now'));
-  });
+  userEvent.click(await screen.findByText('Register now'));
 
-  await screen.findByText('Create an account in HireNet');
+  expect(await screen.findByText('Create a HireNet account')).toBeInTheDocument();
 });
 
 test('go to recover password', async () => {
   renderFromRoute('/login');
 
-  await act(async () => {
-    userEvent.click(await screen.findByText('Recover it'));
-  });
+  userEvent.click(await screen.findByText('Recover it'));
 
-  await screen.findByText('Recover password');
+  expect(await screen.findByText('Recover password')).toBeInTheDocument();
 });
