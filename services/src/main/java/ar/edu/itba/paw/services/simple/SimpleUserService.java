@@ -46,8 +46,7 @@ public class SimpleUserService implements UserService {
                          ByteImage image, Locale locale, String webpageUrl) throws UserAlreadyExistsException {
         Optional<User> maybeUser = userDao.findByEmail(email);
 
-        if (maybeUser.isPresent()) {
-            User user = maybeUser.get();
+        if (maybeUser.isPresent() && maybeUser.get().isVerified()) {
             throw new UserAlreadyExistsException();
         }
 
@@ -59,7 +58,6 @@ public class SimpleUserService implements UserService {
 
         VerificationToken token = tokenService.createVerificationToken(registeredUser);
         mailingService.sendVerificationTokenEmail(registeredUser, token, locale, webpageUrl);
-
         return registeredUser;
     }
 

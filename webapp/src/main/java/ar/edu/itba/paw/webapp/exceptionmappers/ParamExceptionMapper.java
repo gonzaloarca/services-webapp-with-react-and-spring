@@ -19,12 +19,10 @@ public class ParamExceptionMapper implements ExceptionMapper<ParamException> {
     }
 
     private static class HirenetParamException {
-        private String paramName;
         private String message;
 
         public HirenetParamException(ParamException e) {
-            this.message = String.format("Parameter error at %s: %s", e.getParameterName(), e.getMessage());
-            this.paramName = e.getParameterName();
+            this.message = String.format("Parameter error at %s", e.getParameterName());
         }
 
         public HirenetParamException() {
@@ -38,12 +36,12 @@ public class ParamExceptionMapper implements ExceptionMapper<ParamException> {
             this.message = message;
         }
 
-        public String getParamName() {
-            return paramName;
-        }
-
-        public void setParamName(String paramName) {
-            this.paramName = paramName;
-        }
+//        public String getParamName() {
+//            return paramName;
+//        }
+//
+//        public void setParamName(String paramName) {
+//            this.paramName = paramName;
+//        }
     }
 }

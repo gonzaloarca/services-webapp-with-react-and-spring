@@ -79,17 +79,13 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response register(@Valid final NewUserDto newUserDto) {
         User currentUser;
-        try {
-            accountControllerLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}",
-                    newUserDto.getEmail(), newUserDto.getPassword(), newUserDto.getUsername(), newUserDto.getPhone());
-            currentUser = userService
-                    .register(newUserDto.getEmail(), newUserDto.getPassword(), newUserDto.getUsername(),
-                            newUserDto.getPhone(), null, LocaleResolverUtil
-                                    .resolveLocale(headers.getAcceptableLanguages()), newUserDto.getWebPageUrl());
-        } catch (UserAlreadyExistsException e) {
-            accountControllerLogger.error("Register error: email already exists");
-            throw new UserAlreadyExistsException();
-        }
+        accountControllerLogger.debug("Registering user with data: email: {}, password: {}, name: {}, phone: {}",
+                newUserDto.getEmail(), newUserDto.getPassword(), newUserDto.getUsername(), newUserDto.getPhone());
+        currentUser = userService
+                .register(newUserDto.getEmail(), newUserDto.getPassword(), newUserDto.getUsername(),
+                        newUserDto.getPhone(), null, LocaleResolverUtil
+                                .resolveLocale(headers.getAcceptableLanguages()), newUserDto.getWebPageUrl());
+        userService.assignRole(currentUser.getId(), UserAuth.Role.CLIENT.ordinal());
         final URI userUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(currentUser.getId()))
                 .build();

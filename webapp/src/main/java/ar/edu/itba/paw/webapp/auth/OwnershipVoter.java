@@ -129,10 +129,8 @@ public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
                         }
                 }
 
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException | NoSuchElementException e) {
                 return ACCESS_ABSTAIN;
-            } catch (NoSuchElementException e) {
-                return ACCESS_DENIED;
             }
         }
         return ACCESS_ABSTAIN;

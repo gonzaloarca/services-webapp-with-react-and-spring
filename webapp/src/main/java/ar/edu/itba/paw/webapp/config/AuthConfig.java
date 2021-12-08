@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.*;
+import ar.edu.itba.paw.webapp.dto.ErrorDto;
+import jdk.jfr.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
@@ -17,6 +20,7 @@ import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -33,6 +37,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
@@ -43,13 +49,7 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.restcontrollers"})
 public class AuthConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("classpath:key.txt")
-    private Resource key;
-
     private final String BASE_URL = "/api";
-
-    @Autowired
-    private HireNetUserDetails hireNetUserDetails;
 
     @Autowired
     private AccessDecisionVoter ownershipVoter;
@@ -57,9 +57,12 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Autowired
+    private HireNetAuthenticationManager hireNetAuthenticationManager;
+
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(hireNetUserDetails).passwordEncoder(passwordEncoder());
+    protected AuthenticationManager authenticationManager() {
+        return hireNetAuthenticationManager;
     }
 
     @Override
@@ -81,7 +84,11 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
         http = http
                 .exceptionHandling()
-                .authenticationEntryPoint((request, response, ex) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage()))
+                .authenticationEntryPoint((request, response, ex) -> {
+                    response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
+                    response.setContentType(MediaType.APPLICATION_JSON);
+                    response.getWriter().write(String.valueOf(new ErrorDto(new Exception("You don't have access to this resource"))));
+                })
                 .and();
 
         String relativePath = BASE_URL;

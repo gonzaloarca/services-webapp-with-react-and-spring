@@ -20,7 +20,7 @@ setupTests(server);
 
 test('pending tab displays title', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/pending');
+	renderFromRoute('/my-contracts/offered/pending');
 
 	expect(await screen.findByText('Pending approval contracts')).toBeInTheDocument();
 
@@ -29,7 +29,7 @@ test('pending tab displays title', async () => {
 
 test('states tabs work', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/active');
+	renderFromRoute('/my-contracts/offered/active');
 	expect(await screen.findByText('Active contracts')).toBeInTheDocument();
 
 	userEvent.click(await screen.findByText('Pending approval'));
@@ -56,7 +56,7 @@ test('hired contracts showing rate button on non rated contracts', async () => {
 
 test('offered contracts not showing rate button on non rated contracts', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/finalized');
+	renderFromRoute('/my-contracts/offered/finalized');
 
 	const card = await screen.findByTestId('contract-card-77');
 	expect(within(card).queryByText('Rate')).not.toBeInTheDocument();
@@ -66,7 +66,7 @@ test('offered contracts not showing rate button on non rated contracts', async (
 
 test('hired contracts not showing rate button on non rated cancelled contracts', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/finalized');
+	renderFromRoute('/my-contracts/offered/finalized');
 
 	const card = await screen.findByTestId('contract-card-75');
 	expect(within(card).queryByText('Rate')).not.toBeInTheDocument();
@@ -76,7 +76,7 @@ test('hired contracts not showing rate button on non rated cancelled contracts',
 
 test('on click details button opens modal', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/pending');
+	renderFromRoute('/my-contracts/offered/pending');
 
 	userEvent.click(await screen.findByText('Details'));
 
@@ -87,7 +87,7 @@ test('on click details button opens modal', async () => {
 
 test('on click contact button opens modal', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/pending');
+	renderFromRoute('/my-contracts/offered/pending');
 
 	userEvent.click(await screen.findByText('Contact'));
 
@@ -98,7 +98,7 @@ test('on click contact button opens modal', async () => {
 
 test('on click reschedule button opens modal', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/pending');
+	renderFromRoute('/my-contracts/offered/pending');
 
 	userEvent.click(await screen.findByText('Reschedule'));
 
@@ -109,7 +109,7 @@ test('on click reschedule button opens modal', async () => {
 
 test('on click cancel button opens modal', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/pending');
+	renderFromRoute('/my-contracts/offered/pending');
 
 	userEvent.click(await screen.findByText('Cancel'));
 
@@ -120,7 +120,7 @@ test('on click cancel button opens modal', async () => {
 
 test('contract without reschedules shows reschedule button', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/pending');
+	renderFromRoute('/my-contracts/offered/pending');
 
 	const card = await screen.findByTestId('contract-card-60');
 
@@ -215,7 +215,7 @@ test('rate modal shows error when no description', async () => {
 
 test('contract already rescheduled doesnt show reschedule button', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/pending');
+	renderFromRoute('/my-contracts/offered/pending');
 
 	const card = await screen.findByTestId('contract-card-36');
 	expect(within(card).queryByText('Reschedule')).not.toBeInTheDocument();
@@ -225,7 +225,7 @@ test('contract already rescheduled doesnt show reschedule button', async () => {
 
 test('contract finalized doesnt show updates buttons', async () => {
 	sessionStorage.setItem('token', LOGIN_MOCKED_DATA.TOKEN);
-	renderFromRoute('/my-contracts/pro/finalized');
+	renderFromRoute('/my-contracts/offered/finalized');
 
 	await waitMyContractsSetup();
 
