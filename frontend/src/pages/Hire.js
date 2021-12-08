@@ -140,8 +140,8 @@ const Hire = ({ match, history }) => {
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({currentSection:'/categories',isTransparent:false});
-  },[])
+    setNavBarProps({ currentSection: '/categories', isTransparent: false });
+  }, []);
 
   const loadJobPost = async () => {
     try {
@@ -382,6 +382,7 @@ export const DatePickerField = (props) => {
       filterTime={filterPastTime}
       placeholderText={t('hirePage.form.dateplaceholder')}
       locale={t('locale')}
+      autoComplete="off"
     />
   );
 };
