@@ -99,6 +99,11 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
   useEffect(() => {
     loadClient();
     loadProfessional();
+
+	return () => {
+		setClient(null);
+		setProfessional(null);
+	}
   }, []);
 
   useEffect(() => {
@@ -338,7 +343,7 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
   return (
       <>
         {!loading ? (
-            <Card className={classes.contractCard}>
+            <Card className={classes.contractCard} >
               <ContractStateHeader contract={contract} isOwner={isOwner} />
               <Grid className="p-4 pr-4" container spacing={3}>
                 <Grid
@@ -498,10 +503,10 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
                           ((isOwner && roles.includes('PROFESSIONAL')) ||
                               (!isOwner && roles.includes('CLIENT'))) &&
                           (!show || !contract[show]) ? (
-                              <>
+                              <div key={index}>
                                 <Button
                                     className="ml-2"
-                                    key={index}
+                                    
                                     onClick={
                                       modalDataMap[action] && modalDataMap[action].openModal
                                           ? modalDataMap[action].openModal
@@ -542,9 +547,9 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
                                         }
                                     />
                                 )}
-                              </>
+                              </div>
                           ) : (
-                              <></>
+                              <div key={index}/>
                           )
                   )}
                 </div>

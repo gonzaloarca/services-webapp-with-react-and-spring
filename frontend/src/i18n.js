@@ -32,7 +32,7 @@ i18n
     react: {
       useSuspense: false,
     },
-    debug: true,
+    debug: false,
     resources,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default

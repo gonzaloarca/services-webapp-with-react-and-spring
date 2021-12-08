@@ -15,6 +15,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
+    "@testing-library/react-hooks": "^7.0.1",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
@@ -63,7 +64,11 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
+    "msw": "^0.32.0",
     "postcss": "^7.0.36",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.4"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

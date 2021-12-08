@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styles from '../styles';
 import {
   Grid,
@@ -27,6 +27,7 @@ import { useReviews, useUser } from '../hooks';
 import { isProfessional } from '../utils/userUtils.js';
 import { useJobCards } from '../hooks';
 import BottomPagination from '../components/BottomPagination';
+import {NavBarContext} from '../context';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -79,6 +80,7 @@ const Profile = ({ match }) => {
     proInfo: {},
   });
   const [rates, setRates] = useState({ "five": 3, "four": 0, "one": 0, "three": 1, "two": 0 });
+  const { setNavBarProps } = useContext(NavBarContext);
 
   const loadData = async (id) => {
     try {
@@ -99,6 +101,10 @@ const Profile = ({ match }) => {
 
   useEffect(() => {
     loadData(match.params.id);
+  }, []);
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/create-job-post', isTransparent: false });
   }, []);
 
   return (

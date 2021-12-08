@@ -136,10 +136,17 @@ const Login = () => {
                     name="email"
                     className={classes.FieldHeight}
                   >
-                    <InputLabel className="text-sm">
+                    <InputLabel
+                      aria-label={t('login.email')}
+                      className="text-sm"
+                    >
                       {t('login.email')}
                     </InputLabel>
-                    <FilledInput className="text-sm font-medium" id="email" />
+                    <FilledInput
+                      inputProps={{ 'data-testid': 'email-login-input' }}
+                      className="text-sm font-medium"
+                      id="email"
+                    />
                     <FormHelperText>
                       <ErrorMessage name="email" />
                     </FormHelperText>
@@ -151,6 +158,7 @@ const Login = () => {
                     onSubmit={(e) => {
                       props.onSubmit(e.values, props);
                     }}
+                    inputProps={{ 'data-testid': 'password-login-input' }}
                   />
                   <div className="flex justify-between items-center mb-3">
                     <FormControlLabel

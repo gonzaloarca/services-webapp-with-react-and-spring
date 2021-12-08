@@ -87,6 +87,10 @@ const App = () => {
         setToken(sessionStorageToken);
       }
     }
+    return () => {
+      setToken(null);
+      setCurrentUser(null);
+    }
   }, []);
 
   return (

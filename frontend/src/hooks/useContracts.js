@@ -97,6 +97,10 @@ const useContractsHook = () => {
     return response.data;
   };
 
+  const freeLinks = () => {
+	  setLinks(initialLinks);
+  }
+
   return {
     getContractsByClientIdAndState,
     getContractsByProAndStateId,
@@ -104,6 +108,7 @@ const useContractsHook = () => {
     getContractStates,
     createContract,
     links,
+	freeLinks,
   };
 };
 export default useContractsHook;

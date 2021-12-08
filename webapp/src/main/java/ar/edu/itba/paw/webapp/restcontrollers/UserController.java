@@ -60,7 +60,7 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findByEmail(@QueryParam("email") final String email) {
         if (email == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            throw new IllegalArgumentException("Email must have a value");
         }
         accountControllerLogger.debug("Finding user with email {}", email);
         UserWithImage user = userService.findUserWithImageByEmail(email).orElseThrow(UserNotFoundException::new);
