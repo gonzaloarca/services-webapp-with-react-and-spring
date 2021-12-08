@@ -38,14 +38,15 @@ const Login = () => {
   const { token, setCurrentUser, setToken } = useContext(UserContext);
   const [rememberMe, setRememberMe] = useState(false);
   const [badCredentials, setBadCredentials] = useState(false);
+  const [userNotVerified, setUserNotVerified] = useState(false);
 
   const { getUserByEmail, login } = useUser();
 
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({currentSection:'/login',isTransparent:true});
-  },[])
+    setNavBarProps({ currentSection: '/login', isTransparent: true });
+  }, []);
 
   const setUserData = async (email) => {
     try {
@@ -81,17 +82,20 @@ const Login = () => {
       .min(8, t('validationerror.minlength', { length: 8 })),
   });
 
-  const onSubmit = async (values, props) => {
+  const onSubmit = async (values, _) => {
     try {
       setToken(await login(values));
       history.push('/');
     } catch (error) {
       if (error.response.status === 401) {
         setBadCredentials(true);
+        setUserNotVerified(false);
+      } else if (error.response.status === 403) {
+        setUserNotVerified(true);
+        setBadCredentials(false);
       } else {
         history.replace('/error');
       }
-      return;
     }
   };
 
@@ -161,6 +165,10 @@ const Login = () => {
                     {badCredentials ? (
                       <p className={classes.badCredentials}>
                         {t('login.badcredentials')}
+                      </p>
+                    ) : userNotVerified ? (
+                      <p className={classes.badCredentials}>
+                        {t('login.usernotverified')}
                       </p>
                     ) : (
                       <></>
