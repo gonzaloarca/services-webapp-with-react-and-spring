@@ -6,7 +6,8 @@ import styles from '../styles';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { themeUtils } from '../theme';
-import { NavBarContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
+import { useUser } from '../hooks';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -29,9 +30,23 @@ const JobPostSuccess = ({ match }) => {
   const { t } = useTranslation();
 
   const { setNavBarProps } = useContext(NavBarContext);
+  const { setCurrentUser,currentUser } = useContext(UserContext);
+  const { getUserByEmail } = useUser();
+
+  const refetchUserData = async (email) => {
+    try {
+      const user = await getUserByEmail(email);
+      if (user) {
+        setCurrentUser(user);
+      }
+    } catch (e) {
+      // console.log(e);
+    }
+  };
 
   useEffect(() => {
     setNavBarProps({currentSection:'/create-job-post',isTransparent:false});
+    refetchUserData(currentUser.email)
   },[])
 
   return (
