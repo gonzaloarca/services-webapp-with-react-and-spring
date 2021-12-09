@@ -485,7 +485,7 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
                   </div>
                 </div>
                 <div>
-                  {contractActionsMap[
+                  {contract.rate > 0 ? <div>AAAAA</div> :contractActionsMap[
                       contractStateDataMap[contract.state.description].state
                       ].map(
                       (
