@@ -101,10 +101,11 @@ const Profile = ({ match }) => {
 
   useEffect(() => {
     loadData(match.params.id);
-  }, []);
+    console.log(match.params.id);
+  }, [match.params.id]);
 
   useEffect(() => {
-    setNavBarProps({ currentSection: '/create-job-post', isTransparent: false });
+    setNavBarProps({ currentSection: '/profile', isTransparent: false });
   }, []);
 
   return (
@@ -250,7 +251,7 @@ const ProfileTabs = ({ details, proId, rates }) => {
 
   useEffect(() => {
     loadJobCards();
-  }, [queryParams]);
+  }, [queryParams,proId]);
 
   const loadReviews = async () => {
     try {
@@ -270,7 +271,7 @@ const ProfileTabs = ({ details, proId, rates }) => {
 
   useEffect(() => {
     loadReviews();
-  }, [queryParams]);
+  }, [queryParams,proId]);
 
   return (
     <>
