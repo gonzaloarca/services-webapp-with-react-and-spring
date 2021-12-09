@@ -140,7 +140,7 @@ const Hire = ({ match, history }) => {
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({ currentSection: '/categories', isTransparent: false });
+    setNavBarProps({ currentSection: '/hire', isTransparent: false });
   }, []);
 
   const loadJobPost = async () => {

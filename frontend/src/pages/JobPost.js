@@ -218,7 +218,7 @@ const JobPost = ({ match, history }) => {
   const { setNavBarProps } = useContext(NavBarContext);
 
   useEffect(() => {
-    setNavBarProps({ currentSection: '/search', isTransparent: false });
+    setNavBarProps({ currentSection: '/job-post', isTransparent: false });
   }, []);
 
   const loadJobPost = async () => {
