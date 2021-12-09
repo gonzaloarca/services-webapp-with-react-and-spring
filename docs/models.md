@@ -1,6 +1,6 @@
 # Modelos - DTOs
 
-{{baseUrl}} = {{absolutePath}}/api/v1
+{{baseUrl}} = {{absolutePath}}/api
 
 Recordamos que en los PUT no son todos los datos necesarios.
 
@@ -74,7 +74,7 @@ Tampoco lo son ciertos query params en determinadas situaciones.
 }
 ```
 
-### PUT: {{baseUrl}}/contracts/40?role=professional
+### PUT: {{baseUrl}}/contracts/40
 
 ```json
 {
@@ -87,18 +87,35 @@ Tampoco lo son ciertos query params en determinadas situaciones.
 
 ```json
 {
-  "clientId": 1,
-  "creationDate": "2021-07-16T16:24:36.055",
-  "description": "Necesito que cuides a 4 nenes de 4 años",
-  "id": 40,
-  "image": "http://localhost:8080/api/v1/contracts/40/image",
-  "jobPackage": "http://localhost:8080/api/v1/job-posts/13/packages/13",
-  "lastModifiedDate": "2021-07-16T16:35:40.292",
+  "avgRate": 3.6666666666666665,
+  "client": "http://localhost:8080/api/users/40",
+  "contractsCompleted": 5,
+  "creationDate": "2021-08-23T13:39:08.596",
+  "description": "necesitooooooooo",
+  "id": 46,
+  "jobContract": "http://localhost:8080/api/contracts/46",
+  "jobPackage": "http://localhost:8080/api/job-posts/8/packages/8",
+  "jobPost": "http://localhost:8080/api/job-posts/8",
+  "jobTitle": "Niñero turno mañana",
+  "jobType": {
+    "description": "Babysitting",
+    "id": 7
+  },
+  "packageTitle": "4 dias a la semana 4 horas",
+  "postImage": "http://localhost:8080/api/job-posts/8/images/12",
+  "professional": "http://localhost:8080/api/users/5",
+  "rate": 0,
+  "rateType": {
+    "description": "TBD",
+    "id": 2
+  },
+  "reviewsCount": 3,
   "scheduledDate": "2021-06-16T14:20:20.028799",
   "state": {
     "description": "CLIENT_REJECTED",
     "id": 2
-  }
+  },
+  "wasRescheduled": false
 }
 ```
 
@@ -110,28 +127,28 @@ Retorna imagen como body
 
 En un form con key "file" viajara la imagen
 
-### GET contracts by role and state:
+### GET contracts by type and state:
 
-### {{baseUrl}}/contracts?userId=5&role=professional&state=finalized
+### {{baseUrl}}/contracts?userId=5&type=offered&state=finalized
 
 ```json
 [
   {
     "avgRate": 3.6666666666666665,
-    "client": "http://localhost:8080/api/v1/users/3",
+    "client": "http://localhost:8080/api/users/3",
     "contractsCompleted": 5,
     "creationDate": "2021-07-15T21:50:22.663",
-    "imageUrl": "http://localhost:8080/api/v1/job-posts/8/images/12",
-    "jobContractDto": "http://localhost:8080/api/v1/contracts/34",
-    "jobPackageDto": "http://localhost:8080/api/v1/job-posts/8/packages/8",
-    "jobPost": "http://localhost:8080/api/v1/job-posts/8",
+    "imageUrl": "http://localhost:8080/api/job-posts/8/images/12",
+    "jobContractDto": "http://localhost:8080/api/contracts/34",
+    "jobPackageDto": "http://localhost:8080/api/job-posts/8/packages/8",
+    "jobPost": "http://localhost:8080/api/job-posts/8",
     "jobTitle": "Niñero turno mañana",
     "jobType": {
       "description": "Babysitting",
       "id": 7
     },
     "packageTitle": "4 dias a la semana 4 horas",
-    "professional": "http://localhost:8080/api/v1/users/5",
+    "professional": "http://localhost:8080/api/users/5",
     "rateType": {
       "description": "TBD",
       "id": 2
@@ -181,14 +198,14 @@ En un form con key "file" viajara la imagen
     "availableHours": "Todo los dias",
     "creationDate": "2021-05-02T18:22:13.338478",
     "id": 10,
-    "images": ["http://localhost:8080/api/v1/job-posts/10/images/15"],
+    "images": ["http://localhost:8080/api/job-posts/10/images/15"],
     "jobType": {
       "description": "Electricity",
       "id": 1
     },
-    "packages": "http://localhost:8080/api/v1/job-posts/packages",
-    "professional": "http://localhost:8080/api/v1/users/6",
-    "reviews": "http://localhost:8080/api/v1/reviews?postId=10",
+    "packages": "http://localhost:8080/api/job-posts/packages",
+    "professional": "http://localhost:8080/api/users/6",
+    "reviews": "http://localhost:8080/api/reviews?postId=10",
     "title": "Fran",
     "zones": [
       {
@@ -213,9 +230,9 @@ En un form con key "file" viajara la imagen
     "description": "Babysitting",
     "id": 7
   },
-  "packages": "http://localhost:8080/api/v1/job-posts/19/packages",
-  "professional": "http://localhost:8080/api/v1/users/5",
-  "reviews": "http://localhost:8080/api/v1/reviews?postId=19",
+  "packages": "http://localhost:8080/api/job-posts/19/packages",
+  "professional": "http://localhost:8080/api/users/5",
+  "reviews": "http://localhost:8080/api/reviews?postId=19",
   "title": "Niñero turno mañana",
   "zones": [
     {
@@ -274,6 +291,7 @@ En un form con key "file" viajara la imagen
 ```
 
 ### GET all: {{baseUrl}}/job-posts/1/packages
+### GET active: {{baseUrl}}/job-posts/1/packages?type=active
 
 ```json
 [
@@ -281,7 +299,7 @@ En un form con key "file" viajara la imagen
     "active": true,
     "description": "Muchos trabajos",
     "id": 20,
-    "jobPost": "http://localhost:8080/api/v1/job-posts/1",
+    "jobPost": "http://localhost:8080/api/job-posts/1",
     "price": 160.0,
     "rateType": {
       "description": "HOURLY",
@@ -299,7 +317,7 @@ En un form con key "file" viajara la imagen
   "active": false,
   "description": "Muchos trabajos",
   "id": 21,
-  "jobPost": "http://localhost:8080/api/v1/job-posts/1",
+  "jobPost": "http://localhost:8080/api/job-posts/1",
   "price": 160.0,
   "rateType": {
     "description": "HOURLY",
@@ -324,8 +342,8 @@ En un form con key "file" viajara la imagen
   {
     "avgRate": 0.0,
     "contractsCompleted": 0,
-    "imageUrl": "http://localhost:8080/api/v1/job-posts/1/images/1",
-    "jobPost": "http://localhost:8080/api/v1/job-posts/1",
+    "imageUrl": "http://localhost:8080/api/job-posts/1/images/1",
+    "jobPost": "http://localhost:8080/api/job-posts/1",
     "jobType": {
       "description": "Plumbing",
       "id": 0
@@ -364,10 +382,10 @@ En un form con key "file" viajara la imagen
 
 ```json
 {
-  "client": "http://localhost:8080/api/v1/users/3",
+  "client": "http://localhost:8080/api/users/3",
   "creationDate": "2021-05-02T18:22:21.684413",
   "description": "EL MEJOR NIÑERO",
-  "jobContract": "http://localhost:8080/api/v1/contracts/1",
+  "jobContract": "http://localhost:8080/api/contracts/1",
   "rate": 5,
   "title": "No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹"
 }
@@ -377,15 +395,15 @@ En un form con key "file" viajara la imagen
 
 ### GET by postId: {{baseUrl}}/reviews?page=1&postId=5
 
-### GET by userId: {{baseUrl}}/reviews?page=1&userId=5&role=professional
+### GET by userId: {{baseUrl}}/reviews?page=1&userId=5&type=offered
 
 ```json
 [
   {
-    "client": "http://localhost:8080/api/v1/users/3",
+    "client": "http://localhost:8080/api/users/3",
     "creationDate": "2021-05-02T18:22:21.684413",
     "description": "EL MEJOR NIÑERO",
-    "jobContract": "http://localhost:8080/api/v1/contracts/1",
+    "jobContract": "http://localhost:8080/api/contracts/1",
     "rate": 5,
     "title": "No debes moverte de donde estas ⛹⛹⛹⛹⛹⛹"
   }
@@ -421,7 +439,7 @@ En un form con key "file" viajara la imagen
 ```json
 [
   {
-    "contracts": "http://localhost:8080/api/v1/contracts?userId=13",
+    "contracts": "http://localhost:8080/api/contracts?userId=13",
     "email": "amigoitba@yopmail.com",
     "id": 13,
     "phone": "1234467567",
@@ -437,10 +455,10 @@ En un form con key "file" viajara la imagen
 
 ```json
 {
-  "contracts": "http://localhost:8080/api/v1/contracts?userId=5",
+  "contracts": "http://localhost:8080/api/contracts?userId=5",
   "email": "manaaasd@gmail.com",
   "id": 5,
-  "image": "http://localhost:8080/api/v1/users/5/image",
+  "image": "http://localhost:8080/api/users/5/image",
   "phone": "03034560123",
   "roles": ["CLIENT", "PROFESSIONAL"],
   "username": "Manuel Rodrigueaaaaa"
@@ -524,7 +542,7 @@ En un form con key "token" viajara el token
 }
 ```
 
-### PUT: {{baseUrl}}/contracts/40?role=professional
+### PUT: {{baseUrl}}/contracts/40
 
 ```json
 {
@@ -541,8 +559,8 @@ En un form con key "token" viajara el token
   "creationDate": "2021-07-16T16:24:36.055",
   "description": "Necesito que cuides a 4 nenes de 4 años",
   "id": 40,
-  "image": "http://localhost:8080/api/v1/contracts/40/image",
-  "jobPackage": "http://localhost:8080/api/v1/job-posts/13/packages/13",
+  "image": "http://localhost:8080/api/contracts/40/image",
+  "jobPackage": "http://localhost:8080/api/job-posts/13/packages/13",
   "lastModifiedDate": "2021-07-16T16:35:40.292",
   "scheduledDate": "2021-06-16T14:20:20.028799",
   "state": {
@@ -550,40 +568,6 @@ En un form con key "token" viajara el token
     "id": 2
   }
 }
-```
-
-### GET contractCards: {{baseUrl}}/contracts?userId=5&role=professional&state=finalized
-
-```json
-[
-  {
-    "avgRate": 3.6666666666666665,
-    "client": "http://localhost:8080/api/v1/users/3",
-    "contractsCompleted": 5,
-    "creationDate": "2021-07-15T21:50:22.663",
-    "imageUrl": "http://localhost:8080/api/v1/job-posts/8/images/12",
-    "jobContractDto": "http://localhost:8080/api/v1/contracts/34",
-    "jobPackageDto": "http://localhost:8080/api/v1/job-posts/8/packages/8",
-    "jobPost": "http://localhost:8080/api/v1/job-posts/8",
-    "jobTitle": "Niñero turno mañana",
-    "jobType": {
-      "description": "Babysitting",
-      "id": 7
-    },
-    "packageTitle": "4 dias a la semana 4 horas",
-    "professional": "http://localhost:8080/api/v1/users/5",
-    "rateType": {
-      "description": "TBD",
-      "id": 2
-    },
-    "reviewsCount": 3,
-    "scheduledDate": "2021-06-16T14:25:28.028799",
-    "state": {
-      "description": "CLIENT_REJECTED",
-      "id": 2
-    }
-  }
-]
 ```
 
 ### GET image: {{baseUrl}}/contracts/3/image

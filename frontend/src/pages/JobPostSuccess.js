@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import NavBar from '../components/NavBar';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, Grid, makeStyles } from '@material-ui/core';
 import styles from '../styles';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { themeUtils } from '../theme';
+import { NavBarContext, UserContext } from '../context';
+import { useUser } from '../hooks';
 
 const useGlobalStyles = makeStyles(styles);
 
@@ -28,12 +29,31 @@ const JobPostSuccess = ({ match }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const { setNavBarProps } = useContext(NavBarContext);
+  const { setCurrentUser,currentUser } = useContext(UserContext);
+  const { getUserByEmail } = useUser();
+
+  const refetchUserData = async (email) => {
+    try {
+      const user = await getUserByEmail(email);
+      if (user) {
+        setCurrentUser(user);
+      }
+    } catch (e) {
+      // console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/create-job-post',isTransparent:false});
+    refetchUserData(currentUser.email)
+  },[])
+
   return (
     <>
       <Helmet>
         <title>{t('title', { section: 'Servicio creado' })}</title>
       </Helmet>
-      <NavBar currentSection="/create-job-post" />
       <Grid
         container
         className={clsx(

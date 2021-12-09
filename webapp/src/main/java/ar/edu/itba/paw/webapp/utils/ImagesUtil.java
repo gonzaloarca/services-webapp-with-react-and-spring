@@ -8,27 +8,24 @@ import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 
 public class ImagesUtil {
 
     public static ByteImage fromInputStream(FormDataBodyPart body) throws IOException {
         String mediaType = "image/" + body.getMediaType().getSubtype();
-        if(!mediaType.equals("image/png") && !mediaType.equals("image/jpg") && !mediaType.equals("image/jpeg"))
+        if (!mediaType.equals("image/png") && !mediaType.equals("image/jpg") && !mediaType.equals("image/jpeg"))
             throw new IllegalArgumentException();
         byte[] data = IOUtils.toByteArray(body.getValueAs(InputStream.class));
-        return new ByteImage(data,mediaType);
+        return new ByteImage(data, mediaType);
     }
 
-    public static Response sendCachableImageResponse(ByteImage byteImage,Request request){
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(86400);
-        EntityTag etag = new EntityTag(Integer.toString(byteImage.hashCode()));
-        Response.ResponseBuilder builder = request.evaluatePreconditions(etag);
-        if(builder == null){
-            builder = Response.ok(new ByteArrayInputStream(byteImage.getData()));
-            builder.tag(etag);
-        }
-        return builder.cacheControl(cacheControl).build();
+    public static Response sendCacheableImageResponse(ByteImage byteImage, Request request) {
+        return CacheUtils.sendConditionalCacheResponse(request, new ByteArrayInputStream(byteImage.getData()), new EntityTag(String.valueOf(Arrays.hashCode(byteImage.getData()))));
+    }
+
+    public static Response sendUnconditionalCacheImageResponse(ByteImage byteImage) {
+        return CacheUtils.sendUnconditionalCacheResponse(new ByteArrayInputStream(byteImage.getData()));
     }
 }

@@ -14,7 +14,7 @@ export const getReviewsByProIdRequest = (proId, page = 1) => {
     params: {
       page: page,
       userId: proId,
-      role: 'PROFESSIONAL',
+      type: 'offered',
     },
   });
 };

@@ -1,6 +1,5 @@
 import jwt from 'jwt-decode';
 import React, { useContext, useEffect, useState } from 'react';
-import NavBar from '../components/NavBar';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -22,7 +21,7 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
@@ -39,8 +38,15 @@ const Login = () => {
   const { token, setCurrentUser, setToken } = useContext(UserContext);
   const [rememberMe, setRememberMe] = useState(false);
   const [badCredentials, setBadCredentials] = useState(false);
+  const [userNotVerified, setUserNotVerified] = useState(false);
 
   const { getUserByEmail, login } = useUser();
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/login', isTransparent: true });
+  }, []);
 
   const setUserData = async (email) => {
     try {
@@ -76,17 +82,20 @@ const Login = () => {
       .min(8, t('validationerror.minlength', { length: 8 })),
   });
 
-  const onSubmit = async (values, props) => {
+  const onSubmit = async (values, _) => {
     try {
       setToken(await login(values));
       history.push('/');
     } catch (error) {
       if (error.response.status === 401) {
         setBadCredentials(true);
+        setUserNotVerified(false);
+      } else if (error.response.status === 403) {
+        setUserNotVerified(true);
+        setBadCredentials(false);
       } else {
         history.replace('/error');
       }
-      return;
     }
   };
 
@@ -95,7 +104,6 @@ const Login = () => {
       <Helmet>
         <title>{t('title', { section: t('navigation.sections.login') })}</title>
       </Helmet>
-      <NavBar currentSection={'/login'} isTransparent />
       <div
         className={classes.background}
         style={{
@@ -128,10 +136,17 @@ const Login = () => {
                     name="email"
                     className={classes.FieldHeight}
                   >
-                    <InputLabel className="text-sm">
+                    <InputLabel
+                      aria-label={t('login.email')}
+                      className="text-sm"
+                    >
                       {t('login.email')}
                     </InputLabel>
-                    <FilledInput className="text-sm font-medium" id="email" />
+                    <FilledInput
+                      inputProps={{ 'data-testid': 'email-login-input' }}
+                      className="text-sm font-medium"
+                      id="email"
+                    />
                     <FormHelperText>
                       <ErrorMessage name="email" />
                     </FormHelperText>
@@ -143,6 +158,7 @@ const Login = () => {
                     onSubmit={(e) => {
                       props.onSubmit(e.values, props);
                     }}
+                    inputProps={{ 'data-testid': 'password-login-input' }}
                   />
                   <div className="flex justify-between items-center mb-3">
                     <FormControlLabel
@@ -157,6 +173,10 @@ const Login = () => {
                     {badCredentials ? (
                       <p className={classes.badCredentials}>
                         {t('login.badcredentials')}
+                      </p>
+                    ) : userNotVerified ? (
+                      <p className={classes.badCredentials}>
+                        {t('login.usernotverified')}
                       </p>
                     ) : (
                       <></>

@@ -11,7 +11,6 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
-import NavBar from '../components/NavBar';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import { themeUtils } from '../theme';
@@ -21,7 +20,7 @@ import ContractCard from '../components/ContractCard';
 import { useParams, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useContracts } from '../hooks';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import BottomPagination from '../components/BottomPagination';
 import { isLoggedIn } from '../utils/userUtils';
 
@@ -89,14 +88,24 @@ const MyContracts = ({ history }) => {
   const { t } = useTranslation();
   const { activeTab, activeState } = useParams();
   const { currentUser } = useContext(UserContext);
-  const { getContractsByClientIdAndState, getContractsByProAndStateId, links } =
+  const { getContractsByClientIdAndState, getContractsByProAndStateId, links, freeLinks } =
     useContracts();
   const [hiredServices, setHiredServices] = useState(null);
   const [myServices, setMyServices] = useState(null);
-  const [tabValue, setTabValue] = React.useState(activeTab === 'pro' ? 1 : 0);
-  const tabPaths = ['hired', 'pro'];
-  const [queryParams, setQueryParams] = React.useState({ page: 1 });
+  const [tabValue, setTabValue] = useState(activeTab === 'offered' ? 1 : 0);
+  const tabPaths = ['hired', 'offered'];
+  const [queryParams, setQueryParams] = useState({ page: 1 });
   const [loading, setLoading] = useState(true);
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/my-contracts', isTransparent: false });
+
+	return () => {
+		setNavBarProps({currentSection: '', isTransparent: false});
+	}
+  }, []);
 
   if (!isLoggedIn()) {
     history.replace('/login');
@@ -132,7 +141,7 @@ const MyContracts = ({ history }) => {
   useEffect(() => {
     if (currentUser && activeTab && activeState) {
       setLoading(true);
-      if (activeTab === 'pro') {
+      if (activeTab === 'offered') {
         setTabValue(1);
         loadMyServicesContracts();
       } else {
@@ -140,13 +149,15 @@ const MyContracts = ({ history }) => {
         loadHiredContracts();
       }
     }
+
+	return () => freeLinks();
   }, [activeState, activeTab, currentUser, reload, queryParams]);
 
   const handleChange = (_event, newValue) => {
     setTabValue(newValue);
     history.push(
       `/my-contracts/${tabPaths[newValue]}` +
-        (activeState ? `/${activeState}` : '')
+      (activeState ? `/${activeState}` : '')
     );
   };
 
@@ -157,7 +168,6 @@ const MyContracts = ({ history }) => {
           {t('title', { section: t('navigation.sections.mycontracts') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/my-contracts'} />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('navigation.sections.mycontracts')} />
         <div>
@@ -242,8 +252,6 @@ const ContractsDashboard = ({
   contracts,
   isOwner = false,
   topTabSection,
-  loadHiredContracts,
-  loadMyServicesContracts,
   reload,
   setReload,
   loading,
@@ -256,7 +264,6 @@ const ContractsDashboard = ({
   const classes = useStyles();
   const { t } = useTranslation();
   const { activeState } = useParams();
-
   useEffect(() => {
     if (contracts) setLoading(false);
     else setLoading(true);
@@ -423,7 +430,7 @@ const ContractsDashboard = ({
                     <div>
                       <>
                         {contracts.map((contract) => (
-                          <div key={contract.id} className="mb-6">
+                          <div key={contract.id} className="mb-6" data-testid={`contract-card-${contract.id}`}>
                             <ContractCard
                               contract={contract}
                               isOwner={isOwner}
@@ -438,7 +445,7 @@ const ContractsDashboard = ({
                           </div>
                         ))}{' '}
                         <BottomPagination
-                          maxPage={links.last.page}
+                          maxPage={parseInt(links.last?.page || queryParams.page)}
                           queryParams={queryParams}
                           setQueryParams={setQueryParams}
                         />

@@ -8,7 +8,7 @@ export const getContractsByClientIdAndStateRequest = (
   return hireNetApi.get('/contracts', {
     params: {
       userId: clientId,
-      role: 'client',
+      type: 'hired',
       state: state,
       page: page,
     },
@@ -30,7 +30,7 @@ export const getContractsByProAndStateIdRequest = (proId, state, page = 1) => {
   return hireNetApi.get('/contracts', {
     params: {
       userId: proId,
-      role: 'professional',
+      type: 'offered',
       state: state,
       page: page,
     },
@@ -47,8 +47,7 @@ export const getContractsByProAndStateIdRequest = (proId, state, page = 1) => {
 export const changeContractStateRequest = (
   contractId,
   state,
-  newScheduledDate,
-  role
+  newScheduledDate
 ) => {
   return hireNetApi.put(
     '/contracts/' + contractId,
@@ -63,9 +62,6 @@ export const changeContractStateRequest = (
           (localStorage.getItem('token') ||
             sessionStorage.getItem('token') ||
             ''),
-      },
-      params: {
-        role: role,
       },
     }
   );

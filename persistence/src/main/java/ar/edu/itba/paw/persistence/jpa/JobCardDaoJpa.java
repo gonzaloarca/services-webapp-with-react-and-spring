@@ -18,16 +18,22 @@ import java.util.stream.Collectors;
 @Repository
 public class JobCardDaoJpa implements JobCardDao {
 
-    private static final String FULL_CONTRACT = "(SELECT * FROM contract NATURAL JOIN job_package NATURAL JOIN (SELECT user_id AS professional_id, post_id FROM job_post) AS post NATURAL JOIN (SELECT user_id AS client_id FROM users) AS client NATURAL JOIN (SELECT user_id AS professional_id FROM users) AS professional)";
+    private static final String FULL_FINALIZED_CONTRACTS = new StringBuilder()
+            .append("(SELECT * FROM contract NATURAL JOIN job_package ")
+            .append(" NATURAL JOIN (SELECT user_id AS professional_id, post_id FROM job_post) AS post")
+            .append(" NATURAL JOIN (SELECT user_id AS client_id FROM users) AS client")
+            .append(" NATURAL JOIN (SELECT user_id AS professional_id FROM users) AS professional")
+            .append("   WHERE contract_state = 6)")
+            .toString();
 
     private static final String RELATED_CARDS_QUERY = new StringBuilder()
             .append("FROM job_cards NATURAL JOIN (")
             .append("    SELECT DISTINCT pro2_contracts.post_id, ")
             .append("COUNT(DISTINCT pro2_contracts.client_id) AS clients_in_common")
             .append("    FROM ")
-            .append(FULL_CONTRACT).append(" pro1_contracts")
+            .append(FULL_FINALIZED_CONTRACTS).append(" pro1_contracts")
             .append("             JOIN ")
-            .append(FULL_CONTRACT).append(" pro2_contracts")
+            .append(FULL_FINALIZED_CONTRACTS).append(" pro2_contracts")
             .append(" ON pro1_contracts.client_id = pro2_contracts.client_id")
             .append("    WHERE :proId <> pro2_contracts.professional_id AND :proId = pro1_contracts.professional_id")
             .append("      AND pro2_contracts.contract_creation_date >= :dateLimit")
@@ -46,6 +52,8 @@ public class JobCardDaoJpa implements JobCardDao {
 
     @Override
     public List<JobCard> findAll(int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery(
                 "SELECT post_id FROM job_post WHERE post_is_active = TRUE"
         );
@@ -54,6 +62,8 @@ public class JobCardDaoJpa implements JobCardDao {
 
     @Override
     public List<JobCard> findByUserId(long id, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         Query nativeQuery = em.createNativeQuery(
                 "SELECT post_id FROM job_post WHERE post_is_active = TRUE AND user_id = :id")
                 .setParameter("id", id);
@@ -62,13 +72,16 @@ public class JobCardDaoJpa implements JobCardDao {
 
     @Override
     public List<JobCard> search(String query, JobPost.Zone zone, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, boolean withZone, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         return searchWithCategory(query, zone, null, similarTypes, orderBy, withZone, page);
     }
 
     @Override
     public List<JobCard> searchWithCategory(String query, JobPost.Zone zone, JobPost.JobType jobType, List<JobPost.JobType> similarTypes, JobCard.OrderBy orderBy, boolean withZone, int page) {
-        StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards");
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
 
+        StringBuilder sqlQuery = new StringBuilder().append("SELECT post_id FROM job_cards");
         Query nativeQuery = buildSearchQuery(query, zone, jobType, similarTypes, sqlQuery, orderBy, withZone, false);
 
         return executePageQuery(page, nativeQuery);
@@ -93,6 +106,8 @@ public class JobCardDaoJpa implements JobCardDao {
 
     @Override
     public List<JobCard> findRelatedJobCards(long professional_id, int page) {
+        if(page < HirenetUtils.ALL_PAGES) return new ArrayList<>();
+
         StringBuilder sqlQuery = new StringBuilder()
                 .append("SELECT post_id ")
                 .append(RELATED_CARDS_QUERY)

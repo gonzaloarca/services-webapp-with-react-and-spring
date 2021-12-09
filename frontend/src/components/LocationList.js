@@ -11,11 +11,11 @@ import {
   TextField,
 } from '@material-ui/core';
 import { LocationOn, Search } from '@material-ui/icons';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConstantDataContext } from '../context';
 import { themeUtils } from '../theme';
-
+import Fuse from 'fuse.js';
 const useStyles = makeStyles((theme) => ({
   container: {
     width: '70%',
@@ -69,8 +69,17 @@ const LocationList = ({
   const [checked, setChecked] = useState(initial === null ? [] : initial);
   const [filter, setFilter] = useState('');
   const { t } = useTranslation();
-
+  const fuse = useRef(null);
   const { zones } = useContext(ConstantDataContext);
+
+  useEffect(() => {
+    if (zones) {
+      fuse.current = new Fuse(zones, {
+        includeScore: false,
+        keys: ['description'],
+      });
+    }
+  }, [zones]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -93,35 +102,31 @@ const LocationList = ({
   };
 
   const renderList = (list) => {
-    const renderedList = list
-      .filter(
-        ({ description }) =>
-          description
-            .toLowerCase()
-            .startsWith(filter.trimStart().trimEnd().toLowerCase()) ||
-          filter === ''
-      )
-      .map(({ id, description }) => {
-        const labelId = `checkbox-list-label-${id}`;
+    let filteredList = list
+    if (filter) {
+      filteredList = fuse.current.search(filter).map(item => item.item);
+    }
+    const renderedList = filteredList.map(({ id, description }) => {
+      const labelId = `checkbox-list-label-${id}`;
 
-        return (
-          <div key={id}>
-            <ListItem role={undefined} dense button onClick={handleToggle(id)}>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(id) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={description} />
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      });
+      return (
+        <div key={id}>
+          <ListItem role={undefined} dense button onClick={handleToggle(id)}>
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={checked.indexOf(id) !== -1}
+                tabIndex={-1}
+                disableRipple
+                inputProps={{ 'aria-labelledby': labelId }}
+              />
+            </ListItemIcon>
+            <ListItemText id={labelId} primary={description} />
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    });
     if (renderedList.length > 0) return renderedList;
     else
       return (

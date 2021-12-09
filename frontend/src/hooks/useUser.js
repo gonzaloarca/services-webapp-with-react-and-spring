@@ -27,7 +27,7 @@ const useUserHook = () => {
 
   const login = async ({ email, password }) => {
     const response = await loginRequest({ email, password });
-    return response.headers.authorization;
+    return response.headers.authorization.split(' ')[1];
   };
 
   const getUserById = async (id) => {
@@ -48,7 +48,7 @@ const useUserHook = () => {
 
   const verifyEmail = async (data) => {
     const response = await verifyEmailRequest(data);
-    return response.data;
+    return response.headers.authorization.split(' ')[1];
   };
 
   const getRankings = async (userId) => {
@@ -96,7 +96,7 @@ const useUserHook = () => {
     const formData = new FormData();
     formData.append('file', image);
     const response = await uploadUserImageRequest(userId, formData);
-    return response.data;
+    return response.headers.location;
   };
 
   return {

@@ -282,6 +282,28 @@ const contractCardStyles = (theme) => ({
       justifyContent: 'center',
     },
   },
+  alreadyRatedTag: {
+    backgroundColor: themeUtils.colors.lightGrey,
+    borderRadius: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '5px auto',
+    padding: '5px 10px',
+  },
+  alreadyRatedText: {
+    fontSize: '0.8rem',
+    fontWeight: 500,
+    color: themeUtils.colors.grey,
+    marginRight: 5
+  },
+  alreadyRatedRating: {
+    fontSize: '1rem',
+    fontWeight: 600,
+    marginLeft: 2,
+    color: 'black',
+  }
+
 });
 
 export default contractCardStyles;

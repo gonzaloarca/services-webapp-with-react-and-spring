@@ -69,7 +69,9 @@
             <br/>
         </div>
         <div class="custom-row">
-            <p class="bold" th:text="#{mail.contractToClient.scheduledDate}"></p>&nbsp;
+            <p th:if="${!modifiedState}" th:text="#{mail.contractToClient.scheduledDate}"></p>
+            <p class="bold" th:if="${modifiedState}" th:text="#{mail.contractToClient.newScheduledDate}"></p>
+            &nbsp;
             <p th:text="#{dateTime.formatted(${scheduledDate},${scheduledTime})}"></p>
             <br/>
         </div>

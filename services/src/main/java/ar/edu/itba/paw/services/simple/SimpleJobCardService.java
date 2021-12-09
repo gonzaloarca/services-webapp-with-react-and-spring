@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.interfaces.HirenetUtils.*;
 
@@ -55,11 +54,20 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public List<JobCard> search(String query, int zone, int jobType, int order, int page, Locale locale) {
+    public List<JobCard> search(String query, Integer zone, Integer jobType, Integer orderBy, int page, Locale locale) {
+        if (jobType == null)
+            jobType = SEARCH_WITHOUT_CATEGORIES;
+        if (orderBy == null)
+            orderBy = JobCard.OrderBy.BETTER_QUALIFIED.ordinal();
+        if (zone == null)
+            zone = SEARCH_WITHOUT_ZONES;
+        if (query == null)
+            query = "";
+
         if (zone < SEARCH_WITHOUT_ZONES || zone > JobPost.Zone.values().length
                 || jobType < SEARCH_WITHOUT_CATEGORIES ||
-                jobType > JobPost.JobType.values().length || order < 0
-                || order > JobCard.OrderBy.values().length || page < ALL_PAGES) {
+                jobType > JobPost.JobType.values().length || orderBy < 0
+                || orderBy > JobCard.OrderBy.values().length || page < ALL_PAGES) {
             return new ArrayList<>();
         }
         List<JobPost.JobType> similarTypes = getSimilarTypes(query, locale);
@@ -68,11 +76,12 @@ public class SimpleJobCardService implements JobCardService {
         if (zone != SEARCH_WITHOUT_ZONES)
             parsedZone = JobPost.Zone.values()[zone];
         else withZone = false;
-        JobCard.OrderBy orderBy = JobCard.OrderBy.values()[order];
+        JobCard.OrderBy orderByValue = JobCard.OrderBy.values()[orderBy];
         if (jobType == SEARCH_WITHOUT_CATEGORIES)
-            return jobCardDao.search(query, parsedZone, similarTypes, orderBy, withZone, page);
+            return jobCardDao.search(query, parsedZone, similarTypes, orderByValue, withZone, page);
         else
-            return jobCardDao.searchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType], similarTypes, orderBy, withZone, page);
+            return jobCardDao.searchWithCategory(query, parsedZone, JobPost.JobType.values()[jobType], similarTypes,
+                    orderByValue, withZone, page);
     }
 
     @Override
@@ -111,7 +120,13 @@ public class SimpleJobCardService implements JobCardService {
     }
 
     @Override
-    public int searchMaxPage(String query, int zone, int jobType, Locale locale) {
+    public int searchMaxPage(String query, Integer zone, Integer jobType, Locale locale) {
+        if (jobType == null)
+            jobType = SEARCH_WITHOUT_CATEGORIES;
+        if (zone == null)
+            zone = SEARCH_WITHOUT_ZONES;
+        if (query == null)
+            query = "";
         JobPost.Zone parsedZone = JobPost.Zone.values()[0];
         boolean withZone = true;
         if (zone != SEARCH_WITHOUT_ZONES)

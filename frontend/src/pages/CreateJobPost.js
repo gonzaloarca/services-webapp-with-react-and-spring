@@ -31,7 +31,7 @@ import {
 import { Add } from '@material-ui/icons';
 import clsx from 'clsx';
 import { Form, Formik, useFormikContext, ErrorMessage } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircleIcon from '../components/CircleIcon';
 import LocationList from '../components/LocationList';
@@ -53,7 +53,7 @@ import { ConstantDataContext } from '../context';
 import { useJobPosts } from '../hooks';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import { isLoggedIn } from '../utils/userUtils';
-
+import { NavBarContext } from '../context';
 const HirenetConnector = withStyles({
   alternativeLabel: {
     top: 22,
@@ -276,6 +276,7 @@ const CreateJobPost = ({ history }) => {
   if (!isLoggedIn()) history.replace('/login');
 
   const { createJobPost } = useJobPosts();
+  const { setNavBarProps } = useContext(NavBarContext);
 
   const [data, setData] = React.useState({
     category: '',
@@ -316,6 +317,13 @@ const CreateJobPost = ({ history }) => {
     }
   };
 
+  useEffect(() => {
+    setNavBarProps({
+      currentSection: '/create-job-post',
+      isTransparent: false,
+    });
+  }, []);
+
   const formRef = React.useRef();
 
   const handleSubmit = () => {
@@ -331,7 +339,6 @@ const CreateJobPost = ({ history }) => {
           {t('title', { section: t('navigation.sections.publish') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/create-job-post'} />
 
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('createjobpost.header')} />
@@ -364,6 +371,7 @@ const CreateJobPost = ({ history }) => {
               <Button
                 variant="contained"
                 color="primary"
+                data-testid="submit-button"
                 onClick={handleSubmit}
                 className={classes.button}
                 disabled={disableSubmit}
@@ -432,6 +440,7 @@ const CategoryStepBody = ({ formRef, handleNext, data }) => {
                 name="category"
                 value={values.category}
                 onChange={(e) => setFieldValue('category', e.target.value)}
+                inputProps={{ 'data-testid': 'category-select' }}
               >
                 <MenuItem value="">
                   <em>None</em>
@@ -485,6 +494,7 @@ const TitleStepBody = ({ formRef, handleNext, data }) => {
               value={values.title}
               onChange={(e) => setFieldValue('title', e.target.value)}
               name="title"
+              inputProps={{ 'data-testid': 'title-input' }}
               helperText={<ErrorMessage name="title"></ErrorMessage>}
             />
           </Form>

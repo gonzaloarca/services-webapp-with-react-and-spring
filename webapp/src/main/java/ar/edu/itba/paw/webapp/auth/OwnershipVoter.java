@@ -29,9 +29,6 @@ public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
     private JobPostService jobPostService;
 
     @Autowired
-    private JobPackageService jobPackageService;
-
-    @Autowired
     private UserService userService;
 
     @Override
@@ -53,15 +50,14 @@ public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
             Map<String, String> queryParams = new HashMap<>();
             for (String q :
                     query) {
-                String[] splitted = q.split("=");
-                if(splitted.length < 2)
-                    queryParams.put(splitted[0], null);
+                String[] split = q.split("=");
+                if(split.length < 2)
+                    queryParams.put(split[0], null);
                 else
-                        queryParams.put(splitted[0], splitted[1]);
+                        queryParams.put(split[0], split[1]);
             }
             User user;
             JobContract contract;
-            JobPost jobPost;
             if (paths.length == 0)
                 return ACCESS_ABSTAIN;
             try {
@@ -133,10 +129,8 @@ public class OwnershipVoter implements AccessDecisionVoter<FilterInvocation> {
                         }
                 }
 
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException | NoSuchElementException e) {
                 return ACCESS_ABSTAIN;
-            } catch (NoSuchElementException e) {
-                return ACCESS_DENIED;
             }
         }
         return ACCESS_ABSTAIN;

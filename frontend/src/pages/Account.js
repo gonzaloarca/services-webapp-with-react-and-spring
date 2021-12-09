@@ -1,5 +1,4 @@
-import React, { useContext, useState } from 'react';
-import NavBar from '../components/NavBar';
+import React, { useContext, useState, useEffect } from 'react';
 import SectionHeader from '../components/SectionHeader';
 import styles from '../styles';
 import {
@@ -27,6 +26,8 @@ import { Helmet } from 'react-helmet';
 import { UserContext } from '../context';
 import { useUser } from '../hooks';
 import { isLoggedIn } from '../utils/userUtils';
+import { uniqueId } from 'lodash';
+import {NavBarContext} from '../context';
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -86,8 +87,9 @@ const Account = () => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   const history = useHistory();
+  const { setNavBarProps } = useContext(NavBarContext);
 
   if (!isLoggedIn()) {
     history.replace('/login');
@@ -98,7 +100,12 @@ const Account = () => {
       tabLabel: t('account.data.title'),
       color: themeUtils.colors.orange,
       icon: <Person className="text-white" />,
-      component: <PersonalData currentUser={currentUser} />,
+      component: (
+        <PersonalData
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+        />
+      ),
       path: 'personal',
     },
     {
@@ -138,6 +145,10 @@ const Account = () => {
     history.push(`/account/${accountSections[newValue].path}`);
   };
 
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/account', isTransparent: false });
+  }, []);
+
   return (
     <>
       <Helmet>
@@ -145,7 +156,6 @@ const Account = () => {
           {t('title', { section: t('navigation.sections.account') })}
         </title>
       </Helmet>
-      <NavBar />
       <div className={globalClasses.contentContainerTransparent}>
         <SectionHeader sectionName={t('account.header')} />
         <Grid container spacing={4}>
@@ -217,14 +227,15 @@ const HirenetTab = withStyles((theme) => ({
   },
 }))(Tab);
 
-const PersonalData = ({ currentUser }) => {
+const PersonalData = ({ currentUser, setCurrentUser }) => {
   const classes = useStyles();
   const globalClasses = useGlobalStyles();
   const { t } = useTranslation();
   const { changeAccountData, changeAccountImage } = useUser();
   const [answer, setAnswer] = useState('');
-
-  const history = useHistory();
+  const [image, setImage] = useState(currentUser.image);
+  const [username, setUsername] = useState(currentUser.username);
+  const [phone, setPhone] = useState(currentUser.phone);
 
   const initialValues = {
     username: currentUser.username,
@@ -250,15 +261,27 @@ const PersonalData = ({ currentUser }) => {
 
   const onSubmit = async (values) => {
     try {
+      setAnswer('');
       await changeAccountData({
         userId: currentUser.id,
         email: currentUser.email,
         phone: values.phone,
         username: values.username,
       });
-      if (values.image) await changeAccountImage(currentUser.id, values.image);
+      setUsername(values.username);
+      setPhone(values.phone);
+      let imageUrl;
+      if (values.image) {
+        imageUrl = await changeAccountImage(currentUser.id, values.image);
+        setImage(URL.createObjectURL(values.image));
+      }
       setAnswer('ok');
-      history.go(0);
+      setCurrentUser((prevState) => ({
+        ...prevState,
+        username: values.username,
+        phone: values.phone,
+        image: imageUrl ? `${imageUrl}?${uniqueId()}` : prevState.image,
+      }));
     } catch (error) {
       setAnswer('error');
     }
@@ -277,16 +300,19 @@ const PersonalData = ({ currentUser }) => {
               <img
                 loading="lazy"
                 className={classes.profileImg}
-                src={currentUser.image}
+                src={image}
                 alt={t('account.data.imagealt')}
               />
             </Grid>
             <Grid item sm={10} xs={12} className="flex flex-col justify-center">
-              <div className="font-bold text-lg">{currentUser.username}</div>
+              <div className="font-bold text-lg">{username}</div>
               <div>
                 {currentUser.roles.includes('PROFESSIONAL')
                   ? t('professional')
                   : t('client')}
+              </div>
+              <div>
+                {t('register.phone')}: {phone}
               </div>
             </Grid>
           </Grid>
@@ -372,7 +398,7 @@ const PersonalData = ({ currentUser }) => {
                   </p>
                 ) : (
                   <p style={{ color: 'red' }} className={classes.answerMessage}>
-                    {t('account.rejected')}{' '}
+                    {t('account.rejectedchanges')}{' '}
                   </p>
                 )}
                 <Button

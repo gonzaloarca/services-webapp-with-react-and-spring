@@ -34,7 +34,7 @@ public interface ReviewService {
 
     Double findJobPostAvgRate(long id);
 
-    int findReviewsMaxPage(Long userId,Long postId, String role);
+    int findReviewsMaxPage(Long userId, Long postId, String type);
 
-    List<Review> findReviews(Long userId, String role, Long postId, int page);
+    List<Review> findReviews(Long userId, String type, Long postId, int page);
 }

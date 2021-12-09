@@ -74,8 +74,6 @@ public class SimpleTokenService implements TokenService {
 
 		verificationTokenDao.deleteToken(user.getId());
 		userDao.verifyUser(user.getId());
-		userDao.assignRole(user.getId(), UserAuth.Role.CLIENT.ordinal());
-
 		return true;
 	}
 

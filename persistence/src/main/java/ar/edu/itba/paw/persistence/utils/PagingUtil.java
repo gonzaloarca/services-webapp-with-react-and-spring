@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class PagingUtil {
     public static List<Long> getFilteredIds(int page, Query nativeQuery) {
-        if (page != HirenetUtils.ALL_PAGES) {
+        if (page >= 0) {
             nativeQuery.setFirstResult((page) * HirenetUtils.PAGE_SIZE);
             nativeQuery.setMaxResults(HirenetUtils.PAGE_SIZE);
         }

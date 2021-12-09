@@ -38,15 +38,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-// Get authorization header and validate
-            final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        // Get authorization header and validate
+        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
 
+        final String[] headerSplit = header.split(" ");
+        if (headerSplit.length <= 1) {
+            chain.doFilter(request, response);
+            return;
+        }
         // Get jwt token and validate
-        final String token = header.split(" ")[1].trim();
+        final String token = headerSplit[1].trim();
         if (!jwtUtil.validate(token)) {
             chain.doFilter(request, response);
             return;

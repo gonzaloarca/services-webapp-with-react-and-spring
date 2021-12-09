@@ -45,7 +45,17 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public User register(String email, String password, String username, String phone, ByteImage image) {
-        final UserWithImage userWithImage = new UserWithImage(email, username, phone, true, false, image, LocalDateTime.now(), password);
+        Optional<UserWithImage> maybeUser = em.createQuery("FROM UserWithImage AS u WHERE u.email = :email", UserWithImage.class)
+                .setParameter("email", email).getResultList().stream().findFirst();
+        UserWithImage userWithImage;
+        if(maybeUser.isPresent()){
+            userWithImage = maybeUser.get();
+            userWithImage.setPassword(password);
+            userWithImage.setPhone(phone);
+            userWithImage.setByteImage(image);
+        }else{
+            userWithImage= new UserWithImage(email, username, phone, true, false, image, LocalDateTime.now(), password);
+        }
         em.persist(userWithImage);
         return new User(userWithImage);
     }

@@ -143,7 +143,7 @@ public class SimpleJobContractServiceTest {
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 
         List<JobContractCard> jobContractCards = mockContractService
-                .findContracts(PROFESSIONAL.getId(), "pending", "professional", 1);
+                .findContracts(PROFESSIONAL.getId(), "pending", "offered", 1);
 
         Assert.assertFalse(jobContractCards.isEmpty());
         Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS), jobContractCards);
@@ -154,7 +154,7 @@ public class SimpleJobContractServiceTest {
         SimpleJobContractService mockContractService = Mockito.spy(simpleJobContractService);
 
         List<JobContractCard> jobContractCards = mockContractService.findContracts(NON_EXISTENT_ID,
-                "pending", "professional", HirenetUtils.ALL_PAGES);
+                "pending", "offered", HirenetUtils.ALL_PAGES);
 
         Assert.assertTrue(jobContractCards.isEmpty());
     }
@@ -174,7 +174,7 @@ public class SimpleJobContractServiceTest {
         Mockito.when(simpleReviewService.findContractReview(Mockito.anyLong())).thenReturn(Optional.empty());
 
         List<JobContractCard> jobContractCards = mockContractService
-                .findContracts(CLIENT.getId(), "pending", "client", 1);
+                .findContracts(CLIENT.getId(), "pending", "hired", 1);
 
         Assert.assertFalse(jobContractCards.isEmpty());
         Assert.assertEquals(Arrays.asList(JOB_CONTRACT_CARDS), jobContractCards);

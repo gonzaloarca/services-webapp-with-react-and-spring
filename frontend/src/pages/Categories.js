@@ -6,14 +6,14 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import CategoryCard from '../components/CategoryCard';
-import NavBar from '../components/NavBar';
-import { ConstantDataContext } from '../context';
+import { ConstantDataContext, NavBarContext } from '../context';
 import styles from '../styles';
 import { themeUtils } from '../theme';
+import Fuse from 'fuse.js';
 
 const useGlobalStyles = makeStyles(styles);
 const useStyles = makeStyles((theme) => ({
@@ -60,25 +60,30 @@ const Categories = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
 
+  const fuse = useRef(null);
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/categories', isTransparent: false });
+  }, []);
+
   const { categories } = useContext(ConstantDataContext);
 
   useEffect(() => {
     if (categories) {
       setLoading(false);
+      fuse.current = new Fuse(categories, {
+        includeScore: false,
+        keys: ['description']
+      });
     }
   }, [categories]);
 
   const renderList = (isLoading, list) => {
     if (isLoading) {
       list = [1, 2, 3, 4, 5, 6, 7, 8];
-    } else {
-      list = list.filter(
-        ({ description }) =>
-          description
-            .toLowerCase()
-            .startsWith(filter.trimStart().trimEnd().toLowerCase()) ||
-          filter === ''
-      );
+    } else if(filter){
+      list = fuse.current.search(filter).map(item => item.item);
     }
 
     const renderedList = list.map((category) => (
@@ -112,7 +117,6 @@ const Categories = () => {
           {t('title', { section: t('navigation.sections.categories') })}
         </title>
       </Helmet>
-      <NavBar currentSection="/categories" />
       <div className={globalClasses.contentContainerTransparent}>
         <div className={classes.container}>
           <h1 className={classes.header}>{t('categories.header')}</h1>

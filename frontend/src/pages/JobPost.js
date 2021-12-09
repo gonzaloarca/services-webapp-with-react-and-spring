@@ -23,7 +23,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import Carousel from 'react-material-ui-carousel';
 import { Link as RouterLink } from 'react-router-dom';
-import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { themeUtils } from '../theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -42,7 +41,7 @@ import { Helmet } from 'react-helmet';
 import { extractLastIdFromURL } from '../utils/urlUtils';
 import BottomPagination from '../components/BottomPagination';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../context';
+import { NavBarContext, UserContext } from '../context';
 import HirenetModal, { PlainTextBody } from '../components/HirenetModal';
 
 const useStyles = makeStyles((theme) => ({
@@ -206,7 +205,7 @@ const JobPost = ({ match, history }) => {
   const { getUserById } = useUser();
   const { currentUser } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
-  const [post, setJobPost] = useState(null);
+  const [jobPost, setJobPost] = useState(null);
   const [jobCard, setJobCard] = useState(null);
   const [packages, setPackages] = useState([]);
   const [proUser, setProUser] = useState(null);
@@ -214,6 +213,13 @@ const JobPost = ({ match, history }) => {
   const [hirable, setHirable] = useState(false);
   const [finalized, setFinalized] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [showArrows, setArrows] = useState(false);
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({ currentSection: '/job-post', isTransparent: false });
+  }, []);
 
   const loadJobPost = async () => {
     try {
@@ -244,7 +250,7 @@ const JobPost = ({ match, history }) => {
 
   const loadProUser = async () => {
     try {
-      const proId = extractLastIdFromURL(post.professional);
+      const proId = extractLastIdFromURL(jobPost.professional);
       const pro = await getUserById(proId);
       setProUser(pro);
     } catch (e) {
@@ -253,20 +259,21 @@ const JobPost = ({ match, history }) => {
   };
 
   useEffect(() => {
-    if (post) {
+    if (jobPost) {
       loadProUser();
     }
-  }, [post]);
+  }, [jobPost]);
 
   useEffect(() => {
-    if (post && jobCard && packages && packages.length > 0 && proUser) {
-      if (currentUser && currentUser.id === proUser.id && post.active)
+    if (jobPost && jobCard && packages && packages.length > 0 && proUser) {
+      if (currentUser && currentUser.id === proUser.id && jobPost.active)
         setIsOwner(true);
-      else if (post.active) setHirable(true);
-      if (!post.active) setFinalized(true);
+      else if (jobPost.active) setHirable(true);
+      if (!jobPost.active) setFinalized(true);
+      if (jobPost.images.length > 1) setArrows(true);
       setLoading(false);
     }
-  }, [post, jobCard, packages, proUser]);
+  }, [jobPost, jobCard, packages, proUser]);
 
   useEffect(() => {
     loadJobPost();
@@ -276,8 +283,11 @@ const JobPost = ({ match, history }) => {
 
   const deletePost = async () => {
     try {
-      await deleteJobPost(post);
-      history.go(0);
+      await deleteJobPost(jobPost);
+      setIsOwner(false);
+      setHirable(false);
+      setFinalized(true);
+      setOpenDelete(false);
     } catch (e) {
       history.push(`/error`);
     }
@@ -285,7 +295,6 @@ const JobPost = ({ match, history }) => {
 
   return (
     <>
-      <NavBar currentSection={'/search'} />
       {loading ? (
         <div className="flex justify-center items-center w-screen h-screen">
           <CircularProgress />
@@ -293,7 +302,7 @@ const JobPost = ({ match, history }) => {
       ) : (
         <>
           <Helmet>
-            <title>{t('title', { section: post.title })}</title>
+            <title>{t('title', { section: jobPost.title })}</title>
           </Helmet>
           <div className={globalClasses.contentContainerTransparent}>
             {finalized && (
@@ -339,8 +348,9 @@ const JobPost = ({ match, history }) => {
             ) : (
               <></>
             )}
-            <Carousel navButtonsAlwaysVisible>
-              {post.images.map((item, i) => (
+            <Carousel navButtonsAlwaysVisible={showArrows}
+                      navButtonsAlwaysInvisible={!showArrows}>
+              {jobPost.images.map((item, i) => (
                 <img
                   key={`image_${i}`}
                   src={item}
@@ -370,7 +380,7 @@ const JobPost = ({ match, history }) => {
                   labelBackgroundColor={themeUtils.colors.aqua}
                 >
                   <div className={classes.workingHoursContainer}>
-                    {post.availableHours}
+                    {jobPost.availableHours}
                   </div>
                 </SectionCard>
               </Grid>
@@ -382,7 +392,7 @@ const JobPost = ({ match, history }) => {
                   labelBackgroundColor={themeUtils.colors.orange}
                 >
                   <div className={classes.locationsContainer}>
-                    {post.zones.map((zone) => (
+                    {jobPost.zones.map((zone) => (
                       <Chip
                         className={classes.locationChip}
                         key={`zone_${zone.id}`}
@@ -414,7 +424,7 @@ const JobPost = ({ match, history }) => {
             </div>
             {/* Reseñas */}
             <div id="reviews" className="mt-7">
-              <ReviewListCard postId={post.id} />
+              <ReviewListCard postId={jobPost.id} />
             </div>
           </div>
         </>
@@ -641,7 +651,7 @@ const ReviewListCard = ({ postId }) => {
       {renderReviews(reviews)}
 
       <BottomPagination
-        maxPage={links.last.page}
+        maxPage={parseInt(links.last?.page || queryParams.page)}
         setQueryParams={setQueryParams}
         queryParams={queryParams}
       />

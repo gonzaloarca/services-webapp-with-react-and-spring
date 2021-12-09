@@ -1,5 +1,4 @@
-import React from 'react';
-import NavBar from '../components/NavBar';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -11,6 +10,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useUser } from '../hooks';
 import { Helmet } from 'react-helmet';
+import NavBarContext from '../context/navBarContext';
 
 const useStyles = makeStyles(LoginAndRegisterStyles);
 
@@ -30,6 +30,12 @@ const Register = () => {
   });
 
   const { register } = useUser();
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/register',isTransparent:true});
+  },[])
 
   const makeRequest = async (newData) => {
     try {
@@ -74,7 +80,6 @@ const Register = () => {
           {t('title', { section: t('navigation.sections.register') })}
         </title>
       </Helmet>
-      <NavBar currentSection={'/register'} isTransparent />
       <div
         className={classes.background}
         style={{
@@ -166,6 +171,7 @@ const StepOne = (props) => {
                     input: 'text-sm font-medium',
                   },
                 }}
+                inputProps={{ 'data-testid': 'username-register-input' }}
               />
             </Grid>
             <Grid item sm={5} xs={12}>
@@ -182,6 +188,7 @@ const StepOne = (props) => {
                     input: 'text-sm font-medium',
                   },
                 }}
+                inputProps={{ 'data-testid': 'phone-register-input' }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -198,6 +205,7 @@ const StepOne = (props) => {
                     input: 'text-sm font-medium',
                   },
                 }}
+                inputProps={{ 'data-testid': 'email-register-input' }}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -205,6 +213,7 @@ const StepOne = (props) => {
                 placeholder={t('register.password')}
                 variable="password"
                 fullWidth
+                inputProps={{ 'data-testid': 'password-register-input' }}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -212,6 +221,7 @@ const StepOne = (props) => {
                 placeholder={t('register.passwordrepeat')}
                 variable="passwordrepeat"
                 fullWidth
+                inputProps={{ 'data-testid': 'passrepeat-register-input' }}
               />
             </Grid>
             <Grid item xs={12} className="h-28">
@@ -220,6 +230,7 @@ const StepOne = (props) => {
                 className={clsx(classes.submitButton, 'mb-4')}
                 type="submit"
                 disabled={isSubmitting}
+                data-testid='submit-register-input'
               >
                 {t('register.submit')}
               </Button>

@@ -12,17 +12,17 @@ public class ParamExceptionMapper implements ExceptionMapper<ParamException> {
 
     @Override
     public Response toResponse(ParamException e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<ParamExceptionMapper.HirenetParamException>(new ParamExceptionMapper.HirenetParamException(e)) {
-        }).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(
+                new GenericEntity<ParamExceptionMapper.HirenetParamException>(
+                        new ParamExceptionMapper.HirenetParamException(e)) {
+                }).build();
     }
 
     private static class HirenetParamException {
-        private String paramName;
         private String message;
 
         public HirenetParamException(ParamException e) {
-            this.message = String.format("Parameter error at %s: %s",e.getParameterName(),e.getMessage());
-            this.paramName = e.getParameterName();
+            this.message = String.format("Parameter error at %s", e.getParameterName());
         }
 
         public HirenetParamException() {
@@ -36,12 +36,12 @@ public class ParamExceptionMapper implements ExceptionMapper<ParamException> {
             this.message = message;
         }
 
-        public String getParamName() {
-            return paramName;
-        }
-
-        public void setParamName(String paramName) {
-            this.paramName = paramName;
-        }
+//        public String getParamName() {
+//            return paramName;
+//        }
+//
+//        public void setParamName(String paramName) {
+//            this.paramName = paramName;
+//        }
     }
 }

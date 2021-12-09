@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 import CategoryCard from '../components/CategoryCard';
 import Hero, { HeroSteps } from '../components/Hero';
 import JobCard from '../components/JobCard';
-import NavBar from '../components/NavBar';
 import styles from '../styles';
 import { LightenDarkenColor, themeUtils } from '../theme';
 import homeStyles from './HomeStyles';
-import { ConstantDataContext } from '../context';
+import { ConstantDataContext, NavBarContext } from '../context';
 import { useJobCards } from '../hooks';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
@@ -26,19 +25,32 @@ export const Home = (props) => {
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [randomCategories, setRandomCategories] = useState([]);
   const [showChevron, setShowChevron] = useState(false);
   const { searchJobCards } = useJobCards();
+
+  const { setNavBarProps } = useContext(NavBarContext);
+
+  useEffect(() => {
+    setNavBarProps({currentSection:'/',isTransparent:true});
+    return () => setNavBarProps({currentSection:'',isTransparent:false});
+  },[])
+
   const loadJobCards = async () => {
     setJobs(await searchJobCards({ orderBy: 4 }));
     setLoadingJobs(false);
   };
 
   useEffect(() => {
-    if (categories && categories.length > 0) setLoadingCategories(false);
+    if (categories && categories.length > 0) {
+      setLoadingCategories(false);
+      setRandomCategories(categories.sort(() => 0.5 - Math.random()).slice(0, 4));
+    }
   }, [categories]);
 
   useEffect(() => {
     loadJobCards();
+    return () => setJobs([]);
   }, []);
 
   return (
@@ -46,7 +58,6 @@ export const Home = (props) => {
       <Helmet>
         <title>{t('title', { section: t('navigation.sections.home') })}</title>
       </Helmet>
-      <NavBar currentSection={'/'} isTransparent />
       <Hero zones={zones} />
       <HeroSteps />
       <div className={globalClasses.contentContainerTransparent}>
@@ -61,9 +72,7 @@ export const Home = (props) => {
             ))
           ) : (
             <>
-              {categories
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 4)
+              {randomCategories
                 .map((i) => (
                   <Grid key={i.id} item xs={6} sm={4} md={3} lg={2}>
                     <CategoryCard category={i} />
@@ -111,7 +120,7 @@ export const Home = (props) => {
             ) : (
               <div className={classes.noJobsContainer}>
                 <img
-                  src={process.env.PUBLIC_URL + 'img/unavailable-1.svg'}
+                  src={process.env.PUBLIC_URL + '/img/unavailable-1.svg'}
                   alt=""
                   className={classes.noJobsImage}
                   loading="lazy"

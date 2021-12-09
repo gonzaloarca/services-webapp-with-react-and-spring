@@ -57,33 +57,19 @@ const useContractsHook = () => {
       page
     );
     setLinks(parse(response.headers.link) || { ...initialLinks });
-    return response.data;
+    return response.data.map((contract) => ({
+      ...contract,
+      postImage: contract.postImage
+        ? contract.postImage
+        : categoryImageMap.get(contract.jobType.id),
+    }));
   };
 
-  const changeContractStatePro = async (
-    contractId,
-    state,
-    newScheduledDate
-  ) => {
+  const changeContractState = async (contractId, state, newScheduledDate) => {
     const response = await changeContractStateRequest(
       contractId,
       state,
-      newScheduledDate,
-      'professional'
-    );
-    return response.data;
-  };
-
-  const changeContractStateClient = async (
-    contractId,
-    state,
-    newScheduledDate
-  ) => {
-    const response = await changeContractStateRequest(
-      contractId,
-      state,
-      newScheduledDate,
-      'client'
+      newScheduledDate
     );
     return response.data;
   };
@@ -112,14 +98,18 @@ const useContractsHook = () => {
     return response.data;
   };
 
+  const freeLinks = () => {
+    setLinks(initialLinks);
+  };
+
   return {
     getContractsByClientIdAndState,
     getContractsByProAndStateId,
-    changeContractStateClient,
-    changeContractStatePro,
+    changeContractState,
     getContractStates,
     createContract,
     links,
+    freeLinks,
   };
 };
 export default useContractsHook;
