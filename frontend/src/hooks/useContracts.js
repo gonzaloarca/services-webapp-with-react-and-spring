@@ -57,14 +57,15 @@ const useContractsHook = () => {
       page
     );
     setLinks(parse(response.headers.link) || { ...initialLinks });
-    return response.data;
+    return response.data.map((contract) => ({
+      ...contract,
+      postImage: contract.postImage
+        ? contract.postImage
+        : categoryImageMap.get(contract.jobType.id),
+    }));
   };
 
-  const changeContractState = async (
-    contractId,
-    state,
-    newScheduledDate
-  ) => {
+  const changeContractState = async (contractId, state, newScheduledDate) => {
     const response = await changeContractStateRequest(
       contractId,
       state,
@@ -98,8 +99,8 @@ const useContractsHook = () => {
   };
 
   const freeLinks = () => {
-	  setLinks(initialLinks);
-  }
+    setLinks(initialLinks);
+  };
 
   return {
     getContractsByClientIdAndState,
@@ -108,7 +109,7 @@ const useContractsHook = () => {
     getContractStates,
     createContract,
     links,
-	freeLinks,
+    freeLinks,
   };
 };
 export default useContractsHook;
