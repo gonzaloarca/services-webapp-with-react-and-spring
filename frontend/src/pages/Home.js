@@ -25,6 +25,7 @@ export const Home = (props) => {
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [randomCategories, setRandomCategories] = useState([]);
   const [showChevron, setShowChevron] = useState(false);
   const { searchJobCards } = useJobCards();
 
@@ -41,7 +42,10 @@ export const Home = (props) => {
   };
 
   useEffect(() => {
-    if (categories && categories.length > 0) setLoadingCategories(false);
+    if (categories && categories.length > 0) {
+      setLoadingCategories(false);
+      setRandomCategories(categories.sort(() => 0.5 - Math.random()).slice(0, 4));
+    }
   }, [categories]);
 
   useEffect(() => {
@@ -68,9 +72,7 @@ export const Home = (props) => {
             ))
           ) : (
             <>
-              {categories
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 4)
+              {randomCategories
                 .map((i) => (
                   <Grid key={i.id} item xs={6} sm={4} md={3} lg={2}>
                     <CategoryCard category={i} />
