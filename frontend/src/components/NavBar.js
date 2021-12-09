@@ -228,8 +228,10 @@ const NavBar = ({}) => {
                     }}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
-                        if (!searchBarQueryParams)
+                        if (currentSection !== '/search') {
+                          setSearchBarQueryParams({ ...searchBarQueryParams, query: event.target.value });
                           history.push('/search?query=' + event.target.value);
+                        }
                         else
                           setSearchBarQueryParams({
                             ...searchBarQueryParams,
