@@ -4,6 +4,7 @@ import {
   faImage,
   faInfoCircle,
   faUserCircle,
+  faStar
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -485,7 +486,7 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
                   </div>
                 </div>
                 <div>
-                  {contract.rate > 0 ? <div>AAAAA</div> :contractActionsMap[
+                  {contract.rate > 0 ? <AlreadyRatedTag rating={contract.rate} /> :contractActionsMap[
                       contractStateDataMap[contract.state.description].state
                       ].map(
                       (
@@ -563,6 +564,19 @@ const ContractCard = ({ contract, isOwner, refetch, setReload }) => {
       </>
   );
 };
+
+const AlreadyRatedTag = ({rating}) => {
+  const classes = useStyles();
+  const { t } = useTranslation();
+
+  return (
+      <div className={classes.alreadyRatedTag}>
+        <div className={classes.alreadyRatedText}>{t('mycontracts.contractactions.alreadyrated')}</div>
+        <FontAwesomeIcon icon={faStar} style={{ color: themeUtils.colors.yellow }} />
+        <div className={classes.alreadyRatedRating}>{rating}</div>
+      </div>
+  );
+}
 
 const DetailsBody = ({
                        packageTitle,

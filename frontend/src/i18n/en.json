@@ -248,7 +248,8 @@
       "contact": "Contact",
       "details": "Details",
       "reschedule": "Reschedule",
-      "reviewreschedule": "Review rescheduling"
+      "reviewreschedule": "Review rescheduling",
+	  "alreadyrated": "Rated:"
     },
     "modals": {
       "cancel": {

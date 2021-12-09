@@ -264,7 +264,6 @@ const ContractsDashboard = ({
   const classes = useStyles();
   const { t } = useTranslation();
   const { activeState } = useParams();
-  console.log(contracts);
   useEffect(() => {
     if (contracts) setLoading(false);
     else setLoading(true);
