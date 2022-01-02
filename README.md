@@ -34,7 +34,12 @@ nvm use
 ```
 This guarantees that the same Node version used for the development of the project is used
 
-Next, start the React development server from the same folder:
+Next, install the project dependencies
+```bash
+npm install
+```
+
+Finally, start the React development server from the same folder:
 ```bash
 npm start
 ```
